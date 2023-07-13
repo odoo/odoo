@@ -1504,8 +1504,8 @@
                                     t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}"
                                 />
                             </td>
-                            <td class='td-product_name'>
-                                <div>
+                            <td class="td-product_name" name="cart_line_description">
+                                <div name="cart_line_description_short">
                                     <t t-call="website_sale.cart_line_product_link">
                                         <strong t-field="line.name_short" />
                                     </t>
@@ -1618,8 +1618,10 @@
                                         </div>
                                         <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
                                         <t t-set="redirect_url" t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout?express=1'"/>
-                                        <div id="process_checkout" class="d-flex flex-column"
-                                             t-if="website_sale_order and website_sale_order.website_order_line">
+                                        <div t-if="website_sale_order and website_sale_order.website_order_line"
+                                             id="process_checkout"
+                                             class="d-flex flex-column"
+                                             t-att-disabled="not website_sale_order._is_cart_ready()">
                                             <a class="btn btn-primary float-end" role="button" t-attf-href="{{redirect_url}}">
                                                 <t t-if="redirect_to_sign_in">
                                                     <span>Sign In</span>
@@ -2162,7 +2164,8 @@
                     </t>
                     <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
                     <t t-set="redirect_url" t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout?express=1'"/>
-                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line"
+                    <a role="button"
+                       t-att-disabled="not website_sale_order._is_cart_ready()"
                        class="btn btn-secondary float-end d-none d-xl-inline-block"
                        id="process_checkout_cart_summary"
                        t-attf-href="{{redirect_url}}">
@@ -2191,7 +2194,7 @@
                     <b>Your order: </b> <span id="amount_total_summary" class="monetary_field" t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
                     <span class='oi oi-chevron-down fa-border float-end' role="img" aria-label="Details" title="Details"></span>
                 </div>
-                <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
+                <div name="cart_summary_info" t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
                     Your cart is empty!
                 </div>
                 <div class="toggle_summary_div d-none d-xl-block">
@@ -2218,7 +2221,7 @@
                                         />
                                     </td>
                                     <td class='td-product_name'>
-                                        <div>
+                                        <div name="cart_summary_description_short">
                                             <strong t-field="line.name_short" />
                                         </div>
                                     </td>
