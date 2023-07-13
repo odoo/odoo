@@ -48,6 +48,14 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'ref': 'ref_partner_2',
         })
 
+        cls.tax_19 = cls.env['account.tax'].create({
+            'name': 'tax_19',
+            'amount_type': 'percent',
+            'amount': 19,
+            'type_tax_use': 'sale',
+            'country_id': cls.env.ref('base.ro').id,
+        })
+
         cls.env.company.invoice_is_ubl_cii = True
 
     @classmethod
@@ -77,7 +85,7 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
                     'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
                     'price_unit': 123.0,
                     'discount': 10.0,
-                    # 'tax_ids': [(6, 0, self.tax_19.ids)],
+                    'tax_ids': [(6, 0, self.tax_19.ids)],
                 },
             ],
         )
