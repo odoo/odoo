@@ -8,6 +8,7 @@ from requests import HTTPError
 import pytz
 from dateutil.parser import parse
 from markupsafe import Markup
+from datetime import timedelta
 
 from odoo import api, fields, models, registry, _
 from odoo.tools import ormcache_context, email_normalize
@@ -126,6 +127,13 @@ class GoogleSync(models.AbstractModel):
         else:
             records_to_sync = self
         cancelled_records = self - records_to_sync
+
+        # Sync only records created/updated after the last synchronization date with Google Calendar.
+        # A time window of five minutes is accepted for avoiding network delay errors.
+        if self.env.user.google_calendar_account_id and self.env.user.google_calendar_last_sync_date:
+            time_offset = timedelta(minutes=5)
+            records_to_sync = records_to_sync.filtered(lambda rec: rec.write_date >= self.env.user.google_calendar_last_sync_date - time_offset)
+            cancelled_records = cancelled_records.filtered(lambda rec: rec.write_date >= self.env.user.google_calendar_last_sync_date - time_offset)
 
         updated_records = records_to_sync.filtered('google_id')
         new_records = records_to_sync - updated_records
@@ -252,7 +260,8 @@ class GoogleSync(models.AbstractModel):
                 except HTTPError as e:
                     if e.response.status_code in (400, 403):
                         self._google_error_handling(e)
-                self.exists().with_context(dont_notify=True).need_sync = False
+                if values:
+                    self.exists().with_context(dont_notify=True).need_sync = False
 
     @after_commit
     def _google_insert(self, google_service: GoogleCalendarService, values, timeout=TIMEOUT):
@@ -288,6 +297,11 @@ class GoogleSync(models.AbstractModel):
                     '&', ('google_id', '=', False), is_active_clause,
                     ('need_sync', '=', True),
             ]])
+        # Sync only records created/updated after the last synchronization date with Google Calendar.
+        # A time window of five minutes is accepted for avoiding network delay errors.
+        time_offset = timedelta(minutes=5)
+        domain = expression.AND([domain, [('write_date', '>=', self.env.user.google_calendar_last_sync_date - time_offset)]])
+
         # We want to limit to 200 event sync per transaction, it shouldn't be a problem for the day to day
         # but it allows to run the first synchro within an acceptable time without timeout.
         # If there is a lot of event to synchronize to google the first time,

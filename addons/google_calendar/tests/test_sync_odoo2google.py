@@ -622,3 +622,104 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event.with_context(send_updates=False)._sync_odoo2google(self.google_service)
         self.call_post_commit_hooks()
         self.assertGoogleEventSendUpdates('none')
+
+    @patch_api
+    def test_dont_sync_events_created_before_sync_started_outside_time_window(self):
+        # Stop synchronization with Google Calendar.
+        self.env.user.stop_google_synchronization()
+
+        # Create simple event and recurrence while synchronization with Google Calendar is off.
+        simple_event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2023, 6, 25, 10, 0),
+            'stop': datetime(2023, 6, 25, 11, 0),
+        })
+        rec_event_1 = self.env['calendar.event'].create({
+            'name': "Recurrent Event",
+            'start': datetime(2023, 6, 21),
+            'stop': datetime(2023, 6, 21),
+            'allday': True
+        })
+        self.env['calendar.recurrence'].create({
+            'rrule': 'FREQ=WEEKLY;COUNT=1;BYDAY=WE',
+            'calendar_event_ids': [(4, rec_event_1.id)]
+        })
+
+        # Assert that the insertion call is not made with a 10 minutes gap since last synchronization (the limit is 5 minutes).
+        # Variable 'google_calendar_last_sync_date' is manually updated here since 'freeze_time' is limited within this function scope.
+        self.env.user.restart_google_synchronization()
+        self.env.user.google_calendar_last_sync_date = simple_event.write_date + relativedelta(minutes=10)
+        simple_event._sync_odoo2google(self.google_service)
+        self.env.user.google_calendar_last_sync_date = rec_event_1.write_date + relativedelta(minutes=10)
+        rec_event_1._sync_odoo2google(self.google_service)
+        self.assertGoogleAPINotCalled()
+        self.assertGoogleEventNotInserted()
+
+    @patch_api
+    def test_sync_event_created_before_sync_started_within_time_window(self):
+        # Stop synchronization with Google Calendar.
+        self.env.user.stop_google_synchronization()
+
+        # Create simple event while synchronization with Google Calendar is off.
+        simple_event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2023, 6, 25, 10, 0),
+            'stop': datetime(2023, 6, 25, 11, 0),
+        })
+
+        # Restart the synchronization right after the event creation.
+        # Its synchronization will be allowed within this immediate time gap between creation and sync start.
+        self.env.user.restart_google_synchronization()
+        simple_event._sync_odoo2google(self.google_service)
+        self.assertGoogleEventInserted({
+            'id': False,
+            'start': {'dateTime': '2023-06-25T10:00:00+00:00'},
+            'end': {'dateTime': '2023-06-25T11:00:00+00:00'},
+            'summary': 'Event',
+            'description': '',
+            'location': '',
+            'visibility': 'public',
+            'guestsCanModify': True,
+            'reminders': {'overrides': [], 'useDefault': False},
+            'organizer': {'email': 'odoobot@example.com', 'self': True},
+            'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: simple_event.id}}
+        })
+
+    @patch_api
+    def test_sync_recurrence_created_before_sync_started_within_time_window(self):
+        # Stop synchronization with Google Calendar.
+        self.env.user.stop_google_synchronization()
+
+        # Create recurrence while synchronization with Google Calendar is off.
+        rec_event_1 = self.env['calendar.event'].create({
+            'name': "Recurrent Event",
+            'start': datetime(2023, 6, 21),
+            'stop': datetime(2023, 6, 21),
+            'allday': True
+        })
+        recurrence = self.env['calendar.recurrence'].create({
+            'rrule': 'FREQ=WEEKLY;COUNT=2;BYDAY=WE',
+            'calendar_event_ids': [(4, rec_event_1.id)],
+            'need_sync': False
+        })
+
+        # Restart the synchronization right after the recurrence creation.
+        # Its synchronization will be allowed within this immediate time gap between creation and sync start.
+        self.env.user.restart_google_synchronization()
+        recurrence._sync_odoo2google(self.google_service)
+        self.assertGoogleEventInserted({
+            'id': False,
+            'start': {'date': str(rec_event_1.start_date)},
+            'end': {'date': str(rec_event_1.stop_date + relativedelta(days=1))},
+            'summary': 'Recurrent Event',
+            'description': '',
+            'location': '',
+            'guestsCanModify': True,
+            'organizer': {'email': 'odoobot@example.com', 'self': True},
+            'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: rec_event_1.recurrence_id.id}},
+            'reminders': {'overrides': [], 'useDefault': False},
+            'visibility': 'public',
+            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=WE']
+        })

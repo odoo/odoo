@@ -21,6 +21,7 @@ class User(models.Model):
     google_calendar_sync_token = fields.Char(related='google_calendar_account_id.calendar_sync_token')
     google_calendar_cal_id = fields.Char(related='google_calendar_account_id.calendar_cal_id')
     google_synchronization_stopped = fields.Boolean(related='google_calendar_account_id.synchronization_stopped', readonly=False)
+    google_calendar_last_sync_date = fields.Datetime(related='google_calendar_account_id.calendar_last_sync_date', readonly=False)
 
     _sql_constraints = [
         ('google_token_uniq', 'unique (google_calendar_account_id)', "The user has already a google account"),
@@ -29,11 +30,11 @@ class User(models.Model):
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['google_synchronization_stopped', 'google_calendar_account_id']
+        return super().SELF_READABLE_FIELDS + ['google_synchronization_stopped', 'google_calendar_account_id', 'google_calendar_last_sync_date']
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['google_synchronization_stopped', 'google_calendar_account_id']
+        return super().SELF_WRITEABLE_FIELDS + ['google_synchronization_stopped', 'google_calendar_account_id', 'google_calendar_last_sync_date']
 
     def _get_google_calendar_token(self):
         self.ensure_one()
@@ -78,6 +79,8 @@ class User(models.Model):
         events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
         (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
 
+        self.google_calendar_last_sync_date = fields.datetime.now()
+
         return bool(events | synced_events) or bool(recurrences | synced_recurrences)
 
     @api.model
@@ -97,11 +100,13 @@ class User(models.Model):
     def stop_google_synchronization(self):
         self.ensure_one()
         self.google_synchronization_stopped = True
+        self.google_calendar_last_sync_date = None
 
     def restart_google_synchronization(self):
         self.ensure_one()
         if not self.google_calendar_account_id:
             self.google_calendar_account_id = self.env['google.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.ids)]}])
+        self.google_calendar_last_sync_date = fields.datetime.now()
         self.google_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()

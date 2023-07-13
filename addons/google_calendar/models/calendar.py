@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
+from datetime import timedelta
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 from uuid import uuid4
@@ -64,7 +65,11 @@ class Meeting(models.Model):
         day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))
         lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
+        # Sync only records created/updated after the last synchronization date with Google Calendar.
+        # A time window of five minutes is accepted for avoiding network delay errors.
+        time_offset = timedelta(minutes=5)
         return [
+            ('write_date', '>=', self.env.user.google_calendar_last_sync_date - time_offset),
             ('partner_ids.user_ids', 'in', self.env.user.id),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),

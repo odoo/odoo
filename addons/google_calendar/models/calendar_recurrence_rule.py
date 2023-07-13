@@ -3,6 +3,7 @@
 
 import re
 import logging
+from datetime import timedelta
 
 from odoo import api, models, Command
 from odoo.tools import email_normalize
@@ -195,7 +196,11 @@ class RecurrenceRule(models.Model):
         # older versions of the module. When synced, these recurrency may come back from Google after database cleaning
         # and trigger errors as the records are not properly populated.
         # We also prevent sync of other user recurrent events.
-        return [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False)]
+        # Sync only records created/updated after the last synchronization date with Google Calendar.
+        # A time window of five minutes is accepted for avoiding network delay errors.
+        time_offset = timedelta(minutes=5)
+        return [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False),
+                ('write_date', '>=', self.env.user.google_calendar_last_sync_date - time_offset)]
 
     @api.model
     def _odoo_values(self, google_recurrence, default_reminders=()):
