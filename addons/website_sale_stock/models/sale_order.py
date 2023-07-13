@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import _, models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -75,6 +76,18 @@ class SaleOrder(models.Model):
             return self.env['sale.order.line']
         product = product or line.product_id
         return self.order_line.filtered(lambda l: l.product_id == product)
+
+    def _check_cart_is_ready_to_be_paid(self):
+        values = []
+        for line in self.order_line:
+            if line.product_id.type == 'product' and not line.product_id.allow_out_of_stock_order:
+                cart_qty, avl_qty = self._get_cart_and_free_qty(line=line)
+                if cart_qty > avl_qty:
+                    line._set_shop_warning_stock(cart_qty, max(avl_qty, 0))
+                    values.append(line.shop_warning)
+        if values:
+            raise ValidationError(' '.join(values))
+        return super()._check_cart_is_ready_to_be_paid()
 
     def _set_shop_warning_stock(self, desired_qty, new_qty):
         self.ensure_one()

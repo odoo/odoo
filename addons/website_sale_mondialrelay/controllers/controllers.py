@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import http, _
-from odoo.addons.website_sale.controllers.main import WebsiteSale, PaymentPortal
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery
 
-from odoo.exceptions import AccessDenied, ValidationError, UserError
+from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
 
 
@@ -72,15 +72,3 @@ class WebsiteSaleDeliveryMondialrelay(WebsiteSaleDelivery):
                 )
 
         return res
-
-
-class PaymentPortalMondialRelay(PaymentPortal):
-
-    @http.route()
-    def shop_payment_transaction(self, *args, **kwargs):
-        order = request.website.sale_get_order()
-        if order.partner_shipping_id.is_mondialrelay and order.carrier_id and not order.carrier_id.is_mondialrelay and order.delivery_set:
-            raise ValidationError(_('Point Relais® can only be used with the delivery method Mondial Relay.'))
-        elif not order.partner_shipping_id.is_mondialrelay and order.carrier_id.is_mondialrelay:
-            raise ValidationError(_('Delivery method Mondial Relay can only ship to Point Relais®.'))
-        return super().shop_payment_transaction(*args, **kwargs)
