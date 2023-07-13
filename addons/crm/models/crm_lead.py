@@ -237,9 +237,10 @@ class Lead(models.Model):
         index=True, ondelete='restrict', tracking=True)
     # Statistics
     calendar_event_ids = fields.One2many('calendar.event', 'opportunity_id', string='Meetings')
-    calendar_event_count = fields.Integer('# Meetings', compute='_compute_calendar_event_count')
     duplicate_lead_ids = fields.Many2many("crm.lead", compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead", context={"active_test": False})
     duplicate_lead_count = fields.Integer(compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead Count")
+    meeting_display_date = fields.Date(compute="_compute_meeting_display")
+    meeting_display_label = fields.Char(compute="_compute_meeting_display")
     # UX
     partner_email_update = fields.Boolean('Partner Email will Update', compute='_compute_partner_email_update')
     partner_phone_update = fields.Boolean('Partner Phone will Update', compute='_compute_partner_phone_update')
@@ -537,13 +538,29 @@ class Lead(models.Model):
         for lead in self:
             lead.recurring_revenue_prorated = (lead.recurring_revenue or 0.0) * (lead.probability or 0) / 100.0
 
-    def _compute_calendar_event_count(self):
+    @api.depends('calendar_event_ids', 'calendar_event_ids.start')
+    def _compute_meeting_display(self):
+        now = fields.Datetime.now()
         meeting_data = self.env['calendar.event'].sudo()._read_group([
-            ('opportunity_id', 'in', self.ids)
-        ], ['opportunity_id'], ['__count'])
-        mapped_data = {opportunity.id: count for opportunity, count in meeting_data}
+            ('opportunity_id', 'in', self.ids),
+        ], ['opportunity_id'], ['start:array_agg', 'start:max'])
+        mapped_data = {
+            lead: {
+                'last_meeting_date': last_meeting_date,
+                'next_meeting_date': min([dt for dt in meeting_start_dates if dt > now] or [False]),
+            } for lead, meeting_start_dates, last_meeting_date in meeting_data
+        }
         for lead in self:
-            lead.calendar_event_count = mapped_data.get(lead.id, 0)
+            lead_meeting_info = mapped_data.get(lead)
+            if not lead_meeting_info:
+                lead.meeting_display_date = False
+                lead.meeting_display_label = _('No Meeting')
+            elif lead_meeting_info['next_meeting_date']:
+                lead.meeting_display_date = lead_meeting_info['next_meeting_date']
+                lead.meeting_display_label = _('Next Meeting')
+            else:
+                lead.meeting_display_date = lead_meeting_info['last_meeting_date']
+                lead.meeting_display_label = _('Last Meeting')
 
     @api.depends('email_domain_criterion', 'email_normalized', 'partner_id',
                  'phone_sanitized')

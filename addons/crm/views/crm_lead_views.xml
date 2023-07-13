@@ -29,11 +29,10 @@
                             <button name="action_schedule_meeting" type="object"
                                 class="oe_stat_button" icon="fa-calendar"
                                 context="{'partner_id': partner_id}"
-                                invisible="type == 'lead'">
+                                invisible="not id or type == 'lead'">
                                 <div class="o_stat_info">
-                                    <field name="calendar_event_count" class="o_stat_value"/>
-                                    <span class="o_stat_text" invisible="calendar_event_count &lt; 2"> Meetings</span>
-                                    <span class="o_stat_text" invisible="calendar_event_count &gt; 1"> Meeting</span>
+                                    <span class="o_stat_text"><field name="meeting_display_label"/></span>
+                                    <field name="meeting_display_date" class="o_stat_value" invisible="not meeting_display_date"/>
                                 </div>
                             </button>
                             <button name="action_show_potential_duplicates" type="object"
