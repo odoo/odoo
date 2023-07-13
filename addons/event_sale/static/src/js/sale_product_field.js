@@ -49,10 +49,7 @@ patch(SaleOrderLineProductField.prototype, 'event_sale', {
                         }
                     } else {
                         const eventConfiguration = closeInfo.eventConfiguration;
-                        this.props.record.update({
-                            'event_id': eventConfiguration.event_id,
-                            'event_ticket_id': eventConfiguration.event_ticket_id,
-                        });
+                        this.props.record.update(eventConfiguration);
                     }
                 }
             }
