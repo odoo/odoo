@@ -186,7 +186,7 @@
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                    <field name="analytic_tag_ids" optional="hide" readonly="1" groups="analytic.group_analytic_tags"/>
+                    <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" readonly="1" groups="analytic.group_analytic_tags"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
                     <field name="balance" sum="Total Balance" readonly="1" optional="hide"/>
