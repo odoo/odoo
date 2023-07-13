@@ -756,6 +756,62 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(subcontract.date_planned_start, picking_receipt.scheduled_date)
         self.assertEqual(subcontract.date_planned_finished, picking_receipt.scheduled_date)
 
+    def test_subcontracting_set_quantity_done(self):
+        """ Tests to set a quantity done directly on a subcontracted move without using the subcontracting wizard. Checks that it does the same
+            as it would do with the wizard. Since immediate/planned transfers have different flows, we need to test both.
+        """
+        self.bom.consumption = 'flexible'
+        quantities = [10, 15, 12, 14]
+
+        # For planned transfers, as some triggers are different if it's an immediate transfer.
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.product_uom_qty = quantities[0]
+            picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        self.assertEqual(picking_receipt.immediate_transfer, False)
+        move = picking_receipt.move_ids_without_package
+
+        for qty in quantities[1:]:
+            move.quantity_done = qty
+            subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
+            self.assertEqual(sum(subcontracted.mapped('product_qty')), qty)
+
+        picking_receipt.button_validate()
+        self.assertEqual(move.product_uom_qty, quantities[-1])
+        self.assertEqual(move.quantity_done, quantities[-1])
+        subcontracted = move._get_subcontract_production().filtered(lambda p: p.state == 'done')
+        self.assertEqual(sum(subcontracted.mapped('qty_produced')), quantities[-1])
+
+        # Now the same with an immediate transfer
+        with Form(self.env['stock.picking'].with_context(default_immediate_transfer=True)) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.quantity_done = quantities[0]
+            picking_receipt = picking_form.save()
+        self.assertEqual(picking_receipt.immediate_transfer, True)
+        move = picking_receipt.move_ids_without_package
+
+        subcontracted = move._get_subcontract_production()
+        self.assertEqual(subcontracted.product_qty, quantities[0])
+
+        for qty in quantities[1:]:
+            move.quantity_done = qty
+            subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
+            self.assertEqual(sum(subcontracted.mapped('product_qty')), qty)
+
+        picking_receipt.button_validate()
+        self.assertEqual(move.product_uom_qty, quantities[-1])
+        self.assertEqual(move.quantity_done, quantities[-1])
+        subcontracted = move._get_subcontract_production().filtered(lambda p: p.state == 'done')
+        self.assertEqual(sum(subcontracted.mapped('qty_produced')), quantities[-1])
+
+
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
 
@@ -1254,6 +1310,9 @@ class TestSubcontractingPortal(TransactionCase):
             ml.lot_id = serial1
         mo = mo_form.save()
         mo.subcontracting_record_component()
+        # Continue record of components with new MO (backorder was when recording first MO)
+        action = picking_receipt.with_user(self.portal_user).with_context({'is_subcontracting_portal': 1}).move_ids.action_show_details()
+        mo = self.env['mrp.production'].with_user(self.portal_user).browse(action['res_id'])
         mo_form = Form(mo.with_context(action['context']), view=action['view_id'])
         # Registering components for the second manufactured product with over-consumption, which leads to a warning
         mo_form.qty_producing = 1

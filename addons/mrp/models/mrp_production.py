@@ -1624,7 +1624,7 @@ class MrpProduction(models.Model):
             if diff > 0 and not cancel_remaining_qty:
                 amounts[production].append(production.product_qty - total_amount)
                 has_backorder_to_ignore[production] = True
-            elif diff < 0 or production.state in ['done', 'cancel']:
+            elif not self.env.context.get('allow_more') and (diff < 0 or production.state in ['done', 'cancel']):
                 raise UserError(_("Unable to split with more than the quantity to produce."))
 
         backorder_vals_list = []
