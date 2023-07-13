@@ -43,6 +43,7 @@ from xmlrpc import client as xmlrpclib
 import requests
 import werkzeug.urls
 from lxml import etree, html
+from requests import PreparedRequest, Session
 
 import odoo
 from odoo import api
@@ -243,7 +244,7 @@ def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     arch_string = etree.fromstring(arch_string, parser=parser)
     return etree.tostring(arch_string, pretty_print=True, encoding='unicode')
 
-
+_super_send = requests.Session.send
 class BaseCase(case.TestCase, metaclass=MetaCase):
     """ Subclass of TestCase for Odoo-specific code. This class is abstract and
     expects self.registry, self.cr and self.uid to be initialized by subclasses.
@@ -257,6 +258,33 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         super().__init__(methodName)
         self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
         self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
+        self.request_mock = None
+
+    def setUp(self):
+        super().setUp()
+        if 'external' not in self.test_tags:
+            # if the method is passed directly `patch` discards the session
+            # object which we need
+            # pylint: disable=unnecessary-lambda
+            self.patch(
+                requests.sessions.Session,
+                'send',
+                lambda s, r, **kwargs: self._request_handler(s, r, **kwargs),
+            )
+
+    def _request_handler(self, s: Session, r: PreparedRequest, /, **kw):
+        # allow localhost requests
+        # TODO: also check port?
+        url = werkzeug.urls.url_parse(r.url)
+        if url.host in (HOST, 'localhost'):
+            return _super_send(s, r, **kw)
+        if url.scheme == 'file':
+            return _super_send(s, r, **kw)
+
+        _logger.getChild('requests').info(
+            "Blocking un-mocked external HTTP request %s %s", r.method, r.url)
+        raise requests.exceptions.ConnectionError(
+            f"External requests verboten (was {r.method} {r.url})")
 
     def run(self, result):
         testMethod = getattr(self, self._testMethodName)
