@@ -262,6 +262,7 @@ export class Wysiwyg extends Component {
         insertParagraphAfterColumns: true,
         onHistoryResetFromSteps: () => {},
         autostart: true,
+        dropImageAsAttachment: true,
     }
     init() {
         this.id = ++id;
