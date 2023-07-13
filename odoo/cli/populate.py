@@ -53,8 +53,10 @@ class Populate(Command):
         except TypeError:
             raise ValueError("Separator must be a single Unicode character.")
 
-        dbname = odoo.tools.config['db_name']
-        registry = Registry(dbname)
+        dbnames = odoo.tools.config['db_name']
+        if len(dbnames) > 1:
+            sys.exit("-d/--database/db_name has multiple database, please provide a single one")
+        registry = Registry(dbnames[0])
         with registry.cursor() as cr:
             env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {'active_test': False})
             self.populate(env, model_factors, separator_code)

@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import argparse
-import os
 import sys
-import textwrap
 from pathlib import Path
 
 from odoo.tools import cloc, config
@@ -37,11 +35,13 @@ In the latter mode, only the custom code is accounted for.
         if not opt.database and not opt.path:
             parser.print_help()
             sys.exit()
+        if ',' in opt.database:
+            sys.exit("-d/--database has multiple database, please provide a single one")
 
         c = cloc.Cloc()
         if opt.database:
             config.parse_config(['-d', opt.database] + unknown)
-            c.count_database(opt.database)
+            c.count_database(config['db_name'][0])
         if opt.path:
             for i in opt.path:
                 c.count_path(i)

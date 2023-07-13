@@ -128,14 +128,16 @@ BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
 DEFAULT_SUCCESS_SIGNAL = 'test successful'
 
 def get_db_name():
-    db = odoo.tools.config['db_name']
+    dbnames = odoo.tools.config['db_name']
     # If the database name is not provided on the command-line,
     # use the one on the thread (which means if it is provided on
     # the command-line, this will break when installing another
     # database from XML-RPC).
-    if not db and hasattr(threading.current_thread(), 'dbname'):
+    if not dbnames and hasattr(threading.current_thread(), 'dbname'):
         return threading.current_thread().dbname
-    return db
+    if len(dbnames) > 1:
+        sys.exit("-d/--database/db_name has multiple database, please provide a single one")
+    return dbnames[0]
 
 
 standalone_tests = defaultdict(list)
@@ -169,10 +171,6 @@ def test_xsd(url=None, path=None, skip=False):
                 _validate_xml(self.env, url, path, xmls)
         return wrapped_f
     return decorator
-
-
-# For backwards-compatibility - get_db_name() should be used instead
-DB = get_db_name()
 
 
 def new_test_user(env, login='', groups='base.group_user', context=None, **kwargs):
