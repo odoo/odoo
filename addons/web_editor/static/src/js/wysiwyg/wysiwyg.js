@@ -81,6 +81,7 @@ const Wysiwyg = Widget.extend({
         insertParagraphAfterColumns: true,
         onHistoryResetFromSteps: () => {},
         autostart: true,
+        dropImageAsAttachment: true,
     },
     init: function (parent, options) {
         this._super.apply(this, arguments);
