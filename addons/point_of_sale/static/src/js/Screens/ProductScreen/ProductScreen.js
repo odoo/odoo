@@ -186,8 +186,24 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.currentOrder.add_product(product, options);
         this.numberBuffer.reset();
     }
-    _barcodePartnerAction(code) {
-        const partner = this.pos.globalState.db.get_partner_by_barcode(code.code);
+    async _getPartnerByBarcode(code) {
+        const { globalState } = this.pos;
+        let partner = globalState.db.get_partner_by_barcode(code.code);
+        if (!partner) {
+            // find the partner in the backend by the barcode
+            const foundPartnerIds = await this.orm.search("res.partner", [
+                ["barcode", "=", code.code]
+            ]);
+            if (foundPartnerIds.length) {
+                await globalState._loadPartners(foundPartnerIds);
+                // assume that the result is unique.
+                partner = globalState.db.get_partner_by_id(foundPartnerIds[0]);
+            }
+        }
+        return partner;
+    }
+    async _barcodePartnerAction(code) {
+        const partner = await this._getPartnerByBarcode(code);
         if (partner) {
             if (this.currentOrder.get_partner() !== partner) {
                 this.currentOrder.set_partner(partner);
