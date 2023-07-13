@@ -1,13 +1,14 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
+import { constants } from "@odoo/o-spreadsheet";
 
 registry
     .category("mock_server")
     .add("res.currency/get_currencies_for_spreadsheet", function (route, args) {
         const currencyNames = args.args[0];
         const result = [];
-        for (let currencyName of currencyNames) {
+        for (const currencyName of currencyNames) {
             const curr = this.models["res.currency"].records.find(
                 (curr) => curr.name === currencyName
             );
@@ -28,4 +29,7 @@ registry
             position: "after",
             decimalPlaces: 2,
         };
+    })
+    .add("res.lang/get_user_spreadsheet_locale", function (route, args) {
+        return constants.DEFAULT_LOCALE;
     });
