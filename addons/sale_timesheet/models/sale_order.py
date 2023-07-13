@@ -126,7 +126,7 @@ class SaleOrder(models.Model):
                 context['default_project_id'] = self.project_ids[0].id
         action.update({
             'context': context,
-            'domain': [('so_line', 'in', self.order_line.ids)],
+            'domain': [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)],
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     No activities found. Let's start a new one!
