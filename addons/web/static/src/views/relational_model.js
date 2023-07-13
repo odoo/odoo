@@ -1709,7 +1709,9 @@ class DynamicList extends DataPoint {
     // Protected
     // -------------------------------------------------------------------------
 
-    async _multiSave(record, changes = record.getChanges()) {
+    async _multiSave(record, changes) {
+        const hasManualChanges = Boolean(changes);
+        changes = changes || record.getChanges();
         if (!changes) {
             return;
         }
@@ -1736,7 +1738,7 @@ class DynamicList extends DataPoint {
                     },
                 };
                 return this.model.dialogService.add(AlertDialog, dialogProps);
-            } else if (validSelection.length > 1) {
+            } else if (validSelection.length > 1 || hasManualChanges) {
                 this.editedRecord = null;
                 const resIds = validSelection.map((r) => r.resId);
                 try {
