@@ -797,6 +797,28 @@ class StockQuant(TransactionCase):
         quant.invalidate_recordset(['quantity'])
         self.assertEqual(quant.quantity, 11)
 
+    def test_quant_display_name(self):
+        """ Check the display name of a quant. """
+        sn1 = self.env['stock.lot'].create({
+            'name': 'sn1',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        lot1 = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_lot.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
+        self.env['stock.quant']._update_available_quantity(self.product_lot, self.stock_location, 1.0, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=sn1)
+        quants = self.stock_location.quant_ids
+        for q in quants:
+            if q.lot_id:
+                self.assertEqual(q.display_name, '%s - %s' % (q.location_id.display_name, q.lot_id.name))
+            else:
+                self.assertEqual(q.display_name, '%s' % (q.location_id.display_name))
+
 class StockQuantRemovalStrategy(TransactionCase):
     def setUp(self):
         super().setUp()

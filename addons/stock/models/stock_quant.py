@@ -548,16 +548,14 @@ class StockQuant(models.Model):
     def _compute_display_name(self):
         """name that will be displayed in the detailed operation"""
         for record in self:
-            name = []
-            if self.env.user.has_group('stock.group_stock_multi_locations'):
-                name.append(record.location_id.display_name)
+            name = [record.location_id.display_name]
             if self.env.user.has_group('stock.group_production_lot') and record.lot_id:
                 name.append(record.lot_id.name)
             if self.env.user.has_group('stock.group_tracking_lot') and record.package_id:
                 name.append(record.package_id.name)
             if self.env.user.has_group('stock.group_tracking_owner') and record.owner_id:
                 name.append(record.owner_id.name)
-            self.display_name = ' - '.join(name) if name else "- no data -"
+            record.display_name = ' - '.join(name)
 
     @api.constrains('product_id')
     def check_product_id(self):
