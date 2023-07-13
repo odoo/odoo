@@ -2185,19 +2185,20 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @private
      */
     _notifyCurrentState() {
+        const trimmed = (str) => str.trim().replace(/\s+/g, " ");
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
-            const id = this.isCustom ? el.value : el.name;
+            const id = trimmed(this.isCustom ? el.value : el.name);
             return Object.assign({
                 id: /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id,
-                name: el.value,
-                display_name: el.value,
+                name: trimmed(el.value),
+                display_name: trimmed(el.value),
             }, el.dataset);
         });
         if (this.hasDefault) {
             const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
             this.selected = checkboxes.map(el => {
                 const input = el.parentElement.previousSibling.firstChild;
-                const id = this.isCustom ? input.value : input.name;
+                const id = trimmed(this.isCustom ? input.value : input.name);
                 return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
             });
             values.forEach(v => {
