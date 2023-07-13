@@ -589,7 +589,6 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         downpayment = self.env['sale.advance.payment.inv'].with_context(Downpayment).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 115,
-            'deposit_account_id': self.company_data['default_account_revenue'].id,
         })
         # When a down payment is created, the default 15% tax is included. The SOL associated it then created by removing the taxed amount.
         # Therefore, the amount of the dp is higher than the amount of the sol created.
@@ -603,7 +602,6 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         downpayment = self.env['sale.advance.payment.inv'].with_context(Downpayment).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 115,
-            'deposit_account_id': self.company_data['default_account_revenue'].id,
         })
         down_payment_invoiced = 2 * down_payment_invoiced
         downpayment.create_invoices()

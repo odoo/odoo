@@ -22,7 +22,7 @@ class SaleOrderLine(models.Model):
 
     _sql_constraints = [
         ('accountable_required_fields',
-            "CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom IS NOT NULL))",
+            "CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND product_uom IS NOT NULL))",
             "Missing required fields on accountable sale order line."),
         ('non_accountable_null_fields',
             "CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom IS NULL AND customer_lead = 0))",
@@ -264,11 +264,16 @@ class SaleOrderLine(models.Model):
 
     #=== COMPUTE METHODS ===#
 
-    @api.depends('order_partner_id', 'order_id', 'product_id')
+    @api.depends('order_partner_id', 'order_id', 'product_id', 'is_downpayment')
     def _compute_display_name(self):
         name_per_id = self._additional_name_per_id()
         for so_line in self.sudo():
-            name = '{} - {}'.format(so_line.order_id.name, so_line.name and so_line.name.split('\n')[0] or so_line.product_id.name)
+            name = '{} - {}'.format(
+                so_line.order_id.name,
+                so_line.name and so_line.name.split('\n')[0] or (
+                    _('Down Payment') if so_line.is_downpayment else so_line.product_id.name
+                )
+            )
             additional_name = name_per_id.get(so_line.id)
             if additional_name:
                 name = f'{name} {additional_name}'

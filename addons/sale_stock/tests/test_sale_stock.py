@@ -144,15 +144,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on order" storable products')
         # let's do an invoice for a deposit of 5%
 
-        advance_product = self.env['product.product'].create({
-            'name': 'Deposit',
-            'type': 'service',
-            'invoice_policy': 'order',
-        })
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'percentage',
             'amount': 5.0,
-            'product_id': advance_product.id,
         })
         act = adv_wiz.with_context(open_invoices=True).create_invoices()
         inv = self.env['account.move'].browse(act['res_id'])
@@ -1409,16 +1403,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         })
         so.action_confirm()
 
-        advance_product = self.env['product.product'].create({
-            'name': 'Deposit',
-            'type': 'service',
-            'invoice_policy': 'order',
-        })
-
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[so.id]).create({
             'advance_payment_method': 'percentage',
             'amount': 5.0,
-            'product_id': advance_product.id,
         })
 
         act = adv_wiz.with_context(open_invoices=True).create_invoices()
