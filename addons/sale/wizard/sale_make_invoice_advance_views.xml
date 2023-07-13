@@ -17,6 +17,7 @@
                 <group>
                     <field name="sale_order_ids" invisible="1"/>
                     <field name="count" attrs="{'invisible': [('count', '=', 1)]}"/>
+                    <field name="consolidated_billing" attrs="{'invisible': [('count', '=', 1)]}"/>
                     <field name="advance_payment_method" class="oe_inline"
                         widget="radio"
                         attrs="{'invisible': [('count', '&gt;', 1)]}"/>
