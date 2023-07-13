@@ -302,8 +302,8 @@ class configmanager:
 
         # Database Group
         group = optparse.OptionGroup(parser, "Database related options")
-        group.add_option("-d", "--database", dest="db_name", my_default='',
-                         help="specify the database name")
+        group.add_option("-d", "--database", dest="db_name", type='comma', my_default=[],
+                         help="database(s) used when installing or updating modules.")
         group.add_option("-r", "--db_user", dest="db_user", my_default='',
                          help="specify the database user name")
         group.add_option("-w", "--db_password", dest="db_password", my_default='',
@@ -572,7 +572,7 @@ class configmanager:
         if self.options['translate_out'] and (not self.options['db_name']):
             self.parser.error("the i18n-export option cannot be used without the database (-d) option")
 
-        if ',' in (self.options.get('db_name') or '') and (self['init'] or self['update']):
+        if len(self['db_name']) > 1 and (self['init'] or self['update']):
             self.parser.error("Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")
 
         # ensure default server wide modules are present

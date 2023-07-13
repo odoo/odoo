@@ -44,8 +44,8 @@ class TestDatabaseOperations(BaseCase):
         )
         self.startPatcher(self.verify_admin_password_patcher)
 
-        self.db_name = config['db_name']
-        self.assertTrue(self.db_name)
+        self.assertEqual(len(config['db_name']), 1)
+        self.db_name = config['db_name'][0]
 
         # monkey-patch db-filter
         self.addCleanup(operator.setitem, config, 'dbfilter', config['dbfilter'])

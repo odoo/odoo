@@ -97,8 +97,9 @@ def setup_pid_file():
 
 def export_translation():
     config = odoo.tools.config
-    dbname = config['db_name']
-
+    dbnames = config['db_name']
+    if len(dbnames) > 1:
+        sys.exit("-d/--database/db_name has multiple database, please provide a single one")
     if config["language"]:
         msg = "language %s" % (config["language"],)
     else:
@@ -112,7 +113,7 @@ def export_translation():
         fileformat = "po"
 
     with open(config["translate_out"], "wb") as buf:
-        registry = odoo.modules.registry.Registry.new(dbname)
+        registry = odoo.modules.registry.Registry.new(dbnames[0])
         with registry.cursor() as cr:
             odoo.tools.translate.trans_export(config["language"],
                 config["translate_modules"] or ["all"], buf, fileformat, cr)
@@ -122,9 +123,10 @@ def export_translation():
 def import_translation():
     config = odoo.tools.config
     overwrite = config["overwrite_existing_translations"]
-    dbname = config['db_name']
-
-    registry = odoo.modules.registry.Registry.new(dbname)
+    dbnames = config['db_name']
+    if len(dbnames) > 1:
+        sys.exit("-d/--database/db_name has multiple database, please provide a single one")
+    registry = odoo.modules.registry.Registry.new(dbnames[0])
     with registry.cursor() as cr:
         translation_importer = odoo.tools.translate.TranslationImporter(cr)
         translation_importer.load_file(config["translate_in"], config["language"])
@@ -143,21 +145,18 @@ def main(args):
     # bit overkill, but better safe than sorry I guess
     csv.field_size_limit(500 * 1024 * 1024)
 
-    preload = []
-    if config['db_name']:
-        preload = config['db_name'].split(',')
-        for db_name in preload:
-            try:
-                odoo.service.db._create_empty_database(db_name)
-                config['init']['base'] = True
-            except InsufficientPrivilege as err:
-                # We use an INFO loglevel on purpose in order to avoid
-                # reporting unnecessary warnings on build environment
-                # using restricted database access.
-                _logger.info("Could not determine if database %s exists, "
-                             "skipping auto-creation: %s", db_name, err)
-            except odoo.service.db.DatabaseExists:
-                pass
+    for db_name in config['db_name']:
+        try:
+            odoo.service.db._create_empty_database(db_name)
+            config['init']['base'] = True
+        except InsufficientPrivilege as err:
+            # We use an INFO loglevel on purpose in order to avoid
+            # reporting unnecessary warnings on build environment
+            # using restricted database access.
+            _logger.info("Could not determine if database %s exists, "
+                         "skipping auto-creation: %s", db_name, err)
+        except odoo.service.db.DatabaseExists:
+            pass
 
     if config["translate_out"]:
         export_translation()
@@ -170,7 +169,7 @@ def main(args):
     stop = config["stop_after_init"]
 
     setup_pid_file()
-    rc = odoo.service.server.start(preload=preload, stop=stop)
+    rc = odoo.service.server.start(preload=config['db_name'], stop=stop)
     sys.exit(rc)
 
 class Server(Command):
