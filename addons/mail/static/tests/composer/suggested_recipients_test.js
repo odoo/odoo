@@ -7,6 +7,7 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 const views = {
     "res.fake,false,form": `
@@ -36,6 +37,81 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async (
     await click("button:contains(Send message)");
     assert.containsNone($, "button:contains(Show more)");
 });
+
+QUnit.test(
+    "Opening full composer in 'send message' mode should copy selected suggested recipients",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({
+            display_name: "John Jane",
+            email: "john@jane.be",
+        });
+        const fakeId = pyEnv["res.fake"].create({
+            email_cc: "john@test.be",
+            partner_ids: [partnerId],
+        });
+        const { env, openFormView } = await start();
+        await openFormView("res.fake", fakeId);
+        patchWithCleanup(env.services.action, {
+            doAction(action) {
+                assert.step("do-action");
+                assert.strictEqual(action.name, "Compose Email");
+                assert.strictEqual(action.context.default_subtype_xmlid, "mail.mt_comment");
+                assert.deepEqual(action.context.default_partner_ids, [partnerId]);
+                return Promise.resolve();
+            },
+        });
+        await click("button:contains(Send message)");
+        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(john@test.be)");
+        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(John Jane)");
+        assert.notOk(
+            $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
+        );
+        assert.ok(
+            $(".o-mail-SuggestedRecipient:contains(John Jane) input[type=checkbox]")[0].checked
+        );
+        await click("button[title='Full composer']");
+        assert.verifySteps(["do-action"]);
+    }
+);
+
+QUnit.test(
+    "Opening full composer in 'log note' mode should not copy selected suggested recipients",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({
+            display_name: "John Jane",
+            email: "john@jane.be",
+        });
+        const fakeId = pyEnv["res.fake"].create({
+            email_cc: "john@test.be",
+            partner_ids: [partnerId],
+        });
+        const { env, openFormView } = await start();
+        await openFormView("res.fake", fakeId);
+        patchWithCleanup(env.services.action, {
+            doAction(action) {
+                assert.step("do-action");
+                assert.strictEqual(action.name, "Log note");
+                assert.strictEqual(action.context.default_subtype_xmlid, "mail.mt_note");
+                assert.deepEqual(action.context.default_partner_ids, []);
+                return Promise.resolve();
+            },
+        });
+        await click("button:contains(Send message)");
+        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(john@test.be)");
+        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(John Jane)");
+        assert.notOk(
+            $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
+        );
+        assert.ok(
+            $(".o-mail-SuggestedRecipient:contains(John Jane) input[type=checkbox]")[0].checked
+        );
+        await click("button:contains(Log note)");
+        await click("button[title='Full composer']");
+        assert.verifySteps(["do-action"]);
+    }
+);
 
 QUnit.test(
     "more than 3 suggested recipients: display only 3 and 'show more' button",
