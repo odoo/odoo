@@ -27,7 +27,7 @@ msgstr ""
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s: Time Off"
-msgstr ""
+msgstr "%s: Poissa"
 
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
@@ -43,6 +43,15 @@ msgid ""
 "Contracts:\n"
 "%s"
 msgstr ""
+"Lomaa ei voi asettaa useisiin sopimuksiin, joissa on eri työaikataulut.\n"
+"\n"
+"Luo yksi vapaapäivä kutakin sopimusta varten.\n"
+"\n"
+"Vapaa:\n"
+"%s\n"
+"\n"
+"Sopimukset:\n"
+"%s"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
@@ -52,7 +61,7 @@ msgstr "Työsopimus"
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr "HR-työmerkintä"
+msgstr "HR-työkirjaus"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry_type
@@ -77,6 +86,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
+"Tilaksi asetetaan \"Lähetettävä\", kun vapaata koskeva pyyntö luodaan.\n"
+"Tila on 'Hyväksyttäväksi', kun käyttäjä on vahvistanut vapaa-aikapyynnön.\n"
+"Tila on \"Hylätty\", kun esimies on hylännyt vapaapyynnön.\n"
+"Tila on \"Hyväksytty\", kun esimies on hyväksynyt vapaapyynnön."
 
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
@@ -85,6 +98,8 @@ msgid ""
 "There is no employee set on the time off. Please make sure you're logged in "
 "the correct company."
 msgstr ""
+"Vapaa-aikaa ei ole asetettu työntekijälle. Varmista, että olet kirjautunut "
+"oikeaan yritykseen."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave
@@ -96,7 +111,7 @@ msgstr "Vapaa"
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave_type
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Time Off Type"
-msgstr "Vapaa-aika Tyyppi"
+msgstr "Vapaa-aikatyyppi"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__work_entry_type_id
@@ -106,4 +121,4 @@ msgstr "Työkirjaustyyppi"
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Work entry used in the payslip."
-msgstr ""
+msgstr "Palkkalaskelmassa käytetty työkirjaus."

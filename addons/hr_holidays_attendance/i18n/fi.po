@@ -27,7 +27,7 @@ msgstr ""
 #: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
 #, python-format
 msgid "%s hours available"
-msgstr ""
+msgstr "%s tuntia käytettävissä"
 
 #. module: hr_holidays_attendance
 #. openerp-web
@@ -58,7 +58,7 @@ msgstr "Päivää"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
-msgstr ""
+msgstr "Lisätuntien vähentäminen"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -76,7 +76,7 @@ msgstr "Lisätunnit"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
 msgid "Extra Hours Available"
-msgstr ""
+msgstr "Lisäaikoja saatavilla"
 
 #. module: hr_holidays_attendance
 #. openerp-web
@@ -88,31 +88,31 @@ msgstr "Tunnit"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__hr_attendance_overtime
 msgid "Hr Attendance Overtime"
-msgstr ""
+msgstr "HR läsnäolo ylityö"
 
 #. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
-msgstr ""
+msgstr "Uusi kohdentamispyyntö"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 msgid ""
 "Once a time off of this type is approved, extra hours in attendances will be"
 " deducted."
-msgstr ""
+msgstr "Kun vapaa on hyväksytty, ylimääräiset läsnäolotunnit vähennetään."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
 msgid "Overtime Deductible"
-msgstr ""
+msgstr "Ylityön omavastuuosuus"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
 msgid "Request Overtime"
-msgstr ""
+msgstr "Ylityön pyytäminen"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -125,12 +125,15 @@ msgstr "Tallenna"
 msgid ""
 "The employee does not have enough extra hours to extend this allocation."
 msgstr ""
+"Työntekijällä ei ole riittävästi lisätunteja tämän kohdentamisen "
+"pidentämiseksi."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
 msgstr ""
+"Työntekijällä ei ole riittävästi lisätunteja tämän loman pidentämiseksi."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
@@ -138,6 +141,8 @@ msgstr ""
 msgid ""
 "The employee does not have enough extra hours to request this allocation."
 msgstr ""
+"Työntekijällä ei ole riittävästi lisätunteja, jotta hän voisi pyytää tätä "
+"kohdentamista."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
@@ -145,6 +150,8 @@ msgstr ""
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
 msgstr ""
+"Työntekijällä ei ole riittävästi ylimääräisiä tunteja, jotta hän voisi "
+"pyytää tätä lomaa."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
@@ -152,6 +159,7 @@ msgstr ""
 msgid ""
 "The employee does not have enough overtime hours to request this leave."
 msgstr ""
+"Työntekijällä ei ole riittävästi ylityötunteja tämän loman pyytämiseen."
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -161,7 +169,7 @@ msgstr "Vapaa"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_allocation
 msgid "Time Off Allocation"
-msgstr ""
+msgstr "Vapaa-ajan kohdentaminen"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
@@ -184,4 +192,4 @@ msgstr "Käyttäjä"
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "You do not have enough extra hours to request this leave"
-msgstr ""
+msgstr "Sinulla ei ole riittävästi lisätunteja tämän loman hakemiseen"

@@ -7,7 +7,6 @@
 # Marcelo at JambuTec <marcelo@jambu.com.br>, 2022
 # Mateus Lopes <mateus1@gmail.com>, 2022
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2022
-# Marcos Rodrigues, 2022
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2022
 # grazziano <gra.negocia@gmail.com>, 2022
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
@@ -58,20 +57,21 @@ msgstr "\"URL para\" não pode ficar vazio."
 #, python-format
 msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
 msgstr ""
+"“URL para” não pode conter um parâmetro %s que não seja usado em “URL de”."
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" is invalid: %s"
-msgstr ""
+msgstr "“URL para” é inválido: %s"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
-msgstr ""
+msgstr "“URL para” deve conter um parâmetro %s que seja usado em “URL de”."
 
 #. module: website
 #. odoo-python
@@ -89,7 +89,7 @@ msgstr "# Páginas visitadas"
 #: model:ir.model.fields,field_description:website.field_website_visitor__visit_count
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "# Visits"
-msgstr ""
+msgstr "Nº de visitas"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -121,7 +121,7 @@ msgstr "R$9,00"
 #: code:addons/website/static/src/components/views/page_list.js:0
 #, python-format
 msgid "%s record(s) selected, are you sure you want to publish them all?"
-msgstr ""
+msgstr "%s registros selecionados, tem certeza de que deseja publicar todos?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -136,7 +136,7 @@ msgstr "&amp;lt;head&amp;gt;"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -146,7 +146,7 @@ msgstr "' não coincide com nenhuma página."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
 msgid "' did not match anything."
-msgstr ""
+msgstr "' não corresponde a nada."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
@@ -154,13 +154,15 @@ msgid ""
 "' did not match anything.\n"
 "                        Results are displayed for '"
 msgstr ""
+"' não corresponde a nada.\n"
+"                        Exibindo resultados para '"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "' to link to an anchor."
-msgstr ""
+msgstr "' para vincular a uma âncora."
 
 #. module: website
 #. odoo-javascript
@@ -170,6 +172,8 @@ msgid ""
 "' to search a page.\n"
 "                    '"
 msgstr ""
+"' para pesquisar em uma página.\n"
+"                    '"
 
 #. module: website
 #. odoo-javascript
@@ -203,12 +207,12 @@ msgstr "(poderia ser usado em"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "+ Field"
-msgstr ""
+msgstr "Adicionar campo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "+ New Website"
-msgstr ""
+msgstr "Adicionar novo site"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -222,12 +226,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 555-0111"
-msgstr ""
+msgstr "+1 (650) 555-0111"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid ", .s_searchbar_input"
-msgstr ""
+msgstr ", .s_searchbar_input"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -1872,7 +1876,7 @@ msgstr "E um ótimo subtítulo"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Animate text"
-msgstr ""
+msgstr "Animar texto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -4109,7 +4113,7 @@ msgstr "Ativar o recurso de construtor de formulário para este modelo."
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Enable the right google map APIs in your google account"
-msgstr ""
+msgstr "Habilite as APIs do Google Maps corretas na sua conta Google"
 
 #. module: website
 #. odoo-javascript
@@ -6288,7 +6292,7 @@ msgstr ""
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_live_chat
 msgid "Live Chat"
-msgstr "Live Chat"
+msgstr "Chat ao Vivo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
@@ -6376,7 +6380,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Make sure billing is enabled"
-msgstr ""
+msgstr "Certifique-se de que o faturamento esteja habilitado"
 
 #. module: website
 #. odoo-javascript
@@ -6386,6 +6390,9 @@ msgid ""
 "Make sure to wait if errors keep being shown: sometimes enabling an API "
 "allows to use it immediately but Google keeps triggering errors for a while"
 msgstr ""
+"Aguarde caso os erros continuem sendo exibidos; às vezes, a ativação de uma "
+"API permite usá-la imediatamente, mas o Google continua disparando erros por"
+" algum tempo"
 
 #. module: website
 #. odoo-javascript
@@ -6393,6 +6400,7 @@ msgstr ""
 #, python-format
 msgid "Make sure your settings are properly configured:"
 msgstr ""
+"Certifique-se de que as suas definições estejam configuradas corretamente:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -6404,14 +6412,14 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Maps JavaScript API"
-msgstr ""
+msgstr "API JavaScript do Maps"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Maps Static API"
-msgstr ""
+msgstr "API estática do Maps"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -7609,12 +7617,12 @@ msgstr "Pizza"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Pill"
-msgstr "Comprimido"
+msgstr "Pílula"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Pills"
-msgstr "Comprimidos"
+msgstr "Pílulas"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -7626,7 +7634,7 @@ msgstr "Marcador de posição"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Places API"
-msgstr ""
+msgstr "API do Places"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -8589,7 +8597,7 @@ msgstr "Sequência"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Serve font from Google servers"
-msgstr ""
+msgstr "Oferecer fonte dos servidores Google"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -9671,6 +9679,8 @@ msgstr ""
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
 msgstr ""
+"Esta fonte é hospedada e oferecida aos seus visitantes pelos servidores "
+"Google"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -10011,7 +10021,7 @@ msgstr "Tipo"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Type '"
-msgstr ""
+msgstr "Digite '"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -11459,12 +11469,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
 msgid "eCommerce"
-msgstr "eCommerce"
+msgstr "e-Commerce"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_elearning
 msgid "eLearning"
-msgstr "eLearning"
+msgstr "e-Learning"
 
 #. module: website
 #. odoo-python

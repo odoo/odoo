@@ -96,7 +96,7 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
-msgstr ""
+msgstr "- Streckkoden \"%s\" har redan tilldelats produkten/produkterna: %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -120,7 +120,7 @@ msgstr "160x80cm, med stora ben."
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
 msgid "2 x 7 with price"
-msgstr ""
+msgstr "2 x 7 med pris"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_6
@@ -135,12 +135,12 @@ msgstr "4 x 12"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
 msgid "4 x 12 with price"
-msgstr ""
+msgstr "4 x 12 med pris"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
 msgid "4 x 7 with price"
-msgstr ""
+msgstr "4 x 7 med pris"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -148,11 +148,14 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
+"<i class=”fa fa-long-arrow-right mx-2 oe_edit_only” aria-label=”Pil ikon” "
+"title=”Pil”/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
 msgstr ""
+"<i class=”fa fa-money” role=”img” aria-label=”Valuta” title=”Valuta”/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -164,6 +167,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=”{’invisible’: [(’pricelist_item_count’, ’=’, 1)]}”>\n"
+"                                        Extra Priser\n"
+"                                    </span>\n"
+"                                    <span attrs=”{’invisible’: [(’pricelist_item_count’, ’!=’, 1)]}”>\n"
+"                                        Extra Pris\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -178,7 +187,7 @@ msgstr "<span class=\"o_stat_text\">Relaterade Produkter</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -202,6 +211,8 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                    here to set up the feature."
 msgstr ""
+"<strong>Spara</strong> den här sidan och kom tillbaka\n"
+"                                    hit för att konfigurera funktionen."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -229,7 +240,7 @@ msgid ""
 msgstr ""
 "En beskrivning av produkten som du vill kommunicera till dina kunder. Den "
 "här beskrivningen kopieras på alla Försäljnings, Leverans ordrar och på kund"
-" faktura och krediterings dokument."
+" faktura och krediterings dokument"
 
 #. module: product
 #. odoo-python
@@ -1010,7 +1021,7 @@ msgstr "Varaktighet"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr ""
+msgstr "Dymo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -1208,6 +1219,8 @@ msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
 msgstr ""
+"Här kan du ange ett specifikt HTML-färgindex (t.ex. #ff0000) för att visa "
+"färgen om attributtypen är \"Färg\"."
 
 #. module: product
 #: model:product.template,name:product.expense_hotel_product_template
@@ -1265,7 +1278,7 @@ msgid ""
 "If not set, the vendor price will apply to all variants of this product."
 msgstr ""
 "Om ej vald kommer leverantörspriset att ställas in för alla varianter av "
-"denna produkt. "
+"denna produkt."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -2881,22 +2894,22 @@ msgstr "Variantbild"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr ""
+msgstr "Variantbild 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr ""
+msgstr "Variant bild 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr ""
+msgstr "Variantbild 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr ""
+msgstr "Variantbild 512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2956,7 +2969,7 @@ msgstr "Leverantörsfakturor"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "Säljarens information"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
@@ -3000,13 +3013,13 @@ msgstr "Volym"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
 msgid "Volume unit of measure"
-msgstr ""
+msgstr "Måttenhet för volym"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Måttenhet för volym etikett"
 
 #. module: product
 #. odoo-python
@@ -3027,6 +3040,8 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
+"Vi lägger stor vikt vid detaljerna och därför är våra skrivbord av högsta "
+"kvalitet."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
@@ -3050,7 +3065,7 @@ msgstr "Vikt"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr ""
+msgstr "Måttenhet för vikt"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
@@ -3272,22 +3287,22 @@ msgstr "dagar"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "t.ex. ostburgare"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "t.ex. lampor"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Subscription"
-msgstr ""
+msgstr "t.ex. Odoo Enterprise-abonnemang"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr ""
+msgstr "t.ex. USD Återförsäljare"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3305,7 +3320,7 @@ msgstr "produkt"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "the parent company"
-msgstr "Moderbolaget"
+msgstr "moderbolaget"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view

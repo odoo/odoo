@@ -409,3 +409,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_27_website_clicks(self):
         self.start_tour('/web', 'website_click_tour', login='admin')
+
+    def test_28_website_text_edition(self):
+        self.start_tour('/@/', 'website_text_edition', login='admin')

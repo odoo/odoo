@@ -3762,6 +3762,13 @@ class PropertiesDefinition(Field):
         'name', 'string', 'type', 'comodel', 'default',
         'selection', 'tags', 'domain', 'view_in_kanban',
     )
+    # those keys will be removed if the types does not match
+    PROPERTY_PARAMETERS_MAP = {
+        'comodel': {'many2one', 'many2many'},
+        'domain': {'many2one', 'many2many'},
+        'selection': {'selection'},
+        'tags': {'tags'},
+    }
 
     def convert_to_column(self, value, record, values=None, validate=True):
         """Convert the value before inserting it in database.
@@ -3862,6 +3869,10 @@ class PropertiesDefinition(Field):
                     del property_definition['domain']
 
             result.append(property_definition)
+
+            for property_parameter, allowed_types in self.PROPERTY_PARAMETERS_MAP.items():
+                if property_definition.get('type') not in allowed_types:
+                    property_definition.pop(property_parameter, None)
 
         return result
 

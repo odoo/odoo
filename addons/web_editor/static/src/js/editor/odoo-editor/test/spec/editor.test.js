@@ -5952,6 +5952,80 @@ X[]
                 contentAfter: '<div><p>a[]</p></div><div data-oe-protected="true"></div>',
             });
         });
+        it('should not select a protected table', async () => {
+            // Individually protected cells are not yet supported for simplicity
+            // since there is no need for that currently.
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table data-oe-protected="true"><tbody><tr>
+                        <td>[ab</td>
+                    </tr></tbody></table>
+                    <table><tbody><tr>
+                        <td>cd]</td>
+                    </tr></tbody></table>
+                `),
+                contentAfterEdit: unformat(`
+                    <table data-oe-protected="true"><tbody><tr>
+                        <td>[ab</td>
+                    </tr></tbody></table>
+                    <table class="o_selected_table"><tbody><tr>
+                        <td class="o_selected_td">cd]</td>
+                    </tr></tbody></table>
+                `),
+            });
+        });
+        it('should not fix the selection in a protected input even if it is contenteditable="false"', async () => {
+            await testEditor(BasicEditor, {
+                // Protected, the selection is kept.
+                contentBefore: unformat(`
+                    <p>ab</p>
+                    <div contenteditable="false" data-oe-protected="true">
+                        [<input>]
+                    </div>
+                `),
+                stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
+                contentAfterEdit: unformat(`
+                    <p>ab</p>
+                    <div contenteditable="false" data-oe-protected="true" data-oe-keep-contenteditable="">
+                        [<input>]
+                    </div>
+                `),
+            });
+            // Not protected, the selection is fixed.
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <p>ab</p>
+                    <div contenteditable="false">
+                        [<input>]
+                    </div>
+                `),
+                stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
+                contentAfterEdit: unformat(`
+                    <p>[]ab</p>
+                    <div contenteditable="false" data-oe-keep-contenteditable="">
+                        <input>
+                    </div>
+                `),
+            });
+        });
+        it('should remove the selection in a protected element if it is contenteditable="false"', async () => {
+            await testEditor(BasicEditor, {
+                // Protected, but not an input, the selection is fixed.
+                contentBefore: unformat(`
+                    <p>ab</p>
+                    <div contenteditable="false" data-oe-protected="true">
+                        <div>[]content</div>
+                    </div>
+                `),
+                stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
+                contentAfterEdit: unformat(`
+                    <p>ab</p>
+                    <div contenteditable="false" data-oe-protected="true" data-oe-keep-contenteditable="">
+                        <div>content</div>
+                    </div>
+                `),
+            });
+        });
     });
     describe('selection', () => {
         describe('after an arrow key press', () => {

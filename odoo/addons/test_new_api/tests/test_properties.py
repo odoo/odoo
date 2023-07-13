@@ -133,6 +133,25 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(self.message_3.read(['attributes'])[0]['attributes'], expected)
         self.assertEqual(self.message_3.attributes, expected)
 
+    def test_properties_field_parameters_cleanup(self):
+        # check that the keys not valid for the given type are removed
+        self.message_1.attributes = [{
+            'name': 'discussion_color_code',
+            'string': 'Color Code',
+            'type': 'char',
+            'default': 'blue',
+            'value': 'Test',
+            'definition_changed': True,
+            'selection': [['a', 'A']],  # selection key is not valid for char type
+        }]
+        values = self._get_sql_definition(self.message_1.discussion)
+        self.assertEqual(values, [{
+            'name': 'discussion_color_code',
+            'string': 'Color Code',
+            'type': 'char',
+            'default': 'blue',
+        }])
+
     @mute_logger('odoo.fields')
     def test_properties_field_write_batch(self):
         """Test the behavior of the write called in batch.

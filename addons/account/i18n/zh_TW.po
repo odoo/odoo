@@ -3,11 +3,12 @@
 # 	* account
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Jeanphy <hzh0292@qq.com>, 2022
 # Tony Ng, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
+# 226408 台北 <226408@so8d.com>, 2023
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,9 +37,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"賬項操作 (%s) 導致賬目未能平衡。\n"
+"帳項操作 (%s) 導致帳目未能平衡。\n"
 "借記總額為 %s；貸記總額為 %s。\n"
-"請考慮為流水賬 \"%s\" 設定預設入賬賬戶，使賬項操作能自動檢查並完成賬目平衡。"
+"請考慮為流水帳 \"%s\" 設定預設入帳帳戶，使帳項操作能自動檢查並完成帳目平衡。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -70,22 +71,22 @@ msgstr ""
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
-msgstr ""
+msgstr " (<b>%(amount)s</b> 如果在 <b>%(date)s</b> 之前支付)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "已對賬賬單數目"
+msgstr "已對帳帳單數目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "已對賬發票數目"
+msgstr "已對帳發票數目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr "已對賬結單記項數目"
+msgstr "已對帳結單記項數目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -104,7 +105,7 @@ msgstr "# 建立者： %s"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "%(action)s for journal %(journal)s"
-msgstr "針對流水賬 %(journal)s 的操作 %(action)s"
+msgstr "針對流水帳 %(journal)s 的操作 %(action)s"
 
 #. module: account
 #. odoo-python
@@ -123,14 +124,14 @@ msgstr "%<span class=\"px-3\"/>("
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "%d moves"
-msgstr "%d 賬項操作"
+msgstr "%d 帳項操作"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: account
 #. odoo-python
@@ -162,7 +163,7 @@ msgstr "%s （捨入）"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
-msgstr "%s － %s； %s 已開賬單， %s 已收到，每項單價為 %s。"
+msgstr "%s － %s； %s 已開帳單， %s 已收到，每項單價為 %s。"
 
 #. module: account
 #. odoo-python
@@ -193,7 +194,7 @@ msgid ""
 "%s has reached its Credit Limit of : %s\n"
 "Total amount due "
 msgstr ""
-"%s 已到達信用限額，該賬戶的信用限額設定為 %s。\n"
+"%s 已到達信用限額，該帳戶的信用限額設定為 %s。\n"
 "到期付款總額： "
 
 #. module: account
@@ -208,7 +209,7 @@ msgstr "%s 不是儲存的欄位"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "%s.copy"
-msgstr ""
+msgstr "%s.複製"
 
 #. module: account
 #. odoo-python
@@ -254,14 +255,14 @@ msgstr "，到期付款日期及金額將為："
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
-msgstr "－ 將對客戶發票 / 供應商賬單建議一個預設日期。"
+msgstr "－ 將對客戶發票 / 供應商帳單建議一個預設日期。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
-msgstr "－ 加入「連稅總額」新欄位，以利用正確的賬戶及稅款自動產生記項，加快並加強管控賬單編碼過程。"
+msgstr "－ 加入「連稅總額」新欄位，以利用正確的帳戶及稅款自動產生記項，加快並加強管控帳單編碼過程。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -271,7 +272,7 @@ msgstr "－ 所有文件的序號現已可在文件內編輯。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> 檢視已部份完成對賬的記項"
+msgstr "-> 檢視已部份完成對帳的記項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -283,7 +284,7 @@ msgstr "。請確保這是你想要的操作。"
 msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
-msgstr "。記項在以你公司慣用的貨幣誌入流水賬之前，需先經由 Odoo 核算。"
+msgstr "。記項在以你公司慣用的貨幣誌入流水帳之前，需先經由 Odoo 核算。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -355,6 +356,8 @@ msgid ""
 "<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
+"<b>%(count)s#</b> 在 <b style='color: #704A66;'>%(date)s</b> 支付 "
+"<b>%(amount)s</b> 的分期付款"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -535,7 +538,7 @@ msgid ""
 "<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to "
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
-"<li><strong>%s</strong> 已透過 {link} 轉賬 {amount} ({debit_credit}) 至 "
+"<li><strong>%s</strong> 已透過 {link} 轉帳 {amount} ({debit_credit}) 至 "
 "<strong>{account_target_name}</strong>。</li>"
 
 #. module: account
@@ -589,7 +592,7 @@ msgid ""
 "class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('rule_type', '!=', 'invoice_matching')]}\" "
-"class=\"o_form_label o_td_label\">配對發票 / 賬單及</span>"
+"class=\"o_form_label o_td_label\">配對發票 / 帳單及</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -669,6 +672,9 @@ msgid ""
 "                                dated\n"
 "                                <span class=\"mx-1\"/>"
 msgstr ""
+"<span class=\"mx-1\"/>\n"
+"                                日期\n"
+"                                <span class=\"mx-1\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -714,7 +720,7 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
-msgstr "<span class=\"o_form_label\">所有選取的流水賬記項將會驗證及入賬，之後不能修改。</span>"
+msgstr "<span class=\"o_form_label\">所有選取的流水帳記項將會驗證及入帳，之後不能修改。</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -790,7 +796,7 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">The following default accounts are used with "
 "certain features.</span>"
-msgstr "<span class=\"o_form_label\">下列預設賬戶會連同某些特色功能一併使用。</span>"
+msgstr "<span class=\"o_form_label\">下列預設帳戶會連同某些特色功能一併使用。</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -816,7 +822,7 @@ msgstr "<span class=\"o_stat_text\">已開發票</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr "<span class=\"o_stat_text\">流水賬記項</span>"
+msgstr "<span class=\"o_stat_text\">流水帳記項</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -825,6 +831,9 @@ msgid ""
 "groups=\"base.group_multi_currency\" attrs=\"{'invisible': [('move_type', "
 "'=', 'entry')]}\"> in </span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mx-3\" "
+"groups=\"base.group_multi_currency\" attrs=\"{'invisible': [('move_type', "
+"'=', 'entry')]}\"> 在 </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -834,7 +843,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"text-muted\" "
-"colspan=\"2\">若想建立新的流水賬戶供此銀行賬戶使用，請留空。或者，選擇一個現有流水賬戶，以連結至該銀行賬戶。</span>"
+"colspan=\"2\">若想建立新的流水帳戶供此銀行帳戶使用，請留空。或者，選擇一個現有流水帳戶，以連結至該銀行帳戶。</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -890,7 +899,7 @@ msgstr "<span role=\"separator\">新增</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr "<span role=\"separator\">對賬</span>"
+msgstr "<span role=\"separator\">對帳</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -922,7 +931,7 @@ msgstr "<span> (借)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Bill</span>"
-msgstr "<span>賬單</span>"
+msgstr "<span>帳單</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -1162,7 +1171,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 msgid "<strong>Total Rounded</strong>"
-msgstr ""
+msgstr "<strong>總計（四捨五入）</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1188,14 +1197,14 @@ msgid ""
 "A Cash Register allows you to manage cash entries in your cash\n"
 "                journals. This feature provides an easy way to follow up cash\n"
 "                payments on a daily basis."
-msgstr "收銀機能簡化管理現金賬流水記項的工作。此功能方便用戶每天點算和跟進現金付款。"
+msgstr "收銀機能簡化管理現金帳流水記項的工作。此功能方便用戶每天點算和跟進現金付款。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "A bank account can belong to only one journal."
-msgstr "同一個銀行賬戶，只能連結至單一流水賬戶。"
+msgstr "同一個銀行帳戶，只能連結至單一流水帳戶。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1203,7 +1212,7 @@ msgid ""
 "A bank statement is a summary of all financial transactions\n"
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodically from your bank."
-msgstr "銀行結單總結一個銀行賬戶在某段期間內發生的所有財務交易。你應該會定期由銀行收到結單。"
+msgstr "銀行結單總結一個銀行帳戶在某段期間內發生的所有財務交易。你應該會定期由銀行收到結單。"
 
 #. module: account
 #. odoo-python
@@ -1218,20 +1227,20 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"日記賬的每項「記項」（entry）包含兩條甚至幾條日記賬項目（item）。\n"
-"                <br><br>這些交易項目的金額，只可記賬為「借記」（debit）或「貸記」（credit）款項。"
+"日記帳的每項「記項」（entry）包含兩條甚至幾條日記帳項目（item）。\n"
+"                <br><br>這些交易項目的金額，只可記帳為「借記」（debit）或「貸記」（credit）款項。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A journal group name must be unique per company."
-msgstr "流水賬組別的名稱，在同一間公司內必須獨一無二。"
+msgstr "流水帳組別的名稱，在同一間公司內必須獨一無二。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
 msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
-msgstr "流水賬用作記錄日常營運產生的所有交易及相關會計數據。"
+msgstr "流水帳用作記錄日常營運產生的所有交易及相關會計數據。"
 
 #. module: account
 #. odoo-python
@@ -1245,14 +1254,14 @@ msgstr "同一資料行內，不能同時存在子項目及分組方式數值（
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "A line of this move is using a deprecated account, you cannot post it."
-msgstr "此操作其中一個資料行使用了已棄用的賬戶，所以無法過賬。"
+msgstr "此操作其中一個資料行使用了已棄用的帳戶，所以無法過帳。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
-msgstr "付款交易必須使用銀行賬戶或現金賬誌賬。"
+msgstr "付款交易必須使用銀行帳戶或現金帳誌帳。"
 
 #. module: account
 #. odoo-python
@@ -1274,7 +1283,7 @@ msgstr "付款容忍度金額數值須大於 0"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
 msgid "A reconciliation model already bears this name."
-msgstr "已有其他對賬模型使用此名稱。"
+msgstr "已有其他對帳模型使用此名稱。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -1299,14 +1308,14 @@ msgstr "已建立第二筆付款： %s"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
 "A second payment will be created automatically in the destination journal."
-msgstr "目標流水賬會自動建立第二筆付款。"
+msgstr "目標流水帳會自動建立第二筆付款。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "A statement should only contain lines from the same journal."
-msgstr ""
+msgstr "對帳單應只包含同一帳簿的明細行。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -1347,7 +1356,7 @@ msgstr "存取警告"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__normal
 msgid "According to each type of account"
-msgstr "按所有賬戶類型"
+msgstr "按所有帳戶類型"
 
 #. module: account
 #. odoo-python
@@ -1364,7 +1373,7 @@ msgstr "按所有賬戶類型"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Account"
-msgstr "賬戶"
+msgstr "帳戶"
 
 #. module: account
 #. odoo-python
@@ -1373,75 +1382,75 @@ msgstr "賬戶"
 msgid ""
 "Account %s does not allow reconciliation. First change the configuration of "
 "this account to allow it."
-msgstr "賬戶 \"%s\" 不容許進行對賬。請先變更賬戶設定，設為允許對賬。"
+msgstr "帳戶 \"%s\" 不容許進行對帳。請先變更帳戶設定，設為允許對帳。"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr "賬戶現金捨入"
+msgstr "帳戶現金捨入"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "賬目表範本"
+msgstr "帳目表範本"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
 msgid "Account Codes Formula Shortcut"
-msgstr "賬戶代碼公式捷徑"
+msgstr "帳戶代碼公式捷徑"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__currency_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__currency_id
 msgid "Account Currency"
-msgstr "賬戶貨幣"
+msgstr "帳戶貨幣"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_dest_id
 msgid "Account Destination"
-msgstr "賬戶目標"
+msgstr "帳戶目標"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Account Entry"
-msgstr "賬戶記項"
+msgstr "帳戶記項"
 
 #. module: account
 #: model:ir.model,name:account.model_account_group
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_tree
 msgid "Account Group"
-msgstr "賬戶組別"
+msgstr "帳戶組別"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_hierarchy
 msgid "Account Groups"
-msgstr "賬戶組別"
+msgstr "帳戶組別"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Account Groups with the same granularity can't overlap"
-msgstr "數據細緻度相同的賬戶組別，不可重疊。"
+msgstr "數據細緻度相同的帳戶組別，不可重疊。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_id
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_id
 msgid "Account Holder"
-msgstr "賬戶持有人"
+msgstr "帳戶持有人"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr "賬戶持有人名稱"
+msgstr "帳戶持有人名稱"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
 msgid "Account Invoice Send"
-msgstr "賬戶發票發送"
+msgstr "帳戶發票發送"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1449,30 +1458,30 @@ msgstr "賬戶發票發送"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_tree
 msgid "Account Journal"
-msgstr "賬戶流水賬"
+msgstr "帳戶流水帳"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr "賬戶流水賬組別"
+msgstr "帳戶流水帳組別"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__account_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Account Mapping"
-msgstr "賬戶對應"
+msgstr "帳戶對應"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
-msgstr "撤回賬戶操作"
+msgstr "撤回帳戶操作"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Account Name"
-msgstr "賬戶名稱"
+msgstr "帳戶名稱"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_acc_number
@@ -1480,34 +1489,34 @@ msgstr "賬戶名稱"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Account Number"
-msgstr "賬戶號碼"
+msgstr "帳戶號碼"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state_flag
 msgid "Account Onboarding Create Invoice State Flag"
-msgstr ""
+msgstr "帳戶開通創建發票狀態標誌"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
-msgstr "應付賬戶"
+msgstr "應付帳戶"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Account Properties"
-msgstr "賬戶設定"
+msgstr "帳戶設定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_id
 msgid "Account Receivable"
-msgstr "應收賬戶"
+msgstr "應收帳戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
-msgstr "賬戶對賬"
+msgstr "帳戶對帳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1517,61 +1526,61 @@ msgstr "會計項目根"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
 msgid "Account Source"
-msgstr "賬戶來源"
+msgstr "帳戶來源"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_graph
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_pivot
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_graph_date
 msgid "Account Statistics"
-msgstr "賬戶統計"
+msgstr "帳戶統計"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "賬戶標籤"
+msgstr "帳戶標籤"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__account_tag_ids
 #: model:ir.model.fields,field_description:account.field_product_template__account_tag_ids
 msgid "Account Tags"
-msgstr "賬戶標籤"
+msgstr "帳戶標籤"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Account Tax"
-msgstr "賬戶稅項"
+msgstr "帳戶稅項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
-msgstr "賬戶稅組"
+msgstr "帳戶稅組"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_tree
 msgid "Account Tax Template"
-msgstr "賬戶稅項範本"
+msgstr "帳戶稅項範本"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr "賬戶所用 TaxCloud"
+msgstr "帳戶所用 TaxCloud"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__property_stock_valuation_account_id
 msgid "Account Template for Stock Valuation"
-msgstr "賬戶存貨計價範本"
+msgstr "帳戶存貨計價範本"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__account_type
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account Type"
-msgstr "賬戶類型"
+msgstr "帳戶類型"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__account_type
@@ -1580,45 +1589,45 @@ msgid ""
 "Account Type is used for information purpose, to generate country-specific "
 "legal reports, and set the rules to close a fiscal year and generate opening"
 " entries."
-msgstr "「賬戶類型」主要用作匯報用途，用以產生不同國家法定要求的財務報表、設定應如何終結財政年度，以及產生賬戶開立初期的記項。"
+msgstr "「帳戶類型」主要用作匯報用途，用以產生不同國家法定要求的財務報表、設定應如何終結財政年度，以及產生帳戶開立初期的記項。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_account_type
 msgid "Account Types"
-msgstr "賬戶類型"
+msgstr "帳戶類型"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "賬戶取消對賬"
+msgstr "帳戶取消對帳"
 
 #. module: account
 #: model:ir.model,name:account.model_account_root
 msgid "Account codes first 2 digits"
-msgstr "賬戶代碼首兩位數"
+msgstr "帳戶代碼首兩位數"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid ""
 "Account for the difference amount after the expense discount has been "
 "granted"
-msgstr "開支折扣獲批後記錄差額的賬戶"
+msgstr "開支折扣獲批後記錄差額的帳戶"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
-msgstr "收入折扣獲批後記錄差額的賬戶"
+msgstr "收入折扣獲批後記錄差額的帳戶"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
 msgid "Account group"
-msgstr "賬戶組別"
+msgstr "帳戶組別"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
 msgid "Account groups"
-msgstr "賬戶組別"
+msgstr "帳戶組別"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_holder_name
@@ -1631,33 +1640,33 @@ msgstr "科目持有人名稱，預防與科目持有人的名稱不同"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
 msgid "Account on Product"
-msgstr "產品所用賬戶"
+msgstr "產品所用帳戶"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__account_id
 msgid "Account on which to post the tax amount"
-msgstr "稅款誌入賬戶"
+msgstr "稅款誌入帳戶"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
 msgid "Account prefixes can determine account groups."
-msgstr "賬戶代號起首可用作決定賬戶組別。"
+msgstr "帳戶代號起首可用作決定帳戶組別。"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
 msgid "Account report with payment lines"
-msgstr "有付款資料行的賬戶報表"
+msgstr "有付款資料行的帳戶報表"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
 msgid "Account report without payment lines"
-msgstr "沒有付款資料行的賬戶報表"
+msgstr "沒有付款資料行的帳戶報表"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
 msgid "Account tag"
-msgstr "賬戶標籤"
+msgstr "帳戶標籤"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__property_cash_basis_base_account_id
@@ -1666,37 +1675,37 @@ msgstr "賬戶標籤"
 msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
-msgstr "此賬戶會是現金流水賬記項所產生的資料行用以誌賬的賬戶，並用作追蹤計稅基準金額。"
+msgstr "此帳戶會是現金流水帳記項所產生的資料行用以誌帳的帳戶，並用作追蹤計稅基準金額。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
 msgid "Account to Use Instead"
-msgstr "代為使用的賬戶"
+msgstr "代為使用的帳戶"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "Account to transfer to."
-msgstr "入賬賬戶"
+msgstr "入帳帳戶"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
 msgid "Account tour upload bill"
-msgstr "賬戶導覽上載賬單"
+msgstr "帳戶導覽上載帳單"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill_email_confirm
 msgid "Account tour upload bill email confirm"
-msgstr "賬戶導覽上載賬單電郵確認"
+msgstr "帳戶導覽上載帳單電郵確認"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__revenue_accrual_account_id
 msgid "Account used to move the period of a revenue"
-msgstr "用作過賬有關期間收入的賬戶"
+msgstr "用作過帳有關期間收入的帳戶"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__expense_accrual_account_id
 msgid "Account used to move the period of an expense"
-msgstr "用作過賬有關期間開支的賬戶"
+msgstr "用作過帳有關期間開支的帳戶"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -1706,12 +1715,12 @@ msgid ""
 "contain the tax amount as long as the original invoice has not been "
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
-msgstr "用作過賬現金稅項金額的賬戶。若原本發票未完成對賬，金額將包含稅項。在對賬時，金額會在此賬戶註銷，轉往正常的稅項賬戶誌賬。"
+msgstr "用作過帳現金稅項金額的帳戶。若原本發票未完成對帳，金額將包含稅項。在對帳時，金額會在此帳戶註銷，轉往正常的稅項帳戶誌帳。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account with Entries"
-msgstr "有記項的賬戶"
+msgstr "有記項的帳戶"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
@@ -1719,7 +1728,7 @@ msgstr "有記項的賬戶"
 msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
-msgstr "此賬戶用作誌賬已開啟 auto_post 功能、會計日期截至今天的所有草稿記項"
+msgstr "此帳戶用作誌帳已開啟 auto_post 功能、會計日期截至今天的所有草稿記項"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -1800,7 +1809,7 @@ msgstr "會計報表資料行"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting firm mode will change invoice/bill encoding:"
-msgstr "會計公司模式會變更發票 / 賬單的編碼："
+msgstr "會計公司模式會變更發票 / 帳單的編碼："
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1811,39 +1820,39 @@ msgstr "要管理會計相關設定，請前往"
 #: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__accounts
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Accounts"
-msgstr "會計賬戶"
+msgstr "會計帳戶"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Accounts Mapping"
-msgstr "會計賬戶對應"
+msgstr "會計帳戶對應"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Accounts Mapping Template of Fiscal Position"
-msgstr "財務規則賬戶對應範本"
+msgstr "財務規則帳戶對應範本"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "財務規則賬戶對應"
+msgstr "財務規則帳戶對應"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
 msgid "Accounts Prefix"
-msgstr "賬戶代號起首"
+msgstr "帳戶代號起首"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
-msgstr "應計賬戶"
+msgstr "應計帳戶"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrual Moves"
-msgstr "應計項目過賬"
+msgstr "應計項目過帳"
 
 #. module: account
 #. odoo-python
@@ -1864,7 +1873,7 @@ msgstr "累積了 %s 應計記項（截至 %s ）"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Accrued Account"
-msgstr "應計項目賬戶"
+msgstr "應計項目帳戶"
 
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
@@ -1931,7 +1940,7 @@ msgstr "啟用"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Active Account"
-msgstr "生效賬戶"
+msgstr "生效帳戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__active_domain
@@ -2029,7 +2038,7 @@ msgstr "應收憑單上增加二維碼，使用者可以立即在手機銀行支
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 msgid "Add a bank account"
-msgstr "加入銀行賬戶"
+msgstr "加入銀行帳戶"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -2135,7 +2144,7 @@ msgstr ""
 msgid ""
 "Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on "
 "{new_date}"
-msgstr "調整分錄給 {link}: {percent:.2f}% 的 {amount} 認可於 {new_date}"
+msgstr "{link}的調整分錄：{percent:.2f}%的{amount}在{new_date}上確認"
 
 #. module: account
 #. odoo-python
@@ -2143,7 +2152,7 @@ msgstr "調整分錄給 {link}: {percent:.2f}% 的 {amount} 認可於 {new_date}
 #, python-format
 msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
-msgstr "調整分錄 {link}: {percent:.2f}% 的 {amount} 從 {date} 確認"
+msgstr "調整條目 {link}：從 {date} 認定的 {amount} 的 {percent:.2f}% "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_advance_tax_payment_account_id
@@ -2502,7 +2511,7 @@ msgstr "分析會計"
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr "分析賬戶"
+msgstr "分析帳戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__analytic
@@ -2577,7 +2586,7 @@ msgstr "統計分析"
 #, python-format
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
-msgstr "應付賬款科目上的任何日記賬項目都必須有到期日，反之亦然."
+msgstr "應付帳款科目上的任何日記帳項目都必須有到期日，反之亦然."
 
 #. module: account
 #. odoo-python
@@ -2586,7 +2595,7 @@ msgstr "應付賬款科目上的任何日記賬項目都必須有到期日，反
 msgid ""
 "Any journal item on a receivable account must have a due date and vice "
 "versa."
-msgstr "應收賬款科目上的任何日記賬項目都必須有到期日，反之亦然."
+msgstr "應收帳款科目上的任何日記帳項目都必須有到期日，反之亦然."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -2776,14 +2785,14 @@ msgstr "自動建立的付款"
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post
 msgid "Auto-post"
-msgstr "自動過賬"
+msgstr "自動過帳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post_until
 msgid "Auto-post until"
-msgstr "自動過賬有效期至"
+msgstr "自動過帳有效期至"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -2912,7 +2921,7 @@ msgstr "銀行 &amp; 現金"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account"
-msgstr "銀行賬戶"
+msgstr "銀行帳戶"
 
 #. module: account
 #. odoo-python
@@ -3198,7 +3207,7 @@ msgstr "帳單管理員"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Bills"
-msgstr "賬單"
+msgstr "帳單"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3493,7 +3502,7 @@ msgstr "現金收付稅"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr "現金制中轉賬戶"
+msgstr "現金制中轉帳戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_expense_account_id
@@ -3704,7 +3713,7 @@ msgstr "表模板"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 #, python-format
 msgid "Chart of Accounts"
-msgstr "賬目總表"
+msgstr "帳目總表"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__coa
@@ -3719,7 +3728,7 @@ msgstr "會計科目表"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Chart of accounts set."
-msgstr "已設置賬目總表。"
+msgstr "已設置帳目總表。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -3939,7 +3948,7 @@ msgstr "公司"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Company Bank Account"
-msgstr "公司銀行賬戶"
+msgstr "公司銀行帳戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
@@ -4067,7 +4076,7 @@ msgstr "連接"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 msgid "Connect your financial accounts in seconds."
-msgstr "快速連結財務賬戶。"
+msgstr "快速連結財務帳戶。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
@@ -4261,7 +4270,7 @@ msgstr "在電子郵件中建立應收憑單"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Create Journal Entries"
-msgstr "建立日記賬記項"
+msgstr "建立日記帳記項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4293,7 +4302,7 @@ msgstr "建立客戶發票"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "建立日記賬記項"
+msgstr "建立日記帳記項"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -4979,7 +4988,7 @@ msgstr "日期範例"
 msgid ""
 "Date from which the accounting is managed in Odoo. It is the date of the "
 "opening entry."
-msgstr "開始使用 Odoo 會計系統管理賬目的日期，亦即會計賬目起始記項的日期。"
+msgstr "開始使用 Odoo 會計系統管理帳目的日期，亦即會計帳目起始記項的日期。"
 
 #. module: account
 #. odoo-javascript
@@ -6215,7 +6224,7 @@ msgstr "財務會計科目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefix"
-msgstr "財務會計賬戶代號起首"
+msgstr "財務會計帳戶代號起首"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -6567,7 +6576,7 @@ msgstr "來自"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Non Trade Receivable accounts"
-msgstr "來自非貿易應收賬款科目"
+msgstr "來自非貿易應收帳款科目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6577,12 +6586,12 @@ msgstr "來自損益表科目"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Payable accounts"
-msgstr "來自貿易應付賬款科目"
+msgstr "來自貿易應付帳款科目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Receivable accounts"
-msgstr "來自貿易應付賬款科目"
+msgstr "來自貿易應付帳款科目"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
@@ -6741,12 +6750,12 @@ msgstr "分組付款"
 #. module: account
 #: model:account.report,name:account.generic_tax_report_account_tax
 msgid "Group by: Account > Tax "
-msgstr "分組方式：賬戶 > 稅項"
+msgstr "分組方式：帳戶 > 稅項"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report_tax_account
 msgid "Group by: Tax > Account "
-msgstr "分組方式：稅項 > 賬戶"
+msgstr "分組方式：稅項 > 帳戶"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
@@ -7049,8 +7058,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
-"如果設定，此科目將屬於報表和篩選器中的非貿易應收/應付賬款.\n"
-"如果不設定，此科目將屬於報表和篩選器中的貿易應收/應付賬款."
+"如果設定，此科目將屬於報表和篩選器中的非貿易應收/應付帳款.\n"
+"如果不設定，此科目將屬於報表和篩選器中的貿易應收/應付帳款."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7152,7 +7161,7 @@ msgstr "會計科目表的導入模板"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Import Template for Journal Items"
-msgstr "日記賬項目的導入模板"
+msgstr "日記帳項目的導入模板"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -7819,7 +7828,7 @@ msgstr "應收憑單/應付帳單 全額匹配"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "發票工具"
+msgstr "會計"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
@@ -7971,7 +7980,7 @@ msgstr "一月"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Journal"
-msgstr "日記賬"
+msgstr "日記帳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__currency_id
@@ -7992,12 +8001,12 @@ msgstr "日記帳幣別"
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr "日記賬記項"
+msgstr "日記帳記項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Date"
-msgstr "日記賬記項（按日期）"
+msgstr "日記帳記項（按日期）"
 
 #. module: account
 #. odoo-python
@@ -8081,7 +8090,7 @@ msgstr "日記帳組"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Journal Groups"
-msgstr "流水賬組別"
+msgstr "流水帳組別"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -8122,7 +8131,7 @@ msgstr "日記帳項目標籤"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_pivot
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
-msgstr "日記賬項目"
+msgstr "日記帳項目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -8205,7 +8214,7 @@ msgstr "日記帳:"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_miscellaneous
 msgid "Journals"
-msgstr "流水賬"
+msgstr "流水帳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_journal_ids
@@ -8216,7 +8225,7 @@ msgstr "日計帳可用性"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
 msgid "Journals Entries Lock Date"
-msgstr "日記賬記項鎖定日期"
+msgstr "日記帳記項鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -8831,7 +8840,7 @@ msgid ""
 msgstr ""
 "手動: 通過 Odoo 之外的任何方式支付或收款.\n"
 "支付提供商: 每個支付提供商都有自己的支付方式. 借助合作夥伴在線購買或訂閱時保存的支付密鑰，請求在卡上/向卡進行交易.\n"
-"支票: 通過支票支付賬單並從 Odoo 列印.\n"
+"支票: 通過支票支付帳單並從 Odoo 列印.\n"
 "批量存款: 一次收集多張客戶支票，產生批量存款並將其提交給您的銀行. 模組 account_batch_payment 是必需的.\n"
 "SEPA Credit Transfer: 通過向您的銀行提交 SEPA Credit Transfer 文件在 SEPA 區進行支付. 模組 account_sepa 是必需的.\n"
 "SEPA 直接借記: 由於您的合作夥伴授予您的授權，在 SEPA 區獲得付款。 模組 account_sepa 是必需的.\n"
@@ -9038,7 +9047,7 @@ msgstr "雜項"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Miscellaneous Operations"
-msgstr "其他營運賬項"
+msgstr "其他營運帳項"
 
 #. module: account
 #. odoo-python
@@ -9481,7 +9490,7 @@ msgstr "提示：要建立退款單，最容易的方法是直接在客戶發票
 msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
-msgstr "請注意，建立供應商折讓單的最簡單方法是直接從供應商賬單中進行."
+msgstr "請注意，建立供應商折讓單的最簡單方法是直接從供應商帳單中進行."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -9702,7 +9711,7 @@ msgstr "應收憑單準備好後，按確認."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
-msgstr "此合作夥伴設定的一個或多個銀行賬戶也被其他人使用"
+msgstr "此合作夥伴設定的一個或多個銀行帳戶也被其他人使用"
 
 #. module: account
 #. odoo-python
@@ -10647,7 +10656,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Please contact your accountant to print the Hash integrity result."
-msgstr ""
+msgstr "請聯繫您的會計師列印雜湊完整性結果。"
 
 #. module: account
 #. odoo-python
@@ -10727,7 +10736,7 @@ msgstr "網站入口存取網址"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Post"
-msgstr "過賬"
+msgstr "過帳"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10742,7 +10751,7 @@ msgstr "過帳差異於"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "過賬日記賬記項"
+msgstr "過帳日記帳記項"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -10761,7 +10770,7 @@ msgstr "過帳分錄"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "已過賬"
+msgstr "已過帳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__posted_before
@@ -10773,12 +10782,12 @@ msgstr "曾過帳"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "已過賬的日記賬記項"
+msgstr "已過帳的日記帳記項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "已過賬的日記賬項目"
+msgstr "已過帳的日記帳項目"
 
 #. module: account
 #. odoo-python
@@ -10799,33 +10808,33 @@ msgstr "前項小計"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__account_codes
 msgid "Prefix of Account Codes"
-msgstr "賬戶代號起首"
+msgstr "帳戶代號起首"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
 #: model:ir.model.fields,field_description:account.field_res_company__bank_account_code_prefix
 msgid "Prefix of the bank accounts"
-msgstr "銀行賬戶代號起首"
+msgstr "銀行帳戶代號起首"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__cash_account_code_prefix
 msgid "Prefix of the cash accounts"
-msgstr "現金賬戶代號起首"
+msgstr "現金帳戶代號起首"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__cash_account_code_prefix
 msgid "Prefix of the main cash accounts"
-msgstr "主要現金賬戶的代號起首"
+msgstr "主要現金帳戶的代號起首"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__transfer_account_code_prefix
 msgid "Prefix of the main transfer accounts"
-msgstr "主要轉賬賬戶的代號起首"
+msgstr "主要轉帳帳戶的代號起首"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__transfer_account_code_prefix
 msgid "Prefix of the transfer accounts"
-msgstr "轉賬賬戶代號起首"
+msgstr "轉帳帳戶代號起首"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_applicability__account_prefix
@@ -11106,17 +11115,17 @@ msgstr "收據"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Receivable"
-msgstr "應收賬款"
+msgstr "應收帳款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_receivable_id
 msgid "Receivable Account"
-msgstr "應收賬款科目"
+msgstr "應收帳款科目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "Receivables"
-msgstr "應收賬款"
+msgstr "應收帳款"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
@@ -11174,7 +11183,7 @@ msgstr "已核銷"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
-msgstr "已核銷應付賬單"
+msgstr "已核銷應付帳單"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
@@ -11194,7 +11203,7 @@ msgstr "已核銷的項目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
 msgid "Reconciled Statement Lines"
-msgstr "已核銷的對賬明細"
+msgstr "已核銷的對帳明細"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -11206,7 +11215,7 @@ msgstr "核銷對帳模型"
 #: model:ir.ui.menu,name:account.action_account_reconcile_model_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
-msgstr "對賬模型"
+msgstr "對帳模型"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
@@ -11524,7 +11533,7 @@ msgstr "收入應計科目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
 msgid "Revenue/Expense Account"
-msgstr "收入/開支賬戶"
+msgstr "收入/開支帳戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__reversal_date
@@ -12263,7 +12272,7 @@ msgstr "設定"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Setup your chart of accounts and record initial balances."
-msgstr "設定賬目總表，開始記賬。"
+msgstr "設定帳目總表，開始記帳。"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -12474,7 +12483,7 @@ msgstr "指定一個任意值，該值將在整個訂單的預設項目上累積
 msgid ""
 "Specify whether this entry is posted automatically on its accounting date, "
 "and any similar recurring invoices."
-msgstr "設定此記項（以及任何類似的經常性發票）是否按本身的會計日期自動過賬。"
+msgstr "設定此記項（以及任何類似的經常性發票）是否按本身的會計日期自動過帳。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -13561,7 +13570,7 @@ msgstr "目前最高的金額是"
 msgid ""
 "The current total is %s but the expected total is %s. In order to post the "
 "invoice/bill, you can adjust its lines or the expected Total (tax inc.)."
-msgstr "當前總數為 %s，但預期總數為 %s. 為了過帳應收憑單/應付賬款，您可以調整其明細或預期的總計(含稅)."
+msgstr "當前總數為 %s，但預期總數為 %s. 為了過帳應收憑單/應付帳款，您可以調整其明細或預期的總計(含稅)."
 
 #. module: account
 #. odoo-python
@@ -13572,7 +13581,7 @@ msgid ""
 "The Journal Entry will be accounted on %(accounting_date)s upon posting."
 msgstr ""
 "日期設定在 %(lock_type)s 鎖定日期 %(lock_date)s 之前. 日記帳分錄將在過帳後的 %(accounting_date)s "
-"入賬."
+"入帳."
 
 #. module: account
 #. odoo-python
@@ -13998,7 +14007,7 @@ msgstr "核銷模型只能可見於選擇的日記帳."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The recurrence will end on"
-msgstr "經常性記項自動過賬的有效期直至 "
+msgstr "經常性記項自動過帳的有效期直至 "
 
 #. module: account
 #. odoo-python
@@ -14046,7 +14055,7 @@ msgstr "日記帳項目的剩餘總量使用公司的預設幣別."
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr ""
+msgstr "運行餘額（%s）與指定的結束餘額不匹配。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14150,7 +14159,7 @@ msgstr "此日記帳的序列對於付款和未付款是不同的，但您選擇
 msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
-msgstr ""
+msgstr "起始餘額與上一份對帳單的結束餘額不匹配，或者缺少早期對帳單。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -14299,6 +14308,8 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
+"嘗試將橫幅添加到原始PDF時出錯。\n"
+"請確保原始檔案有效。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14504,13 +14515,13 @@ msgstr "當使用者不確定對方的所有資訊時，使用該匹配規則."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move is configured to be auto-posted on %s"
-msgstr "記項已設置在 %s 自動過賬。"
+msgstr "記項已設置在 %s 自動過帳。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
-msgstr "記項已設置為自動過賬。過賬的會計日期為 "
+msgstr "記項已設置為自動過帳。過帳的會計日期為 "
 
 #. module: account
 #. odoo-python
@@ -14570,7 +14581,7 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
-"部份已過賬的流水賬記項，資料涉及此產品。\n"
+"部份已過帳的流水帳記項，資料涉及此產品。\n"
 "若你想變更產品的計量單位，請將現有產品存檔，然後以新資料建立新的產品。"
 
 #. module: account
@@ -14580,7 +14591,7 @@ msgstr ""
 msgid ""
 "This reconciliation model can't be used in the manual reconciliation widget "
 "because its configuration is not adapted"
-msgstr "此對賬模型無法在手動對賬小工具中使用，因為其設定不適應"
+msgstr "此對帳模型無法在手動對帳小工具中使用，因為其設定不適應"
 
 #. module: account
 #. odoo-python
@@ -14601,7 +14612,7 @@ msgstr "此重複分錄源自 %s"
 #: model:ir.model.fields,help:account.field_account_move__auto_post_until
 #: model:ir.model.fields,help:account.field_account_payment__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
-msgstr "本經常性記項會一直自動過賬，直至及包括此日期。"
+msgstr "本經常性記項會一直自動過帳，直至及包括此日期。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -14825,7 +14836,7 @@ msgstr "轉帳日期"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer counterpart"
-msgstr "轉賬對方"
+msgstr "轉帳對方"
 
 #. module: account
 #. odoo-python
@@ -14925,7 +14936,7 @@ msgstr "上"
 msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
-msgstr ""
+msgstr "由於缺少交易，無法創建對帳單。您可能需要在繼續之前重新排序交易。"
 
 #. module: account
 #. odoo-python
@@ -14986,24 +14997,24 @@ msgstr "未付款應收憑單"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "未過賬"
+msgstr "未過帳"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr ""
+msgstr "未過帳的分錄"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "未過賬的日記賬記項"
+msgstr "未過帳的日記帳記項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "未過賬的日記賬項目"
+msgstr "未過帳的日記帳項目"
 
 #. module: account
 #. odoo-javascript
@@ -15345,7 +15356,7 @@ msgstr "已建立供應商應付帳單"
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
 msgid "Vendor Bills"
-msgstr "供應商賬單"
+msgstr "供應商帳單"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_refund
@@ -15440,7 +15451,7 @@ msgstr "應收憑單警告"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Warning: this bill might be a duplicate of"
-msgstr "警告: 此賬單可能與"
+msgstr "警告: 此帳單可能與"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15670,14 +15681,14 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr "只有已過賬記項才可進行對賬。"
+msgstr "只有已過帳記項才可進行對帳。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr "只有已過賬的流水賬記項，才可登記付款。"
+msgstr "只有已過帳的流水帳記項，才可登記付款。"
 
 #. module: account
 #. odoo-python
@@ -16334,7 +16345,7 @@ msgstr "分配給應收憑單"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "auto-posting enabled. Next accounting date:"
-msgstr "自動過賬已啟用。下一個會計日期為 "
+msgstr "自動過帳已啟用。下一個會計日期為 "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16500,7 +16511,7 @@ msgstr "在"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "one of those bills"
-msgstr "其中一張應付賬單"
+msgstr "其中一張應付帳單"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16614,7 +16625,7 @@ msgstr "{label}: 調整分錄於 {new_date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr "{percent:0.2f}% 認可於 {new_date}"
+msgstr "{percent:0.2f}% 在 {new_date} 上被識別"
 
 #. module: account
 #. odoo-python

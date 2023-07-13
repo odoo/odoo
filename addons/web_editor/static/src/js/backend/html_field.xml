@@ -4,7 +4,8 @@
     <t t-name="web_editor.HtmlField" owl="1">
         <t t-if="props.readonly || props.notEditable || (sandboxedPreview and !state.showCodeView)">
             <t t-if="this.showIframe">
-                <iframe t-ref="iframe" t-att-class="{'d-none': !this.state.iframeVisible, 'o_readonly': true}" t-att-sandbox="sandboxedPreview ? 'allow-same-origin' : false"></iframe>
+                <iframe t-ref="iframe" t-att-class="{'d-none': !this.state.iframeVisible, 'o_readonly': true}"
+                t-att-sandbox="sandboxedPreview ? 'allow-same-origin allow-popups allow-popups-to-escape-sandbox' : false"></iframe>
             </t>
             <t t-else="">
                 <div  t-ref="readonlyElement" class="o_readonly" t-out="markupValue" />

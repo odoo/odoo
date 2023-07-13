@@ -1,3 +1,14 @@
+:root {
+    // Make sure black and white CSS variables are defined as they are needed
+    // for the colorpickers to work properly. In the frontend, those are
+    // automatically defined because they are part of the $grays map. In the
+    // backend, bootstrap is more standard and those are not added in the $grays
+    // map (not needed and was actually a problem to make the enterprise dark
+    // mode work properly).
+    --white: $white;
+    --black: $black;
+}
+
 .o_field_html {
     position: relative;
     word-wrap: break-word;
