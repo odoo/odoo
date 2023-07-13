@@ -5,8 +5,8 @@ import random
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_is_zero
@@ -344,6 +344,16 @@ class SaleOrder(models.Model):
         :rtype: bool
         """
         return True
+
+    def _check_cart_is_ready_to_be_paid(self):
+        """"Whether the cart is valid and the user can proceed to the payment
+
+        :rtype: bool
+        """
+        if not self._is_cart_ready():
+            raise ValidationError(_(
+                "Your cart is not ready to be paid, please verify previous steps."
+            ))
 
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """
