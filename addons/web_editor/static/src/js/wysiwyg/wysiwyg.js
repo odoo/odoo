@@ -78,6 +78,7 @@ const Wysiwyg = Widget.extend({
         allowCommandLink: true,
         insertParagraphAfterColumns: true,
         autostart: true,
+        dropImageAsAttachment: true,
     },
     init: function (parent, options) {
         this._super.apply(this, arguments);
