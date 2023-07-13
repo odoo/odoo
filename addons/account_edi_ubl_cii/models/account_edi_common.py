@@ -225,17 +225,21 @@ class AccountEdiCommon(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _check_required_fields(self, record, field_names, custom_warning_message=""):
-        """
-        This function check that a field exists on a record or dictionaries
-        returns a generic error message if it's not the case or a custom one if specified
+        """Check if at least one of the field_names are set on the record/dict
+
+        :param record: either a recordSet or a dict
+        :param field_names: The field name or list of field name that has to
+                            be checked. If a list is provided, check that at
+                            least one of them is set.
+        :return: an Error message or None
         """
         if not record:
             return custom_warning_message or _("The element %s is required on %s.", record, ', '.join(field_names))
 
-        if not isinstance(field_names, list):
-            field_names = [field_names]
+        if not isinstance(field_names, (list, tuple)):
+            field_names = (field_names,)
 
-        has_values = any(record[field_name] for field_name in field_names)
+        has_values = any((field_name in record and record[field_name]) for field_name in field_names)
         # field is present
         if has_values:
             return
