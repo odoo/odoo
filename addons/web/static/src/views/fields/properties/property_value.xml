@@ -72,7 +72,7 @@
                     <t t-set="hasAccess" t-value="!propertyValue || propertyValue[1]"/>
                     <img t-if="showAvatar and propertyValue[0] and hasAccess"
                         t-attf-src="/web/image/{{props.comodel}}/{{propertyValue[0]}}/avatar_128"
-                        class="rounded me-1"/>
+                        class="o_avatar rounded me-1"/>
                     <t t-if="props.readonly || !hasAccess">
                         <a
                             t-if="clickableRelational || !hasAccess"
