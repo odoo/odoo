@@ -494,6 +494,7 @@ class AccountMoveLine(models.Model):
                            'account.move' AS model,
                            line.move_id AS id,
                            NULL AS account_type,
+                           NULL::integer AS company_id,
                            line.account_id AS account_id
                       FROM account_move_line line
                      WHERE line.move_id = ANY(%(move_ids)s)
@@ -501,20 +502,21 @@ class AccountMoveLine(models.Model):
                        AND line.id != ANY(%(current_ids)s)
                 ),
                 properties AS(
-                    SELECT DISTINCT ON (property.company_id, property.name)
+                    SELECT DISTINCT ON (property.company_id, property.res_id, property.name)
                            'res.partner' AS model,
                            SPLIT_PART(property.res_id, ',', 2)::integer AS id,
                            CASE
                                WHEN property.name = 'property_account_receivable_id' THEN 'asset_receivable'
                                ELSE 'liability_payable'
                            END AS account_type,
+                           property.company_id AS company_id,
                            SPLIT_PART(property.value_reference, ',', 2)::integer AS account_id
                       FROM ir_property property
                       JOIN res_company company ON property.company_id = company.id
                      WHERE property.name IN ('property_account_receivable_id', 'property_account_payable_id')
                        AND property.company_id = ANY(%(company_ids)s)
                        AND property.res_id = ANY(%(partners)s)
-                  ORDER BY property.company_id, property.name, account_id
+                  ORDER BY property.company_id, property.res_id, property.name, account_id
                 ),
                 default_properties AS(
                     SELECT DISTINCT ON (property.company_id, property.name)
@@ -524,6 +526,7 @@ class AccountMoveLine(models.Model):
                                WHEN property.name = 'property_account_receivable_id' THEN 'asset_receivable'
                                ELSE 'liability_payable'
                            END AS account_type,
+                           property.company_id AS company_id,
                            SPLIT_PART(property.value_reference, ',', 2)::integer AS account_id
                       FROM ir_property property
                       JOIN res_company company ON property.company_id = company.id
@@ -537,6 +540,7 @@ class AccountMoveLine(models.Model):
                            'res.company' AS model,
                            account.company_id AS id,
                            account.account_type AS account_type,
+                           NULL::integer AS company_id,
                            account.id AS account_id
                       FROM account_account account
                      WHERE account.company_id = ANY(%(company_ids)s)
@@ -557,17 +561,17 @@ class AccountMoveLine(models.Model):
                 'current_ids': term_lines.ids
             })
             accounts = {
-                (model, id, account_type): account_id
-                for model, id, account_type, account_id in self.env.cr.fetchall()
+                (model, id, account_type, company_id): account_id
+                for model, id, account_type, company_id, account_id in self.env.cr.fetchall()
             }
             for line in term_lines:
                 account_type = 'asset_receivable' if line.move_id.is_sale_document(include_receipts=True) else 'liability_payable'
                 move = line.move_id
                 account_id = (
-                    accounts.get(('account.move', move.id, None))
-                    or accounts.get(('res.partner', move.commercial_partner_id.id, account_type))
-                    or accounts.get(('res.partner', move.company_id.partner_id.id, account_type))
-                    or accounts.get(('res.company', move.company_id.id, account_type))
+                    accounts.get(('account.move', move.id, None, None))
+                    or accounts.get(('res.partner', move.commercial_partner_id.id, account_type, move.company_id.id))
+                    or accounts.get(('res.partner', move.company_id.partner_id.id, account_type, move.company_id.id))
+                    or accounts.get(('res.company', move.company_id.id, account_type, None))
                 )
                 if line.move_id.fiscal_position_id:
                     account_id = self.move_id.fiscal_position_id.map_account(self.env['account.account'].browse(account_id))
