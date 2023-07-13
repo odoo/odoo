@@ -3,10 +3,11 @@
     <template id="report_payment_receipt_document">
         <t t-call="web.external_layout">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
+            <t t-set="values" t-value="o._get_payment_receipt_report_values()"/>
             <div class="page">
                 <h3><strong>Payment Receipt: <span t-field="o.name"/></strong></h3>
                 <div class="mb-4 mt-3">
-                    <div class="row">
+                    <div name="date" class="row">
                         <div class="col-6" t-if="o.date">
                             Payment Date: <span t-field="o.date"/>
                         </div>
@@ -20,7 +21,9 @@
                                 Vendor:
                             </t><span t-field="o.partner_id"/>
                         </div>
-                        <div class="col-6" t-if="o.payment_method_id">
+                        <div name="payment_method"
+                             t-if="values['display_payment_method'] and o.payment_method_id"
+                             class="col-6">
                             Payment Method: <span t-field="o.payment_method_id.name"/>
                         </div>
                     </div>
@@ -34,14 +37,15 @@
                     </div>
                 </div>
 
-                <t t-set="partials" t-value="o.move_id._get_reconciled_invoices_partials()[0]"/>
-                <t t-set="invoices" t-value="{partial[2].move_id for partial in partials}"/>
-                <!-- Check if invoices include different currencies -->
-                <t t-foreach="invoices" t-as="inv">
-                    <t t-if="any(inv.currency_id != par[2].currency_id for par in inv._get_reconciled_invoices_partials()[0])" t-set="otherCurrency" t-value="True"/>
-                </t>
-
-                <table class="table table-sm">
+                <table name="invoices"
+                       t-if="values['display_invoices']"
+                       class="table table-sm">
+                    <t t-set="partials" t-value="o.move_id._get_reconciled_invoices_partials()[0]"/>
+                    <t t-set="invoices" t-value="{partial[2].move_id for partial in partials}"/>
+                    <!-- Check if invoices include different currencies -->
+                    <t t-foreach="invoices" t-as="inv">
+                        <t t-if="any(inv.currency_id != par[2].currency_id for par in inv._get_reconciled_invoices_partials()[0])" t-set="otherCurrency" t-value="True"/>
+                    </t>
                     <thead>
                         <tr>
                             <th><span>Invoice Date</span></th>

@@ -917,6 +917,19 @@ class AccountPayment(models.Model):
                 lambda l: l.account_id == payment.destination_account_id and not l.reconciled)
             lines.reconcile()
 
+    def _get_payment_receipt_report_values(self):
+        """ Get the extra values when rendering the Payment Receipt PDF report.
+
+        :return: A dictionary:
+            * display_invoices: Display the invoices table.
+            * display_payment_method: Display the payment method value.
+        """
+        self.ensure_one()
+        return {
+            'display_invoices': True,
+            'display_payment_method': True,
+        }
+
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
