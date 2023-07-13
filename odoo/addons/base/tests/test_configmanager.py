@@ -122,7 +122,7 @@ class TestConfigManager(TransactionCase):
             'smtp_ssl_private_key_filename': '',
 
             # database
-            'db_name': '',
+            'db_name': [],
             'db_user': '',
             'db_password': '',
             'pg_path': '',
@@ -240,7 +240,7 @@ class TestConfigManager(TransactionCase):
             'smtp_ssl_private_key_filename': '/tmp/tlskey',
 
             # database
-            'db_name': 'horizon',
+            'db_name': ['horizon'],
             'db_user': 'kiwi',
             'db_password': 'Tigrou0073',
             'pg_path': '/tmp/pg_path',
@@ -323,7 +323,7 @@ class TestConfigManager(TransactionCase):
             'csv_internal_sep': ',',
             'db_host': '',
             'db_maxconn': 64,
-            'db_name': '',
+            'db_name': [],
             'db_password': '',
             'db_port': None,
             'db_sslmode': 'prefer',
@@ -518,7 +518,7 @@ class TestConfigManager(TransactionCase):
             'smtp_ssl_private_key_filename': '/tmp/tlskey',
 
             # database
-            'db_name': 'horizon',
+            'db_name': ['horizon'],
             'db_user': 'kiwi',
             'db_password': 'Tigrou0073',
             'pg_path': '/tmp/pg_path',

@@ -368,8 +368,7 @@ def db_filter(dbs, host=None):
     if config['db_name']:
         # In case --db-filter is not provided and --database is passed, Odoo will
         # use the value of --database as a comma separated list of exposed databases.
-        exposed_dbs = {db.strip() for db in config['db_name'].split(',')}
-        return sorted(exposed_dbs.intersection(dbs))
+        return sorted(set(config['db_name']).intersection(dbs))
 
     return list(dbs)
 
