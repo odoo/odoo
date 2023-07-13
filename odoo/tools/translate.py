@@ -1112,6 +1112,7 @@ class TranslationModuleReader:
                             value_en = record[field_name] or ''
                             value_lang = record.with_context(lang=self._lang)[field_name] or ''
                         except Exception:
+                            _logger.exception("Failed to extract terms from %s", name)
                             continue
                         trans_type = 'model_terms' if callable(field.translate) else 'model'
                         for term_en, term_langs in field.get_translation_dictionary(value_en, {self._lang: value_lang}).items():

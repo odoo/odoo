@@ -10,7 +10,7 @@ import io
 
 from odoo.exceptions import UserError
 from odoo.tools import sql
-from odoo.tools.translate import quote, unquote, xml_translate, html_translate, TranslationImporter
+from odoo.tools.translate import quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader
 from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
 
 _stats_logger = logging.getLogger('odoo.tests.stats')
@@ -343,6 +343,15 @@ class TestLanguageInstall(TransactionCase):
         self.assertEqual(len(loaded), 1)
         self.assertEqual(loaded[0][1], ['fr_FR'])
         self.assertEqual(loaded[0][2], True)
+
+
+@tagged('post_install', '-at_install')
+class TestTranslationExport(TransactionCase):
+
+    def test_export_translatable_resources(self):
+        """Read files of installed modules and export translatable terms"""
+        with self.assertNoLogs('odoo.tools.translate', "ERROR"):
+            TranslationModuleReader(self.env.cr)
 
 
 class TestTranslation(TransactionCase):
