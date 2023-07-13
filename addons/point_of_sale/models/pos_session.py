@@ -112,7 +112,7 @@ class PosSession(models.Model):
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
                 total_cash_payment = 0.0
-                last_session = session.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
+                last_session = session.search([('config_id', '=', session.config_id.id), ('id', '<', session.id)], limit=1)
                 result = self.env['pos.payment']._read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], aggregates=['amount:sum'])
                 total_cash_payment = result[0][0] or 0.0
                 if session.state == 'closed':
