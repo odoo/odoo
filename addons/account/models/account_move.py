@@ -3512,8 +3512,22 @@ class AccountMove(models.Model):
             ('date', '<=', fields.Date.context_today(self)),
             ('auto_post', '=', True),
         ])
-        for ids in self._cr.split_for_in_conditions(records.ids, size=1000):
-            self.browse(ids)._post()
+
+        for ids in self._cr.split_for_in_conditions(records.ids, size=100):
+            moves = self.browse(ids)
+            try:  # try posting in batch
+                moves._post()
+            except UserError:  # if at least one move cannot be posted, handle moves one by one
+                for move in moves:
+                    try:
+                        move._post()
+                    except UserError as e:
+                        move.to_check = True
+                        msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
+                        move.message_post(body=msg,
+                                          message_type='comment',
+                                          author_id=self.env.ref('base.partner_root').id)
+
             if not self.env.registry.in_test_mode():
                 self._cr.commit()
 
