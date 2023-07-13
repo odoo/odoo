@@ -46,7 +46,7 @@ class SaleOrder(models.Model):
             self.update({'timesheet_total_duration': 0})
             return
         group_data = self.env['account.analytic.line'].sudo()._read_group([
-            ('order_id', 'in', self.ids)
+            ('order_id', 'in', self.ids), ('project_id', '!=', False)
         ], ['order_id', 'unit_amount'], ['order_id'])
         timesheet_unit_amount_dict = defaultdict(float)
         timesheet_unit_amount_dict.update({data['order_id'][0]: data['unit_amount'] for data in group_data})
