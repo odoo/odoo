@@ -1062,7 +1062,7 @@ class Website(models.Model):
             else:
                 domain = [('key', '=', view_id)]
                 order = View._order
-            views = View.with_context(active_test=False).search(domain, order=order)
+            views = View.with_context(active_test=False).search(domain, order=order, limit=1)
             if views:
                 view = views.filter_duplicate()
             else:
