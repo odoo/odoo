@@ -951,7 +951,7 @@ QUnit.test("Editing a message to clear its composer opens message delete dialog.
     await click(".o-mail-Message [title='Edit']");
     await insertText(".o-mail-Message-editable .o-mail-Composer-input", "", { replace: true });
     triggerHotkey("Enter");
-    await contains(".modal-body p", { text: "Are you sure you want to delete this message?" });
+    await contains(".modal-body p", { text: "Are you sure you want to bid farewell to this message forever?" });
 });
 
 QUnit.test(
@@ -981,7 +981,7 @@ QUnit.test(
         await contains(".o-mail-Message-textContent", { text: "" });
         // weak test, no guarantee that we waited long enough for the potential dialog to show
         await contains(".modal-body p", {
-            text: "Are you sure you want to delete this message?",
+            text: "Are you sure you want to bid farewell to this message forever?",
             count: 0,
         });
     }

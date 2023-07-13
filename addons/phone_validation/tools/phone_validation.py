@@ -22,7 +22,7 @@ try:
             ) from e
 
         if not phonenumbers.is_possible_number(phone_nbr):
-            raise UserError(_('Impossible number %s: probably invalid number of digits.', number))
+            raise UserError(_("The number %s has an invalid number of digits, unless you're dialing aliens. Let's fix it for this dimension!", number))
         if not phonenumbers.is_valid_number(phone_nbr):
             raise UserError(_('Invalid number %s: probably incorrect prefix.', number))
 

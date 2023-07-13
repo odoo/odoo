@@ -1183,13 +1183,9 @@ class SaleOrder(models.Model):
 
     def _nothing_to_invoice_error_message(self):
         return _(
-            "Cannot create an invoice. No items are available to invoice.\n\n"
-            "To resolve this issue, please ensure that:\n"
-            "   \u2022 The products have been delivered before attempting to invoice them.\n"
-            "   \u2022 The invoicing policy of the product is configured correctly.\n\n"
-            "If you want to invoice based on ordered quantities instead:\n"
-            "   \u2022 For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
-            "   \u2022 For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
+            "There’s nothing to invoice!\n\n"
+            "Tip: Quantities to invoice appear in blue in the invoice form. If you have none, you might consider delivering your customer before invoicing :)\n"
+            "Alternatively, you can change your product setting into “Invoice based on ordered quantities”"
         )
 
     def _get_update_prices_lines(self):
