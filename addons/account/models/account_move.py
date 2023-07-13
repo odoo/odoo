@@ -3835,8 +3835,19 @@ class AccountMove(models.Model):
             ('state', '=', 'draft'),
             ('date', '<=', fields.Date.context_today(self)),
             ('auto_post', '!=', 'no'),
+            ('to_check', '=', False),
         ], limit=100)
-        records._post()
+
+        try:  # try posting in batch
+            records._post()
+        except UserError:  # if at least one move cannot be posted, handle moves one by one
+            for move in records:
+                try:
+                    move._post()
+                except UserError as e:
+                    move.to_check = True
+                    msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
+                    move.message_post(body=msg, message_type='comment')
 
         if len(records) == 100:  # assumes there are more whenever search hits limit
             self.env.ref('account.ir_cron_auto_post_draft_entry')._trigger()
