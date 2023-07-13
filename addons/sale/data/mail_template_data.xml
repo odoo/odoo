@@ -262,20 +262,22 @@
         <t t-if="transaction_sudo and transaction_sudo.state == 'pending'">
             is pending.
             <br/>
-            <t t-if="object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) >= 1 and object.state in ('draft', 'sent')">
+            <t t-if="object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) >= 0 and object.state in ('draft', 'sent')">
                 Your order will be confirmed once the payment is confirmed.
             </t>
             <t t-else="">
-                Once confirmed it will remain
+                Once confirmed,
                 <span style="font-weight:bold;" t-out="format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''">$ 10.00</span>
-                to pay.
+                will remain to be paid.
             </t>
         </t>
         <t t-else="">
             has been confirmed.
-            <br/>
-            It remains <span style="font-weight:bold;" t-out="format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''">$ 10.00</span>
-            to be paid.
+            <t t-if="object.currency_id.compare_amounts(object.amount_paid, object.amount_total) &lt; 0">
+                <br/>
+                <span style="font-weight:bold;" t-out="format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''">$ 10.00</span>
+                remains to be paid.
+            </t>
         </t>
         <br/><br/>
         Thank you for your trust!
