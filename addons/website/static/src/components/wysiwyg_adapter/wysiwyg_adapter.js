@@ -152,7 +152,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this.options.toolbarHandler = $('#web_editor-top-edit');
         // Do not insert a paragraph after each column added by the column commands:
         this.options.insertParagraphAfterColumns = false;
-        this.options.dropImageAsAttachment = true;
 
         const $editableWindow = this.$editable[0].ownerDocument.defaultView;
         // Dropdown menu initialization: handle dropdown openings by hand
