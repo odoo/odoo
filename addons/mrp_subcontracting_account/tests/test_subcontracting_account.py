@@ -231,9 +231,8 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished
-            move.quantity_done = todo_nb
+            move.product_uom_qty = todo_nb
         picking_receipt = picking_form.save()
-        picking_receipt.action_reset_draft()
         # Mimic the extra cost on the po line
         picking_receipt.move_ids.price_unit = 50
         picking_receipt.action_confirm()
