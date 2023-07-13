@@ -24,14 +24,20 @@ DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
 class AccountReport(models.Model):
     _name = "account.report"
     _description = "Accounting Report"
+    _order = 'sequence, id'
 
     #  CORE ==========================================================================================================================================
 
     name = fields.Char(string="Name", required=True, translate=True)
+    sequence = fields.Integer(string="Sequence")
+    active = fields.Boolean(string="Active", default=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
     column_ids = fields.One2many(string="Columns", comodel_name='account.report.column', inverse_name='report_id')
     root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', help="The report this report is a variant of.")
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
+    section_report_ids = fields.Many2many(string="Sections", comodel_name='account.report', relation="account_report_section_rel", column1="main_report_id", column2="sub_report_id")
+    section_main_report_ids = fields.Many2many(string="Section Of", comodel_name='account.report', relation="account_report_section_rel", column1="sub_report_id", column2="main_report_id")
+    use_sections = fields.Boolean(string="Composite Report", store=True, readonly=False, compute="_compute_use_sections")
     chart_template = fields.Selection(string="Chart of Accounts", selection=lambda self: self.env['account.chart.template']._select_chart_template())
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
     only_tax_exigible = fields.Boolean(
@@ -137,6 +143,11 @@ class AccountReport(models.Model):
             else:
                 report.availability_condition = 'always'
 
+    @api.depends('section_report_ids')
+    def _compute_use_sections(self):
+        for report in self:
+            report.use_sections = bool(report.section_report_ids)
+
     @api.constrains('root_report_id')
     def _validate_root_report_id(self):
         for report in self:
@@ -152,6 +163,12 @@ class AccountReport(models.Model):
                     _('Line "%s" defines line "%s" as its parent, but appears before it in the report. '
                       'The parent must always come first.', line.name, line.parent_id.name))
             previous_lines |= line
+
+    @api.constrains('section_report_ids')
+    def _validate_section_report_ids(self):
+        for record in self:
+            if any(section.section_report_ids for section in record.section_report_ids):
+                raise ValidationError(_("The sections defined on a report cannot have sections themselves."))
 
     @api.onchange('availability_condition')
     def _onchange_availability_condition(self):
