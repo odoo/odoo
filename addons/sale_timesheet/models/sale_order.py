@@ -37,7 +37,7 @@ class SaleOrder(models.Model):
     @api.depends('company_id.project_time_mode_id', 'company_id.timesheet_encode_uom_id', 'order_line.timesheet_ids')
     def _compute_timesheet_total_duration(self):
         group_data = self.env['account.analytic.line']._read_group([
-            ('order_id', 'in', self.ids)
+            ('order_id', 'in', self.ids), ('project_id', '!=', False)
         ], ['order_id'], ['unit_amount:sum'])
         timesheet_unit_amount_dict = defaultdict(float)
         timesheet_unit_amount_dict.update({order.id: unit_amount for order, unit_amount in group_data})
