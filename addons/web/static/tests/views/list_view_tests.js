@@ -65,6 +65,7 @@ import {
 } from "../search/helpers";
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
 import { makeView, makeViewInDialog, setupViewRegistries } from "./helpers";
+import { x2ManyCommands } from "@web/core/orm_service";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -19195,4 +19196,38 @@ QUnit.module("Views", (hooks) => {
             "Monetary cells should have ltr direction"
         );
     })
+
+    QUnit.test("multisave take changes into account when there is only one record selected", async function (assert) {
+        const listView = registry.category("views").get("list");
+
+        class CustomListRenderer extends listView.Renderer {
+            onGlobalClick(ev) {
+                const record = this.props.list.selection[0];
+                record.model.root._multiSave(record, {
+                    m2m: [x2ManyCommands.linkTo(1)],
+                });
+            }
+        }
+
+        registry.category("views").add("custom_list", {
+            ...listView,
+            Renderer: CustomListRenderer,
+        }, { force: true });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            resId: 3,
+            arch: '<tree js_class="custom_list"><field name="foo"/></tree>',
+            mockRPC: (route, { method, args }) => {
+                if (method === "write") {
+                    assert.deepEqual(args[1], { m2m: [[x2ManyCommands.LINK_TO, 1, false]] });
+                }
+            },
+        });
+
+        await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
+        await click(target.querySelectorAll(".o_data_row [name=foo]")[0]);
+    });
 });
