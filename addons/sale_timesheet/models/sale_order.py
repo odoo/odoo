@@ -100,7 +100,7 @@ class SaleOrder(models.Model):
                 if projects:
                     action['context']['default_project_id'] = projects[0].id
         if self.timesheet_count > 0:
-            action['domain'] = [('so_line', 'in', self.order_line.ids)]
+            action['domain'] = [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)]
         else:
             action = {'type': 'ir.actions.act_window_close'}
         return action
