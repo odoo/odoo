@@ -430,7 +430,7 @@ class AccountMoveSend(models.Model):
         # We must ensure the newly created PDF are added. At this point, the PDF has been generated but not added
         # to 'mail_attachments_widget'.
         seen_attachment_ids = set()
-        for attachment_data in self._get_invoice_extra_attachments_data(self.move_ids) + self.mail_attachments_widget:
+        for attachment_data in self._get_invoice_extra_attachments_data(self.move_ids) + (self.mail_attachments_widget or []):
             try:
                 attachment_id = int(attachment_data['id'])
             except ValueError:
