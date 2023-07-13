@@ -23,5 +23,6 @@
         'views/res_config_settings_views.xml',
         'wizard/account_move_send_views.xml',
     ],
+    'installable': False,
     'license': 'LGPL-3',
 }
