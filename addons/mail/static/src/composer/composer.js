@@ -397,9 +397,12 @@ export class Composer extends Component {
             default_attachment_ids: attachmentIds,
             default_body: escapeAndCompactTextContent(this.props.composer.textInputContent),
             default_model: this.props.composer.thread.model,
-            default_partner_ids: this.props.composer.thread.suggestedRecipients.map(
-                (recipient) => recipient.persona.id
-            ),
+            default_partner_ids:
+                this.props.type === "note"
+                    ? []
+                    : this.props.composer.thread.suggestedRecipients
+                          .filter((recipient) => recipient.checked)
+                          .map((recipient) => recipient.persona.id),
             default_res_ids: [this.props.composer.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             mail_post_autofollow: this.props.composer.thread.hasWriteAccess,
