@@ -24,14 +24,12 @@ $o-cw-filter-avatar-size: 20px;
     background-color: $o-view-background-color;
     border-right: 1px solid $border-color;
     overflow-y: auto;
+    width: 240px;
+    @include media-breakpoint-up(xl){
+        width: 280px;
+    }
 
     .o_calendar_sidebar {
-        width: 200px;
-        font-size: 14px;
-
-        @include media-breakpoint-up("xl") {
-            width: 250px;
-        }
         // sync buttons are only displayed on calendar.event views
         .o_calendar_sync {
             padding-bottom: 0.5em;
