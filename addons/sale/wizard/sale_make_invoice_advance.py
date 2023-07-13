@@ -80,6 +80,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
     # UI
     display_draft_invoice_warning = fields.Boolean(compute="_compute_display_draft_invoice_warning")
     display_invoice_amount_warning = fields.Boolean(compute="_compute_display_invoice_amount_warning")
+    consolidated_billing = fields.Boolean(
+        string="Consolidated Billing", default=True,
+        help="Create one invoice for all orders related to same customer and same invoicing address"
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -191,7 +195,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _create_invoices(self, sale_orders):
         self.ensure_one()
         if self.advance_payment_method == 'delivered':
-            return sale_orders._create_invoices(final=self.deduct_down_payments)
+            return sale_orders._create_invoices(final=self.deduct_down_payments, grouped=not self.consolidated_billing)
         else:
             self.sale_order_ids.ensure_one()
             self = self.with_company(self.company_id)
