@@ -347,3 +347,55 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         delivery.button_validate()
 
         self.assertEqual(po.order_line.qty_received, 1.0)
+
+    def test_two_boms_same_component_supplier(self):
+        """
+        The "Dropship Subcontractor" route is modified: the propagation of the
+        buy rule is set to "Leave Empty".
+        Two subcontracted products (different subcontractor) that use the same
+        component. The component has its own supplier. Confirm one PO for each
+        subcontrated product. It should generate two PO from component's
+        supplier to each subcontractor.
+        """
+        dropship_subcontractor_route = self.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping')
+        dropship_subcontractor_route.rule_ids.filtered(lambda r: r.action == 'buy').group_propagation_option = 'none'
+
+        subcontractor01, subcontractor02, component_supplier = self.env['res.partner'].create([{
+            'name': 'Super Partner %d' % i
+        } for i in range(3)])
+
+        product01, product02, component = self.env['product.product'].create([{
+            'name': name,
+            'type': 'product',
+            'seller_ids': [(0, 0, {'partner_id': vendor.id})],
+            'route_ids': [(6, 0, routes)],
+        } for name, vendor, routes in [
+            ('SuperProduct 01', subcontractor01, []),
+            ('SuperProduct 02', subcontractor02, []),
+            ('Component', component_supplier, dropship_subcontractor_route.ids),
+        ]])
+
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [(4, subcontractor.id)],
+            'bom_line_ids': [(0, 0, {'product_id': component.id})]
+        } for finished, subcontractor in [
+            (product01, subcontractor01),
+            (product02, subcontractor02),
+        ]])
+
+        for (partner, product) in [(subcontractor01, product01), (subcontractor02, product02)]:
+            po_form = Form(self.env['purchase.order'])
+            po_form.partner_id = partner
+            with po_form.order_line.new() as line:
+                line.product_id = product
+            po = po_form.save()
+            po.button_confirm()
+
+        supplier_orders = self.env['purchase.order'].search([('partner_id', '=', component_supplier.id)])
+        self.assertEqual(supplier_orders.dest_address_id, subcontractor01 | subcontractor02)
+        self.assertRecordValues(supplier_orders.order_line, [
+            {'product_id': component.id, 'product_qty': 1.0},
+            {'product_id': component.id, 'product_qty': 1.0},
+        ])
