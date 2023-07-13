@@ -3562,3 +3562,37 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
                 # Date of the reversal of the exchange move should be the last day of the month/year of the payment depending on the sequence format
                 self.assertEqual(exchange_move_reversal.date, fields.Date.to_date(expected_date))
+
+    @freeze_time('2023-01-01')
+    def test_post_valid_invoices_when_auto_post(self):
+        valid_invoice = self.init_invoice(move_type='out_invoice', products=self.product_a, invoice_date='2023-01-01')
+
+        # missing partner
+        invalid_invoice_1 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2023-01-01',
+            'date': '2023-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'test line',
+                'price_unit': 10,
+                'quantity': 1,
+                'account_id': self.company_data['default_account_revenue'].id,
+            })],
+        })
+
+        # missing invoice lines
+        invalid_invoice_2 = self.init_invoice(move_type='out_invoice', invoice_date='2023-01-01')
+
+        (valid_invoice + invalid_invoice_1 + invalid_invoice_2).auto_post = True
+
+        self.registry.enter_test_mode(self.env.cr)
+        self.env['account.move']._autopost_draft_entries()
+        self.registry.leave_test_mode()
+        self.assertEqual(valid_invoice.state, 'posted')
+        self.assertEqual(invalid_invoice_1.state, 'draft')
+        self.assertEqual(invalid_invoice_1.message_ids[0].body,
+                         "<p>The move could not be posted for the following reason: "
+                         "The field 'Customer' is required, please complete it to validate the Customer Invoice.</p>")
+        self.assertEqual(invalid_invoice_2.state, 'draft')
+        self.assertEqual(invalid_invoice_2.message_ids[0].body,
+                         "<p>The move could not be posted for the following reason: You need to add a line before posting.</p>")
