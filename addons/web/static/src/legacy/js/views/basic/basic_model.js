@@ -1127,6 +1127,9 @@ var BasicModel = AbstractModel.extend({
             var record = self.localData[recordID];
             if (options.savePoint) {
                 self._visitChildren(record, function (rec) {
+                    for (let fieldName in (rec._changes || {})) {
+                        rec._editionViewType[fieldName] = options.viewType;
+                    }
                     var newValue = rec._changes || rec.data;
                     if (newValue instanceof Array) {
                         rec._savePoint = newValue.slice(0);
@@ -4078,7 +4081,7 @@ var BasicModel = AbstractModel.extend({
      */
     _isFieldProtected: function (record, fieldName, viewType) {
         viewType = viewType || record.viewType;
-        var fieldInfo = viewType && record.fieldsInfo && record.fieldsInfo[viewType][fieldName];
+        var fieldInfo = viewType && record.fieldsInfo && record.fieldsInfo[viewType] && record.fieldsInfo[viewType][fieldName];
         if (fieldInfo) {
             var rawModifiers = fieldInfo.modifiers || {};
             var modifiers = this._evalModifiers(record, _.pick(rawModifiers, 'readonly'));
