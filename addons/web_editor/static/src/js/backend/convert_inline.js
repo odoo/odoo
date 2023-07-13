@@ -479,6 +479,15 @@ function toInline($editable, cssRules, $iframe) {
     for (const imgTop of editable.querySelectorAll('.card-img-top')) {
         imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
     }
+    // Flag img-fluid images with fixed width/height for later.
+    for (const imgFluid of editable.querySelectorAll('.img-fluid')) {
+        if (!Number.isNaN(+imgFluid.style.width.replace('px', ''))) {
+            imgFluid.classList.add('o_img_fluid_fixed_width');
+        }
+        if (!Number.isNaN(+imgFluid.style.height.replace('px', ''))) {
+            imgFluid.classList.add('o_img_fluid_fixed_height');
+        }
+    }
     // Fix Outlook image rendering bug.
     for (const attributeName of ['width', 'height']) {
         const images = editable.querySelectorAll('img');
@@ -517,25 +526,30 @@ function toInline($editable, cssRules, $iframe) {
     // Fix img-fluid.
     for (const image of editable.querySelectorAll('img.img-fluid')) {
         // Outlook requires absolute width/height.
-        const width = _getWidth(image);
         const clone = image.cloneNode();
+        const width = _getWidth(image);
         clone.setAttribute('width', width);
         clone.style.setProperty('width', width + 'px');
         clone.style.removeProperty('max-width');
+        const height = _getHeight(image);
+        clone.setAttribute('height', height);
+        clone.style.setProperty('height', height + 'px');
+        clone.style.removeProperty('max-height');
         image.before(document.createComment(`[if mso]>${clone.outerHTML}<![endif]`));
         image.setAttribute('style', `${image.getAttribute('style') || ''} mso-hide: all;`.trim());
         image.before(document.createComment('[if !mso]><!'));
         image.after(document.createComment('<![endif]'));
         // Account for the absence of responsive stacking (let max-width do the
         // resizing work outside of Outlook).
-        if (!image.style.width.endsWith('%')) {
+        if (!image.style.width.endsWith('%') && !image.classList.contains('o_img_fluid_fixed_width')) {
             image.removeAttribute('width');
             image.style.removeProperty('width');
         }
-        if (!image.style.height.endsWith('%')) {
+        if (!image.style.height.endsWith('%') && !image.classList.contains('o_img_fluid_fixed_height')) {
             image.removeAttribute('height');
             image.style.removeProperty('height');
         }
+        image.classList.remove('o_img_fluid_fixed_width', 'o_img_fluid_fixed_height');
     }
 
     for (const [node, displayValue] of displaysToRestore) {
