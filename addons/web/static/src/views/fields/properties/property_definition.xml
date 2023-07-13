@@ -157,7 +157,10 @@
                     />
                 </div>
                 <div t-if="!props.hideKanbanOption" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
-                    <label t-att-for="getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">View In Kanban</label>
+                    <label t-att-for="getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">
+                        Display in Cards
+                        <sup class="text-info" title="Whether or not this Property Field is displayed in the Calendar, Cards &amp; Kanban views">?</sup>
+                    </label>
                     <CheckBox
                         id="getUniqueDomID('kanban')"
                         value="props.propertyDefinition.view_in_kanban"
