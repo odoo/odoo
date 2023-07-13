@@ -1803,6 +1803,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if order_sudo.state == "cancel":
             raise ValidationError(_("The order has been canceled."))
 
+        order_sudo._check_cart_is_ready_to_be_paid()
+
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
             'partner_id': order_sudo.partner_invoice_id.id,
@@ -1835,16 +1837,16 @@ class PaymentPortal(payment_portal.PaymentPortal):
 class CustomerPortal(sale_portal.CustomerPortal):
 
     def _get_payment_values(self, order_sudo, website_id=None, **kwargs):
-       """ Override of `sale` to inject the `website_id` into the kwargs.
+        """ Override of `sale` to inject the `website_id` into the kwargs.
 
-       :param sale.order order_sudo: The sales order being paid.
-       :param int website_id: The website on which the order was made, if any, as a `website` id.
-       :param dict kwargs: Locally unused keywords arguments.
-       :return: The payment-specific values.
-       :rtype: dict
-       """
-       website_id = website_id or order_sudo.website_id.id
-       return super()._get_payment_values(order_sudo, website_id=website_id, **kwargs)
+        :param sale.order order_sudo: The sales order being paid.
+        :param int website_id: The website on which the order was made, if any, as a `website` id.
+        :param dict kwargs: Locally unused keywords arguments.
+        :return: The payment-specific values.
+        :rtype: dict
+        """
+        website_id = website_id or order_sudo.website_id.id
+        return super()._get_payment_values(order_sudo, website_id=website_id, **kwargs)
 
     def _sale_reorder_get_line_context(self):
         return {}
