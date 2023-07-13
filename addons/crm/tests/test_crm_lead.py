@@ -4,6 +4,7 @@
 from datetime import datetime
 from freezegun import freeze_time
 
+from odoo import fields
 from odoo.addons.base.tests.test_format_address_mixin import FormatAddressCase
 from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
@@ -303,6 +304,36 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.date_closed, datetime.now(), "Closed date is updated after marking lead as lost")
 
     @users('user_sales_manager')
+    def test_crm_lead_meeting_display_fields(self):
+        lead = self.env['crm.lead'].create({'name': 'Lead With Meetings'})
+        meeting_1, meeting_2, meeting_3 = self.env['calendar.event'].create([{
+            'name': 'Meeting 1 of Lead',
+            'opportunity_id': lead.id,
+            'start': '2022-07-12 08:00:00',
+            'stop': '2022-07-12 10:00:00',
+        }, {
+            'name': 'Meeting 2 of Lead',
+            'opportunity_id': lead.id,
+            'start': '2022-07-14 08:00:00',
+            'stop': '2022-07-14 10:00:00',
+        }, {
+            'name': 'Meeting 3 of Lead',
+            'opportunity_id': lead.id,
+            'start': '2022-07-15 08:00:00',
+            'stop': '2022-07-15 10:00:00',
+        }])
+
+        with freeze_time('2022-07-13 11:00:00'):
+            self.assertEqual(lead.meeting_display_date, fields.Date.from_string('2022-07-14'))
+            self.assertEqual(lead.meeting_display_label, 'Next Meeting')
+            (meeting_2 | meeting_3).unlink()
+            self.assertEqual(lead.meeting_display_date, fields.Date.from_string('2022-07-12'))
+            self.assertEqual(lead.meeting_display_label, 'Last Meeting')
+            meeting_1.unlink()
+            self.assertFalse(lead.meeting_display_date)
+            self.assertEqual(lead.meeting_display_label, 'No Meeting')
+
+    @users('user_sales_manager')
     def test_crm_lead_partner_sync(self):
         lead, partner = self.lead_1.with_user(self.env.user), self.contact_2
         partner_email, partner_phone = self.contact_2.email, self.contact_2.phone
@@ -560,7 +591,7 @@ class TestCRMLead(TestCrmCommon):
                 'stop': '2022-07-13 10:00:00',
             }
         ])
-        self.assertEqual(lead.calendar_event_count, 1)
+        self.assertEqual(len(lead.calendar_event_ids), 1)
         self.assertEqual(meetings.opportunity_id, lead)
         self.assertEqual(meetings.mapped('res_id'), [lead.id, lead.id])
         self.assertEqual(meetings.mapped('res_model'), ['crm.lead', 'crm.lead'])
