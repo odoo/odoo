@@ -582,6 +582,8 @@ class MassMailing(models.Model):
         return False
 
     def action_test(self):
+        if not self:
+            return
         self.ensure_one()
         ctx = dict(self.env.context, default_mass_mailing_id=self.id, dialog_size='medium')
         return {
