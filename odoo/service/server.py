@@ -15,6 +15,7 @@ import subprocess
 import sys
 import threading
 import time
+import typing as t
 import unittest
 from itertools import chain
 
@@ -147,6 +148,17 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             self.close_connection = True
             return
         super().send_header(keyword, value)
+
+    def send_response(self, code: int, message: t.Optional[str] = None):
+        try:
+            return super().send_response(code, message)
+        except UnicodeEncodeError as e:
+            # If user enter the URL like "https://www.example.com/contâct" in the browser's address bar, most of
+            # the browser will automatically convert it to "https://www.example.com/cont%C3%A2ct" (the non-ASCII
+            # character "â" is represented by their UTF-8 encoded value). But if the browser does not convert the
+            # URL, it generates a UnicodeEncodeError. In Sentry does not need to catch this type of error.
+            e.sentry_ignored = True
+            raise
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
