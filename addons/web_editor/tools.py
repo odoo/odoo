@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import contextlib
 import re
 import requests
 
@@ -137,17 +138,18 @@ def get_video_thumbnail(video_url):
 
     response = None
     platform, video_id = source[:2]
-    if platform == 'youtube':
-        response = requests.get(f'https://img.youtube.com/vi/{video_id}/0.jpg', timeout=10)
-    elif platform == 'vimeo':
-        res = requests.get(f'http://vimeo.com/api/oembed.json?url={video_url}', timeout=10)
-        if res.ok:
-            data = res.json()
-            response = requests.get(data['thumbnail_url'], timeout=10)
-    elif platform == 'dailymotion':
-        response = requests.get(f'https://www.dailymotion.com/thumbnail/video/{video_id}', timeout=10)
-    elif platform == 'instagram':
-        response = requests.get(f'https://www.instagram.com/p/{video_id}/media/?size=t', timeout=10)
+    with contextlib.suppress(requests.exceptions.RequestException):
+        if platform == 'youtube':
+            response = requests.get(f'https://img.youtube.com/vi/{video_id}/0.jpg', timeout=10)
+        elif platform == 'vimeo':
+            res = requests.get(f'http://vimeo.com/api/oembed.json?url={video_url}', timeout=10)
+            if res.ok:
+                data = res.json()
+                response = requests.get(data['thumbnail_url'], timeout=10)
+        elif platform == 'dailymotion':
+            response = requests.get(f'https://www.dailymotion.com/thumbnail/video/{video_id}', timeout=10)
+        elif platform == 'instagram':
+            response = requests.get(f'https://www.instagram.com/p/{video_id}/media/?size=t', timeout=10)
 
     if response and response.ok:
         return image_process(response.content)
