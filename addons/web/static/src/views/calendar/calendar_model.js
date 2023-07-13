@@ -29,7 +29,7 @@ export class CalendarModel extends Model {
             ...params,
             activeFields,
             fields,
-            firstDayOfWeek: localization.weekStart,
+            firstDayOfWeek: (localization.weekStart || 0) % 7,
             formViewId: params.formViewId || formViewIdFromConfig,
         };
 
@@ -361,8 +361,8 @@ export class CalendarModel extends Model {
         }
 
         if (["week", "month"].includes(scale)) {
-            const weekday = start.weekday < firstDayOfWeek ? firstDayOfWeek - 7 : firstDayOfWeek;
-            start = start.set({ weekday });
+            const currentWeekOffset = (start.weekday - firstDayOfWeek + 7) % 7;
+            start = start.minus({ days: currentWeekOffset });
             end = start.plus({ weeks: scale === "week" ? 1 : 6, days: -1 });
         }
 
