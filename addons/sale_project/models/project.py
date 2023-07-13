@@ -323,8 +323,16 @@ class Project(models.Model):
             f'{ProjectMilestone._table}.sale_line_id',
         )
 
-        query = Query(self._cr, 'project_sale_order_item', ' UNION '.join([project_query_str, task_query_str, milestone_query_str]))
-        query._where_params = project_params + task_params + milestone_params
+        SaleOrderLine = self.env['sale.order.line']
+        sale_order_line_domain = [('order_id', 'any', [('analytic_account_id', 'in', self.analytic_account_id.ids)])]
+        sale_order_line_query = SaleOrderLine._where_calc(sale_order_line_domain)
+        sale_order_line_query_str, sale_order_line_query_params = sale_order_line_query.select(
+            f'{SaleOrderLine._table}.project_id AS id',
+            f'{SaleOrderLine._table}.id AS sale_line_id',
+        )
+
+        query = Query(self._cr, 'project_sale_order_item', ' UNION '.join([project_query_str, task_query_str, milestone_query_str, sale_order_line_query_str]))
+        query._where_params = project_params + task_params + milestone_params + sale_order_line_query_params
         return query
 
     def get_panel_data(self):

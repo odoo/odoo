@@ -73,14 +73,29 @@
                 </tfoot>
             </table>
         </div>
-        <div class="o_rightpanel_subsection">
+        <div class="o_rightpanel_subsection" t-if="revenues.data.length &amp;&amp; costs.data.length">
             <table class="table table-sm table-borderless w-100 mb-0">
                 <thead>
-                    <tr>
+                    <tr class="align-top">
                         <th>Margin</th>
-                        <th class="text-end" t-att-class="margin.invoiced_billed &lt; 0 ? 'text-danger' : 'text-success'"><t t-esc="props.formatMonetary(margin.invoiced_billed)"/></th>
-                        <th class="text-end" t-att-class="margin.to_invoice_to_bill &lt; 0 ? 'text-danger' : 'text-success'"><t t-esc="props.formatMonetary(margin.to_invoice_to_bill)"/></th>
-                        <th class="text-end" t-att-class="margin.total &lt; 0 ? 'text-danger' : 'text-success'"><t t-esc="props.formatMonetary(margin.total)"/></th>
+                        <th class="text-end" t-att-class="margin.invoiced_billed &lt; 0 ? 'text-danger' : 'text-success'">
+                            <t t-esc="props.formatMonetary(margin.invoiced_billed)"/><br/>
+                            <t t-if="costs.total.billed != 0">
+                                <t t-esc="margin.invoiced_billed > 0 ? '+' : ''"/><t t-esc="(margin.invoiced_billed / (-costs.total.billed) * 100).toFixed(0)"/>%
+                            </t>
+                        </th>
+                        <th class="text-end" t-att-class="margin.to_invoice_to_bill &lt; 0 ? 'text-danger' : 'text-success'">
+                            <t t-esc="props.formatMonetary(margin.to_invoice_to_bill)"/><br/>
+                            <t t-if="costs.total.to_bill != 0">
+                                <t t-esc="margin.to_invoice_to_bill > 0 ? '+' : ''"/><t t-esc="(margin.to_invoice_to_bill / (-costs.total.to_bill) * 100).toFixed(0)"/>%
+                            </t>
+                        </th>
+                        <th class="text-end" t-att-class="margin.total &lt; 0 ? 'text-danger' : 'text-success'">
+                            <t t-esc="props.formatMonetary(margin.total)"/><br/>
+                            <t t-if="(costs.total.billed + costs.total.to_bill) != 0">
+                                <t t-esc="margin.total > 0 ? '+' : ''"/><t t-esc="(margin.total / (-costs.total.billed - costs.total.to_bill) * 100).toFixed(0)"/>%
+                            </t>
+                        </th>
                     </tr>
                 </thead>
             </table>
