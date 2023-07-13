@@ -363,7 +363,7 @@ class PricelistItem(models.Model):
         product.ensure_one()
         uom.ensure_one()
 
-        currency = currency or self.currency_id
+        currency = currency or self.currency_id or self.env.company.currency_id
         currency.ensure_one()
 
         # Pricelist specific values are specified according to product UoM

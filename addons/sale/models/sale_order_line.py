@@ -431,7 +431,7 @@ class SaleOrderLine(models.Model):
             # manually edited
             if line.qty_invoiced > 0:
                 continue
-            if not line.product_uom or not line.product_id or not line.order_id.pricelist_id:
+            if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
             else:
                 price = line.with_company(line.company_id)._get_display_price()
