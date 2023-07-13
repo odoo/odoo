@@ -897,7 +897,7 @@ class StockQuant(models.Model):
                     quant._get_inventory_move_values(quant.inventory_diff_quantity,
                                                      quant.product_id.with_company(quant.company_id).property_stock_inventory,
                                                      quant.location_id))
-            else:
+            elif float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.product_uom_id.rounding) < 0:
                 move_vals.append(
                     quant._get_inventory_move_values(-quant.inventory_diff_quantity,
                                                      quant.location_id,
