@@ -199,8 +199,15 @@ export class ViewCompiler {
         this.id = 1;
         /** @type {Compiler[]} */
         this.compilers = [
-            { selector: "a[type]:not([data-bs-toggle]),a[data-type]:not([data-bs-toggle])", fn: this.compileButton },
-            { selector: "button:not([data-bs-toggle])", fn: this.compileButton, doNotCopyAttributes: true },
+            {
+                selector: "a[type]:not([data-bs-toggle]),a[data-type]:not([data-bs-toggle])",
+                fn: this.compileButton,
+            },
+            {
+                selector: "button:not([data-bs-toggle])",
+                fn: this.compileButton,
+                doNotCopyAttributes: true,
+            },
             { selector: "field", fn: this.compileField },
             { selector: "widget", fn: this.compileWidget },
         ];
@@ -411,7 +418,7 @@ export class ViewCompiler {
             props.name = `'${el.getAttribute("name")}'`;
         }
         if (el.hasAttribute("class")) {
-            props.name = `'${el.getAttribute("class")}'`;
+            props.className = `'${el.getAttribute("class")}'`;
         }
         props.widgetInfo = `__comp__.props.archInfo.widgetNodes['${widgetId}']`;
         const widget = createElement("Widget", props);
