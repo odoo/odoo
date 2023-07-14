@@ -4829,9 +4829,9 @@ X[]
                                             '<td style="width: 30px;"><p><br></p></td>' +
                                         '</tr>' +
                                         '<tr style="height: 20px;">' +
-                                            '<td style="">ab</td>' +
-                                            '<td style="">cd</td>' +
-                                            '<td style="">ef[]</td>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef[]</td>' +
                                         '</tr></tbody></table>',
                         });
                     });
@@ -5629,23 +5629,23 @@ X[]
                                             </tbody></table>`,
                             stepFunction: async editor => editor.execCommand('resetSize'),
                             contentAfter: `<table class="table table-bordered o_table"><tbody>
-                                                <tr style="">
-                                                    <td style=""><p>[]<br></p></td>
-                                                    <td style=""><p><br></p></td>
-                                                    <td style=""><p><br></p></td>
-                                                    <td style=""><p><br></p></td>
+                                                <tr>
+                                                    <td><p>[]<br></p></td>
+                                                    <td><p><br></p></td>
+                                                    <td><p><br></p></td>
+                                                    <td><p><br></p></td>
                                                 </tr>
-                                                <tr style="">
-                                                    <td style=""><p><br></p></td>
-                                                    <td style=""><p><br></p></td>
-                                                    <td style=""><p><br></p></td>
-                                                    <td style=""><p><br></p></td>
+                                                <tr>
+                                                    <td><p><br></p></td>
+                                                    <td><p><br></p></td>
+                                                    <td><p><br></p></td>
+                                                    <td><p><br></p></td>
                                                 </tr>
-                                                <tr style="">
-                                                    <td style=""><p><br></p></td>
-                                                    <td style=""><p><br></p></td>
-                                                    <td style=""><p><br></p></td>
-                                                    <td style=""><p><br></p></td>
+                                                <tr>
+                                                    <td><p><br></p></td>
+                                                    <td><p><br></p></td>
+                                                    <td><p><br></p></td>
+                                                    <td><p><br></p></td>
                                                 </tr>
                                             </tbody></table>`,
                         });
@@ -5684,10 +5684,10 @@ X[]
                                                 </tr></tbody></table>`,
                             stepFunction: async editor => editor.execCommand('resetSize'),
                             contentAfter: `<table class="table table-bordered o_table"><tbody>
-                                                <tr style="">
-                                                    <td style=""><h1>[]TESTTEXT</h1></td>
-                                                    <td style=""><p><br></p></td>
-                                                    <td style="">
+                                                <tr>
+                                                    <td><h1>[]TESTTEXT</h1></td>
+                                                    <td><p><br></p></td>
+                                                    <td>
                                                         <ul>
                                                             <li>test</li>
                                                             <li>test</li>
@@ -5695,17 +5695,17 @@ X[]
                                                         </ul>
                                                     </td>
                                                 </tr>
-                                                <tr style="">
-                                                    <td style=""><p><br></p></td>
-                                                    <td style="">
+                                                <tr>
+                                                    <td><p><br></p></td>
+                                                    <td>
                                                         <blockquote>TESTTEXT</blockquote>
                                                     </td>
-                                                    <td style=""><p><br></p></td>
+                                                    <td><p><br></p></td>
                                                 </tr>
-                                                <tr style="">
-                                                    <td style=""><pre>codeTEST</pre></td>
-                                                    <td style=""><p><br></p></td>
-                                                    <td style="">
+                                                <tr>
+                                                    <td><pre>codeTEST</pre></td>
+                                                    <td><p><br></p></td>
+                                                    <td>
                                                         <ol>
                                                             <li>text</li>
                                                             <li>text</li>
@@ -5736,17 +5736,17 @@ X[]
                                             </tbody></table>`,
                             stepFunction: async editor => editor.execCommand('resetSize'),
                             contentAfter: `<table class="table table-bordered o_table"><tbody>
-                                                <tr style="">
+                                                <tr>
                                                     <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p>[]<br></p></td>
                                                     <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
                                                     <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
                                                 </tr>
-                                                <tr style="">
+                                                <tr>
                                                     <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
                                                     <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
                                                     <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
                                                 </tr>
-                                                <tr style="">
+                                                <tr>
                                                     <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
                                                     <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
                                                     <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>

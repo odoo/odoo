@@ -284,6 +284,13 @@ class Sanitize {
                 node.setAttribute('contenteditable', 'false');
             }
 
+            // Remove empty class/style attributes.
+            for (const attributeName of ['class', 'style']) {
+                if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute(attributeName) && !node.getAttribute(attributeName)) {
+                    node.removeAttribute(attributeName);
+                }
+            }
+
             if (node.firstChild) {
                 this._parse(node.firstChild);
             }

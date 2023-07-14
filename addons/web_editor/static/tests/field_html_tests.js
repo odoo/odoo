@@ -308,7 +308,7 @@ QUnit.module('web_editor', {}, function () {
             await testUtils.dom.click($('#toolbar .note-back-color-preview [style="background-color: var(--we-cp-o-color-3);"]'));
 
             assert.strictEqual($field.find('.note-editable').html(),
-                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-o-color-3">oto to</font>to</p><p>tata</p>',
+                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font class="bg-o-color-3">oto to</font>to</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
 
             // Make sure the reset button works too
