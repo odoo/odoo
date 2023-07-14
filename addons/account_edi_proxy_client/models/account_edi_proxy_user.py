@@ -46,13 +46,7 @@ class AccountEdiProxyClientUser(models.Model):
     private_key = fields.Binary(required=True, attachment=False, groups="base.group_system", help="The key to encrypt all the user's data")
     private_key_filename = fields.Char(compute='_compute_private_key_filename')
     refresh_token = fields.Char(groups="base.group_system")
-    proxy_type = fields.Selection(
-        selection=[],
-        string="Proxy type",
-        compute='_compute_proxy_type',
-        readonly=False,
-        store=True,
-    )
+    proxy_type = fields.Selection(selection=[], string="Proxy type", readonly=False, required=True, ondelete={})
     edi_mode = fields.Selection(
         selection=[
             ('prod', 'Production mode'),
@@ -67,11 +61,6 @@ class AccountEdiProxyClientUser(models.Model):
         ('unique_edi_identification', 'unique(edi_identification, proxy_type, edi_mode)', 'This edi identification is already assigned to a user'),
         ('unique_company_proxy', 'unique(company_id, proxy_type, edi_mode)', 'This company has a user already created for this EDI type'),
     ]
-
-    @api.depends('company_id')
-    def _compute_proxy_type(self):
-        for user in self:
-            user.proxy_type = False
 
     def _compute_private_key_filename(self):
         for record in self:
@@ -93,7 +82,7 @@ class AccountEdiProxyClientUser(models.Model):
         '''
         return company.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == proxy_type)
 
-    def _get_proxy_identification(self, company):
+    def _get_proxy_identification(self, company, proxy_type):
         '''Returns the key that will identify company uniquely
         within a specific proxy type and edi operating mode.
         or raises a UserError (if the user didn't fill the related field).
@@ -111,9 +100,9 @@ class AccountEdiProxyClientUser(models.Model):
             'id': uuid.uuid4().hex,
         }
 
+        # Last barrier : in case the demo mode is not handled by the caller, we block access.
         if self.edi_mode == 'demo':
-            # Last barrier : in case the demo mode is not handled by the caller, we block access.
-            raise Exception("Can't access the proxy in demo mode")
+            raise AccountEdiProxyError("block_demo_mode", "Can't access the proxy in demo mode")
 
         try:
             response = requests.post(
@@ -146,7 +135,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         return response['result']
 
-    def _register_proxy_user(self, company, proxy_type, edi_mode, edi_identification):
+    def _register_proxy_user(self, company, proxy_type, edi_mode):
         ''' Generate the public_key/private_key that will be used to encrypt the file, send a request to the proxy
         to register the user with the public key and create the user with the private key.
 
@@ -172,6 +161,7 @@ class AccountEdiProxyClientUser(models.Model):
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
+        edi_identification = self._get_proxy_identification(company, proxy_type)
         if edi_mode == 'demo':
             # simulate registration
             response = {'id_client': f'demo{company.id}', 'refresh_token': 'demo'}

@@ -18,18 +18,23 @@ class AccountMoveSend(models.Model):
     def _get_available_field_values_in_multi(self, move):
         # EXTENDS 'account'
         values = super()._get_available_field_values_in_multi(move)
-        values['checkbox_send_by_post'] = self.checkbox_send_by_post
+        values['checkbox_send_by_post'] = self.checkbox_send_by_post and self._get_default_enable_send_by_post(move)
         return values
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.model
+    def _get_default_enable_send_by_post(self, move):
+        return move.state == 'posted' and move.is_sale_document()
+
     @api.depends('mode')
     def _compute_enable_send_by_post(self):
         for wizard in self:
-            wizard.enable_send_by_post = wizard.mode in ('invoice_single', 'invoice_multi') \
-                and all(x.state == 'posted' for x in wizard.move_ids)
+            wizard.enable_send_by_post = (
+                wizard.mode in ('invoice_single', 'invoice_multi')
+                and all(wizard._get_default_enable_send_by_post(x) for x in wizard.move_ids))
 
     @api.depends('send_by_post_warning_message')
     def _compute_checkbox_send_by_post(self):

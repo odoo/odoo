@@ -19,9 +19,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False)
 
     def _create_proxy_user(self, company_id, edi_mode):
-        fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
-        edi_identification = fattura_pa._get_proxy_identification(company_id)
-        self.env['account_edi_proxy_client.user']._register_proxy_user(company_id, 'l10n_it_edi', edi_mode, edi_identification)
+        self.env['account_edi_proxy_client.user']._register_proxy_user(company_id, 'l10n_it_edi', edi_mode)
 
     @api.depends('company_id.account_edi_proxy_client_ids', 'company_id.account_edi_proxy_client_ids.active')
     def _compute_l10n_it_edi_sdicoop_demo_mode(self):

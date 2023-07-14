@@ -529,7 +529,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             ],
         )
         wizard = self.create_send_and_print(invoice)
-        wizard._compute_send_mail_extra_fields()
+        wizard._compute_fields_from_moves_state()
         self.assertRecordValues(wizard, [{
             'mode': 'invoice_single',
             'checkbox_ubl_cii_label': "Peppol BIS Billing 3.0",

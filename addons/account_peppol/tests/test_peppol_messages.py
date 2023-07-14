@@ -33,7 +33,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'account_peppol_proxy_state': 'active',
         })
 
-        edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company)
+        edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company, 'peppol')
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': ID_CLIENT,
             'proxy_type': 'peppol',

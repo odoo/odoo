@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 class AccountMoveSend(models.Model):
     _inherit = 'account.move.send'
 
-    enable_ubl_cii_xml = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    enable_ubl_cii_xml = fields.Boolean(compute='_compute_fields_from_moves_state')
     checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')  # label for the checkbox_ubl_cii_xml field
     checkbox_ubl_cii_xml = fields.Boolean(compute='_compute_checkbox_ubl_cii_xml', store=True, readonly=False)
 
@@ -47,9 +47,9 @@ class AccountMoveSend(models.Model):
                 if any(codes):
                     wizard.checkbox_ubl_cii_label = ", ".join(code_to_label[c] for c in set(codes) if c)
 
-    def _compute_send_mail_extra_fields(self):
+    def _compute_fields_from_moves_state(self):
         # EXTENDS 'account'
-        super()._compute_send_mail_extra_fields()
+        super()._compute_fields_from_moves_state()
         for wizard in self:
             wizard.enable_ubl_cii_xml = any(wizard._get_default_enable_ubl_cii_xml(m) for m in wizard.move_ids)
 

@@ -32,16 +32,16 @@ class AccountMoveSend(models.Model):
     )
 
     # == MAIL ==
-    enable_send_mail = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    enable_send_mail = fields.Boolean(compute='_compute_fields_from_moves_state')
     checkbox_send_mail = fields.Boolean(
         string="Email",
         compute='_compute_checkbox_send_mail',
         store=True,
         readonly=False,
     )
-    display_mail_composer = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    send_mail_warning_message = fields.Text(compute='_compute_send_mail_extra_fields')
-    send_mail_readonly = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    display_mail_composer = fields.Boolean(compute='_compute_fields_from_moves_state')
+    send_mail_warning_message = fields.Text(compute='_compute_fields_from_moves_state')
+    send_mail_readonly = fields.Boolean(compute='_compute_fields_from_moves_state')
 
     mail_template_id = fields.Many2one(
         comodel_name='mail.template',
@@ -99,7 +99,7 @@ class AccountMoveSend(models.Model):
         return {
             'move_ids': [Command.set(move.ids)],
             'mail_template_id': self.mail_template_id.id,
-            'checkbox_send_mail': self.checkbox_send_mail,
+            'checkbox_send_mail': self.checkbox_send_mail and self._get_default_enable_send_mail(move),
         }
 
     def _get_placeholder_mail_attachments_data(self, move):
@@ -184,10 +184,16 @@ class AccountMoveSend(models.Model):
         for wizard in self:
             wizard.checkbox_download = wizard.enable_download and wizard.company_id.invoice_is_download
 
+    @api.model
+    def _get_default_enable_send_mail(self, move):
+        return move.is_sale_document()
+
     @api.depends('move_ids')
-    def _compute_send_mail_extra_fields(self):
+    def _compute_fields_from_moves_state(self):
         for wizard in self:
-            wizard.enable_send_mail = wizard.mode in ('invoice_single', 'invoice_multi')
+            wizard.enable_send_mail = (
+                wizard.mode in ('invoice_single', 'invoice_multi')
+                and any(wizard._get_default_enable_send_mail(m) for m in wizard.move_ids))
             wizard.display_mail_composer = wizard.mode == 'invoice_single'
             send_mail_readonly = False
 
@@ -429,7 +435,7 @@ class AccountMoveSend(models.Model):
     def _get_mail_params(self, move):
         self.ensure_one()
 
-        if self.mode != 'invoice_single':
+        if self.mode != 'invoice_single' or not self.checkbox_send_mail:
             return
 
         # We must ensure the newly created PDF are added. At this point, the PDF has been generated but not added

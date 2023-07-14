@@ -85,6 +85,7 @@ class TestItEdi(AccountEdiTestCommon):
 
         # We create this because we are unable to post without a proxy user existing
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
+            'proxy_type': 'l10n_it_edi',
             'id_client': 'l10n_it_edi_test',
             'company_id': cls.company.id,
             'edi_identification': 'l10n_it_edi_test',

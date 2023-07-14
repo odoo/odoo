@@ -3,7 +3,7 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 class AccountMoveSend(models.Model):
     _inherit = 'account.move.send'
 
-    l10n_es_edi_facturae_enable_xml = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    l10n_es_edi_facturae_enable_xml = fields.Boolean(compute='_compute_fields_from_moves_state')
     l10n_es_edi_facturae_checkbox_xml = fields.Boolean(
         string="Generate Facturae edi file",
         default=True,
@@ -13,9 +13,9 @@ class AccountMoveSend(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    def _compute_send_mail_extra_fields(self):
+    def _compute_fields_from_moves_state(self):
         # EXTENDS 'account'
-        super()._compute_send_mail_extra_fields()
+        super()._compute_fields_from_moves_state()
         for wizard in self:
             wizard.l10n_es_edi_facturae_enable_xml = any(move._l10n_es_edi_facturae_get_default_enable() for move in wizard.move_ids)
 
