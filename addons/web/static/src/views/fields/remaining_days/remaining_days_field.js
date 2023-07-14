@@ -3,8 +3,9 @@
 import { Component } from "@odoo/owl";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { _lt } from "@web/core/l10n/translation";
+import { _lt, _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { sprintf } from "@web/core/utils/strings";
 import { DateTimeField } from "../datetime/datetime_field";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -26,6 +27,27 @@ export class RemainingDaysField extends Component {
         const today = DateTime.local().startOf("day");
         const diff = value.startOf("day").diff(today, "days");
         return Math.floor(diff.days);
+    }
+
+    get diffString() {
+        if (this.diffDays === null) {
+            return "";
+        }
+        switch (this.diffDays) {
+            case -1:
+                return _t("Yesterday");
+            case 0:
+                return _t("Today");
+            case 1:
+                return _t("Tomorrow");
+        }
+        if (Math.abs(this.diffDays) > 99) {
+            return this.formattedValue;
+        }
+        if (this.diffDays < 0) {
+            return sprintf(_t("%s days ago"), -this.diffDays);
+        }
+        return sprintf(_t("In %s days"), this.diffDays);
     }
 
     get formattedValue() {
