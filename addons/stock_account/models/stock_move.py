@@ -52,7 +52,7 @@ class StockMove(models.Model):
                 layers = layers.filtered(lambda l: float_compare(l.value, 0, precision_rounding=l.product_id.uom_id.rounding) <= 0)
             layers |= layers.stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
-            return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
+            return sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
         return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
 
     @api.model
@@ -185,7 +185,7 @@ class StockMove(models.Model):
             svl_vals = move.product_id._prepare_out_svl_vals(forced_quantity or valued_quantity, move.company_id)
             svl_vals.update(move._prepare_common_svl_vals())
             if forced_quantity:
-                svl_vals['description'] = 'Correction of %s (modification of past move)' % move.picking_id.name or move.name
+                svl_vals['description'] = 'Correction of %s (modification of past move)' % (move.picking_id.name or move.name)
             svl_vals['description'] += svl_vals.pop('rounding_adjustment', '')
             svl_vals_list.append(svl_vals)
         return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
@@ -377,7 +377,7 @@ class StockMove(models.Model):
             svl_vals = move.product_id._prepare_in_svl_vals(forced_quantity or valued_quantity, unit_cost)
             svl_vals.update(move._prepare_common_svl_vals())
             if forced_quantity:
-                svl_vals['description'] = 'Correction of %s (modification of past move)' % move.picking_id.name or move.name
+                svl_vals['description'] = 'Correction of %s (modification of past move)' % (move.picking_id.name or move.name)
             svl_vals_list.append(svl_vals)
         return svl_vals_list
 

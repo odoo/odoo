@@ -262,18 +262,21 @@ export function findNode(domPath, findCallback = () => true, stopCallback = () =
  * the range (so that it is not possible to partially remove them)
  *
  * @param {Node} node
- * @param {Node} parentLimit non-inclusive furthest parent allowed
+ * @param {Node} [parentLimit=undefined] non-inclusive furthest parent allowed
  * @returns {Node} uneditable parent if it exists
  */
 export function getFurthestUneditableParent(node, parentLimit) {
-    if (node === parentLimit || !parentLimit.contains(node)) {
+    if (node === parentLimit || (parentLimit && !parentLimit.contains(node))) {
         return undefined;
     }
     let parent = node && node.parentElement;
     let nonEditableElement;
-    while (parent && parent !== parentLimit) {
+    while (parent && (!parentLimit || parent !== parentLimit)) {
         if (!parent.isContentEditable) {
             nonEditableElement = parent;
+        }
+        if (parent.oid === "root") {
+            break;
         }
         parent = parent.parentElement;
     }
