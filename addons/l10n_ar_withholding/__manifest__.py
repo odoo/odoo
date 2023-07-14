@@ -21,6 +21,8 @@ Technical
         'views/account_tax_views.xml',
         'views/account_payment_view.xml',
         'views/product_template_view.xml',
+        'views/report_payment_receipt_templates.xml',
+        'views/res_config_settings.xml',
         'wizards/account_payment_register_views.xml',
         'security/ir.model.access.csv',
     ],

@@ -11,7 +11,7 @@
                     <field name="withholding_ids">
                         <tree editable="bottom">
                             <field name="tax_id" domain="[('l10n_ar_withholding', '=', parent.partner_type), ('company_id', '=', parent.company_id)]" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="name"/>
+                            <field name="name" attrs="{'column_invisible': [('parent.partner_type', '=', 'supplier')]}"/>
                             <field name="base_amount"/>
                             <field name="amount"/>
                             <field name="currency_id" invisible="True"/>

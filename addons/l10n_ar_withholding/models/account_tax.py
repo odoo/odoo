@@ -10,7 +10,6 @@ class AccountTax(models.Model):
         [('supplier', 'Supplier'), ('customer', 'Customer')], 'Argentinean Withholding')
     l10n_ar_withholding_amount_type = fields.Selection([
         ('untaxed_amount', 'Untaxed Amount'),
-        ('tax_amount', 'Tax Amount'),
         ('total_amount', 'Total Amount'),
     ], 'Withholding Base Amount', help='Base amount used to get withholding amount',)
     l10n_ar_withholding_sequence_id = fields.Many2one(
