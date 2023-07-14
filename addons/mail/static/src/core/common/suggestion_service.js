@@ -1,11 +1,14 @@
 /* @odoo-module */
 
+import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { cleanTerm } from "@mail/utils/common/format";
 
 import { registry } from "@web/core/registry";
 
 export class SuggestionService {
     constructor(env, services) {
+        /** @type {import("@web/env").OdooEnv} env */
+        this.env = env;
         this.orm = services.orm;
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
@@ -162,103 +165,18 @@ export class SuggestionService {
      */
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = cleanTerm(searchTerm);
-        /**
-         * Ordering:
-         * - recent chat partners
-         * - internal users
-         * - channel members
-         * - thread followers
-         * - longgest match of name, alphabetically if having same length of match
-         * - longgest match of email, alphabetically if having same length of match
-         * - id
-         */
+        const compareFunctions = partnerCompareRegistry.getAll();
         return partners.sort((p1, p2) => {
-            const recentChatPartnerIds = this.personaService.getRecentChatPartnerIds();
-            const recentChatIndex_p1 = recentChatPartnerIds.findIndex(
-                (partnerId) => partnerId === p1.id
-            );
-            const recentChatIndex_p2 = recentChatPartnerIds.findIndex(
-                (partnerId) => partnerId === p2.id
-            );
-            if (recentChatIndex_p1 !== -1 && recentChatIndex_p2 === -1) {
-                return -1;
-            } else if (recentChatIndex_p1 === -1 && recentChatIndex_p2 !== -1) {
-                return 1;
-            } else if (recentChatIndex_p1 < recentChatIndex_p2) {
-                return -1;
-            } else if (recentChatIndex_p1 > recentChatIndex_p2) {
-                return 1;
-            }
-            const isAInternalUser = p1.user?.isInternalUser;
-            const isBInternalUser = p2.user?.isInternalUser;
-            if (isAInternalUser && !isBInternalUser) {
-                return -1;
-            }
-            if (!isAInternalUser && isBInternalUser) {
-                return 1;
-            }
-            if (thread?.model === "discuss.channel") {
-                const isMember1 = thread.channelMembers.some((member) => member.persona === p1);
-                const isMember2 = thread.channelMembers.some((member) => member.persona === p2);
-                if (isMember1 && !isMember2) {
-                    return -1;
-                }
-                if (!isMember1 && isMember2) {
-                    return 1;
+            for (const fn of compareFunctions) {
+                const result = fn(p1, p2, {
+                    env: this.env,
+                    searchTerms: cleanedSearchTerm,
+                    thread,
+                });
+                if (result !== undefined) {
+                    return result;
                 }
             }
-            if (thread) {
-                const followerList = [...thread.followers];
-                const isFollower1 = followerList.some((follower) => follower.partner === p1);
-                const isFollower2 = followerList.some((follower) => follower.partner === p2);
-                if (isFollower1 && !isFollower2) {
-                    return -1;
-                }
-                if (!isFollower1 && isFollower2) {
-                    return 1;
-                }
-            }
-            const cleanedName1 = cleanTerm(p1.name ?? "");
-            const cleanedName2 = cleanTerm(p2.name ?? "");
-            if (
-                cleanedName1.startsWith(cleanedSearchTerm) &&
-                !cleanedName2.startsWith(cleanedSearchTerm)
-            ) {
-                return -1;
-            }
-            if (
-                !cleanedName1.startsWith(cleanedSearchTerm) &&
-                cleanedName2.startsWith(cleanedSearchTerm)
-            ) {
-                return 1;
-            }
-            if (cleanedName1 < cleanedName2) {
-                return -1;
-            }
-            if (cleanedName1 > cleanedName2) {
-                return 1;
-            }
-            const cleanedEmail1 = cleanTerm(p1.email ?? "");
-            const cleanedEmail2 = cleanTerm(p2.email ?? "");
-            if (
-                cleanedEmail1.startsWith(cleanedSearchTerm) &&
-                !cleanedEmail1.startsWith(cleanedSearchTerm)
-            ) {
-                return -1;
-            }
-            if (
-                !cleanedEmail2.startsWith(cleanedSearchTerm) &&
-                cleanedEmail2.startsWith(cleanedSearchTerm)
-            ) {
-                return 1;
-            }
-            if (cleanedEmail1 < cleanedEmail2) {
-                return -1;
-            }
-            if (cleanedEmail1 > cleanedEmail2) {
-                return 1;
-            }
-            return p1.id - p2.id;
         });
     }
 
