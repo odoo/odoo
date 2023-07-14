@@ -32,6 +32,21 @@ export class DiscussCoreCommon {
 
     setup() {
         this.messagingService.isReady.then(() => {
+            this.busService.subscribe("discuss.channel/joined", (payload) => {
+                const { channel, invited_by_user_id: invitedByUserId } = payload;
+                const thread = this.threadService.insert({
+                    ...channel,
+                    model: "discuss.channel",
+                    channel: channel.channel,
+                    type: channel.channel.channel_type,
+                });
+                if (invitedByUserId && invitedByUserId !== this.store.user?.user?.id) {
+                    this.notificationService.add(
+                        sprintf(_t("You have been invited to #%s"), thread.displayName),
+                        { type: "info" }
+                    );
+                }
+            });
             this.busService.subscribe("discuss.channel/leave", (payload) => {
                 const thread = this.threadService.insert({
                     ...payload,
