@@ -455,8 +455,8 @@ class MrpWorkCenterCapacity(models.Model):
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     capacity = fields.Float('Capacity', default=1.0, help="Number of pieces that can be produced in parallel for this product.")
-    time_start = fields.Float('Setup Time (minutes)', help="Time in minutes for the setup.")
-    time_stop = fields.Float('Cleanup Time (minutes)', help="Time in minutes for the cleaning.")
+    time_start = fields.Float('Setup Time (minutes)', help="Additional time in minutes for the setup.")
+    time_stop = fields.Float('Cleanup Time (minutes)', help="Additional time in minutes for the cleaning.")
 
     _sql_constraints = [
         ('positive_capacity', 'CHECK(capacity > 0)', 'Capacity should be a positive number.'),
