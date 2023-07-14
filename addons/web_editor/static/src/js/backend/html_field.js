@@ -36,6 +36,8 @@ import {
 } from "@odoo/owl";
 import { uniqueId } from '@web/core/utils/functions';
 
+import { activeWysiwygs } from '@web_editor/js/wysiwyg/linkDialogCommand';
+
 export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
     setup() {
         super.setup();
@@ -249,6 +251,7 @@ export class HtmlField extends Component {
             onWysiwygBlur: this._onWysiwygBlur.bind(this),
             ...wysiwygOptions,
             ...dynamicPlaceholderOptions,
+            activeWysiwygs,
             recordInfo: {
                 res_model: this.props.record.resModel,
                 res_id: this.props.record.resId,

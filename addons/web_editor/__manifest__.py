@@ -51,7 +51,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/editor/odoo-editor/src/commands/toggleList.js',
 
             # utils
-            'web_editor/static/src/js/wysiwyg/linkDialogCommand.js',
             'web_editor/static/src/js/wysiwyg/PeerToPeer.js',
 
             # odoo utils
@@ -115,6 +114,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.backend.scss',
 
+            'web_editor/static/src/js/wysiwyg/linkDialogCommand.js',
             'web_editor/static/src/js/wysiwyg/dialog.js',
             'web_editor/static/src/js/frontend/loader.js',
             'web_editor/static/src/js/backend/**/*',

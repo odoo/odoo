@@ -88,6 +88,7 @@ const Wysiwyg = Widget.extend({
         insertParagraphAfterColumns: true,
         onHistoryResetFromSteps: () => {},
         autostart: true,
+        activeWysiwygs: new Set(),
     },
     init: function (parent, options) {
         this._super.apply(this, arguments);
@@ -108,7 +109,7 @@ const Wysiwyg = Widget.extend({
         this._isOnline = true;
         this._signalOnline = this._signalOnline.bind(this);
         this.tooltipTimeouts = [];
-        Wysiwyg.activeWysiwygs.add(this);
+        this.options.activeWysiwygs.add(this);
         this._oNotEditableObservers = new Map();
         this._joinPeerToPeer = this._joinPeerToPeer.bind(this);
     },
@@ -702,7 +703,7 @@ const Wysiwyg = Widget.extend({
      * @override
      */
     destroy: function () {
-        Wysiwyg.activeWysiwygs.delete(this);
+        this.options.activeWysiwygs.delete(this);
         if (this._collaborationChannelName) {
             Wysiwyg.activeCollaborationChannelNames.delete(this._collaborationChannelName);
         }
@@ -2757,7 +2758,6 @@ const Wysiwyg = Widget.extend({
 
 });
 Wysiwyg.activeCollaborationChannelNames = new Set();
-Wysiwyg.activeWysiwygs = new Set();
 //--------------------------------------------------------------------------
 // Public helper
 //--------------------------------------------------------------------------
