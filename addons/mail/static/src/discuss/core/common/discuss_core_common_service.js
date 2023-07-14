@@ -5,7 +5,9 @@ import { createLocalId } from "@mail/utils/common/misc";
 
 import { markup, reactive } from "@odoo/owl";
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { sprintf } from "@web/core/utils/strings";
 
 export class DiscussCoreCommon {
     constructor(env, services) {
@@ -19,6 +21,7 @@ export class DiscussCoreCommon {
         this.messageService = services["mail.message"];
         /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
+        this.notificationService = services.notification;
         /** @type {import("@mail/core/common/out_of_focus_service").OutOfFocusService} */
         this.outOfFocusService = services["mail.out_of_focus"];
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
@@ -29,6 +32,20 @@ export class DiscussCoreCommon {
 
     setup() {
         this.messagingService.isReady.then(() => {
+            this.busService.subscribe("discuss.channel/leave", (payload) => {
+                const thread = this.threadService.insert({
+                    ...payload,
+                    model: "discuss.channel",
+                });
+                this.threadService.remove(thread);
+                if (thread.localId === this.store.discuss.threadLocalId) {
+                    this.store.discuss.threadLocalId = undefined;
+                }
+                this.notificationService.add(
+                    sprintf(_t("You unsubscribed from %s."), thread.displayName),
+                    { type: "info" }
+                );
+            });
             this.busService.addEventListener("notification", ({ detail: notifications }) => {
                 // Do not handle new message notification if the channel was just left. This issue
                 // occurs because the "discuss.channel/leave" and the "discuss.channel/new_message"
@@ -139,6 +156,7 @@ export const discussCoreCommon = {
         "mail.out_of_focus",
         "mail.store",
         "mail.thread",
+        "notification",
         "presence",
         "rpc",
     ],

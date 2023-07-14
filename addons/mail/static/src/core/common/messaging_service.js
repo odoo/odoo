@@ -163,22 +163,6 @@ export class Messaging {
                         this.store.activityCounter--;
                     }
                     break;
-                case "discuss.channel/leave":
-                    {
-                        const thread = this.threadService.insert({
-                            ...notif.payload,
-                            model: "discuss.channel",
-                        });
-                        this.threadService.remove(thread);
-                        if (thread.localId === this.store.discuss.threadLocalId) {
-                            this.store.discuss.threadLocalId = undefined;
-                        }
-                        this.notificationService.add(
-                            sprintf(_t("You unsubscribed from %s."), thread.displayName),
-                            { type: "info" }
-                        );
-                    }
-                    break;
                 case "mail.record/insert":
                     this._handleNotificationRecordInsert(notif);
                     break;
