@@ -179,6 +179,31 @@ ul {
     -webkit-box-flex: 1 !important;
 }
 
+// Report footer need to support bootstrap columns (2, 3 and 4 columns)
+// Even if the width is smaller than the media querry limit from bootstrap.
+// This need come from the footer being editable via the Odoo editor.
+
+.footer {
+    .row {
+        -webkit-box-flex: 1 !important;
+    }
+    .col-lg-3 {
+        flex: 0 0 auto;
+        -webkit-box-flex: 1 !important;
+        width: 25%;
+    }
+    .col-lg-4 {
+        flex: 0 0 auto;
+        -webkit-box-flex: 1 !important;
+        width: 33.33333333%;
+    }
+    .col-lg-6 {
+        flex: 0 0 auto;
+        -webkit-box-flex: 1 !important;
+        width: 50%;
+    }
+}
+
 // Boostrap 5 introduces variable paddings for container which wkhtmltopdf doesn't seem to process, so we restore Boostrap 4's paddings for PDFs
 .container {
     padding-right: $container-padding-x;
