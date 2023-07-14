@@ -1,15 +1,24 @@
 /** @odoo-module */
+import { HEADER_STYLE, TOP_LEVEL_STYLE, MEASURE_STYLE } from "@spreadsheet/helpers/constants";
 
 /**
  * @typedef {Object} Column
  * @property {string[]} fields
  * @property {string[]} values
  * @property {number} width
+ * @property {number} offset
  *
  * @typedef {Object} Row
  * @property {string[]} fields
  * @property {string[]} values
  * @property {number} intend
+ *
+ * @typedef {Object} PivotCell
+ * @property {boolean} isHeader
+ * @property {string[]} [domain] Domain of the pivot formula. Undefined for constant cells or empty cells
+ * @property {string} [content] Content of constant cells in the pivot.
+ * @property {Object} [style]
+ * @property {string} [measure] Measure for the pivot formula. Undefined for header cells.
  *
  * @typedef {Object} SpreadsheetTableData
  * @property {Column[][]} cols
@@ -68,17 +77,21 @@ export class SpreadsheetPivotTable {
      * @param {string} rowTitle
      */
     constructor(cols, rows, measures, rowTitle = "") {
-        this._cols = cols;
+        /** @type {Column[][]} */
+        this._cols = cols.map((row) => {
+            // offset in the pivot table
+            // starts at 1 because the first column is the row title
+            let offset = 1;
+            return row.map((col) => {
+                col = { ...col, offset };
+                offset += col.width;
+                return col;
+            });
+        });
         this._rows = rows;
         this._measures = measures;
         this._rowTitle = rowTitle;
-    }
-
-    /**
-     * @returns {number}
-     */
-    getNumberOfMeasures() {
-        return this._measures.length;
+        this.pivotCells = this._getPivotCells();
     }
 
     /**
@@ -93,22 +106,22 @@ export class SpreadsheetPivotTable {
      * @returns {Column[]}
      */
     getMeasureHeaders() {
-        return this._cols[this._cols.length - 1];
+        return this._cols[this.getNumberOfHeaderRows() - 1];
     }
 
     /**
      * Get the number of columns leafs (i.e. the number of the last row of columns)
      * @returns {number}
      */
-    getColWidth() {
-        return this._cols[this._cols.length - 1].length;
+    getNumberOfDataColumns() {
+        return this._cols[this.getNumberOfHeaderRows() - 1].length;
     }
 
     /**
-     * Get the number of row in each columns
+     * Get the number of row in each column header
      * @return {number}
      */
-    getColHeight() {
+    getNumberOfHeaderRows() {
         return this._cols.length;
     }
 
@@ -124,7 +137,7 @@ export class SpreadsheetPivotTable {
      *
      * @returns {number}
      */
-    getRowHeight() {
+    getNumberOfDataRows() {
         return this._rows.length;
     }
 
@@ -171,8 +184,80 @@ export class SpreadsheetPivotTable {
         return this._rows[index];
     }
 
-    getRowTitle() {
-        return this._rowTitle;
+    /**
+     * @private
+     * @returns {PivotCell[][]}
+     */
+    _getPivotCells() {
+        const pivotHeight = this.getNumberOfHeaderRows() + this.getNumberOfDataRows();
+        const pivotWidth = this.getNumberOfDataColumns() + 1;
+
+        const domainArray = [];
+        for (let col = 0; col < pivotWidth; col++) {
+            domainArray.push([]);
+            for (let row = 0; row < pivotHeight; row++) {
+                domainArray[col].push(this._getPivotCell(col, row));
+            }
+        }
+        return domainArray;
+    }
+
+    /**
+     * @returns {PivotCell}
+     */
+    _getPivotCell(col, row) {
+        const colHeadersHeight = this.getNumberOfHeaderRows();
+        if (col === 0 && row === colHeadersHeight - 1) {
+            return { content: this._rowTitle, isHeader: true, style: HEADER_STYLE };
+        } else if (row <= colHeadersHeight - 1) {
+            const domain = this._getColHeaderDomain(col, row);
+            const style = row === colHeadersHeight - 1 ? MEASURE_STYLE : TOP_LEVEL_STYLE;
+            return { domain, isHeader: true, style };
+        } else if (col === 0) {
+            const rowIndex = row - colHeadersHeight;
+            const domain = this._getRowDomain(rowIndex);
+            const indent = this._rows[rowIndex].indent;
+            const style = indent <= 1 ? TOP_LEVEL_STYLE : indent === 2 ? HEADER_STYLE : undefined;
+            return { domain, isHeader: true, style };
+        } else {
+            const rowIndex = row - colHeadersHeight;
+            const domain = [...this._getRowDomain(rowIndex), ...this._getColDomain(col)];
+            const measure = this._getColMeasure(col);
+            return { domain, isHeader: false, measure };
+        }
+    }
+
+    _getColHeaderDomain(col, row) {
+        if (col === 0) {
+            return undefined;
+        }
+        const domain = [];
+        const pivotCol = this._cols[row].find((pivotCol) => pivotCol.offset === col);
+        if (!pivotCol) {
+            return undefined;
+        }
+        for (let i = 0; i < pivotCol.fields.length; i++) {
+            domain.push(pivotCol.fields[i]);
+            domain.push(pivotCol.values[i]);
+        }
+        return domain;
+    }
+
+    _getColDomain(col) {
+        return this._getColHeaderDomain(col, this.getNumberOfHeaderRows() - 1).slice(0, -2); // slice: remove measure and value
+    }
+
+    _getColMeasure(col) {
+        return this._getColHeaderDomain(col, this.getNumberOfHeaderRows() - 1).at(-1);
+    }
+
+    _getRowDomain(row) {
+        const domain = [];
+        for (let i = 0; i < this._rows[row].fields.length; i++) {
+            domain.push(this._rows[row].fields[i]);
+            domain.push(this._rows[row].values[i]);
+        }
+        return domain;
     }
 
     /**
