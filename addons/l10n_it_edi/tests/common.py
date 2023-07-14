@@ -104,7 +104,8 @@ class TestItEdi(AccountEdiTestCommon):
         path = f'{self.module}/tests/export_xmls/{filename}'
         with tools.file_open(path, mode='rb') as fd:
             expected_tree = etree.fromstring(fd.read())
-        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(invoice))
+        xml = self.env['l10n_it_edi.export']._l10n_it_edi_export(invoice)
+        invoice_etree = etree.fromstring(xml)
         try:
             self.assertXmlTreeEqual(invoice_etree, expected_tree)
         except AssertionError as ae:
@@ -138,9 +139,8 @@ class TestItEdi(AccountEdiTestCommon):
             'name': filename,
             'raw': import_content,
         })
-        invoices = self.company_data_2['default_journal_purchase']\
-            .with_context(default_move_type='in_invoice')\
-            ._create_document_from_attachment(attachment.ids)
+        purchase_journal = self.company_data_2['default_journal_purchase'].with_context(default_move_type='in_invoice')
+        invoices = purchase_journal._create_document_from_attachment(attachment.ids)
 
         expected_invoice_values_list = []
         expected_invoice_line_ids_values_list = []

@@ -3,7 +3,7 @@
 
 import logging
 from collections import namedtuple
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -28,15 +28,15 @@ class AccountMove(models.Model):
             move.l10n_it_amount_pension_fund_signed = totals['pension_fund']
             move.l10n_it_amount_before_withholding_signed = move.amount_untaxed_signed + totals['vat'] + totals['pension_fund']
 
-    def _l10n_it_edi_filter_fatturapa_tax_details(self, line, tax_values):
+    def _l10n_it_edi_filter_tax_details(self, line, tax_values):
         """Filters tax details to only include the positive amounted lines regarding VAT taxes."""
         repartition_line = tax_values['tax_repartition_line']
         repartition_line_vat = repartition_line.tax_id._l10n_it_filter_kind('vat')
         return repartition_line.factor_percent >= 0 and repartition_line_vat and repartition_line_vat.amount >= 0
 
-    def _prepare_fatturapa_export_values(self):
+    def _l10n_it_edi_get_values(self):
         """Add withholding and pension_fund features."""
-        template_values = super()._prepare_fatturapa_export_values()
+        template_values = super()._l10n_it_edi_get_values()
 
         # Withholding tax data
         WithholdingTaxData = namedtuple('TaxData', ['tax', 'tax_amount'])
@@ -94,3 +94,18 @@ class AccountMove(models.Model):
             'document_total': document_total,
         })
         return template_values
+
+    def _l10n_it_edi_export_taxes_data_check(self):
+        """
+            Override to also allow pension_fund, withholding taxes.
+            Needs not to call super, because super checks for one tax only per line.
+        """
+        errors = []
+        for invoice_line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
+            vat_taxes, withholding_taxes, pension_fund_taxes = [invoice_line.tax_ids._l10n_it_filter_kind(kind) for kind in ('vat', 'withholding', 'pension_fund')]
+            if not invoice_line.display_type:
+                if len(vat_taxes) != 1:
+                    errors.append(_("Bad tax configuration for line %s, there must be one and only one VAT tax per line", invoice_line.name))
+                if len(pension_fund_taxes) > 1 or len(withholding_taxes) > 1:
+                    errors.append(_("Bad tax configuration for line %s, there must be one Withholding tax and one Pension Fund tax at max.", invoice_line.name))
+        return errors

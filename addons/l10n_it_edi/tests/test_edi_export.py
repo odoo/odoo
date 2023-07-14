@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
@@ -214,8 +213,9 @@ class TestItEdiExport(TestItEdi):
             ],
         })
 
-        with self.assertRaises(UserError):
-            invoice.action_post()
+        expected = ['Alessi must have a street.', 'Alessi must have a country.', 'Alessi must have a post code.', 'Alessi must have a city.']
+        actual = invoice._l10n_it_edi_export_data_check()
+        self.assertEqual(expected, actual)
 
     def test_invoice_non_domestic_simplified(self):
         invoice = self.env['account.move'].with_company(self.company).create({
@@ -231,9 +231,9 @@ class TestItEdiExport(TestItEdi):
                 }),
             ],
         })
-
-        with self.assertRaises(UserError):
-            invoice.action_post()
+        expected = ['Alessi must have a street.', 'Alessi must have a post code.', 'Alessi must have a city.']
+        actual = invoice._l10n_it_edi_export_data_check()
+        self.assertEqual(expected, actual)
 
     def test_invoice_send_pa_partner(self):
         invoice = self.env['account.move'].with_company(self.company).create({
@@ -250,9 +250,16 @@ class TestItEdiExport(TestItEdi):
                 }),
             ],
         })
-
-        res = self.edi_format._l10n_it_post_invoices_step_1(invoice)
-        self.assertEqual(res[invoice], {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True})
+        invoice._post()
+        send_and_print_wizard = self.env['account.move.send'].create({
+            'move_ids': invoice.ids,
+            'l10n_it_edi_checkbox_send': True,
+            'checkbox_send_mail': False,
+            'checkbox_download': False,
+        })
+        send_and_print_wizard.action_send_and_print(from_cron=False)
+        self.assertTrue(bool(invoice.l10n_it_edi_attachment_id))
+        self.assertEqual('requires_user_signature', invoice.l10n_it_edi_state)
 
     def test_invoice_zero_percent_taxes(self):
         tax_zero_percent_hundred_percent_repartition = self.env['account.tax'].with_company(self.company).create({

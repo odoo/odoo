@@ -1,15 +1,16 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
 import logging
+
+from odoo import models, _
 
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+class L10nItEdiImport(models.AbstractModel):
+    _inherit = 'l10n_it_edi.import'
 
     def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None, vat_only=True):
         """ In case no withholding_type or pension_fund is specified, exclude taxes that have it.
@@ -18,21 +19,6 @@ class AccountEdiFormat(models.Model):
         if vat_only:
             extra_domain += [('l10n_it_withholding_type', '=', False), ('l10n_it_pension_fund_type', '=', False)]
         return super()._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain)
-
-    def _l10n_it_edi_check_taxes_configuration(self, invoice):
-        """
-            Override to also allow pension_fund, withholding taxes.
-            Needs not to call super, because super checks for one tax only per line.
-        """
-        errors = []
-        for invoice_line in invoice.invoice_line_ids.filtered(lambda x: not x.display_type):
-            vat_taxes, withholding_taxes, pension_fund_taxes = [invoice_line.tax_ids._l10n_it_filter_kind(kind) for kind in ('vat', 'withholding', 'pension_fund')]
-            if not invoice_line.display_type:
-                if len(vat_taxes) != 1:
-                    errors.append(_("Bad tax configuration for line %s, there must be one and only one VAT tax per line", invoice_line.name))
-                if len(pension_fund_taxes) > 1 or len(withholding_taxes) > 1:
-                    errors.append(_("Bad tax configuration for line %s, there must be one Withholding tax and one Pension Fund tax at max.", invoice_line.name))
-        return errors
 
     def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree):
         extra_info, message_to_log = super()._l10n_it_edi_get_extra_info(company, document_type, body_tree)
@@ -86,21 +72,21 @@ class AccountEdiFormat(models.Model):
 
         return extra_info, message_to_log
 
-    def _import_fattura_pa_line(self, element, invoice_line_form, extra_info):
-        messages_to_log = super()._import_fattura_pa_line(element, invoice_line_form, extra_info)
+    def _l10n_it_edi_import_line(self, element, move_line_form, extra_info=None):
+        messages_to_log = super()._l10n_it_edi_import_line(element, move_line_form, extra_info)
 
         for withholding_tax in extra_info.get('withholding_taxes', []):
             withholding_tags = element.xpath("Ritenuta")
             if withholding_tags and withholding_tags[0].text == 'SI':
-                invoice_line_form.tax_ids |= withholding_tax
+                move_line_form.tax_ids |= withholding_tax
         for pension_fund_tax in extra_info.get('pension_fund_taxes', []):
-            invoice_line_form.tax_ids |= pension_fund_tax
+            move_line_form.tax_ids |= pension_fund_tax
 
         if extra_info['simplified']:
             return messages_to_log
 
-        price_subtotal = invoice_line_form.price_unit
-        company = invoice_line_form.company_id
+        price_subtotal = move_line_form.price_unit
+        company = move_line_form.company_id
 
         # ENASARCO Pension Fund tax (works as a withholding)
         for other_data_element in element.xpath('.//AltriDatiGestionali'):
@@ -120,10 +106,10 @@ class AccountEdiFormat(models.Model):
                 [('l10n_it_pension_fund_type', '=', 'TC07')],
                 vat_only=False)
             if enasarco_tax:
-                invoice_line_form.tax_ids |= enasarco_tax
+                move_line_form.tax_ids |= enasarco_tax
             else:
                 messages_to_log.append("%s<br/>%s" % (
-                    _("Enasarco tax not found for line with description '%s'", invoice_line_form.name),
+                    _("Enasarco tax not found for line with description '%s'", move_line_form.name),
                     self.env['account.move']._compose_info_message(other_data_element, '.'),
                 ))
 

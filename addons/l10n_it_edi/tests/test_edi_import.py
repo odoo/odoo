@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import MagicMock, patch
+import uuid
+from unittest.mock import patch
 
 from odoo import fields, sql_db
 from odoo.tests import tagged
@@ -73,25 +74,30 @@ class TestItEdiImport(TestItEdi):
     def test_receive_same_vendor_bill_twice(self):
         """ Test that the second time we are receiving an SdiCoop invoice, the second is discarded """
 
-        fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
-        content = self.fake_test_content.encode()
-
         # Our test content is not encrypted
-        proxy_user = MagicMock()
-        proxy_user.company_id = self.company
-        proxy_user._decrypt_data.return_value = content
+        ProxyUser = self.env['account_edi_proxy_client.user']
+        proxy_user = ProxyUser.create({
+            'company_id': self.company.id,
+            'proxy_type': 'l10n_it_edi',
+            'id_client': str(uuid.uuid4()),
+            'edi_identification': ProxyUser._get_proxy_identification(self.company, 'l10n_it_edi'),
+            'private_key': str(uuid.uuid4()),
+        })
+
+        filename = 'IT01234567890_FPR02.xml'
 
         def mock_commit(self):
             pass
 
-        with patch.object(sql_db.Cursor, "commit", mock_commit):
-            for dummy in range(2):
-                fattura_pa._save_incoming_attachment_fattura_pa(
-                    proxy_user=proxy_user,
-                    id_transaction='9999999999',
-                    filename='IT01234567890_FPR02.xml',
-                    content=content,
-                    key=None)
+        for dummy in range(2):
+            with patch.object(proxy_user.__class__, '_decrypt_data', return_value=self.fake_test_content):
+                with patch.object(sql_db.Cursor, "commit", mock_commit):
+                    proxy_user._l10n_it_edi_process_downloads({
+                        '999999999': {
+                            'filename': filename,
+                            'file': self.fake_test_content,
+                            'key': str(uuid.uuid4()),
+                        }})
 
         # There should be one attachement with this filename
         attachments = self.env['ir.attachment'].search([('name', '=', 'IT01234567890_FPR02.xml')])

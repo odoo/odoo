@@ -515,6 +515,7 @@ class AccountMove(models.Model):
         tracking=True,
         help="It indicates that the invoice/payment has been sent or the PDF has been generated.",
     )
+    display_send_and_print_button = fields.Boolean(compute="_compute_display_send_and_print_button")
 
     invoice_user_id = fields.Many2one(
         string='Salesperson',
@@ -638,6 +639,18 @@ class AccountMove(models.Model):
                 move.invoice_user_id = move.invoice_user_id or self.env.user
             else:
                 move.invoice_user_id = False
+
+    @api.depends('move_type', 'state', 'invoice_pdf_report_id')
+    def _compute_display_send_and_print_button(self):
+        sale_types = self.get_sale_types()
+        invoice_types = self.get_invoice_types()
+        for move in self:
+            move.display_send_and_print_button = (
+                move.state == 'posted' and (
+                    move.invoice_pdf_report_id and move.move_type in invoice_types
+                    or not move.invoice_pdf_report_id and move.move_type in sale_types
+                )
+            )
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
@@ -3028,30 +3041,29 @@ class AccountMove(models.Model):
         """
         success = False
 
-        for file_data in attachments._unwrap_edi_attachments(): # sorted by priority
-
-            decoder = self._get_edi_decoder(file_data, new=new)
-
-            try:
-                if decoder and not success:
-                    with self.env.cr.savepoint(), self._get_edi_creation() as invoice:
-                        # pylint: disable=not-callable
-                        success = decoder(invoice, file_data, new)
+        # sorted by priority
+        for file_data in attachments._unwrap_edi_attachments():
+            if not success and (decoder := self._get_edi_decoder(file_data, new=new)):
+                try:
+                    with self.env.cr.savepoint():
+                        with self._get_edi_creation() as invoice:
+                            # pylint: disable=not-callable
+                            success = decoder(invoice, file_data, new)
                         if success:
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
 
-            except RedirectWarning as rw:
-                raise rw
-            except Exception as e:
-                _logger.exception(
-                    "Error importing attachment '%s' as invoice: %s",
-                    file_data['filename'],
-                    str(e),
-                )
-
-            finally:
-                if file_data.get('on_close'):
-                    file_data['on_close']()
+                except RedirectWarning as rw:
+                    raise rw
+                except Exception as e: # pylint: disable=broad-except
+                    _logger.exception(
+                        "Error importing attachment '%s' as invoice (decoder=%s): %s",
+                        file_data['filename'],
+                        decoder.__name__,
+                        str(e),
+                    )
+                finally:
+                    if file_data.get('on_close'):
+                        file_data['on_close']()
 
         return success
 

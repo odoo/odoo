@@ -7,12 +7,9 @@
     'version': '0.3',
     'depends': [
         'l10n_it',
-        # Although account_edi is a dependency of account_edi_proxy_client,
-        # it is here because it's in the auto-install
-        'account_edi',
         'account_edi_proxy_client',
     ],
-    'auto_install': ['l10n_it', 'account_edi'],
+    'auto_install': ['l10n_it'],
     'description': """
 E-invoice implementation
     """,
@@ -26,7 +23,8 @@ E-invoice implementation
         'data/ir_cron.xml',
         'views/res_config_settings_views.xml',
         'views/l10n_it_view.xml',
-        ],
+        'wizard/account_move_send_views.xml',
+    ],
     'demo': [
         'data/account_invoice_demo.xml',
     ],

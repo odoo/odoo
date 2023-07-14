@@ -92,6 +92,9 @@ class IrAttachment(models.Model):
         This function is meant to be overriden to add formats.
 
         :returns:           A list of dictionary.
+        * name:             Optional but helps debugging.
+                            There are other methods that require the attachment
+                            to be an XML other than the standard one.
         * check:            Function to be called on the attachment to pre-check if decoding will work.
         * decoder:          Function to be called on the attachment to unwrap it.
         """
@@ -105,14 +108,17 @@ class IrAttachment(models.Model):
 
         return [
             {
+                'name': 'pdf',
                 'check': lambda attachment: 'pdf' in attachment.mimetype,
                 'decoder': self._decode_edi_pdf,
             },
             {
+                'name': 'xml',
                 'check': is_xml,
                 'decoder': self._decode_edi_xml,
             },
             {
+                'name': 'binary',
                 'check': lambda attachment: True,
                 'decoder': self._decode_edi_binary,
             },
