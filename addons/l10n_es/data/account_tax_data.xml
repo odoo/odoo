@@ -2522,6 +2522,38 @@
             }),
         ]"/>
     </record>
+    <record id="account_tax_template_p_iva5_nd" model="account.tax.template">
+        <field name="type_tax_use">purchase</field>
+        <field name="name">5% IVA Soportado no deducible</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="5"/>
+        <field name="amount_type">percent</field>
+        <field name="analytic" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_iva_nd"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
     <record id="account_tax_template_p_iva4_nd" model="account.tax.template">
         <field name="type_tax_use">purchase</field>
         <field name="name">4% IVA Soportado no deducible</field>
