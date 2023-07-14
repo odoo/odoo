@@ -26,6 +26,7 @@ export class DomainField extends Component {
     };
 
     setup() {
+        this.rpc = useService("rpc");
         this.orm = useService("orm");
         this.state = useState({
             recordCount: null,
@@ -50,14 +51,33 @@ export class DomainField extends Component {
 
         useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", async (ev) => {
             if (this.isDebugEdited) {
-                const prom = this.loadCount(this.props);
+                const props = this.props;
+                const prom = this.quickValidityCheck(props);
                 ev.detail.proms.push(prom);
-                await prom;
-                if (!this.state.isValid) {
-                    this.props.record.setInvalidField(this.props.name);
-                }
+                prom.then((isValid) => {
+                    if (isValid) {
+                        this.isDebugEdited = false; // will allow the count to be loaded if needed
+                    } else {
+                        this.state.isValid = false;
+                        this.state.recordCount = 0;
+                        this.props.record.setInvalidField(props.name);
+                    }
+                });
             }
         });
+    }
+
+    async quickValidityCheck(p) {
+        const model = this.getResModel(p);
+        if (!model) {
+            return false;
+        }
+        try {
+            const domain = this.getDomain(p.record.data[p.name]).toList(this.getContext(p));
+            return this.rpc("/web/domain/validate", { model, domain });
+        } catch {
+            return false;
+        }
     }
 
     getContext(p) {
