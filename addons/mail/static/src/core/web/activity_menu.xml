@@ -13,7 +13,7 @@
                     <span>Congratulations, you're done with your activities.</span>
                 </div>
                 <div class="d-flex flex-column list-group-flush" name="activityGroups">
-                    <t t-foreach="store.activityGroups" t-as="group" t-key="group.id" name="activityGroupLoop">
+                    <t t-foreach="store.activityGroups" t-as="group" t-key="group_index" name="activityGroupLoop">
                         <button class="o-mail-ActivityGroup list-group-item list-group-item-action d-flex p-2" t-att-data-model_name="group.model" t-on-click="() => this.openActivityGroup(group)">
                             <img alt="Activity" t-att-src="group.icon"/>
                             <div class="flex-grow-1 overflow-hidden">
