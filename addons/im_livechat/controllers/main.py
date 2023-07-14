@@ -72,7 +72,8 @@ class LivechatController(http.Controller):
             if matching_rule.chatbot_script_id.active and (not matching_rule.chatbot_only_if_no_operator or
                (not operator_available and matching_rule.chatbot_only_if_no_operator)) and matching_rule.chatbot_script_id.script_step_ids:
                 chatbot_script = matching_rule.chatbot_script_id
-                rule.update({'chatbot': chatbot_script._format_for_frontend()})
+                chatbot_language = request.httprequest.cookies.get('frontend_lang', request.env.user.lang or tools.get_lang(request.env).code)
+                rule.update({'chatbot': chatbot_script.with_context(lang=chatbot_language)._format_for_frontend()})
         return {
             'available_for_me': (rule and rule.get('chatbot'))
                                 or operator_available and (not rule or rule['action'] != 'hide_button'),
@@ -132,7 +133,8 @@ class LivechatController(http.Controller):
 
         chatbot_script = False
         if chatbot_script_id:
-            chatbot_script = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
+            chatbot_language = request.httprequest.cookies.get('frontend_lang', request.env.user.lang or tools.get_lang(request.env).code)
+            chatbot_script = request.env['chatbot.script'].sudo().with_context(lang=chatbot_language).browse(chatbot_script_id)
 
         return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_discuss_channel(
             anonymous_name,
