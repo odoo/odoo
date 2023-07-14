@@ -45,6 +45,7 @@ class PosSelfOrderController(http.Controller):
             'data': {
                 'uuid': order.get('uuid'),
                 'name': unique_id,
+                'pos_reference': unique_id,
                 'user_id': request.session.uid,
                 'sequence_number': sequence_number,
                 'access_token': uuid.uuid4().hex,
@@ -125,8 +126,7 @@ class PosSelfOrderController(http.Controller):
     def get_orders_by_access_token(self, order_access_tokens):
         orders_sudo = request.env["pos.order"].sudo().search([
             ("access_token", "in", order_access_tokens),
-            ("date_order", ">=", fields.Datetime.now() - timedelta(days=7)),
-        ])
+        ], limit=10)
 
         if not orders_sudo:
             raise NotFound("Orders not found")

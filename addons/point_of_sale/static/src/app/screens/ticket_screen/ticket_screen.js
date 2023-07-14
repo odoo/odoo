@@ -330,6 +330,7 @@ export class TicketScreen extends Component {
         const predicate = (order) => {
             return filterCheck(order) && searchCheck(order);
         };
+
         return this._getOrderList().filter(predicate);
     }
     getDate(order) {
