@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-from lxml import etree
 from collections import namedtuple
 
 from odoo import fields

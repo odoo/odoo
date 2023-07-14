@@ -11,6 +11,28 @@ class AccountMove(models.Model):
     l10n_it_ddt_ids = fields.Many2many('stock.picking', compute="_compute_ddt_ids")
     l10n_it_ddt_count = fields.Integer(compute="_compute_ddt_ids")
 
+    def _l10n_it_edi_document_type_mapping(self):
+        """ Deferred invoices (not direct) require TD24 FatturaPA Document Type. """
+        res = super()._l10n_it_edi_document_type_mapping()
+        for document_type, infos in res.items():
+            if document_type == 'TD07':
+                continue
+            infos['direct_invoice'] = True
+        res['TD24'] = {'move_types': ['out_invoice'], 'import_type': 'in_invoice', 'direct_invoice': False}
+        return res
+
+    def _l10n_it_edi_invoice_is_direct(self):
+        """ An invoice is only direct if the Transport Documents are all done the same day as the invoice. """
+        for ddt in self.l10n_it_ddt_ids:
+            if not ddt.date_done or ddt.date_done != self.invoice_date:
+                return False
+        return True
+
+    def _l10n_it_edi_features_for_document_type_selection(self):
+        res = super()._l10n_it_edi_features_for_document_type_selection()
+        res['direct_invoice'] = self._l10n_it_edi_invoice_is_direct()
+        return res
+
     def _get_ddt_values(self):
         """
         We calculate the link between the invoice lines and the deliveries related to the invoice through the
@@ -79,7 +101,7 @@ class AccountMove(models.Model):
             'domain': [('id', 'in', self.l10n_it_ddt_ids.ids)],
         }
 
-    def _prepare_fatturapa_export_values(self):
-        template_values = super()._prepare_fatturapa_export_values()
+    def _l10n_it_edi_get_values(self, pdf_values=None):
+        template_values = super()._l10n_it_edi_get_values(pdf_values)
         template_values['ddt_dict'] = self._get_ddt_values()
         return template_values
