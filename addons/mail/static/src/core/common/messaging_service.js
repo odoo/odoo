@@ -166,14 +166,6 @@ export class Messaging {
                 case "mail.record/insert":
                     this._handleNotificationRecordInsert(notif);
                     break;
-                case "discuss.channel/legacy_insert":
-                    this.threadService.insert({
-                        id: notif.payload.channel.id,
-                        model: "discuss.channel",
-                        type: notif.payload.channel.channel_type,
-                        ...notif.payload,
-                    });
-                    break;
                 case "discuss.channel/transient_message": {
                     const channel =
                         this.store.threads[createLocalId("discuss.channel", notif.payload.res_id)];
