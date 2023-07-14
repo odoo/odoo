@@ -218,6 +218,7 @@ class AccountChartTemplate(models.AbstractModel):
             if self.ref(xmlid, raise_if_not_found=False):
                 del data['account.journal'][xmlid]
             else:
+                journal = None
                 if 'code' in journal_data:
                     journal = self.env['account.journal'].with_context(active_test=False).search([
                         ('code', '=', journal_data['code']),
