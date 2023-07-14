@@ -274,7 +274,7 @@ export function customErrorMessage(assertLocation, value, expected) {
     value = value.replaceAll('\u200B', zws);
     expected = expected.replaceAll('\u200B', zws);
 
-    return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
+    return `${(isMobileTest ? '[MOBILE VERSION: ' : '[')}${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
 
 export async function testEditor(Editor = OdooEditor, spec, options = {}) {
