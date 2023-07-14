@@ -35,8 +35,8 @@ export const SEE_RECORD_LIST_VISIBLE = (position, env) => {
     return (
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
-        getNumberOfListFormulas(cell.content) === 1 &&
         cell &&
+        getNumberOfListFormulas(cell.content) === 1 &&
         getFirstListFunction(cell.content).functionName === "ODOO.LIST"
     );
 };
