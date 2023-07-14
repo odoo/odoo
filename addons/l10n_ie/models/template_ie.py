@@ -32,8 +32,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'l10n_ie_account_2101',
                 'income_currency_exchange_account_id': 'l10n_ie_account_761',
                 'expense_currency_exchange_account_id': 'l10n_ie_account_661',
-                'deferred_expense_account_id': 'l10n_ie_account_2161',
-                'deferred_revenue_account_id': 'l10n_ie_account_39',
                 'account_journal_early_pay_discount_loss_account_id': 'l10n_ie_account_640',
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_ie_account_730',
                 'default_cash_difference_expense_account_id': 'l10n_ie_account_641',
