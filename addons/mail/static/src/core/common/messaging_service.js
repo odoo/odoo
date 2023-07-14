@@ -27,8 +27,6 @@ export class Messaging {
         this.store = services["mail.store"];
         this.rpc = services.rpc;
         this.orm = services.orm;
-        /** @type {import("@mail/core/common/channel_member_service").ChannelMemberService} */
-        this.channelMemberService = services["discuss.channel.member"];
         /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
         this.notificationService = services.notification;
@@ -40,11 +38,8 @@ export class Messaging {
         this.messageService = services["mail.message"];
         /** @type {import("@mail/core/common/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
-        /** @type {import("@mail/core/common/out_of_focus_service").OutOfFocusService} */
-        this.outOfFocusService = services["mail.out_of_focus"];
         this.router = services.router;
         this.bus = services.bus_service;
-        this.presence = services.presence;
         this.isReady = new Deferred();
         this.imStatusService = services.im_status;
         const user = services.user;
@@ -158,14 +153,6 @@ export class Messaging {
     // -------------------------------------------------------------------------
 
     handleNotification(notifications) {
-        const channelsLeft = new Set(
-            notifications.reduce((channelIds, notification) => {
-                if (notification.type === "discuss.channel/leave") {
-                    channelIds.push(notification.payload.id);
-                }
-                return channelIds;
-            }, [])
-        );
         for (const notif of notifications) {
             switch (notif.type) {
                 case "mail.activity/updated":
@@ -175,17 +162,6 @@ export class Messaging {
                     if (notif.payload.activity_deleted) {
                         this.store.activityCounter--;
                     }
-                    break;
-                case "discuss.channel/new_message":
-                    if (channelsLeft.has(notif.payload.id)) {
-                        // Do not handle new message notification if the channel
-                        // was just left. This issue occurs because the
-                        // "discuss.channel/leave" and the
-                        // "discuss.channel/new_message" notifications come from
-                        // the bus as a batch.
-                        break;
-                    }
-                    this._handleNotificationNewMessage(notif);
                     break;
                 case "discuss.channel/leave":
                     {
@@ -446,87 +422,6 @@ export class Messaging {
         }
     }
 
-    async _handleNotificationNewMessage(notif) {
-        const { id, message: messageData } = notif.payload;
-        let channel = this.store.threads[createLocalId("discuss.channel", id)];
-        if (!channel || !channel.type) {
-            const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
-            channel = this.threadService.insert({
-                model: "discuss.channel",
-                type: channelData.channel.channel_type,
-                ...channelData,
-            });
-        }
-        if (!channel.is_pinned) {
-            this.threadService.pin(channel);
-        }
-
-        removeFromArrayWithPredicate(channel.messages, ({ id }) => id === messageData.temporary_id);
-        delete this.store.messages[messageData.temporary_id];
-        messageData.temporary_id = null;
-        if ("parentMessage" in messageData && messageData.parentMessage.body) {
-            messageData.parentMessage.body = markup(messageData.parentMessage.body);
-        }
-        const data = Object.assign(messageData, {
-            body: markup(messageData.body),
-        });
-        const message = this.messageService.insert({
-            ...data,
-            res_id: channel.id,
-            model: channel.model,
-        });
-        if (!channel.messages.includes(message)) {
-            if (!channel.loadNewer) {
-                channel.messages.push(message);
-            } else if (channel.state === "loading") {
-                channel.pendingNewMessages.push(message);
-            }
-            if (message.isSelfAuthored) {
-                channel.seen_message_id = message.id;
-            } else {
-                if (notif.id > this.store.initBusId) {
-                    channel.message_unread_counter++;
-                }
-                if (message.isNeedaction) {
-                    const inbox = this.store.discuss.inbox;
-                    if (!inbox.messages.includes(message)) {
-                        inbox.messages.push(message);
-                        if (notif.id > this.store.initBusId) {
-                            inbox.counter++;
-                        }
-                    }
-                    if (!channel.needactionMessages.includes(message)) {
-                        channel.needactionMessages.push(message);
-                        if (notif.id > this.store.initBusId) {
-                            channel.message_needaction_counter++;
-                        }
-                    }
-                }
-            }
-        }
-        if (channel.chatPartnerId !== this.store.odoobot?.id) {
-            if (!this.presence.isOdooFocused() && channel.isChatChannel) {
-                this.outOfFocusService.notify(message, channel);
-            }
-
-            if (channel.type !== "channel" && !this.store.guest) {
-                // disabled on non-channel threads and
-                // on "channel" channels for performance reasons
-                this.threadService.markAsFetched(channel);
-            }
-        }
-        if (
-            !channel.loadNewer &&
-            !message.isSelfAuthored &&
-            channel.composer.isFocused &&
-            channel.newestPersistentMessage &&
-            !this.store.guest &&
-            channel.newestPersistentMessage === channel.newestMessage
-        ) {
-            this.threadService.markAsRead(channel);
-        }
-    }
-
     _handleNotificationRecordInsert(notif) {
         if (notif.payload.Thread) {
             this.threadService.insert(notif.payload.Thread);
@@ -652,7 +547,6 @@ export class Messaging {
 export const messagingService = {
     dependencies: [
         "mail.store",
-        "discuss.channel.member",
         "rpc",
         "orm",
         "user",
@@ -660,13 +554,11 @@ export const messagingService = {
         "bus_service",
         "im_status",
         "notification",
-        "presence",
         "mail.attachment",
         "mail.user_settings",
         "mail.thread",
         "mail.message",
         "mail.persona",
-        "mail.out_of_focus",
     ],
     start(env, services) {
         const messaging = new Messaging(env, services);
