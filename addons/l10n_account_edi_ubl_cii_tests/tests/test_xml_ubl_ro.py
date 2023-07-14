@@ -19,39 +19,43 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref="ro"):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        cls.currency = cls.env["res.currency"].search([("name", "=", "RON")])
-        cls.country_state = cls.env["res.country.state"].search([("name", "=", "București")])
-
-        cls.partner_1 = cls.env['res.partner'].create({
-            'name': "partner_1",
-            'street': "Strada Kunst, 3",
-            'zip': "010101",
-            'city': "Bucharest",
+        cls.company_data['company'].write({
+            'country_id': cls.env.ref('base.ro').id,
+            'currency_id': cls.env.ref('base.RON').id,
+            'city': 'Bucharest',
+            'zip': '010101',
             'vat': 'RO1234567897',
             'phone': '+40 123 456 789',
-            'email': 'info@partner1.ro',
-            'country_id': cls.env.ref('base.ro').id,
-            'currency_id': cls.currency.id,
-            'state_id': cls.country_state.id,
-            'bank_ids': [(0, 0, {'acc_number': 'RO11BTRL1234567890123456'})],
-            'peppol_eas': '0106',
-            'peppol_endpoint': '987654321',
-            'ref': 'ref_partner_1',
+            'street': "Strada Kunst, 3",
+            'invoice_is_ubl_cii': True,
+        })
+        cls.env['res.partner.bank'].create({
+            'acc_type': 'iban',
+            'partner_id': cls.company_data['company'].partner_id.id,
+            'acc_number': 'RO98RNCB1234567890123456',
         })
 
-        cls.partner_2 = cls.env['res.partner'].create({
-            'name': "partner_2",
-            'street': "Bulevardul Europa, 2",
-            'zip': "020202",
-            'city': "Cluj-Napoca",
+        cls.partner_a = cls.env['res.partner'].create({
+            'name': "Roasted Romanian Roller",
+            'city': "Bucharest",
+            'zip': "010101",
             'vat': 'RO1234567897',
+            'phone': '+40 123 456 789',
+            'street': "Strada Kunst, 3",
             'country_id': cls.env.ref('base.ro').id,
-            'currency_id': cls.currency.id,
-            'state_id': cls.country_state.id,
-            'bank_ids': [(0, 0, {'acc_number': 'RO22BTRL9876543210987654'})],
-            'peppol_eas': '0106',
-            'peppol_endpoint': '123456789',
-            'ref': 'ref_partner_2',
+            'ref': 'ref_partner_a',
+            'ubl_cii_format': 'ciusro' # should be selected automatically! (?)
+        })
+
+        cls.partner_b = cls.env['res.partner'].create({
+            'name': "Belgian Bean Burrito",
+            'city': "Brussels",
+            'zip': "1000",
+            'vat': 'BE0477472701',
+            'phone': '+32 123 456 789',
+            'street': "Rue de la Madeleine, 1",
+            'country_id': cls.env.ref('base.be').id,
+            'ref': 'ref_partner_b',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
@@ -62,25 +66,13 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.ro').id,
         })
 
-        cls.env.company.invoice_is_ubl_cii = True
+    ####################################################
+    # Helper method - remove when done! -TODO-
+    ####################################################
 
-    @classmethod
-    def setup_company_data(cls, company_name, chart_template):
-        # OVERRIDE
-        # to force the company to be romanian
-        res = super().setup_company_data(
-            company_name,
-            chart_template=chart_template,
-            country_id=cls.env.ref("base.ro").id,
-        )
-        return res
-
-    def test_anaf(self, invoice=None, manual_check=False):
-        if not invoice:
+    def test_anaf(self, attachment=None, manual_check=False):
+        if not attachment:
             return
-        invoice._generate_pdf_and_send_invoice(self.move_template)
-        attachment = invoice.ubl_cii_xml_id
-        self.assertTrue(attachment)
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         if manual_check:
             from pathlib import Path
@@ -105,21 +97,33 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
     ####################################################
 
     def test_export_invoice_ro(self):
-        invoice = self._generate_move(
-            self.partner_1,
-            self.partner_2,
-            move_type='out_invoice',
-            invoice_line_ids=[
-                {
+        invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
+            'invoice_payment_term_id': self.pay_terms_b.id,
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'narration': 'test narration',
+            'ref': 'ref_move',
+            'invoice_line_ids': [
+                Command.create({
                     'product_id': self.product_a.id,
-                    'quantity': 2.0,
-                    'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
-                    'price_unit': 123.0,
-                    'discount': 10.0,
+                    'quantity': 1.0,
+                    'price_unit': 500.0,
                     'tax_ids': [(6, 0, self.tax_19.ids)],
-                    'currency_id': self.currency.id,
-                },
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'quantity': 2.0,
+                    'price_unit': 350.0,
+                    'tax_ids': [(6, 0, self.tax_19.ids)],
+                }),
             ],
-        )
-        self.test_anaf(invoice, True)
-        # self.assertEqual(attachment.name[-11:], "cius_ro.xml")
+        })
+        invoice.action_post()
+        invoice._generate_pdf_and_send_invoice(self.move_template)
+        attachment = invoice.ubl_cii_xml_id
+        self.assertTrue(attachment)
+        self.test_anaf(attachment)
+        self.assertEqual(attachment.name[-11:], "cius_ro.xml")
