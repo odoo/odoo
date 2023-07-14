@@ -23,6 +23,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import * as dsHelpers from "@web/../tests/core/domain_selector_tests";
 
 const patchDate = testUtils.mock.patchDate;
 const favoriteMenuRegistry = registry.category("favoriteMenu");
@@ -495,7 +496,7 @@ QUnit.module("Board", (hooks) => {
         // Add a filter ['foo', '=', 'yop']
         await toggleSearchBarMenu(target);
         await openAddCustomFilterDialog(target);
-        await editInput(target, ".o_domain_debug_input", `[("foo", "=", "yop")]`);
+        await editInput(target, dsHelpers.SELECTORS.debugArea, `[("foo", "=", "yop")]`);
         await click(target.querySelector(".modal footer button"));
 
         // Add to dashboard

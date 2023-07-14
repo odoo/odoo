@@ -3,7 +3,7 @@
 import { Domain } from "@web/core/domain";
 import { formatAST, toPyValue } from "@web/core/py_js/py_utils";
 
-const TERM_OPERATORS_NEGATION = {
+export const TERM_OPERATORS_NEGATION = {
     "<": ">=",
     ">": "<=",
     "<=": ">",
