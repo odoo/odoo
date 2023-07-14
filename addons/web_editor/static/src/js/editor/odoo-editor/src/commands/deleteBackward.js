@@ -9,6 +9,7 @@ import {
     DIRECTIONS,
     endPos,
     fillEmpty,
+    getFurthestUneditableParent,
     getState,
     isBlock,
     isEmptyBlock,
@@ -19,6 +20,7 @@ import {
     rightPos,
     moveNodes,
     nodeSize,
+    paragraphRelatedElements,
     prepareUpdate,
     setSelection,
     isMediaElement,
@@ -91,7 +93,62 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
         if (isUnbreakable(this) && (REGEX_BOOTSTRAP_COLUMN.test(this.className) || !isEmptyBlock(this))) {
             throw UNBREAKABLE_ROLLBACK_CODE;
         }
-        const parentEl = this.parentNode;
+        const parentEl = this.parentElement;
+        // Handle editable sub-nodes
+        if (
+            parentEl &&
+            parentEl.getAttribute("contenteditable") === "true" &&
+            parentEl.oid !== "root" &&
+            parentEl.parentElement &&
+            !parentEl.parentElement.isContentEditable
+        ) {
+            if (parentEl.children.length === 1) {
+                // Remove the non-editable zone containing a custom-made
+                // editable zone if its only element is an empty block.
+                if (isEmptyBlock(this)) {
+                    const closestUneditable =
+                        getFurthestUneditableParent(parentEl.parentElement) ||
+                        parentEl.parentElement;
+                    if (closestUneditable && closestUneditable.oid !== "root") {
+                        const p = document.createElement("P");
+                        p.append(document.createElement("BR"));
+                        closestUneditable.replaceWith(p);
+                        setSelection(p, 0);
+                        return;
+                    }
+                }
+                // The last paragraph related child element of a custom-made
+                // editable zone which itself is contained in a non-editable
+                // zone can never be removed.
+                throw UNREMOVABLE_ROLLBACK_CODE;
+            } else if (
+                paragraphRelatedElements.includes(this.tagName) &&
+                !this.previousElementSibling
+            ) {
+                const closestUneditable =
+                    getFurthestUneditableParent(parentEl.parentElement) || parentEl.parentElement;
+                if (closestUneditable && closestUneditable.oid !== "root") {
+                    // Move the current line before the non-editable zone.
+                    const previousSibling = closestUneditable.previousSibling;
+                    this.remove();
+                    const clonedThis = this.cloneNode(true);
+                    closestUneditable.before(clonedThis);
+                    setSelection(clonedThis, 0);
+                    if (
+                        previousSibling &&
+                        paragraphRelatedElements.includes(previousSibling.tagName)
+                    ) {
+                        // Merge the current line with the line that was before
+                        // the non-editable zone if any.
+                        return clonedThis.oDeleteBackward(0, true);
+                    }
+                    return;
+                }
+                // There is no other editable zone before the current one in the
+                // DOM.
+                throw UNREMOVABLE_ROLLBACK_CODE;
+            }
+        }
         const closestLi = closestElement(this, 'li');
         if ((closestLi && !closestLi.previousElementSibling) || !isBlock(this) || isVisibleEmpty(this)) {
             /**
