@@ -14,9 +14,7 @@ class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
 
     peppol_verification_code = fields.Char(string='SMS verification code')
-    proxy_type = fields.Selection(
-        selection_add=[('peppol', 'PEPPOL')],
-    )
+    proxy_type = fields.Selection(selection_add=[('peppol', 'PEPPOL')], ondelete={'peppol': 'cascade'})
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
@@ -65,25 +63,17 @@ class AccountEdiProxyClientUser(models.Model):
 
         return super()._get_server_url(proxy_type, edi_mode)
 
-    def _get_proxy_identification(self, company):
-        if not company.peppol_eas or not company.peppol_endpoint:
-            raise UserError(_("Please fill in the EAS code and the Participant ID code."))
-        return f'{company.peppol_eas}:{company.peppol_endpoint}'
-
-    # -------------------------------------------------------------------------
-    # COMPUTE METHODS
-    # -------------------------------------------------------------------------
-
-    def _compute_proxy_type(self):
-        # Extends account_edi_proxy_client
-        super()._compute_proxy_type()
-        for user in self:
-            if user.company_id.is_account_peppol_participant:
-                user.proxy_type = 'peppol'
-
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
+
+    def _get_proxy_identification(self, company, proxy_type):
+        if proxy_type == 'peppol':
+            if not company.peppol_eas or not company.peppol_endpoint:
+                raise UserError(
+                    _("Please fill in the EAS code and the Participant ID code."))
+            return f'{company.peppol_eas}:{company.peppol_endpoint}'
+        return super()._get_proxy_identification(company, proxy_type)
 
     def _cron_peppol_get_new_documents(self):
         # Retrieve all new Peppol documents for every edi user in the database

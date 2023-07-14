@@ -118,9 +118,7 @@ class ResConfigSettings(models.TransientModel):
 
         company = self.company_id
         edi_proxy_client = self.env['account_edi_proxy_client.user']
-        edi_identification = edi_proxy_client._get_proxy_identification(company)
-        edi_user = edi_proxy_client.sudo()._register_proxy_user(
-            company, 'peppol', 'prod', edi_identification)
+        edi_user = edi_proxy_client.sudo()._register_proxy_user(company, 'peppol', 'prod')
         self.account_peppol_proxy_state = 'not_verified'
 
         # if there is an error when activating the participant below,
