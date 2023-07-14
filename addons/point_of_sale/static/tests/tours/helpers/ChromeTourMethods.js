@@ -17,7 +17,7 @@ class Do {
                 trigger: ".pos-topheader .ticket-button",
             },
             {
-                trigger: ".screen .ticket-screen",
+                trigger: ".screen.ticket-screen",
                 run: () => {},
             },
         ];

@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
 import { useService } from "@web/core/utils/hooks";
-import { useState, useRef, onMounted, Component } from "@odoo/owl";
+import { useState, useRef, onMounted } from "@odoo/owl";
 
 export class NumberPopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.NumberPopup";
