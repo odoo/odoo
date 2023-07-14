@@ -7,9 +7,6 @@
     'version': '0.3',
     'depends': [
         'l10n_it',
-        # Although account_edi is a dependency of account_edi_proxy_client,
-        # it is here because it's in the auto-install
-        'account_edi',
         'account_edi_proxy_client',
     ],
     'auto_install': ['l10n_it'],
@@ -20,13 +17,13 @@ E-invoice implementation
     'website': 'http://www.odoo.com/',
     'data': [
         'security/ir.model.access.csv',
-        'data/account_edi_data.xml',
         'data/invoice_it_template.xml',
         'data/invoice_it_simplified_template.xml',
         'data/ir_cron.xml',
         'views/res_config_settings_views.xml',
         'views/l10n_it_view.xml',
-        ],
+        'wizard/account_move_send_views.xml',
+    ],
     'demo': [
         'data/account_invoice_demo.xml',
     ],

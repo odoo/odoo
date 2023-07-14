@@ -19,7 +19,7 @@
                                  t-out="format_alphanumeric(line.product_uom_id.name, 10)"/>
                     <PrezzoUnitario t-out="'%.06f' % (line_dict['unit_price'])"/>
                     <ScontoMaggiorazione t-if="line.discount != 0">
-                        <Tipo t-out="discount_type(line.discount)"/>
+                        <Tipo t-out="format_alphanumeric(line_dict['discount_type'])"/>
                         <Percentuale t-out="format_numbers(abs(line.discount))"/>
                     </ScontoMaggiorazione>
                     <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price'], currency)"/>

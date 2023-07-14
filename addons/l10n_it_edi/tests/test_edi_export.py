@@ -1,12 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from lxml import etree
 
 from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
-from odoo.exceptions import UserError
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -145,7 +141,7 @@ class TestItEdiExport(TestItEdi):
                     'tax_ids': [Command.set(self.default_tax.ids)],
                 }),
                 Command.create({
-                    'name': '–-',
+                    'name': '--',
                     'price_unit': 800.40,
                     'tax_ids': [Command.set(self.default_tax.ids)],
                 }),
@@ -214,8 +210,9 @@ class TestItEdiExport(TestItEdi):
             ],
         })
 
-        with self.assertRaises(UserError):
-            invoice.action_post()
+        expected = ['Alessi must have a street.', 'Alessi must have a country.', 'Alessi must have a post code.', 'Alessi must have a city.']
+        actual = invoice._l10n_it_edi_export_data_check()
+        self.assertEqual(expected, actual)
 
     def test_invoice_non_domestic_simplified(self):
         invoice = self.env['account.move'].with_company(self.company).create({
@@ -231,9 +228,9 @@ class TestItEdiExport(TestItEdi):
                 }),
             ],
         })
-
-        with self.assertRaises(UserError):
-            invoice.action_post()
+        expected = ['Alessi must have a street.', 'Alessi must have a post code.', 'Alessi must have a city.']
+        actual = invoice._l10n_it_edi_export_data_check()
+        self.assertEqual(expected, actual)
 
     def test_invoice_zero_percent_taxes(self):
         tax_zero_percent_hundred_percent_repartition = self.env['account.tax'].with_company(self.company).create({
