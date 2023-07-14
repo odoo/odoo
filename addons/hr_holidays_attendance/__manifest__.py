@@ -11,7 +11,6 @@ Convert employee's extra hours to leave allocations.
     'depends': ['hr_attendance', 'hr_holidays'],
     'auto_install': True,
     'data': [
-        'security/hr_holidays_attendance_security.xml',
         'views/hr_leave_allocation_views.xml',
         'views/hr_leave_type_views.xml',
         'views/hr_leave_views.xml',

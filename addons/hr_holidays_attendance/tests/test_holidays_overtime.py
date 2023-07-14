@@ -21,8 +21,8 @@ class TestHolidaysOvertime(TransactionCase):
             'hr_attendance_overtime': True,
             'overtime_start_date': datetime(2021, 1, 1),
         })
-        cls.user = new_test_user(cls.env, login='user', groups='base.group_user,hr_attendance.group_hr_attendance', company_id=cls.company.id).with_company(cls.company)
-        cls.user_manager = new_test_user(cls.env, login='manager', groups='base.group_user,hr_holidays.group_hr_holidays_user', company_id=cls.company.id).with_company(cls.company)
+        cls.user = new_test_user(cls.env, login='user', groups='base.group_user', company_id=cls.company.id).with_company(cls.company)
+        cls.user_manager = new_test_user(cls.env, login='manager', groups='base.group_user,hr_holidays.group_hr_holidays_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
 
         cls.manager = cls.env['hr.employee'].create({
             'name': 'Dominique',
@@ -52,7 +52,7 @@ class TestHolidaysOvertime(TransactionCase):
         })
 
     def new_attendance(self, check_in, check_out=False):
-        return self.env['hr.attendance'].create({
+        return self.env['hr.attendance'].sudo().create({
             'employee_id': self.employee.id,
             'check_in': check_in,
             'check_out': check_out,

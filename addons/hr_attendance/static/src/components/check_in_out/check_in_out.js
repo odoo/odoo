@@ -14,6 +14,21 @@ export class CheckInOut extends Component {
     }
 
     async signInOut() {
+        navigator.geolocation.getCurrentPosition(
+            ({coords: {latitude, longitude}}) => {
+                this.orm.call("hr.employee", "update_last_position", [
+                    [this.props.employeeId],
+                    latitude,
+                    longitude
+                ])
+            },
+            err => {
+                this.orm.call("hr.employee", "update_last_position", [
+                    [this.props.employeeId],
+                    false,
+                    false
+                ])
+            })
         const result = await this.orm.call("hr.employee", "attendance_manual", [
             [this.props.employeeId],
             this.props.nextAction,
@@ -21,7 +36,7 @@ export class CheckInOut extends Component {
         if (result.action) {
             this.actionService.doAction(result.action);
         } else if (result.warning) {
-            this.notification.add(result.warning, { type: "danger" });
+            this.notification.add(result.warning, {type: "danger"});
         }
     }
 }

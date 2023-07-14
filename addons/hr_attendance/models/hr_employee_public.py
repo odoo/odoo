@@ -8,22 +8,16 @@ class HrEmployeePublic(models.Model):
 
     # These are required for manual attendance
     attendance_state = fields.Selection(related='employee_id.attendance_state', readonly=True,
-        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
+        groups="hr_attendance.group_hr_attendance_officer")
     hours_today = fields.Float(related='employee_id.hours_today', readonly=True,
-        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
+        groups="hr_attendance.group_hr_attendance_officer")
     last_attendance_id = fields.Many2one(related='employee_id.last_attendance_id', readonly=True,
-        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
+        groups="hr_attendance.group_hr_attendance_officer")
     total_overtime = fields.Float(related='employee_id.total_overtime', readonly=True,
-        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
-
-    def action_employee_kiosk_confirm(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.client',
-            'name': 'Confirm',
-            'tag': 'hr_attendance_kiosk_confirm',
-            'employee_id': self.id,
-            'employee_name': self.name,
-            'employee_state': self.attendance_state,
-            'employee_hours_today': self.hours_today,
-        }
+        groups="hr_attendance.group_hr_attendance_officer")
+    attendance_manager_id = fields.Many2one(related='employee_id.attendance_manager_id',
+        groups="hr_attendance.group_hr_attendance_officer")
+    last_check_in = fields.Datetime(related='employee_id.last_check_in',
+        groups="hr_attendance.group_hr_attendance_officer")
+    last_check_out = fields.Datetime(related='employee_id.last_check_out',
+        groups="hr_attendance.group_hr_attendance_officer")

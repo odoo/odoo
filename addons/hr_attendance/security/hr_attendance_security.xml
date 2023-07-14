@@ -4,48 +4,36 @@
         <field name="sequence">14</field>
     </record>
 
-    <record id="group_hr_attendance_kiosk" model="res.groups">
-        <field name="name">User: Only kiosk mode</field>
-        <field name="category_id" ref="base.module_category_human_resources_employees"/>
-        <field name="comment">The user will be able to open the kiosk mode and validate the employee PIN.</field>
-        <field name="implied_ids" eval="[(6, 0, [ref('base.group_user')])]"/>
+    <record id="group_hr_attendance_own_reader" model="res.groups">
+        <field name="name">User: Read his own attendances</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="comment">The user will have access to his own attendances on his user / employee profile</field>
     </record>
 
-    <record id="hr.group_hr_user" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_kiosk'))]"/>
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_own_reader'))]"/>
     </record>
 
-    <record id="group_hr_attendance" model="res.groups">
-        <field name="name">User</field>
-        <field name="category_id" ref="base.module_category_human_resources_attendances"/>
-        <field name="comment">The user will gain access to the human resources attendance menu, enabling him to manage his own attendance.</field>
-    </record>
-
-    <record id="group_hr_attendance_user" model="res.groups">
-        <field name="name">Officer: Manage all attendances</field>
-        <field name="category_id" ref="base.module_category_human_resources_attendances"/>
-        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user')), (4, ref('hr_attendance.group_hr_attendance'))]"/>
+    <record id="group_hr_attendance_officer" model="res.groups">
+        <field name="name">Officer: Manage attendances</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="comment">The user will have access to the attendance records and reporting of employees where he's set as an attendance manager</field>
     </record>
 
     <record id="group_hr_attendance_manager" model="res.groups">
         <field name="name">Administrator</field>
         <field name="category_id" ref="base.module_category_human_resources_attendances"/>
-        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
     </record>
 
     <record id="base.default_user" model="res.users">
-        <field name="groups_id" eval="[(4,ref('hr_attendance.group_hr_attendance_manager'))]"/>
-    </record>
-
-    <record id="group_hr_attendance_use_pin" model="res.groups">
-        <field name="name">Enable PIN use</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-        <field name="comment">The user will have to enter his PIN to check in and out manually at the company screen.</field>
+        <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
     </record>
 
     <data noupdate="1">
 
+        <!-- Attendances -->
         <record id="hr_attendance_rule_employee_company" model="ir.rule">
             <field name="name">Employee multi company rule</field>
             <field name="model_id" ref="model_hr_attendance"/>
@@ -53,33 +41,43 @@
             <field name="domain_force">['|',('employee_id.company_id','=',False),('employee_id.company_id', 'in', company_ids)]</field>
         </record>
 
-        <record id="hr_attendance_rule_attendance_manager" model="ir.rule">
-            <field name="name">attendance officer: full access</field>
+        <record id="hr_attendance_rule_attendance_admin" model="ir.rule">
+            <field name="name">Attendance Administrator: Full access</field>
             <field name="model_id" ref="model_hr_attendance"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
         </record>
 
-        <record id="hr_attendance_rule_attendance_manual" model="ir.rule">
-            <field name="name">Manual Attendance: own attendances</field>
+        <record id="hr_attendance_rule_attendance_manager_restrict" model="ir.rule">
+            <field name="name">Attendance Officer: Restrict Attendances to managed employees</field>
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="domain_force">
+                [
+                '|',
+                '&amp;',
+                 ('employee_id.attendance_manager_id', '=', user.id),
+                 ('employee_id.user_id', '=', user.id),
+                '&amp;',
+                ('employee_id.user_id', '!=', user.id),
+                ('employee_id.attendance_manager_id', '=', user.id)
+                ]
+            </field>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_read" eval="1"/>
+        </record>
+
+        <record id="hr_attendance_rule_attendance_simple_user" model="ir.rule">
+            <field name="name">Attendance base user: Read his own attendances in other apps</field>
             <field name="model_id" ref="model_hr_attendance"/>
             <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_write" eval="1"/>
-            <field name="perm_create" eval="1"/>
-            <field name="perm_unlink" eval="0"/>
-            <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance'))]"/>
-        </record>
-
-        <record id="hr_attendance_rule_attendance_employee" model="ir.rule">
-            <field name="name">user: read own attendance only</field>
-            <field name="model_id" ref="model_hr_attendance"/>
-            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_write" eval="0"/>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_own_reader'))]"/>
             <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
             <field name="perm_unlink" eval="0"/>
-            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+            <field name="perm_read" eval="1"/>
         </record>
 
         <!-- Overtime -->
@@ -90,29 +88,44 @@
             <field name="domain_force">['|',('employee_id.company_id','=',False),('employee_id.company_id', 'in', company_ids)]</field>
         </record>
 
-        <record id="hr_attendance_rule_attendance_overtime_manager" model="ir.rule">
-            <field name="name">attendance officer: full access</field>
+        <record id="hr_attendance_rule_attendance_officer_overtime_restrict" model="ir.rule">
+            <field name="name">Attendance Officer: Restrict Overtime to managed employees</field>
+            <field name="model_id" ref="model_hr_attendance_overtime"/>
+            <field name="domain_force">
+                [
+                '|',
+                '&amp;',
+                 ('employee_id.attendance_manager_id', '=', user.id),
+                 ('employee_id.user_id', '=', user.id),
+                '&amp;',
+                ('employee_id.user_id', '!=', user.id),
+                ('employee_id.attendance_manager_id', '=', user.id)
+                ]
+            </field>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_read" eval="1"/>
+        </record>
+
+        <record id="hr_attendance_rule_attendance_overtime_admin" model="ir.rule">
+            <field name="name">Attendance Admin: full access</field>
             <field name="model_id" ref="model_hr_attendance_overtime"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+
         </record>
 
-        <record id="hr_attendance_rule_attendance_overtime_employee" model="ir.rule">
-            <field name="name">user: read and modify own attendance only</field>
+        <record id="hr_attendance_rule_attendance_overtime_simple_user" model="ir.rule">
+            <field name="name">Attendance base user: Read his own overtime</field>
             <field name="model_id" ref="model_hr_attendance_overtime"/>
             <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_write" eval="0"/>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_own_reader'))]"/>
             <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
             <field name="perm_unlink" eval="0"/>
-            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
-        </record>
-
-        <!-- Report -->
-        <record id="hr_attendance_report_rule_multi_company" model="ir.rule">
-            <field name="name">Attendance report multi company rule</field>
-            <field name="model_id" ref="model_hr_attendance_report"/>
-            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="perm_read" eval="1"/>
         </record>
     </data>
 </odoo>

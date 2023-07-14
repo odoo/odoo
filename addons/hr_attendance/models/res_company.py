@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 from odoo.osv.expression import OR
+import uuid
+from werkzeug.urls import url_join
 
 
 class ResCompany(models.Model):
@@ -12,7 +14,7 @@ class ResCompany(models.Model):
     overtime_start_date = fields.Date(string="Extra Hours Starting Date")
     overtime_company_threshold = fields.Integer(string="Tolerance Time In Favor Of Company", default=0)
     overtime_employee_threshold = fields.Integer(string="Tolerance Time In Favor Of Employee", default=0)
-
+    hr_attendance_display_overtime = fields.Boolean(string="Display Extra Hours")
     attendance_kiosk_mode = fields.Selection([
         ('barcode', 'Barcode / RFID'),
         ('barcode_manual', 'Barcode / RFID and Manual Selection'),
@@ -24,6 +26,15 @@ class ResCompany(models.Model):
         ('back', 'Back Camera'),
     ], string='Barcode Source', default='front')
     attendance_kiosk_delay = fields.Integer(default=10)
+    attendance_kiosk_key = fields.Char(default=lambda s: uuid.uuid4().hex, copy=False, groups='hr_attendance.group_hr_attendance_manager')
+    attendance_kiosk_url = fields.Char(compute="_compute_attendance_kiosk_url")
+    attendance_kiosk_use_pin = fields.Boolean(string='Employee PIN Identification')
+    attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=True)
+
+    @api.depends("attendance_kiosk_key")
+    def _compute_attendance_kiosk_url(self):
+        for company in self:
+            company.attendance_kiosk_url = url_join(company.get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
 
     def write(self, vals):
         search_domain = False  # Overtime to generate
@@ -72,3 +83,16 @@ class ResCompany(models.Model):
             self.env['hr.attendance'].search(search_domain)._update_overtime()
 
         return res
+
+    def _regenerate_attendance_kiosk_key(self):
+        self.ensure_one()
+        self.write({
+            'attendance_kiosk_key': uuid.uuid4().hex
+        })
+
+    def _action_open_kiosk_mode(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': '/hr_attendance/kiosk_mode_menu'
+        }

@@ -8,6 +8,7 @@
         <field name="priority" eval="120"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
+                <field name="total_overtime" invisible="1"/>
                 <button
                     name="%(hr_leave_allocation_overtime_manager_action)d"
                     string="Deduct Extra Hours"

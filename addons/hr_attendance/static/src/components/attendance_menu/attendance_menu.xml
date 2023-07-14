@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance.attendance_menu" owl="1">
+    <t t-if="this.state.isDisplayed">
+        <Dropdown position="'bottom-end'" beforeOpen.bind="searchReadEmployee" menuClass="`p-0 ${ ui.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
+        <div class="d-flex flex-column flex-grow-1">
+            <t t-set-slot="toggler">
+            <i t-attf-class="fa fa-circle text-{{ this.state.checkedIn ? 'success' : 'warning' }}" role="img" aria-label="Attendance"></i>
+        </t>
+        <t  t-set-slot="default">
+            <div class="o_att_menu_container m-1">
+                <button t-on-click="() => this.onClickSignInOut()" t-attf-class="o_hr_attendance_systray_check_in_btn btn btn-{{ this.state.checkedIn ? 'warning' : 'success' }} align-self-center">
+                    <span class="align-middle text-white" t-if="!this.state.checkedIn">Check IN</span>
+                    <i t-attf-class="fa fa-sign-{{ this.state.checkedIn ? 'out' : 'in' }} align-middle"/>
+                    <span class="align-middle" t-if="this.state.checkedIn">Check OUT</span>
+                </button>
+                <t t-if="this.state.checkedIn">
+                <div class="att_container">
+                    <div class="o_hour_att">
+                        <h2 t-esc="this.lastAttendanceWorkedHours"/>
+                    </div>
+                    <div class="hour_label">
+                        <span>Since</span>
+                        <span><t t-esc="this.lastCheckIn"/></span>
+                    </div>
+                </div>
+                    <t t-if="!this.isFirstAttendance">
+                        <div class="att_container">
+                          <div class="o_hour_att">
+                              <h2 t-esc="this.hoursPreviouslyToday"/>
+                          </div>
+                          <div class="hour_label">
+                            <span>Previously</span>
+                            <span>Today</span>
+                          </div>
+                        </div>
+                    </t>
+                </t>
+                <t t-if="!this.isFirstAttendance or !this.state.checkedIn">
+                    <t t-if="this.state.checkedIn">
+                        <div class="att_container" style="border-top: 2px solid #dee2e6;"/>
+                    </t>
+                    <div class="att_container">
+                      <div class="o_hour_att">
+                          <h2 t-esc="this.hoursToday"/>
+                      </div>
+                      <div class="hour_label">
+                        <span>Hours</span>
+                        <span>Today</span>
+                      </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+        </div>
+    </Dropdown>
+    </t>
+</t>
+
+</templates>

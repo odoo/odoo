@@ -23,3 +23,27 @@
         aspect-ratio: 1.8;
     }
 }
+
+.o_hr_attendance_employee_badge{
+  margin-bottom: -48px !important;
+}
+
+.o_hr_attendance_kiosk_body{
+    position: relative !important;
+}
+
+.o_hr_kiosk_url_media{
+    a{
+        width: 100% !important;
+    }
+}
+
+// Shared with web client and login screen
+.o_attendance_background{
+    background: {
+        size: cover;
+        attachment: fixed;
+        color: var(--homeMenu-bg-color, #{$o-gray-200});
+        image: var(--homeMenu-bg-image, url("/hr_attendance/static/img/background-light.svg"));
+    }
+}
