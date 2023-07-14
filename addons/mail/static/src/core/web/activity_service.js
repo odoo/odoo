@@ -5,12 +5,13 @@ import { assignDefined } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { browser } from "@web/core/browser/browser";
 
 export class ActivityService {
     constructor(env, services) {
         try {
             // useful for synchronizing activity data between multiple tabs
-            this.broadcastChannel = new BroadcastChannel("mail.activity.channel");
+            this.broadcastChannel = new browser.BroadcastChannel("mail.activity.channel");
             this.broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
         } catch {
             // BroadcastChannel API is not supported (e.g. Safari < 15.4), so disabling it.
