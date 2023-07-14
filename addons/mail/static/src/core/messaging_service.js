@@ -185,7 +185,7 @@ export class Messaging {
                         // "discuss.channel/leave" and the
                         // "discuss.channel/new_message" notifications come from
                         // the bus as a batch.
-                        return;
+                        break;
                     }
                     this._handleNotificationNewMessage(notif);
                     break;
@@ -395,28 +395,29 @@ export class Messaging {
                     const { channel_id, last_message_id, partner_id } = notif.payload;
                     const channel =
                         this.store.threads[createLocalId("discuss.channel", channel_id)];
-                    if (!channel) {
-                        return;
-                    }
-                    const seenInfo = channel.seenInfos.find(
-                        (seenInfo) => seenInfo.partner.id === partner_id
-                    );
-                    if (seenInfo) {
-                        seenInfo.lastFetchedMessage = { id: last_message_id };
+                    if (channel) {
+                        const seenInfo = channel.seenInfos.find(
+                            (seenInfo) => seenInfo.partner.id === partner_id
+                        );
+                        if (seenInfo) {
+                            seenInfo.lastFetchedMessage = { id: last_message_id };
+                        }
                     }
                     break;
                 }
                 case "discuss.channel/unpin": {
                     const thread =
                         this.store.threads[createLocalId("discuss.channel", notif.payload.id)];
-                    if (!thread) {
-                        return;
+                    if (thread) {
+                        thread.is_pinned = false;
+                        this.notificationService.add(
+                            sprintf(
+                                _t("You unpinned your conversation with %s"),
+                                thread.displayName
+                            ),
+                            { type: "info" }
+                        );
                     }
-                    thread.is_pinned = false;
-                    this.notificationService.add(
-                        sprintf(_t("You unpinned your conversation with %s"), thread.displayName),
-                        { type: "info" }
-                    );
                     break;
                 }
                 case "mail.message/notification_update":
@@ -445,10 +446,9 @@ export class Messaging {
                             });
                         }
                         const attachment = this.store.attachments[attachmentId];
-                        if (!attachment) {
-                            return;
+                        if (attachment) {
+                            this.attachmentService.remove(attachment);
                         }
-                        this.attachmentService.remove(attachment);
                     }
                     break;
             }
