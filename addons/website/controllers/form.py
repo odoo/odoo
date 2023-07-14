@@ -182,7 +182,7 @@ class WebsiteForm(http.Controller):
                     custom_fields.append((_('email'), field_value))
 
             # If it's a custom field
-            elif field_name != 'context':
+            elif field_name not in ['context', 'recaptcha_token_response']:
                 custom_fields.append((field_name, field_value))
 
         data['custom'] = "\n".join([u"%s : %s" % v for v in custom_fields])
