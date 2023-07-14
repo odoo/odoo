@@ -223,24 +223,24 @@ describe('Paste HTML tables', () => {
             
             
             <tbody><tr>
-                <td class="">Italic
+                <td>Italic
                         then also BOLD</td>
-                <td class=""><s>Italic strike</s></td>
+                <td><s>Italic strike</s></td>
             </tr>
             <tr>
-                <td class="">Just bold Just Italic</td>
-                <td class="">Bold underline</td>
+                <td>Just bold Just Italic</td>
+                <td>Bold underline</td>
             </tr>
             <tr>
-                <td class="">Color text</td>
-                <td class=""><s>Color strike and underline</s></td>
+                <td>Color text</td>
+                <td><s>Color strike and underline</s></td>
             </tr>
             <tr>
-                <td class="">Color background</td>
-                <td class="">Color text on color background</td>
+                <td>Color background</td>
+                <td>Color text on color background</td>
             </tr>
             <tr>
-                <td class="">14pt MONO TEXT
+                <td>14pt MONO TEXT
                 </td>
             </tr>
         </tbody></table><p>
