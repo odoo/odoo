@@ -3,8 +3,9 @@
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
+import { _lt, _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component } from "@odoo/owl";
@@ -31,6 +32,27 @@ export class RemainingDaysField extends Component {
         return Math.floor(
             this.props.record.data[this.props.name].startOf("day").diff(today, "days").days
         );
+    }
+
+    get diffString() {
+        if (this.diffDays === null) {
+            return "";
+        }
+        switch (this.diffDays) {
+            case -1:
+                return _t("Yesterday");
+            case 0:
+                return _t("Today");
+            case 1:
+                return _t("Tomorrow");
+        }
+        if (Math.abs(this.diffDays) > 99) {
+            return this.formattedValue;
+        }
+        if (this.diffDays < 0) {
+            return sprintf(_t("%s days ago"), -this.diffDays);
+        }
+        return sprintf(_t("In %s days"), this.diffDays);
     }
 
     get formattedValue() {
