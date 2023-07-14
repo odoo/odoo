@@ -7,6 +7,7 @@ import { Component, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { Domain } from "@web/core/domain";
 
 export class ActivityMenu extends Component {
     static components = { Dropdown };
@@ -57,7 +58,7 @@ export class ActivityMenu extends Component {
         } else {
             let domain = [["activity_ids.user_id", "=", this.userId]];
             if (group.domain) {
-                domain = domain.concat(group.domain);
+                domain = Domain.and([domain, group.domain]).toList();
             }
             this.action.doAction(
                 {
@@ -85,7 +86,10 @@ export class ActivityMenu extends Component {
         } else {
             context["search_default_activities_" + filter] = 1;
         }
-        const domain = [["activity_ids.user_id", "=", this.userId]];
+        let domain = [["activity_ids.user_id", "=", this.userId]];
+        if (group.domain) {
+            domain = Domain.and([domain, group.domain]).toList();
+        }
         const views = this.availableViews(group);
 
         this.action.doAction(
