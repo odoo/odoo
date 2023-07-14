@@ -240,7 +240,6 @@ class TestUi(odoo.tests.HttpCase):
             'name': 'EditorExtension',
             'bundle': 'website.assets_wysiwyg',
             'path': custom_url,
-            'website_id': new_website.id,
         })
 
         base_website_bundle = self.env['ir.qweb']._get_asset_bundle(asset_bundle_xmlid, assets_params={'website_id': website_default.id})

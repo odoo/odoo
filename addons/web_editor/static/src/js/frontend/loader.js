@@ -5,7 +5,11 @@ import { getBundle, loadBundle } from "@web/core/assets";
 const exports = {};
 
 async function loadWysiwyg(additionnalAssets=[]) {
-    const xmlids = ['web_editor.assets_wysiwyg', ...additionnalAssets];
+    const xmlids = [
+        'web_editor.assets_wysiwyg_lib',
+        'web_editor.assets_wysiwyg',
+        ...additionnalAssets
+    ];
     for (const xmlid of xmlids) {
         const assets = await getBundle(xmlid);
         await loadBundle(assets);
