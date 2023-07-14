@@ -1,0 +1,27 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_move_send_inherit_l10n_it_edi">
+            <field name="name">account.move.send.form.inherit.l10n_it_edi</field>
+            <field name="model">account.move.send</field>
+            <field name="inherit_id" ref="account.account_move_send_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='warnings']" position="inside">
+                    <field name="l10n_it_edi_readonly" invisible="1"/>
+                    <field name="l10n_it_edi_enable_send" invisible="1"/>
+                    <span invisible="not l10n_it_edi_warning_message">
+                        <b>Tax Agency (Italy)</b>
+                    </span>
+                    <div class="alert alert-warning mb-8" role="alert" invisible="not l10n_it_edi_warning_message">
+                        <field name="l10n_it_edi_warning_message"/>
+                    </div>
+                </xpath>
+                <xpath expr="//div[@name='option_send_mail']" position='after'>
+                    <div name="option_l10n_it_edi" invisible="not l10n_it_edi_enable_send">
+                        <field name="l10n_it_edi_checkbox_send" readonly="l10n_it_edi_readonly"/>
+                        <b><label for="l10n_it_edi_checkbox_send"/></b>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

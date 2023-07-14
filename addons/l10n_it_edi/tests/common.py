@@ -5,14 +5,14 @@ from lxml import etree
 
 from odoo import tools
 from odoo.tests import tagged
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestItEdi(AccountEdiTestCommon):
+class TestItEdi(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='it', edi_format_ref="l10n_it_edi.edi_fatturaPA"):
-        super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
+    def setUpClass(cls, chart_template_ref='it'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Company data ------
         cls.company = cls.company_data_2['company']
@@ -104,23 +104,13 @@ class TestItEdi(AccountEdiTestCommon):
         path = f'{self.module}/tests/export_xmls/{filename}'
         with tools.file_open(path, mode='rb') as fd:
             expected_tree = etree.fromstring(fd.read())
-        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(invoice))
+        xml = invoice._l10n_it_edi_render_xml()
+        invoice_etree = etree.fromstring(xml)
         try:
             self.assertXmlTreeEqual(invoice_etree, expected_tree)
         except AssertionError as ae:
             ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
             raise
-
-    def _cleanup_etree(self, content, xpaths=None):
-        xpaths = {
-            **(xpaths or {}),
-            '//FatturaElettronicaBody/Allegati': 'Allegati',
-            '//DatiTrasmissione/ProgressivoInvio': 'ProgressivoInvio',
-        }
-        return self.with_applied_xpath(
-            etree.fromstring(content),
-            "".join([f"<xpath expr='{x}' position='replace'>{y}</xpath>" for x, y in xpaths.items()])
-        )
 
     def _assert_import_invoice(self, filename, expected_values_list, xml_to_apply=None):
         path = f'{self.module}/tests/import_xmls/{filename}'
@@ -138,9 +128,8 @@ class TestItEdi(AccountEdiTestCommon):
             'name': filename,
             'raw': import_content,
         })
-        invoices = self.company_data_2['default_journal_purchase']\
-            .with_context(default_move_type='in_invoice')\
-            ._create_document_from_attachment(attachment.ids)
+        purchase_journal = self.company_data_2['default_journal_purchase'].with_context(default_move_type='in_invoice')
+        invoices = purchase_journal._create_document_from_attachment(attachment.ids)
 
         expected_invoice_values_list = []
         expected_invoice_line_ids_values_list = []

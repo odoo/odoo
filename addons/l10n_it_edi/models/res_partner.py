@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import re
 from stdnum.it import codicefiscale, iva
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-
-import re
 
 
 class ResPartner(models.Model):
@@ -14,12 +14,14 @@ class ResPartner(models.Model):
 
     l10n_it_pec_email = fields.Char(string="PEC e-mail")
     l10n_it_codice_fiscale = fields.Char(string="Codice Fiscale", size=16)
-    l10n_it_pa_index = fields.Char(string="Destination Code",
+    l10n_it_pa_index = fields.Char(
+        string="Destination Code",
         size=7,
-        help="Must contain the 6-character (or 7) code, present in the PA\
-              Index in the information relative to the electronic invoicing service,\
-              associated with the office which, within the addressee administration, deals\
-              with receiving (and processing) the invoice.")
+        help="Must contain the 6-character (or 7) code, present in the PA Index "
+             "in the information relative to the electronic invoicing service, "
+             "associated with the office which, within the addressee administration, deals "
+             "with receiving (and processing) the invoice.",
+    )
 
     _sql_constraints = [
         ('l10n_it_codice_fiscale',
@@ -30,6 +32,11 @@ class ResPartner(models.Model):
             "CHECK(l10n_it_pa_index IS NULL OR l10n_it_pa_index = '' OR LENGTH(l10n_it_pa_index) >= 6)",
             "Destination Code must have between 6 and 7 characters."),
     ]
+
+    def _l10n_it_edi_is_public_administration(self):
+        """ Returns True if the destination of the FatturaPA belongs to the Public Administration. """
+        self.ensure_one()
+        return len(self.l10n_it_pa_index or '') == 6
 
 
     def _l10n_it_edi_get_values(self):
@@ -122,7 +129,7 @@ class ResPartner(models.Model):
             If the Tax Code is equal to the Italian VAT, it may mistakenly have the country prefix,
             so we try and remove it if we can
         """
-        if not l10n_it_codice_fiscale:
+        if l10n_it_codice_fiscale is None:
             self.ensure_one()
             l10n_it_codice_fiscale = self.l10n_it_codice_fiscale
         if l10n_it_codice_fiscale and re.match(r'^IT[0-9]{11}$', l10n_it_codice_fiscale):

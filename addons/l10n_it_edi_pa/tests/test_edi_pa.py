@@ -1,11 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-from lxml import etree
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
-from odoo.exceptions import UserError
 from odoo.tests.common import tagged
-from odoo import tools
 from odoo import Command
 
 @tagged('post_install_l10n', 'post_install', '-at_install')

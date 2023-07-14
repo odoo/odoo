@@ -1,4 +1,3 @@
-# -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -33,6 +32,10 @@ class ResCompany(models.Model):
         store=True, readonly=False, help="Fiscal code of your company")
     l10n_it_tax_system = fields.Selection(selection=TAX_SYSTEM, string="Tax System",
         help="Please select the Tax system to which you are subjected.")
+    l10n_it_edi_proxy_user_id = fields.Many2one(
+        comodel_name="account_edi_proxy_client.user",
+        compute="_compute_l10n_it_edi_proxy_user_id",
+    )
 
     # Economic and Administrative Index
     l10n_it_has_eco_index = fields.Boolean(default=False,
@@ -107,3 +110,9 @@ class ResCompany(models.Model):
                 raise ValidationError(_("Your tax representative partner must have a tax number."))
             if not record.l10n_it_tax_representative_partner_id.country_id:
                 raise ValidationError(_("Your tax representative partner must have a country."))
+
+    @api.depends("account_edi_proxy_client_ids")
+    def _compute_l10n_it_edi_proxy_user_id(self):
+        self.ensure_one()
+        for company in self:
+            company.l10n_it_edi_proxy_user_id = company.account_edi_proxy_client_ids.filtered(lambda x: x.proxy_type == 'l10n_it_edi')

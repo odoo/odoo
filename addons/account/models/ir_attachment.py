@@ -96,6 +96,7 @@ class IrAttachment(models.Model):
         This function is meant to be overriden to add formats.
 
         :returns:           A list of dictionary.
+
         * format:           Optional but helps debugging.
                             There are other methods that require the attachment
                             to be an XML other than the standard one.
