@@ -35,7 +35,7 @@
     <button class="o-mail-DiscussSidebar-item btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-reset"
         t-att-class="{
             'o-bg-inherit': mailbox.localId !== store.discuss.threadLocalId,
-            'o-active bg-200': mailbox.localId === store.discuss.threadLocalId,
+            'o-active': mailbox.localId === store.discuss.threadLocalId,
         }"
         t-on-click="(ev) => this.openThread(ev, mailbox)"
     >
@@ -85,7 +85,7 @@
     <button class="o-mail-DiscussCategoryItem o-mail-DiscussSidebar-item btn btn-secondary d-flex align-items-center w-100 px-0 py-2 border-0 rounded-0 text-reset"
         t-att-class="{
             'o-bg-inherit': threadLocalId !== store.discuss.threadLocalId,
-            'o-active bg-200': threadLocalId === store.discuss.threadLocalId,
+            'o-active': threadLocalId === store.discuss.threadLocalId,
             'o-unread': thread.message_unread_counter > 0,
         }"
         t-on-click="(ev) => this.openThread(ev, thread)"
