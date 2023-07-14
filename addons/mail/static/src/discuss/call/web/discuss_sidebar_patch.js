@@ -17,7 +17,7 @@ patch(Sidebar.prototype, "discuss/call/web", {
             default_display_mode: "video_full_screen",
             partners_to: [this.store.self.id],
         });
-        await this.rtc.toggleCall(thread, { video: true });
-        await this.props.onStartMeeting?.();
+        this.rtc.toggleCall(thread, { video: true });
+        this.props.onStartMeeting?.();
     },
 });
