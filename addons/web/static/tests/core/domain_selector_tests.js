@@ -11,7 +11,6 @@ import {
     patchDate,
     patchTimeZone,
     patchWithCleanup,
-    triggerEvent,
 } from "../helpers/utils";
 import { Component, useState, xml } from "@odoo/owl";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -21,13 +20,14 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { makeTestEnv } from "../helpers/mock_env";
 import { ormService } from "@web/core/orm_service";
-import { OPERATOR_DESCRIPTIONS } from "@web/core/domain_selector/domain_selector_operators";
 import { popoverService } from "@web/core/popover/popover_service";
-import { registerCleanup } from "../helpers/cleanup";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { getPickerApplyButton, getPickerCell } from "./datetime/datetime_test_helpers";
-import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
+import {
+    getModelFieldSelectorValues,
+    openModelFieldSelectorPopover,
+} from "./model_field_selector_tests";
 import { nameService } from "@web/core/name_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { browser } from "@web/core/browser/browser";
@@ -45,24 +45,139 @@ function addProductIds() {
     };
 }
 
-async function selectOperator(el, operator, index = 0) {
-    const select = el.querySelectorAll("select.o_domain_leaf_operator_select")[index];
-    await editSelect(select, null, operator);
+export const SELECTORS = {
+    debugArea: ".o_domain_selector_debug_container textarea",
+    condition: ".o_domain_selector_condition",
+    addNewRule: ".o_domain_selector_row > a",
+    resetButton: ".o_domain_selector_row > button",
+    buttonAddNewRule: ".o_domain_selector_node_control_panel > button:nth-child(1)",
+    buttonAddBranch: ".o_domain_selector_node_control_panel > button:nth-child(2)",
+    buttonDeleteNode: ".o_domain_selector_node_control_panel > button:nth-child(3)",
+    pathEditor: ".o_domain_selector_condition > .o_domain_selector_editor:nth-child(1)",
+    operatorEditor: ".o_domain_selector_condition > .o_domain_selector_editor:nth-child(2)",
+    valueEditor: ".o_domain_selector_condition > .o_domain_selector_editor:nth-child(3)",
+    editor: ".o_domain_selector_editor",
+    clearNotSupported: ".o_input .fa-times",
+    tag: ".o_input .o_tag",
+    toggleArchive: ".form-switch",
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+function get(target, selector, index = 0) {
+    if (index) {
+        return [...target.querySelectorAll(selector)].at(index);
+    }
+    return target.querySelector(selector);
 }
 
-function getOperatorOptions(el, index = 0) {
-    const select = el.querySelectorAll("select.o_domain_leaf_operator_select")[index];
+function getValue(target) {
+    const el = target.querySelector("input,select,span:not(.o_tag)");
+    switch (el.tagName) {
+        case "INPUT":
+            return el.value;
+        case "SELECT":
+            return el.options[el.selectedIndex].label;
+        case "SPAN":
+            return el.innerText;
+    }
+}
+
+export function getConditionText(target, index = 0) {
+    const condition = get(target, SELECTORS.condition, index);
+    const texts = [];
+    for (const t of getNodesTextContent(condition.childNodes)) {
+        const t2 = t.trim();
+        if (t2) {
+            texts.push(t2);
+        }
+    }
+    return texts.join(" ");
+}
+
+function getOperatorOptions(target, index = 0) {
+    const el = get(target, SELECTORS.operatorEditor, index);
+    const select = el.querySelector("select");
     return [...select.options].map((o) => o.label);
 }
 
-function getSelectedOperator(el, index = 0) {
-    const select = el.querySelectorAll("select.o_domain_leaf_operator_select")[index];
-    return select.options[select.selectedIndex].label;
+export function getCurrentPath(target, index = 0) {
+    const pathEditor = get(target, SELECTORS.pathEditor, index);
+    if (pathEditor.querySelector(".o_model_field_selector")) {
+        return getModelFieldSelectorValues(pathEditor).join(" > ");
+    }
+    return pathEditor.textContent;
 }
 
-function getAutocompletValue(target, index = 0) {
-    return target.querySelectorAll(".o_ds_value_cell .o-autocomplete--input")[index].value;
+export function getCurrentOperator(target, index = 0) {
+    const operatorEditor = get(target, SELECTORS.operatorEditor, index);
+    return getValue(operatorEditor);
 }
+
+export function getCurrentValue(target, index) {
+    const valueEditor = get(target, SELECTORS.valueEditor, index);
+    return getValue(valueEditor);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function isNotSupportedPath(target, index = 0) {
+    const pathEditor = get(target, SELECTORS.pathEditor, index);
+    return Boolean(pathEditor.querySelector(SELECTORS.clearNotSupported));
+}
+
+function isNotSupportedOperator(target, index = 0) {
+    const operatorEditor = get(target, SELECTORS.operatorEditor, index);
+    return Boolean(operatorEditor.querySelector(SELECTORS.clearNotSupported));
+}
+
+function isNotSupportedValue(target, index = 0) {
+    const valueEditor = get(target, SELECTORS.valueEditor, index);
+    return Boolean(valueEditor.querySelector(SELECTORS.clearNotSupported));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export async function selectOperator(target, operator, index = 0) {
+    const el = get(target, SELECTORS.operatorEditor, index);
+    await editSelect(el, "select", JSON.stringify(operator));
+}
+
+export async function selectValue(target, value, index = 0) {
+    const el = get(target, SELECTORS.valueEditor, index);
+    await editSelect(el, "select", JSON.stringify(value));
+}
+
+export async function editValue(target, value, index = 0) {
+    const el = get(target, SELECTORS.valueEditor, index);
+    await editInput(el, "input", value);
+}
+
+export async function clickOnButtonAddNewRule(target, index = 0) {
+    await click(get(target, SELECTORS.buttonAddNewRule, index));
+}
+
+export async function clickOnButtonAddBranch(target, index = 0) {
+    await click(get(target, SELECTORS.buttonAddBranch, index));
+}
+
+export async function clickOnButtonDeleteNode(target, index = 0) {
+    await click(get(target, SELECTORS.buttonDeleteNode, index));
+}
+
+export async function clearNotSupported(target, index = 0) {
+    await click(get(target, SELECTORS.clearNotSupported, index));
+}
+
+export async function addNewRule(target) {
+    await click(target, SELECTORS.addNewRule);
+}
+
+async function toggleArchive(target) {
+    await click(target, SELECTORS.toggleArchive);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 async function mountComponent(Component, params = {}) {
     const env = await makeTestEnv({ serverData, mockRPC: params.mockRPC });
@@ -171,27 +286,22 @@ QUnit.module("Components", (hooks) => {
         await makeDomainSelector({
             isDebugMode: true,
         });
+        // As we gave an empty domain, there should be a visible button to add
+        // the first domain part
+        assert.containsOnce(target, SELECTORS.addNewRule);
 
-        // When we have an empty domain, the "New Rule" button should be available
-        assert.containsOnce(
-            target,
-            "a[role=button]",
-            "there should be a button to create a domain element"
-        );
-
-        // Clicking on the button should add a visible field selector in the
-        // widget so that the user can change the field chain
-        await click(target, "a[role=button]");
+        // Clicking on that button should add a visible field selector in the
+        // component so that the user can change the field chain
+        await addNewRule(target);
         assert.containsOnce(target, ".o_model_field_selector");
 
         // Focusing the field selector input should open a field selector popover
-        await click(target, ".o_model_field_selector");
+        await openModelFieldSelectorPopover(target);
         assert.containsOnce(
             document.body,
             ".o_model_field_selector_popover",
             "field selector popover should be visible"
         );
-
         // The field selector popover should contain the list of "partner"
         // fields. "Bar" should be among them. "Bar" result li will display the
         // name of the field and some debug info.
@@ -210,52 +320,37 @@ QUnit.module("Components", (hooks) => {
                 ".o_model_field_selector_popover .o_model_field_selector_popover_item_name"
             )
         );
-        assert.containsOnce(target, "textarea.o_domain_debug_input");
-        assert.strictEqual(
-            target.querySelector(".o_domain_debug_input").value,
-            `[("bar", "=", True)]`,
-            "the domain input should contain a domain with 'bar'"
-        );
-
+        assert.containsOnce(target, SELECTORS.debugArea);
+        assert.strictEqual(target.querySelector(SELECTORS.debugArea).value, `[("bar", "=", True)]`);
         // There should be a "+" button to add a domain part; clicking on it
-        // should add the default "['id', '=', 1]" domain
-        assert.containsOnce(target, ".fa.fa-plus", "there should be a '+' button");
-        await click(target, ".fa.fa-plus");
-        assert.strictEqual(
-            target.querySelector(".o_domain_debug_input").value,
-            `["&", ("bar", "=", True), ("bar", "=", True)]`,
-            "the domain input should contain a domain with 'bar' and 'id'"
-        );
+        // should add the default "('id', '=', 1)" domain
+        assert.containsOnce(target, SELECTORS.buttonAddNewRule);
 
-        // There should be two "add group" buttons to add a domain group; clicking on
-        // the first one, should add this group with defaults "['id', '=', 1]"
+        await clickOnButtonAddNewRule(target);
+        assert.strictEqual(
+            target.querySelector(SELECTORS.debugArea).value,
+            `["&", ("bar", "=", True), ("bar", "=", True)]`
+        );
+        // There should be two "Add branch" buttons to add a domain "branch"; clicking on
+        // the first one, should add this group with defaults "('id', '=', 1)"
         // domains and the "|" operator
-        assert.containsN(target, ".fa.fa-sitemap", 2, "there should be two '...' buttons");
+        assert.containsN(target, SELECTORS.buttonAddBranch, 2);
 
-        await click(target.querySelector(".fa.fa-sitemap"));
+        await clickOnButtonAddBranch(target);
         assert.strictEqual(
-            target.querySelector(".o_domain_debug_input").value,
-            `["&", "&", ("bar", "=", True), "|", ("id", "=", 1), ("id", "=", 1), ("bar", "=", True)]`,
-            "the domain input should contain a domain with 'bar', 'id' and a subgroup"
+            target.querySelector(SELECTORS.debugArea).value,
+            `["&", "&", ("bar", "=", True), "|", ("id", "=", 1), ("id", "=", 1), ("bar", "=", True)]`
         );
-
         // There should be five buttons to remove domain part; clicking on
         // the two last ones, should leave a domain with only the "bar" and
         // "foo" fields, with the initial "&" operator
-        assert.containsN(
-            target,
-            ".o_domain_delete_node_button",
-            5,
-            "there should be five 'x' buttons"
-        );
-        let buttons = target.querySelectorAll(".o_domain_delete_node_button .fa.fa-trash");
-        await click(buttons[buttons.length - 1]);
-        buttons = target.querySelectorAll(".o_domain_delete_node_button .fa.fa-trash");
-        await click(buttons[buttons.length - 1]);
+        assert.containsN(target, SELECTORS.buttonDeleteNode, 5);
+
+        await clickOnButtonDeleteNode(target, -1);
+        await clickOnButtonDeleteNode(target, -1);
         assert.strictEqual(
-            target.querySelector(".o_domain_debug_input").value,
-            `["&", ("bar", "=", True), ("id", "=", 1)]`,
-            "the domain input should contain a domain with 'bar' and 'id'"
+            target.querySelector(SELECTORS.debugArea).value,
+            `["&", ("bar", "=", True), ("id", "=", 1)]`
         );
     });
 
@@ -272,7 +367,6 @@ QUnit.module("Components", (hooks) => {
                 );
             },
         });
-
         // Check that there is a datepicker to choose the date
         assert.containsOnce(target, ".o_datetime_input", "there should be a datepicker");
         // The input field should display the date and time in the user's timezone
@@ -282,7 +376,6 @@ QUnit.module("Components", (hooks) => {
         await click(target, ".o_datetime_input");
         await click(getPickerCell("26").at(0)); // => February 26th
         await click(getPickerApplyButton());
-
         // The input field should display the date and time in the user's timezone
         assert.equal(target.querySelector(".o_datetime_input").value, "02/26/2017 16:42:00");
     });
@@ -294,50 +387,60 @@ QUnit.module("Components", (hooks) => {
                 assert.strictEqual(domain, `[("bar", "=", True)]`);
             },
         });
-
-        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "fooooooo");
+        assert.strictEqual(getCurrentPath(target), "fooooooo");
         assert.containsOnce(target, ".o_model_field_selector_warning");
         assert.strictEqual(
             target.querySelector(".o_model_field_selector_warning").title,
             "Invalid field chain"
         );
-        assert.containsN(target, ".o_domain_leaf_operator_select option", 18);
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "abc");
+        assert.strictEqual(getOperatorOptions(target).length, 1);
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), `abc`);
 
-        await click(target, ".o_model_field_selector");
+        await openModelFieldSelectorPopover(target);
         await click(target.querySelector(".o_model_field_selector_popover_item_name"));
+        assert.strictEqual(getCurrentPath(target), "Bar");
+        assert.strictEqual(getCurrentOperator(target), "is");
+        assert.strictEqual(getCurrentValue(target), "set");
+    });
 
-        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Bar");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "is");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "true");
+    QUnit.test("building a domain with an invalid path (2)", async (assert) => {
+        await makeDomainSelector({
+            domain: `[(bloup, "=", "abc")]`,
+            update(domain) {
+                assert.strictEqual(domain, `[("id", "=", 1)]`);
+            },
+        });
+        assert.strictEqual(getCurrentPath(target), "bloup");
+        assert.ok(isNotSupportedPath(target));
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), `abc`);
+
+        await clearNotSupported(target);
+        assert.strictEqual(getCurrentPath(target), "ID");
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "1");
     });
 
     QUnit.test("building a domain with an invalid operator", async (assert) => {
         await makeDomainSelector({
             domain: `[("foo", "!!!!=!!!!", "abc")]`,
             update(domain) {
-                assert.strictEqual(domain, `[("foo", "=", "")]`);
+                assert.strictEqual(domain, `[("foo", "=", "abc")]`);
             },
         });
-
-        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Foo");
+        assert.strictEqual(getCurrentPath(target), "Foo");
         assert.containsNone(target, ".o_model_field_selector_warning");
-        assert.containsN(target, ".o_domain_leaf_operator_select option", 8 + 1);
-        assert.strictEqual(getSelectedOperator(target), `"!!!!=!!!!"`);
-        assert.containsNone(
-            target,
-            ".o_domain_leaf_value_input",
-            "do not show editor if operator is invalid"
-        );
+        assert.strictEqual(getCurrentOperator(target), `"!!!!=!!!!"`);
+        assert.ok(isNotSupportedOperator(target));
+        assert.strictEqual(getCurrentValue(target), "abc");
 
-        await editSelect(target, ".o_domain_leaf_operator_select", "=");
-
-        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Foo");
+        await clearNotSupported(target);
+        assert.strictEqual(getCurrentPath(target), "Foo");
         assert.containsNone(target, ".o_model_field_selector_warning");
-        assert.containsN(target, ".o_domain_leaf_operator_select option", 8);
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "");
+        assert.strictEqual(getOperatorOptions(target).length, 8);
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "abc");
     });
 
     QUnit.test("building a domain with an expression for value", async (assert) => {
@@ -348,18 +451,10 @@ QUnit.module("Components", (hooks) => {
                 assert.strictEqual(domain, `[("datetime", ">=", "2023-04-20 16:00:00")]`);
             },
         });
+        assert.strictEqual(getCurrentValue(target), "context_today()");
 
-        assert.containsNone(target, ".o_ds_value_cell input");
-        assert.containsOnce(target, ".o_ds_expr_value");
-        assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "context_today()");
-
-        await click(target, ".o_ds_expr_value button");
-        assert.containsOnce(target, ".o_ds_value_cell input");
-        assert.containsNone(target, ".o_ds_expr_value");
-        assert.strictEqual(
-            target.querySelector(".o_ds_value_cell input").value,
-            "04/20/2023 17:00:00"
-        );
+        await clearNotSupported(target);
+        assert.strictEqual(getCurrentValue(target), "04/20/2023 17:00:00");
     });
 
     QUnit.test("building a domain with an expression in value", async (assert) => {
@@ -369,19 +464,14 @@ QUnit.module("Components", (hooks) => {
                 assert.strictEqual(domain, `[("int", "<", 1)]`);
             },
         });
+        assert.strictEqual(getCurrentPath(target), "Integer");
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "id");
 
-        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Integer");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
-        assert.containsNone(target, ".o_ds_value_cell input");
-        assert.containsOnce(target, ".o_ds_expr_value");
-        assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "id");
-
-        await editSelect(target, ".o_domain_leaf_operator_select", "<");
-        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Integer");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "<");
-        assert.containsOnce(target, ".o_ds_value_cell input");
-        assert.containsNone(target, ".o_ds_expr_value");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell input").value, "1");
+        await selectOperator(target, "<");
+        assert.strictEqual(getCurrentPath(target), "Integer");
+        assert.strictEqual(getCurrentOperator(target), "<");
+        assert.strictEqual(getCurrentValue(target), "1");
     });
 
     QUnit.test("building a domain with a m2o without following the relation", async (assert) => {
@@ -393,14 +483,12 @@ QUnit.module("Components", (hooks) => {
             },
         });
         assert.verifySteps([]);
-        assert.containsOnce(target, ".o_ds_expr_value");
+        assert.ok(isNotSupportedValue(target));
 
-        await click(target, ".o_ds_expr_value button");
+        await clearNotSupported(target);
         assert.verifySteps([`[("product_id", "ilike", "")]`]);
 
-        const input = target.querySelector(".o_domain_leaf_value_input");
-        input.value = "pad";
-        await triggerEvent(input, null, "change");
+        await editInput(target, `${SELECTORS.valueEditor} input`, "pad");
         assert.verifySteps([`[("product_id", "ilike", "pad")]`]);
     });
 
@@ -410,8 +498,8 @@ QUnit.module("Components", (hooks) => {
             domain: `[("name", "=", parent.foo)]`,
             isDebugMode: true,
         });
-        assert.containsOnce(target, ".o_ds_expr_value");
-        assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "parent.foo");
+        assert.strictEqual(getCurrentValue(target), "parent.foo");
+        assert.ok(isNotSupportedValue(target));
     });
 
     QUnit.test("creating a domain with a default option", async (assert) => {
@@ -428,9 +516,10 @@ QUnit.module("Components", (hooks) => {
                 );
             },
         });
+
         // Clicking on the button should add a visible field selector in the
         // widget so that the user can change the field chain
-        await click(target, "a[role=button]");
+        await addNewRule(target);
     });
 
     QUnit.test("edit a domain with the debug textarea", async (assert) => {
@@ -445,11 +534,7 @@ QUnit.module("Components", (hooks) => {
                 assert.ok(fromDebug);
             },
         });
-        assert.containsOnce(
-            target,
-            ".o_domain_node.o_domain_leaf",
-            "should have a single domain node"
-        );
+        assert.containsOnce(target, SELECTORS.condition);
 
         newDomain = `
             [
@@ -457,13 +542,13 @@ QUnit.module("Components", (hooks) => {
                 ['id', '=', 0]
             ]
         `;
-        await editInput(target, ".o_domain_debug_input", newDomain);
+        await editInput(target, SELECTORS.debugArea, newDomain);
         assert.strictEqual(
-            target.querySelector(".o_domain_debug_input").value,
+            target.querySelector(SELECTORS.debugArea).value,
             newDomain,
             "the domain should not have been formatted"
         );
-        assert.containsN(target, ".o_domain_node.o_domain_leaf", 2);
+        assert.containsN(target, SELECTORS.condition, 2);
     });
 
     QUnit.test(
@@ -480,78 +565,40 @@ QUnit.module("Components", (hooks) => {
                     assert.ok(fromDebug);
                 },
             });
-            assert.containsOnce(
-                target,
-                ".o_domain_node.o_domain_leaf",
-                "should have a single domain node"
-            );
+            assert.containsOnce(target, SELECTORS.condition);
+
             newDomain = `[(1, "=", 1)]`;
-            let input = target.querySelector(".o_domain_debug_input");
-            input.value = newDomain;
-            await triggerEvent(input, null, "change");
+            await editInput(target, SELECTORS.debugArea, newDomain);
             assert.strictEqual(
-                target.querySelector(".o_domain_debug_input").value,
+                target.querySelector(SELECTORS.debugArea).value,
                 newDomain,
                 "the domain should not have been formatted"
             );
-            assert.containsOnce(
-                target,
-                ".o_domain_node.o_domain_leaf",
-                "should still have a single domain node"
-            );
-
-            assert.strictEqual(
-                target.querySelector(".o_model_field_selector_chain_part").innerText,
-                "1"
-            );
-            assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
-            assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "1");
+            assert.containsOnce(target, SELECTORS.condition);
+            assert.strictEqual(getCurrentPath(target), "1");
+            assert.strictEqual(getCurrentOperator(target), "=");
+            assert.strictEqual(getCurrentValue(target), "1");
 
             newDomain = `[(0, "=", 1)]`;
-            input = target.querySelector(".o_domain_debug_input");
-            input.value = newDomain;
-            await triggerEvent(input, null, "change");
+            await editInput(target, SELECTORS.debugArea, newDomain);
             assert.strictEqual(
-                target.querySelector(".o_domain_debug_input").value,
+                target.querySelector(SELECTORS.debugArea).value,
                 newDomain,
                 "the domain should not have been formatted"
             );
-            assert.containsOnce(
-                target,
-                ".o_domain_node.o_domain_leaf",
-                "should still have a single domain node"
-            );
-
-            assert.strictEqual(
-                target.querySelector(".o_model_field_selector_chain_part").innerText,
-                "0"
-            );
-            assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
-            assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "1");
+            assert.containsOnce(target, SELECTORS.condition);
+            assert.strictEqual(getCurrentPath(target), "0");
+            assert.strictEqual(getCurrentOperator(target), "=");
+            assert.strictEqual(getCurrentValue(target), "1");
         }
     );
 
-    QUnit.test("operator fallback (readonly mode)", async (assert) => {
+    QUnit.test("operator fallback (mode readonly)", async (assert) => {
         await makeDomainSelector({
             domain: `[['foo', 'like', 'kikou']]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo like kikou`);
-    });
-
-    QUnit.test("operator fallback (edit mode)", async (assert) => {
-        OPERATOR_DESCRIPTIONS.test = {
-            label: "test",
-            valueCount: 0,
-        };
-        registerCleanup(() => {
-            delete OPERATOR_DESCRIPTIONS.test;
-        });
-
-        await makeDomainSelector({ domain: "[['foo', 'test', 'kikou']]" });
-        // check that the DomainSelector does not crash
-        assert.containsOnce(target, ".o_domain_selector");
-        assert.containsN(target, ".o_domain_leaf_edition > div", 2, "value should be hidden");
+        assert.strictEqual(getConditionText(target), `Foo like kikou`);
     });
 
     QUnit.test("cache fields_get", async (assert) => {
@@ -563,33 +610,23 @@ QUnit.module("Components", (hooks) => {
                 }
             },
         });
-
         assert.verifySteps(["fields_get"]);
     });
 
     QUnit.test("selection field with operator change from 'is set' to '='", async (assert) => {
         await makeDomainSelector({ domain: `[['state', '!=', False]]` });
+        assert.strictEqual(getCurrentPath(target), "State");
+        assert.strictEqual(getCurrentOperator(target), "is set");
 
-        assert.strictEqual(
-            target.querySelector(".o_model_field_selector_chain_part").innerText,
-            "State"
-        );
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "set");
-
-        await editSelect(target, ".o_domain_leaf_operator_select", "=");
-
-        assert.strictEqual(
-            target.querySelector(".o_model_field_selector_chain_part").innerText,
-            "State"
-        );
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, `"abc"`);
+        await selectOperator(target, "=");
+        assert.strictEqual(getCurrentPath(target), "State");
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), `ABC`);
     });
 
     QUnit.test("show correct operator", async (assert) => {
         await makeDomainSelector({ domain: `[['state', 'in', ['abc']]]` });
-        const select = target.querySelector(".o_domain_leaf_operator_select");
-        assert.strictEqual(select.options[select.options.selectedIndex].text, "is in");
+        assert.strictEqual(getCurrentOperator(target), "is in");
     });
 
     QUnit.test("multi selection", async (assert) => {
@@ -614,32 +651,33 @@ QUnit.module("Components", (hooks) => {
 
         // Create the domain selector and its mock environment
         const comp = await mountComponent(Parent);
-
-        assert.containsOnce(target, ".o_domain_leaf_value_input");
         assert.strictEqual(comp.domain, `[("state", "in", ["a", "b", "c"])]`);
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf_value_input").value,
-            `["a", "b", "c"]`
-        );
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
+            `a`,
+            `b`,
+            `c`,
+        ]);
+        assert.containsOnce(target, `${SELECTORS.valueEditor} select`);
 
-        await editInput(target, ".o_domain_leaf_value_input", `[]`);
-        assert.strictEqual(comp.domain, `[("state", "in", [])]`);
+        await click(target.querySelector(`${SELECTORS.valueEditor} .o_tag .o_delete`));
+        assert.strictEqual(comp.domain, `[("state", "in", ["b", "c"])]`);
 
-        await editInput(target, ".o_domain_leaf_value_input", `["b"]`);
-        assert.strictEqual(comp.domain, `[("state", "in", ["b"])]`);
+        await selectValue(target, "abc");
+        assert.strictEqual(comp.domain, `[("state", "in", ["b", "c", "abc"])]`);
+        const tags = target.querySelectorAll(SELECTORS.tag);
+        assert.hasClass(tags[0], "o_tag_color_2");
+        assert.hasClass(tags[1], "o_tag_color_2");
+        assert.hasClass(tags[2], "o_tag_color_0");
     });
 
     QUnit.test("json field with operator change from 'equal' to 'ilike'", async (assert) => {
         await makeDomainSelector({ domain: `[['json_field', '=', "hey"]]` });
-        assert.strictEqual(
-            target.querySelector(".o_model_field_selector_chain_part").innerText,
-            `Json Field`
-        );
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, `hey`);
+        assert.strictEqual(getCurrentPath(target), `Json Field`);
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), `hey`);
 
-        await editSelect(target, ".o_domain_leaf_operator_select", "ilike");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "ilike");
+        await selectOperator(target, "ilike");
+        assert.strictEqual(getCurrentOperator(target), "contains");
     });
 
     QUnit.test("parse -1", async (assert) => {
@@ -653,7 +691,7 @@ QUnit.module("Components", (hooks) => {
             <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
         `;
         await mountComponent(Parent);
-        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "-1");
+        assert.strictEqual(getCurrentValue(target), "-1");
     });
 
     QUnit.test("parse 3-1", async (assert) => {
@@ -667,7 +705,7 @@ QUnit.module("Components", (hooks) => {
             <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
         `;
         await mountComponent(Parent);
-        assert.strictEqual(target.querySelector(".o_ds_expr_value").innerText, "3 - 1");
+        assert.strictEqual(getCurrentValue(target), "3 - 1");
     });
 
     QUnit.test("domain not supported (mode readonly)", async (assert) => {
@@ -679,8 +717,8 @@ QUnit.module("Components", (hooks) => {
                 isDebugMode: false,
             },
         });
-        assert.containsNone(target, ".o_reset_domain_button");
-        assert.containsNone(target, ".o_domain_debug_input");
+        assert.containsNone(target, SELECTORS.resetButton);
+        assert.containsNone(target, SELECTORS.debugArea);
     });
 
     QUnit.test("domain not supported (mode readonly + mode debug)", async (assert) => {
@@ -692,9 +730,9 @@ QUnit.module("Components", (hooks) => {
                 isDebugMode: true,
             },
         });
-        assert.containsNone(target, ".o_reset_domain_button");
-        assert.containsOnce(target, ".o_domain_debug_input");
-        assert.ok(target.querySelector(".o_domain_debug_input").hasAttribute("readonly"));
+        assert.containsNone(target, SELECTORS.resetButton);
+        assert.containsOnce(target, SELECTORS.debugArea);
+        assert.ok(target.querySelector(SELECTORS.debugArea).hasAttribute("readonly"));
     });
 
     QUnit.test("domain not supported (mode edit)", async (assert) => {
@@ -706,8 +744,8 @@ QUnit.module("Components", (hooks) => {
                 isDebugMode: false,
             },
         });
-        assert.containsOnce(target, ".o_reset_domain_button");
-        assert.containsNone(target, ".o_domain_debug_input");
+        assert.containsOnce(target, SELECTORS.resetButton);
+        assert.containsNone(target, SELECTORS.debugArea);
     });
 
     QUnit.test("domain not supported (mode edit + mode debug)", async (assert) => {
@@ -719,9 +757,9 @@ QUnit.module("Components", (hooks) => {
                 isDebugMode: true,
             },
         });
-        assert.containsOnce(target, ".o_reset_domain_button");
-        assert.containsOnce(target, ".o_domain_debug_input");
-        assert.notOk(target.querySelector(".o_domain_debug_input").hasAttribute("readonly"));
+        assert.containsOnce(target, SELECTORS.resetButton);
+        assert.containsOnce(target, SELECTORS.debugArea);
+        assert.notOk(target.querySelector(SELECTORS.debugArea).hasAttribute("readonly"));
     });
 
     QUnit.test("reset domain", async (assert) => {
@@ -747,18 +785,18 @@ QUnit.module("Components", (hooks) => {
         await mountComponent(Parent);
         assert.strictEqual(
             target.querySelector(".o_domain_selector").innerText.toLowerCase(),
-            "this domain is not supported. reset domain"
+            "this domain is not supported.\nreset domain"
         );
-        assert.containsOnce(target, ".o_reset_domain_button");
-        assert.containsNone(target, ".o_domain_add_first_node_button");
+        assert.containsOnce(target, SELECTORS.resetButton);
+        assert.containsNone(target, SELECTORS.addNewRule);
 
-        await click(target, ".o_reset_domain_button");
+        await click(target, SELECTORS.resetButton);
         assert.strictEqual(
             target.querySelector(".o_domain_selector").innerText.toLowerCase(),
             "match all records\nnew rule"
         );
-        assert.containsNone(target, ".o_reset_domain_button");
-        assert.containsOnce(target, "a[role=button]");
+        assert.containsNone(target, SELECTORS.resetButton);
+        assert.containsOnce(target, SELECTORS.addNewRule);
         assert.verifySteps(["[]"]);
     });
 
@@ -788,13 +826,12 @@ QUnit.module("Components", (hooks) => {
         await editInput(target, ".o_model_field_selector_debug", "a");
         await click(target, ".o_model_field_selector_popover_close");
         assert.verifySteps([`[("a", "=", "")]`]);
-
-        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "a");
+        assert.strictEqual(getCurrentPath(target), "a");
         assert.containsOnce(target, ".o_model_field_selector_warning");
-        assert.containsN(target, ".o_domain_leaf_operator_select option", 18);
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "");
-        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, `[("a", "=", "")]`);
+        assert.strictEqual(getOperatorOptions(target).length, 1);
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.strictEqual(target.querySelector(SELECTORS.debugArea).value, `[("a", "=", "")]`);
     });
 
     QUnit.test("between operator", async (assert) => {
@@ -807,8 +844,8 @@ QUnit.module("Components", (hooks) => {
             },
         });
 
-        assert.containsOnce(target, ".o_domain_leaf");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "between");
+        assert.containsOnce(target, SELECTORS.condition);
+        assert.strictEqual(getCurrentOperator(target), "is between");
         assert.containsN(target, ".o_datetime_input", 2);
 
         await editInput(
@@ -838,16 +875,9 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.containsN(target, ".o_domain_leaf", 2);
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf .o_domain_leaf_operator_select ").value,
-            "="
-        );
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select ")
-                .value,
-            "between"
-        );
+        assert.containsN(target, SELECTORS.condition, 2);
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentOperator(target, 1), "is between");
         assert.containsN(target, ".o_datetime_input", 2);
     });
 
@@ -859,16 +889,9 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.containsN(target, ".o_domain_leaf", 2);
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf .o_domain_leaf_operator_select ").value,
-            "between"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select ")
-                .value,
-            "="
-        );
+        assert.containsN(target, SELECTORS.condition, 2);
+        assert.strictEqual(getCurrentOperator(target), "is between");
+        assert.strictEqual(getCurrentOperator(target, 1), "=");
         assert.containsN(target, ".o_datetime_input", 2);
     });
 
@@ -880,16 +903,9 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.containsN(target, ".o_domain_leaf", 2);
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf .o_domain_leaf_operator_select ").value,
-            "between"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select ")
-                .value,
-            "="
-        );
+        assert.containsN(target, SELECTORS.condition, 2);
+        assert.strictEqual(getCurrentOperator(target), "is between");
+        assert.strictEqual(getCurrentOperator(target, 1), "=");
         assert.containsN(target, ".o_datetime_input", 2);
     });
 
@@ -904,7 +920,7 @@ QUnit.module("Components", (hooks) => {
         });
         assert.strictEqual(
             target.querySelector(".o_domain_selector").innerText,
-            `Match any of the following rules:\ncreate_date\nis between 2023-04-01 00:00:00 and 2023-04-30 23:59:59\n0\n= 1`
+            `Match\nany\nof the following rules:\ncreate_date\nis between\n2023-04-01 00:00:00\nand\n2023-04-30 23:59:59\n0\n=\n1`
         );
     });
 
@@ -917,115 +933,128 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
+        assert.containsOnce(target, SELECTORS.condition);
+        assert.strictEqual(getCurrentOperator(target), "is between");
+        assert.containsOnce(target, SELECTORS.valueEditor);
+        assert.containsN(target.querySelector(SELECTORS.valueEditor), SELECTORS.editor, 2);
+        assert.containsOnce(
+            target.querySelector(SELECTORS.valueEditor),
+            `${SELECTORS.editor} ${SELECTORS.clearNotSupported}`
+        );
+        assert.containsOnce(
+            target.querySelector(SELECTORS.valueEditor),
+            `${SELECTORS.editor} .o_datetime_input`
+        );
 
-        assert.containsOnce(target, ".o_domain_leaf");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "between");
-        assert.containsOnce(target, ".o_ds_expr_value");
-        assert.containsOnce(target, ".o_datetime_input");
-
-        await click(target, ".o_ds_expr_value button");
+        await clearNotSupported(target);
+        assert.containsOnce(target, SELECTORS.valueEditor);
+        assert.containsN(
+            target.querySelector(SELECTORS.valueEditor),
+            `${SELECTORS.editor} .o_datetime_input`,
+            2
+        );
         assert.verifySteps([
             `["&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00")]`,
         ]);
     });
 
-    QUnit.test("support of connector '!' (readonly mode)", async (assert) => {
+    QUnit.test("support of connector '!' (mode readonly)", async (assert) => {
         const toTest = [
             {
                 domain: `["!", ("foo", "=", "abc")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc`,
             },
             {
                 domain: `["!", "!", ("foo", "=", "abc")]`,
-                result: `Match all of the following rules:\nFoo\n= abc`,
+                result: `Match\nall\nof the following rules:\nFoo\n=\nabc`,
             },
             {
                 domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match any of the following rules:\nFoo\n!= abc\nFoo\n!= def`,
+                result: `Match\nany\nof the following rules:\nFoo\n!=\nabc\nFoo\n!=\ndef`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc\nFoo\n!= def`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc\nFoo\n!=\ndef`,
             },
             {
                 domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc\nFoo\n= def`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n!= def`,
+                result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\n!=\ndef`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match any of the following rules:\nFoo\n!= abc\nFoo\n= def`,
+                result: `Match\nany\nof the following rules:\nFoo\n!=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n!= def`,
+                result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\n!=\ndef`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match all of the following rules:\nany\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match\nall\nof the following rules:\nany\nof:\nFoo\n!=\nabc\nFoo\n!=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc\nFoo\n!=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match any of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match\nany\nof the following rules:\nFoo\n!=\nabc\nFoo\n!=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match any of the following rules:\nall\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match\nany\nof the following rules:\nall\nof:\nFoo\n!=\nabc\nFoo\n!=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match any of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
+                result: `Match\nany\nof the following rules:\nFoo\n!=\nabc\nFoo\n!=\ndef\nFoo\n!=\nghi`,
             },
             {
                 domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc\nFoo\n!=\ndef\nFoo\n!=\nghi`,
             },
             {
                 domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match any of the following rules:\nall\nof:\nFoo\n!= abc\nFoo\n= def\nFoo\n!= ghi`,
+                result: `Match\nany\nof the following rules:\nall\nof:\nFoo\n!=\nabc\nFoo\n=\ndef\nFoo\n!=\nghi`,
             },
             {
                 domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match all of the following rules:\nany\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
+                result: `Match\nall\nof the following rules:\nany\nof:\nFoo\n!=\nabc\nFoo\n!=\ndef\nFoo\n!=\nghi`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match any of the following rules:\nFoo\n!= abc\nall\nof:\nFoo\n!= def\nFoo\n!= ghi`,
+                result: `Match\nany\nof the following rules:\nFoo\n!=\nabc\nall\nof:\nFoo\n!=\ndef\nFoo\n!=\nghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "!=", "ghi")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc\nany\nof:\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc\nany\nof:\nFoo\n!=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "!=", "def"), "!", ("foo", "=", "ghi")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc\nany\nof:\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc\nany\nof:\nFoo\n=\ndef\nFoo\n=\nghi`,
             },
         ];
 
@@ -1050,99 +1079,99 @@ QUnit.module("Components", (hooks) => {
         const toTest = [
             {
                 domain: `["!", ("foo", "=", "abc")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc`,
             },
             {
                 domain: `["!", "!", ("foo", "=", "abc")]`,
-                result: `Match all of the following rules:\nFoo\n= abc`,
+                result: `Match\nall\nof the following rules:\nFoo\n=\nabc`,
             },
             {
                 domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match not all of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match\nnot all\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match none of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match\nnone\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match all of the following rules:\nFoo\n!= abc\nFoo\n= def`,
+                result: `Match\nall\nof the following rules:\nFoo\n!=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n!= def`,
+                result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\n!=\ndef`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match any of the following rules:\nFoo\n!= abc\nFoo\n= def`,
+                result: `Match\nany\nof the following rules:\nFoo\n!=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n!= def`,
+                result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\n!=\ndef`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
             },
             {
                 domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match all of the following rules:\nnot all\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match\nall\nof the following rules:\nnot all\nof:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match all of the following rules:\nnone\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match\nall\nof the following rules:\nnone\nof:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match any of the following rules:\nnot all\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match\nany\nof the following rules:\nnot all\nof:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match any of the following rules:\nnone\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match\nany\nof the following rules:\nnone\nof:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match not all of the following rules:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match\nnot all\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match none of the following rules:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match\nnone\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match not all of the following rules:\nany\nof:\nFoo\n= abc\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match\nnot all\nof the following rules:\nany\nof:\nFoo\n=\nabc\nFoo\n!=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match none of the following rules:\nall\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match\nnone\nof the following rules:\nall\nof:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match not all of the following rules:\nFoo\n= abc\nany\nof:\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match\nnot all\nof the following rules:\nFoo\n=\nabc\nany\nof:\nFoo\n=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match none of the following rules:\nFoo\n= abc\nall\nof:\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match\nnone\nof the following rules:\nFoo\n=\nabc\nall\nof:\nFoo\n=\ndef\nFoo\n=\nghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), "!", ("foo", "=", "ghi")]`,
-                result: `Match none of the following rules:\nFoo\n= abc\nall\nof:\nFoo\n= def\nFoo\n!= ghi`,
+                result: `Match\nnone\nof the following rules:\nFoo\n=\nabc\nall\nof:\nFoo\n=\ndef\nFoo\n!=\nghi`,
             },
         ];
 
@@ -1164,7 +1193,8 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("support properties", async (assert) => {
-        assert.expect(7);
+        assert.expect(25);
+        patchDate(2023, 9, 5, 15, 0, 0);
 
         serverData.models.partner.fields.properties = {
             string: "Properties",
@@ -1178,11 +1208,16 @@ QUnit.module("Components", (hooks) => {
             type: "properties_definition",
         };
         serverData.models.product.records[0].definitions = [
-            { name: "xphone_prop_1", string: "P1", type: "boolean" },
-            { name: "xphone_prop_2", string: "P2", type: "selection", selection: [] },
+            { name: "xphone_prop_1", string: "Boolean", type: "boolean" },
+            { name: "xphone_prop_2", string: "Selection", type: "selection", selection: [] },
+            { name: "xphone_prop_3", string: "Char", type: "char" },
+            { name: "xphone_prop_4", string: "Integer", type: "integer" },
+            { name: "xphone_prop_5", string: "Date", type: "date" },
+            { name: "xphone_prop_6", string: "Tags", type: "tags" },
+            { name: "xphone_prop_7", string: "M2M", type: "many2many", comodel: "partner" },
         ];
         serverData.models.product.records[1].definitions = [
-            { name: "xpad_prop_1", string: "P3", type: "many2one", relation: "partner" },
+            { name: "xpad_prop_1", string: "M2O", type: "many2one", comodel: "partner" },
         ];
 
         let expectedDomain = `[("id", "=", 1)]`;
@@ -1214,68 +1249,195 @@ QUnit.module("Components", (hooks) => {
             target,
             ".o_model_field_selector_popover_item[data-name='properties'] .o_model_field_selector_popover_relation_icon"
         );
-        assert.strictEqual(
-            target.querySelector(".o_model_field_selector_value").textContent,
-            "Properties"
-        );
+        assert.strictEqual(getCurrentPath(target), "Properties");
 
-        expectedDomain = `[("properties.xphone_prop_2", "=", False)]`;
-        await click(
-            target.querySelector(
-                ".o_model_field_selector_popover_item[data-name='xphone_prop_2'] button"
-            )
-        );
-        assert.strictEqual(
-            target.querySelector(".o_model_field_selector_value").textContent,
-            "PropertiesP2"
-        );
-        assert.deepEqual(
-            [...target.querySelectorAll(".o_domain_leaf_operator_select option")].map(
-                (e) => e.value
-            ),
-            ["=", "!=", "set", "not_set"]
-        );
-
-        await openModelFieldSelectorPopover(target);
-        expectedDomain = `[("properties.xpad_prop_1", "=", 1)]`;
+        expectedDomain = `[("properties.xpad_prop_1", "=", False)]`;
         await click(
             target.querySelector(
                 ".o_model_field_selector_popover_item[data-name='xpad_prop_1'] button"
             )
         );
-        assert.strictEqual(
-            target.querySelector(".o_model_field_selector_value").textContent,
-            "PropertiesP3"
-        );
-        assert.deepEqual(
-            [...target.querySelectorAll(".o_domain_leaf_operator_select option")].map(
-                (e) => e.value
-            ),
-            ["=", "!=", "set", "not_set"]
-        );
+        assert.strictEqual(getCurrentPath(target), "Properties > M2O");
+        assert.deepEqual(getOperatorOptions(target), ["=", "!=", "is set", "is not set"]);
+
+        const toTests = [
+            {
+                name: "xphone_prop_1",
+                domain: `[("properties.xphone_prop_1", "=", True)]`,
+                options: ["is", "is not"],
+            },
+            {
+                name: "xphone_prop_2",
+                domain: `[("properties.xphone_prop_2", "=", False)]`,
+                options: ["=", "!=", "is set", "is not set"],
+            },
+            {
+                name: "xphone_prop_3",
+                domain: `[("properties.xphone_prop_3", "=", "")]`,
+                options: [
+                    "=",
+                    "!=",
+                    "contains",
+                    "does not contain",
+                    "is in",
+                    "is not in",
+                    "is set",
+                    "is not set",
+                ],
+            },
+            {
+                name: "xphone_prop_4",
+                domain: `[("properties.xphone_prop_4", "=", 1)]`,
+                options: [
+                    "=",
+                    "!=",
+                    ">",
+                    ">=",
+                    "<",
+                    "<=",
+                    "is between",
+                    "contains",
+                    "does not contain",
+                    "is set",
+                    "is not set",
+                ],
+            },
+            {
+                name: "xphone_prop_5",
+                domain: `[("properties.xphone_prop_5", "=", "2023-10-05")]`,
+                options: ["=", "!=", ">", ">=", "<", "<=", "is between", "is set", "is not set"],
+            },
+            {
+                name: "xphone_prop_6",
+                domain: `[("properties.xphone_prop_6", "in", "")]`,
+                options: ["is in", "is not in", "is set", "is not set"],
+            },
+            {
+                name: "xphone_prop_7",
+                domain: `[("properties.xphone_prop_7", "in", [])]`,
+                options: ["is in", "is not in", "is set", "is not set"],
+            },
+        ];
+
+        for (const { name, domain, options } of toTests) {
+            await openModelFieldSelectorPopover(target);
+            expectedDomain = domain;
+            await click(
+                target.querySelector(
+                    `.o_model_field_selector_popover_item[data-name='${name}'] button`
+                )
+            );
+            const { string } = serverData.models.product.records[0].definitions.find(
+                (def) => def.name === name
+            );
+            assert.strictEqual(getCurrentPath(target), `Properties > ${string}`);
+            assert.deepEqual(getOperatorOptions(target), options);
+        }
     });
 
-    QUnit.test("no button 'New Rule' (readonly mode)", async (assert) => {
+    QUnit.test("support properties (mode readonly)", async (assert) => {
+        serverData.models.partner.fields.properties = {
+            string: "Properties",
+            type: "properties",
+            definition_record: "product_id",
+            definition_record_field: "definitions",
+            searchable: true,
+        };
+        serverData.models.product.fields.definitions = {
+            string: "Definitions",
+            type: "properties_definition",
+        };
+        serverData.models.product.records[0].definitions = [
+            { name: "xphone_prop_1", string: "Boolean", type: "boolean" },
+            {
+                name: "xphone_prop_2",
+                string: "Selection",
+                type: "selection",
+                selection: [["abc", "ABC"]],
+            },
+            { name: "xphone_prop_3", string: "Char", type: "char" },
+            { name: "xphone_prop_4", string: "Integer", type: "integer" },
+            { name: "xphone_prop_5", string: "Date", type: "date" },
+            { name: "xphone_prop_6", string: "Tags", type: "tags" },
+            { name: "xphone_prop_7", string: "M2M", type: "many2many", comodel: "product" },
+        ];
+        serverData.models.product.records[1].definitions = [
+            { name: "xpad_prop_1", string: "M2O", type: "many2one", comodel: "product" },
+        ];
+
+        const toTest = [
+            {
+                domain: `[("properties.xphone_prop_1", "=", False)]`,
+                result: `PropertiesBoolean is not set`,
+            },
+            {
+                domain: `[("properties.xphone_prop_2", "=", "abc")]`,
+                result: `PropertiesSelection = ABC`,
+            },
+            {
+                domain: `[("properties.xphone_prop_3", "=", "def")]`,
+                result: `PropertiesChar = def`,
+            },
+            {
+                domain: `[("properties.xphone_prop_4", "=", 1)]`,
+                result: `PropertiesInteger = 1`,
+            },
+            {
+                domain: `[("properties.xphone_prop_5", "=", "2023-10-05")]`,
+                result: `PropertiesDate = 2023-10-05`,
+            },
+            {
+                domain: `[("properties.xphone_prop_6", "in", "g")]`,
+                result: `PropertiesTags is in g`,
+            },
+            {
+                domain: `[("properties.xphone_prop_7", "in", [37])]`,
+                result: `PropertiesM2M is in ( xphone )`,
+            },
+            {
+                domain: `[("properties.xpad_prop_1", "=", 41)]`,
+                result: `PropertiesM2O = xpad`,
+            },
+        ];
+
+        class Parent extends Component {
+            setup() {
+                this.state = useState({ domain: `[]` });
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`<DomainSelector resModel="'partner'" domain="state.domain"/>`;
+
+        const parent = await mountComponent(Parent);
+
+        for (const { domain, result } of toTest) {
+            parent.state.domain = domain;
+            await nextTick();
+            assert.strictEqual(getConditionText(target), result);
+        }
+    });
+
+    QUnit.test("no button 'New Rule' (mode readonly)", async (assert) => {
         await makeDomainSelector({
             readonly: true,
             domain: `[("bar", "=", True)]`,
         });
-        assert.containsOnce(target, ".o_domain_leaf");
+        assert.containsOnce(target, SELECTORS.condition);
         assert.containsNone(target, "a[role=button]");
     });
 
     QUnit.test("button 'New Rule' (edit mode)", async (assert) => {
         await makeDomainSelector();
-        assert.containsNone(target, ".o_domain_leaf");
-        assert.containsOnce(target, "a[role=button]");
+        assert.containsNone(target, SELECTORS.condition);
+        assert.containsOnce(target, SELECTORS.addNewRule);
 
-        await click(target, "a[role=button]");
-        assert.containsOnce(target, ".o_domain_leaf");
-        assert.containsOnce(target, "a[role=button]");
+        await addNewRule(target);
+        assert.containsOnce(target, SELECTORS.condition);
+        assert.containsOnce(target, SELECTORS.addNewRule);
 
-        await click(target, "a[role=button]");
-        assert.containsN(target, ".o_domain_leaf", 2);
-        assert.containsOnce(target, "a[role=button]");
+        await addNewRule(target);
+        assert.containsN(target, SELECTORS.condition, 2);
+        assert.containsOnce(target, SELECTORS.addNewRule);
     });
 
     QUnit.test("updating path should also update operator if invalid", async (assert) => {
@@ -1290,7 +1452,7 @@ QUnit.module("Components", (hooks) => {
             },
         });
 
-        await click(target, ".o_model_field_selector");
+        await openModelFieldSelectorPopover(target);
         await click(target, ".o_model_field_selector_popover_item[data-name=foo] button");
     });
 
@@ -1300,9 +1462,9 @@ QUnit.module("Components", (hooks) => {
             domain: `[("bar","=",false)]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Bar is not set`);
+        assert.strictEqual(getConditionText(target), `Bar is not set`);
         await parent.set(`[("bar","=",true)]`);
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Bar is set`);
+        assert.strictEqual(getConditionText(target), `Bar is set`);
     });
 
     QUnit.test("Edit the value for field char and an operator in", async (assert) => {
@@ -1312,45 +1474,40 @@ QUnit.module("Components", (hooks) => {
             update: (domain) => {
                 assert.step(domain);
             },
+            isDebugMode: true,
         });
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
-            "a",
-            "b",
-            "uid",
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
+            `"a"`,
+            `"b"`,
+            `uid`,
         ]);
         assert.deepEqual(
-            [...target.querySelectorAll(".o_ds_value_cell .o_tag")].map((el) => el.dataset.color),
+            [...target.querySelectorAll(SELECTORS.tag)].map((el) => el.dataset.color),
             ["0", "0", "2"]
         );
-        assert.containsOnce(target, ".o_domain_leaf_value_input");
 
-        await editInput(target, ".o_domain_leaf_value_input", "c");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
-            "a",
-            "b",
-            "uid",
-            "c",
+        await editValue(target, "c");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
+            `"a"`,
+            `"b"`,
+            `uid`,
+            `"c"`,
         ]);
         assert.verifySteps([`[("foo", "in", ["a", "b", uid, "c"])]`]);
 
         await click(target.querySelectorAll(".o_tag .o_delete")[2]);
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
-            "a",
-            "b",
-            "c",
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
+            `a`,
+            `b`,
+            `c`,
         ]);
         assert.verifySteps([`[("foo", "in", ["a", "b", "c"])]`]);
 
-        await parent.set(`[("foo", "in", "a")]`);
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
-            "a",
-        ]);
+        await parent.set(`[("foo", "in", ["a"])]`);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [`a`]);
 
-        await editInput(target, ".o_domain_leaf_value_input", "b");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
-            "a",
-            "b",
-        ]);
+        await editValue(target, "b");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [`a`, `b`]);
         assert.verifySteps([`[("foo", "in", ["a", "b"])]`]);
     });
 
@@ -1360,10 +1517,10 @@ QUnit.module("Components", (hooks) => {
             domain: `[("foo", "hop", "a")]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo "hop" a`);
+        assert.strictEqual(getConditionText(target), `Foo "hop" a`);
 
         await parent.set(`[("foo", hop, "a")]`);
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo hop a`);
+        assert.strictEqual(getConditionText(target), `Foo hop a`);
     });
 
     QUnit.test("display of an unknown operator (edit)", async (assert) => {
@@ -1371,10 +1528,10 @@ QUnit.module("Components", (hooks) => {
             resModel: "partner",
             domain: `[("foo", "hop", "a")]`,
         });
-        assert.strictEqual(getSelectedOperator(target), `"hop"`);
+        assert.strictEqual(getCurrentOperator(target), `"hop"`);
 
         await parent.set(`[("foo", hop, "a")]`);
-        assert.strictEqual(getSelectedOperator(target), `hop`);
+        assert.strictEqual(getCurrentOperator(target), `hop`);
     });
 
     QUnit.test("display of negation of an unknown operator (readonly)", async (assert) => {
@@ -1383,10 +1540,10 @@ QUnit.module("Components", (hooks) => {
             domain: `["!", ("foo", "hop", "a")]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not "hop" a`);
+        assert.strictEqual(getConditionText(target), `Foo not "hop" a`);
 
         await parent.set(`["!", ("foo", hop, "a")]`);
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not hop a`);
+        assert.strictEqual(getConditionText(target), `Foo not hop a`);
     });
 
     QUnit.test("display of an operator without negation defined (readonly)", async (assert) => {
@@ -1395,7 +1552,7 @@ QUnit.module("Components", (hooks) => {
             domain: `["!", ("foo", "=?", "a")]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not =? a`);
+        assert.strictEqual(getConditionText(target), `Foo not =? a`);
     });
 
     QUnit.test("display of an operator without negation defined (edit)", async (assert) => {
@@ -1403,7 +1560,7 @@ QUnit.module("Components", (hooks) => {
             resModel: "partner",
             domain: `["!", ("foo", "=?", "a")]`,
         });
-        assert.strictEqual(getSelectedOperator(target), `not =?`);
+        assert.strictEqual(getCurrentOperator(target), `not =?`);
     });
 
     QUnit.test("display of a contextual value (readonly)", async (assert) => {
@@ -1411,7 +1568,7 @@ QUnit.module("Components", (hooks) => {
             domain: `[("foo", "=", uid)]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo = uid`);
+        assert.strictEqual(getConditionText(target), `Foo = uid`);
     });
 
     QUnit.test("display of an operator without negation defined (edit)", async (assert) => {
@@ -1419,7 +1576,7 @@ QUnit.module("Components", (hooks) => {
             resModel: "partner",
             domain: `["!", (expr, "parent_of", "a")]`,
         });
-        assert.strictEqual(getSelectedOperator(target), `not parent of`);
+        assert.strictEqual(getCurrentOperator(target), `not parent of`);
     });
 
     QUnit.test("boolean field (readonly)", async (assert) => {
@@ -1428,16 +1585,13 @@ QUnit.module("Components", (hooks) => {
             domain: `[]`,
         });
         await parent.set(`[("bar", "=", True)]`);
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "Bar is set");
+        assert.strictEqual(getConditionText(target), "Bar is set");
         await parent.set(`[("bar", "=", False)]`);
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "Bar is not set");
+        assert.strictEqual(getConditionText(target), "Bar is not set");
         await parent.set(`[("bar", "!=", True)]`);
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "Bar is not set");
+        assert.strictEqual(getConditionText(target), "Bar is not set");
         await parent.set(`[("bar", "!=", False)]`);
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf").textContent,
-            "Bar is not not set"
-        );
+        assert.strictEqual(getConditionText(target), "Bar is not not set");
     });
 
     QUnit.test("integer field (readonly)", async (assert) => {
@@ -1447,9 +1601,9 @@ QUnit.module("Components", (hooks) => {
         });
         const toTest = [
             { domain: `[("int", "=", True)]`, text: `Integer = true` },
-            { domain: `[("int", "=", False)]`, text: `Integer is not set ` },
+            { domain: `[("int", "=", False)]`, text: `Integer is not set` },
             { domain: `[("int", "!=", True)]`, text: `Integer != true` },
-            { domain: `[("int", "!=", False)]`, text: `Integer is set ` },
+            { domain: `[("int", "!=", False)]`, text: `Integer is set` },
             { domain: `[("int", "=", 1)]`, text: `Integer = 1` },
             { domain: `[("int", "!=", 1)]`, text: `Integer != 1` },
             { domain: `[("int", "<", 1)]`, text: `Integer < 1` },
@@ -1463,7 +1617,7 @@ QUnit.module("Components", (hooks) => {
         ];
         for (const { domain, text } of toTest) {
             await parent.set(domain);
-            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+            assert.strictEqual(getConditionText(target), text);
         }
     });
 
@@ -1473,8 +1627,8 @@ QUnit.module("Components", (hooks) => {
             domain: `[]`,
         });
         const toTest = [
-            { domain: `[("date", "=", False)]`, text: `Date is not set ` },
-            { domain: `[("date", "!=", False)]`, text: `Date is set ` },
+            { domain: `[("date", "=", False)]`, text: `Date = false` },
+            { domain: `[("date", "!=", False)]`, text: `Date != false` },
             { domain: `[("date", "=", "2023-07-03")]`, text: `Date = 2023-07-03` },
             { domain: `[("date", "=", context_today())]`, text: `Date = context_today()` },
             { domain: `[("date", "!=", "2023-07-03")]`, text: `Date != 2023-07-03` },
@@ -1493,7 +1647,7 @@ QUnit.module("Components", (hooks) => {
         ];
         for (const { domain, text } of toTest) {
             await parent.set(domain);
-            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+            assert.strictEqual(getConditionText(target), text);
         }
     });
 
@@ -1503,8 +1657,8 @@ QUnit.module("Components", (hooks) => {
             domain: `[]`,
         });
         const toTest = [
-            { domain: `[("foo", "=", False)]`, text: `Foo is not set ` },
-            { domain: `[("foo", "!=", False)]`, text: `Foo is set ` },
+            { domain: `[("foo", "=", False)]`, text: `Foo is not set` },
+            { domain: `[("foo", "!=", False)]`, text: `Foo is set` },
             { domain: `[("foo", "=", "abc")]`, text: `Foo = abc` },
             { domain: `[("foo", "=", expr)]`, text: `Foo = expr` },
             { domain: `[("foo", "!=", "abc")]`, text: `Foo != abc` },
@@ -1515,7 +1669,7 @@ QUnit.module("Components", (hooks) => {
         ];
         for (const { domain, text } of toTest) {
             await parent.set(domain);
-            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+            assert.strictEqual(getConditionText(target), text);
         }
     });
 
@@ -1525,8 +1679,8 @@ QUnit.module("Components", (hooks) => {
             domain: `[]`,
         });
         const toTest = [
-            { domain: `[("state", "=", False)]`, text: `State is not set ` },
-            { domain: `[("state", "!=", False)]`, text: `State is set ` },
+            { domain: `[("state", "=", False)]`, text: `State is not set` },
+            { domain: `[("state", "!=", False)]`, text: `State is set` },
             { domain: `[("state", "=", "abc")]`, text: `State = ABC` },
             { domain: `[("state", "=", expr)]`, text: `State = expr` },
             { domain: `[("state", "!=", "abc")]`, text: `State != ABC` },
@@ -1542,7 +1696,7 @@ QUnit.module("Components", (hooks) => {
         ];
         for (const { domain, text } of toTest) {
             await parent.set(domain);
-            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+            assert.strictEqual(getConditionText(target), text);
         }
     });
 
@@ -1576,11 +1730,11 @@ QUnit.module("Components", (hooks) => {
         const toTest = [
             {
                 domain: `[("properties.selection_prop", "=", False)]`,
-                text: `PropertiesSelection is not set `,
+                text: `PropertiesSelection is not set`,
             },
             {
                 domain: `[("properties.selection_prop", "!=", False)]`,
-                text: `PropertiesSelection is set `,
+                text: `PropertiesSelection is set`,
             },
             {
                 domain: `[("properties.selection_prop", "=", "abc")]`,
@@ -1597,7 +1751,7 @@ QUnit.module("Components", (hooks) => {
         ];
         for (const { domain, text } of toTest) {
             await parent.set(domain);
-            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+            assert.strictEqual(getConditionText(target), text);
         }
     });
 
@@ -1625,7 +1779,7 @@ QUnit.module("Components", (hooks) => {
             },
             {
                 domain: `[("product_id", "in", [])]`,
-                text: "Product is in (  )",
+                text: "Product is in ( )",
             },
             {
                 domain: `[("product_id", "in", [41, 37])]`,
@@ -1655,7 +1809,7 @@ QUnit.module("Components", (hooks) => {
         const parent = await makeDomainSelector({ readonly: true });
         for (const { domain, text } of toTest) {
             await parent.set(domain);
-            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+            assert.strictEqual(getConditionText(target), text);
         }
     });
 
@@ -1683,35 +1837,29 @@ QUnit.module("Components", (hooks) => {
             },
         });
         await selectOperator(target, "in");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
-            []
-        );
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), []);
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_id", "in", [])]`]);
 
         await selectOperator(target, "=");
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_id", "=", False)]`]);
 
         await selectOperator(target, "not in");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
-            []
-        );
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), []);
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_id", "not in", [])]`]);
 
         await selectOperator(target, "ilike");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_id", "ilike", "")]`]);
 
         await selectOperator(target, "!=");
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_id", "!=", False)]`]);
 
         await selectOperator(target, "not ilike");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_id", "not ilike", "")]`]);
     });
 
@@ -1723,40 +1871,40 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.strictEqual(getSelectedOperator(target), "=");
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([]);
         assert.containsNone(target, ".dropdown-menu");
 
-        await editInput(target, ".o-autocomplete--input", "xph");
+        await editValue(target, "xph");
 
         assert.containsOnce(target, ".dropdown-menu");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".dropdown-menu li")), [
             "xphone",
         ]);
-        assert.strictEqual(getSelectedOperator(target), "=");
-        assert.strictEqual(getAutocompletValue(target), "xph");
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "xph");
 
         await click(target, ".dropdown-menu li");
-        assert.strictEqual(getSelectedOperator(target), "=");
-        assert.strictEqual(getAutocompletValue(target), "xphone");
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "xphone");
         assert.verifySteps([`[("product_id", "=", 37)]`]);
         assert.containsNone(target, ".dropdown-menu");
 
-        await editInput(target, ".o-autocomplete--input", "");
-        assert.strictEqual(getSelectedOperator(target), "=");
-        assert.strictEqual(getAutocompletValue(target), "");
+        await editValue(target, "");
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_id", "=", False)]`]);
 
         await selectOperator(target, "!=");
-        assert.strictEqual(getSelectedOperator(target), "!=");
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentOperator(target), "!=");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_id", "!=", False)]`]);
 
-        await editInput(target, ".o-autocomplete--input", "xpa");
+        await editValue(target, "xpa");
         await click(target, ".dropdown-menu li");
-        assert.strictEqual(getSelectedOperator(target), "!=");
-        assert.strictEqual(getAutocompletValue(target), "xpad");
+        assert.strictEqual(getCurrentOperator(target), "!=");
+        assert.strictEqual(getCurrentValue(target), "xpad");
         assert.verifySteps([`[("product_id", "!=", 41)]`]);
     });
 
@@ -1768,15 +1916,13 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.strictEqual(getSelectedOperator(target), "is in");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
-            "xphone",
-        ]);
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentOperator(target), "is in");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xphone"]);
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([]);
         assert.containsNone(target, ".dropdown-menu");
 
-        await editInput(target, ".o-autocomplete--input", "x");
+        await editValue(target, "x");
         assert.containsOnce(target, ".dropdown-menu");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".dropdown-menu li")), [
             "xpad",
@@ -1784,27 +1930,25 @@ QUnit.module("Components", (hooks) => {
 
         await click(target, ".dropdown-menu li");
         assert.verifySteps([`[("product_id", "in", [37, 41])]`]);
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
             "xphone",
             "xpad",
         ]);
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentValue(target), "");
 
         await selectOperator(target, "not in");
-        assert.strictEqual(getSelectedOperator(target), "is not in");
-        assert.strictEqual(getAutocompletValue(target), "");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+        assert.strictEqual(getCurrentOperator(target), "is not in");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
             "xphone",
             "xpad",
         ]);
         assert.verifySteps([`[("product_id", "not in", [37, 41])]`]);
 
         await click(target.querySelector(".o_tag .o_delete"));
-        assert.strictEqual(getSelectedOperator(target), "is not in");
-        assert.strictEqual(getAutocompletValue(target), "");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
-            "xpad",
-        ]);
+        assert.strictEqual(getCurrentOperator(target), "is not in");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xpad"]);
         assert.verifySteps([`[("product_id", "not in", [41])]`]);
     });
 
@@ -1816,22 +1960,22 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.strictEqual(getSelectedOperator(target), "contains");
+        assert.strictEqual(getCurrentOperator(target), "contains");
         assert.containsNone(target, ".o-autocomplete--input");
-        assert.containsOnce(target, ".o_ds_value_cell .o_input");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "abc");
+        assert.containsOnce(target, `${SELECTORS.valueEditor} .o_input`);
+        assert.strictEqual(getCurrentValue(target), "abc");
         assert.verifySteps([]);
 
-        await editInput(target, ".o_ds_value_cell .o_input", "def");
-        assert.strictEqual(getSelectedOperator(target), "contains");
-        assert.containsOnce(target, ".o_ds_value_cell .o_input");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "def");
+        await editInput(target, `${SELECTORS.valueEditor} .o_input`, "def");
+        assert.strictEqual(getCurrentOperator(target), "contains");
+        assert.containsOnce(target, `${SELECTORS.valueEditor} .o_input`);
+        assert.strictEqual(getCurrentValue(target), "def");
         assert.verifySteps([`[("product_id", "ilike", "def")]`]);
 
         await selectOperator(target, "not ilike");
-        assert.strictEqual(getSelectedOperator(target), "does not contain");
-        assert.containsOnce(target, ".o_ds_value_cell .o_input");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "def");
+        assert.strictEqual(getCurrentOperator(target), "does not contain");
+        assert.containsOnce(target, `${SELECTORS.valueEditor} .o_input`);
+        assert.strictEqual(getCurrentValue(target), "def");
         assert.verifySteps([`[("product_id", "not ilike", "def")]`]);
     });
 
@@ -1843,24 +1987,24 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.strictEqual(getSelectedOperator(target), "=");
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([]);
 
         await selectOperator(target, "not_set");
 
-        assert.strictEqual(getSelectedOperator(target), "is not set");
+        assert.strictEqual(getCurrentOperator(target), "is not set");
         assert.containsNone(target, ".o_ds_value_cell");
         assert.verifySteps([`[("product_id", "=", False)]`]);
 
         await selectOperator(target, "set");
-        assert.strictEqual(getSelectedOperator(target), "is set");
+        assert.strictEqual(getCurrentOperator(target), "is set");
         assert.containsNone(target, ".o_ds_value_cell");
         assert.verifySteps([`[("product_id", "!=", False)]`]);
 
         await selectOperator(target, "!=");
-        assert.strictEqual(getSelectedOperator(target), "!=");
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentOperator(target), "!=");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_id", "!=", False)]`]);
     });
 
@@ -1872,20 +2016,20 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.strictEqual(getSelectedOperator(target), "=");
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([]);
 
         await selectOperator(target, "not_set");
-        assert.strictEqual(getSelectedOperator(target), "is not set");
+        assert.strictEqual(getCurrentOperator(target), "is not set");
         assert.containsNone(target, ".o_ds_value_cell");
         assert.verifySteps([`[("product_id", "=", False)]`]);
-        assert.containsOnce(target, ".o_domain_leaf");
+        assert.containsOnce(target, SELECTORS.condition);
 
-        await click(target, ".o_domain_add_node_button .fa-plus");
-        assert.containsN(target, ".o_domain_leaf", 2);
-        assert.strictEqual(getSelectedOperator(target), "is not set");
-        assert.strictEqual(getSelectedOperator(target, 1), "is not set");
+        await clickOnButtonAddNewRule(target);
+        assert.containsN(target, SELECTORS.condition, 2);
+        assert.strictEqual(getCurrentOperator(target), "is not set");
+        assert.strictEqual(getCurrentOperator(target, 1), "is not set");
         assert.verifySteps([`["&", ("product_id", "=", False), ("product_id", "=", False)]`]);
     });
 
@@ -1915,31 +2059,22 @@ QUnit.module("Components", (hooks) => {
             },
         });
         await selectOperator(target, "in");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
-            []
-        );
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), []);
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_ids", "in", [])]`]);
 
         await selectOperator(target, "=");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
-            []
-        );
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), []);
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_ids", "=", [])]`]);
 
         await selectOperator(target, "not in");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
-            []
-        );
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), []);
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_ids", "not in", [])]`]);
 
         await selectOperator(target, "ilike");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_ids", "ilike", "")]`]);
 
         await selectOperator(target, "not_set");
@@ -1947,15 +2082,12 @@ QUnit.module("Components", (hooks) => {
         assert.verifySteps([`[("product_ids", "=", False)]`]);
 
         await selectOperator(target, "!=");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
-            []
-        );
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), []);
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_ids", "!=", [])]`]);
 
         await selectOperator(target, "not ilike");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "");
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("product_ids", "not ilike", "")]`]);
 
         await selectOperator(target, "set");
@@ -1972,15 +2104,13 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.strictEqual(getSelectedOperator(target), "is in");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
-            "xphone",
-        ]);
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentOperator(target), "is in");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xphone"]);
+        assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([]);
         assert.containsNone(target, ".dropdown-menu");
 
-        await editInput(target, ".o-autocomplete--input", "x");
+        await editValue(target, "x");
         assert.containsOnce(target, ".dropdown-menu");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".dropdown-menu li")), [
             "xpad",
@@ -1988,46 +2118,39 @@ QUnit.module("Components", (hooks) => {
 
         await click(target, ".dropdown-menu li");
         assert.verifySteps([`[("product_ids", "in", [37, 41])]`]);
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
             "xphone",
             "xpad",
         ]);
-        assert.strictEqual(getAutocompletValue(target), "");
+        assert.strictEqual(getCurrentValue(target), "");
 
         await selectOperator(target, "not in");
-        assert.strictEqual(getSelectedOperator(target), "is not in");
-        assert.strictEqual(getAutocompletValue(target), "");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+        assert.strictEqual(getCurrentOperator(target), "is not in");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
             "xphone",
             "xpad",
         ]);
         assert.verifySteps([`[("product_ids", "not in", [37, 41])]`]);
 
         await click(target.querySelector(".o_tag .o_delete"));
-        assert.strictEqual(getSelectedOperator(target), "is not in");
-        assert.strictEqual(getAutocompletValue(target), "");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
-            "xpad",
-        ]);
+
+        assert.strictEqual(getCurrentOperator(target), "is not in");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xpad"]);
         assert.verifySteps([`[("product_ids", "not in", [41])]`]);
 
         await selectOperator(target, "=");
-        assert.strictEqual(getSelectedOperator(target), "=");
-        assert.strictEqual(getAutocompletValue(target), "");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
-            []
-        ); // to improve -> should be [xpad]
-        assert.verifySteps([`[("product_ids", "=", [])]`]);
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xpad"]);
+        assert.verifySteps([`[("product_ids", "=", [41])]`]);
 
         await selectOperator(target, "!=");
-        assert.strictEqual(getSelectedOperator(target), "!=");
-        assert.strictEqual(getAutocompletValue(target), "");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
-            []
-        );
-        assert.verifySteps([`[("product_ids", "!=", [])]`]);
+        assert.strictEqual(getCurrentOperator(target), "!=");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xpad"]);
+        assert.verifySteps([`[("product_ids", "!=", [41])]`]);
     });
 
     QUnit.test("many2many field and operator ilike/not ilike (edit)", async (assert) => {
@@ -2039,22 +2162,22 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.strictEqual(getSelectedOperator(target), "contains");
+        assert.strictEqual(getCurrentOperator(target), "contains");
         assert.containsNone(target, ".o-autocomplete--input");
-        assert.containsOnce(target, ".o_ds_value_cell .o_input");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "abc");
+        assert.containsOnce(target, `${SELECTORS.valueEditor} .o_input`);
+        assert.strictEqual(getCurrentValue(target), "abc");
         assert.verifySteps([]);
 
-        await editInput(target, ".o_ds_value_cell .o_input", "def");
-        assert.strictEqual(getSelectedOperator(target), "contains");
-        assert.containsOnce(target, ".o_ds_value_cell .o_input");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "def");
+        await editInput(target, `${SELECTORS.valueEditor} .o_input`, "def");
+        assert.strictEqual(getCurrentOperator(target), "contains");
+        assert.containsOnce(target, `${SELECTORS.valueEditor} .o_input`);
+        assert.strictEqual(getCurrentValue(target), "def");
         assert.verifySteps([`[("product_ids", "ilike", "def")]`]);
 
         await selectOperator(target, "not ilike");
-        assert.strictEqual(getSelectedOperator(target), "does not contain");
-        assert.containsOnce(target, ".o_ds_value_cell .o_input");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "def");
+        assert.strictEqual(getCurrentOperator(target), "does not contain");
+        assert.containsOnce(target, `${SELECTORS.valueEditor} .o_input`);
+        assert.strictEqual(getCurrentValue(target), "def");
         assert.verifySteps([`[("product_ids", "not ilike", "def")]`]);
     });
 
@@ -2067,12 +2190,12 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.strictEqual(getSelectedOperator(target), "is not set");
+        assert.strictEqual(getCurrentOperator(target), "is not set");
         assert.containsNone(target, ".o_ds_value_cell");
         assert.verifySteps([]);
 
         await selectOperator(target, "set");
-        assert.strictEqual(getSelectedOperator(target), "is set");
+        assert.strictEqual(getCurrentOperator(target), "is set");
         assert.containsNone(target, ".o_ds_value_cell");
         assert.verifySteps([`[("product_ids", "!=", False)]`]);
     });
@@ -2090,21 +2213,24 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.containsN(target, SELECTORS.condition, 2);
         assert.containsOnce(target, '.form-switch label:contains("Include archived")');
-        await click(target, ".form-switch");
-        assert.containsN(target, ".o_domain_leaf", 2);
+
+        await toggleArchive(target);
+        assert.containsN(target, SELECTORS.condition, 2);
         assert.verifySteps([
             '["&", "&", ("foo", "=", "test"), ("bar", "=", True), ("active", "in", [True, False])]',
         ]);
+
         await click(target, ".dropdown-toggle");
         await click(target, ".dropdown-menu span:nth-child(2)");
-        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.containsN(target, SELECTORS.condition, 2);
         assert.verifySteps([
             '["&", "|", ("foo", "=", "test"), ("bar", "=", True), ("active", "in", [True, False])]',
         ]);
-        await click(target, ".form-switch");
-        assert.containsN(target, ".o_domain_leaf", 2);
+
+        await toggleArchive(target);
+        assert.containsN(target, SELECTORS.condition, 2);
         assert.verifySteps(['["|", ("foo", "=", "test"), ("bar", "=", True)]']);
     });
 
@@ -2121,21 +2247,26 @@ QUnit.module("Components", (hooks) => {
                 assert.step(domain);
             },
         });
-        assert.containsOnce(target, ".o_domain_leaf");
+        assert.containsOnce(target, SELECTORS.condition);
         assert.containsOnce(target, '.form-switch label:contains("Include archived")');
-        await click(target, ".form-switch");
-        assert.containsOnce(target, ".o_domain_leaf");
+
+        await toggleArchive(target);
+        assert.containsOnce(target, SELECTORS.condition);
         assert.verifySteps(['["&", ("foo", "=", "test"), ("active", "in", [True, False])]']);
-        await click(target, ".o_domain_delete_node_button");
-        assert.containsNone(target, ".o_domain_leaf");
+
+        await clickOnButtonDeleteNode(target);
+        assert.containsNone(target, SELECTORS.condition);
         assert.verifySteps(['[("active", "in", [True, False])]']);
-        await click(target, ".form-switch");
+
+        await toggleArchive(target);
         assert.verifySteps(["[]"]);
-        await click(target, ".form-switch");
-        assert.containsNone(target, ".o_domain_leaf");
+
+        await toggleArchive(target);
+        assert.containsNone(target, SELECTORS.condition);
         assert.verifySteps(['[("active", "in", [True, False])]']);
-        await click(target, "a[role=button]");
-        assert.containsOnce(target, ".o_domain_leaf");
+
+        await addNewRule(target);
+        assert.containsOnce(target, SELECTORS.condition);
         assert.verifySteps(['["&", ("id", "=", 1), ("active", "in", [True, False])]']);
     });
 
@@ -2149,8 +2280,32 @@ QUnit.module("Components", (hooks) => {
                     assert.step(domain);
                 },
             });
-            assert.containsOnce(target, ".o_domain_leaf");
+            assert.containsOnce(target, SELECTORS.condition);
             assert.containsNone(target, '.form-switch label:contains("Include archived")');
         }
     );
+
+    QUnit.test("date/datetime edition: switch !=/is set", async (assert) => {
+        await makeDomainSelector({
+            isDebugMode: true,
+            domain: `[("date", "!=", False)]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(getCurrentOperator(target), "!=");
+        assert.containsOnce(target, ".o_datetime_input");
+        assert.strictEqual(getCurrentValue(target), "");
+
+        await selectOperator(target, "set");
+        assert.strictEqual(getCurrentOperator(target), "is set");
+        assert.containsNone(target, ".o_datetime_input");
+        assert.verifySteps([`[("date", "!=", False)]`]);
+
+        await selectOperator(target, "!=");
+        assert.strictEqual(getCurrentOperator(target), "!=");
+        assert.containsOnce(target, ".o_datetime_input");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.verifySteps([`[("date", "!=", False)]`]);
+    });
 });

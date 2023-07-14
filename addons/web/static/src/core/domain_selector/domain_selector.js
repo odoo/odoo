@@ -15,15 +15,15 @@ import { Domain } from "@web/core/domain";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { getOperatorInfo, toOperator } from "@web/core/domain_selector/domain_selector_operators";
+import { getPathEditorInfo } from "@web/core/domain_selector/domain_selector_path_editor";
 import {
-    Editor,
-    PathEditor,
     getDefaultOperator,
+    getOperatorEditorInfo,
+} from "@web/core/domain_selector/domain_selector_operator_editor";
+import {
     getDefaultValue,
-    getOperatorsInfo,
-    getEditorInfo,
-} from "@web/core/domain_selector/domain_selector_fields";
+    getValueEditorInfo,
+} from "@web/core/domain_selector/domain_selector_value_editors";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import { formatValue } from "@web/core/domain_tree";
@@ -88,13 +88,11 @@ function restoreVirtualOperators(tree, otherTree) {
 }
 
 export class DomainSelector extends Component {
-    static template = "web._DomainSelector";
+    static template = "web.DomainSelector";
     static components = {
         Dropdown,
         DropdownItem,
         ModelFieldSelector,
-        Editor,
-        PathEditor,
         CheckBox,
     };
     static props = {
@@ -230,7 +228,7 @@ export class DomainSelector extends Component {
     }
 
     notifyChanges() {
-        this.previousTree = cloneTree(this.tree);
+        this.previousTree = this.tree ? cloneTree(this.tree) : null;
         const archiveDomain = this.includeArchived ? `[("active", "in", [True, False])]` : `[]`;
         const domain = this.tree
             ? Domain.and([buildDomain(this.tree), archiveDomain]).toString()
@@ -304,10 +302,28 @@ export class DomainSelector extends Component {
     }
 
     getDescription(node) {
-        const { path, value } = node;
-        const fieldDef = this.getFieldDef(path);
-        const operatorInfo = this.getOperatorInfo(node);
-        return leafToString(fieldDef, operatorInfo, value, this.displayNames[fieldDef?.relation]);
+        const fieldDef = this.getFieldDef(node.path);
+        return leafToString(
+            node,
+            fieldDef,
+            this.displayNames[fieldDef?.relation || fieldDef?.comodel]
+        );
+    }
+
+    getPathEditorInfo() {
+        const { resModel, isDebugMode } = this.props;
+        const defaultPath = this.defaultCondition.path;
+        return getPathEditorInfo({ defaultPath, isDebugMode, resModel });
+    }
+
+    getOperatorEditorInfo(node) {
+        const fieldDef = this.getFieldDef(node.path);
+        return getOperatorEditorInfo(fieldDef);
+    }
+
+    getValueEditorInfo(node) {
+        const fieldDef = this.getFieldDef(node.path);
+        return getValueEditorInfo(fieldDef, node.operator);
     }
 
     resetDomain() {
@@ -321,69 +337,27 @@ export class DomainSelector extends Component {
         this.notifyChanges();
     }
 
-    updatePath(node, path, { fieldDef } = {}) {
-        if (!path) {
-            // don't like that
-            Object.assign(node, this.createNewLeaf());
-        } else {
-            node.path = path;
-            node.operator = getDefaultOperator(fieldDef);
-            node.value = getDefaultValue(fieldDef, node.operator);
-        }
+    async updatePath(node, path) {
+        const { fieldDef } = await this.loadFieldInfo(this.props.resModel, path);
+        node.path = path;
+        node.negate = false;
+        node.operator = getDefaultOperator(fieldDef);
+        node.value = getDefaultValue(fieldDef, node.operator);
         this.notifyChanges();
     }
 
-    updateLeafOperator(node, operatorKey) {
-        const previousOperatorInfo = getOperatorInfo(node.operator);
-
-        const previousNode = node ? cloneTree(node) : null;
-
-        const [operator, negate] = toOperator(operatorKey);
+    updateLeafOperator(node, operator, negate) {
+        const previousNode = cloneTree(node);
+        const fieldDef = this.getFieldDef(node.path);
         node.negate = negate;
         node.operator = operator;
-
-        const editorInfo = this.getEditorInfo(node);
-        if (!editorInfo.isSupported(node.value) || editorInfo.shouldResetValue?.(node.value)) {
-            node.value = getDefaultValue(this.getFieldDef(node.path), node.operator);
-        }
-
-        const operatorInfo = getOperatorInfo(operator);
-        if (previousOperatorInfo.valueCount !== operatorInfo.valueCount) {
-            switch (operatorInfo.valueCount) {
-                // binary operator with a variable sized array value
-                case "variable": {
-                    node.value = [];
-                    break;
-                }
-                // unary operator (set | not set)
-                case 0: {
-                    node.value = false;
-                    break;
-                }
-                // binary operator with a non array value
-                case 1: {
-                    node.value = getDefaultValue(this.getFieldDef(node.path), node.operator);
-                    break;
-                }
-                // binary operator with a fixed sized array value
-                default: {
-                    const defaultValue = getDefaultValue(
-                        this.getFieldDef(node.path),
-                        node.operator
-                    );
-                    node.value = Array(operatorInfo.valueCount).fill(defaultValue);
-                    break;
-                }
-            }
-        }
-
-        if (buildDomain(node) === buildDomain(previousNode)) {
+        node.value = getDefaultValue(fieldDef, operator, node.value);
+        if (buildDomain(previousNode) === buildDomain(node)) {
             // no interesting changes for parent (only possible domain formatting/rewriting)
             // this means that parent might not render the domain selector
             // but we need to udpate editors
             this.render();
         }
-
         this.notifyChanges();
     }
 
@@ -396,30 +370,8 @@ export class DomainSelector extends Component {
         return this.props.update(value, true);
     }
 
-    getEditorInfo(node) {
-        return getEditorInfo(this.getFieldDef(node.path), node.operator);
-    }
-
-    getOperatorInfo(node) {
-        return getOperatorInfo(node.operator, node.negate);
-    }
-
-    getOperatorsInfo(node) {
-        const fieldDef = this.getFieldDef(node.path);
-        const operatorsInfo = getOperatorsInfo(fieldDef);
-        if (
-            !operatorsInfo.some((op) => op.operator === node.operator && op.negate === node.negate)
-        ) {
-            const operatorInfo = this.getOperatorInfo(node);
-            operatorsInfo.push(operatorInfo);
-        }
-        return operatorsInfo;
-    }
-
-    highlightNode(target, toggle, classNames) {
-        const nodeEl = target.closest(".o_domain_node");
-        for (const className of classNames.split(/\s+/i)) {
-            nodeEl.classList.toggle(className, toggle);
-        }
+    highlightNode(target, toggle) {
+        const nodeEl = target.closest(".o_domain_selector_node");
+        nodeEl.classList.toggle("o_hovered_button", toggle);
     }
 }

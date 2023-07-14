@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import * as dsHelpers from "@web/../tests/core/domain_selector_tests";
 import {
     click,
     getFixture,
@@ -1459,28 +1460,25 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(target, ".modal");
         assert.strictEqual(target.querySelector(".modal header").innerText, "Modify Condition");
         assert.containsOnce(target, ".modal .o_domain_selector");
-        assert.containsOnce(target, ".o_domain_leaf");
+        assert.containsOnce(target, dsHelpers.SELECTORS.condition);
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".modal footer button")), [
             "Confirm",
             "Discard",
         ]);
-        assert.strictEqual(
-            target.querySelector(".o_model_field_selector_value").innerText,
-            "Birthday"
-        );
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, ">=");
-        assert.strictEqual(target.querySelector(".o_ds_expr_value").innerText, "context_today()");
+        assert.strictEqual(dsHelpers.getCurrentPath(target), "Birthday");
+        assert.strictEqual(dsHelpers.getCurrentOperator(target), ">=");
+        assert.strictEqual(dsHelpers.getCurrentValue(target), "context_today()");
         assert.notOk(target.querySelector(".modal footer button").disabled);
 
-        await click(target, ".o_domain_delete_node_button");
-        assert.containsNone(target, ".o_domain_leaf");
+        await dsHelpers.clickOnButtonDeleteNode(target);
+        assert.containsNone(target, dsHelpers.SELECTORS.condition);
         assert.ok(target.querySelector(".modal footer button").disabled);
 
-        await click(target, ".modal .o_domain_tree a[role=button]");
-        assert.containsOnce(target, ".o_domain_leaf");
-        assert.strictEqual(target.querySelector(".o_model_field_selector_value").innerText, "ID");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "1");
+        await click(target, `.modal ${dsHelpers.SELECTORS.addNewRule}`);
+        assert.containsOnce(target, dsHelpers.SELECTORS.condition);
+        assert.strictEqual(dsHelpers.getCurrentPath(target), "ID");
+        assert.strictEqual(dsHelpers.getCurrentOperator(target), "=");
+        assert.strictEqual(dsHelpers.getCurrentValue(target), "1");
 
         await click(target.querySelector(".modal footer button"));
         assert.containsNone(target, ".modal");
@@ -1569,9 +1567,9 @@ QUnit.module("Search", (hooks) => {
 
         await click(target, ".o_facet_with_domain .o_searchview_facet_label");
         assert.containsOnce(target, ".modal");
-        assert.strictEqual(target.querySelector(".o_model_field_selector_value").innerText, "Foo");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "ilike");
-        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "abc");
+        assert.strictEqual(dsHelpers.getCurrentPath(target), "Foo");
+        assert.strictEqual(dsHelpers.getCurrentOperator(target), "contains");
+        assert.strictEqual(dsHelpers.getCurrentValue(target), "abc");
 
         await click(target.querySelector(".modal footer button"));
         assert.containsNone(target, ".modal");
@@ -1620,19 +1618,12 @@ QUnit.module("Search", (hooks) => {
 
         await click(target, ".o_facet_with_domain .o_searchview_facet_label");
         assert.containsOnce(target, ".modal");
-        assert.containsOnce(target, ".o_domain_leaf");
-        assert.strictEqual(
-            target.querySelector(".o_model_field_selector_value").innerText,
-            "Birthday"
-        );
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "between");
-        assert.strictEqual(
-            target.querySelector(".o_ds_value_cell .o_datetime_input:nth-child(1)").value,
-            "04/01/2023"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_ds_value_cell .o_datetime_input:nth-child(3)").value,
-            "04/30/2023"
+        assert.containsOnce(target, dsHelpers.SELECTORS.condition);
+        assert.strictEqual(dsHelpers.getCurrentPath(target), "Birthday");
+        assert.strictEqual(dsHelpers.getCurrentOperator(target), "is between");
+        assert.deepEqual(
+            [...target.querySelectorAll(`.o_datetime_input`)].map((el) => el.value),
+            ["04/01/2023", "04/30/2023"]
         );
 
         await click(target.querySelector(".modal footer button"));
@@ -1674,37 +1665,15 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), ["Foo\nabc\nor\ndef"]);
 
         await click(target, ".o_facet_with_domain .o_searchview_facet_label");
-        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.containsN(target, dsHelpers.SELECTORS.condition, 2);
 
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf:nth-child(1) .o_model_field_selector_value")
-                .innerText,
-            "Foo"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf:nth-child(1) .o_domain_leaf_operator_select")
-                .value,
-            "ilike"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf:nth-child(1) .o_domain_leaf_value_input").value,
-            "abc"
-        );
+        assert.strictEqual(dsHelpers.getCurrentPath(target), "Foo");
+        assert.strictEqual(dsHelpers.getCurrentOperator(target), "contains");
+        assert.strictEqual(dsHelpers.getCurrentValue(target), "abc");
 
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf:nth-child(2) .o_model_field_selector_value")
-                .innerText,
-            "Foo"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select")
-                .value,
-            "ilike"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_value_input").value,
-            "def"
-        );
+        assert.strictEqual(dsHelpers.getCurrentPath(target, 1), "Foo");
+        assert.strictEqual(dsHelpers.getCurrentOperator(target, 1), "contains");
+        assert.strictEqual(dsHelpers.getCurrentValue(target, 1), "def");
 
         await click(target.querySelector(".modal footer button"));
 

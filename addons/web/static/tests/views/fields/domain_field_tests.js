@@ -14,7 +14,8 @@ import {
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { getPickerCell } from "../../core/datetime/datetime_test_helpers";
+import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
+import * as dsHelpers from "@web/../tests/core/domain_selector_tests";
 
 let serverData;
 let target;
@@ -116,7 +117,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
-                target.querySelector(".o_ds_value_cell").textContent,
+                dsHelpers.getCurrentValue(target),
                 "uid",
                 "The widget should show the dynamic filter."
             );
@@ -140,12 +141,9 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            assert.equal(
-                target.querySelector(".o_ds_value_cell .o_ds_expr_value").innerText,
-                "context_today()"
-            );
+            assert.equal(dsHelpers.getCurrentValue(target), "context_today()");
 
-            await click(target, ".o_ds_value_cell .fa.fa-times");
+            await dsHelpers.clearNotSupported(target);
 
             // Change the date in the datepicker
             await click(target, ".o_datetime_input");
@@ -156,10 +154,7 @@ QUnit.module("Fields", (hooks) => {
             await clickDiscard(target);
 
             // Open the datepicker again
-            assert.equal(
-                target.querySelector(".o_ds_value_cell .o_ds_expr_value").innerText,
-                "context_today()"
-            );
+            assert.equal(dsHelpers.getCurrentValue(target), "context_today()");
         }
     );
 
@@ -182,11 +177,11 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // As the domain is empty, there should be a button to add a new rule
-        assert.containsOnce(target, ".o_domain_tree a[role=button]");
+        assert.containsOnce(target, dsHelpers.SELECTORS.addNewRule);
 
         // Clicking on the button should add the [["id", "=", "1"]] domain, so
         // there should be a field selector in the DOM
-        await click(target, ".o_domain_tree a[role=button]");
+        await dsHelpers.addNewRule(target);
         assert.containsOnce(target, ".o_model_field_selector", "there should be a field selector");
 
         // Focusing the field selector input should open the field selector
@@ -206,9 +201,7 @@ QUnit.module("Fields", (hooks) => {
         // associated value should reveal one matched record
         await click(document.body.querySelector(".o_model_field_selector_popover_item_name"));
 
-        const input = target.querySelector(".o_domain_leaf_value_input");
-        input.value = 2;
-        await triggerEvent(input, null, "change");
+        await dsHelpers.editValue(target, 2);
 
         assert.strictEqual(
             target.querySelector(".o_domain_show_selection_button").textContent.trim().substr(0, 2),
@@ -241,7 +234,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await click(target, ".o_domain_tree a[role=button]");
+        await dsHelpers.addNewRule(target);
         await click(target, ".o_model_field_selector");
         await click(
             document.body.querySelector(
@@ -510,7 +503,7 @@ QUnit.module("Fields", (hooks) => {
             "2 record(s)"
         );
 
-        await editInput(target, ".o_domain_debug_input", "[['id', '<', 40]]");
+        await editInput(target, dsHelpers.SELECTORS.debugArea, "[['id', '<', 40]]");
         // the count should not be re-computed when editing with the textarea
         assert.strictEqual(
             target.querySelector(".o_domain_show_selection_button").textContent.trim(),
@@ -578,7 +571,7 @@ QUnit.module("Fields", (hooks) => {
                 "2 record(s)"
             );
 
-            await editInput(target, ".o_domain_debug_input", "[['abc', '=', 1]]");
+            await editInput(target, dsHelpers.SELECTORS.debugArea, "[['abc', '=', 1]]");
             // the count should not be re-computed when editing with the textarea
             assert.strictEqual(
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
@@ -586,7 +579,7 @@ QUnit.module("Fields", (hooks) => {
             );
             assert.verifySteps([]);
 
-            await editInput(target, ".o_domain_debug_input", "[['abc']]");
+            await editInput(target, dsHelpers.SELECTORS.debugArea, "[['abc']]");
             assert.verifySteps([]);
 
             await clickSave(target);
@@ -650,7 +643,7 @@ QUnit.module("Fields", (hooks) => {
                 "2 record(s)"
             );
 
-            await editInput(target, ".o_domain_debug_input", "[['id', '<', 40]]");
+            await editInput(target, dsHelpers.SELECTORS.debugArea, "[['id', '<', 40]]");
             // the count should not be re-computed when editing with the textarea
             assert.strictEqual(
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
@@ -747,11 +740,11 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await doAction(webClient, 1);
-        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+        assert.strictEqual(target.querySelector(dsHelpers.SELECTORS.debugArea).value, rawDomain);
 
         rawDomain = `[("date", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`;
-        await editInput(target, ".o_domain_debug_input", rawDomain);
-        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+        await editInput(target, dsHelpers.SELECTORS.debugArea, rawDomain);
+        assert.strictEqual(target.querySelector(dsHelpers.SELECTORS.debugArea).value, rawDomain);
 
         await clickSave(target);
     });
@@ -802,10 +795,9 @@ QUnit.module("Fields", (hooks) => {
             "fields_get",
         ]);
 
-        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
-        assert.containsOnce(target, ".o_ds_expr_value", "there should be an expression");
+        assert.strictEqual(target.querySelector(dsHelpers.SELECTORS.debugArea).value, rawDomain);
 
-        await click(target, ".o_ds_expr_value button");
+        await dsHelpers.clearNotSupported(target);
         rawDomain = `[("date", ">=", "2020-09-05")]`;
         assert.containsOnce(target, ".o_datetime_input", "there should be a datepicker");
         assert.verifySteps(["search_count"]);
@@ -815,19 +807,19 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_datetime_picker");
         await triggerEvent(window, null, "scroll");
         assert.containsOnce(target, ".o_datetime_picker");
-        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+        assert.strictEqual(target.querySelector(dsHelpers.SELECTORS.debugArea).value, rawDomain);
         assert.verifySteps([]);
 
         // Manually input a date
         rawDomain = `[("date", ">=", "2020-09-09")]`;
         await editInput(target, ".o_datetime_input", "09/09/2020");
         assert.verifySteps(["search_count"]);
-        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+        assert.strictEqual(target.querySelector(dsHelpers.SELECTORS.debugArea).value, rawDomain);
 
         // Save
         await clickSave(target);
         assert.verifySteps(["web_save", "search_count"]);
-        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+        assert.strictEqual(target.querySelector(dsHelpers.SELECTORS.debugArea).value, rawDomain);
     });
 
     QUnit.test("domain field without model", async function (assert) {
@@ -925,14 +917,14 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        assert.containsNone(target, ".o_domain_leaf");
+        assert.containsNone(target, dsHelpers.SELECTORS.condition);
         assert.containsNone(target, ".modal");
         await click(target, ".o_field_domain_dialog_button");
         assert.containsOnce(target, ".modal");
-        await click(target, ".modal .o_domain_tree a[role=button]");
+        await click(target, `.modal ${dsHelpers.SELECTORS.addNewRule}`);
         await click(target, ".modal-footer .btn-primary");
-        assert.containsOnce(target, ".o_domain_leaf");
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "ID = 1");
+        assert.containsOnce(target, dsHelpers.SELECTORS.condition);
+        assert.strictEqual(dsHelpers.getConditionText(target), "ID = 1");
     });
 
     QUnit.test("invalid value in domain field with 'inDialog' options", async function (assert) {
@@ -949,15 +941,15 @@ QUnit.module("Fields", (hooks) => {
                     <field name="display_name" widget="domain" options="{'model': 'partner', 'in_dialog': True}"/>
                 </form>`,
         });
-        assert.containsNone(target, ".o_domain_leaf");
+        assert.containsNone(target, dsHelpers.SELECTORS.condition);
         assert.containsNone(target, ".modal");
         assert.containsNone(target, ".o_field_domain .text-warning");
 
         await click(target, ".o_field_domain_dialog_button");
         assert.containsOnce(target, ".modal");
 
-        await click(target, ".modal .o_domain_tree a[role=button]");
-        await editInput(target, ".o_domain_debug_input", "[(0, '=', expr)]");
+        await click(target, `.modal ${dsHelpers.SELECTORS.addNewRule}`);
+        await editInput(target, dsHelpers.SELECTORS.debugArea, "[(0, '=', expr)]");
         await click(target, ".modal-footer .btn-primary");
         assert.containsOnce(target, ".modal", "the domain is invalid: the dialog is not closed");
     });
@@ -990,7 +982,7 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "0 record(s)"
             );
-            await editInput(target, ".o_domain_debug_input", "[['id', '!=', False]]");
+            await editInput(target, dsHelpers.SELECTORS.debugArea, "[['id', '!=', False]]");
             await click(target, "button.o_form_button_save");
             assert.verifySteps(["/web/domain/validate"]);
             assert.strictEqual(
@@ -1027,11 +1019,11 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_domain > div > div");
 
         // There should be a button to add a new rule
-        assert.containsOnce(target, ".o_domain_tree a[role=button]");
+        assert.containsOnce(target, dsHelpers.SELECTORS.addNewRule);
 
         // Clicking on the button should add the [["id", "=", "1"]] domain, so
         // there should be a field selector in the DOM
-        await click(target, ".o_domain_tree a[role=button]");
+        await dsHelpers.addNewRule(target);
         assert.containsOnce(target, ".o_model_field_selector");
 
         // Focusing the field selector input should open the field selector
@@ -1051,7 +1043,7 @@ QUnit.module("Fields", (hooks) => {
         // associated value should reveal one matched record
         await click(document.body.querySelector(".o_model_field_selector_popover_item_name"));
 
-        await editInput(target, ".o_domain_leaf_value_input", 2);
+        await dsHelpers.editValue(target, 2);
 
         assert.strictEqual(
             target.querySelector(".o_domain_show_selection_button").textContent.trim().substr(0, 2),
@@ -1093,7 +1085,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Unfold the domain and delete the condition
         await click(target, ".o_field_domain > div > div");
-        await click(target, ".o_domain_delete_node_button");
+        await dsHelpers.clickOnButtonDeleteNode(target);
 
         // Fold domain selector
         await click(target, ".o_field_domain a i");
@@ -1105,6 +1097,9 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_domain_add_first_node_button");
         // Domain is now unfolded with the default condition
         assert.containsOnce(target, ".o_model_field_selector");
-        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, '[("id", "=", 1)]');
+        assert.strictEqual(
+            target.querySelector(dsHelpers.SELECTORS.debugArea).value,
+            '[("id", "=", 1)]'
+        );
     });
 });
