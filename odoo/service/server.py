@@ -494,7 +494,12 @@ class ThreadedServer(CommonServer):
         datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
         for i in range(odoo.tools.config['max_cron_threads']):
             def target():
-                self.cron_thread(i)
+                while True:
+                    try:
+                        self.cron_thread(i)
+                    except Exception as error:
+                        _logger.warning("cron%d encountered an Exception:", i, exc_info=error)
+                        time.sleep(SLEEP_INTERVAL)
             t = threading.Thread(target=target, name="odoo.service.cron.cron%d" % i)
             t.daemon = True
             t.type = 'cron'
