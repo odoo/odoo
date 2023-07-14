@@ -1,21 +1,19 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import is_html_empty, plaintext2html
+from odoo.tools import get_lang, is_html_empty, plaintext2html
 
 
 class LivechatChatbotScriptController(http.Controller):
     @http.route('/chatbot/restart', type="json", auth="public", cors="*")
     def chatbot_restart(self, channel_uuid, chatbot_script_id):
-
         discuss_channel = request.env['discuss.channel'].sudo().search([('uuid', '=', channel_uuid)], limit=1)
         chatbot = request.env['chatbot.script'].browse(chatbot_script_id)
         if not discuss_channel or not chatbot.exists():
             return None
-
-        return discuss_channel._chatbot_restart(chatbot).message_format()[0]
+        chatbot_language = self._get_chatbot_language()
+        return discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot).message_format()[0]
 
     @http.route('/chatbot/post_welcome_steps', type="json", auth="public", cors="*")
     def chatbot_post_welcome_steps(self, channel_uuid, chatbot_script_id):
@@ -23,8 +21,8 @@ class LivechatChatbotScriptController(http.Controller):
         chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
         if not discuss_channel or not chatbot.exists():
             return None
-
-        return chatbot._post_welcome_steps(discuss_channel).message_format()
+        chatbot_language = self._get_chatbot_language()
+        return chatbot.with_context(lang=chatbot_language)._post_welcome_steps(discuss_channel).message_format()
 
     @http.route('/chatbot/answer/save', type="json", auth="public", cors="*")
     def chatbot_save_answer(self, channel_uuid, message_id, selected_answer_id):
@@ -43,7 +41,8 @@ class LivechatChatbotScriptController(http.Controller):
 
     @http.route('/chatbot/step/trigger', type="json", auth="public", cors="*")
     def chatbot_trigger_step(self, channel_uuid, chatbot_script_id=None):
-        discuss_channel = request.env['discuss.channel'].sudo().search([('uuid', '=', channel_uuid)], limit=1)
+        chatbot_language = self._get_chatbot_language()
+        discuss_channel = request.env['discuss.channel'].with_context(lang=chatbot_language).sudo().search([('uuid', '=', channel_uuid)], limit=1)
         if not discuss_channel:
             return None
 
@@ -102,3 +101,6 @@ class LivechatChatbotScriptController(http.Controller):
                 result['posted_message'] = result['posted_message'].message_format()[0]
 
         return result
+
+    def _get_chatbot_language(self):
+        return request.httprequest.cookies.get('frontend_lang', request.env.user.lang or get_lang(request.env).code)
