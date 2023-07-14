@@ -14,12 +14,17 @@ from odoo.tools import format_datetime
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError
+from odoo.tools import format_duration
+
+def get_google_maps_url(latitude, longitude):
+    return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
 
 
 class HrAttendance(models.Model):
     _name = "hr.attendance"
     _description = "Attendance"
     _order = "check_in desc"
+    _inherit = "mail.thread"
 
     def _default_employee(self):
         return self.env.user.employee_id
@@ -27,25 +32,101 @@ class HrAttendance(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True, ondelete='cascade', index=True)
     department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id",
         readonly=True)
-    check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True)
-    check_out = fields.Datetime(string="Check Out")
+    check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True)
+    check_out = fields.Datetime(string="Check Out", tracking=True)
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
+    color = fields.Integer(compute='_compute_color')
+    overtime_hours = fields.Float(string="Over Time", compute='_compute_overtime_hours', store=True)
+    in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True)
+    in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True)
+    in_country_name = fields.Char(string="Country", help="Based on IP Address", readonly=True)
+    in_city = fields.Char(string="City", readonly=True)
+    in_ip_address = fields.Char(string="IP Address", readonly=True)
+    in_browser = fields.Char(string="Browser", readonly=True)
+    in_mode = fields.Selection(string="Mode",
+                               selection=[('kiosk', "Kiosk"),
+                                          ('systray', "Systray"),
+                                          ('manual', "Manual")],
+                               readonly=True,
+                               default='manual')
+    out_latitude = fields.Float(digits=(10, 7), readonly=True)
+    out_longitude = fields.Float(digits=(10, 7), readonly=True)
+    out_country_name = fields.Char(help="Based on IP Address", readonly=True)
+    out_city = fields.Char(readonly=True)
+    out_ip_address = fields.Char(readonly=True)
+    out_browser = fields.Char(readonly=True)
+    out_mode = fields.Selection(selection=[('kiosk', "Kiosk"),
+                                           ('systray', "Systray"),
+                                           ('manual', "Manual")],
+                                readonly=True,
+                                default='manual')
+
+    def _compute_color(self):
+        for attendance in self:
+            if attendance.check_out:
+                attendance.color = 1 if attendance.worked_hours > 16 else 0
+            else:
+                attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
+
+    @api.depends('worked_hours')
+    def _compute_overtime_hours(self):
+        self.env['hr.attendance'].flush_model(['worked_hours'])
+        self.env['hr.attendance.overtime'].flush_model(['duration'])
+        self.env.cr.execute('''
+            SELECT att.id as att_id,
+                   att.worked_hours as att_wh,
+                   ot.id as ot_id,
+                   ot.duration as ot_d,
+                   ot.date as od,
+                   att.check_in as ad
+              FROM hr_attendance att
+         INNER JOIN hr_attendance_overtime ot
+                ON date_trunc('day',att.check_in) = date_trunc('day', ot.date)
+                AND date_trunc('day',att.check_out) = date_trunc('day', ot.date)
+                AND att.employee_id IN %s
+                AND att.employee_id = ot.employee_id
+                ORDER BY att.check_in DESC
+        ''', (tuple(self.employee_id.ids),))
+        a = self.env.cr.dictfetchall()
+        grouped_dict = dict()
+        for row in a:
+            if row['ot_id'] and row['att_wh']:
+                if row['ot_id'] not in grouped_dict:
+                    grouped_dict[row['ot_id']] = {'attendances': [(row['att_id'], row['att_wh'])], 'overtime_duration': row['ot_d']}
+                else:
+                    grouped_dict[row['ot_id']]['attendances'].append((row['att_id'], row['att_wh']))
+
+        att_progress_values = dict()
+        for ot in grouped_dict:
+            ot_bucket = grouped_dict[ot]['overtime_duration']
+            for att in grouped_dict[ot]['attendances']:
+                if ot_bucket > 0:
+                    sub_time = att[1] - ot_bucket
+                    if sub_time < 0:
+                        att_progress_values[att[0]] = 0
+                        ot_bucket -= att[1]
+                    else:
+                        att_progress_values[att[0]] = float(((att[1] - ot_bucket) / att[1])*100)
+                        ot_bucket = 0
+                else:
+                    att_progress_values[att[0]] = 100
+        for attendance in self:
+            attendance.overtime_hours = attendance.worked_hours * ((100 - att_progress_values.get(attendance.id, 100))/100)
 
     @api.depends('employee_id', 'check_in', 'check_out')
     def _compute_display_name(self):
         for attendance in self:
             if not attendance.check_out:
                 attendance.display_name = _(
-                    "%s from %s",
-                    attendance.employee_id.name,
-                    format_datetime(self.env, attendance.check_in, dt_format=False)
+                    "From %s",
+                    format_datetime(self.env, attendance.check_in, dt_format="HH:mm"),
                 )
             else:
                 attendance.display_name = _(
-                    "%s from %s to %s",
-                    attendance.employee_id.name,
-                    format_datetime(self.env, attendance.check_in, dt_format=False),
-                    format_datetime(self.env, attendance.check_out, dt_format=False),
+                    "%s : (%s-%s)",
+                    format_duration(attendance.worked_hours),
+                    format_datetime(self.env, attendance.check_in, dt_format="HH:mm"),
+                    format_datetime(self.env, attendance.check_out, dt_format="HH:mm"),
                 )
 
     def _get_employee_calendar(self):
@@ -156,7 +237,7 @@ class HrAttendance(models.Model):
 
         overtime_to_unlink = self.env['hr.attendance.overtime']
         overtime_vals_list = []
-
+        affected_employees = self.env['hr.employee']
         for emp, attendance_dates in employee_attendance_dates.items():
             # get_attendances_dates returns the date translated from the local timezone without tzinfo,
             # and contains all the date which we need to check for overtime
@@ -295,10 +376,16 @@ class HrAttendance(models.Model):
                             'duration': overtime_duration,
                             'duration_real': overtime_duration
                         })
+                        affected_employees |= overtime.employee_id
                 elif overtime:
                     overtime_to_unlink |= overtime
-        self.env['hr.attendance.overtime'].sudo().create(overtime_vals_list)
+        created_overtimes = self.env['hr.attendance.overtime'].sudo().create(overtime_vals_list)
+        employees_worked_hours_to_compute = (affected_employees.ids +
+                                             created_overtimes.employee_id.ids +
+                                             overtime_to_unlink.employee_id.ids)
         overtime_to_unlink.sudo().unlink()
+        self.env.add_to_compute(self._fields['overtime_hours'],
+                                self.search([('employee_id', 'in', employees_worked_hours_to_compute)]))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -309,7 +396,7 @@ class HrAttendance(models.Model):
     def write(self, vals):
         if vals.get('employee_id') and \
             vals['employee_id'] not in self.env.user.employee_ids.ids and \
-            not self.env.user.has_group('hr_attendance.group_hr_attendance_user'):
+            not self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not his own."))
         attendances_dates = self._get_attendances_dates()
         result = super(HrAttendance, self).write(vals)
@@ -330,3 +417,19 @@ class HrAttendance(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         raise exceptions.UserError(_('You cannot duplicate an attendance.'))
+
+    def action_in_attendance_maps(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': get_google_maps_url(self.in_latitude, self.in_longitude),
+            'target': 'new'
+        }
+
+    def action_out_attendance_maps(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': get_google_maps_url(self.out_latitude, self.out_longitude),
+            'target': 'new'
+        }

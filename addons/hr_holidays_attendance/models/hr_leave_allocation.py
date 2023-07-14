@@ -75,7 +75,7 @@ class HolidaysAllocation(models.Model):
         datetime_min_time = datetime.min.time()
         start_dt = datetime.combine(start_date, datetime_min_time)
         end_dt = datetime.combine(end_date, datetime_min_time)
-        attendances = self.env['hr.attendance'].search([
+        attendances = self.env['hr.attendance'].sudo().search([
             ('employee_id', '=', self.employee_id.id),
             ('check_in', '>=', start_dt),
             ('check_out', '<=', end_dt),
