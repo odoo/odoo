@@ -925,7 +925,7 @@ class SaleOrder(models.Model):
         :return: None
         """
         for order in self:
-            mail_template = self._get_confirmation_template()
+            mail_template = order._get_confirmation_template()
             order._send_order_notification_mail(mail_template)
 
     def _send_payment_succeeded_for_order_mail(self):
