@@ -6,8 +6,10 @@ from unittest.mock import patch
 from lxml import objectify
 
 from odoo.fields import Command
-from odoo.addons.base.tests.common import BaseCommon
+from odoo.osv.expression import AND
 from odoo.tools.misc import hmac as hmac_tool
+
+from odoo.addons.base.tests.common import BaseCommon
 
 _logger = logging.getLogger(__name__)
 
@@ -132,14 +134,13 @@ class PaymentCommon(BaseCommon):
         """
         company = company or cls.env.company
         update_values = update_values or {}
+        provider_domain = cls._get_provider_domain(code)
 
         provider = cls.env['payment.provider'].sudo().search(
-            [('code', '=', code), ('company_id', '=', company.id)], limit=1
+            AND([provider_domain, [('company_id', '=', company.id)]]), limit=1
         )
         if not provider:
-            base_provider = cls.env['payment.provider'].sudo().search(
-                [('code', '=', code)], limit=1
-            )
+            base_provider = cls.env['payment.provider'].sudo().search(provider_domain, limit=1)
             if not base_provider:
                 _logger.error("no payment.provider found for code %s", code)
                 return cls.env['payment.provider']
@@ -149,6 +150,10 @@ class PaymentCommon(BaseCommon):
         update_values['state'] = 'test'
         provider.write(update_values)
         return provider
+
+    @classmethod
+    def _get_provider_domain(cls, code):
+        return [('code', '=', code)]
 
     def _create_transaction(self, flow, sudo=True, **values):
         default_values = {

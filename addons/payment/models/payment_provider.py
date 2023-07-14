@@ -687,3 +687,25 @@ class PaymentProvider(models.Model):
             'token_inline_form_view_id': None,
             'express_checkout_form_view_id': None,
         }
+
+    def _get_provider_name(self):
+        """ Return the translated name of the provider.
+
+        Note: self.ensure_one()
+
+        :return: The translated name of the provider.
+        :rtype: str
+        """
+        self.ensure_one()
+        return dict(self._fields['code']._description_selection(self.env))[self.code]
+
+    def _get_code(self):
+        """ Return the code of the provider.
+
+        Note: self.ensure_one()
+
+        :return: The code of the provider.
+        :rtype: str
+        """
+        self.ensure_one()
+        return self.code
