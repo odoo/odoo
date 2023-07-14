@@ -69,7 +69,7 @@
                                        type="radio"
                                        t-att-checked="token.id == default_payment_option_id"
                                        t-att-data-payment-option-id="token.id"
-                                       t-att-data-provider="token.provider_code"
+                                       t-att-data-provider="provider._get_code()"
                                        data-payment-option-type="token"/>
                                 <!-- === Token name === -->
                                 <span class="payment_option_name" t-esc="token.display_name"/>
@@ -90,8 +90,8 @@
                                 </span>
                                 <div class="ms-4 fst-italic small text-muted">
                                     Managed by
-                                    <span t-esc="dict(provider._fields['code']._description_selection(provider.env))[provider.code]"/>
-                                    — created on 
+                                    <span t-out="provider._get_provider_name()"/>
+                                    — created on
                                     <span t-esc="token.create_date.date()"/>
                                 </div>
                             </label>
@@ -126,7 +126,7 @@
                                    t-att-checked="provider.id == default_payment_option_id"
                                    t-att-class="'' if provider_count + token_count > 1 else 'd-none'"
                                    t-att-data-payment-option-id="provider.id"
-                                   t-att-data-provider="provider.code"
+                                   t-att-data-provider="provider._get_code()"
                                    data-payment-option-type="provider"/>
                             <!-- === Provider name === -->
                             <span class="payment_option_name">
@@ -225,7 +225,7 @@
             <t t-set="footer_template_id"
                t-value="footer_template_id or 'payment.footer'"/>
             <!-- === Tokens === -->
-            <t t-if="token_count > 0"> 
+            <t t-if="token_count > 0">
                 <span class="fs-4">Saved payment methods</span>
                 <div class="card">
                     <t t-foreach="tokens" t-as="token">
@@ -239,7 +239,7 @@
                                        t-att-checked="token.id == default_payment_option_id"
                                        t-att-class="'' if bool(assign_token_route) else 'd-none'"
                                        t-att-data-payment-option-id="token.id"
-                                       t-att-data-provider="token.provider_code"
+                                       t-att-data-provider="provider._get_code()"
                                        data-payment-option-type="token"/>
                                 <!-- === Token name === -->
                                 <span class="payment_option_name" t-esc="token.display_name"/>
@@ -259,11 +259,11 @@
                                 <i class="fa fa-trash"/> Delete
                             </button>
                             <div class="fst-italic small text-muted">
-                                    Managed by
-                                    <span t-esc="dict(provider._fields['code']._description_selection(provider.env))[provider.code]"/>
-                                    – created on 
-                                    <span t-esc="token.create_date.date()"/>
-                            </div>                      
+                                Managed by
+                                <span t-out="provider._get_provider_name()"/>
+                                — created on
+                                <span t-esc="token.create_date.date()"/>
+                            </div>
                         </div>
                         <!-- === Token inline form === -->
                         <div t-attf-id="o_payment_token_inline_manage_form_{{token.id}}"
@@ -295,7 +295,7 @@
                                    t-att-checked="provider.id == default_payment_option_id"
                                    t-att-class="'' if provider_count + token_count > 1 else 'd-none'"
                                    t-att-data-payment-option-id="provider.id"
-                                   t-att-data-provider="provider.code"
+                                   t-att-data-provider="provider._get_code()"
                                    data-payment-option-type="provider"/>
                             <!-- === Provider name === -->
                             <span class="payment_option_name">

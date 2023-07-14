@@ -22,7 +22,7 @@ class PaymentProvider(models.Model):
         for provider in self:
             payment_method = self.env['account.payment.method.line'].search([
                 ('journal_id.company_id', '=', provider.company_id.id),
-                ('code', '=', provider.code)
+                ('code', '=', provider._get_code())
             ], limit=1)
             if payment_method:
                 provider.journal_id = payment_method.journal_id
@@ -31,15 +31,14 @@ class PaymentProvider(models.Model):
 
     def _inverse_journal_id(self):
         for provider in self:
+            code = provider._get_code()
             payment_method_line = self.env['account.payment.method.line'].search([
                 ('journal_id.company_id', '=', provider.company_id.id),
-                ('code', '=', provider.code),
+                ('code', '=', code),
             ], limit=1)
             if provider.journal_id:
                 if not payment_method_line:
-                    default_payment_method_id = provider._get_default_payment_method_id(
-                        provider.code
-                    )
+                    default_payment_method_id = provider._get_default_payment_method_id(code)
                     existing_payment_method_line = self.env['account.payment.method.line'].search([
                         ('payment_method_id', '=', default_payment_method_id),
                         ('journal_id', '=', provider.journal_id.id),
