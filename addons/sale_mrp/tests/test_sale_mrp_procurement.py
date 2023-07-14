@@ -271,3 +271,83 @@ class TestSaleMrpProcurement(TransactionCase):
         orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
             [('product_id', '=', kit_1.id)])
         self.assertFalse(orderpoint_product)
+
+    def test_so_reordering_rule_02(self):
+        """
+        Have a manufactured product in kg unit of measure with the manufacturing route
+        and a reordering rule (RR) set to min=max=0, and a BoM in grams.
+        Confirm a SO with that product in 510 grams -> It should generate a MO with 510g.
+        Create a second SO with 510g -> It should update the MO to 1020g.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        uom_gram = self.env.ref('uom.product_uom_gram')
+
+        product, component = self.env['product.product'].create([{
+            'name': 'Finished',
+            'type': 'product',
+            'uom_id': uom_kg.id,
+            'uom_po_id': uom_kg.id,
+            'route_ids': [(6, 0, manufacture_route.ids)],
+        }, {
+            'name': 'Component',
+            'type': 'consu',
+        }])
+
+        self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': uom_gram.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ],
+        })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': product.name,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'trigger': 'auto',
+            'qty_multiple': 0.01,
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Super Partner'}).id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 510,
+                    'product_uom': uom_gram.id,
+                    'price_unit': 1,
+                })],
+        })
+        so.action_confirm()
+        self.assertEqual(so.state, 'sale')
+
+        mo = self.env['mrp.production'].search([('product_id', '=', product.id)], order='id desc', limit=1)
+        self.assertIn(so.name, mo.origin)
+        self.assertEqual(mo.product_uom_id, uom_gram)
+        self.assertEqual(mo.product_qty, 510)
+
+        so_2 = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Super Partner'}).id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 510,
+                    'product_uom': uom_gram.id,
+                    'price_unit': 1,
+                })],
+        })
+        so_2.action_confirm()
+        self.assertEqual(so_2.state, 'sale')
+        self.assertEqual(mo.product_uom_id, uom_gram)
+        self.assertEqual(mo.product_qty, 1020)
