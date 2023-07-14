@@ -20,18 +20,19 @@
  * @property {Object} fieldMatching
  *
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
+ * @typedef {import("../pivot_table.js").PivotCell} PivotCell
  */
 
-import { CorePlugin } from "@odoo/o-spreadsheet";
+import { CorePlugin, helpers } from "@odoo/o-spreadsheet";
 import { makePivotFormula } from "../pivot_helpers";
 import { getMaxObjectId } from "@spreadsheet/helpers/helpers";
-import { HEADER_STYLE, TOP_LEVEL_STYLE, MEASURE_STYLE } from "@spreadsheet/helpers/constants";
 import { SpreadsheetPivotTable } from "../pivot_table";
 import CommandResult from "../../o_spreadsheet/cancelled_reason";
 import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
+const { isDefined } = helpers;
 
 export default class PivotCorePlugin extends CorePlugin {
     constructor(config) {
@@ -82,22 +83,22 @@ export default class PivotCorePlugin extends CorePlugin {
         switch (cmd.type) {
             case "INSERT_PIVOT": {
                 const { sheetId, col, row, id, definition } = cmd;
-                /** @type [number,number] */
-                const anchor = [col, row];
+                /** @type { col: number, row: number } */
+                const position = { col, row };
                 const { cols, rows, measures, rowTitle } = cmd.table;
                 const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
                 this._addPivot(id, definition);
-                this._insertPivot(sheetId, anchor, id, table);
+                this._insertPivot(sheetId, position, id, table);
                 this.history.update("nextId", parseInt(id, 10) + 1);
                 break;
             }
             case "RE_INSERT_PIVOT": {
                 const { sheetId, col, row, id } = cmd;
-                /** @type [number,number] */
-                const anchor = [col, row];
+                /** @type { col: number, row: number } */
+                const position = { col, row };
                 const { cols, rows, measures, rowTitle } = cmd.table;
                 const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
-                this._insertPivot(sheetId, anchor, id, table);
+                this._insertPivot(sheetId, position, id, table);
                 break;
             }
             case "RENAME_ODOO_PIVOT": {
@@ -267,93 +268,39 @@ export default class PivotCorePlugin extends CorePlugin {
 
     /**
      * @param {string} sheetId
-     * @param {[number, number]} anchor
+     * @param {{ col: number, row: number }} position
      * @param {string} id
      * @param {SpreadsheetPivotTable} table
      */
-    _insertPivot(sheetId, anchor, id, table) {
-        this._resizeSheet(sheetId, anchor, table);
-        this._insertColumns(sheetId, anchor, id, table);
-        this._insertRows(sheetId, anchor, id, table);
-        this._insertBody(sheetId, anchor, id, table);
-        this._addBorders(sheetId, anchor, table);
-    }
-
-    /**
-     * @param {string} sheetId
-     * @param {[number, number]} anchor
-     * @param {string} id
-     * @param {SpreadsheetPivotTable} table
-     */
-    _insertColumns(sheetId, anchor, id, table) {
-        let anchorLeft = anchor[0] + 1;
-        let anchorTop = anchor[1];
-        for (const _row of table.getColHeaders()) {
-            anchorLeft = anchor[0] + 1;
-            for (const cell of _row) {
-                const args = [id];
-                for (let i = 0; i < cell.fields.length; i++) {
-                    args.push(cell.fields[i]);
-                    args.push(cell.values[i]);
-                }
-                if (cell.width > 1) {
-                    this._merge(sheetId, {
-                        top: anchorTop,
-                        bottom: anchorTop,
-                        left: anchorLeft,
-                        right: anchorLeft + cell.width - 1,
-                    });
-                }
-                this._addPivotFormula(sheetId, anchorLeft, anchorTop, "ODOO.PIVOT.HEADER", args);
-                anchorLeft += cell.width;
+    _insertPivot(sheetId, position, id, table) {
+        this._resizeSheet(sheetId, position, table);
+        const pivotCells = table.pivotCells;
+        for (let col = 0; col < pivotCells.length; col++) {
+            for (let row = 0; row < pivotCells[col].length; row++) {
+                const pivotCell = pivotCells[col][row];
+                const functionCol = position.col + col;
+                const functionRow = position.row + row;
+                this._addPivotFormula(
+                    sheetId,
+                    id,
+                    { col: functionCol, row: functionRow },
+                    pivotCell
+                );
             }
-            anchorTop++;
         }
-        const colHeight = table.getColHeight();
-        const colWidth = table.getColWidth();
-        const lastRowBeforeMeasureRow = anchor[1] + colHeight - 2;
-        const right = anchor[0] + colWidth;
-        const left = right - table.getNumberOfMeasures() + 1;
-        for (let anchorTop = anchor[1]; anchorTop < lastRowBeforeMeasureRow; anchorTop++) {
-            this._merge(sheetId, { top: anchorTop, bottom: anchorTop, left, right });
-        }
-        const headersZone = {
-            top: anchor[1],
-            bottom: lastRowBeforeMeasureRow,
-            left: anchor[0],
-            right: anchor[0] + colWidth,
-        };
-        const measuresZone = {
-            top: anchor[1] + colHeight - 1,
-            bottom: anchor[1] + colHeight - 1,
-            left: anchor[0],
-            right: anchor[0] + colWidth,
-        };
-        this.dispatch("SET_FORMATTING", { sheetId, target: [headersZone], style: TOP_LEVEL_STYLE });
-        this.dispatch("SET_FORMATTING", { sheetId, target: [measuresZone], style: MEASURE_STYLE });
-    }
 
-    /**
-     * Merge a zone
-     *
-     * @param {string} sheetId
-     * @param {Object} zone
-     *
-     * @private
-     */
-    _merge(sheetId, zone) {
-        this.dispatch("ADD_MERGE", { sheetId, target: [zone] });
+        this._addBorders(sheetId, position, table);
     }
 
     /**
      * @param {string} sheetId
-     * @param {[number,number]} anchor
+     * @param {{ col: number, row: number }} position
      * @param {SpreadsheetPivotTable} table
      */
-    _resizeSheet(sheetId, anchor, table) {
-        const colLimit = table.getColWidth() + 1; // +1 for the Top-Left
+    _resizeSheet(sheetId, { col, row }, table) {
+        const colLimit = table.getNumberOfDataColumns() + 1; // +1 for the Top-Left
         const numberCols = this.getters.getNumberCols(sheetId);
-        const deltaCol = numberCols - anchor[0];
+        const deltaCol = numberCols - col;
         if (deltaCol < colLimit) {
             this.dispatch("ADD_COLUMNS_ROWS", {
                 dimension: "COL",
@@ -363,9 +310,9 @@ export default class PivotCorePlugin extends CorePlugin {
                 position: "after",
             });
         }
-        const rowLimit = table.getColHeight() + table.getRowHeight();
+        const rowLimit = table.getNumberOfHeaderRows() + table.getNumberOfDataRows();
         const numberRows = this.getters.getNumberRows(sheetId);
-        const deltaRow = numberRows - anchor[1];
+        const deltaRow = numberRows - row;
         if (deltaRow < rowLimit) {
             this.dispatch("ADD_COLUMNS_ROWS", {
                 dimension: "ROW",
@@ -379,90 +326,33 @@ export default class PivotCorePlugin extends CorePlugin {
 
     /**
      * @param {string} sheetId
-     * @param {[number, number]} anchor
-     * @param {string} id
+     * @param {{ col: number, row: number }} position
      * @param {SpreadsheetPivotTable} table
      */
-    _insertRows(sheetId, anchor, id, table) {
-        let y = anchor[1] + table.getColHeight() - 1;
-        const x = anchor[0];
-        this.dispatch("UPDATE_CELL", {
-            col: x,
-            row: y,
-            sheetId,
-            content: table.getRowTitle(),
-        });
-        y++;
-        for (const row of table.getRowHeaders()) {
-            const args = [id];
-            for (let i = 0; i < row.fields.length; i++) {
-                args.push(row.fields[i]);
-                args.push(row.values[i]);
-            }
-            this._addPivotFormula(sheetId, x, y, "ODOO.PIVOT.HEADER", args);
-            if (row.indent <= 2) {
-                const target = [{ top: y, bottom: y, left: x, right: x }];
-                const style = row.indent === 2 ? HEADER_STYLE : TOP_LEVEL_STYLE;
-                this.dispatch("SET_FORMATTING", { sheetId, target, style });
-            }
-            y++;
-        }
-    }
-
-    /**
-     * @param {string} sheetId
-     * @param {[number, number]} anchor
-     * @param {string} id
-     * @param {SpreadsheetPivotTable} table
-     */
-    _insertBody(sheetId, anchor, id, table) {
-        let x = anchor[0] + 1;
-        for (const col of table.getMeasureHeaders()) {
-            let y = anchor[1] + table.getColHeight();
-            const measure = col.values[col.values.length - 1];
-            for (const row of table.getRowHeaders()) {
-                const args = [id, measure];
-                for (let i = 0; i < row.fields.length; i++) {
-                    args.push(row.fields[i]);
-                    args.push(row.values[i]);
-                }
-                for (let i = 0; i < col.fields.length - 1; i++) {
-                    args.push(col.fields[i]);
-                    args.push(col.values[i]);
-                }
-                this._addPivotFormula(sheetId, x, y, "ODOO.PIVOT", args);
-                y++;
-            }
-            x++;
-        }
-    }
-
-    _addBorders(sheetId, anchor, table) {
-        const colHeight = table.getColHeight();
-        const colWidth = table.getColWidth();
-        const anchorLeft = anchor[0];
-        const anchorTop = anchor[1];
-        const totalRow = anchorTop + colHeight + table.getRowHeaders().length - 1;
+    _addBorders(sheetId, { col, row }, table) {
+        const colHeight = table.getNumberOfHeaderRows();
+        const colWidth = table.getNumberOfDataColumns();
+        const totalRow = row + colHeight + table.getRowHeaders().length - 1;
         const headerAndMeasureZone = {
-            top: anchorTop,
-            bottom: anchorTop + colHeight - 1,
-            left: anchorLeft,
-            right: anchorLeft + colWidth,
+            top: row,
+            bottom: row + colHeight - 1,
+            left: col,
+            right: col + colWidth,
         };
         this.dispatch("SET_ZONE_BORDERS", {
             sheetId,
             target: [
                 headerAndMeasureZone,
                 {
-                    left: anchorLeft,
-                    right: anchorLeft + colWidth,
+                    left: col,
+                    right: col + colWidth,
                     top: totalRow,
                     bottom: totalRow,
                 },
                 {
-                    left: anchorLeft,
-                    right: anchorLeft + colWidth,
-                    top: anchorTop,
+                    left: col,
+                    right: col + colWidth,
+                    top: row,
                     bottom: totalRow,
                 },
             ],
@@ -475,17 +365,22 @@ export default class PivotCorePlugin extends CorePlugin {
 
     /**
      * @param {string} sheetId
-     * @param {number} col
-     * @param {number} row
-     * @param {string} formula
-     * @param {Array<string>} args
+     * @param {{ col: number, row: number }} position
+     * @param {string} pivotId
+     * @param {PivotCell} pivotCell
      */
-    _addPivotFormula(sheetId, col, row, formula, args) {
+    _addPivotFormula(sheetId, pivotId, { col, row }, pivotCell) {
+        const formula = pivotCell.isHeader ? "ODOO.PIVOT.HEADER" : "ODOO.PIVOT";
+        const args = pivotCell.domain
+            ? [pivotId, pivotCell.measure, ...pivotCell.domain].filter(isDefined)
+            : undefined;
+
         this.dispatch("UPDATE_CELL", {
             sheetId,
             col,
             row,
-            content: makePivotFormula(formula, args),
+            content: pivotCell.content || (args ? makePivotFormula(formula, args) : undefined),
+            style: pivotCell.style,
         });
     }
 
