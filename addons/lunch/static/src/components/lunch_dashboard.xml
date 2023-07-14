@@ -9,28 +9,30 @@
     </t>
 
     <t t-name="lunch.LunchOrderLine">
-        <div class="d-flex align-items-center pe-3">
-            <div class="btn-group">
+        <tr>
+            <td class="text-center">
                 <button class="btn btn-sm btn-icon btn-link fa fa-minus-circle p-0" t-if="canEdit" t-on-click="() => this.updateQuantity(-1)"/>
                 <span t-esc="line.quantity" class="px-2 py-1"/>
                 <button class="btn btn-sm btn-icon btn-link fa fa-plus-circle p-0" t-if="canEdit" t-on-click="() => this.updateQuantity(1)"/>
-            </div>
-            <span class="flex-grow-1 ps-2 text-700">
+            </td>
+            <td class="flex-grow-1 ps-2 text-700">
                 <a t-on-click="() => props.openOrderLine(line.product[0], line.id)" t-if="canEdit" role="button" title="Edit order">
                     <t t-esc="line.product[1]"/>
                 </a>
                 <t t-else="" t-esc="line.product[1]"/>
-                <span t-esc="line.state" t-attf-class="badge ms-2 rounded-pill text-bg-#{badgeClass} border-#{badgeClass} "/>
-            </span>
-            <LunchCurrency currency="props.currency" amount="line.product[2]"/>
-        </div>
-        <ul t-if="hasToppings" class="list-unstyled ps-4">
-            <li t-foreach="line.toppings" t-as="topping" t-key="topping" class="d-flex pe-3">
-                <span class="flex-grow-1 lunch_topping" t-esc="topping[0]"/>
-                <LunchCurrency currency="props.currency" amount="topping[1]"/>
-            </li>
-        </ul>
-        <div t-if="line.note" t-esc="line.note" class="text-muted ps-4"/>
+            </td>
+            <td t-esc="line.state" t-attf-class="badge ms-2 rounded-pill text-bg-#{badgeClass} border-#{badgeClass} "/>
+            <td t-esc="line.location"/>
+            <td t-esc="line.date" class="mx-4"/>
+            <td><LunchCurrency currency="props.currency" amount="line.product[2]"/></td>
+        </tr>
+        <t t-if="hasToppings" class="ps-4">
+            <tr t-foreach="line.toppings" t-as="topping" t-key="topping">
+                <td> </td>
+                <td class="lunch_topping flex-grow-1 ps-2 text-700" t-esc="topping[0]"/>
+            </tr>
+        </t>
+        <tr t-if="line.note" t-esc="line.note" class="text-muted ps-4"/>
     </t>
 
     <t t-name="lunch.LunchAlerts">
@@ -74,12 +76,12 @@
 
         <div class="o_lunch_banner container-fluid p-4 bg-view">
             <div class="row h-100">
-                <div class="col-12 col-md-4">
+                <div class="col-8 col-md-3 px-0">
                     <div class="row h-100 align-content-center">
                         <div class="col-3">
                             <img class="o_image_64_cover rounded" t-att-src="state.infos.userimage"/>
                         </div>
-                        <div class="col-9">
+                        <div class="col-8 pe-0">
                             <LunchUser
                                 isManager="state.infos.is_manager"
                                 username="state.infos.username"
@@ -89,6 +91,13 @@
                                 location="location"
                                 onUpdateLunchLocation.bind="onUpdateLunchLocation"/>
 
+                            <div id="lunch_order_date">
+                                <DateTimeInput
+                                    type="'date'"
+                                    placeholder="'Today'"
+                                    onChange.bind="onUpdateLunchTime"/>
+                            </div>
+
                             <div class="d-flex pb-1">
                                 <span class="flex-grow-1">Your Account</span>
                                 <LunchCurrency currency="currency" amount="state.infos.wallet"/>
@@ -96,18 +105,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-5" t-if="hasLines">
-                    <h4 class="mb-0">
+                <div class="col-12 col-md-7" t-if="hasLines">
+                    <h4 class="">
                         Your Order
                         <button t-if="state.infos.raw_state != 'confirmed'" class="btn btn-sm btn-icon btn-link fa fa-trash" t-on-click.prevent="emptyCart"/>
                     </h4>
-                    <ul class="o_lunch_widget_lines overflow-auto list-unstyled">
-                        <li t-foreach="state.infos.lines" t-as="line" t-key="line.id">
+                    <table class="o_lunch_widget_lines col-10">
+                        <t t-foreach="state.infos.lines" t-as="line" t-key="line.id">
                             <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantity" openOrderLine.bind="props.openOrderLine"/>
-                        </li>
-                    </ul>
+                        </t>
+                    </table>
                 </div>
-                <div class="col-12 col-md-3 d-flex flex-column justify-content-between" t-if="hasLines">
+                <div class="col-6 col-md-2 px-0 d-flex flex-column justify-content-between" t-if="hasLines">
                     <span class="d-flex flex-row mt-1 text-muted">
                         <span class="flex-grow-1">
                             Total

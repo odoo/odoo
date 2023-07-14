@@ -29,6 +29,8 @@ class LunchController(http.Controller):
                       'price': line.price,
                       'raw_state': line.state,
                       'state': translated_states[line.state],
+                      'date': line.date,
+                      'location': line.lunch_location_id.name,
                       'note': line.note} for line in lines.sorted('date')]
             total = float_round(sum(line['price'] for line in lines), 2)
             paid_subtotal = float_round(sum(line['price'] for line in lines if line['raw_state'] != 'new'), 2)
@@ -64,7 +66,6 @@ class LunchController(http.Controller):
         lines = self._get_current_lines(user)
         if lines:
             lines = lines.filtered(lambda line: line.state == 'new')
-
             lines.action_order()
             return True
 
@@ -141,7 +142,7 @@ class LunchController(http.Controller):
 
     def _get_current_lines(self, user):
         return request.env['lunch.order'].search(
-            [('user_id', '=', user.id), ('date', '=', fields.Date.context_today(user)), ('state', '!=', 'cancelled')]
+            [('user_id', '=', user.id), ('date', '>=', fields.Date.context_today(user)), ('state', '!=', 'cancelled')]
             )
 
     def _get_state(self, lines):

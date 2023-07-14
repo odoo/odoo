@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { DateTimeInput } from '@web/core/datetime/datetime_input';
 import { Component, useState, onWillStart, markup, xml } from "@odoo/owl";
 
 export class LunchCurrency extends Component {
@@ -108,6 +109,7 @@ export class LunchDashboard extends Component {
         super.setup();
         this.state = useState({
             infos: {},
+            date: new Date(),
         });
 
         useBus(this.env.bus, 'lunch_update_dashboard', () => this._fetchLunchInfos());
@@ -178,4 +180,26 @@ export class LunchDashboard extends Component {
         await this._fetchLunchInfos();
         this.env.searchModel.updateLocationId(value[0].id);
     }
+
+    async onUpdateLunchTime(value) {
+        if (value) {
+            // Set time at 12:00
+            this.state.date.setTime(value + 12 * 60 * 60 * 1000);
+        } else {
+            this.state.date.setTime(new Date());
+        }
+        this.env.searchModel.updateDate(this.state.date);
+    }
 }
+
+LunchDashboard.components = {
+    LunchAlerts,
+    LunchCurrency,
+    LunchLocation,
+    LunchOrderLine,
+    LunchUser,
+    Many2XAutocomplete,
+    DateTimeInput,
+};
+LunchDashboard.props = ["openOrderLine"];
+LunchDashboard.template = 'lunch.LunchDashboard';

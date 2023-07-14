@@ -205,6 +205,9 @@ class LunchSupplier(models.Model):
             if 'automatic_email_time' in values:
                 self.flush_model(['automatic_email_time'])
             self._sync_cron()
+        days_removed = [val for val in values if val in ('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun') and not values[val]]
+        if days_removed:
+            self._cancel_future_days(days_removed)
         return res
 
     def unlink(self):
@@ -224,6 +227,14 @@ class LunchSupplier(models.Model):
         Product.search([('supplier_id', 'in', active_suppliers.ids)]).write({'active': True})
         Product.search([('supplier_id', 'in', inactive_suppliers.ids)]).write({'active': False})
         return res
+
+    def _cancel_future_days(self, weekdays):
+        weekdays_n = [WEEKDAY_TO_NAME.index(wd) for wd in weekdays]
+        self.env['lunch.order'].search([
+            ('supplier_id', 'in', self.ids),
+            ('state', 'in', ('new', 'ordered')),
+            ('date', '>=', fields.Date.context_today(self.with_context(tz=self.tz))),
+        ]).filtered(lambda lo: lo.date.weekday() in weekdays_n).write({'state': 'cancelled'})
 
     def _get_current_orders(self, state='ordered'):
         """ Returns today's orders """
@@ -291,9 +302,8 @@ class LunchSupplier(models.Model):
         now = fields.Datetime.now().replace(tzinfo=pytz.UTC)
 
         for supplier in self:
-            now = now.astimezone(pytz.timezone(supplier.tz))
-
-            supplier.available_today = supplier._available_on_date(now)
+            supplier_date = now.astimezone(pytz.timezone(supplier.tz))
+            supplier.available_today = supplier._available_on_date(supplier_date)
 
     def _available_on_date(self, date):
         self.ensure_one()

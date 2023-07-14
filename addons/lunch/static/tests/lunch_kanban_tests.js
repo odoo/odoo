@@ -248,7 +248,7 @@ QUnit.module('LunchKanban', (hooks) => {
         click(target, '.lunch_user li:not(.o_m2o_dropdown_option) .dropdown-item:not(.ui-state-active)');
 
         await nextTick();
-        const wallet = target.querySelector('.o_lunch_banner .col-9 > .d-flex > span:nth-child(2)');
+        const wallet = target.querySelector('.o_lunch_banner .col-8 > .d-flex > span:nth-child(2)');
         assert.equal(wallet.innerText, '-10000.00€', 'David Elora is poor')
 
         click(target, '.lunch_location input');
@@ -302,7 +302,7 @@ QUnit.module('LunchKanban', (hooks) => {
 
         assert.containsN(target, 'div.o_lunch_banner > .row > div', 3);
         assert.containsOnce(target, 'div.o_lunch_banner > .row > div:nth-child(2) button.fa-trash', 'should have trash icon');
-        assert.containsOnce(target, 'div.o_lunch_banner > .row > div:nth-child(2) ul > li', 'should have one order line');
+        assert.containsOnce(target, 'div.o_lunch_banner > .row > div:nth-child(2) table > tr', 'should have one order line');
 
         assert.containsOnce(target, 'div.o_lunch_banner > .row > div:nth-child(3) button:contains(Order Now)');
 
@@ -410,7 +410,7 @@ QUnit.module('LunchKanban', (hooks) => {
             }
         });
 
-        const wallet = target.querySelector('.o_lunch_banner .col-9 > .d-flex > span:nth-child(2)');
+        const wallet = target.querySelector('.o_lunch_banner .col-8 > .d-flex > span:nth-child(2)');
         assert.equal(wallet.innerText, '12.05€');
 
         click(target, 'div.o_lunch_banner > .row > div:nth-child(3) button');
