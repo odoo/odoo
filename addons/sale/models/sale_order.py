@@ -1366,12 +1366,12 @@ class SaleOrder(models.Model):
         else:
             access_opt = customer_portal_group[2].setdefault('button_access', {})
             is_tx_pending = self.get_portal_last_transaction().state == 'pending'
-            if self._has_to_be_signed(include_draft=True):
+            if self._has_to_be_signed():
                 if self._has_to_be_paid():
                     access_opt['title'] = _("View Quotation") if is_tx_pending else _("Sign & Pay Quotation")
                 else:
                     access_opt['title'] = _("Accept & Sign Quotation")
-            elif self._has_to_be_paid(include_draft=True) and not is_tx_pending:
+            elif self._has_to_be_paid() and not is_tx_pending:
                 access_opt['title'] = _("Accept & Pay Quotation")
             elif self.state in ('draft', 'sent'):
                 access_opt['title'] = _("View Quotation")
@@ -1495,30 +1495,29 @@ class SaleOrder(models.Model):
 
     # PORTAL #
 
-    def _has_to_be_signed(self, include_draft=False):
+    def _has_to_be_signed(self):
         """A sale order has to be signed when:
-        - its state is `sent`, or `draft` if draft sale orders are included;
+        - its state is 'draft' or `sent`
         - it's not expired;
         - it requires a signature;
         - it's not already signed.
 
         Note: self.ensure_one()
 
-        :param bool include_draft: Whether including `draft` sale orders, defaults to False.
         :return: Whether the sale order has to be signed.
         :rtype: bool
         """
         self.ensure_one()
         return (
-            (self.state == 'sent' or (self.state == 'draft' and include_draft))
+            self.state in ['draft', 'sent']
             and not self.is_expired
             and self.require_signature
             and not self.signature
         )
 
-    def _has_to_be_paid(self, include_draft=False):
+    def _has_to_be_paid(self):
         """A sale order has to be paid when:
-        - its state is `sent`, or `draft` if draft sale orders are included;
+        - its state is 'draft' or `sent`;
         - it's not expired;
         - it requires a payment;
         - the last transaction's state isn't `done`;
@@ -1526,14 +1525,13 @@ class SaleOrder(models.Model):
 
         Note: self.ensure_one()
 
-        :param bool include_draft: Whether including `draft` sale orders, defaults to False.
         :return: Whether the sale order has to be paid.
         :rtype: bool
         """
         self.ensure_one()
         transaction = self.get_portal_last_transaction()
         return (
-            (self.state == 'sent' or (self.state == 'draft' and include_draft))
+            self.state in ['draft', 'sent']
             and not self.is_expired
             and self.require_payment
             and transaction.state != 'done'
