@@ -38,6 +38,10 @@
         globalThis.odoo = {};
     }
     var odoo = globalThis.odoo;
+    if (odoo.debug && !new URLSearchParams(location.search).has("debug")) {
+        // remove debug mode if not explicitely set in url
+        odoo.debug = "";
+    }
     var debug = odoo.debug;
 
     var didLogInfoResolve;
