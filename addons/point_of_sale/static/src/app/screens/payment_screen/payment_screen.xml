@@ -20,7 +20,7 @@
                     </div>
                     <div class="center-content d-flex flex-column px-2 w-50">
                         <PaymentScreenStatus order="currentOrder" />
-                        <div class="payment-buttons-container flex-grow-1 d-flex flex-wrap">
+                        <div class="payment-numpad flex-grow-1 d-flex flex-wrap">
                             <PaymentScreenNumpad />
                         </div>
                     </div>
@@ -68,12 +68,12 @@
 
 
     <t t-name="point_of_sale.PaymentScreenButtons" owl="1">
-        <div class="payment-buttons d-flex flex-column flex-wrap p-3 bg-300 ">
-            <button class="button btn btn-light py-3 text-start rounded-0" t-att-class="{ 'highlight text-bg-primary': currentOrder.get_partner() }" 
-                t-on-click="() =&gt; this.selectPartner(false, [])">
+        <div class="payment-buttons d-flex flex-column flex-wrap p-3 bg-300">
+            <button class="button partner-button btn btn-light py-3 text-start rounded-0" 
+                t-att-class="{ 'highlight text-bg-primary': currentOrder.get_partner() }" 
+                t-on-click="() => this.selectPartner(false, [])">
                 <i class="fa fa-user me-2" role="img" title="Customer" />
-                <span t-if="currentOrder.get_partner()" t-esc="partner.name" />
-                <span t-else="">Customer</span>
+                <span class="partner-name" t-esc="currentOrder.get_partner()?.name or 'Customer'" /> 
             </button>
             <button class="button js_invoice btn btn-light py-3 text-start rounded-0" t-att-class="{ 'highlight text-bg-primary': currentOrder.is_to_invoice() }" 
                 t-on-click="toggleIsToInvoice">
