@@ -75,7 +75,7 @@ class StockRule(models.Model):
             else:
                 self.env['change.production.qty'].with_context(skip_activity=True).create({
                     'mo_id': mo.id,
-                    'product_qty': mo.product_uom_qty + procurement.product_qty
+                    'product_qty': mo.product_id.uom_id._compute_quantity((mo.product_uom_qty + procurement.product_qty), mo.product_uom_id)
                 }).change_prod_qty()
 
         note_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
