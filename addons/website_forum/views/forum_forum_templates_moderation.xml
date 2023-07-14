@@ -12,62 +12,42 @@
     </t>
 </template>
 
-<template id="moderation_display_post_answer">
-    <div class="clearfix">
-        <div class="question-name">
-            <a style="font-size: 15px;" t-attf-href="/forum/#{ slug(answer.forum_id) }/#{ answer.parent_id.id }/#answer-#{ answer.id }" t-esc="answer.parent_id.name"/>
-            <b>[Answer]</b>
-            <span t-if="not answer.active and answer.state=='offensive'"><b> [Offensive]</b></span>
-            <span t-if="not answer.active and answer.state=='offensive' and answer.closed_reason_id"><b> [<t t-esc="answer.closed_reason_id.name[0].upper() + answer.closed_reason_id.name[1:]"/>]</b></span>
-            <t t-if="answer.state == 'flagged'">
-                <small class="text-muted">
-                    Flagged
-                </small>
-            </t>
-            <t t-if="len(answer.website_message_ids)&gt;0">
-                (<t t-esc="len(answer.website_message_ids)"/>
-                <t t-if="len(answer.website_message_ids)&gt;1"> Comments</t>
-                <t t-if="len(answer.website_message_ids)&lt;=1"> Comment</t>)
-            </t>
-        </div>
-        <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
-    </div>
-</template>
-
 <!-- Moderation: close a post -->
 <template id="mark_as_offensive">
     <div class="o_mark_offensive">
-        <p class="text-muted" t-if="not offensive">
+        <div class="alert bg-light text-muted" t-if="not offensive">
             If you close this post, it will be hidden for most users. Only
             users having a high karma can see closed posts to moderate
             them.
-        </p>
-        <p class="text-muted" t-if="offensive">
+        </div>
+        <div class="alert bg-light text-muted" t-if="offensive">
             If you mark this post as offensive, it will be hidden for most users. Only
             users having a high karma can see offensive posts to moderate
             them.
-        </p>
-        <form t-attf-action="/forum/#{ slug(forum) }/#{offensive and 'post' or 'question'}/#{slug(question)}/#{offensive and 'mark_as_offensive' or 'close'}" method="post" role="form" class="mt32 js_website_submit_form">
+        </div>
+        <form t-attf-action="/forum/#{ slug(forum) }/#{offensive and 'post' or 'question'}/#{slug(question)}/#{offensive and 'mark_as_offensive' or 'close'}" method="post" role="form" class="js_website_submit_form">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input name="post_id" t-att-value="question.id" type="hidden"/>
-            <div class="mb-3">
-                <label class="form-label" for="post">Post:</label>
-                <input type="text" disabled="True" class="form-control-plaintext" name="post" t-att-value="question.name if not question.parent_id else question.parent_id.name"/>
+            <div class="row g-0 mb-3">
+                <label class="form-label col-lg-2" for="post">Post:</label>
+                <input type="text" disabled="True" class="form-control-plaintext col" name="post" t-att-value="question.name if not question.parent_id else question.parent_id.name"/>
             </div>
-            <div class="mb-4">
-                <label class="form-label" for="reason"><t t-if="offensive">Offensive</t><t t-if="not offensive">Closing</t> Reason:</label>
-                <select class="form-select form-select form-select-lg" name="reason_id">
+            <div class="row g-0 mb-4">
+                <label class="form-label col-lg-2" for="reason"><t t-if="offensive">Offensive</t><t t-if="not offensive">Closing</t> Reason:</label>
+                <select class="form-select form-select col" name="reason_id">
                     <t t-foreach="reasons or []" t-as="reason">
-                        <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-esc="reason.name"/></option>
+                        <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-out="reason.name"/></option>
                     </t>
                 </select>
             </div>
-            <div class="mb-3">
-                <button type="submit" class="btn btn-danger">
-                    <t t-if="offensive">Mark as offensive</t>
-                    <t t-if="not offensive">Close post</t>
-                </button>
-                <a role="button" class="btn btn-light border ms-2" t-attf-href="/forum/#{ slug(forum) }/#{ slug(question) }">Discard</a>
+            <div class="row g-0 mb-3">
+                <div class="col offset-lg-2">
+                    <button type="submit" class="btn btn-danger">
+                        <t t-if="offensive">Mark as offensive</t>
+                        <t t-if="not offensive">Close post</t>
+                    </button>
+                    <a role="button" class="btn btn-link ms-2" t-attf-href="/forum/#{ slug(forum) }/#{ slug(question) }">Discard</a>
+                </div>
             </div>
         </form>
     </div>
@@ -80,23 +60,20 @@
 </template>
 
 <template id="moderation_queue" name="Forum Moderation Queue">
+    <t t-if="queue_type == 'validation'" t-set="_page_name" t-valuef="To Validate"/>
+    <t t-if="queue_type == 'flagged'" t-set="_page_name" t-valuef="Flagged"/>
+    <t t-if="queue_type == 'offensive'" t-set="_page_name" t-valuef="Offensive Posts"/>
+    <t t-if="queue_type == 'close'" t-set="_page_name" t-valuef="Closed Posts"/>
+    <t t-set="website_forum_action" t-value="'o_wforum_moderation_queue'"/>
+
     <t t-call="website_forum.header">
-        <t t-set="website_forum_action" t-value="'o_wforum_moderation_queue'"/>
-        <div t-if="len(posts_ids) > 0" class="mb-2 text-end">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#markAllAsSpam"><i class="fa fa-bug"></i> Filter Tool</button>
-        </div>
-        <div t-attf-class="o_caught_up_alert alert text-center #{len(posts_ids) and 'd-none'}">
-            <i class="fa fa-check text-success d-block display-2"></i>
-            <b>You've Completely Caught Up!</b><br/>
-            <t t-if="queue_type == 'validation'">No post to be validated</t>
-            <t t-if="queue_type == 'flagged'">No flagged posts</t>
-        </div>
+        <t t-if="len(posts_ids) &lt; 1" t-call="website_forum.no_results_message"></t>
 
         <div class="modal fade" t-att-data-spam-ids="str(posts_ids.ids)" id="markAllAsSpam" tabindex="-1" role="dialog" aria-labelledby="markAllAsSpam" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header d-flex align-items-center pb-0">
-                        <div class="text-muted me-2">Filter by:</div>
+                        <div class="me-2 text-muted">Filter by:</div>
                         <ul class="nav nav-tabs border-bottom-0" id="myTab" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active spam_menu" id="user-tab" data-bs-toggle="tab" href="#spam_user" role="tab" aria-controls="user" aria-selected="true"><i class="fa fa-user"/> User</a>
@@ -118,10 +95,10 @@
                                         <div class="card mb-2">
                                             <div class="card-body py-2">
                                                 <div class="form-check">
-                                                    <input type="checkbox" t-att-value="create_user.id" class="form-check-input" t-attf-id="user_#{create_user.id}"/>
-                                                    <label class="form-check-label" t-attf-for="user_#{create_user.id}">
-                                                        <img class="d-inline img o_forum_avatar" t-att-src="website.image_url(create_user, 'avatar_128', '40x40')" alt="Avatar"/>
-                                                        <span t-esc="create_user.name" class="d-inline"/>
+                                                    <input type="checkbox" t-att-value="user.id" class="form-check-input" t-attf-id="user_#{user.id}"/>
+                                                    <label class="form-check-label" t-attf-for="user_#{user.id}">
+                                                        <img class="d-inline img o_wforum_avatar" t-att-src="request.website.image_url(user, 'avatar_128', '40x40')" alt="Avatar"/>
+                                                        <span t-out="user.name" class="d-inline"/>
                                                     </label>
                                                 </div>
                                             </div>
@@ -138,7 +115,7 @@
                                                     <input type="checkbox" class="form-check-input" t-attf-id="country_#{country.id}" t-att-value="country.id"/>
                                                     <label class="form-check-label" t-attf-for="country_#{country.id}">
                                                         <span t-field="country.image_url" t-options='{"widget": "image_url", "class": "country_flag"}' class="me-2"/>
-                                                        <span t-esc="country.name"/>
+                                                        <span t-out="country.name"/>
                                                     </label>
                                                 </div>
                                             </div>
@@ -160,32 +137,85 @@
             </div>
         </div>
         <div t-foreach="posts_ids" t-as="question" class="post_to_validate card mb-3">
+            <div class="card-header">
+                <div class="row align-items-baseline">
+                    <h6 class="col-md-2 mb-0">
+                        <b t-if="question.parent_id" >Answer:</b>
+                        <b t-else="" >Question:</b>
+                    </h6>
+                    <div class="col d-flex align-items-center justify-content-between">
+                        <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{answer and ('/#answer-%s' % answer.id)}"
+                            t-attf-title="Read: #{question.name}"
+                            t-attf-class="text-reset"
+                            t-out="question.name"/>
+                    </div>
+                    <div class="col-lg-3 d-lg-flex">
+                        <span t-if="not question.active and question.state=='offensive'" class="badge bg-warning text-wrap">Offensive</span>
+                        <span t-if="not question.active and question.state=='offensive' and question.closed_reason_id" class="badge bg-warning text-wrap" t-out="question.closed_reason_id.name[0].upper() + question.closed_reason_id.name[1:]"/>
+                        <span t-if="question.closed_reason_id" class="badge bg-danger text-wrap" t-out="question.closed_reason_id.name[0].upper() + question.closed_reason_id.name[1:]"/>
+                    </div>
+                </div>
+            </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-2 col-sm-3 o_js_validation_queue border-end">
-                        <div class="text-center d-flex align-items-end flex-sm-column justify-content-end align-items-sm-stretch">
-                            <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" title="Validate" aria-label="Validate" data-bs-toggle="tooltip" class="btn border-success m-1 bg-white"><i class="fa fa-check text-success"/></a>
-                            <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" data-bs-toggle="tooltip" title="Refuse" aria-label="Refuse" class="btn border-danger m-1 bg-white"><i class="fa fa-times text-danger"/></a>
-                            <a t-if="queue_type == 'flagged'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/ask_for_mark_as_offensive" data-bs-toggle="tooltip" aria-label="Mark as offensive" title="Mark as offensive" class="btn border-danger m-1 bg-white"><i class="fa fa-times text-danger"/></a>
-                            <a href="#" t-if="queue_type == 'offensive'" disabled="True" aria-label="Offensive" title="Offensive" data-bs-toggle="tooltip" class="btn border-danger bg-white"><i class="fa fa-times m-1 text-danger"/></a>
-                        </div>
-                    </div>
                     <t t-if="question.parent_id">
-                        <div t-foreach="question" t-as="answer" class="col-md-10 col-sm-8">
-                            <t t-call="website_forum.moderation_display_post_answer"/>
-                            <small class="text-muted">
-                                 <i t-attf-class="fa fa-user" role="img" aria-label="Question" />
-                                <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
-                                <i class="ms-4 mr4 fa fa-calendar"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
-                                <span t-if="question.state == 'flagged'" class="text-black">
-                                    <i class="fa fa-flag ms-4 mr4"/>
-                                    Flagged
-                                </span>
-                            </small>
+                        <div t-foreach="question" t-as="answer" class="d-flex flex-column col-md-9 col-sm-8 mb-2">
+                            <span t-field="answer.content" class="oe_no_empty flex-grow-1 mb-2"/>
+                            <div class="mt-auto">
+                                <t t-call="website_forum.author_box">
+                                    <t t-set="object" t-value="question"/>
+                                    <t t-set="_image_classes" t-value="'rounded-circle'"/>
+                                    <t t-set="allow_biography" t-value="True"/>
+                                    <t t-set="show_image" t-value="True"/>
+                                    <t t-set="show_name" t-value="True"/>
+                                    <t t-set="compact" t-value="True"/>
+                                </t>
+                                <small class="text-muted">
+                                    <i class="ms-4 mr4 fa fa-calendar"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                                </small>
+                            </div>
                         </div>
                     </t>
-                    <div t-if="not question.parent_id" class="col">
-                        <t t-call="website_forum.moderation_display_post_question_block"/>
+                    <div t-if="not question.parent_id" class="d-flex flex-column col">
+                        <span t-field="question.content" class="oe_no_empty flex-grow-1"/>
+                        <div class="mt-auto">
+                            <t t-call="website_forum.author_box">
+                                <t t-set="object" t-value="question"/>
+                                <t t-set="_image_classes" t-value="'rounded-circle'"/>
+                                <t t-set="allow_biography" t-value="True"/>
+                                <t t-set="show_image" t-value="True"/>
+                                <t t-set="show_name" t-value="True"/>
+                                <t t-set="compact" t-value="True"/>
+                            </t>
+                            <small class="text-muted">
+                                <i class="fa fa-calendar ms-4 me-1"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 o_js_validation_queue">
+                        <div class="text-center d-flex flex-row gap-2 flex-lg-column align-items-stretch mt-2 mt-lg-0">
+                            <t t-if="queue_type == 'close'" t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"/>
+                                <t t-set="label">Reopen</t>
+                                <t t-set="icon" t-value="'fa fa-folder-open'"/>
+                                <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
+                                <t t-set="form_classes" t-value="'d-flex'"/>
+                                <t t-set="classes" t-value="'btn-outline-primary flex-grow-1'"/>
+                            </t>
+                            <t t-if="queue_type == 'close'" t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
+                                <t t-set="label">Delete</t>
+                                <t t-set="icon" t-value="'fa fa-trash'"/>
+                                <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
+                                <t t-set="form_classes" t-value="'d-flex'"/>
+                                <t t-set="classes" t-value="'btn-outline-danger flex-grow-1'"/>
+                            </t>
+
+                            <a t-else="" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" title="Validate" aria-label="Validate" class="btn btn-outline-success flex-grow-1"><i class="fa fa-check"/><span class="ms-2">Accept</span></a>
+                            <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" title="Refuse" aria-label="Refuse" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Reject</span></a>
+                            <a t-if="queue_type == 'flagged'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Offensive</span></a>
+                            <a t-if="queue_type == 'offensive'" href="#" disabled="disabled" aria-label="Offensive" title="Offensive" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Offensive</span></a>
+                        </div>
                     </div>
                 </div>
             </div>
