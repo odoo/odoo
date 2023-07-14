@@ -19,6 +19,7 @@ import {
     rightPos,
     moveNodes,
     nodeSize,
+    paragraphRelatedElements,
     prepareUpdate,
     setSelection,
     isMediaElement,
@@ -91,7 +92,22 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
         if (isUnbreakable(this) && (REGEX_BOOTSTRAP_COLUMN.test(this.className) || !isEmptyBlock(this))) {
             throw UNBREAKABLE_ROLLBACK_CODE;
         }
-        const parentEl = this.parentNode;
+        const parentEl = this.parentElement;
+        // Handle editable sub-nodes
+        if (
+            parentEl &&
+            parentEl.getAttribute("contenteditable") === "true" &&
+            parentEl.oid !== "root" &&
+            parentEl.parentElement &&
+            !parentEl.parentElement.isContentEditable &&
+            paragraphRelatedElements.includes(this.tagName) &&
+            !this.previousElementSibling
+        ) {
+            // The first child element of a contenteditable="true" zone which
+            // itself is contained in a contenteditable="false" zone can not be
+            // removed if it is paragraph-like.
+            throw UNREMOVABLE_ROLLBACK_CODE;
+        }
         const closestLi = closestElement(this, 'li');
         if ((closestLi && !closestLi.previousElementSibling) || !isBlock(this) || isVisibleEmpty(this)) {
             /**
