@@ -59,23 +59,13 @@
                     **/
 
                     /** The footers are not at the bottom of the page, so we push them down. **/
-                    .o_background_footer  {
-                        margin-top: 295px !important;
+                    .o_background_footer, .o_standard_footer, .o_boxed_footer, .o_clean_footer {
+                        position: absolute;
+                        bottom: 0;
+                        left:50px;
+                        right:50px;
                         font-size: 0.8rem
                     }
-                    .o_standard_footer {
-                        margin-top: 200px !important;
-                        font-size: 0.8rem
-                    }
-                    .o_boxed_footer {
-                         margin-top: 270px !important;
-                         font-size: 0.8rem
-                    }
-                    .o_clean_footer {
-                         margin-top: 175px !important;
-                         font-size: 0.8rem
-                    }
-
                     /** Avoid image overflowing and creating a scrollbar **/
                     .o_background_header {
                         min-width: initial !important;
