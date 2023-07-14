@@ -7,9 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    group_attendance_use_pin = fields.Boolean(
-        string='Employee PIN',
-        implied_group="hr_attendance.group_hr_attendance_use_pin")
     hr_attendance_overtime = fields.Boolean(
         string="Count Extra Hours", readonly=False)
     overtime_start_date = fields.Date(string="Extra Hours Starting Date", readonly=False)
@@ -17,9 +14,13 @@ class ResConfigSettings(models.TransientModel):
         string="Tolerance Time In Favor Of Company", readonly=False)
     overtime_employee_threshold = fields.Integer(
         string="Tolerance Time In Favor Of Employee", readonly=False)
+    hr_attendance_display_overtime = fields.Boolean(related='company_id.hr_attendance_display_overtime', readonly=False)
     attendance_kiosk_mode = fields.Selection(related='company_id.attendance_kiosk_mode', readonly=False)
     attendance_barcode_source = fields.Selection(related='company_id.attendance_barcode_source', readonly=False)
     attendance_kiosk_delay = fields.Integer(related='company_id.attendance_kiosk_delay', readonly=False)
+    attendance_kiosk_url = fields.Char(related='company_id.attendance_kiosk_url')
+    attendance_kiosk_use_pin = fields.Boolean(related='company_id.attendance_kiosk_use_pin', readonly=False)
+    attendance_from_systray = fields.Boolean(related="company_id.attendance_from_systray", readonly=False)
 
     @api.model
     def get_values(self):
@@ -47,3 +48,7 @@ class ResConfigSettings(models.TransientModel):
         ]
         if any(self[field] != company[field] for field in fields_to_check):
             company.write({field: self[field] for field in fields_to_check})
+
+    def regenerate_kiosk_key(self):
+        if self.user_has_groups("hr_attendance.group_hr_attendance_manager"):
+            self.company_id._regenerate_attendance_kiosk_key()
