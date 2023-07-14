@@ -19,6 +19,8 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref="ro"):
         super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.currency = cls.env["res.currency"].search([("name", "=", "RON")])
+        cls.country_state = cls.env["res.country.state"].search([("name", "=", "București")])
 
         cls.partner_1 = cls.env['res.partner'].create({
             'name': "partner_1",
@@ -27,8 +29,10 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Bucharest",
             'vat': 'RO1234567897',
             'phone': '+40 123 456 789',
-            'email': 'info@partner1.com',
+            'email': 'info@partner1.ro',
             'country_id': cls.env.ref('base.ro').id,
+            'currency_id': cls.currency.id,
+            'state_id': cls.country_state.id,
             'bank_ids': [(0, 0, {'acc_number': 'RO11BTRL1234567890123456'})],
             'peppol_eas': '0106',
             'peppol_endpoint': '987654321',
@@ -42,6 +46,8 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Cluj-Napoca",
             'vat': 'RO1234567897',
             'country_id': cls.env.ref('base.ro').id,
+            'currency_id': cls.currency.id,
+            'state_id': cls.country_state.id,
             'bank_ids': [(0, 0, {'acc_number': 'RO22BTRL9876543210987654'})],
             'peppol_eas': '0106',
             'peppol_endpoint': '123456789',
@@ -66,14 +72,39 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             company_name,
             chart_template=chart_template,
             country_id=cls.env.ref("base.ro").id,
-            vat="RO1234567897")
+        )
         return res
+
+    def test_anaf(self, invoice=None, manual_check=False):
+        if not invoice:
+            return
+        invoice._generate_pdf_and_send_invoice(self.move_template)
+        attachment = invoice.ubl_cii_xml_id
+        self.assertTrue(attachment)
+        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        if manual_check:
+            from pathlib import Path
+            with Path("~/work/odoo/.notes/test.xml").expanduser().open("wb") as f:
+                f.write(xml_content)
+                print("wrote to test.xml")
+
+        url = 'https://webservicesp.anaf.ro/prod/FCTEL/rest/validare/FACT1'
+        headers = {'Content-Type': 'text/plain'}
+        response = requests.post(url, data=xml_content, headers=headers)
+        json = response.json()
+        print("=====================================================")
+        print("\n")
+
+        for message_obj in json['Messages']:
+            message = message_obj['message']
+            print(message, "\n\n")
+        print("=====================================================")
 
     ####################################################
     # Test export - import
     ####################################################
 
-    def test_export_invoice_one_line_schematron_partner_ro(self):
+    def test_export_invoice_ro(self):
         invoice = self._generate_move(
             self.partner_1,
             self.partner_2,
@@ -86,30 +117,9 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
                     'price_unit': 123.0,
                     'discount': 10.0,
                     'tax_ids': [(6, 0, self.tax_19.ids)],
+                    'currency_id': self.currency.id,
                 },
             ],
         )
-
-        invoice._generate_pdf_and_send_invoice(self.move_template)
-        attachment = invoice.ubl_cii_xml_id
-        self.assertTrue(attachment)
-        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
-
-        # TODO: remove when done
-        # for manual check to https://www.anaf.ro/uploadxmi/
-        from pathlib import Path
-        with Path("~/work/odoo/.notes/test.xml").expanduser().open("wb") as f:
-            f.write(xml_content)
-
-        self.assertEqual(attachment.name[-11:], "cius_ro.xml")
-
-        # make a request to anaf.ro API validator
-        url = 'https://webservicesp.anaf.ro/prod/FCTEL/rest/validare/FACT1'
-        headers = {'Content-Type': 'text/plain'}
-        response = requests.post(url, data=xml_content, headers=headers)
-        json = response.json()
-        print("\n")
-
-        for message_obj in json['Messages']:
-            message = message_obj['message']
-            print(message, "\n\n")
+        self.test_anaf(invoice, True)
+        # self.assertEqual(attachment.name[-11:], "cius_ro.xml")

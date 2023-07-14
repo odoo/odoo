@@ -2,15 +2,15 @@
 
 from odoo import models
 
-ISO_3166_RO_CODES = {"Alba": "RO-AB", "Arad": "RO-AR", "Argeș": "RO-AG", "Bacău": "RO-BC", "Bihor": "RO-BH",
-                     "Bistrița-Năsăud": "RO-BN", "Botoșani": "RO-BT", "Brașov": "RO-BV", "Brăila": "RO-BR",
-                     "Buzău": "RO-BZ", "Caraș-Severin": "RO-CS", "Călărași": "RO-CL", "Cluj": "RO-CJ",
-                     "Constanța": "RO-CT", "Covasna": "RO-CV", "Dâmbovița": "RO-DB", "Dolj": "RO-DJ", "Galați": "RO-GL",
-                     "Giurgiu": "RO-GR", "Gorj": "RO-GJ", "Harghita": "RO-HR", "Hunedoara": "RO-HD",
-                     "Ialomița": "RO-IL", "Iași": "RO-IS", "Ilfov": "RO-IF", "Maramureș": "RO-MM", "Mehedinți": "RO-MH",
-                     "Mureș": "RO-MS", "Neamț": "RO-NT", "Olt": "RO-OT", "Prahova": "RO-PH", "Satu Mare": "RO-SM",
-                     "Sălaj": "RO-SJ", "Sibiu": "RO-SB", "Suceava": "RO-SV", "Teleorman": "RO-TR", "Timiș": "RO-TM",
-                     "Tulcea": "RO-TL", "Vaslui": "RO-VS", "Vâlcea": "RO-VL", "Vrancea": "RO-VN", "București": "RO-B", }
+# ISO_3166_RO_CODES = {"Alba": "RO-AB", "Arad": "RO-AR", "Argeș": "RO-AG", "Bacău": "RO-BC", "Bihor": "RO-BH",
+#                      "Bistrița-Năsăud": "RO-BN", "Botoșani": "RO-BT", "Brașov": "RO-BV", "Brăila": "RO-BR",
+#                      "Buzău": "RO-BZ", "Caraș-Severin": "RO-CS", "Călărași": "RO-CL", "Cluj": "RO-CJ",
+#                      "Constanța": "RO-CT", "Covasna": "RO-CV", "Dâmbovița": "RO-DB", "Dolj": "RO-DJ", "Galați": "RO-GL",
+#                      "Giurgiu": "RO-GR", "Gorj": "RO-GJ", "Harghita": "RO-HR", "Hunedoara": "RO-HD",
+#                      "Ialomița": "RO-IL", "Iași": "RO-IS", "Ilfov": "RO-IF", "Maramureș": "RO-MM", "Mehedinți": "RO-MH",
+#                      "Mureș": "RO-MS", "Neamț": "RO-NT", "Olt": "RO-OT", "Prahova": "RO-PH", "Satu Mare": "RO-SM",
+#                      "Sălaj": "RO-SJ", "Sibiu": "RO-SB", "Suceava": "RO-SV", "Teleorman": "RO-TR", "Timiș": "RO-TM",
+#                      "Tulcea": "RO-TL", "Vaslui": "RO-VS", "Vâlcea": "RO-VL", "Vrancea": "RO-VN", "București": "RO-B", }
 
 
 class AccountEdiXmlUBLRO(models.AbstractModel):
@@ -23,11 +23,12 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
 
     def _get_partner_address_vals(self, partner):
         # EXTENDS account.edi.xml.ubl_bis3
-        partner = super()._get_partner_address_vals(partner)
+        vals = super()._get_partner_address_vals(partner)
 
         # TODO
+        # vals["country_subentity"] = ISO_3166_RO_CODES[vals["city_name"]]
 
-        return partner
+        return vals
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
