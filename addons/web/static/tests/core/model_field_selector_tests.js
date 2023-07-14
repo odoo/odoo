@@ -43,7 +43,7 @@ function getDisplayedFieldNames(target) {
     );
 }
 
-function getModelFieldSelectorValues(target) {
+export function getModelFieldSelectorValues(target) {
     return getNodesTextContent(target.querySelectorAll("span.o_model_field_selector_chain_part"));
 }
 
