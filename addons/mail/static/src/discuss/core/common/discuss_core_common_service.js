@@ -61,6 +61,14 @@ export class DiscussCoreCommon {
                     { type: "info" }
                 );
             });
+            this.busService.subscribe("discuss.channel/legacy_insert", (payload) => {
+                this.threadService.insert({
+                    id: payload.channel.id,
+                    model: "discuss.channel",
+                    type: payload.channel.channel_type,
+                    ...payload,
+                });
+            });
             this.busService.addEventListener("notification", ({ detail: notifications }) => {
                 // Do not handle new message notification if the channel was just left. This issue
                 // occurs because the "discuss.channel/leave" and the "discuss.channel/new_message"
