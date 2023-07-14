@@ -15,6 +15,7 @@ let nextId = 1;
 patch(ThreadService.prototype, "mail/core/web", {
     setup(env, services) {
         this._super(env, services);
+        this.action = services.action;
         /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
         /** @type {import("@mail/core/web/activity_service").ActivityService} */
@@ -199,8 +200,22 @@ patch(ThreadService.prototype, "mail/core/web", {
         }
     },
     open(thread, replaceNewMessageChatWindow) {
-        if (!this.store.discuss.isActive || this.ui.isSmall) {
-            this.chatWindowService.open(thread, replaceNewMessageChatWindow);
+        if (!this.store.discuss.isActive && !this.ui.isSmall) {
+            this._openChatWindow(thread, replaceNewMessageChatWindow);
+            return;
+        }
+        if (this.ui.isSmall && thread.model === "discuss.channel") {
+            this._openChatWindow(thread, replaceNewMessageChatWindow);
+            return;
+        }
+        if (thread.model !== "discuss.channel") {
+            this.action.doAction({
+                type: "ir.actions.act_window",
+                res_id: thread.id,
+                res_model: thread.model,
+                views: [[false, "form"]],
+            });
+            return;
         }
         this._super(thread, replaceNewMessageChatWindow);
     },
@@ -227,11 +242,24 @@ patch(ThreadService.prototype, "mail/core/web", {
         }
         this._super(...arguments);
     },
+    _openChatWindow(thread, replaceNewMessageChatWindow) {
+        const chatWindow = this.chatWindowService.insert({
+            folded: false,
+            thread,
+            replaceNewMessageChatWindow,
+        });
+        chatWindow.autofocus++;
+        if (thread) {
+            thread.state = "open";
+        }
+        this.chatWindowService.notifyState(chatWindow);
+    },
 });
 
 patch(threadService, "mail/core/web", {
     dependencies: [
         ...threadService.dependencies,
+        "action",
         "mail.activity",
         "mail.attachment",
         "mail.chat_window",
