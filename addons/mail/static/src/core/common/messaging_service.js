@@ -166,22 +166,6 @@ export class Messaging {
                 case "mail.record/insert":
                     this._handleNotificationRecordInsert(notif);
                     break;
-                case "discuss.channel/joined": {
-                    const { channel, invited_by_user_id: invitedByUserId } = notif.payload;
-                    const thread = this.threadService.insert({
-                        ...channel,
-                        model: "discuss.channel",
-                        channel: channel.channel,
-                        type: channel.channel.channel_type,
-                    });
-                    if (invitedByUserId && invitedByUserId !== this.store.user?.user?.id) {
-                        this.notificationService.add(
-                            sprintf(_t("You have been invited to #%s"), thread.displayName),
-                            { type: "info" }
-                        );
-                    }
-                    break;
-                }
                 case "discuss.channel/legacy_insert":
                     this.threadService.insert({
                         id: notif.payload.channel.id,
