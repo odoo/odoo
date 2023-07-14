@@ -10182,8 +10182,28 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_widget").textContent,
             '{"foo":"My little Foo Value","bar":false}'
         );
+    });
 
-        widgetRegistry.remove("test_widget");
+    QUnit.test("widget with class attribute", async function (assert) {
+        class MyComponent extends owl.Component {
+            static template = owl.xml`<span>Hello</span>`;
+        }
+        const myComponent = {
+            component: MyComponent,
+        };
+        widgetRegistry.add("test_widget", myComponent);
+
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <widget name="test_widget" class="my_classname"/>
+                </form>`,
+        });
+
+        assert.containsOnce(target, ".o_widget.my_classname");
     });
 
     QUnit.test("support header button as widgets on form statusbar", async function (assert) {
