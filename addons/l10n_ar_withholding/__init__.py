@@ -14,6 +14,7 @@ def _l10n_ar_withholding_post_init(env):
         data = {
             model: env['account.chart.template']._parse_csv(template_code, model, module='l10n_ar_withholding')
             for model in [
+                'account.account',
                 'account.tax.group',
                 'account.tax',
                 'ir.sequence',
@@ -23,3 +24,4 @@ def _l10n_ar_withholding_post_init(env):
         for company in env['res.company'].search([('chart_template', '=', template_code)]):
             _logger.info("Company %s already has the Argentinean localization installed, updating...", company.name)
             env['account.chart.template'].with_company(company)._load_data(data)
+            env['account.chart.template'].with_company(company)._post_load_data(template_code, company, data)

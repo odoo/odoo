@@ -1,0 +1,26 @@
+<odoo>
+    <template inherit_id="account.report_payment_receipt_document" id="report_payment_receipt_document">
+        <xpath expr="//table" position="after">
+            <table id="l10n_ar_withholding" t-if="payment.withholding_ids" class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th><span>Withholding</span></th>
+                            <th><span>Amount</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="payment.withholding_ids" t-as="line">
+                            <tr>
+                                <td>
+                                    <span t-field='line.name'/> 
+                                </td>
+                                <td class="text-end">
+                                    <span t-options="{'widget': 'monetary', 'display_currency': currencyPayment}" t-field="line.amount_currency"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+            </table>
+        </xpath>
+    </template>
+</odoo>
