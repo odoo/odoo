@@ -198,7 +198,8 @@
                                             <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" attrs="{'invisible': [('barcode', '=', False)]}"/>
                                         </div>
                                     </group>
-                                    <group string='Payroll' name="payroll_group">
+                                    <!-- Todo: remove me master -->
+                                    <group string='Payroll' name="payroll_group" invisible="1">
                                         <field name="job_id"/>
                                     </group>
                                     <group name="application_group" string="Application Settings" invisible="1"/>
