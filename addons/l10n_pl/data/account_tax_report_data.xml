@@ -16,10 +16,12 @@
             <record id="account_tax_report_line_razem_c" model="account.report.line">
                 <field name="name">Base - Total C</field>
                 <field name="aggregation_formula">PLTAXC_01_10.balance + PLTAXC_02_11.balance + PLTAXC_03_13.balance + PLTAXC_04_15.balance + PLTAXC_05_17.balance + PLTAXC_06_19.balance + PLTAXC_07_21.balance + PLTAXC_08_22.balance + PLTAXC_09_23.balance + PLTAXC_10_25.balance + PLTAXC_11_27.balance + PLTAXC_12_31.balance</field>
+                <field name="sequence">10</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_kraj_zwolnione" model="account.report.line">
                         <field name="name">Base - Supply of goods/services, domestic, exempt</field>
                         <field name="code">PLTAXC_01_10</field>
+                        <field name="sequence">20</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_kraj_zwolnione_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -31,6 +33,7 @@
                     <record id="account_tax_report_line_poza_kraj" model="account.report.line">
                         <field name="name">Base - Supply of goods/services, out of the country</field>
                         <field name="code">PLTAXC_02_11</field>
+                        <field name="sequence">30</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_poza_kraj_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -42,6 +45,7 @@
                             <record id="account_tax_report_line_uslugi_art_100_1_4" model="account.report.line">
                                 <field name="name">Base - Services included in art. 100.1.4</field>
                                 <field name="code">PLTAXC_02a_12</field>
+                                <field name="sequence">40</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_uslugi_art_100_1_4_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -55,6 +59,7 @@
                     <record id="account_tax_report_line_uslugi_kraj_0" model="account.report.line">
                         <field name="name">Base - Supply of goods/services, domestic, 0%</field>
                         <field name="code">PLTAXC_03_13</field>
+                        <field name="sequence">50</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_uslugi_kraj_0_tag" model="account.report.expression">
                                 <field name="label">tag</field>
@@ -71,6 +76,7 @@
                             <record id="account_tax_report_line_towary_art_129" model="account.report.line">
                                 <field name="name">Base - Goods under art. 129</field>
                                 <field name="code">PLTAXC_03_14</field>
+                                <field name="sequence">60</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_towary_art_129_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -84,6 +90,7 @@
                     <record id="account_tax_report_line_kraj_3_lub_5" model="account.report.line">
                         <field name="name">Base - Supply of goods/services, domestic, 3% or 5%</field>
                         <field name="code">PLTAXC_04_15</field>
+                        <field name="sequence">70</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_kraj_3_lub_5_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -95,6 +102,7 @@
                     <record id="account_tax_report_line_kraj_7_lub_8" model="account.report.line">
                         <field name="name">Base - Supply of goods/services, domestic, 7% or 8%</field>
                         <field name="code">PLTAXC_05_17</field>
+                        <field name="sequence">80</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_kraj_7_lub_8_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -106,6 +114,7 @@
                     <record id="account_tax_report_line_kraj_22_lub_23" model="account.report.line">
                         <field name="name">Base - Supply of goods/services, domestic, 22% or 23%</field>
                         <field name="code">PLTAXC_06_19</field>
+                        <field name="sequence">90</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_kraj_22_lub_23_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -117,6 +126,7 @@
                     <record id="account_tax_report_line_dostawa_towarow" model="account.report.line">
                         <field name="name">Base - Intra-Community supply of goods</field>
                         <field name="code">PLTAXC_07_21</field>
+                        <field name="sequence">100</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_dostawa_towarow_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -128,6 +138,7 @@
                     <record id="account_tax_report_line_eksport_towarow" model="account.report.line">
                         <field name="name">Base - Export of goods</field>
                         <field name="code">PLTAXC_08_22</field>
+                        <field name="sequence">110</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_eksport_towarow_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -139,6 +150,7 @@
                     <record id="account_tax_report_line_nabycie_towarow" model="account.report.line">
                         <field name="name">Base - Intra-Community acquisition of goods</field>
                         <field name="code">PLTAXC_09_23</field>
+                        <field name="sequence">120</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_nabycie_towarow_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -150,6 +162,7 @@
                     <record id="account_tax_report_line_art_33a" model="account.report.line">
                         <field name="name">Base - Import of goods under art. 33a</field>
                         <field name="code">PLTAXC_10_25</field>
+                        <field name="sequence">130</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_art_33a_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -161,6 +174,7 @@
                     <record id="account_tax_report_line_import_uslug" model="account.report.line">
                         <field name="name">Base - Importation of services</field>
                         <field name="code">PLTAXC_11_27</field>
+                        <field name="sequence">140</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_import_uslug_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -172,6 +186,7 @@
                             <record id="account_tax_report_line_art_28b" model="account.report.line">
                                 <field name="name">Base - Acquisition under art. 28b</field>
                                 <field name="code">PLTAXC_11a_29</field>
+                                <field name="sequence">150</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_art_28b_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -185,6 +200,7 @@
                     <record id="account_tax_report_line_podatnik_nabywca" model="account.report.line">
                         <field name="name">Base - Supply of goods, taxable person acquiring</field>
                         <field name="code">PLTAXC_12_31</field>
+                        <field name="sequence">160</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_podatnik_nabywca_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -198,10 +214,12 @@
             <record id="account_tax_report_line_razem_d" model="account.report.line">
                 <field name="name">Base - Total D</field>
                 <field name="aggregation_formula">PLTAXD_02_40.balance + PLTAXD_02_42.balance</field>
+                <field name="sequence">170</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_uslug_s_trwale" model="account.report.line">
                         <field name="name">Basis - Acquisition of goods and services, fixed assets</field>
                         <field name="code">PLTAXD_02_40</field>
+                        <field name="sequence">180</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_uslug_s_trwale_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -213,6 +231,7 @@
                     <record id="account_tax_report_line_uslug_pozostalych" model="account.report.line">
                         <field name="name">Base - Purchase of other goods and services</field>
                         <field name="code">PLTAXD_02_42</field>
+                        <field name="sequence">190</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_uslug_pozostalych_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -226,6 +245,8 @@
             <record id="account_tax_report_line_do_przeniesienia" model="account.report.line">
                 <field name="name">Tax - To be carried over</field>
                 <field name="code">PLTAX</field>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="sequence">200</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_do_przeniesienia_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -245,10 +266,12 @@
                         <field name="name">Tax - Total C</field>
                         <field name="code">PLTAXC</field>
                         <field name="aggregation_formula">PLTAXC_04_16.balance + PLTAXC_05_18.balance + PLTAXC_06_20.balance + PLTAXC_09_24.formula + PLTAXC_10_26.balance + PLTAXC_11_28.balance + PLTAXC_12_32.balance + PLTAXC_12_33.balance + PLTAXC_01_34.balance</field>
+                        <field name="sequence">210</field>
                         <field name="children_ids">
                             <record id="account_tax_report_line_podatek_kraj_3_lub_5" model="account.report.line">
                                 <field name="name">Tax - Supply of goods/services, domestic, 3% or 5%</field>
                                 <field name="code">PLTAXC_04_16</field>
+                                <field name="sequence">220</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_kraj_3_lub_5_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -260,6 +283,7 @@
                             <record id="account_tax_report_line_podatek_kraj_7_lub_8" model="account.report.line">
                                 <field name="name">Tax - Supply of goods/services, domestic, 7% or 8%</field>
                                 <field name="code">PLTAXC_05_18</field>
+                                <field name="sequence">230</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_kraj_7_lub_8_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -271,6 +295,7 @@
                             <record id="account_tax_report_line_podatek_kraj_22_lub_23" model="account.report.line">
                                 <field name="name">Tax - Supply of goods/services, domestic, 22% or 23%</field>
                                 <field name="code">PLTAXC_06_20</field>
+                                <field name="sequence">240</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_kraj_22_lub_23_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -282,6 +307,7 @@
                             <record id="account_tax_report_line_podatek_nabycie_towarow" model="account.report.line">
                                 <field name="name">Tax - Intra-Community acquisition of goods</field>
                                 <field name="code">PLTAXC_09_24</field>
+                                <field name="sequence">250</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_nabycie_towarow_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -298,6 +324,7 @@
                                     <record id="account_tax_report_line_podatek_transp_termin" model="account.report.line">
                                         <field name="name">Tax - Inter-Community acquisition of means of transport</field>
                                         <field name="code">PLTAXC_10_35</field>
+                                        <field name="sequence">260</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_podatek_transp_termin_tag" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -311,6 +338,7 @@
                             <record id="account_tax_report_line_podatek_art_33a" model="account.report.line">
                                 <field name="name">Tax - Importation of goods under art. 33a</field>
                                 <field name="code">PLTAXC_10_26</field>
+                                <field name="sequence">270</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_art_33a_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -322,6 +350,7 @@
                             <record id="account_tax_report_line_podatek_import_uslug" model="account.report.line">
                                 <field name="name">Tax - Importation of services</field>
                                 <field name="code">PLTAXC_11_28</field>
+                                <field name="sequence">280</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_import_uslug_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -333,6 +362,7 @@
                                     <record id="account_tax_report_line_podatek_art_28b" model="account.report.line">
                                         <field name="name">Tax - Acquisition under art. 28b</field>
                                         <field name="code">PLTAXC_11a_30</field>
+                                        <field name="sequence">290</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_podatek_art_28b_tag" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -346,6 +376,7 @@
                             <record id="account_tax_report_line_podatek_podatnik_nabywca" model="account.report.line">
                                 <field name="name">Tax - Supply of goods, taxable person acquiring</field>
                                 <field name="code">PLTAXC_12_32</field>
+                                <field name="sequence">300</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_podatnik_nabywca_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -357,6 +388,7 @@
                             <record id="account_tax_report_line_podatek_art_14_5" model="account.report.line">
                                 <field name="name">Tax - From physical inventory under art. 14.5</field>
                                 <field name="code">PLTAXC_12_33</field>
+                                <field name="sequence">310</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_art_14_5_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -368,6 +400,7 @@
                             <record id="account_tax_report_line_kasy_rejestrujace" model="account.report.line">
                                 <field name="name">Tax - Expenditure on cash registers</field>
                                 <field name="code">PLTAXC_01_34</field>
+                                <field name="sequence">320</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_kasy_rejestrujace_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -379,6 +412,7 @@
                             <record id="account_tax_report_line_wewnątrzwspólnotowe_103_5a" model="account.report.line">
                                 <field name="name">Tax - Intra-Community acquisition of goods under art. 103 sec. 5a</field>
                                 <field name="code">PLTAXC_01_36</field>
+                                <field name="sequence">330</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_wewnątrzwspólnotowe_103_5a_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -393,10 +427,12 @@
                         <field name="name">Tax - Total D</field>
                         <field name="code">PLTAXD</field>
                         <field name="aggregation_formula">PLTAXC_39.balance + PLTAXD_02_41.balance + PLTAXD_02_43.balance + PLTAXD_02_44.balance + PLTAXD_02_45.balance + PLTAXD_02_46.balance + PLTAXD_02_47.balance</field>
+                        <field name="sequence">340</field>
                         <field name="children_ids">
                             <record id="account_tax_report_line_podatek_deklaracji" model="account.report.line">
                                 <field name="name">Tax - Surplus from previous declaration</field>
                                 <field name="code">PLTAXC_39</field>
+                                <field name="sequence">350</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_deklaracji_applied_carryover" model="account.report.expression">
                                         <field name="label">_applied_carryover_balance</field>
@@ -419,6 +455,7 @@
                             <record id="account_tax_report_line_podatek_s_trwale" model="account.report.line">
                                 <field name="name">Tax - Acquisition of goods and services, fixed assets</field>
                                 <field name="code">PLTAXD_02_41</field>
+                                <field name="sequence">360</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_s_trwale_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -430,6 +467,7 @@
                             <record id="account_tax_report_line_podatek_uslug_pozostalych" model="account.report.line">
                                 <field name="name">Tax - Purchase of other goods and services</field>
                                 <field name="code">PLTAXD_02_43</field>
+                                <field name="sequence">370</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_uslug_pozostalych_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -441,6 +479,7 @@
                             <record id="account_tax_report_line_podatek_s_trwalych" model="account.report.line">
                                 <field name="name">Tax - Adjustment of input tax on acquisition of fixed assets</field>
                                 <field name="code">PLTAXD_02_44</field>
+                                <field name="sequence">380</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_s_trwalych_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -452,6 +491,7 @@
                             <record id="account_tax_report_line_podatek_pozostalych_nabyc" model="account.report.line">
                                 <field name="name">Tax - Adjustment of input tax on other acquisitions</field>
                                 <field name="code">PLTAXD_02_45</field>
+                                <field name="sequence">390</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_pozostalych_nabyc_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -463,6 +503,7 @@
                             <record id="account_tax_report_line_korekta_art89b1" model="account.report.line">
                                 <field name="name">Tax - Input tax adjustments under art. 89b sec 1</field>
                                 <field name="code">PLTAXD_02_46</field>
+                                <field name="sequence">400</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_korekta_art89b1_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -474,6 +515,7 @@
                             <record id="account_tax_report_line_korekta_art89b4" model="account.report.line">
                                 <field name="name">Tax - Input tax adjustments under art. 89b sec 4</field>
                                 <field name="code">PLTAXD_02_47</field>
+                                <field name="sequence">410</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_korekta_art89b4_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -487,6 +529,7 @@
                     <record id="account_tax_report_line_podatek_okresie" model="account.report.line">
                         <field name="name">Tax - Expenditure on cash registers to be reimbursed in the period</field>
                         <field name="code">PLTAX_49</field>
+                        <field name="sequence">420</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_podatek_okresie_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -498,6 +541,7 @@
                     <record id="account_tax_report_line_zaniechaniem_poboru" model="account.report.line">
                         <field name="name">Tax - Subject to non-collection</field>
                         <field name="code">PLTAX_50</field>
+                        <field name="sequence">430</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_zaniechaniem_poboru_tag" model="account.report.expression">
                                 <field name="label">balance</field>
