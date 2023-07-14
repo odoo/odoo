@@ -2017,3 +2017,36 @@ QUnit.test(
         assert.strictEqual($(".o_breadcrumb").text(), "DiscussGeneral");
     }
 );
+
+QUnit.test(
+    "Chatter notification in messaging menu should open the form view even when discuss app is open",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+        const messageId = pyEnv["mail.message"].create({
+            model: "res.partner",
+            body: "A needaction message to have it in messaging menu",
+            author_id: pyEnv.odoobotId,
+            needaction: true,
+            needaction_partner_ids: [pyEnv.currentPartnerId],
+            res_id: partnerId,
+        });
+        pyEnv["mail.notification"].create({
+            mail_message_id: messageId,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: pyEnv.currentPartnerId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        await click(".o_main_navbar i[aria-label='Messages']");
+        await click(".o-mail-NotificationItem");
+        assert.containsNone($, ".o-mail-Discuss");
+        assert.containsOnce($, ".o_form_view .o-mail-Chatter");
+        assert.containsOnce($, ".o_form_view .o_breadcrumb:contains(TestPartner)");
+        assert.containsOnce(
+            $,
+            ".o-mail-Chatter .o-mail-Message:contains(A needaction message to have it in messaging menu)"
+        );
+    }
+);
