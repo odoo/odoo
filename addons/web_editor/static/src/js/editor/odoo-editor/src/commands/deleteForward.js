@@ -1,4 +1,5 @@
 /** @odoo-module **/
+import { UNREMOVABLE_ROLLBACK_CODE } from '../utils/constants.js';
 import {
     findNode,
     isContentTextNode,
@@ -14,6 +15,7 @@ import {
     rightLeafOnlyPathNotBlockNotEditablePath,
     isNotEditableNode,
     splitTextNode,
+    paragraphRelatedElements,
     prepareUpdate,
     isVisibleStr,
     isInPre,
@@ -141,6 +143,30 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
     ) {
         firstLeafNode.oDeleteBackward(Math.min(1, nodeSize(firstLeafNode)));
         return;
+    }
+    const nextSibling = this.nextSibling;
+    // Remove the nextSibling if it is a non-editable element.
+    if (
+        nextSibling &&
+        nextSibling.nodeType === Node.ELEMENT_NODE &&
+        !nextSibling.isContentEditable
+    ) {
+        nextSibling.remove();
+        return;
+    }
+    const parentEl = this.parentElement;
+    // Prevent the deleteForward operation since it is done at the end of an
+    // enclosed editable zone (inside a non-editable zone in the editor).
+    if (
+        parentEl &&
+        parentEl.getAttribute("contenteditable") === "true" &&
+        parentEl.oid !== "root" &&
+        parentEl.parentElement &&
+        !parentEl.parentElement.isContentEditable &&
+        paragraphRelatedElements.includes(this.tagName) &&
+        !this.nextElementSibling
+    ) {
+        throw UNREMOVABLE_ROLLBACK_CODE;
     }
     const firstOutNode = findNode(
         rightLeafOnlyPathNotBlockNotEditablePath(
