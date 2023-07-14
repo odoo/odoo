@@ -6,14 +6,6 @@
         height: 15px;
     }
 
-    .o-mail-DiscussSidebar-item:hover {
-        background-color: $o-gray-200 !important;
-
-        .o-mail-DiscussCategoryItem-commands {
-            display: flex !important;
-        }
-    }
-
     .o-mail-DiscussCategory-im-status {
         transform: scale(0.75);
     }
@@ -21,6 +13,16 @@
 
 .o-mail-DiscussSidebar-badge {
     padding: 3px 6px;
+}
+
+.o-mail-DiscussSidebar-item {
+    &:hover, &.o-active {
+        background-color: $o-gray-200 !important;
+    }
+
+    &:hover .o-mail-DiscussCategoryItem-commands {
+        display: flex !important;
+    }
 }
 
 .o-mail-DiscussCategoryItem-threadIcon {
