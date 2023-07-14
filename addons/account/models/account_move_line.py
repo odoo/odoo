@@ -1748,17 +1748,6 @@ class AccountMoveLine(models.Model):
             recon_debit_amount = remaining_debit_amount
             recon_credit_amount = -remaining_credit_amount
 
-        # Check if there is something left to reconcile. Move to the next loop iteration if not.
-        skip_reconciliation = False
-        if recon_currency.is_zero(recon_debit_amount):
-            res['debit_vals'] = None
-            skip_reconciliation = True
-        if recon_currency.is_zero(recon_credit_amount):
-            res['credit_vals'] = None
-            skip_reconciliation = True
-        if skip_reconciliation:
-            return res
-
         # ==== Match both lines together and compute amounts to reconcile ====
 
         # Determine which line is fully matched by the other.
@@ -1810,6 +1799,17 @@ class AccountMoveLine(models.Model):
                 partial_credit_amount_currency = partial_amount
             else:
                 partial_credit_amount_currency = min_recon_amount
+
+        # Check if there is something left to reconcile. Move to the next loop iteration if not.
+        skip_reconciliation = False
+        if recon_currency.is_zero(partial_amount) and recon_currency.is_zero(recon_debit_amount):
+            res['debit_vals'] = None
+            skip_reconciliation = True
+        if recon_currency.is_zero(partial_amount) and recon_currency.is_zero(recon_credit_amount):
+            res['credit_vals'] = None
+            skip_reconciliation = True
+        if skip_reconciliation:
+            return res
 
         # Computation of the partial exchange difference. You can skip this part using the
         # `no_exchange_difference` context key (when reconciling an exchange difference for example).
