@@ -123,6 +123,13 @@ function sanitizeNode(node, root) {
         node.setAttribute('contenteditable', 'false');
     }
 
+    // Remove empty class/style attributes.
+    for (const attributeName of ['class', 'style']) {
+        if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute(attributeName) && !node.getAttribute(attributeName)) {
+            node.removeAttribute(attributeName);
+        }
+    }
+
     if (
         areSimilarElements(node, node.previousSibling) &&
         !isUnbreakable(node) &&
