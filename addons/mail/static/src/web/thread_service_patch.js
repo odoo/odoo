@@ -15,6 +15,7 @@ let nextId = 1;
 patch(ThreadService.prototype, "mail/web", {
     setup(env, services) {
         this._super(env, services);
+        this.action = services.action;
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
         /** @type {import("@mail/web/activity/activity_service").ActivityService} */
@@ -175,17 +176,21 @@ patch(ThreadService.prototype, "mail/web", {
         this._super(...arguments);
     },
     open(thread, replaceNewMessageChatWindow) {
-        if (!this.store.discuss.isActive || this.store.isSmall) {
-            const chatWindow = this.chatWindowService.insert({
-                folded: false,
-                thread,
-                replaceNewMessageChatWindow,
+        if (!this.store.discuss.isActive && !this.store.isSmall) {
+            this._openChatWindow(thread, replaceNewMessageChatWindow);
+            return;
+        }
+        if (this.store.isSmall && thread.model === "discuss.channel") {
+            this._openChatWindow(thread, replaceNewMessageChatWindow);
+            return;
+        }
+        if (thread.model !== "discuss.channel") {
+            this.action.doAction({
+                type: "ir.actions.act_window",
+                res_id: thread.id,
+                res_model: thread.model,
+                views: [[false, "form"]],
             });
-            chatWindow.autofocus++;
-            if (thread) {
-                thread.state = "open";
-            }
-            this.chatWindowService.notifyState(chatWindow);
             return;
         }
         this._super(thread, replaceNewMessageChatWindow);
@@ -208,11 +213,24 @@ patch(ThreadService.prototype, "mail/web", {
         }
         this._super(...arguments);
     },
+    _openChatWindow(thread, replaceNewMessageChatWindow) {
+        const chatWindow = this.chatWindowService.insert({
+            folded: false,
+            thread,
+            replaceNewMessageChatWindow,
+        });
+        chatWindow.autofocus++;
+        if (thread) {
+            thread.state = "open";
+        }
+        this.chatWindowService.notifyState(chatWindow);
+    },
 });
 
 patch(threadService, "mail/web", {
     dependencies: [
         ...threadService.dependencies,
+        "action",
         "mail.activity",
         "mail.attachment",
         "mail.chat_window",
