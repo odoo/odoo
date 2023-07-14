@@ -1074,6 +1074,27 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_add_date");
     });
 
+    QUnit.test("related start date, required, both start date and end date set", async (assert) => {
+        serverData.models.partner.fields.date_end = { string: "Some Date", type: "date" };
+        const [firstRecord] = serverData.models.partner.records;
+        firstRecord.date_end = firstRecord.date;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="date" widget="daterange" options="{'start_date_field': 'date_end'}" required="1" />
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(getInputs()[0].value, "02/03/2017");
+        assert.containsOnce(target, ".fa-long-arrow-right");
+        assert.strictEqual(getInputs()[1].value, "02/03/2017");
+    });
+
     QUnit.test("list daterange with start date and empty end date", async (assert) => {
         serverData.models.partner.fields.date_end = { string: "Some Date", type: "date" };
 

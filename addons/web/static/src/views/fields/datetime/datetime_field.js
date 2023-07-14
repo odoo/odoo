@@ -213,8 +213,8 @@ export class DateTimeField extends Component {
     shouldShowSeparator() {
         return (
             this.state.range &&
-            this.props.required &&
-            (this.isEmpty(this.startDateField) || this.isEmpty(this.endDateField))
+            (this.props.required ||
+                (!this.isEmpty(this.startDateField) && !this.isEmpty(this.endDateField)))
         );
     }
 
