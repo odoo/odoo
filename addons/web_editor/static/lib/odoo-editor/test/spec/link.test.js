@@ -559,12 +559,10 @@ describe('Link', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
                 stepFunction: async editor => {
-                    const a = await clickOnLink(editor);
-                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    await clickOnLink(editor);
                     await deleteBackward(editor);
-                    console.log(a.closest('.odoo-editor-editable').outerHTML);
                 },
-                contentAfterEdit: '<p>a<a href="#/" data-oe-zws-empty-inline="" class="o_link_in_selection">' +
+                contentAfterEdit: '<p>a<a href="#/" class="o_link_in_selection" data-oe-zws-empty-inline="">' +
                         '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
                         '[]\u200B' + // content: empty inline zws
                         '<span data-o-link-zws="end">\u200B</span>' + // end zws
