@@ -277,7 +277,7 @@ export function customErrorMessage(assertLocation, value, expected) {
     value = value.replaceAll('\u0009', tab);
     expected = expected.replaceAll('\u0009', tab);
 
-    return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
+    return `${(isMobileTest ? '[MOBILE VERSION: ' : '[')}${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
 
 /**
