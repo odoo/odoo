@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Messaging, messagingService } from "@mail/core/common/messaging_service";
-import { createLocalId } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -41,18 +40,6 @@ patch(Messaging.prototype, "mail/core/web", {
             }
         }
         this._super(data);
-    },
-    async _handleNotificationNewMessage(notif) {
-        await this._super(notif);
-        const channel = this.store.threads[createLocalId("discuss.channel", notif.payload.id)];
-        const message = this.store.messages[notif.payload.message.id];
-        if (
-            !this.ui.isSmall &&
-            channel.correspondent !== this.store.odoobot &&
-            !message.isSelfAuthored
-        ) {
-            this.chatWindowService.insert({ thread: channel });
-        }
     },
 });
 
