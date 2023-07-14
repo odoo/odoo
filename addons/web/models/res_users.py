@@ -25,3 +25,35 @@ class ResUsers(models.Model):
                 user_ids.pop()
                 user_ids.insert(0, self._uid)
         return user_ids
+
+    @api.model
+    def web_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, count_limit=None):
+        result = super().web_search_read(
+            expression.AND([domain or [], [('id', '!=', self._uid)]]),
+            fields, offset, limit, order, count_limit)
+
+        length = result['length']
+        records = list(result['records'])
+
+        if offset == 0:
+            current_user = super().search_read(
+                domain=expression.AND([domain or [], [('id', '=', self._uid)]]),
+                fields=fields,
+                limit=1)
+            if current_user:
+                records.insert(0, current_user[0])
+                if length < count_limit:
+                    length += 1
+                if len(records) == limit + 1:
+                    records.pop()
+        else:
+            if length < count_limit and self.search(
+                    domain=expression.AND([domain or [], [('id', '=', self._uid)]]),
+                    limit=1
+            ):
+                length += 1
+
+        return {
+            'records': records,
+            'length': length
+        }
