@@ -138,3 +138,7 @@ class SaleOrder(models.Model):
         self.sale_order_option_ids.discount = 0.0
         self.sale_order_option_ids._compute_price_unit()
         self.sale_order_option_ids._compute_discount()
+
+    def _can_be_edited_on_portal(self):
+        self.ensure_one()
+        return self.state in ('draft', 'sent')

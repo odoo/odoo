@@ -25,7 +25,8 @@ class CustomerPortal(portal.CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        if order_sudo.state not in ('draft', 'sent'):
+        # Redundant with can be edited on portal for line, ask sales if can rbe removed
+        if not order_sudo._can_be_edited_on_portal():
             return False
 
         order_line = request.env['sale.order.line'].sudo().browse(int(line_id)).exists()

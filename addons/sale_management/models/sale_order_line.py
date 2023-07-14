@@ -39,7 +39,7 @@ class SaleOrderLine(models.Model):
     #=== TOOLING ===#
 
     def _can_be_edited_on_portal(self):
-        return self.state in ('draft', 'sent') and (
+        return self.order_id._can_be_edited_on_portal() and (
             self.sale_order_option_ids
             or self.product_id in self.order_id.sale_order_option_ids.product_id
         )
