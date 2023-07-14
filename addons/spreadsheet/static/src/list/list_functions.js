@@ -17,7 +17,7 @@ function assertListsExists(listId, getters) {
     }
 }
 
-functionRegistry.add("ODOO.LIST", {
+const ODOO_LIST = {
     description: _t("Get the value from a list."),
     args: [
         arg("list_id (string)", _t("ID of the list.")),
@@ -58,9 +58,9 @@ functionRegistry.add("ODOO.LIST", {
         }
     },
     returns: ["NUMBER", "STRING"],
-});
+};
 
-functionRegistry.add("ODOO.LIST.HEADER", {
+const ODOO_LIST_HEADER = {
     description: _t("Get the header of a list."),
     args: [
         arg("list_id (string)", _t("ID of the list.")),
@@ -74,4 +74,7 @@ functionRegistry.add("ODOO.LIST.HEADER", {
         return this.getters.getListHeaderValue(id, field);
     },
     returns: ["NUMBER", "STRING"],
-});
+};
+
+functionRegistry.add("ODOO.LIST", ODOO_LIST);
+functionRegistry.add("ODOO.LIST.HEADER", ODOO_LIST_HEADER);
