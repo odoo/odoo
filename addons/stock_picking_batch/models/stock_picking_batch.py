@@ -259,6 +259,12 @@ class StockPickingBatch(models.Model):
                     picking.batch_id.id,
                     picking.batch_id.name))
 
+        if empty_waiting_pickings:
+            self.message_post(body=_(
+                "%s was removed from the batch, no quantity processed",
+                Markup(', ').join([picking._get_html_link() for picking in empty_waiting_pickings])
+            ))
+
         return pickings.with_context(**context).button_validate()
 
     def action_assign(self):
