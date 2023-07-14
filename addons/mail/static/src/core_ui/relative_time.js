@@ -11,8 +11,8 @@ export class RelativeTime extends Component {
     static template = xml`<t t-esc="relativeTime"/>`;
 
     setup() {
-        this.computeRelativeTime();
         this.timeout = null;
+        this.computeRelativeTime();
         onWillDestroy(() => clearTimeout(this.timeout));
     }
 

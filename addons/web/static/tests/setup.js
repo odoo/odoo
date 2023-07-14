@@ -194,6 +194,13 @@ function patchBrowserWithCleanup() {
             cancelAnimationFrame: (handle) => {
                 animationFrameHandles.delete(handle);
             },
+            // BroadcastChannels need to be closed to be garbage collected
+            BroadcastChannel: class SelfClosingBroadcastChannel extends BroadcastChannel {
+                constructor() {
+                    super(...arguments);
+                    registerCleanup(() => this.close());
+                }
+            },
         },
         { pure: true }
     );
