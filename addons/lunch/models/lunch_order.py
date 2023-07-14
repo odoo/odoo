@@ -23,9 +23,10 @@ class LunchOrder(models.Model):
     supplier_id = fields.Many2one(
         string='Vendor', related='product_id.supplier_id', store=True, index=True)
     available_today = fields.Boolean(related='supplier_id.available_today')
-    order_deadline_passed = fields.Boolean(related='supplier_id.order_deadline_passed')
-    user_id = fields.Many2one('res.users', 'User', readonly=False,
-                              default=lambda self: self.env.uid)
+
+    available_on_date = fields.Boolean(compute='_compute_available_on_date')
+    order_deadline_passed = fields.Boolean(compute='_compute_order_deadline_passed')
+    user_id = fields.Many2one('res.users', 'User', default=lambda self: self.env.uid)
     lunch_location_id = fields.Many2one('lunch.location', default=lambda self: self.env.user.last_lunch_location_id)
     note = fields.Text('Notes')
     price = fields.Monetary('Total Price', compute='_compute_total_price', readonly=True, store=True)
@@ -77,6 +78,22 @@ class LunchOrder(models.Model):
         show_button = self.env.context.get('show_reorder_button')
         for order in self:
             order.display_reorder_button = show_button and order.state == 'confirmed' and order.supplier_id.available_today
+
+    @api.depends('date', 'supplier_id')
+    def _compute_available_on_date(self):
+        for order in self:
+            order.available_on_date = order.supplier_id._available_on_date(order.date)
+
+    @api.depends('supplier_id', 'date')
+    def _compute_order_deadline_passed(self):
+        today = fields.Date.context_today(self)
+        for order in self:
+            if order.date < today:
+                order.order_deadline_passed = True
+            elif order.date == today:
+                order.order_deadline_passed = order.supplier_id.order_deadline_passed
+            else:
+                order.order_deadline_passed = False
 
     def init(self):
         self._cr.execute("""CREATE INDEX IF NOT EXISTS lunch_order_user_product_date ON %s (user_id, product_id, date)"""
@@ -175,7 +192,7 @@ class LunchOrder(models.Model):
         domain = [
             ('user_id', '=', values.get('user_id', self.default_get(['user_id'])['user_id'])),
             ('product_id', '=', values.get('product_id', False)),
-            ('date', '=', fields.Date.today()),
+            ('date', '=', values.get('date', fields.Date.today())),
             ('note', '=', values.get('note', False)),
             ('lunch_location_id', '=', values.get('lunch_location_id', default_location_id)),
         ]
@@ -218,15 +235,13 @@ class LunchOrder(models.Model):
 
     def action_order(self):
         for order in self:
-            if not order.supplier_id.available_today:
-                raise UserError(_('The vendor related to this order is not available today.'))
+            if not order.available_on_date:
+                raise UserError(_('The vendor related to this order is not available at the selected date.'))
         if self.filtered(lambda line: not line.product_id.active):
             raise ValidationError(_('Product is no longer available.'))
         self.write({
             'state': 'ordered',
         })
-        for order in self:
-            order.lunch_location_id = order.user_id.last_lunch_location_id
         self._check_wallet()
 
     def action_reorder(self):

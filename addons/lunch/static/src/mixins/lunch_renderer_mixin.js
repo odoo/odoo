@@ -17,6 +17,12 @@ export const LunchRendererMixin = (T) => class LunchRendererMixin extends T {
         if (this.env.searchModel.lunchState.userId) {
             context['default_user_id'] = this.env.searchModel.lunchState.userId;
         }
+        if (this.env.searchModel.lunchState.date) {
+            context['default_date'] = this.env.searchModel.lunchState.date;
+        }
+        if (this.env.searchModel.lunchState.locationId) {
+            context['default_lunch_location_id'] = this.env.searchModel.lunchState.locationId;
+        }
 
         let action = {
             res_model: 'lunch.order',
