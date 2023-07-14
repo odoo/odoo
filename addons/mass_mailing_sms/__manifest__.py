@@ -31,6 +31,11 @@
         'data/mailing_list_demo.xml',
         'data/mailing_demo.xml',
     ],
+    'assets': {
+        'web.assets_tests': [
+            'mass_mailing_sms/static/tests/tours/**/*',
+        ],
+    },
     'application': True,
     'license': 'LGPL-3',
 }
