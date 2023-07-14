@@ -37,7 +37,7 @@ class FleetVehicleModel(models.Model):
     trailer_hook = fields.Boolean(default=False, string='Trailer Hitch')
     default_co2 = fields.Float('CO2 Emissions')
     co2_standard = fields.Char()
-    default_fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', default='diesel')
+    default_fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', default='electric')
     power = fields.Integer('Power')
     horsepower = fields.Integer()
     horsepower_tax = fields.Float('Horsepower Taxation')
