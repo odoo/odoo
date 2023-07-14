@@ -38,7 +38,8 @@
         globalThis.odoo = {};
     }
     var odoo = globalThis.odoo;
-    var debug = odoo.debug;
+    const debug = new URLSearchParams(location.search).get("debug") || "";
+    odoo.debug = debug;
 
     var didLogInfoResolve;
     var didLogInfoPromise = new Promise(function (resolve) {
