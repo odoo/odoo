@@ -61,6 +61,7 @@ QUnit.module("Web Components", (hooks) => {
             setTheme: () => {},
             resize: () => {},
             destroy: () => {},
+            on: () => {},
         };
     }
 

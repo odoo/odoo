@@ -34,6 +34,7 @@ export class CodeEditor extends Component {
         value: { type: String, optional: true },
         readonly: { type: Boolean, optional: true },
         onChange: { type: Function, optional: true },
+        onBlur: { type: Function, optional: true },
         class: { type: String, optional: true },
         theme: {
             type: String,
@@ -83,6 +84,11 @@ export class CodeEditor extends Component {
                 this.aceEditor.session.on("change", () => {
                     if (this.props.onChange) {
                         this.props.onChange(this.aceEditor.getValue());
+                    }
+                });
+                this.aceEditor.on("blur", () => {
+                    if (this.props.onBlur) {
+                        this.props.onBlur();
                     }
                 });
 

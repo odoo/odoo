@@ -1,7 +1,13 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { getFixture, nextTick, triggerEvents } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    nextTick,
+    triggerEvent,
+    triggerEvents,
+} from "@web/../tests/helpers/utils";
 import { pagerNext } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { fakeCookieService } from "@web/../tests/helpers/mock_services";
@@ -126,4 +132,43 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps(['read: [[2],["foo","display_name"]]']);
         }
     );
+
+    QUnit.test("AceEditorField only trigger onchanges when blurred", async (assert) => {
+        serverData.models.partner.onchanges = {
+            foo: (obj) => {},
+        };
+
+        serverData.models.partner.records.forEach((rec) => {
+            rec.foo = false;
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            resIds: [1, 2],
+            serverData,
+            arch: `<form>
+                <field name="display_name" />
+                <field name="foo" widget="code" />
+            </form>`,
+            mockRPC(route, args) {
+                if (args.method) {
+                    assert.step(`${args.method}: ${JSON.stringify(args.args)}`);
+                }
+            },
+        });
+
+        assert.verifySteps(["get_views: []", 'read: [[1],["display_name","foo"]]']);
+        const textArea = target.querySelector(".ace_editor textarea");
+        await click(textArea);
+        textArea.focus();
+        textArea.value = "a";
+        await triggerEvent(textArea, null, "input", {});
+        await triggerEvents(textArea, null, ["blur"]);
+        assert.verifySteps([
+            'onchange: [[1],{"id":1,"display_name":false,"foo":"a"},"foo",{"display_name":"","foo":"1"}]',
+        ]);
+        await click(target, ".o_form_button_save");
+        assert.verifySteps(['write: [[1],{"foo":"a"}]', 'read: [[1],["display_name","foo"]]']);
+    });
 });
