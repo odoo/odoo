@@ -124,6 +124,8 @@ msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
 msgstr ""
+"Se diversa da 0, la prossima data di inventario per i prodotti conservati in"
+" questa ubicazione sarà impostata automaticamente alla frequenza definita."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -157,7 +159,7 @@ msgstr "&gt;"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Count Sheet'"
-msgstr ""
+msgstr "\"Numero fogli\""
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
@@ -951,7 +953,7 @@ msgstr "Giorno e mese annuale dell'inventario"
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_month
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__annual_inventory_month
 msgid "Annual Inventory Month"
-msgstr ""
+msgstr "Mese dell'inventario annuale"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__annual_inventory_month
@@ -1051,7 +1053,7 @@ msgstr "Assegna"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "Assign All"
-msgstr ""
+msgstr "Assegna a tutti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
@@ -1388,6 +1390,13 @@ msgid ""
 "(Chicago) in its entirety and does not include any costs relating to the "
 "legislation of the country in which the client is located."
 msgstr ""
+"Alcune azioni applicato la ritenuta alla fonte sul totale delle fatture, ai "
+"sensi della legge vigente. Qualsiasi ritenuta alla fonte verrà pagata alle "
+"autorità fiscali dal cliente. In nessun caso My Company (Chicago) sarà "
+"coinvolta in costi legati alla legislazione di un Paese. L'importo della "
+"fattura verrà addebitato a My Company (Chicago) nella sua completezza e non "
+"includerà nessun costo relativo alla legislazione del Paese in cui si trova "
+"il cliente."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -1625,13 +1634,13 @@ msgstr "Confermato"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
 msgid "Conflict in Inventory"
-msgstr ""
+msgstr "Conflitto nel magazzino"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Conflict in Inventory Adjustment"
-msgstr ""
+msgstr "Conflitto nelle rettifiche di inventario"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__quant_to_fix_ids
@@ -2048,7 +2057,7 @@ msgstr " Data dell'ultimo inventario in questa località."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__reservation_date
 msgid "Date to Reserve"
-msgstr ""
+msgstr "Giorno per prenotare"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2069,6 +2078,8 @@ msgid ""
 "Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.\n"
 "        If greater than the last day of a month, then the last day of the month will be selected instead."
 msgstr ""
+"Giorno del mese in cui dovrebbe verificarsi l'inventario annuale. Se pari a 0 o negativo, verrà selezionato il primo giorno del mese.\n"
+"        Se superiore rispetto all'ultimo giorno del mese, verrà selezionato l'ultimo giorno del mese."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
@@ -2201,7 +2212,7 @@ msgstr "Data di avviso ritardo"
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Delay on %s"
-msgstr ""
+msgstr "Ritardo per %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
@@ -2655,6 +2666,12 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
+"Goditi un'esperienza dal ritmo veloce con l'applicazione Odoo Barcode "
+"Scanner. È incredibilmente rapida e funziona anche senza una connessione "
+"internet stabile. Inoltre, supporta tutti i tipi di operazioni: rettifiche "
+"inventariali, prelievi di gruppo, trasferimento di lotti o palette, "
+"verifiche di inventario, ecc. Vai sul menu delle App per attivare "
+"l'interfaccia di Barcode Scanner."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -3097,7 +3114,7 @@ msgstr "Contiene varianti"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Having Category"
-msgstr ""
+msgstr "Ha una categoria"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__height
@@ -3436,7 +3453,7 @@ msgstr "Trasferimento in entrata in bozza"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__incoming_move_line_ids
 msgid "Incoming Move Line"
-msgstr ""
+msgstr "Riga movimento in entrata"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_steps
@@ -3650,7 +3667,7 @@ msgstr "Panoramica magazzino"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_set
 msgid "Inventory Quantity Set"
-msgstr ""
+msgstr "Configurazione quantità inventario"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
@@ -3744,6 +3761,8 @@ msgid ""
 "It is not allowed to import reserved quantity, you have to use the quantity "
 "directly."
 msgstr ""
+"Non è consentito importare quantità prenotate, la quantità deve essere "
+"utilizzata direttamente."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -3779,7 +3798,7 @@ msgstr "Gennaio"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_lead_days
 msgid "Json Lead Days"
-msgstr ""
+msgstr "Giorni di attesa Json"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_history
@@ -4010,7 +4029,7 @@ msgstr "Trasferimenti in ritardo"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__products_availability
 msgid "Latest product availability status of the picking"
-msgstr ""
+msgstr "Ultimo stato disponibilità del prodotto per il prelievo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days_date
@@ -4027,7 +4046,7 @@ msgstr "Tempo di risposta"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "Lead Times"
-msgstr ""
+msgstr "Tempi di attesa"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -4384,6 +4403,8 @@ msgid ""
 "Maximum number of days before scheduled date that priority picking products "
 "should be reserved."
 msgstr ""
+"Numero massimo di giorni prima della data prevista in cui i prodotti con "
+"priorità per il prelievo devono essere prenotati."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before
@@ -4532,7 +4553,7 @@ msgstr "Regole di capacità multiple per un tipo di pacchetto."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_product
 msgid "Multiple capacity rules for one product."
-msgstr ""
+msgstr "Regole capacità multiple per un prodotto."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
@@ -4655,7 +4676,7 @@ msgstr "Tipologia prossima attività"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected Inventory"
-msgstr ""
+msgstr "Prossimo inventario previsto"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
@@ -5117,7 +5138,7 @@ msgstr "Trasferimento in uscita in bozza"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
 msgid "Outgoing Move Line"
-msgstr ""
+msgstr "Riga movimento in uscita"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
@@ -5221,7 +5242,7 @@ msgstr "Codice a barre della confezione con contenuto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__package_capacity_ids
 msgid "Package Capacity"
-msgstr ""
+msgstr "Capacità collo"
 
 #. module: stock
 #: code:addons/stock/models/stock_package_level.py:0
@@ -5501,6 +5522,8 @@ msgid ""
 "Press the CREATE button to define quantity for each product in your stock or"
 " import them from a spreadsheet throughout Favorites"
 msgstr ""
+"Premi il pulsante CREA per definire le quantità di ogni prodotto nello stock"
+" o per importarli da un foglio di calcolo attraverso la sezione Preferiti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5853,7 +5876,7 @@ msgstr "Propagazione del gruppo di approvvigionamento"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_carrier
 msgid "Propagation of carrier"
-msgstr ""
+msgstr "Propagazione corriere"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__action__pull_push
@@ -6434,7 +6457,7 @@ msgstr "Di riserva"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
 msgid "Reserve Only Full Packagings"
-msgstr ""
+msgstr "Prenota solo colli interi"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__packaging_reserve_method
@@ -6442,21 +6465,23 @@ msgid ""
 "Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
 "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved"
 msgstr ""
+"Prenota solo colli interi: i colli parziali non verranno prenotati. Se il cliente ordina 2 palette da 1000 unità ognuna e ne hai solo 1600 in stock, verranno prenotate solo 1000 unità.\n"
+"Prenota colli parziali: permette di prenotare colli parziali. Se il cliente ordina 2 palette da 1000 unità ognuna e ne hai solo 1600 in stock, verranno prenotate 1600 unità."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
 msgid "Reserve Packagings"
-msgstr ""
+msgstr "Prenota colli"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__partial
 msgid "Reserve Partial Packagings"
-msgstr ""
+msgstr "Prenota colli parziali"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reserve before scheduled date"
-msgstr ""
+msgstr "Prenota prima della data prevista"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_qty
@@ -6904,7 +6929,7 @@ msgstr "Sequenza di prelievo"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence return"
-msgstr ""
+msgstr "Sequenza reso"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -6929,6 +6954,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"Il numero seriale (%s) non è localizzato in %s ma in: %s.\n"
+"\n"
+"Correggi il problema per evitare dati non coerenti."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6938,6 +6966,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %s"
 msgstr ""
+"Il numero seriale (%s) non è localizzato in %s ma in: %s.\n"
+"\n"
+"L'ubicazione di origine per questo movimento verrà modificata in %s"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
@@ -6948,7 +6979,7 @@ msgstr "fissare"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__set
 msgid "Set Current Value"
-msgstr ""
+msgstr "Configura valore attuale"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7075,7 +7106,7 @@ msgstr "Mostrare dettaglio operazioni"
 #: model:ir.model.fields,field_description:stock.field_product_product__show_forecasted_qty_status_button
 #: model:ir.model.fields,field_description:stock.field_product_template__show_forecasted_qty_status_button
 msgid "Show Forecasted Qty Status Button"
-msgstr ""
+msgstr "Pulsante mostra stato qtà previste"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_m2o
@@ -7097,7 +7128,7 @@ msgstr "Mostra segna da fare"
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
 #: model:ir.model.fields,field_description:stock.field_product_template__show_on_hand_qty_status_button
 msgid "Show On Hand Qty Status Button"
-msgstr ""
+msgstr "Pulsante mostra stato qtà disponibili"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_operations
@@ -7389,7 +7420,7 @@ msgstr "Resoconto quantità in giacenza"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_reception
 msgid "Stock Reception Report"
-msgstr ""
+msgstr "Rapporto di ricezione giacenze"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_product_product_replenishment
@@ -7400,7 +7431,7 @@ msgstr "Resoconto rifornimenti di magazzino"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_request_count
 msgid "Stock Request an Inventory Count"
-msgstr ""
+msgstr "Lo stock richiede un conteggio del magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -7512,7 +7543,7 @@ msgstr "Categoria di stoccaggio"
 #: model:ir.ui.menu,name:stock.menu_storage_categoty_capacity_config
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
 msgid "Storage Category Capacity"
-msgstr ""
+msgstr "Capacità categoria di stoccaggio"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
@@ -7532,7 +7563,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
 msgid "Store to sublocation"
-msgstr ""
+msgstr "Conserva in un'ubicazione secondaria"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__supplied_wh_id
@@ -7791,6 +7822,8 @@ msgstr "La giacenza prevista al"
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
 msgstr ""
+"La frequenza d'inventario (giorni) per un'ubicazione non deve essere "
+"negativa"
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -7886,6 +7919,8 @@ msgid ""
 "The selected Inventory Frequency (Days) creates a date too far into the "
 "future."
 msgstr ""
+"La frequenza d'inventario (Giorni) selezionata ha generato una data troppo "
+"lontana."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7962,6 +7997,8 @@ msgid ""
 "This analysis gives you an overview of the current stock level of your "
 "products."
 msgstr ""
+"L'analisi offre una panoramica del livello attuale delle scorte dei "
+"prodotti."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -8030,6 +8067,7 @@ msgid ""
 "This location (if it's internal) and all its descendants filtered by "
 "type=Internal."
 msgstr ""
+"L'ubicazione (se interna) e tutti i discendenti filtrati per tipo=interno."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -8193,7 +8231,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
 msgid "This will discard all unapplied counts, do you want to proceed?"
-msgstr ""
+msgstr "I conteggi non applicati verranno eliminati, vuoi comunque procedere?"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -9555,7 +9593,7 @@ msgstr "giorni"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "days before when starred"
-msgstr ""
+msgstr "giorni prima se con priorità"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -9595,12 +9633,12 @@ msgstr "es. Luoghi fisici"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Spare Stock"
-msgstr ""
+msgstr "ad es. stock di riserva"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "e.g. Two-steps reception"
-msgstr ""
+msgstr "ad es. ricezione a due fasi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view

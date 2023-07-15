@@ -1589,6 +1589,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"이 프로젝트 및 관련 작업을 볼 수 있는 사람.\n"
+"\n"
+"- 초대 받은 내부 사용자: 프로젝트를 팔로우하면 내부 사용자는 어떤 작업에든 접근할 수 있습니다. 그렇지 않은 경우, 팔로우하는 특정 작업에만 접근할 수 있습니다.\n"
+" 프로젝트 > 관리자 접근 권한 수준을 가진 사용자는 직접 팔로우하지 않은 경우에도 여전히 이 프로젝트 및 관련 작업에 접근할 수 있습니다.\n"
+"\n"
+"- 모든 내부 사용자: 모든 내부 사용자는 프로젝트 및 모든 작업에 구분 없이 접근할 수 있습니다.all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1657,7 +1671,7 @@ msgstr "디자인"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
-msgstr ""
+msgstr "작업을 수행할 순서를 결정"
 
 #. module: project
 #. openerp-web
@@ -1698,7 +1712,7 @@ msgstr "작성 취소"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__display_access_mode
 msgid "Display Access Mode"
-msgstr ""
+msgstr "접근 모드 표시"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
@@ -1783,7 +1797,7 @@ msgstr "편집하기"
 #: code:addons/project/static/src/js/project_kanban.js:0
 #, python-format
 msgid "Edit Personal Stage"
-msgstr ""
+msgstr "개인 단계 편집"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1852,7 +1866,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr ""
+msgstr "오류가 발생했습니다! 작업 순환 구조를 생성할 수 없습니다."
 
 #. module: project
 #. openerp-web
@@ -2304,7 +2318,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Invite People"
-msgstr ""
+msgstr "다른 사람 초대하기"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
@@ -2705,7 +2719,7 @@ msgstr "메시지"
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_ids
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "마일스톤"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
