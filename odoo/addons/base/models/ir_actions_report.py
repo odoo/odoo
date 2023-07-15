@@ -794,6 +794,7 @@ class IrActionsReport(models.Model):
         if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_report_rendering'):
             return self._render_qweb_html(report_ref, res_ids, data=data)
 
+        self = self.with_context(webp_as_jpg=True)
         collected_streams = self._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
 
         # access the report details with sudo() but keep evaluation context as current user

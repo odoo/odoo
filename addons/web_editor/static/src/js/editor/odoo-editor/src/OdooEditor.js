@@ -4597,7 +4597,7 @@ export class OdooEditor extends EventTarget {
                 const url = /^https?:\/\//i.test(text) ? text : 'https://' + text;
                 const youtubeUrl = this.options.allowCommandVideo &&YOUTUBE_URL_GET_VIDEO_ID.exec(url);
                 const urlFileExtention = url.split('.').pop();
-                const isImageUrl = ['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(urlFileExtention.toLowerCase());
+                const isImageUrl = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(urlFileExtention.toLowerCase());
                 // A url cannot be transformed inside an existing link.
                 // An image can be embedded inside an existing link, a video cannot.
                 if (selectionIsInsideALink) {

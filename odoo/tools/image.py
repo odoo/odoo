@@ -15,6 +15,7 @@ except ImportError:
 from random import randrange
 
 from odoo.exceptions import UserError
+from odoo.tools.misc import DotDict
 from odoo.tools.translate import _
 
 
@@ -29,6 +30,7 @@ FILETYPE_BASE64_MAGICWORD = {
     b'R': 'gif',
     b'i': 'png',
     b'P': 'svg+xml',
+    b'U': 'webp',
 }
 
 EXIF_TAG_ORIENTATION = 0x112
@@ -73,8 +75,8 @@ class ImageProcess():
         self.source = source or False
         self.operationsCount = 0
 
-        if not source or source[:1] == b'<':
-            # don't process empty source or SVG
+        if not source or source[:1] == b'<' or (source[0:4] == b'RIFF' and source[8:15] == b'WEBPVP8'):
+            # don't process empty source or SVG or WEBP
             self.image = False
         else:
             try:
@@ -432,6 +434,43 @@ def image_to_base64(image, output_format, **params):
     return base64.b64encode(stream)
 
 
+def get_webp_size(source):
+    """
+    Returns the size of the provided webp binary source for VP8, VP8X and
+    VP8L, otherwise returns None.
+    See https://developers.google.com/speed/webp/docs/riff_container.
+
+    :param source: binary source
+    :return: (width, height) tuple, or None if not supported
+    """
+    if not (source[0:4] == b'RIFF' and source[8:15] == b'WEBPVP8'):
+        raise UserError(_("This file is not a webp file."))
+
+    vp8_type = source[15]
+    if vp8_type == 0x20:  # 0x20 = ' '
+        # Sizes on big-endian 16 bits at offset 26.
+        width_low, width_high, height_low, height_high = source[26:30]
+        width = (width_high << 8) + width_low
+        height = (height_high << 8) + height_low
+        return (width, height)
+    elif vp8_type == 0x58:  # 0x48 = 'X'
+        # Sizes (minus one) on big-endian 24 bits at offset 24.
+        width_low, width_medium, width_high, height_low, height_medium, height_high = source[24:30]
+        width = 1 + (width_high << 16) + (width_medium << 8) + width_low
+        height = 1 + (height_high << 16) + (height_medium << 8) + height_low
+        return (width, height)
+    elif vp8_type == 0x4C and source[20] == 0x2F:  # 0x4C = 'L'
+        # Sizes (minus one) on big-endian-ish 14 bits at offset 21.
+        # E.g. [@20] 2F ab cd ef gh
+        # - width = 1 + (c&0x3)d ab: ignore the two high bits of the second byte
+        # - height= 1 + hef(c&0xC>>2): used them as the first two bits of the height
+        ab, cd, ef, gh = source[21:25]
+        width = 1 + ((cd & 0x3F) << 8) + ab
+        height = 1 + ((gh & 0xF) << 10) + (ef << 2) + (cd >> 6)
+        return (width, height)
+    return None
+
+
 def is_image_size_above(base64_source_1, base64_source_2):
     """Return whether or not the size of the given image `base64_source_1` is
     above the size of the given image `base64_source_2`.
@@ -441,8 +480,21 @@ def is_image_size_above(base64_source_1, base64_source_2):
     if base64_source_1[:1] in (b'P', 'P') or base64_source_2[:1] in (b'P', 'P'):
         # False for SVG
         return False
-    image_source = image_fix_orientation(base64_to_image(base64_source_1))
-    image_target = image_fix_orientation(base64_to_image(base64_source_2))
+
+    def get_image_size(base64_source):
+        source = base64.b64decode(base64_source)
+        if (source[0:4] == b'RIFF' and source[8:15] == b'WEBPVP8'):
+            size = get_webp_size(source)
+            if size:
+                return DotDict({'width': size[0], 'height': size[0]})
+            else:
+                # False for unknown WEBP format
+                return False
+        else:
+            return image_fix_orientation(binary_to_image(source))
+
+    image_source = get_image_size(base64_source_1)
+    image_target = get_image_size(base64_source_2)
     return image_source.width > image_target.width or image_source.height > image_target.height
 
 

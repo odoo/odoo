@@ -5677,8 +5677,11 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     /**
      * @see this.selectClass for parameters
      */
-    selectWidth(previewMode, widgetValue, params) {
-        this._getImg().dataset.resizeWidth = widgetValue;
+    selectFormat(previewMode, widgetValue, params) {
+        const values = widgetValue.split(' ');
+        const image = this._getImg();
+        image.dataset.resizeWidth = values[0];
+        image.dataset.mimetype = values[1];
         return this._applyOptions();
     },
     /**
@@ -5747,8 +5750,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         });
 
         switch (methodName) {
-            case 'selectWidth':
-                return img.naturalWidth;
+            case 'selectFormat':
+                return img.naturalWidth + ' ' + this._getImageMimetype(img);
             case 'setFilter':
                 return img.dataset.filter;
             case 'glFilter':
@@ -5776,12 +5779,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         if (!this.originalSrc || !this._isImageSupportedForProcessing(img)) {
             return;
         }
-        const $select = $(uiFragment).find('we-select[data-name=width_select_opt]');
-        (await this._computeAvailableWidths()).forEach(([value, label]) => {
-            $select.append(`<we-button data-select-width="${value}">${label}</we-button>`);
+        const $select = $(uiFragment).find('we-select[data-name=format_select_opt]');
+        (await this._computeAvailableFormats()).forEach(([value, [label, targetFormat]]) => {
+            $select.append(`<we-button data-select-format="${Math.round(value)} ${targetFormat}" class="o_we_badge_at_end">${label} <span class="badge rounded-pill text-bg-dark">${targetFormat.split('/')[1]}</span></we-button>`);
         });
 
-        if (this._getImageMimetype(img) !== 'image/jpeg') {
+        if (!['image/jpeg', 'image/webp'].includes(this._getImageMimetype(img))) {
             const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
             if (optQuality) {
                 optQuality.remove();
@@ -5789,26 +5792,31 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
     },
     /**
-     * Returns a list of valid widths for a given image.
+     * Returns a list of valid formats for a given image.
      *
      * @private
      */
-    async _computeAvailableWidths() {
+    async _computeAvailableFormats() {
         const img = this._getImg();
         const original = await loadImage(this.originalSrc);
         const maxWidth = img.dataset.width ? img.naturalWidth : original.naturalWidth;
         const optimizedWidth = Math.min(maxWidth, this._computeMaxDisplayWidth());
         this.optimizedWidth = optimizedWidth;
         const widths = {
-            128: '128px',
-            256: '256px',
-            512: '512px',
-            1024: '1024px',
-            1920: '1920px',
+            128: ['128px', 'image/webp'],
+            256: ['256px', 'image/webp'],
+            512: ['512px', 'image/webp'],
+            1024: ['1024px', 'image/webp'],
+            1920: ['1920px', 'image/webp'],
         };
-        widths[img.naturalWidth] = sprintf(_t("%spx"), img.naturalWidth);
-        widths[optimizedWidth] = sprintf(_t("%spx (Suggested)"), optimizedWidth);
-        widths[maxWidth] = sprintf(_t("%spx (Original)"), maxWidth);
+        widths[img.naturalWidth] = [sprintf(_t("%spx"), img.naturalWidth), 'image/webp'];
+        widths[optimizedWidth] = [sprintf(_t("%spx (Suggested)"), optimizedWidth), 'image/webp'];
+        widths[maxWidth] = [sprintf(_t("%spx (Original)"), maxWidth), img.dataset.originalMimetype];
+        if (img.dataset.originalMimetype !== 'image/webp') {
+            // Avoid a key collision by subtracting 0.1 - putting the webp
+            // above the original format one of the same size.
+            widths[maxWidth - 0.1] = [sprintf(_t("%spx"), maxWidth), 'image/webp'];
+        }
         return Object.entries(widths)
             .filter(([width]) => width <= maxWidth)
             .sort(([v1], [v2]) => v1 - v2);
@@ -5863,6 +5871,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         this.originalId = img.dataset.originalId;
         this.originalSrc = img.dataset.originalSrc;
+        if (!img.dataset.originalMimetype) {
+            img.dataset.originalMimetype = img.dataset.mimetype;
+        }
     },
     /**
      * Sets the image's width to its suggested size.
@@ -5872,7 +5883,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     async _autoOptimizeImage() {
         await this._loadImageInfo();
         await this._rerenderXML();
-        this._getImg().dataset.resizeWidth = this.optimizedWidth;
+        const img = this._getImg();
+        if (!['image/gif', 'image/svg+xml'].includes(img.dataset.mimetype)) {
+            // Convert to recommended format and width.
+            img.dataset.mimetype = 'image/webp';
+            img.dataset.resizeWidth = this.optimizedWidth;
+        }
         await this._applyOptions();
         await this.updateUI();
     },
@@ -5944,7 +5960,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         return params.optionsPossibleValues.glFilter
             || 'customFilter' in params.optionsPossibleValues
             || params.optionsPossibleValues.setQuality
-            || widgetName === 'width_select_opt';
+            || widgetName === 'format_select_opt';
     },
 });
 

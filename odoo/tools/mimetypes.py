@@ -110,6 +110,10 @@ def _check_svg(data):
     if b'<svg' in data and b'/svg' in data:
         return 'image/svg+xml'
 
+def _check_webp(data):
+    """This checks the presence of the WEBP and VP8 in the RIFF"""
+    if data[8:15] == b'WEBPVP8':
+        return 'image/webp'
 
 # for "master" formats with many subformats, discriminants is a list of
 # functions, tried in order and the first non-falsy value returned is the
@@ -128,6 +132,9 @@ _mime_mappings = (
         _check_svg,
     ]),
     _Entry('image/x-icon', [b'\x00\x00\x01\x00'], []),
+    _Entry('image/webp', [b'RIFF'], [
+        _check_webp,
+    ]),
     # OLECF files in general (Word, Excel, PPT, default to word because why not?)
     _Entry('application/msword', [b'\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', b'\x0D\x44\x4F\x43'], [
         _check_olecf
