@@ -57,7 +57,7 @@ const setupSteps = [{
     run: "drag_and_drop iframe #wrap",
 }];
 
-const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .jpg, .png, .svg";
+const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .jpg, .png, .svg, .webp";
 
 wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     url: '/test_image_progress',
@@ -87,7 +87,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
         run: function () {}, // it's a check
     }, {
         content: "check upload progress bar is correctly shown (2)",
-        trigger: `.o_we_progressbar:contains('image.webp'):contains('${formatErrorMsg}')`,
+        trigger: ".o_we_progressbar:contains('image.webp'):contains('File has been uploaded')",
         in_modal: false,
         run: function () {}, // it's a check
     }, {

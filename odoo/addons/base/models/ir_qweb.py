@@ -359,6 +359,7 @@ structure.
 
 """
 
+import base64
 import fnmatch
 import io
 import logging
@@ -384,7 +385,7 @@ from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
 from odoo.tools.misc import str2bool
-from odoo.tools.image import image_data_uri
+from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
 from odoo.exceptions import UserError, AccessDenied, AccessError, MissingError, ValidationError
@@ -861,6 +862,30 @@ class IrQWeb(models.AbstractModel):
 
     # values for running time
 
+    def _get_converted_image_data_uri(self, base64_source):
+        if self.env.context.get('webp_as_jpg'):
+            mimetype = FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], 'png')
+            if 'webp' in mimetype:
+                # Use converted image so that is recognized by wkhtmltopdf.
+                bin_source = base64.b64decode(base64_source)
+                Attachment = self.env['ir.attachment']
+                checksum = Attachment._compute_checksum(bin_source)
+                origins = Attachment.sudo().search([
+                    ['id', '!=', False],  # No implicit condition on res_field.
+                    ['checksum', '=', checksum],
+                ])
+                if origins:
+                    converted_domain = [
+                        ['id', '!=', False],  # No implicit condition on res_field.
+                        ['res_model', '=', 'ir.attachment'],
+                        ['res_id', 'in', origins.ids],
+                        ['mimetype', '=', 'image/jpeg'],
+                    ]
+                    converted = Attachment.sudo().search(converted_domain, limit=1)
+                    if converted:
+                        base64_source = converted.datas
+        return image_data_uri(base64_source)
+
     def _prepare_environment(self, values):
         """ Prepare the values and context that will sent to the
         compiled and evaluated function.
@@ -878,7 +903,6 @@ class IrQWeb(models.AbstractModel):
             values.setdefault('debug', debug)
             values.setdefault('user_id', self.env.user.with_env(self.env))
             values.setdefault('res_company', self.env.company.sudo())
-
             values.update(
                 request=request,  # might be unbound if we're not in an httprequest context
                 test_mode_enabled=bool(config['test_enable'] or config['test_file']),
@@ -887,7 +911,7 @@ class IrQWeb(models.AbstractModel):
                 time=safe_eval.time,
                 datetime=safe_eval.datetime,
                 relativedelta=relativedelta,
-                image_data_uri=image_data_uri,
+                image_data_uri=self._get_converted_image_data_uri,
                 # specific 'math' functions to ease rounding in templates and lessen controller marshmalling
                 floor=math.floor,
                 ceil=math.ceil,

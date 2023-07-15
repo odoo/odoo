@@ -542,7 +542,7 @@ class Web_Editor(http.Controller):
         return files_data_by_bundle
 
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
-    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None):
+    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None, alt_data=None):
         """
         Creates a modified copy of an attachment and returns its image_src to be
         inserted into the DOM.
@@ -561,6 +561,28 @@ class Web_Editor(http.Controller):
         if name:
             fields['name'] = name
         attachment = attachment.copy(fields)
+        if alt_data:
+            for size, per_type in alt_data.items():
+                reference_id = attachment.id
+                if 'image/webp' in per_type:
+                    resized = attachment.create_unique([{
+                        'name': attachment.name,
+                        'description': 'resize: %s' % size,
+                        'datas': per_type['image/webp'],
+                        'res_id': reference_id,
+                        'res_model': 'ir.attachment',
+                        'mimetype': 'image/webp',
+                    }])
+                    reference_id = resized[0]
+                if 'image/jpeg' in per_type:
+                    attachment.create_unique([{
+                        'name': re.sub(r'\.webp$', '.jpg', attachment.name),
+                        'description': 'format: jpeg',
+                        'datas': per_type['image/jpeg'],
+                        'res_id': reference_id,
+                        'res_model': 'ir.attachment',
+                        'mimetype': 'image/jpeg',
+                    }])
         if attachment.url:
             # Don't keep url if modifying static attachment because static images
             # are only served from disk and don't fallback to attachments.
