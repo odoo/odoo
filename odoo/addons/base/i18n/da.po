@@ -10,7 +10,7 @@
 # Lucas Holm, 2023
 # Martin Trigaux, 2023
 # Mads Søndergaard, 2023
-# lhmflexerp <lhm@flexerp.dk>, 2023
+# Lærke Hedegaard Mathiasen <lhm@flexerp.dk>, 2023
 # Sanne Kristensen <sanne@vkdata.dk>, 2023
 # 
 msgid ""
@@ -15077,7 +15077,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Ygyldig 'grupper efter' parameter"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -25242,6 +25247,13 @@ msgstr "Kan ikke finde Wkhtmltopdf på dette system. PDF'en kan ikke oprettes."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -26645,6 +26657,15 @@ msgstr ""
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "Du kan ikke oprette rekursive tags."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

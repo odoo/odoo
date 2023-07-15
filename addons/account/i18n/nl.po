@@ -7,8 +7,8 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Jinjiu Liu, 2022
 # Dylan Kiss, 2023
-# Martin Trigaux, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -3035,7 +3035,7 @@ msgstr "Standaarddagboek voor automatische invoer"
 #. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
-msgstr "Automatische reeks"
+msgstr "Automatische nummering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -15261,6 +15261,14 @@ msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "Deze boeking wordt geboekt op de boekhouddatum: %(date)s"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr "Deze bewerking zal een gat maken in de nummering."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
 msgid ""
 "This option permanently removes any track of email after it's been sent, "
@@ -16804,6 +16812,18 @@ msgstr ""
 msgid "You cannot delete an item linked to a posted entry."
 msgstr ""
 "Je kunt een item dat is gekoppeld aan een geboekte boeking niet verwijderen."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"Je kunt deze invoer niet verwijderen, omdat deze al een volgnummer heeft "
+"gebruikt en niet de laatste in de keten is. Waarschijnlijk moet je de "
+"boeking omdraaien."
 
 #. module: account
 #. odoo-python

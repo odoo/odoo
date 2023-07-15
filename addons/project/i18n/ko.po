@@ -2023,7 +2023,7 @@ msgstr "설명"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__description
 msgid "Description to provide more information and context about this project"
-msgstr ""
+msgstr "이 프로젝트에 대한 추가 정보 및 컨텍스트를 확인할 수 있는 설명"
 
 #. module: project
 #. odoo-javascript
@@ -2038,7 +2038,7 @@ msgstr "디자인"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
-msgstr ""
+msgstr "작업을 수행할 순서를 결정"
 
 #. module: project
 #. odoo-javascript
@@ -2076,7 +2076,7 @@ msgstr "작성 취소"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__display_access_mode
 msgid "Display Access Mode"
-msgstr ""
+msgstr "접근 모드 표시"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
@@ -2098,7 +2098,7 @@ msgstr "표시명"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
 msgid "Display Parent Task Button"
-msgstr ""
+msgstr "상위 작업 표시 버튼"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_project_id
@@ -2163,7 +2163,7 @@ msgstr "편집하기"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_renderer.js:0
 #, python-format
 msgid "Edit Personal Stage"
-msgstr ""
+msgstr "개인 단계 편집"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2201,7 +2201,7 @@ msgstr "이메일 서식"
 msgid ""
 "Email addresses that were in the CC of the incoming emails from this task "
 "and that are not currently linked to an existing customer."
-msgstr ""
+msgstr "수신된 이메일에서 참조가 되어 있었으며 기존 고객과 현재 연결되어 있지 않은 이메일 주소입니다."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -2242,14 +2242,14 @@ msgstr "종료일"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr ""
+msgstr "오류가 발생했습니다! 작업 순환 구조를 생성할 수 없습니다."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
-msgstr ""
+msgstr "누구나 아이디어를 제시할 수 있으며, 최고의 아이디어는 편집자가 다음과 같이 표시합니다."
 
 #. module: project
 #. odoo-javascript
@@ -2262,7 +2262,7 @@ msgstr "예상됨"
 #. module: project
 #: model:project.tags,name:project.project_tags_02
 msgid "Experiment"
-msgstr ""
+msgstr "실험"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -2327,7 +2327,7 @@ msgstr "칸반 화면 접기"
 #: model:ir.model.fields,help:project.field_project_task__is_closed
 #: model:ir.model.fields,help:project.field_report_project_task_user__is_closed
 msgid "Folded in Kanban stages are closing stages."
-msgstr ""
+msgstr "칸반에서 접혀있는 단계는 종료된 단계입니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2350,7 +2350,7 @@ msgstr "팔로우된 작업"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Followed Updates"
-msgstr ""
+msgstr "후속 업데이트"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_follower_ids
@@ -2756,7 +2756,7 @@ msgstr "잘못된 값: %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Invite People"
-msgstr ""
+msgstr "다른 사람 초대하기"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
@@ -3231,7 +3231,7 @@ msgstr "메시지"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "마일스톤"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
@@ -3841,6 +3841,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"이 프로젝트 및 관련 작업을 볼 수 있는 사람.\n"
+"\n"
+"- 초대 받은 내부 사용자: 프로젝트를 팔로우하면 내부 사용자는 어떤 작업에든 접근할 수 있습니다. 그렇지 않은 경우, 팔로우하는 특정 작업에만 접근할 수 있습니다.\n"
+" 프로젝트 > 관리자 접근 권한 수준을 가진 사용자는 직접 팔로우하지 않은 경우에도 여전히 이 프로젝트 및 관련 작업에 접근할 수 있습니다.\n"
+"\n"
+"- 모든 내부 사용자: 모든 내부 사용자는 프로젝트 및 모든 작업에 구분 없이 접근할 수 있습니다.all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction

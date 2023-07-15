@@ -6,11 +6,11 @@
 # Léonie Bouchat <lbo@odoo.com>, 2022
 # Rita Amboni, 2022
 # Luca Carlo, 2023
-# Martin Trigaux, 2023
 # Odoo - Paolo Gatti (pgi), 2023
 # Sebastiano Picchi, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Marianna Ciofani, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15050,6 +15050,14 @@ msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "Il movimento verrà confermato alla data contabile: %(date)s"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
 msgid ""
 "This option permanently removes any track of email after it's been sent, "
@@ -16562,6 +16570,17 @@ msgstr ""
 msgid "You cannot delete an item linked to a posted entry."
 msgstr ""
 "Impossibile eliminare un movimento collegato a una registrazione confermata."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"Non puoi cancellare questa voce, poiché ha già consumato un numero di "
+"sequenza e non è l'ultima nella catena. Devi invece ripristinarla."
 
 #. module: account
 #. odoo-python
