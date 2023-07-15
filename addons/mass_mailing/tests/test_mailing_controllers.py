@@ -7,6 +7,8 @@ import datetime
 import werkzeug
 
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
+from requests import Session, PreparedRequest, Response
+
 from odoo.tests.common import HttpCase
 from odoo.tests import tagged
 
@@ -32,6 +34,13 @@ class TestMailingControllers(MassMailCommon, HttpCase):
 
         # freeze time base value
         cls._reference_now = datetime.datetime(2022, 6, 14, 10, 0, 0)
+
+    def _request_handler(self, s: Session, r: PreparedRequest, /, **kw):
+        if r.url.startswith('https://www.example.com/foo/bar'):
+            r = Response()
+            r.status_code = 200
+            return r
+        return super()._request_handler(s, r, **kw)
 
     def test_tracking_short_code(self):
         """ Test opening short code linked to a mailing trace: should set the
