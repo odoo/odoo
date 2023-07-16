@@ -60,32 +60,32 @@ msgstr "# Losowo wybrane pytania"
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_4
 msgid "$100"
-msgstr ""
+msgstr "100 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_1
 msgid "$20"
-msgstr ""
+msgstr "20 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_5
 msgid "$200"
-msgstr ""
+msgstr "200 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_6
 msgid "$300"
-msgstr ""
+msgstr "300 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_2
 msgid "$50"
-msgstr ""
+msgstr "50 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_3
 msgid "$80"
-msgstr ""
+msgstr "80 USD"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
@@ -300,6 +300,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Drogi <t t-out=\"object.partner_id.name or 'participant'\">uczestniku</t><br><br>\n"
+"<t t-if=\"object.survey_id.certification\">\n"
+"Zostałeś zaproszony do wzięcia udziału w nowej certyfikacji.\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"Przeprowadzamy ankietę i Twoja odpowiedź będzie mile widziana.\n"
+"</t>\n"
+"<div style=\"margin: 16px 0px 16px 0px;\">\n"
+"<a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"<t t-if=\"object.survey_id.certification\">\n"
+"Rozpocznij certyfikację\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"Rozpocznij ankietę\n"
+"</t>\n"
+"</a>\n"
+"</div>\n"
+"<t t-if=\"object.deadline\">\n"
+"Prosimy o odpowiedź na ankietę z dnia <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
+"</t>\n"
+"<t t-if=\"object.survey_id.certification\">\n"
+"Życzymy powodzenia!\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"Z góry dziękujemy za udział.\n"
+"</t>\n"
+"</p>\n"
+"</div>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
@@ -1519,7 +1549,7 @@ msgstr "Skopiowane!"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug3
 msgid "Cornaceae"
-msgstr ""
+msgstr "Rogowate"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_1
@@ -4412,7 +4442,7 @@ msgstr "Ankiety"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q1_sug3
 msgid "Takaaki Kajita"
-msgstr ""
+msgstr "Takaaki Kajita"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
@@ -5378,6 +5408,16 @@ msgstr ""
 
 #. module: survey
 #. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
+"Nie można usuwać pytań z ankiet \"%(survey_names)s\" podczas trwania sesji "
+"na żywo."
+
+#. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5484,7 +5524,7 @@ msgstr "zamknięcia"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr ""
+msgstr "dropdown-item d-flex align-items-center justify-content-between"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form

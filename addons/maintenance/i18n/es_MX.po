@@ -3,7 +3,6 @@
 # 	* maintenance
 # 
 # Translators:
-# Lucia Pacheco, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Iran Villalobos López, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
@@ -11,6 +10,7 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Fernanda Alvarez, 2023
 # Aimée Mendoza Sánchez, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +83,7 @@ msgid ""
 "creating new records for this alias."
 msgstr ""
 "Se evaluará un diccionario de Python con el fin de proporcionar valores "
-"predefinidos cuando se creen nuevos registros para este seudónimo."
+"predeterminados cuando se creen nuevos registros para este seudónimo."
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_computer3
@@ -159,7 +159,7 @@ msgstr "Añadir una nueva petición de mantenimiento"
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_stage_action
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_dashboard_action
 msgid "Add a new stage in the maintenance request"
-msgstr "Añadir una nueva etapa en la petición de mantenimiento"
+msgstr "Agregar una nueva etapa en la solicitud de mantenimiento"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_team_action_settings
@@ -375,8 +375,8 @@ msgid ""
 "Date at which the equipment became effective. This date will be used to "
 "compute the Mean Time Between Failure."
 msgstr ""
-"Fecha en que el equipo entró en vigencia. Esta fecha se usará para calcular "
-"el tiempo promedio entre fallas."
+"Fecha en la que se empezó a usar el equipo. Esta fecha se usará para "
+"calcular el tiempo promedio entre fallas."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__next_action_date
@@ -386,7 +386,7 @@ msgstr "Fecha del siguiente mantenimiento preventivo"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__request_date
 msgid "Date requested for the maintenance to happen"
-msgstr "Fecha solicitada para que el mantenimiento ocurra"
+msgstr "Fecha solicitada para que ocurra el mantenimiento"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__schedule_date
@@ -505,7 +505,7 @@ msgstr "Equipo asignado"
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_cat
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Equipment Categories"
-msgstr "Categorías de equipamiento"
+msgstr "Categorías del equipo"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__category_id
@@ -620,7 +620,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID del registro padre que tiene el seudónimo (ejemplo: el proyecto que "
+"ID del registro principal que tiene el seudónimo (ejemplo: el proyecto que "
 "contiene el seudónimo para la creación de tareas)"
 
 #. module: maintenance
@@ -633,7 +633,7 @@ msgstr "Icono"
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_icon
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Ícono que indica una actividad de excepción."
+msgstr "Icono que indica una actividad de excepción."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction
@@ -721,7 +721,7 @@ msgstr "Ubicación"
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
 msgid "Losses Analysis"
-msgstr "Análisis de les pérdidas"
+msgstr "Análisis de las pérdidas"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__1
@@ -1007,7 +1007,7 @@ msgid ""
 msgstr ""
 "ID opcional de un hilo (registro) al que se adjuntarán todos los mensajes "
 "entrantes, incluso si no fueron respuestas del mismo. Si se establece, se "
-"deshabilitará completamente la creación de nuevos registros."
+"deshabilitará por completo la creación de nuevos registros."
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
@@ -1059,7 +1059,7 @@ msgid ""
 msgstr ""
 "Política sobre cómo publicar un mensaje en el documento utilizando el servidor de correo.\n"
 "- todos: todos pueden publicar\n"
-"- partners: solo los partners verificados\n"
+"- contactos: solo los contactos verificados\n"
 "- seguidores: solo los seguidores del documento relacionado o los miembros de los canales\n"
 
 #. module: maintenance
@@ -1238,7 +1238,7 @@ msgstr "Número de serie"
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
 msgstr ""
-"Establezca el \"archivo\" a \"verdadero\" para esconder la petición de "
+"Establezca el archivo como Verdadero para esconder la petición de "
 "mantenimiento sin borrarla."
 
 #. module: maintenance
@@ -1246,7 +1246,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Mostrar todos los registros que tienen la próxima fecha de acción antes de "
+"Mostrar todos los registros cuya fecha de siguiente actividad es antes de "
 "hoy"
 
 #. module: maintenance
@@ -1282,7 +1282,7 @@ msgstr ""
 "Estado según las actividades\n"
 "Vencida: ya pasó la fecha límite\n"
 "Hoy: hoy es la fecha de la actividad\n"
-"Planeada: futuras actividades."
+"Planeada: actividades en un plazo a futuro."
 
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_status
@@ -1358,15 +1358,15 @@ msgid ""
 "system user is found for that address."
 msgstr ""
 "El propietario de los registros creados al recibir correos electrónicos en "
-"este seudónimo. Si el campo no está establecido, el sistema tratará de "
-"encontrar al propietario adecuado basado en la dirección del emisor (De), o "
+"este seudónimo. Si no se establece en el campo, el sistema tratará de "
+"encontrar al propietario adecuado según la dirección del emisor (De), o "
 "usará la cuenta de administrador si no se encuentra un usuario para esa "
 "dirección."
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
 msgid "The user will be able to manage equipment."
-msgstr "El usuario será capaz de manejar el equipamiento"
+msgstr "El usuario será capaz de manejar el equipo"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1392,8 +1392,8 @@ msgid ""
 "Track equipment and link it to an employee or department.\n"
 "                You will be able to manage allocations, issues and maintenance of your equipment."
 msgstr ""
-"Rastrear equipamiento y vincularlo a un empleado o departamento en específico.\n"
-"                Será capaz de gestionar las asignaciones, las incidencias y el mantenimiento de su equipo."
+"Rastree equipos y vincúlelos a un empleado o departamento.\n"
+"Podrá administrar asignaciones, problemas y mantenimiento de su equipo."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
@@ -1457,8 +1457,8 @@ msgid ""
 "You cannot delete an equipment category containing equipment or maintenance "
 "requests."
 msgstr ""
-"No podrá eliminar una categoría de equipamiento que contenga solicitudes de "
-"equipo o de mantenimiento."
+"No podrá eliminar una categoría de equipo que contenga solicitudes de equipo"
+" o de mantenimiento."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1495,4 +1495,4 @@ msgstr "horas"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_pivot
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
-msgstr "petición de mantenimiento"
+msgstr "solicitud de mantenimiento"

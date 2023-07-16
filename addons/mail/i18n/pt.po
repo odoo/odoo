@@ -20,8 +20,8 @@
 # Luiz Fernando <lfpsgs@outlook.com>, 2023
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2023
 # Martin Trigaux, 2023
-# Manuela Silva <mmsrs@sky.com>, 2023
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2023
+# Manuela Silva <mmsrs@sky.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2023\n"
+"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2023\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,6 +101,13 @@ msgstr ""
 #: code:addons/mail/static/src/rtc/rtc_service.js:0
 #, python-format
 msgid "%(name)s: %(message)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/web/messaging_service_patch.js:0
+#, python-format
+msgid "%(user)s connected. This is their first connection. Wish them luck."
 msgstr ""
 
 #. module: mail
@@ -279,13 +286,6 @@ msgstr ""
 msgid ""
 ",\n"
 "    <br/><br/>"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/composer/composer.xml:0
-#, python-format
-msgid ", enter to"
 msgstr ""
 
 #. module: mail
@@ -741,6 +741,23 @@ msgstr "<p>Crie aqui um canal.</p>"
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
+#, python-format
+msgid ""
+"<samp>%(cancel_keybind)s</samp><i> to <a href='#' data-"
+"type='%(cancel_type)s'>cancel</a></i>, <samp>%(save_keybind)s</samp><i> to "
+"<a href='#' data-type='%(save_type)s'>save</a></i>"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
+#, python-format
+msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
 msgstr ""
 
 #. module: mail
@@ -1221,6 +1238,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core_ui/message.xml:0
 #: code:addons/mail/static/src/core_ui/message.xml:0
+#: code:addons/mail/static/src/core_ui/message.xml:0
 #, python-format
 msgid "Add a Reaction"
 msgstr ""
@@ -1395,6 +1413,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr ""
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -1496,14 +1521,6 @@ msgstr ""
 #: code:addons/mail/static/src/core_ui/message.js:0
 #, python-format
 msgid "Are you sure you want to delete this message?"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message.js:0
-#: code:addons/mail/static/src/discuss_app/pinned_messages_panel.js:0
-#, python-format
-msgid "Are you sure you want to remove this pinned message?"
 msgstr ""
 
 #. module: mail
@@ -1996,6 +2013,13 @@ msgid "COOL button"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
+#, python-format
+msgid "CTRL-Enter"
+msgstr ""
+
+#. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
 msgid "Call"
 msgstr "Ligar"
@@ -2458,7 +2482,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message_confirm_dialog.xml:0
+#: code:addons/mail/static/src/core_ui/message_confirm_dialog.js:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 #, python-format
 msgid "Confirm"
@@ -3588,6 +3612,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
+#, python-format
+msgid "Enter"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/rtc/call_action_list.xml:0
 #: code:addons/mail/static/src/rtc/call_action_list.xml:0
 #, python-format
@@ -3643,6 +3674,13 @@ msgstr ""
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
 msgid "Error, a partner cannot follow twice the same object."
 msgstr "Erro, um parceiro não pode seguir duas vezes o mesmo objecto"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
+#, python-format
+msgid "Escape"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3728,6 +3766,13 @@ msgstr "Mensagem Falhada"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Failed"
 msgstr "Falhou"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
+#, python-format
+msgid "Failed to load emojis..."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -5548,6 +5593,7 @@ msgstr "Servidor Local"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -5579,7 +5625,7 @@ msgstr "Registe uma Atividade"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/web/chatter.xml:0
+#: code:addons/mail/static/src/web/composer_patch.js:0
 #, python-format
 msgid "Log an internal note..."
 msgstr ""
@@ -5866,6 +5912,7 @@ msgstr "Marcar como Concluído"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core_ui/message.xml:0
 #: code:addons/mail/static/src/core_ui/message.xml:0
 #, python-format
 msgid "Mark as Read"
@@ -6534,6 +6581,13 @@ msgstr ""
 #: code:addons/mail/static/src/web/messaging_menu/messaging_menu.xml:0
 #, python-format
 msgid "No conversation yet..."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
+#, python-format
+msgid "No emoji match your search"
 msgstr ""
 
 #. module: mail
@@ -7361,6 +7415,13 @@ msgstr ""
 #: code:addons/mail/static/src/core_ui/message.js:0
 #, python-format
 msgid "Pin"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid "Pin It"
 msgstr ""
 
 #. module: mail
@@ -8364,6 +8425,21 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
+#, python-format
+msgid "Search for an emoji"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
+#: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
+#, python-format
+msgid "Search..."
+msgstr "Procurar..."
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/views/activity/activity_controller.js:0
 #, python-format
 msgid "Search: %s"
@@ -8425,7 +8501,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/composer/composer.xml:0
+#: code:addons/mail/static/src/composer/composer.js:0
 #: code:addons/mail/static/src/composer/composer.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -8466,7 +8542,7 @@ msgstr "Enviar Agora"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/web/chatter.xml:0
+#: code:addons/mail/static/src/web/composer_patch.js:0
 #, python-format
 msgid "Send a message to followers..."
 msgstr ""
@@ -9237,6 +9313,21 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss_app/discuss.js:0
 #, python-format
@@ -9298,15 +9389,6 @@ msgstr ""
 msgid ""
 "The following email templates could not be reset because their related source files could not be found:\n"
 "- %s"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message.js:0
-#, python-format
-msgid ""
-"The following message will be pinned to the channel. Are you sure you want "
-"to continue?"
 msgstr ""
 
 #. module: mail
@@ -9941,6 +10023,13 @@ msgid "Unpin Conversation"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid "Unpin Message"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Contador de Mensagens Não Lidas"
@@ -10193,6 +10282,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
@@ -10379,6 +10476,15 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid ""
+"Well, nothing lasts forever, but are you sure you want to unpin this "
+"message?"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/public/welcome_page.xml:0
 #, python-format
 msgid "What's your name?"
@@ -10434,10 +10540,24 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid "Yeah, pin it!"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/web/message_patch.js:0
 #, python-format
 msgid "Yes"
 msgstr "Sim"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid "Yes, remove it please"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10607,6 +10727,14 @@ msgstr ""
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "You may not define a template on an abstract model: %s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid ""
+"You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr ""
 
 #. module: mail
@@ -13614,7 +13742,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/composer/composer.xml:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
@@ -17353,13 +17480,6 @@ msgstr ""
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "eruption"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/composer/composer.xml:0
-#, python-format
-msgid "escape to"
 msgstr ""
 
 #. module: mail
@@ -29723,13 +29843,6 @@ msgstr ""
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "sausage"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/composer/composer.xml:0
-#, python-format
-msgid "save"
 msgstr ""
 
 #. module: mail

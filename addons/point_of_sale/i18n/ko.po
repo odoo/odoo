@@ -4,8 +4,8 @@
 # 
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2023
-# Martin Trigaux, 2023
 # Sarah Park, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5431,6 +5431,14 @@ msgstr "세션 %s의 %s 주문에 대한 POS 마감 항목 %s 취소"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "환입 : %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "터미널로 환입 요청 전송"
@@ -6468,6 +6476,13 @@ msgstr ""
 "                        마감 차액을 허용하려면 관리자에게 문의하시기 바랍니다."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique!"
 msgstr "POS 세션은 고유한 이름을 사용해야 합니다!"
@@ -7461,13 +7476,6 @@ msgstr "판매하려는 품목 중 일련번호/로트번호가 설정되지 않
 #, python-format
 msgid "You can go to"
 msgstr "다음으로 이동할 수 있습니다."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "현금 결제는 한 가지 방법만 사용하실 수 있습니다."
 
 #. module: point_of_sale
 #. odoo-python

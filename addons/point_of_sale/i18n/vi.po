@@ -6,8 +6,8 @@
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2023
 # Vo Thanh Thuy, 2023
-# Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5524,6 +5524,14 @@ msgstr "Đảo ngược bút toán đóng phiên POS %s cho đơn hàng %s từ 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Đảo ngược của: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Yêu cầu đảo ngược gửi đến thiết bị đầu cuối"
@@ -6581,6 +6589,13 @@ msgstr ""
 "Chênh lệch tối đa được phép là %s.\n"
 "\n"
 "                        Vui lòng liên hệ với quản lý của bạn để chấp nhận chênh lệch đóng phiên."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7648,13 +7663,6 @@ msgstr ""
 #, python-format
 msgid "You can go to"
 msgstr "Bạn có thể đi đến"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Bạn chỉ có thể có một phương thức thanh toán bằng tiền mặt."
 
 #. module: point_of_sale
 #. odoo-python

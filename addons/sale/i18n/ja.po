@@ -2333,7 +2333,7 @@ msgstr "Amazonオーダインポートおよび運送同期"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "製品テンプレートをインポート"
+msgstr "プロダクトテンプレートをインポート"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_product_catalog_search_view
@@ -2504,7 +2504,7 @@ msgstr "請求方針"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr "請求ターゲット"
+msgstr "請求目標額"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3327,7 +3327,7 @@ msgstr "プロダクト梱包"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_id
 #: model_terms:ir.ui.view,arch_db:sale.sale_product_catalog_search_view
 msgid "Product Template"
-msgstr "製品テンプレート"
+msgstr "プロダクトテンプレート"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_type
@@ -3344,12 +3344,12 @@ msgstr "製品Uom読み取り専用"
 #: model:ir.model,name:sale.model_product_product
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
 msgid "Product Variant"
-msgstr "製品バリアント"
+msgstr "プロダクトバリアント"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
-msgstr "製品バリアント"
+msgstr "プロダクトバリアント"
 
 #. module: sale
 #. odoo-python
@@ -3651,7 +3651,7 @@ msgstr "オーダの確認にオンライン署名を要求"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Requested date is too soon."
-msgstr "リクエスト日が早すぎます。"
+msgstr "要求日が早すぎます。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
@@ -3662,7 +3662,7 @@ msgstr "担当ユーザ"
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid ""
 "Revenue target for the current month (untaxed total of confirmed invoices)."
-msgstr "今月の収益目標(確認済みの請求書の非課税合計)。"
+msgstr "当月の収益目標（確認済の請求書の非課税合計）"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -3739,7 +3739,7 @@ msgstr "キャンセルする販売オーダ"
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales"
-msgstr "売上"
+msgstr "販売"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -3758,12 +3758,12 @@ msgstr "受注前払請求書"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #, python-format
 msgid "Sales Analysis"
-msgstr "売上分析"
+msgstr "販売分析"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr "売上分析レポート"
+msgstr "販売分析レポート"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__state__done
@@ -3867,7 +3867,7 @@ msgstr "販売オーダ"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
-msgstr "営業チーム"
+msgstr "販売チーム"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.report_sales_team
@@ -3919,7 +3919,7 @@ msgstr "販売：見積もり送付"
 #: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr "売上高:非課税合計"
+msgstr "販売高:非課税合計"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__user_id
@@ -4639,8 +4639,8 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"このレポートは見積と受注上の分析を実行します。分析は受注高をチェックし別のグループ基準 (販売員、パートナ、製品など) "
-"により並べ替えます。まだ請求されていない受注の分析を実行するためにこのレポートを使います。総売上高を分析したい場合は、会計アプリケーションの中の請求書分析レポートを使用する必要があります。"
+"このレポートは見積書と販売オーダの分析を行います。この分析では販売収益をチェックし、別のグループ基準 （販売担当、取引先、プロダクトなど） "
+"により並べ替えます。このレポートを使用して、まだ請求されていない販売を分析しましょう。総売上高を分析したい場合は、会計アプリケーションの中の請求書分析レポートを使用する必要があります。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -4651,9 +4651,9 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"このレポートはあなたの見積の分析を行います。 "
-"分析によって販売収益が確認され、さまざまなグループ基準(セールスマン、取引先、製品など)によってソートされます。このレポートを使用して、請求がまだ行われていない売上を分析します。"
-" 売上高を分析する場合は、会計アプリケーションで請求書分析レポートを使用する必要があります。"
+"このレポートは見積書の分析を行います。 "
+"この分析では、販売収益をチェックし、様々なグループ基準（販売担当、取引先、プロダクトなど）によって並び替えます。このレポートを使用して、まだ請求されていない販売を分析しましょう。"
+" 総売上高を分析したい場合は、会計アプリケーションで請求書分析レポートを使用する必要があります。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -4664,9 +4664,8 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"このレポートは、受注の分析を実行します。 "
-"分析によって販売収益が確認され、さまざまなグループ基準(セールスマン、取引先、製品など)によってソートされます。このレポートを使用して、請求がまだ行われていない売上を分析します。"
-" 売上高を分析する場合は、会計アプリケーションで請求書分析レポートを使用する必要があります。"
+"このレポートは、販売オーダの分析を行います。 "
+"この分析では、販売収益をチェックし、様々なグループ基準（販売担当、取引先、プロダクト）によって並び替えます。このレポートを使用して、まだ請求されていない販売を分析しましょう。売上高を分析したい場合は、会計アプリケーションで請求書分析レポートを使用する必要があります。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

@@ -194,6 +194,8 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                here to set up the feature."
 msgstr ""
+"<strong>احفظ</strong> ذه الصفحة ثم عد إلى\n"
+"                                هنا لضبط الخاصية. "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -2644,6 +2646,13 @@ msgstr ""
 "الكمية لشرائها من هذا المورد للاستفادة من السعر، معبر عنها بوحدة قياس منتَج "
 "المورّد، وإذا لم تكن هناك وحدة قياس أخرى، تُستخدم وحدة القياس الافتراضية "
 "للمنتج. "
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "يجب أن تكون طريقة التقريب إلى قيمة موجبة فقط لا غير. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price

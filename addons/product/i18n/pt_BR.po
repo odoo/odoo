@@ -277,7 +277,7 @@ msgstr "Telas de blocos acústicos"
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr "Ação necessária"
+msgstr "Requer ação"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__active
@@ -2674,6 +2674,13 @@ msgstr ""
 "A quantidade a comprar desse fornecedor para se beneficiar do preço, "
 "expresso na unidade de medida do produto do fornecedor, se não houver, na "
 "unidade de medida padrão do produto."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price

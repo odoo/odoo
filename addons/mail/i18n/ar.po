@@ -102,6 +102,13 @@ msgid "%(name)s: %(message)s)"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/web/messaging_service_patch.js:0
+#, python-format
+msgid "%(user)s connected. This is their first connection. Wish them luck."
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
 #, python-format
@@ -280,13 +287,6 @@ msgid ""
 msgstr ""
 "،\n"
 "    <br/><br/> "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/composer/composer.xml:0
-#, python-format
-msgid ", enter to"
-msgstr "، ادخل "
 
 #. module: mail
 #. odoo-javascript
@@ -752,6 +752,23 @@ msgid "<p>Create a public or private channel.</p>"
 msgstr "<p>إنشاء قناة عامة أو خاصة.</p>"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
+#, python-format
+msgid ""
+"<samp>%(cancel_keybind)s</samp><i> to <a href='#' data-"
+"type='%(cancel_type)s'>cancel</a></i>, <samp>%(save_keybind)s</samp><i> to "
+"<a href='#' data-type='%(save_type)s'>save</a></i>"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
+#, python-format
+msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Button Color</span>"
 msgstr "<span class=\"d-block w-75 py-2\">لون الزر</span>"
@@ -817,7 +834,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">مؤرشف</span> "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1234,6 +1251,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core_ui/message.xml:0
 #: code:addons/mail/static/src/core_ui/message.xml:0
+#: code:addons/mail/static/src/core_ui/message.xml:0
 #, python-format
 msgid "Add a Reaction"
 msgstr "إضافة تعبير "
@@ -1412,6 +1430,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "يجب تقديم رمز وصول لكل مرفق. "
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -1514,14 +1539,6 @@ msgstr "تمت الأرشفة لأن %(user_name)s (#%(user_id)s) قام بحذ�
 #, python-format
 msgid "Are you sure you want to delete this message?"
 msgstr "هل أنت متأكد من أنك ترغب في حذف هذه الرسالة؟ "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message.js:0
-#: code:addons/mail/static/src/discuss_app/pinned_messages_panel.js:0
-#, python-format
-msgid "Are you sure you want to remove this pinned message?"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_reset_view_form
@@ -2021,6 +2038,13 @@ msgid "COOL button"
 msgstr "COOL button"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
+#, python-format
+msgid "CTRL-Enter"
+msgstr ""
+
+#. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
 msgid "Call"
 msgstr "مكالمة"
@@ -2490,7 +2514,7 @@ msgstr "تهيئة خوادم البريد الإلكتروني الخاص بك"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message_confirm_dialog.xml:0
+#: code:addons/mail/static/src/core_ui/message_confirm_dialog.js:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 #, python-format
 msgid "Confirm"
@@ -3633,6 +3657,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
+#, python-format
+msgid "Enter"
+msgstr "إدخال "
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/rtc/call_action_list.xml:0
 #: code:addons/mail/static/src/rtc/call_action_list.xml:0
 #, python-format
@@ -3690,6 +3721,13 @@ msgstr "خطأ دون استثناء. قد يكون بسبب إرسال رسال
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
 msgid "Error, a partner cannot follow twice the same object."
 msgstr "خطأ، لا يمكن لشريك أن يتابع نفس الكائن مرتين. "
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
+#, python-format
+msgid "Escape"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3775,6 +3813,13 @@ msgstr "رسالة الفشل"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Failed"
 msgstr "فشل"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
+#, python-format
+msgid "Failed to load emojis..."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -5630,6 +5675,7 @@ msgstr "الخادم المحلي "
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/composer/composer.js:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -5661,7 +5707,7 @@ msgstr "تسجيل نشاط"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/web/chatter.xml:0
+#: code:addons/mail/static/src/web/composer_patch.js:0
 #, python-format
 msgid "Log an internal note..."
 msgstr "جاري تسجيل ملاحظة داخلية… "
@@ -5952,6 +5998,7 @@ msgstr "تعيين كمنتهي "
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core_ui/message.xml:0
 #: code:addons/mail/static/src/core_ui/message.xml:0
 #, python-format
 msgid "Mark as Read"
@@ -6620,6 +6667,13 @@ msgstr "لم يتم تحديد محادثة."
 #, python-format
 msgid "No conversation yet..."
 msgstr "لا توجد محادثات بعد..."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
+#, python-format
+msgid "No emoji match your search"
+msgstr "ليس هناك أي وجه ضاحك يطابق بحثك "
 
 #. module: mail
 #. odoo-javascript
@@ -7464,6 +7518,13 @@ msgstr "مكالمة هاتفية"
 #: code:addons/mail/static/src/core_ui/message.js:0
 #, python-format
 msgid "Pin"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid "Pin It"
 msgstr ""
 
 #. module: mail
@@ -8475,6 +8536,21 @@ msgstr "البحث عن مستخدم... "
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
+#, python-format
+msgid "Search for an emoji"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
+#: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
+#, python-format
+msgid "Search..."
+msgstr "بحث..."
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/views/activity/activity_controller.js:0
 #, python-format
 msgid "Search: %s"
@@ -8536,7 +8612,7 @@ msgstr "المستخدمين المحددين: "
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/composer/composer.xml:0
+#: code:addons/mail/static/src/composer/composer.js:0
 #: code:addons/mail/static/src/composer/composer.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -8577,7 +8653,7 @@ msgstr "إرسال الآن"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/web/chatter.xml:0
+#: code:addons/mail/static/src/web/composer_patch.js:0
 #, python-format
 msgid "Send a message to followers..."
 msgstr "إرسال رسالة إلى المتابعين …"
@@ -9366,6 +9442,21 @@ msgstr ""
 "الدولة. يمكنك استخدام '/' للإشارة إلى أن الشريك لا يخضع للضريبة. "
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "المرفق %s غير موجود أو إنك لا تملك حق الوصول إليه. "
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss_app/discuss.js:0
 #, python-format
@@ -9437,15 +9528,6 @@ msgid ""
 msgstr ""
 "تعذر إعادة ضبط قوالب البريد الإلكتروني التالية لعدم العثور على الملفات المصدرية الرتبطة بها: \n"
 "- %s "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message.js:0
-#, python-format
-msgid ""
-"The following message will be pinned to the channel. Are you sure you want "
-"to continue?"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__user_id
@@ -10101,6 +10183,13 @@ msgid "Unpin Conversation"
 msgstr "إلغاء تثبيت المحادثة "
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid "Unpin Message"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "عداد الرسائل غير المقروءة "
@@ -10363,6 +10452,14 @@ msgstr ""
 "(@mycompany.odoo.com). "
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
@@ -10549,6 +10646,15 @@ msgstr "مرحباً بك في شركتي! "
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid ""
+"Well, nothing lasts forever, but are you sure you want to unpin this "
+"message?"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/public/welcome_page.xml:0
 #, python-format
 msgid "What's your name?"
@@ -10606,10 +10712,24 @@ msgstr "YYYY-MM-DD HH:MM:SS"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid "Yeah, pin it!"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/web/message_patch.js:0
 #, python-format
 msgid "Yes"
 msgstr "نعم"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid "Yes, remove it please"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10784,6 +10904,14 @@ msgstr ""
 #, python-format
 msgid "You may not define a template on an abstract model: %s"
 msgstr "لا يمكن تحديد قالب في النموذج التجريدي: %s"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/message_service.js:0
+#, python-format
+msgid ""
+"You sure want this message pinned to %(conversation)s forever and ever?"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -13795,7 +13923,6 @@ msgstr "عبوة معدنية "
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/composer/composer.xml:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
@@ -17537,13 +17664,6 @@ msgstr "فارس "
 #, python-format
 msgid "eruption"
 msgstr "ثوران البركان "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/composer/composer.xml:0
-#, python-format
-msgid "escape to"
-msgstr "الخروج إلى "
 
 #. module: mail
 #. odoo-javascript
@@ -29908,13 +30028,6 @@ msgstr "صوروبود "
 #, python-format
 msgid "sausage"
 msgstr "سجق "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/composer/composer.xml:0
-#, python-format
-msgid "save"
-msgstr "حفظ "
 
 #. module: mail
 #. odoo-javascript

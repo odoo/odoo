@@ -2129,6 +2129,10 @@ msgid ""
 "- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 format\n"
 "    "
 msgstr ""
+"\n"
+"- 註冊成為 Peppol 參與者\n"
+"- 透過 Peppol 網絡，以 Peppol BIS Billing 3.0 格式傳送和接收文件\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -4729,6 +4733,25 @@ msgid ""
 "Pro rules and show the errors.\n"
 "    "
 msgstr ""
+"\n"
+"電子發票模組\n"
+"===========================\n"
+"\n"
+"允許匯入匯出格式：E-FFF、UBL Bis 3、EHF3、NLCIUS、Factur-X（CII）、XRechnung（UBL）。\n"
+"產生發票的 PDF 時，PDF 將嵌入到所有 UBL 格式的 XML 中。 這允許\n"
+"收件人僅使用 XML 檔案讀取 PDF。請注意，**EHF3 完全由 UBL BIS 3 實現** (`參考\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).\n"
+"\n"
+"可以從連結到發票的日記帳（日記帳 > 進階設置）中選擇格式。\n"
+"\n"
+"請注意，E-FFF、NLCIUS 和 XRechnung（UBL）分別僅適用於比利時、荷蘭和德國公司。\n"
+"UBL BIS 3 僅適用於下列國家/地區的公司： `EAS 清單\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
+"\n"
+"另請注意，為了讓 Chorus Pro 自動偵測“PDF/A-3 (Factur-X)”格式，您需要啟動\n"
+"日記賬上的“Factur-X PDF/A-3”選項。此選項還會根據 Factur-X 和 Chorus Pro \n"
+"的規則驗證 XML,並顯示錯誤。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -10355,6 +10378,12 @@ msgid ""
 "- Follow-up Address: Preferred address for follow-up reports. Selected by default when you send reminders about overdue invoices.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- 聯絡人：用作整理特定公司的員工聯絡資訊（例：行政總裁、財務總監⋯）。\n"
+"- 發票地址：所有發票的首選地址，為該公司的訂單開立發票時預設選用。\n"
+"- 送貨地址：所有送貨的首選地址，交付該公司的訂單時預設選用。\n"
+"- 私人：私人地址只限授權用戶查閱，並包含敏感資料（員工住址等）。\n"
+"- 跟進地址：跟進報告的首選地址，發送有關逾期發票的提醒時預設選用。\n"
+"- 其他：公司的其他地址（例如子公司⋯）"
 
 #. module: base
 #. odoo-python
@@ -15308,6 +15337,13 @@ msgstr "完整名稱"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "計算"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -21250,6 +21286,12 @@ msgstr "指定的\"訂單\"無效(%s). 有效的\"順序\"規範是以逗號分�
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "無效的「分組」參數"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -33752,6 +33794,13 @@ msgstr "未找到 WKhtmltopdf 系統，無法建立 PDF."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -35308,6 +35357,15 @@ msgid "You can not create recursive tags."
 msgstr "您不能建立遞歸的標籤."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login!"
 msgstr "不能有兩個使用者同時登入！"
@@ -35425,6 +35483,12 @@ msgstr "您不能停用您當前登入的使用者."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""

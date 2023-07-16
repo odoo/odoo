@@ -28,6 +28,10 @@ msgid ""
 "                                             before confirming the registration!\n"
 "                                        </b>"
 msgstr ""
+"<b>\n"
+"                                            Bitte verifizieren den EAS-Code und den Endpunkt (Beteiligten-ID) unten\n"
+"                                             vor der Registrierungsbestätigung!\n"
+"                                        </b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -56,6 +60,9 @@ msgid ""
 "                                        Upload a document to verify Company information.\n"
 "                                    </span>"
 msgstr ""
+"<span>\n"
+"                                        Ein Dokument hochladen, um die Unternehmensinformationen zu verifizieren.\n"
+"                                    </span>"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -88,11 +95,13 @@ msgid ""
 "By clicking the \"Confirm\" button, I accept that Odoo may process my "
 "e-invoices."
 msgstr ""
+"Durch Bestätigen erkläre ich mich damit einverstanden, dass Odoo meine "
+"elektronischen Rechnungen verarbeitet."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "Cancel PEPPOL"
-msgstr ""
+msgstr "PEPPOL abbrechen"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__canceled
@@ -105,19 +114,20 @@ msgstr "Abgebrochen"
 #, python-format
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr ""
+"Buchung, die bereits an PEPPOL gesendet wurde, kann nicht abgebrochen werden"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Cannot register a user with a %s application"
-msgstr ""
+msgstr "Benutzer mit %s-Anwendung kann nicht registriert werden"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_validity_last_check
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_validity_last_check
 msgid "Checked on"
-msgstr ""
+msgstr "Geprüft am"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_eas
@@ -164,7 +174,7 @@ msgstr "Fehler"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Error when receiving via Peppol: %s"
-msgstr ""
+msgstr "Fehler beim Eingang via Peppol: %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -179,11 +189,12 @@ msgstr "Import eines Peppol-Dokuments fehlgeschlagen."
 #, python-format
 msgid "Failed to import a Peppol document. Sender endpoint: %s"
 msgstr ""
+"Import eines Peppol-Dokuments fehlgeschlagen. Endpunkt des Senders: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
-msgstr ""
+msgstr "Journal für Eingangsrechnungen"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move
@@ -194,12 +205,12 @@ msgstr "Journalbuchung"
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_validity_last_check
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_validity_last_check
 msgid "Last Peppol endpoint verification"
-msgstr ""
+msgstr "Letzte Verifizierung des Peppol-Endpunkts"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
-msgstr ""
+msgstr "Nicht registriert"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
@@ -218,6 +229,9 @@ msgid ""
 "                                        You will be able to start sending and receiving documents via PEPPOL once your participation is approved.\n"
 "                                        We will notify you once we have reviewed your application."
 msgstr ""
+"Sobald Sie diese Option ausgewählen und bestätigen, werden wir Ihren Antrag prüfen. \n"
+"                                        Sobald Ihre Teilnahme an PEPPOL genehmigt ist, können Sie mit dem Versand und Empfang von Dokumenten über PEPPOL beginnen.\n"
+"                                        Wir werden Sie benachrichtigen, sobald wir Ihren Antrag geprüft haben."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
@@ -227,41 +241,41 @@ msgstr "PEPPOL"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "PEPPOL Electronic Document Invoicing"
-msgstr ""
+msgstr "PEPPOL-Dokument für elektronische Rechnungsstellung"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__is_account_peppol_participant
 msgid "PEPPOL Participant"
-msgstr ""
+msgstr "PEPPOL-Beteiligter"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "PEPPOL Purchase Journal"
-msgstr ""
+msgstr "PEPPOL-Einkaufsjournal"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__is_account_peppol_eligible
 msgid "PEPPOL eligible"
-msgstr ""
+msgstr "PEPPOL-berechtigt"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "PEPPOL endpoint validity"
-msgstr ""
+msgstr "Gültigkeit des PEPPOL-Endpunkts"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_payment__peppol_message_uuid
 msgid "PEPPOL message ID"
-msgstr ""
+msgstr "PEPPOL-Nachrichten-ID"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "PEPPOL state"
-msgstr ""
+msgstr "PEPPOL-Status"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_move_state
@@ -271,22 +285,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_proxy_state
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_proxy_state
 msgid "PEPPOL status"
-msgstr ""
+msgstr "PEPPOL-Status"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
 msgid "PEPPOL: retrieve new documents"
-msgstr ""
+msgstr "PEPPOL: neue Dokumente abrufen"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_message_status_ir_actions_server
 msgid "PEPPOL: update message status"
-msgstr ""
+msgstr "PEPPOL: Nachrichtenstatus aktualisieren"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "PEPPOL: update participant status"
-msgstr ""
+msgstr "PEPPOL: Teilnehmerstatus aktualisieren"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -296,27 +310,27 @@ msgstr "Ausstehend"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol EAS"
-msgstr ""
+msgstr "Peppol EAS"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Endpoint"
-msgstr "Peppol Endpoint"
+msgstr "Peppol-Endpunkt"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_attachment_ids
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_attachment_ids
 msgid "Peppol Identification Documents"
-msgstr ""
+msgstr "Peppol-Identifikationsdokumente"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol document has been received successfully"
-msgstr ""
+msgstr "Peppol-Dokument wurde erfolgreich empfangen"
 
 #. module: account_peppol
 #. odoo-python
@@ -324,6 +338,7 @@ msgstr ""
 #, python-format
 msgid "Peppol document has been received successfully. Sender endpoint: %s"
 msgstr ""
+"Peppol-Dokument wurde erfolgreich empfangen. Endpunkt des Absenders: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
@@ -335,7 +350,7 @@ msgstr "Peppol E-Adresse (EAS)"
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_verification_label
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_verification_label
 msgid "Peppol endpoint validity"
-msgstr ""
+msgstr "Gültigkeit des Peppol-Endpunkts"
 
 #. module: account_peppol
 #. odoo-python
@@ -343,6 +358,13 @@ msgstr ""
 #, python-format
 msgid "Peppol error: %s"
 msgstr "Peppol-Fehler: %s"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+#, python-format
+msgid "Peppol status update: %s"
+msgstr "Peppol-Statusaktualisierung: %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -359,13 +381,15 @@ msgid ""
 "Please fill in the EAS code and the Participant ID code in the company's "
 "partner form."
 msgstr ""
+"Bitte geben Sie den EAS-Code und den ID-Code des Teilnehmers in das "
+"Partnerformular des Unternehmens ein."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Please select the UBL format"
-msgstr ""
+msgstr "Bitte wählen Sie das UBL-Format"
 
 #. module: account_peppol
 #. odoo-python
@@ -373,6 +397,8 @@ msgstr ""
 #, python-format
 msgid "Please upload a document that would help verifying your application"
 msgstr ""
+"Bitte laden Sie ein Dokument hoch, das dabei helfen könnte, Ihren Antrag zu "
+"genehmigen"
 
 #. module: account_peppol
 #. odoo-python
@@ -380,6 +406,7 @@ msgstr ""
 #, python-format
 msgid "Please verify partner configuration in partner settings."
 msgstr ""
+"Bitte überprüfen Sie die Partnerkonfiguration in den Partnereinstellungen."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -417,6 +444,7 @@ msgstr "Via PEPPOL senden"
 #, python-format
 msgid "The document has been sent to the Peppol Access Point for processing"
 msgstr ""
+"Das Dokument wurde zur Verarbeitung an den Peppol-Zugangspunkt gesendet"
 
 #. module: account_peppol
 #. odoo-python
@@ -434,19 +462,22 @@ msgid ""
 "documents. Please check and verify their Peppol endpoint and the Electronic "
 "Invoicing format: %s"
 msgstr ""
+"Die folgenden Partner sind nicht korrekt für den Empfang von Peppol-"
+"Dokumenten konfiguriert. Bitte überprüfen Sie ihren Peppol-Endpunkt und das "
+"Format für die elektronische Rechnungsstellung: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr ""
+msgstr "Dem Partner fehlt die Peppol-EAS- und/oder Endpunkt-Kennung."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "The partner's EAS code and PEPPOL endpoint are valid"
-msgstr ""
+msgstr "Der EAS-Code und der PEPPOL-Endpunkt des Partners sind gültig"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -461,7 +492,7 @@ msgid ""
 "also known as 'Endpoint ID'."
 msgstr ""
 "Eindeutige Kennung, die von Peppol BIS Billing 3.0 und Ableitungen verwendet"
-" wird, auch bekannt als „Endpoint ID“."
+" wird, auch bekannt als „Endunkt-ID“."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -476,7 +507,7 @@ msgstr "PEPPOL verwenden"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Use PEPPOL Invoicing"
-msgstr ""
+msgstr "PEPPOL-Rechnungsstellung verwenden"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
@@ -491,7 +522,7 @@ msgstr "Prüfen Sie"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify partner's PEPPOL endpoint"
-msgstr ""
+msgstr "Den PEPPOL-Endpunkt des Partners verifizieren"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning

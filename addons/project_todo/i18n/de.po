@@ -133,6 +133,17 @@ msgid ""
 "        Similarly, private tasks created in the Project app will also appear in your to-dos.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        To-dos sind jetzt wie \n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">private Aufgaben</font>\n"
+"        </span>\n"
+"        und werden in der Projekte-App unter \n"
+"        <span>\n"
+"            <font style=\"font-weight: bolder;\" class=\"text-o-color-2\">Meine Aufgaben</font> angezeigt.\n"
+"        </span>\n"
+"        Ebenso erscheinen private Aufgaben, die Sie in der Projekte-App erstellt haben, in Ihren To-Dos.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -145,6 +156,13 @@ msgid ""
 "        field above to share this to-do with other users.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        To-dos, genau wie private Aufgaben, sind nur für die als zugewiesen festgelegte Benutzer zugänglich. Sie können das Feld\n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">Zugewiesen an</font>\n"
+"        </span>\n"
+"        oben verwenden, um diese To-do mit anderen Benutzern zu teilen.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -153,6 +171,9 @@ msgid ""
 "        Use it to manage your urgent work, take notes on the go, and create tasks based on them. \n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Verwalten Sie damit Ihre dringenden Arbeiten, machen Sie sich unterwegs Notizen und erstellen Sie darauf basierend Aufgaben. \n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -165,6 +186,13 @@ msgid ""
 "        pop-up from the action menu of the to-do.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Sie können Ihre To-dos in Aufgaben umwandeln und sie einem Projekt zuweisen. Um dies zu tun, müssen Sie auf das Pop-up\n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">In Aufgabe umwandeln</font>\n"
+"        </span>\n"
+"        aus dem Aktionsmenü der To-do zugreifen.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -197,6 +225,9 @@ msgid ""
 "    <br/>\n"
 "    <span style=\"font-size: 14px;\">Ready to give it a spin?</span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">Mit dieser privaten To-do können Sie etwas herumexperimentieren.</span>\n"
+"    <br/>\n"
+"    <span style=\"font-size: 14px;\">Bereit für einen Testlauf?</span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -214,7 +245,7 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Aktionen führen gegebenfalls zu weiteren Funktionen wie zur Öffnung der "
+"Aktionen führen gegebenenfalls zu weiteren Funktionen wie zur Öffnung der "
 "Kalenderansicht oder zur automatischen „Erledigt“-Markierung, wenn ein "
 "Dokument hochgeladen wurde."
 
@@ -236,7 +267,7 @@ msgstr "Eine To-do hinzufügen"
 #: code:addons/project_todo/static/src/web/activity/activity_menu_patch.xml:0
 #, python-format
 msgid "AddTodo"
-msgstr ""
+msgstr "To-do hinzufügen"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
@@ -253,17 +284,17 @@ msgstr "Zugewiesen an"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "By assigned tags"
-msgstr ""
+msgstr "Nach zugewiesenen Stichwörtern"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "By personal stages"
-msgstr ""
+msgstr "Nach persönlichen Phasen"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
 msgid "Choose tags from the selected project"
-msgstr ""
+msgstr "Stichwörter aus dem ausgewählten Projekt auswählen"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -287,7 +318,7 @@ msgstr "In Aufgabe umwandeln"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Create a task"
-msgstr ""
+msgstr "Eine Aufgabe erstellen"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_kanban
@@ -320,6 +351,8 @@ msgid ""
 "Keep your work organized by using memos and to-do lists.\n"
 "                Your to-do items are private by default, but you can choose to share them with others by adding them as assignees."
 msgstr ""
+"Organisieren Sie Ihre Arbeit mit Hilfe von Memos und To-do-Listen.\n"
+"                Ihre To-do-Punkte sind standardmäßig privat, aber Sie können sie für andere freigeben, indem Sie sie als Verantwortliche hinzufügen."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -337,12 +370,12 @@ msgstr "Als erledigt markieren"
 #. module: project_todo
 #: model_terms:ir.actions.act_window,help:project_todo.project_task_action_todo
 msgid "No to-do found. Let's create one!"
-msgstr ""
+msgstr "Keine To-do gefunden. Erstellen Sie eine!"
 
 #. module: project_todo
 #: model:res.groups,name:project_todo.group_onboarding_todo
 msgid "Onboarding todo already generated for those users"
-msgstr ""
+msgstr "Einführung in To-do bereits für diese Benutzer generiert"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -360,19 +393,19 @@ msgstr "Erinnerung"
 #: code:addons/project_todo/static/src/web/activity/activity_menu_patch.xml:0
 #, python-format
 msgid "Reminder to..."
-msgstr ""
+msgstr "Erinnerung an ..."
 
 #. module: project_todo
 #. odoo-javascript
 #: code:addons/project_todo/static/src/web/activity/activity_menu_patch.xml:0
 #, python-format
 msgid "SAVE"
-msgstr "Speichern"
+msgstr "SPEICHERN"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
 msgid "Select an existing project"
-msgstr ""
+msgstr "Ein bestehendes Projekt auswählen"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -405,14 +438,14 @@ msgstr "To-do"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
 msgid "To-do Title"
-msgstr ""
+msgstr "Titel der To-do"
 
 #. module: project_todo
 #: model:ir.actions.act_window,name:project_todo.project_task_action_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_activity
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_tree
 msgid "To-dos"
-msgstr ""
+msgstr "To-dos"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -422,7 +455,7 @@ msgstr "Heutige Aktivitäten"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "Todos"
-msgstr ""
+msgstr "To-dos"
 
 #. module: project_todo
 #. odoo-javascript
@@ -431,7 +464,7 @@ msgstr ""
 #: code:addons/project_todo/static/src/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name.js:0
 #, python-format
 msgid "Untitled to-do"
-msgstr ""
+msgstr "To-do ohne Titel"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -458,6 +491,8 @@ msgid ""
 "Your to-do has been successfully added to your tasks and scheduled for "
 "completion."
 msgstr ""
+"Ihre To-do wurde erfolgreich zu Ihren Aufgaben hinzugefügt und für die "
+"Erledigung geplant."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
@@ -467,7 +502,7 @@ msgstr "z. B. Einladungen versenden"
 #. module: project_todo
 #: model:ir.actions.server,name:project_todo.project_task_preload_action_todo
 msgid "menu load To-dos"
-msgstr ""
+msgstr "Menü laden To-dos"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding

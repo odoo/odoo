@@ -4056,7 +4056,7 @@ msgstr "세션 점수획득판 보기"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Show all records which has next action date is before today"
-msgstr "다음 작업 일자가 오늘 이전인 모든 기록 표시"
+msgstr "다음 작업 일자가 오늘 이전인 모든 레코드 표시"
 
 #. module: survey
 #. odoo-python
@@ -5306,6 +5306,14 @@ msgstr "다양한 수단을 통해 링크를 공유할 수 있습니다: 이메�
 
 #. module: survey
 #. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
+
+#. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""

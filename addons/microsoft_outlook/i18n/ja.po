@@ -42,6 +42,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Outlookトークン有効\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -50,6 +53,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Outlookトークン有効\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -181,7 +187,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "Outlookリフレッシュトークン"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -199,7 +205,7 @@ msgstr ""
 
 #. module: microsoft_outlook
 #. odoo-python
-#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
 "Please fill the \"Username\" field with your Outlook/Office365 username "

@@ -277,9 +277,9 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
-"<span>ルールに基づいて定期的にリードを割り当てる</span><br/>\n"
+"<span>規則に基づいて定期的にリードを割り当てる</span><br/>\n"
 "                                <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
-"                                    全営業チームは、特に指定がない限りデフォルトで\n"
+"                                    全販売チームは、特に指定がない限りデフォルトで\n"
 "                                   この設定を使用します。\n"
 "                                </span>"
 
@@ -650,7 +650,7 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
-"あなたは営業ではないチームのメンバーであるため、<b>デフォルトで初めのチーム</b>のパイプラインが表示されます。\n"
+"あなたは販売チーム外のメンバーであるため、<b>デフォルトで初めのチーム</b>のパイプラインが表示されます。\n"
 "                                        CRMを使用するには、<a name=\"%d\" type=\"action\" tabindex=\"-1\">チームに参加</a>する必要があります。"
 
 #. module: crm
@@ -661,13 +661,13 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
-"あなたは営業ではないチームのメンバーであるため、<b>デフォルトで初めのチーム</b>のパイプラインが表示されます。 "
+"あなたは販売チーム外のメンバーであるため、<b>デフォルトで初めのチーム</b>のパイプラインが表示されます。 "
 "CRMを使用するには、チームに参加する必要があります。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
-msgstr "リードを割り当て"
+msgstr "リードの割り当て"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -779,7 +779,7 @@ msgstr "ブラックリストされた電話は固定電話"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Boom! Team record for the past 30 days."
-msgstr "はい!チームの過去30日分のレコードです。"
+msgstr "こちらがチームの過去30日分のレコードです。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_bounce
@@ -903,7 +903,7 @@ msgstr "契約日"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "閉めた/死んだリードはチャンスに変換できません。"
+msgstr "クローズ/失注リードは案件に変換できません。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
@@ -1115,7 +1115,7 @@ msgstr "定期的計画を作成"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
-msgstr "案件パイプラインからリード発掘リクエストを直接作成"
+msgstr "案件パイプラインからリード発掘要求を直接作成します。"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -1295,7 +1295,7 @@ msgstr "Eメールが下記宛に送信されたのをご存じですか："
 msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
-msgstr "営業チームエイリアスに送信されたEメールがあなたのパイプラインに案件を作成したのをご存じですか？"
+msgstr "販売チームエイリアスに送信されたEメールがあなたのパイプラインに案件を作成したのをご存じですか？"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
@@ -1341,7 +1341,7 @@ msgstr "表示名"
 #: code:addons/crm/models/digest.py:0 code:addons/crm/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "アクセス権がありません。ユーザのダイジェストメールにこのデータをスキップしてください"
+msgstr "アクセス権がありません。ユーザのダイジェストメール用にこのデータをスキップして下さい。"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__nothing
@@ -1454,7 +1454,7 @@ msgstr "リードのメールアドレスをもとに、企業データを充実
 msgid ""
 "Enter here the internal requirements for this stage (ex: Offer sent to "
 "customer). It will appear as a tooltip over the stage's name."
-msgstr "この段階の内部要件をここに入力します(例：オファーが顧客に送信されます)。 ステージ名の上にツールチップとして表示されます。"
+msgstr "このステージの内部要件をここに入力します（例：オファーが顧客に送信されます） ステージ名の上にツールチップとして表示されます。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__date_deadline
@@ -1573,7 +1573,7 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 200 credits for free."
 msgstr ""
-"営業チームにとって、リードの枯渇ほどつらいことはありません。幸い数回クリックするだけで、企業規模や業種など、貴社のニーズに特化したリードを生成することができます。この機能をお試しいただけるよう、200クレジットを無料でご提供しています。"
+"販売チームにとって、リードの枯渇ほど辛いことはありません。幸い数回クリックするだけで、企業規模や業種など、貴社のニーズに特化したリードを生成することができます。この機能をお試し頂けるよう、200クレジットを無料でご提供しています。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1721,7 +1721,7 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
-msgstr "設定されている場合、この営業チームは、この取引先に関連する営業および割り当てに使用されます。"
+msgstr "設定されている場合、この販売チームは、この取引先に関連する営業および割り当てに使用されます。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_bounced_content
@@ -1843,7 +1843,7 @@ msgstr "職位："
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
 msgid "Kanban State"
-msgstr "かんばん状態"
+msgstr "かんばんステート"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
@@ -1941,7 +1941,7 @@ msgstr "リード割り当て"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Lead Assignment requested by %(user_name)s"
-msgstr "%(user_name)sによるリード割り当てリクエスト"
+msgstr "%(user_name)sによるリード割り当て要求"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_max
@@ -2070,8 +2070,8 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
-"リード分析では、処理遅延や状態ごとのリードの数のようなさまざまなCRM関連の情報を確認することができます。 "
-"さまざまなグループごとにリード分析を並べ替えて、正確な、細かな分析を得ることができます。"
+"リード分析では、処理遅延やステートごとのリード数など、様々なCRM関連の情報を確認することができます。 "
+"色々なグループごとにリード分析を並べ替えて、正確・詳細な分析を得ることができます。"
 
 #. module: crm
 #. odoo-python
@@ -2539,7 +2539,7 @@ msgstr "キャパシティがないため%(team_name)sチームに割り当て�
 msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
-msgstr "チームまたは販売担当者に割り当てられたリードがありません。未割り当てのリードと同様に、営業チームと販売担当者の設定を確認して下さい。"
+msgstr "チームまたは販売担当者に割り当てられたリードがありません。未割り当てのリードと同様に、販売チームと販売担当者の設定を確認して下さい。"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -3175,7 +3175,7 @@ msgstr "SMS配信エラー"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_sales
 msgid "Sales"
-msgstr "売上"
+msgstr "販売"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team
@@ -3193,7 +3193,7 @@ msgstr "売上"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Sales Team"
-msgstr "営業チーム"
+msgstr "販売チーム"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team_member
@@ -3349,7 +3349,7 @@ msgstr "アラーム機能 7日"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Source"
-msgstr "情報源"
+msgstr "ソース"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3438,10 +3438,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"活動に基づいての状態\n"
-"延滞: 期限は既に過ぎました\n"
-"当日: 活動日は本日です\n"
-"予定: 将来の活動。"
+"活動に基づくステータス\n"
+"期限超過： 期限を過ぎています\n"
+"本日：活動の日付が本日です\n"
+"計画：今後の活動です"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -3560,7 +3560,7 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"このエイリアスに電子メールを受信した時に作成されるレコードのオーナー。このフィールドが設定されない場合、システムは送信者(From)アドレスに基づいた適切なオーナーを見つけるか、見つからなければ管理者アカウントを使用します。"
+"このエイリアスにEメールを受信した時に作成されるレコードの所有者。このフィールドが設定されない場合、システムは送信者(From)アドレスに基づいた適切なオーナーを見つけるか、そのアドレスのユーザーが見つからなければ管理者アカウントを使用します。"
 
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_lead_check_probability
@@ -3595,7 +3595,7 @@ msgstr "このバーで予定されている活動に基づいて案件をフィ
 msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
-msgstr "これは、ルールに基づいて自動的にリードを営業担当者に割り当てるために使用することができます。"
+msgstr "これは、規則に基づいて自動的にリードを営業担当者に割り当てるために使用することができます。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3630,7 +3630,7 @@ msgstr "これは、Fall_Drive、Christmas_Specialなど、さまざまなキャ
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "これは、はがき、電子メール、バナー広告などの配信方法です。"
+msgstr "これは、はがき、Eメール、バナー広告などの配信方法です。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
@@ -3650,7 +3650,7 @@ msgstr "この電話番号はSMSマーケティングのブラックリストに
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr "このステージは、そのステージにレコードが表示されていないときに、かんばんのビューで折り込まれます。"
+msgstr "このステージは、そのステージにレコードが表示されていないときに、かんばんビューで折り込まれます。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -3841,9 +3841,10 @@ msgid ""
 "                    a contact form filled in your website, or a file of unqualified\n"
 "                    prospects you import, etc."
 msgstr ""
-"案件や顧客を作成する前に評価ステップが必要な場合は、リードを使用してください。\n"
-"受け取った名刺、ウェブサイトに記入されたコンタクトフォーム、または\n"
-"インポートした精査されていない見込み顧客のファイルなどです。"
+"案件や顧客を作成する前に評価ステップが必要な場合は、\n"
+"　　　　　リードを使用してください。\n"
+"受け取った名刺、ウェブサイトで記入された問い合わせフォーム、または\n"
+"インポートした未精査の見込み顧客のファイルなどです。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3854,7 +3855,7 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
-"案件や顧客を作成する前に評価ステップが必要な場合は、リードを使用してください。受け取った名刺、ウェブサイトに記入されたコンタクトフォーム、または、インポートした未評価の見込み顧客のファイルなどです。評価されると、リードはビジネス案件、及び/または、連絡先の新しい顧客に変換されます。"
+"案件や顧客を作成する前に評価ステップが必要な場合は、リードを使用してください。受け取った名刺、ウェブサイトで記入された問い合わせフォーム、またはインポートした未評価の見込み顧客のファイルなどです。評価されると、リードはビジネス案件、および/または、アドレス帳で新しい顧客に変換されます。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4038,9 +4039,9 @@ msgid ""
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
-"ミーティングを計画したり、案件のアクティビティに電話したりしたり、\n"
-"　　見積に変換したり、関連ドキュメントを添付したり、\n"
-"　　すべてのディスカッションを追跡したりさらにいろいろすることができます。"
+"案件からミーティングや電話を計画したり、\n"
+"　　　　　見積に変換したり、関連ドキュメントを添付したり、\n"
+"　　　　　すべてのディスカッションを追跡したり、さらに多くのこと　　　　　　　　　　　を行うことができます。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4077,7 +4078,7 @@ msgstr "例）協議"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. Product Pricing"
-msgstr "例.製品の価格つけ"
+msgstr "例：プロダクトの価格設定"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -4112,7 +4113,7 @@ msgstr "Eメールを送ります。"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
-msgstr "このEメールアドレスは営業チームメンバーが設定することができます。"
+msgstr "このEメールアドレスは販売チームメンバーが設定することができます。"
 
 #. module: crm
 #. odoo-python

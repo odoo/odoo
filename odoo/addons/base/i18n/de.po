@@ -281,7 +281,7 @@ msgstr ""
 "Lokalisierungsmodul für Dänemark\n"
 "===============================\n"
 "\n"
-"Dies ist das Modul zur Verwaltung des **Kontenplans für Denmark**. Sowohl Einzelunternehmen als auch I/S, IVS, ApS und A/S\n"
+"Dies ist das Modul zur Verwaltung des **Kontenplans für Dänemark**. Sowohl Einzelunternehmen als auch I/S, IVS, ApS und A/S\n"
 "\n"
 "**Modulet opsætter:**\n"
 "\n"
@@ -906,6 +906,9 @@ msgid ""
 "        Addon for the POS App that allows customers to view the menu on their smartphone.\n"
 "        "
 msgstr ""
+"\n"
+"        Addon für die Kassensystem-App, das es Kunden ermöglicht, die Speisekarte auf Ihrem Smartphone einzusehen.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment
@@ -1043,6 +1046,9 @@ msgid ""
 "        Bridge module addings support for EMV Merchant-Presented QR-code generation for Payment System.\n"
 "    "
 msgstr ""
+"\n"
+"        Brückenmodul zur Unterstützung der Generierung der vom Händler vorgezeigten QR-Codes bei EMV-Zahlungen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_quality
@@ -1751,7 +1757,7 @@ msgstr ""
 "\n"
 "        Mit diesem Modul können Sie Ihren Verkaufsauftrag auf der Grundlage der Produktkonfiguration planen.\n"
 "\n"
-"Für Produkte, bei denen die Option „Services planen“ aktiviert ist, haben Sie die Möglichkeit,\n"
+"Für Produkte, bei denen die Option „Dienstleistungen planen“ aktiviert ist, haben Sie die Möglichkeit,\n"
 "automatisch die Schichten für die Mitarbeiter zu prognostizieren, die die Schicht übernehmen können\n"
 "(d. h. Mitarbeiter, die die gleiche Rolle haben wie die für das Produkt konfigurierte).\n"
 "\n"
@@ -1773,7 +1779,7 @@ msgstr ""
 "\n"
 "Mit diesem Modul können Sie Ihren Verkaufsauftrag auf der Grundlage der Produktkonfiguration planen.\n"
 "\n"
-"Für Produkte, bei denen die Option „Services planen“ aktiviert ist, haben Sie die Möglichkeit\n"
+"Für Produkte, bei denen die Option „Dienstleistungen planen“ aktiviert ist, haben Sie die Möglichkeit\n"
 "automatisch Schichten an Mitarbeiter zuzuweisen, die die Schicht  übernehmen können\n"
 "(d. h. Mitarbeiter, die die gleiche Rolle haben wie die für das Produkt konfigurierte).\n"
 "\n"
@@ -2425,6 +2431,12 @@ msgid ""
 "    for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx\n"
 "    "
 msgstr ""
+"\n"
+"    Dieses Modul erstellt die Facturae-Datei, die für die Übermittlung der Rechnungsdaten an die allgemeinen staatlichen Behörden erforderlich ist.\n"
+"    Es ermöglicht den Export und die Signatur der Facturae-Dateien.\n"
+"    Die aktuell unterstützte Version von Facturae ist die 3.2.1\n"
+"\n"
+"Weitere Informationen finden Sie unter https://www.facturae.gob.es/face/Paginas/FACE.aspx"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -2542,6 +2554,10 @@ msgid ""
 "- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 format\n"
 "    "
 msgstr ""
+"\n"
+"- Als PEPPOL-Teilnehmer registrieren\n"
+"- Dokumente über das PEPPOL-Netzwerk im Format Peppol BIS Billing 3.0 senden und empfangen\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -3780,6 +3796,10 @@ msgid ""
 "==================================================================================================\n"
 "This module allows the computation of the 'Vendor Bills', 'Other Costs' and 'Other Revenues' section for the project profitability, in the project update view.\n"
 msgstr ""
+"\n"
+"Ermöglicht die Berechnung eines bestimmten Abschnitts für die Projektrentabilität\n"
+"==================================================================================================\n"
+"Dieses Modul ermöglicht die Berechnung der Abschnitte „Lieferantenrechnungen“, „Sonstigen Kosten“ und „Sonstigen Einnahmen“ für die Projektrentabilität in der Projektaktualisierungsansicht.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -8377,6 +8397,35 @@ msgid ""
 "    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
 "    "
 msgstr ""
+"\n"
+"Zweck des Moduls:\n"
+"======================\n"
+"\n"
+"Als Teil der SII-Anforderungen (gesetzliche Anforderung in Chile), \n"
+"müssen ab März 2021 Boletas-Transaktionen im Rahmen der elektronischen\n"
+"Rechnungsstellungsabläufe an die SII gesendet werden, wobei ein anderer Webservice als der für elektronische Rechnungen verwendet wird. \n"
+"Zuvor mussten die Boletas nicht an die SII gesendet werden, sondern nur ein Tagesbericht.\n"
+"\n"
+"Die Anforderung, ein tägliches Verkaufsbuch\n"
+"„Libro de ventas diarias“ (vorher „reporte de consumo de folios“ oder RCOF) zu senden, wurde ab dem 1. August 2022 \n"
+" von der Behörde abgeschafft. Daher wurde es aus der neuen Odoo-Version entfernt.\n"
+"\n"
+"Unterschiede zwischen elektronischen Boletas und elektronischen Rechnungsstellungsabläufen:\n"
+"=========================================================================\n"
+"\n"
+"Diese Abläufe weisen einige wichtige Unterschiede auf, die uns dazu veranlasst haben, diese PR mit den spezifischen Änderungen durchzuführen..\n"
+"Hier sind die Unterschiede:\n"
+"\n"
+"* Der Mechanismus für den Versand der elektronischen Boletas-Informationen benötigt dedizierte Server, die sich von denen unterscheiden, die für den Empfang der elektronischen Rechnung verwendet werden („Palena“ für die Produktionsumgebung - palena.sii.cl und „Maullin“ für die Testumgebung - maullin.sii.cl).\n"
+"* Die Authentifizierungsdienste, die den Status einer Lieferung und den Status eines Dokuments abfragen, werden unterschiedlich sein.\n"
+"* Das erhaltene Authentifizierungstoken\n"
+"* Das XML-Schema für den Versand der elektronischen boletas wurde durch die Aufnahme neuer Stichwörter aktualisiert.\n"
+"* Die Validierungsdiagnose der elektronischen Boletas wird über einen „REST“-Webservice bereitgestellt, der als Eingabe die Verfolgungs-ID der Lieferung hat. Elektronische Rechnungen erhalten ihre Diagnosen weiterhin per E-Mail.\n"
+"* Die Verfolgungs-ID („identificador de envío“), die mit den elektronischen Boletas verbunden ist, wird 15 Ziffern lang sein. (Elektronische Rechnungen haben 10 Stellen)\n"
+"\n"
+"Highlights aus diesem SII-Leitfaden:\n"
+"    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -8839,6 +8888,30 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach three files to your draft mail: the invoice, the ISR and the QR-bill.\n"
 "    "
 msgstr ""
+"\n"
+"Lokalisierung für die Schweiz\n"
+"==================\n"
+"Dieses Modul definiert einen Kontenplan für die Schweiz (Schweizer PME/KMU 2015), Steuern und ermöglicht die Erstellung von ESR- und QR-Rechnungen, wenn Sie eine Rechnung drucken oder per Post versenden.\n"
+"\n"
+"Ein ESR wird erstellt, wenn Sie die erforderlichen Informationen angeben:\n"
+"- Das Bankkonto, auf das die Zahlung erfolgen soll, muss eingerichtet sein und eine gültige Postreferenz haben.\n"
+"- Ihrer Rechnung muss ein Bankkonto zugewiesen worden sein, auf das die Zahlung erfolgen soll\n"
+"(dies kann manuell geschehen, aber wenn Sie ein Bankkonto definiert haben, wird automatisch ein Standardwert eingestellt)\n"
+"- Sie müssen die Postanschrift Ihrer Bank angegeben haben.\n"
+"- Ihre Rechnung muss in EUR oder CHF ausgestellt sein (da ESRs keine anderen Währungen akzeptieren)\n"
+"\n"
+"Eine QR-Rechnung wird erstellt, wenn:\n"
+"- der auf Ihrer Rechnung angegebene Partner eine vollständige Adresse (Straße, Ort, Postleitzahl und Land) in der Schweiz hat\n"
+"- die Option zur Generierung des Schweizer QR-Codes auf der Rechnung ausgewählt ist (standardmässig)\n"
+"- die korrekte Kontonummer/QR-IBAN ist in Ihrem Bankjournal hinterlegt ist\n"
+"- (bei Verwendung einer QR-IBAN): die Zahlungsreferenz der Rechnung eine QR-Referenz ist\n"
+"\n"
+"Die Erstellung des ESR und der QR-Rechnung erfolgt automatisch, wenn Sie die oben genannten Kriterien erfüllen.\n"
+"\n"
+"Das funktioniert folgendermaßen:\n"
+"- Wenn Sie die Rechnung drucken, werden drei Dateien heruntergeladen: die Rechnung, der ESR und die QR-Rechnung\n"
+"- Wenn Sie auf die Schaltfläche „Per E-Mail versenden“ klicken, werden diese drei Dateien an Ihren Mailentwurf angehängt\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -9192,6 +9265,35 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Dies ist das Basismodul zur Verwaltung des Kontenplans für Belgien in Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Nach der Installation dieses Moduls wird der Konfigurationsassistent für die Buchhaltung gestartet.\n"
+"* Wir haben die Kontenvorlagen, die hilfreich sein können, um Kontenpläne zu erstellen.\n"
+"* Auf diesem speziellen Assistenten werden Sie aufgefordert, den Namen des Unternehmen,\n"
+"die zu befolgende Kontenplanvorlage, die Anzahl der zu generierenden Stellen, den Code für Ihre\n"
+"Konto und Bankkonto, Währung zur Erstellung von Journalen anzugeben.\n"
+"\n"
+"Damit wird die reine Kopie der Kontenplanvorlage erzeugt.\n"
+"\n"
+"Assistenten, die von diesem Modul zur Verfügung gestellt werden:\n"
+"--------------------------------\n"
+"* Partner MwSt. Intra: Die Partner mit der zugehörigen Mehrwertsteuer und den in Rechnung gestellten\n"
+"Beträge. Bereitet ein XML-Dateiformat vor.\n"
+"\n"
+"**Pfad für den Zugriff:** Rechnung/Berichte/Rechtliche Berichte/Belgische Auszüge/Partner MwSt. Intra\n"
+"* Periodische MwSt.-Erklärung: Bereitet eine XML-Datei für die MwSt-Erklärung\n"
+"des Hauptunternehmens des aktuell angemeldeten Benutzers vor.\n"
+"\n"
+"**Zugriffspfad :** Rechnung/Berichtswesen/Rechtliche Berichte/Belgische Auszüge/periodische MwSt.-Erklärung\n"
+"* Jährliche Auflistung der mehrwertsteuerpflichtigen Kunden: Bereitet eine XML-Datei für die MwSt.-Erklärung\n"
+"des Hauptunternehmens des aktuell angemeldeten Benutzers Basierend auf dem\n"
+"Geschäftsjahr vor.\n"
+"\n"
+"**Zugriffspfad :** Rechnung/Berichtswesen/Rechtliche Berichte/Belgische Auszüge/Jährliche Auflistung der mehrwertsteuerpflichtigen Kunden\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg
@@ -9777,6 +9879,13 @@ msgid ""
 "- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul fügt generische Funktionen hinzu, um eine Odoo-DB auf dem Proxy zu registrieren, der für den Empfang von Daten (über Anfragen von Web-Services) verantwortlich ist.\n"
+"- Ein edi_proxy_user hat eine eindeutige Identifikation in einem bestimmten Proxy-Typ (z. B. l10n_it_edi, Peppol), die es ermöglicht, ihn beim Empfang eines an ihn gerichteten Dokuments zu identifizieren. Er ist mit einem bestimmten Unternehmen in einer bestimmten\n"
+"Odoo-Datenbank verknüpft.\n"
+"- Verschlüsselungsfunktionen ermöglichen die Entschlüsselung aller Daten des Benutzers, wenn er sie vom Proxy erhält.\n"
+"- Die Authentifizierung bietet zusätzlich Sicherheit, um zu verhindern, dass Dritte sich Zugang zur Datenbank des Benutzers verschaffen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -10030,6 +10139,18 @@ msgid ""
 "- Check on bottom: ADP standard\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht es Ihnen, Ihre Zahlungen auf vorgedruckten Schecks zu drucken.\n"
+"Sie können die Ausgabe (Layout, Kontrollabschnitte, Papierformat usw.) in den Unternehmenseinstellungen konfigurieren und die\n"
+"Schecknummerierung (wenn Sie vorgedruckte Schecks ohne Nummern verwenden) in den Journaleinstellungen verwalten.\n"
+"Gemäß der Canadian Payment Association (https://www.payments.ca/sites/default/files/standard_006_complete_0.pdf)\n"
+"\n"
+"Unterstützte Formate\n"
+"-----------------\n"
+"- Prüfung oben: Quicken / QuickBooks Standard\n"
+"- Prüfung mitte: Peachtree Standard\n"
+"- Prüfung unten: ADP Standard\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -11845,6 +11966,12 @@ msgid ""
 "- Follow-up Address: Preferred address for follow-up reports. Selected by default when you send reminders about overdue invoices.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Verwenden Sie dies, um die Kontaktdaten der Mitarbeiter eines bestimmten Unternehmens zu organisieren (z. B. CEO, CFO ...)\n"
+"- Rechnungsadresse: Bevorzugte Adresse für alle Rechnungen. Wird standardmäßig ausgewählt, wenn Sie einen Auftrag in Rechnung stellen, der zu diesem Unternehmen gehört.\n"
+"- Lieferadresse: Bevorzugte Adresse für alle Lieferungen. Wird standardmäßig ausgewählt, wenn Sie einen Auftrag liefern, der zu diesem Unternehmen gehört.\n"
+"- Privat: Privatadressen sind nur für autorisierte Benutzer sichtbar und enthalten sensible Daten (Privatadressen von Mitarbeitern ...).\n"
+"- Mahnadresse: Bevorzugte Adresse für Mahnberichte. Standardmäßig ausgewählt, wenn Sie Mahnungen für überfällige Rechnungen versenden.\n"
+"- Andere: Andere Adresse für das Unternehmen (z. B. Niederlassung ...)."
 
 #. module: base
 #. odoo-python
@@ -12187,7 +12314,7 @@ msgid ""
 msgstr ""
 "<em>\n"
 "                Wie kann das Unternehmen Ihnen bei Ihren Bedürfnissen und Zielen helfen,\n"
-"                damit Sie Ihre Ziele erreichen und die beste Zusammenarbeit suchen.\n"
+"                damit Sie Ihre Ziele erreichen und die beste Zusammenarbeit anstreben können.\n"
 "            </em>"
 
 #. module: base
@@ -13427,7 +13554,7 @@ msgstr "Kontoinhaber"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr "Kontoinhaber"
+msgstr "Kontoinhabername"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -13489,8 +13616,7 @@ msgstr "Konto Winbooks Import"
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr ""
-"Name des Kontoinhabers, wenn dieser nicht der Names des Kontoinhabers ist"
+msgstr "Kontoinhabername, wenn dieser nicht der Name des Kontoinhabers ist"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -14412,6 +14538,7 @@ msgstr "Kunden ermöglichen, Produkte, auf die Wunschliste zu setzen"
 #: model:ir.module.module,summary:base.module_sale_subscription_stock
 msgid "Allow to create recurring order on storable product"
 msgstr ""
+"Möglichkeit, wiederkehrende Aufträge für lagerfähige Produkte zu erstellen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -16478,7 +16605,7 @@ msgstr "Tschad"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_my
 msgid "Change My Preferences"
-msgstr "Meine Präferenzen jetzt ändern"
+msgstr "Meine Präferenzen ändern"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.change_password_wizard_action
@@ -17102,6 +17229,13 @@ msgstr "Vollständiger Name"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "Berechnen"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "Berechnungsmethode darf nicht vom Feld „ID“ abhängen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -20556,12 +20690,12 @@ msgstr "Außendienst - Verkaufsabonnement"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
 msgid "Field Service Reports"
-msgstr "Außendienstberichte"
+msgstr "Tätigkeitsberichte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale_report
 msgid "Field Service Reports - Sale"
-msgstr "Außendienstberichte - Verkauf"
+msgstr "Tätigkeitsberichte - Verkauf"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_stock
@@ -21069,7 +21203,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_work_entry_holidays
 msgid "France - Work Entries Time Off"
-msgstr ""
+msgstr "Frankreich - Abwesenheiten und Arbeitseinträge"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -23257,6 +23391,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Fehlerhafter „group by“-Parameter"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Ungültiges JSON-Format im Standardwertfeld."
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
@@ -23330,7 +23470,7 @@ msgstr "Ungültiges Modus-Attribut:"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "Invalid model name %r in action definition."
-msgstr "Ungültiger Modulname %r in der Aktionsdefinition."
+msgstr "Ungültiger Modellname %r in der Aktionsdefinition."
 
 #. module: base
 #. odoo-python
@@ -25943,7 +26083,7 @@ msgstr "Hr."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_accountant
 msgid "Mrp Accounting"
-msgstr ""
+msgstr "MRP Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
@@ -29310,7 +29450,7 @@ msgstr "Kassensystem Restaurant Stripe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order
 msgid "POS Self Order"
-msgstr ""
+msgstr "Kassensystem Selbstbestellung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
@@ -29927,7 +30067,7 @@ msgstr "Zubereitungsdisplay des Kassensystems"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_preparation_display
 msgid "PoS Preparation Display Restaurant"
-msgstr ""
+msgstr "Zubereitungsdisplay des Kassensystems Restaurant"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
@@ -31959,7 +32099,7 @@ msgstr "Verkauf Bestand Marge"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_stock
 msgid "Sale Subscriptions Stock"
-msgstr ""
+msgstr "Verkauf Abonnements Bestand"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_stock
@@ -31976,6 +32116,17 @@ msgid ""
 "- Invoice delivered recurring product at the end of invoicing period\n"
 "- Report planned delivery for active subscriptions\n"
 msgstr ""
+"Verkauf Abonnements Bestand\n"
+"\n"
+"Verkauf Abonnements Bestand ist ein Brückenmodul zwischen sale_subscription und\n"
+"sale_stock. Der Zweck dieses Moduls besteht ist es, dem Benutzer die Möglichkeit zu geben, eine\n"
+" Abonnementbestellung mit lagerfähigen Produkten zu erstellen,\n"
+"die zu einem wiederkehrenden Lieferauftrag und zur Rechnungsstellung für diese Produkte führt.\n"
+"Funktionen:\n"
+"- Erlauben Sie die Erstellung von wiederkehrenden lagerfähigen Produkten\n"
+"- Erstellen Sie automatisch einen Lieferauftrag für das wiederkehrende, lagerfähige Produkt\n"
+"- Stellen Sie das gelieferte wiederkehrende Produkt am Ende des Rechnungszeitraums in Rechnung\n"
+"- Berichten Sie über die geplante Lieferung für aktive Abonnements\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase
@@ -33461,7 +33612,7 @@ msgstr "Konfiguration beginnen"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Bundesland/Region"
+msgstr "Status"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -35640,7 +35791,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_productivity_to-do
 #: model:ir.module.module,shortdesc:base.module_project_todo
 msgid "To-Do"
-msgstr ""
+msgstr "To-do"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -36111,6 +36262,13 @@ msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
 "Konnte Wkhtmltopdf in diesem System nicht finden. Das PDF kann nicht "
 "erstellt werden."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr "Feldtyp „%s“ konnte nicht importiert werden  "
 
 #. module: base
 #. odoo-python
@@ -37757,6 +37915,17 @@ msgid "You can not create recursive tags."
 msgstr "Sie können keine rekursiven Stichwörter erstellen."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+"Es ist nicht erlaubt, den Vorlagenbenutzer zu löschen, Durch das Löschen "
+"dieses Profils werden wichtige Funktionen beeinträchtigt."
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login!"
 msgstr "Zwei Benuzter dürfen nicht den gleichen Benutzernamen verwenden!"
@@ -37887,6 +38056,14 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+"Sie können eine Gruppe, die mit einem Einstellungsfeld verknüpft ist, nicht "
+"löschen."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -38573,7 +38750,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account
 msgid "project profitability items computation"
-msgstr ""
+msgstr "Einzelberechnung der Projektrentabilität"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__properties

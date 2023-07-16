@@ -93,6 +93,8 @@ msgid ""
 "<span class=\"h5 fw-light\">In the meantime,</span><br/>\n"
 "                                            <span class=\"h3 mt8 mb32 fw-bold\">Take a look around our website:</span>"
 msgstr ""
+"<span class=\"h5 fw-light\">Währendessen</span><br/>\n"
+"                                            <span class=\"h3 mt8 mb32 fw-bold\">können Sie sich auf unserer Website umsehen:</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -440,6 +442,13 @@ msgid ""
 "                                                feedback</strong> or if you don't get news from me\n"
 "                                                quickly enough."
 msgstr ""
+"In der Regel <strong>beantworte ich Bewerbungen innerhalb von 3 Tagen</strong>.\n"
+"                                                <br/><br/>\n"
+"                                                Der nächste Schritt ist entweder ein Anruf oder ein Treffen in unseren Büros.\n"
+"                                                <br/><br/>\n"
+"                                                Sie können mich gerne <strong>kontaktieren, wenn Sie ein schnelleres\n"
+"                                                Feedback wünschen</strong> oder wenn Sie nicht schnell\n"
+"                                                genug von mir hören."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -449,7 +458,7 @@ msgstr "Ich fühle mich glücklich."
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Insert a Job Description..."
-msgstr ""
+msgstr "Eine Stellenbeschreibung eingeben ..."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_published
@@ -720,6 +729,8 @@ msgid ""
 "There are currently no open job opportunities,<br class=\"mb-2\"/>\n"
 "                                            but feel free to <span class=\"fw-bold\">contact us</span> for a spontaneous application."
 msgstr ""
+"Wir haben derzeit keine offenen Stellen,<br class=\"mb-2\"/>\n"
+"                                            aber Sie können uns auch eine <span class=\"fw-bold\">Initiativbewerbung</span> zukommen lassen."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -729,7 +740,7 @@ msgstr "Schulungen"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
 msgid "Unspecified type"
-msgstr ""
+msgstr "Unbestimmter Typ"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
@@ -813,6 +824,9 @@ msgid ""
 "        the job position, defining specific terms and benefits. Keep it simple\n"
 "        an clear."
 msgstr ""
+"Sie können diese Beispielstellenbeschreibung mit einer kurzen Übersicht der\n"
+"        Stelle anpassen, indem Sie bestimmte Bedingungen und Vorteile erläutern. Halten Sie es einfach\n"
+"        und deutlich."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_inherit_website
@@ -824,9 +838,16 @@ msgstr ""
 "Hauptseite der Stellenbörse angezeigt wird."
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "You cannot apply for this job."
+msgstr "Sie können sich nicht um diese Stelle bewerben."
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Your <b>contact</b> information is:"
-msgstr ""
+msgstr "Ihre <b>Ansprechpartner</b> ist:"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -834,6 +855,8 @@ msgid ""
 "Your application has been posted successfully,<br class=\"mb-2\"/>\n"
 "                                    We usually respond within 3 days..."
 msgstr ""
+"Ihre Bewerbung wurde erfolgreich eingereicht.<br class=\"mb-2\"/>\n"
+"                                    Wir antworten in der Regel innerhalb von 3 Tagen ..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -859,3 +882,8 @@ msgstr "teilen"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "unveröffentlicht"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "Optional if you provided a Linkedin profile"
+msgstr "Optional, wenn Sie ein Linkedin-Profil angeben"

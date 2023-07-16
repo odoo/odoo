@@ -120,8 +120,8 @@ msgstr ""
 " alle Produkte können reserviert. * Bereit: Der Transfer ist zur Bearbeitung"
 " bereit. (a) Die Versandbedingung ist „Sobald wie möglich“: Wenigstens ein "
 "Produkt kann reserviert werden. (b) Die Versandbedingung ist „Wenn alle "
-"Produkte bereit“: Alle Produkte können reserviert werden. * Erledigt: Der "
-"Transfer wurde getätigt. * Abgebrochen: Der Transfer wurde abgebrochen."
+"Produkte bereit sind“: Alle Produkte können reserviert werden. * Erledigt: "
+"Der Transfer wurde getätigt. * Abgebrochen: Der Transfer wurde abgebrochen."
 
 #. module: stock
 #. odoo-python
@@ -460,12 +460,12 @@ msgstr "<span class=\"o_stat_text\">Prognostiziert</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">In:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Eingang:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Location</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Standort</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -499,33 +499,33 @@ msgstr "<span class=\"o_stat_text\">Vorgänge</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Out:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ausgang:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Produktbewegungen</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Putaway Rules</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Einlagerungsregeln</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "<span class=\"o_stat_text\">Routes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Routen</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Storage Capacities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Lagerkapazitäten</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Rückverfolgbarkeit</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -632,12 +632,12 @@ msgstr "<strong>Los-/Seriennummer</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
 msgid "<strong>Max qty:</strong>"
-msgstr ""
+msgstr "<strong>Max. Menge:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
 msgid "<strong>Min qty:</strong>"
-msgstr ""
+msgstr "<strong>Min. Menge</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -1912,7 +1912,7 @@ msgstr "Neue Los-/Seriennummer erstellen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Create Stock"
-msgstr ""
+msgstr "Bestand erstellen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2318,7 +2318,7 @@ msgstr "Standard: Lagerentnahme"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__route_ids
 msgid "Defaults routes through the warehouse"
-msgstr "Standard Routen im Lagerhaus"
+msgstr "Standardrouten im Lagerhaus"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -2619,7 +2619,7 @@ msgstr "Zielverpackung"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Package:"
-msgstr ""
+msgstr "Zielverpackung:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
@@ -2701,7 +2701,7 @@ msgstr "Vollständig anzeigen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_import_lot
 msgid "Display Import Lot"
-msgstr ""
+msgstr "Importlos anzeigen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
@@ -2821,6 +2821,9 @@ msgid ""
 "Due to receipts scheduled in the future, you might end up with "
 "excessive stock . Check the Forecasted Report  before reordering"
 msgstr ""
+"Aufgrund von in der Zukunft geplanten Eingängen kann es vorkommen, dass Sie "
+"einen Bestandsüberschuss haben. Prüfen Sie den Prognosebericht, bevor Sie "
+"nachbestellen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
@@ -3296,7 +3299,7 @@ msgstr "Serien generieren"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_generate_serial
 msgid "Generate serial number from a pattern"
-msgstr ""
+msgstr "Seriennummer aus einem Muster generieren"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3740,13 +3743,13 @@ msgstr "Importieren"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Import Serial/Lots"
-msgstr ""
+msgstr "Serie/Los importieren"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_import_lot
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Import Serials/Lots"
-msgstr ""
+msgstr "Serien/Lose importieren"
 
 #. module: stock
 #. odoo-python
@@ -3759,6 +3762,7 @@ msgstr "Importvorlage für Bestandsaufnahme"
 #: model:ir.model,name:stock.model_stock_import_lot
 msgid "Import lots or serial numbers to create stock move lines"
 msgstr ""
+"Los- oder Seriennummern importieren, um Lagerbuchungszeilen zu erstellen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -4129,10 +4133,10 @@ msgstr "Ist die erledigte Menge bearbeitbar"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
+"It is not allowed to import reserved quantity, you have to use the quantity "
 "directly."
 msgstr ""
-"Es ist nicht möglich, reservierte Mengen zu importieren, Sie müssen die "
+"Es ist nicht möglich, reservierte Mengen zu importieren. Sie müssen die "
 "Menge direkt verwenden."
 
 #. module: stock
@@ -4840,7 +4844,7 @@ msgstr "Bewegung"
 #: model:ir.model.fields,field_description:stock.field_stock_generate_serial__move_location_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_import_lot__move_location_dest_id
 msgid "Move Destination Location"
-msgstr ""
+msgstr "Ziellagerort der Bewegung"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -5617,7 +5621,7 @@ msgstr "Eigentümer "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Owner:"
-msgstr ""
+msgstr "Eigentümer:"
 
 #. module: stock
 #. odoo-python
@@ -5865,6 +5869,9 @@ msgid ""
 "                contain a lot/SN plus optional quantity and/or expiry\n"
 "                date, separated by space or semicolon."
 msgstr ""
+"Fügen Sie Ihre Liste der Serien/Lose hier ein. EJede Zeile muss\n"
+"                eine Los-/Seriennummer sowie eine optionale Menge und/oder ein\n"
+"                Ablaufdatum enthalten (per Leerzeichen oder Semikolon getrennt)."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
@@ -5883,7 +5890,7 @@ msgstr "Kommissionieren"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quant_id
 msgid "Pick From"
-msgstr ""
+msgstr "Nehmen aus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
@@ -7609,7 +7616,7 @@ msgstr "Aktuellen Wert einstellen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Set Draft"
-msgstr ""
+msgstr "Entwurf festlegen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7931,7 +7938,7 @@ msgstr "Quellverpackung"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Package:"
-msgstr ""
+msgstr "Quellverpackung:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -9322,7 +9329,7 @@ msgstr "Unsichere Maßeinheit"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__unwanted_replenish
 msgid "Unwanted Replenish"
-msgstr ""
+msgstr "Ungewollte Auffüllung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
@@ -9902,6 +9909,8 @@ msgid ""
 "You are going to pick products that are not referenced\n"
 "in this location. That leads to a negative stock."
 msgstr ""
+"Sie werden Produkte kommissionieren, die sich nicht an diesem Lagerort "
+"befinden. Dies führt zu einem negatigen Bestand."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish

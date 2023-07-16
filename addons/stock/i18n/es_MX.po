@@ -7,10 +7,10 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Iran Villalobos López, 2023
-# Lucia Pacheco, 2023
 # Martin Trigaux, 2023
-# Fernanda Alvarez, 2023
 # Aimée Mendoza Sánchez, 2023
+# Fernanda Alvarez, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"%s--> UdM del producto es %s (%s) - UdM del movimiento es %s (%s)"
+"%s--> La UdM del producto es %s (%s) - la UdM del movimiento es %s (%s)"
 
 #. module: stock
 #. odoo-python
@@ -4128,7 +4128,7 @@ msgstr "¿Se puede editar la cantidad hecha?"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
+"It is not allowed to import reserved quantity, you have to use the quantity "
 "directly."
 msgstr ""
 "No se permite importar la cantidad reservada, tiene que utilizar la cantidad"
@@ -5434,7 +5434,7 @@ msgid ""
 "Optional address where goods are to be delivered, specifically used for "
 "allotment"
 msgstr ""
-"Dirección opcional donde se deben entregar las mercancías, se utiliza "
+"Dirección opcional donde se deben entregar los productos, se utiliza "
 "específicamente para lotes."
 
 #. module: stock
@@ -5496,7 +5496,7 @@ msgstr "Orden firmada por %s"
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__orderpoint_ids
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__orderpoint_id
 msgid "Orderpoint"
-msgstr "Punto de pedido"
+msgstr "Punto de la orden"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -5655,7 +5655,7 @@ msgstr "Tipo de empaquetado"
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pack goods, send goods in output and then deliver (3 steps)"
 msgstr ""
-"Empaquetar artículos, enviar artículos a ubicación de salida, y enviar (3 "
+"Empaquetar artículos, enviar productos a ubicación de salida, y enviar (3 "
 "pasos)"
 
 #. module: stock
@@ -5788,7 +5788,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
 msgid "Packaging"
-msgstr "Embalaje"
+msgstr "Empaquetado"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -5833,7 +5833,7 @@ msgstr "Parámetros"
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__parent_location_id
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Parent Location"
-msgstr "Ubicación padre"
+msgstr "Ubicación principal"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__parent_path
@@ -5859,7 +5859,7 @@ msgstr "Contacto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__partner_address_id
 msgid "Partner Address"
-msgstr "Dirección del partner"
+msgstr "Dirección del contacto"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_import_lot
@@ -5868,8 +5868,8 @@ msgid ""
 "                contain a lot/SN plus optional quantity and/or expiry\n"
 "                date, separated by space or semicolon."
 msgstr ""
-"Pegue su lista de seriales/lotes aquí. Cada línea debe\n"
-"               contener un lote/NS más una cantidad opcional y/o fecha de vencimiento\n"
+"Pegue su lista de números de serie/lote aquí. Cada línea debe\n"
+"               contener un número de serie/lote más una cantidad opcional y/o fecha de vencimiento\n"
 "                separados por espacio o punto y coma."
 
 #. module: stock
@@ -6205,18 +6205,18 @@ msgstr "Movimientos de producto (línea de movimiento de inventario)"
 #. module: stock
 #: model:ir.model,name:stock.model_product_packaging
 msgid "Product Packaging"
-msgstr "Embalaje del producto"
+msgstr "Empaquetado del producto"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
 msgid "Product Packaging (ZPL)"
-msgstr "Embalaje del producto (ZPL)"
+msgstr "Empaquetado del producto (ZPL)"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packagings"
-msgstr "Embalajes del producto"
+msgstr "Empaquetado de los productos"
 
 #. module: stock
 #. odoo-python

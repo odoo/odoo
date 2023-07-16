@@ -178,7 +178,7 @@ msgstr "<span class=\"o_stat_text\"> Produkte</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Related Products</span>"
-msgstr "<span class=\"o_stat_text\">Verknüfte Produkte</span>"
+msgstr "<span class=\"o_stat_text\">Verknüpfte Produkte</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2688,6 +2688,13 @@ msgstr ""
 "Die Menge, die von diesem Lieferanten gekauft werden soll, um von dem Preis "
 "zu profitieren, ausgedrückt in der Produktmaßeinheit des Lieferanten, falls "
 "keine vorhanden ist, ansonsten in der Standardmaßeinheit des Produkts."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "Die Rundungsmethode muss unbedingt positiv sein."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price

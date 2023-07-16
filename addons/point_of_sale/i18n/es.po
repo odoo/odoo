@@ -7,7 +7,7 @@
 # Fernanda Alvarez, 2023
 # Gelo, 2023
 # Daniel Duque <danieldqmrt@gmail.com>, 2023
-# jabelchi, 2023
+# Josep Anton Belchi, 2023
 # Rolando Duarte [Vauxoo], 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Iran Villalobos López, 2023
@@ -15,10 +15,11 @@
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023
 # FLNerea, 2023
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
-# Martin Trigaux, 2023
 # Patricia Lorenzo Bartolomé, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Aimée Mendoza Sánchez, 2023
+# Pablo De Andrés, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5536,6 +5537,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Anulación de: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Solicitud de reversión enviada a la terminal"
@@ -6613,6 +6622,13 @@ msgstr ""
 "                        Contacte a su gerente para aceptar la diferencia de cierre."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "El nombre de las monedas/billetes ha de ser un número."
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique!"
 msgstr ""
@@ -7676,13 +7692,6 @@ msgstr ""
 #, python-format
 msgid "You can go to"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Solo puede haber un método de pago efectivo."
 
 #. module: point_of_sale
 #. odoo-python

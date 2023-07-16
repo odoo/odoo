@@ -3,7 +3,6 @@
 # 	* stock_delivery
 # 
 # Translators:
-# Fernando Colus <fcolus1@gmail.com>, 2023
 # Layna Nascimento, 2023
 # Martin Trigaux, 2023
 # adrianojprado <adrianojprado@gmail.com>, 2023
@@ -65,7 +64,7 @@ msgstr "<strong>Código HS</strong>"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr ""
+msgstr "<strong>Peso da remessa: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -73,6 +72,8 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
+"<strong>Peso da remessa:</strong>\n"
+"                    <br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
@@ -80,18 +81,18 @@ msgid ""
 "<strong>Total Weight:</strong>\n"
 "                <br/>"
 msgstr ""
-"<strong>Peso Total:</strong>\n"
+"<strong>Peso total:</strong>\n"
 "                <br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Tracking Number:</strong>"
-msgstr "<strong>Número de Rastreamento:</strong>"
+msgstr "<strong>Número de rastreamento:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Weight: </strong>"
-msgstr ""
+msgstr "<strong>Peso: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
@@ -105,7 +106,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
-msgstr "Peso da Massa"
+msgstr "Peso da massa"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -118,6 +119,8 @@ msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to "
 "continue?"
 msgstr ""
+"O cancelamento de uma entrega pode não ser possível. Tem certeza de que "
+"deseja continuar?"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
@@ -130,12 +133,12 @@ msgstr "Transportadora"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr ""
+msgstr "Código da transportadora"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr ""
+msgstr "Nome da transportadora"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
@@ -147,7 +150,7 @@ msgstr "Empresa"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Cost: %(price).2f %(currency)s"
-msgstr ""
+msgstr "Custo: %(price).2f %(currency)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
@@ -162,7 +165,7 @@ msgstr "Criado em"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr "Assistente de Seleção de Transportadora de Entrega"
+msgstr "Assistente de seleção de transportadora de entrega"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
@@ -172,7 +175,7 @@ msgstr "Assistente de seleção de pacote de entrega"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr ""
+msgstr "Tipo de pacote de entrega"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
@@ -183,7 +186,7 @@ msgstr "Destino"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__destination_country_code
 msgid "Destination Country"
-msgstr ""
+msgstr "País de destino"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
@@ -206,6 +209,8 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Custo estimado: o cliente receberá uma fatura com o custo estimado do frete.\n"
+"Custo real: o cliente receberá uma fatura com o custo real do frete, o custo do frete será atualizado no PV após a entrega."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -227,7 +232,7 @@ msgstr "Política de faturamento"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr "É Separação de Devolução"
+msgstr "É separação de devolução"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
@@ -253,7 +258,7 @@ msgstr "OK"
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr "Origem das Mercadorias"
+msgstr "Origem das mercadorias"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
@@ -265,7 +270,7 @@ msgstr "Pacote"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Package Details"
-msgstr "Detalhes da Embalagem"
+msgstr "Detalhes da embalagem"
 
 #. module: stock_delivery
 #. odoo-python
@@ -289,7 +294,7 @@ msgstr "Separação"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
-msgstr "Imprimir Etiqueta de Devolução"
+msgstr "Imprimir etiqueta de devolução"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_template
@@ -309,17 +314,17 @@ msgstr "Fornecedor"
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
 msgid "Real cost"
-msgstr "Custo Real"
+msgstr "Custo real"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr "Etiqueta de Devolução"
+msgstr "Etiqueta de devolução"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Separação Devolvida"
+msgstr "Separação devolvida"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
@@ -334,7 +339,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
 msgid "Sale Price"
-msgstr "Preço de Venda"
+msgstr "Preço de venda"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_sale_order
@@ -349,7 +354,7 @@ msgstr "Salvar"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr "Enviar ao Fretador"
+msgstr "Enviar a transportadora"
 
 #. module: stock_delivery
 #. odoo-python
@@ -359,11 +364,13 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s"
 msgstr ""
+"Remessa enviada à transportadora %(carrier_name)s para envio com número de "
+"rastreamento %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
 msgid "Shipping Cost"
-msgstr "Custo de Envio"
+msgstr "Custo de envio"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -380,12 +387,12 @@ msgstr "Métodos de envio"
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__shipping_weight
 msgid "Shipping Weight"
-msgstr "Peso da Encomenda"
+msgstr "Peso da encomenda"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr "Peso da Encomenda:"
+msgstr "Peso da encomenda:"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
@@ -394,8 +401,8 @@ msgid ""
 "Standardized code for international shipping and goods declaration. At the "
 "moment, only used for the FedEx shipping provider."
 msgstr ""
-"Código harmonizado - padronizado para envio internacional e declaração de "
-"mercadorias. No momento, usado apenas para a transportadora FedEx."
+"Código padronizado para envio internacional e declaração de mercadorias. No "
+"momento, usado apenas para a transportadora FedEx."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -410,12 +417,13 @@ msgstr "Tipo de pacote de estoque"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
-msgstr ""
+msgstr "Campo técnico que indica o número de casas decimais do peso"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr ""
+"Campo técnico que indica se a unidade de peso é kg ou não (ex.: libra)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -436,6 +444,8 @@ msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
+"O pacote não pode ser criado porque o peso total dos produtos na separação é"
+" 0,0 %s"
 
 #. module: stock_delivery
 #. odoo-python
@@ -506,19 +516,19 @@ msgstr "Acompanhamento"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr "Referência de Rastreamento"
+msgstr "Referência do rastreamento"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_url
 msgid "Tracking URL"
-msgstr "URL do Rastreamento"
+msgstr "URL do rastreamento"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Tracking links for shipment:"
-msgstr ""
+msgstr "Links de rastreamento para a remessa:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -541,7 +551,7 @@ msgstr "Peso"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__shipping_weight
 msgid "Weight for Shipping"
-msgstr "Peso para Entrega"
+msgstr "Peso para entrega"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -558,13 +568,13 @@ msgstr "Etiqueta da unidade de medida de peso"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr ""
+msgstr "Peso:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
-"Você tem múltiplos links de rastreamento e eles estão disponíveis no Chat"
+"Você tem múltiplos links de rastreamento e eles estão disponíveis no chat"
 
 #. module: stock_delivery
 #. odoo-python
@@ -585,17 +595,17 @@ msgstr "Prefixo do CEP"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
-msgstr ""
+msgstr "^A0N,44,33^FDPeso da remessa:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr ""
+msgstr "^A0N,44,33^FDPeso:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^FO310,200"
-msgstr ""
+msgstr "^FO310,200"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery

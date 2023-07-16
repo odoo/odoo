@@ -8,9 +8,10 @@
 # Éder Brito <britoederr@gmail.com>, 2023
 # Gabriel Bortolotto Contesotto <gabrielbortolotto@gmail.com>, 2023
 # ff68f1f9b02a0effe4204ba86a8b106e_92c9ca6, 2023
-# Martin Trigaux, 2023
 # Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
+# Diego Sayron, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -450,7 +451,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction
 msgid "Action Needed"
-msgstr "Ação necessária"
+msgstr "Requer ação"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__active
@@ -4704,7 +4705,7 @@ msgstr "Tipo de operação de ponto de venda"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Linhas de pedido de ponto de venda"
+msgstr "Linhas de pedido do ponto de venda"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order
@@ -5065,8 +5066,8 @@ msgid ""
 " an IoT Box."
 msgstr ""
 "A impressão não é compatível com alguns navegadores porque nenhum protocolo "
-"de impressão padrão está disponível. É possível imprimir seus tíquetes "
-"usando uma IoT Box."
+"de impressão padrão está disponível. É possível imprimir seus tickets "
+"utilizando um IoT Box."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_procurement_group
@@ -5536,6 +5537,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Reversão de: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Solicitação reversa enviada para o terminal"
@@ -5552,7 +5561,7 @@ msgstr "Reverso"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Reverse Payment"
-msgstr "Pagamento reverso"
+msgstr "Reverter pagamento"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6601,6 +6610,13 @@ msgstr ""
 "A diferença máxima permitida é %s.\n"
 "\n"
 "                        Entre em contato com seu gerente para aceitar a diferença de fechamento."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "O nome das Moedas/Notas deve ser um número."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7673,13 +7689,6 @@ msgstr ""
 #, python-format
 msgid "You can go to"
 msgstr "Você pode ir para"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Você só pode ter um método de pagamento em dinheiro."
 
 #. module: point_of_sale
 #. odoo-python

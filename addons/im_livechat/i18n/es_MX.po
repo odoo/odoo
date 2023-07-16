@@ -3,7 +3,6 @@
 # 	* im_livechat
 # 
 # Translators:
-# Lucia Pacheco, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
@@ -11,6 +10,7 @@
 # Martin Trigaux, 2023
 # Aimée Mendoza Sánchez, 2023
 # Fernanda Alvarez, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,22 +43,22 @@ msgstr "\"%s\" no es un correo electrónico válido."
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
 msgid "# Messages"
-msgstr "# Mensajes"
+msgstr "Número de mensajes"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_count
 msgid "# Ratings"
-msgstr "# Calificaciones"
+msgstr "Número de calificaciones"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
 msgid "# of Sessions"
-msgstr "# de sesiones"
+msgstr "Número de sesiones"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_speaker
 msgid "# of speakers"
-msgstr "# de participantes"
+msgstr "Número de participantes"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -215,7 +215,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "<span>You are currently testing</span>"
-msgstr "<span>Actualmente está probando</span>"
+msgstr "<span>Se están realizando pruebas</span>"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_chatbot_message__unique_mail_message_id
@@ -230,7 +230,7 @@ msgid ""
 "                                       If the visitor is also the operator, the session will always be answered."
 msgstr ""
 "Una sesión no tiene respuesta si el operador no respondió. \n"
-"                                       Si el visitante es también el operador, la sesión siempre estará respondida."
+"                                       Si el visitante es también el operador, siempre se responderá la sesión"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction
@@ -479,17 +479,17 @@ msgstr "Nombre del bot de chat"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr "Guión del bot de chat"
+msgstr "Guion del bot de chat"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script_answer
 msgid "Chatbot Script Answer"
-msgstr "Respuesta de guión del bot de chat"
+msgstr "Respuesta de guion del bot de chat"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr "Paso de guión del bot de chat"
+msgstr "Paso de guion del bot de chat"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__script_step_id
@@ -569,7 +569,7 @@ msgstr "Conversación con %s"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations
 msgid "Conversations handled"
-msgstr "Conversaciones gestionadas"
+msgstr "Conversaciones terminadas"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -701,7 +701,7 @@ msgid ""
 "installed on your server, otherwise, the countries of the rule will not be "
 "taken into account."
 msgstr ""
-"Defina reglas para su canal de asistencia en vivo. Puede aplicar una acción "
+"Defina reglas para su canal de soporte en vivo. Puede aplicar una acción "
 "para el URL dado y por país.<br/>Para identificar el país, GeoIP debe estar "
 "instalado en su servidor, de lo contrario, los países de la regla no se "
 "tomarán en cuenta."
@@ -713,7 +713,7 @@ msgid ""
 "selected action must be 'Open automatically' otherwise this parameter will "
 "not be taken into account."
 msgstr ""
-"Retraso (en segundos) para abrir de forma automática la ventana de "
+"Demora (en segundos) para abrir de forma automática la ventana de "
 "conversación. Tome en cuenta que la acción seleccionada debe ser \"Abrir de "
 "forma automática\", de otra forma no se considerará este parámetro."
 
@@ -808,9 +808,9 @@ msgid ""
 "Settings and select the Website Live Chat Channel you want to add to your "
 "website."
 msgstr ""
-"Para sitios web creados con Odoo CMS, diríjase al Sitio web &gt; "
-"configuración &gt; ajustes y seleccione el Chat en vivo del Sitio web que "
-"desea agregar a su sitio web"
+"Para sitios web creados con Odoo CMS, diríjase a Sitio web &gt; "
+"configuración &gt; ajustes y seleccione Chat en vivo del Sitio web que desea"
+" agregar a su sitio web"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
@@ -1262,7 +1262,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_time_to_answer_action
 msgid "No data yet!"
-msgstr "¡No hay datos aún!"
+msgstr "Todavía no hay información"
 
 #. module: im_livechat
 #. odoo-python
@@ -1436,21 +1436,21 @@ msgstr "Teléfono"
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "Please call me on: "
-msgstr "Por favor, llámeme al:"
+msgstr "Llámeme al:"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Please check your internet connection."
-msgstr "Por favor, revise su conexión a internet."
+msgstr "Revise su conexión a internet."
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "Please contact me on: "
-msgstr "Por favor, contácteme por:"
+msgstr "Contácteme por:"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
@@ -1497,12 +1497,12 @@ msgstr "Texto de calificación promedio"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Calificación del último comentario"
+msgstr "Calificación de la última retroalimentación"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_image
 msgid "Rating Last Image"
-msgstr "Imagen de la última calificación"
+msgstr "Calificación de la última imagen"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_value
@@ -1571,7 +1571,7 @@ msgstr "Mensaje de correo relacionado"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
 msgid "Report"
-msgstr "Reporte"
+msgstr "Reportar"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1634,22 +1634,22 @@ msgstr "Diga algo"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
 msgid "Script"
-msgstr "Script"
+msgstr "Guion"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
 msgid "Script (external)"
-msgstr "Script (externo)"
+msgstr "Guion (externo)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__script_step_id
 msgid "Script Step"
-msgstr "Paso de script"
+msgstr "Paso del guion"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__script_step_ids
 msgid "Script Steps"
-msgstr "Pasos de script"
+msgstr "Pasos del guion"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -1706,7 +1706,7 @@ msgstr "Estadísticas de sesión"
 #: code:addons/im_livechat/static/src/legacy/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Session expired... Please refresh and try again."
-msgstr "La sesión expiró... Actualice la página y vuelva a intentarlo."
+msgstr "La sesión expiró... actualice la página y vuelva a intentarlo."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_unrated
@@ -1824,9 +1824,9 @@ msgid ""
 "The visitor will be redirected to this link upon clicking the option (note "
 "that the script will end if the link is external to the livechat website)."
 msgstr ""
-"Se redirigirá al visitante a este enlace al hacer clic en la opción (tome en"
-" cuenta que el guión terminará si el enlace es externo al sitio web del chat"
-" en vivo)."
+"Se redirigirá al visitante a este enlace cuando haga clic en la opción (tome"
+" en cuenta que el guion terminará si el enlace es externo al sitio web del "
+"chat en vivo)."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat
@@ -1937,8 +1937,8 @@ msgid ""
 " load a canned response, start your sentence with ':' and select the "
 "template."
 msgstr ""
-"Utilice respuestas predefinidas para definir plantillas de mensajes en la "
-"aplicación Chat en vivo. Para cargar una respuesta predefinida, empiece su "
+"Utilice respuestas predefinidas para establecer plantillas de mensajes en la"
+" aplicación Chat en vivo. Para cargar una respuesta predefinida, empiece su "
 "oración con \":\" y seleccione la plantilla."
 
 #. module: im_livechat
@@ -2057,7 +2057,7 @@ msgid ""
 "You can create a new Chatbot with a defined script to speak to your website "
 "visitors."
 msgstr ""
-"Puede crear un nuevo bot de chat con un guión definido para hablar con los "
+"Puede crear un nuevo bot de chat con un guion definido para hablar con los "
 "visitantes de su sitio web."
 
 #. module: im_livechat

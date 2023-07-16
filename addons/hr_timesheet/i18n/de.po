@@ -85,6 +85,18 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('has_timesheet', '=', False)]}\">\n"
+"                        Sie können keine Mitarbeiter löschen, die Zeiterfassungsbögen haben.\n"
+"                        <span attrs=\"{'invisible': [('has_active_employee', '=', False)]}\">\n"
+"                            Sie können diese Mitarbeiter entweder archivieren oder erst alle ihre Zeiterfassungsbögen löschen.\n"
+"                        </span>\n"
+"                        <span attrs=\"{'invisible': [('has_active_employee', '=', True)]}\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Bitte löschen Sie zuerst alle ihre Zeiterfassungsbögen.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('has_timesheet', '=', True)]}\">\n"
+"                       Sind Sie sicher, dass Sie diese Mitarbeiter löschen müssen?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
@@ -493,6 +505,8 @@ msgstr "Codierungseinheit"
 msgid ""
 "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
+"Generieren Sie Zeiterfassungen für validierte Abwesenheitsanträge und "
+"gesetzliche Urlaubstage"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
@@ -799,7 +813,7 @@ msgstr "Zeiterfassung des Projekts"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__readonly_timesheet
 msgid "Readonly Timesheet"
-msgstr ""
+msgstr "Schreibgeschützte Zeiterfassung"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
@@ -1111,7 +1125,7 @@ msgstr "Zeiteinheit für Ihre Zeiterfassung"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_my
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet"
-msgstr "Zeiterfassung"
+msgstr "Zeiterfassungen"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -1302,7 +1316,7 @@ msgstr "Gesamt"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Allocated Time"
-msgstr ""
+msgstr "Insgesamt zugewiesene Zeit"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form

@@ -194,7 +194,7 @@ msgid ""
 " the product category, or on the location, before processing this operation."
 msgstr ""
 "Eine Lagereingangskonto für für das Produkt %s konnte nicht gefunden werden."
-" Sie müssen vor der Bearbeitung dieses Vorgangs, eins über die "
+" Sie müssen vor der Bearbeitung dieses Vorgangs eins über die "
 "Produktkategorie oder den Lagerort definieren."
 
 #. module: stock_account
@@ -207,7 +207,7 @@ msgid ""
 "operation."
 msgstr ""
 "Eine Lagerausgangskonto für für das Produkt %s konnte nicht gefunden werden."
-" Sie müssen vor der Bearbeitung dieses Vorgangs, eins über die "
+" Sie müssen vor der Bearbeitung dieses Vorgangs eins über die "
 "Produktkategorie oder den Lagerort definieren."
 
 #. module: stock_account
@@ -662,7 +662,7 @@ msgstr ""
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
 msgid "Stock Accounting Automatic"
-msgstr ""
+msgstr "Lagerbuchhaltung Automatisch"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -898,12 +898,12 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Bei der Echtzeit-Bestandsbewertung verwendet. Wenn bei einem virtuellen "
-"Lager eingestellt (nicht intern), wird diesem Konto der Wert der Produkte "
-"zugeschrieben, die bei Bewegungen von einem internen Lager an dieses Lager "
-"erfolgen, anstelle des beim jeweiligen Produkt eingetragenen allgemeinen "
-"Lagerausgangskonto, verwendet. Bei rein internen Lagerorten hat diese "
-"Einstellung keine Auswirkung."
+"Bei der Echtzeit-Bestandsbewertung verwendet. Wenn für ein virtuelles Lager "
+"eingestellt (nicht intern), wird der Wert der Produkte, die aus einem "
+"internen Lagerort an diesen Lagerort verschoben werden, auf diesem Konto "
+"verbucht und nicht auf dem für das Produkt festgelegten allgemeinen "
+"Lagerausgangskonto. Bei rein internen Lagerorten hat diese Einstellung keine"
+" Auswirkung."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -914,12 +914,12 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Bei der Echtzeit-Bestandsbewertung verwendet. Wenn bei einem virtuellen "
-"Lager eingestellt (nicht intern), wird diesem Konto der Wert der Produkte "
-"zugeschrieben, die bei Bewegungen aus diesem Lagerort an einen internen "
-"Lagerort erfolgen, anstelle des beim jeweiligen Produkt eingetragenen "
-"allgemeinen Lagerausgangskonto, verwendet. Bei rein internen Lagerorten hat "
-"diese Einstellung keine Auswirkung."
+"Bei der Echtzeit-Bestandsbewertung verwendet. Wenn für ein virtuelles Lager "
+"eingestellt (nicht intern), wird der Wert der Produkte, die aus diesem "
+"Lagerort an einen internen Lagerort verschoben werden, auf diesem Konto "
+"verbucht und nicht auf dem für das Produkt festgelegten allgemeinen "
+"Lagerausgangskonto. Bei rein internen Lagerorten hat diese Einstellung keine"
+" Auswirkung."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation

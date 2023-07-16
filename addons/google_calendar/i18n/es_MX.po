@@ -3,12 +3,11 @@
 # 	* google_calendar
 # 
 # Translators:
-# Lucia Pacheco, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Fernanda Alvarez, 2023
 # Martin Trigaux, 2023
-# Aimée Mendoza Sánchez, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,8 +73,8 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
-"¡Un administrador necesita configurar la sincronización de Google antes de "
-"poder usarla!"
+"Un administrador necesita configurar la sincronización de Google antes de "
+"poder usarla."
 
 #. module: google_calendar
 #. odoo-python
@@ -87,10 +86,10 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronisation."
 msgstr ""
-"Ocurrió un error al generar el token. Su código de autorización puede ser "
-"inválido o ya expiró [%s]. Debe comprobar su ID de cliente y su secreto en "
-"la plataforma de las API de Google o intentar detener y reiniciar la "
-"sincronización del calendario."
+"Ocurrió un error al generar el token. Puede que su código de autorización no"
+" sea válido o que ya haya expirado [%s]. Debe comprobar su ID de cliente y "
+"su secreto en la plataforma de las API de Google o intentar detener y "
+"reiniciar la sincronización del calendario."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -274,7 +273,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "It will not be synced as long at it is not updated."
-msgstr "No se sincronizará mientras no haya sido actualizado."
+msgstr "No se sincronizará si no se ha actualizado."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
@@ -383,21 +382,22 @@ msgstr ""
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
 msgstr ""
-"La cuenta para el servicio de Calendario de Google no está configurada."
+"La cuenta para el servicio del calendario de Outlook no está configurada."
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "The following event could not be synced with Google Calendar."
-msgstr "El siguiente evento no pudo sincronizarse con Google Calendar."
+msgstr ""
+"El siguiente evento no pudo sincronizarse con el calendario de Google."
 
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
-msgstr "La sincronización con el Calendario de Google se detuvo con éxito."
+msgstr "La sincronización con el calendario de Google se detuvo con éxito."
 
 #. module: google_calendar
 #: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
@@ -459,5 +459,5 @@ msgstr "tiempo indefinido"
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
 msgstr ""
-"parece que no tiene permiso para modificar este evento en el Calendario de "
+"parece que no tiene permiso para modificar este evento en el calendario de "
 "Google"

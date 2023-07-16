@@ -151,6 +151,47 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
+"        Hallo,\n"
+"        <br><br>\n"
+"        Eine Zahlung mit der Referenz\n"
+"        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
+"        in Höhe von\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">10,00 €</span>\n"
+"        für Ihren Auftrag\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
+"            ist noch ausstehend.\n"
+"            <br>\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 1 and object.state in ('draft', 'sent')\">\n"
+"                Ihr Auftrag wird bestätigt, sobald die Zahlung bestätigt ist..\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Nach der Bestätigung bleiben\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">10,00 €</span>\n"
+"                zu zahlen.\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            wurde bestätigt.\n"
+"            <br>\n"
+"            Es bleiben noch <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">10,00 €</span>\n"
+"            zu zahlen.\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Vielen Dank für Ihr Vertrauen!\n"
+"        <br>\n"
+"        Kommen Sie gerne mit Fragen auf uns zu.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -568,14 +609,14 @@ msgstr ""
 "            <t t-if=\"object.origin\">\n"
 "                (mit der Referenz: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
-"            über den Betrag von<span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 10,00 $</span> ist verfügbar.\n"
+"            über den Betrag von<span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 10,00 €</span> ist verfügbar.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"doc_name or ''\">Ihr Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (mit der Referenz: S00052 )\n"
 "            </t>\n"
-"            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 $</span> steht zur Prüfung bereit.\n"
+"            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 €</span> steht zur Prüfung bereit.\n"
 "        </t>\n"
 "        <br><br>\n"
 "        Für Fragen stehen wir Ihnen gerne zur Verfügung.\n"
@@ -671,7 +712,7 @@ msgstr "<i class=\"fa fa-fw fa-check\"/><b>Bezahlt</b>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Warte auf Zahlung</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Warten auf Zahlung</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -719,6 +760,12 @@ msgid ""
 "                whether it's a storable product, a consumable or a service.\n"
 "            </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                Ein neues Produkt erstellen\n"
+"            </p><p>\n"
+"                Sie müssen ein Produkt definieren für alles, was Sie verkaufen oder kaufen,\n"
+"                ob es sich nun um ein lagerfähiges Produkt, ein Verbrauchsartikel oder eine Dienstleistung handelt.\n"
+"            </p>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -820,7 +867,7 @@ msgstr "<span>Unterschrift</span>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Tax excl.</span>"
-msgstr "</span>exkl. Steuer</span>"
+msgstr "<span>exkl. Steuer</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1030,6 +1077,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Je nach Produktkonfiguration kann die gelieferte Menge automatisch durch einen Mechanismus berechnet werden:\n"
+"  - Manuell: Die Menge wird manuell auf der Position eingestellt\n"
+"  - Kostenrechnung aus Auslagen: Die Menge ist die Mengensumme aus gebuchten Auslagen\n"
+"  - Zeiterfassung: Die Menge ist die Summe der Stunden, die für Aufgaben erfasst wurden, die mit dieser Verkaufsposition verbunden sind.\n"
+"  - Lagerbuchungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__acc_number
@@ -1082,7 +1134,7 @@ msgstr "Aktivitätstypen"
 #: code:addons/sale/static/src/js/product_catalog/sale_order_line/sale_order_line.xml:0
 #, python-format
 msgid "Add"
-msgstr "Hinzufügen von"
+msgstr "Hinzufügen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1181,7 +1233,7 @@ msgstr "Suche nach Kostenverteilung"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr "Kostenrechnung aus Spesen"
+msgstr "Kostenrechnung aus Auslagen"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -1400,7 +1452,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose between electronic signatures or online payments."
 msgstr ""
-"Wählen Sie zwischen elektronischen Unterschrifen oder Online-Zahlungen."
+"Wählen Sie zwischen elektronischen Unterschriften oder Online-Zahlungen."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_payment_provider_onboarding_wizard
@@ -2359,7 +2411,7 @@ msgstr "Importvorlage für Produkte"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_product_catalog_search_view
 msgid "In the Order"
-msgstr ""
+msgstr "Im Auftrag"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3514,7 +3566,7 @@ msgstr "Angebot #"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr "Angebot / Auftrag"
+msgstr "Angebot/Auftrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -3965,7 +4017,7 @@ msgstr "Verkauf: Auftragsbestätigung"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
 msgid "Sales: Payment Done"
-msgstr ""
+msgstr "Verkauf: Zahlung erledigt"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -4130,6 +4182,8 @@ msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm"
 " their order"
 msgstr ""
+"Versand an Kunden, wenn eine Zahlung eingegangen ist, der Auftrag aber nicht"
+" sofort bestätigt ist"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4149,7 +4203,7 @@ msgstr "Setzen Sie mehrere Preise pro Produkt, automatische Rabatte etc."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Set payments"
-msgstr "Zahlungen festlegen"
+msgstr "Zahlungen einrichten"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4197,7 +4251,7 @@ msgstr "Angebot unterzeichnen & bezahlen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr "Unterschreiben &amp; Bezahlen"
+msgstr "Unterzeichnen &amp; Bezahlen"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -4567,6 +4621,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "The order is not in a state requiring customer payment."
 msgstr ""
+"Der Auftrag befindet sich nicht in einem Status, der eine Zahlung des Kunden"
+" erfordert."
 
 #. module: sale
 #. odoo-python
@@ -4899,12 +4955,12 @@ msgstr "Typ der Ausnahmeaktivität im Datensatz."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "Tippen Sie, um einen Kunden zu finden ..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Tippen Sie, um ein Produkt zu finden ..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -5177,7 +5233,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/product_catalog/sale_order_line/sale_order_line.xml:0
 #, python-format
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "Sie können dieses Produkt nicht im Katalog bearbeiten"
 
 #. module: sale
 #. odoo-python

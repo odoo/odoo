@@ -90,7 +90,7 @@ msgstr "'見積依頼 - %s' % (object.name)"
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "-&gt;"
-msgstr ""
+msgstr "-&gt;"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -959,7 +959,7 @@ msgstr "仕入先請求書作成"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
 msgid "Create a new product variant"
-msgstr "製品バリアント新規作成"
+msgstr "プロダクトバリアント新規作成"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_uid
@@ -1271,7 +1271,7 @@ msgstr "有効にすると、仕入先請求書の3者間照合が有効にな�
 msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
-msgstr "インストールされている場合、製品バリアントはグリッドエントリを介して発注書に追加されます。"
+msgstr "インストールされている場合、プロダクトバリアントはグリッドエントリを介して発注書に追加されます。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
@@ -1283,7 +1283,7 @@ msgstr ""
 #: code:addons/purchase/models/product.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "製品テンプレートをインポート"
+msgstr "プロダクトテンプレートをインポート"
 
 #. module: purchase
 #. odoo-python
@@ -1852,7 +1852,7 @@ msgstr "プロダクト包装"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
 msgid "Product Template"
-msgstr "製品テンプレート"
+msgstr "プロダクトテンプレート"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_type
@@ -1862,13 +1862,13 @@ msgstr "製品タイプ"
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
 msgid "Product Variant"
-msgstr "製品バリアント"
+msgstr "プロダクトバリアント"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_product_action
 #: model:ir.ui.menu,name:purchase.product_product_menu
 msgid "Product Variants"
-msgstr "製品バリアント"
+msgstr "プロダクトバリアント"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
@@ -2309,7 +2309,7 @@ msgstr "基準単位"
 msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
-msgstr "この注文書リクエストを生成したドキュメントの参照(例:販売注文)"
+msgstr "この購買オーダ要求を生成したドキュメントの参照（例:販売オーダ）"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
@@ -3067,7 +3067,7 @@ msgstr "購買オーダにて警告"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning when Purchasing this Product"
-msgstr "製品購買時に警告"
+msgstr "プロダクト購買時に警告"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3128,14 +3128,18 @@ msgstr "注文書行のタイプを変更することはできません。代わ
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
-msgstr "販売または購買するもの(在庫品、消耗品、サービス品等)は、製品として登録する必要があります。"
+msgstr ""
+"販売または購買するものは、在庫品、消耗品、またはサービスかに関わらず、\n"
+"　　　　全てプロダクトとして定義する必要があります。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "            whether it's a storable product, a consumable or a service."
-msgstr "販売または購買するもの(在庫品、消耗品、サービス品等)は、製品として登録する必要があります。"
+msgstr ""
+"販売または購買するものは、在庫品、消耗品、またはサービスかに関わらず、\n"
+"　　　　全てプロダクトとして定義する必要があります。"
 
 #. module: purchase
 #. odoo-python
@@ -3145,8 +3149,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"見積もりには会社%(product_company)sの製品が含まれていますが、見積もりは会社%(quote_company)sに属しています。\n"
-"見積もりの 会社を変更するか、他の会社から製品を削除してください(%(bad_products)s)。"
+"見積書には会社%(product_company)sのプロダクトが含まれていますが、見積書は会社%(quote_company)sに属しています。\n"
+"見積書の 会社を変更するか、他の会社からプロダクトを削除してください(%(bad_products)s)。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order

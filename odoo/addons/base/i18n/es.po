@@ -6,7 +6,7 @@
 # David Ramia, 2023
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2023
 # Camille Dantinne <cmd@odoo.com>, 2023
-# jabelchi, 2023
+# Josep Anton Belchi, 2023
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Gelo, 2023
 # PepeImpulso, 2023
@@ -15699,6 +15699,13 @@ msgid "Compute"
 msgstr "Calcular"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -21800,6 +21807,12 @@ msgstr ""
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'group by' no valido"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -34414,6 +34427,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -36026,6 +36046,15 @@ msgid "You can not create recursive tags."
 msgstr "No puede crear etiquetas recursivas."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login!"
 msgstr "¡No puede tener dos usuarios con el mismo inicio de sesión!"
@@ -36149,6 +36178,12 @@ msgstr "No puede desactivar el usuario que está usando ahora mismo."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""

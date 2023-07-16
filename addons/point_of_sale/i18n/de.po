@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2023
-# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -175,6 +175,8 @@ msgstr "<i class=\"fa fa-pencil\"/> Bearbeiten"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>How to manage tax-included prices"
 msgstr ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>Wie Preise inklusive Steuern verwaltet"
+" werden"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1785,7 +1787,7 @@ msgstr "Kunde erforderlich"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/CustomerFacingDisplayButton.xml:0
 #, python-format
 msgid "Customer Screen"
-msgstr ""
+msgstr "Kundenbildschirm"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1848,7 +1850,7 @@ msgstr "Tagesbericht"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Daily Sale"
-msgstr ""
+msgstr "Tagesverkauf"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session_filtered
@@ -2259,6 +2261,10 @@ msgid ""
 "            An Order Printer will only print updates for products belonging to one of\n"
 "            its categories."
 msgstr ""
+"Jeder Bestelldrucker hat eine IP-Adresse, die die IoT-Box oder den Hardware-Proxy,\n"
+"            wo der Drucker gefunden werden kann, definiert und eine Liste von Produktkategorien.\n"
+"            Ein Bestelldrucker druckt nur Aktualisierungen für Produkte, die zu einer\n"
+"            seiner Kategorien gehören."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3175,7 +3181,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__last_order_preparation_change
 msgid "Last preparation change"
-msgstr ""
+msgstr "Letzte Zubereitungsänderung"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__last_order_preparation_change
@@ -3599,6 +3605,8 @@ msgid ""
 "No barcode nomenclature has been configured. This can be changed in the "
 "configuration settings."
 msgstr ""
+"Es wurde keine Barcode-Nomenklatur konfiguriert. Dies kann in den "
+"Konfigurationseinstellungen geändert werden."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4010,6 +4018,8 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "            order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
+"Bestelldrucker werden von Restaurants und Bars genutzt, um \n"
+"            Bestellungen in der Küche/Bar zu drucken, wenn der Kellner eine Bestellung aktualisiert."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
@@ -4896,7 +4906,7 @@ msgstr "Zubereitungsdisplay"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer
 msgid "Preparation Printers"
-msgstr ""
+msgstr "Zubereitungsdrucker"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5547,6 +5557,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Stornierung von: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Stornoantrag an das Terminal gesendet"
@@ -6622,6 +6640,13 @@ msgstr ""
 "                        Bitte kontaktieren Sie Ihren Vorgesetzten, um die Abschlussdifferenz zu aktzeptieren."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "Der Name der Münzen/Scheine muss eine Zahl sein."
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique!"
 msgstr "Die Bezeichnung der Kassensitzung muss eindeutig sein!"
@@ -7404,7 +7429,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/barcode_reader_service.js:0
 #, python-format
 msgid "Unable to parse barcode"
-msgstr ""
+msgstr "Barcode kann nicht analysiert werden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7702,13 +7727,6 @@ msgstr ""
 #, python-format
 msgid "You can go to"
 msgstr "Gehen Sie zu"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Sie können nur eine Barzahlungsmethode haben."
 
 #. module: point_of_sale
 #. odoo-python

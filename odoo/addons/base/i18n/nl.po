@@ -17169,6 +17169,13 @@ msgid "Compute"
 msgstr "Bereken"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "De berekeningsmethode kan niet afhangen van het 'id' veld"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "Bereken BTW met Taxcloud na de online levering berekening."
@@ -23295,6 +23302,12 @@ msgstr ""
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Incorrecte 'groep door' instelling"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Ongeldig JSON-formaat in Standaardwaarde-veld."
 
 #. module: base
 #. odoo-python
@@ -36150,6 +36163,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr "Kon het veld van het soort '%s' niet importeren"
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -37788,6 +37808,17 @@ msgid "You can not create recursive tags."
 msgstr "Je kunt geen recursieve labels aanmaken."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+"Het verwijderen van sjabloongebruikers is niet toegestaan. Het verwijderen "
+"van dit profiel zal essentiële functies in gevaar brengen."
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login!"
 msgstr "Je kunt niet twee gebruikers met dezelfde login hebben!"
@@ -37915,6 +37946,12 @@ msgstr "Je kunt de gebruiker waarmee je bent aangemeld niet deactiveren."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "Je kan een aan een parameterveld gekopppelde groep niet verwijderen."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""

@@ -5,8 +5,9 @@
 # Translators:
 # Andy Yiu, 2023
 # Noma Yuki, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Martin Trigaux, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1060,7 +1061,7 @@ msgstr "割り当て要求を否認するには、割り当て要求を確認ま
 msgid ""
 "Allocation request must be in Draft state (\"To Submit\") in order to "
 "confirm it."
-msgstr "割り当てリクエストを確認するには、ドラフト状態('To Submit')である必要があります。"
+msgstr "割り当て申請を確認するには、ドラフト状態('To Submit')である必要があります。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1098,7 +1099,7 @@ msgid ""
 "- By Department: all employees of the specified department\n"
 "- By Employee Tag: all employees of the specific employee group category"
 msgstr ""
-"リクエストをバッチで作成できるようにします。\n"
+"申請をバッチで作成できるようにします。\n"
 "-従業員別:特定の従業員用\n"
 "-会社別:指定した会社のすべての従業員\n"
 "-部門別:指定した部門のすべての従業員\n"
@@ -1399,8 +1400,8 @@ msgstr "この発生の上限を選択します。0は上限なしを意味し�
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_ids
 msgid ""
-"Choose the Time Off Officer who will be notified to approve allocation or "
-"Time Off request"
+"Choose the Time Off Officers who will be notified to approve allocation or "
+"Time Off Request. If empty, nobody will be notified"
 msgstr ""
 
 #. module: hr_holidays
@@ -1516,7 +1517,7 @@ msgstr "新しい休暇の割当を作成する"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr "新しい休暇割り当てリクエストを作成します"
+msgstr "新しい休暇割り当て申請を作成します"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_uid
@@ -1872,7 +1873,7 @@ msgstr ""
 msgid ""
 "Filters only on requests that belong to an time off type that is 'active' "
 "(active field is True)"
-msgstr "active'(アクティブフィールドがTrue)であるtimeoffタイプに属するリクエストでのみフィルタリングします"
+msgstr "active'(アクティブフィールドがTrue)である休暇タイプに属する申請でのみフィルタリングします"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__first_approver_id
@@ -2559,7 +2560,7 @@ msgstr "新しい割り当て"
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "New Allocation Request"
-msgstr "休暇割当リクエスト"
+msgstr "休暇割当申請"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2568,7 +2569,7 @@ msgstr "休暇割当リクエスト"
 msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
-msgstr "%(user)sによって作成された新しい割当リクエスト:%(count)s%(allocation_type)sの日数"
+msgstr "%(user)sによって作成された新しい割当申請：%(count)s%(allocation_type)sの日数"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2767,7 +2768,7 @@ msgstr "オンライン"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can approve/refuse its own requests."
-msgstr "タイムオフマネージャーのみが、自身のリクエストを承認/否認できます。"
+msgstr "休暇管理者のみが、自身の申請を承認/否認できます。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2795,7 +2796,7 @@ msgstr "タイムオフマネージャーだけが他の人の休暇をリセッ
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Only a time off Manager can approve its own requests."
-msgstr "休暇マネージャーのみが独自のリクエストを承認できます。"
+msgstr "休暇管理者のみが自身の申請を承認できます。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3008,22 +3009,22 @@ msgstr "レポーティング"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Allocation"
-msgstr "割り当てをリクエストする"
+msgstr "割当申請"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
 msgid "Request End Date"
-msgstr "リクエスト終了日"
+msgstr "申請終了日"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from
 msgid "Request Start Date"
-msgstr "リクエスト開始日"
+msgstr "申請開始日"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Time off"
-msgstr "休暇のリクエスト"
+msgstr "休暇申請"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_type
@@ -3033,7 +3034,7 @@ msgstr "申請タイプ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__duration_display
 msgid "Requested (Days/Hours)"
-msgstr "リクエスト(日数/時間数)"
+msgstr "申請（日数/時間数）"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__requires_allocation
@@ -3057,8 +3058,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
-msgid "Responsible Time Off Officer"
-msgstr "休暇担当責任者"
+msgid "Notified Time Off Officer"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -3411,7 +3412,7 @@ msgstr "期間は0より大きくなければなりません。"
 msgid ""
 "The employee, department, company or employee category of this request is "
 "missing. Please make sure that your user login is linked to an employee."
-msgstr "このリクエストの従業員、部門、会社、または従業員のカテゴリがありません。ユーザーログインが従業員にリンクされていることを確認してください。"
+msgstr "この申請の従業員、部門、会社、または従業員のカテゴリがありません。ユーザーログインが従業員にリンクされていることを確認してください。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3622,7 +3623,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_employee.py:0
 #, python-format
 msgid "Time Off Dashboard"
-msgstr ""
+msgstr "休暇ダッシュボード"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
@@ -3657,14 +3658,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Time Off Request"
-msgstr "休暇リクエスト"
+msgstr "休暇申請"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Time Off Requests"
-msgstr "休暇リクエスト"
+msgstr "休暇申請"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_responsible
@@ -3883,7 +3884,7 @@ msgid ""
 "to create allocation/time off request. Total based on all the time off types"
 " without overriding limit."
 msgstr ""
-"この従業員に割り当てられた有給休暇の総数。この値を変更して、割り当て/休暇リクエストを作成します。制限を上書きせずに、すべてのタイムオフタイプに基づく合計。"
+"この従業員に割り当てられた有給休暇の総数。この値を変更して、割り当て/休暇申請を作成します。制限を上書きせずに、すべてのタイムオフタイプに基づく合計。"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training
@@ -3916,7 +3917,7 @@ msgstr "年に２回"
 #, python-format
 msgid ""
 "Two public holidays cannot overlap each other for the same working hours."
-msgstr ""
+msgstr "2つの祝祭日が同じ労働時間で重なることはありません。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -4306,7 +4307,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/resource.py:0
 #, python-format
 msgid "a new public holiday completely overrides this leave."
-msgstr ""
+msgstr "新しい祝祭日は、この休暇を完全に上書きします。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form

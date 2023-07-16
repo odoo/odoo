@@ -5,6 +5,7 @@
 # Translators:
 # Sarah Park, 2023
 # Martin Trigaux, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
 #, python-format
 msgid "%s hours available"
-msgstr ""
+msgstr "%s 시간 사용 가능"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -42,7 +43,7 @@ msgstr "회사"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__hr_attendance_overtime
 msgid "Count Extra Hours"
-msgstr ""
+msgstr "추가 근무 시간 계산"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -56,7 +57,7 @@ msgstr "일"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
-msgstr ""
+msgstr "추가 시간 공제"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -68,14 +69,14 @@ msgstr "작성 취소"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
 msgid "Extra Hours"
-msgstr ""
+msgstr "추가 시간"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form_overtime
 msgid "Extra Hours Available"
-msgstr ""
+msgstr "추가 시간 이용 가능"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -87,7 +88,7 @@ msgstr "시간"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__hr_attendance_overtime
 msgid "Hr Attendance Overtime"
-msgstr ""
+msgstr "시간외 근무 시간"
 
 #. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
@@ -100,18 +101,18 @@ msgstr "새 할당 요청"
 msgid ""
 "Once a time off of this type is approved, extra hours in attendances will be"
 " deducted."
-msgstr ""
+msgstr "해당 유형의 휴가가 승인되면 추가 근무 시간에서 차감됩니다."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
 msgid "Overtime Deductible"
-msgstr ""
+msgstr "초과 근무 공제"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
 msgid "Request Overtime"
-msgstr ""
+msgstr "초과 근무 요청"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -124,14 +125,14 @@ msgstr "저장"
 #, python-format
 msgid ""
 "The employee does not have enough extra hours to extend this allocation."
-msgstr ""
+msgstr "직원이 수당을 연장할 수 있는 충분한 추가 시간을 채우지 않았습니다."
 
 #. module: hr_holidays_attendance
 #. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
-msgstr ""
+msgstr "직원이 휴가를 연장할 수 있는 충분한 추가 시간을 채우지 않았습니다."
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -139,7 +140,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The employee does not have enough extra hours to request this allocation."
-msgstr ""
+msgstr "직원이 수당을 요청할 수 있는 충분한 추가 시간을 채우지 않았습니다."
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -147,7 +148,7 @@ msgstr ""
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
-msgstr ""
+msgstr "직원이 휴가를 요청할 수 있는 충분한 추가 시간을 채우지 않았습니다."
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -155,7 +156,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The employee does not have enough overtime hours to request this leave."
-msgstr ""
+msgstr "직원이 휴가를 요청할 수 있는 충분한 초과 근무 시간을 채우지 못했습니다."
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -176,7 +177,7 @@ msgstr "휴가 유형"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
 msgid "Total Overtime"
-msgstr ""
+msgstr "총 초과 근무"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_res_users
@@ -189,4 +190,4 @@ msgstr "사용자"
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "You do not have enough extra hours to request this leave"
-msgstr ""
+msgstr "휴가를 요청할 수 있는 충분한 추가 시간을 채우지 않았습니다."
