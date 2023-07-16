@@ -237,18 +237,20 @@ msgstr "12"
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__13
 msgid "13"
 msgstr ""
+"13\n"
+" "
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__14
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__14
 msgid "14"
-msgstr ""
+msgstr "14"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__15
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__15
 msgid "15"
-msgstr ""
+msgstr "15"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__16
@@ -260,7 +262,7 @@ msgstr "16"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__17
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__17
 msgid "17"
-msgstr ""
+msgstr "17"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__18
@@ -272,7 +274,7 @@ msgstr "18"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__19
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__19
 msgid "19"
-msgstr ""
+msgstr "19"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__20
@@ -284,25 +286,25 @@ msgstr "20"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__21
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__21
 msgid "21"
-msgstr ""
+msgstr "21"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__22
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__22
 msgid "22"
-msgstr ""
+msgstr "22"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__23
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__23
 msgid "23"
-msgstr ""
+msgstr "23"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__24
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__24
 msgid "24"
-msgstr ""
+msgstr "24"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__25
@@ -314,37 +316,37 @@ msgstr "25"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__26
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__26
 msgid "26"
-msgstr ""
+msgstr "26"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__27
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__27
 msgid "27"
-msgstr ""
+msgstr "27"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__28
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__28
 msgid "28"
-msgstr ""
+msgstr "28"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__29
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__29
 msgid "29"
-msgstr ""
+msgstr "29"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__30
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__30
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__31
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__31
 msgid "31"
-msgstr ""
+msgstr "31"
 
 #. module: project
 #. odoo-javascript
@@ -432,6 +434,68 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"<t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"<t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"<tbody>\n"
+"<tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"<t t-if=\"partner.name\">\n"
+"Witaj <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"Witam,<br><br>\n"
+"</t>\n"
+"Prosimy o poświęcenie chwili na kurs naszych usług związanych z zadaniem <strong t-out=\"object.name or ''\">\"Planowanie i budżet\"</strong>\n"
+"<t t-if=\"object._rating_get_operator().name\">\n"
+"przypisanego do <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
+"</t>\n"
+"\n"
+".<br>\n"
+"\n"
+"<t t-else=\"\">\n"
+"</td></tr>\n"
+"<tr><td style=\"text-align: center;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"<tr><td style=\"font-size: 13px;\">\n"
+"<strong>Powiedz nam, co sądzisz o naszych usługach</strong><br>\n"
+"<span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(kliknij na jeden z tych emotikonów)</span>\n"
+"</td></tr>\n"
+"<tr><td style=\"font-size: 13px;\">\n"
+"<table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"<tr>\n"
+"<td>\n"
+"<a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
+"<img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
+"</a>\n"
+"</td>\n"
+"<td>\n"
+"<a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
+"<img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
+"</a>\n"
+"</td>\n"
+"<td>\n"
+"<a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
+"<img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
+"</a>\n"
+"</td>\n"
+"</tr>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"</td></tr>\n"
+"<tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"Doceniamy Twoją opinię. Pomagają nam one w ciągłym doskonaleniu się.\n"
+"<t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"<br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Ta ankieta została wysłana, ponieważ zadanie zostało przeniesione do etapu <b t-out=\"object.stage_id.name or ''\">W toku</b></span>\n"
+"</t>\n"
+"<t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Ta ankieta klienta jest wysyłana <b t-out=\"object.project_id.rating_status_period or ''\">co tydzień</b>, dopóki zadanie znajduje się na etapie <b t-out=\"object.stage_id.name or ''\">W toku</b>.</span>\n"
+"</t>\n"
+"</td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</div>"
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -447,6 +511,15 @@ msgid ""
 "<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"Drogi <t t-out=\"object.partner_id.name or 'customer'\">Brandonie Freeman</t>,<br>\n"
+"Z przyjemnością informuję, że z powodzeniem zakończyliśmy projekt <strong t-out=\"object.name or ''\">\"Renowacja\"</strong>.\n"
+"<t t-if=\"user.signature\">\n"
+"<br>\n"
+"<t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"</t>\n"
+"</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Otrzymujesz tę wiadomość, ponieważ Twój projekt został przeniesiony do etapu <b t-out=\"object.stage_id.name or ''\">Gotowe</b>.</span>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -464,6 +537,17 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"Drogi <t t-out=\"object.partner_id.name or 'customer'\">Brandonie Freeman</t>,<br>\n"
+"Dziękujemy za zapytanie.<br>\n"
+"Jeśli masz jakieś pytania, daj nam znać.\n"
+"<br><br>\n"
+"Dziękujemy,\n"
+"<t t-if=\"user.signature\">\n"
+"<br>\n"
+"<t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"</t>\n"
+"</div>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -492,6 +576,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
 "                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
+"<i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -505,7 +591,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-warning\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 
 #. module: project
 #. odoo-python
@@ -531,7 +617,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -539,11 +625,13 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -580,7 +668,7 @@ msgstr "<span class=\"o_stat_text\">Zadania</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">w nawrocie</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -645,7 +733,7 @@ msgstr "<u>Kamienie Milowe</u>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "=&gt;"
-msgstr ""
+msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -2545,10 +2633,12 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task_type__fold
 msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
-"your tasks. Tasks in a folded stage are considered as closed."
+"your tasks. Tasks in a folded stage are considered as closed (not applicable"
+" to personal stages)."
 msgstr ""
 "Jeśli opcja ta jest włączona, etap ten będzie wyświetlany jako złożony w "
-"widoku Kanban zadań. Zadania na złożonym etapie są uważane za zamknięte."
+"widoku Kanban zadań. Zadania na etapie złożonym są uważane za zamknięte (nie"
+" dotyczy etapów osobistych)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -3196,7 +3286,7 @@ msgstr "Kamienie Milowe"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Mixing"
-msgstr ""
+msgstr "Mieszanie"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__mon
@@ -3404,12 +3494,12 @@ msgstr "Typ następnej czynności"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__next_recurrence_date
 msgid "Next Recurrence Date"
-msgstr ""
+msgstr "Data następnego nawrotu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
 msgid "Next Recurrencies"
-msgstr ""
+msgstr "Następne nawroty"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3580,7 +3670,7 @@ msgstr "Październik"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
-msgstr ""
+msgstr "Poza ścieżką"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_office_design
@@ -4977,7 +5067,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_stop_recurrence_confirmation_dialog/project_stop_recurrence_confirmation_dialog.xml:0
 #, python-format
 msgid "Stop Recurrence"
-msgstr ""
+msgstr "Zatrzymaj rekurencję"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count

@@ -286,6 +286,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Okresowo przydzielaj sygnały na podstawie reguł</span><br/>\n"
+"<span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"Wszystkie zespoły sprzedaży będą używać tego ustawienia domyślnie, chyba że\n"
+"nie określono inaczej.\n"
+"</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1376,7 +1381,7 @@ msgstr "Email DW"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email cc:"
-msgstr ""
+msgstr "Email cc:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1853,7 +1858,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_active_count
 msgid "Lang Active Count"
-msgstr ""
+msgstr "Język Liczba aktywności"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_id
@@ -1992,7 +1997,7 @@ msgstr "Data rozpoczęcia punktacji szans w ciągu znaków"
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_tree
 msgid "Lead Tags"
-msgstr ""
+msgstr "Tagi sygnału"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -3007,7 +3012,7 @@ msgstr "Potencjalna liczba zduplikowanych szans"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Predictive Lead Scoring"
-msgstr ""
+msgstr "Predykcyjny scoring sygnałów"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
@@ -3066,7 +3071,7 @@ msgstr "Proporcjonalny MPC (Miesięczny Przychód Cyklilczny)"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_prorated
 msgid "Prorated Recurring Revenues"
-msgstr ""
+msgstr "Proporcjonalne przychody cykliczne"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
@@ -3926,6 +3931,8 @@ msgid ""
 "Use the top left <i>Create</i> button, or send an email to %(email_link)s to"
 " test the email gateway."
 msgstr ""
+"Użyj przycisku <i>Utwórz</i> w lewym górnym rogu lub wyślij wiadomość e-mail"
+" do %(email_link)s, aby przetestować bramkę e-mail."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4145,7 +4152,7 @@ msgstr "wygenerować szanse w twoim lejku?<br>"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
 msgid "team_count"
-msgstr ""
+msgstr "team_count"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper

@@ -6,12 +6,12 @@
 # ook rio <riokoko5@gmail.com>, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2023
-# Martin Trigaux, 2023
 # Noma Yuki, 2023
 # Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # 江口和志 <sandwhale1010@gmail.com>, 2023
 # Junko Augias, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 11:05+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1332,6 +1332,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "添付ファイルごとにアクセストークンを提供する必要があります。"
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -1381,8 +1388,8 @@ msgid "Animals & Nature"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -3268,7 +3275,7 @@ msgstr "定期購読の編集"
 #: code:addons/mail/static/src/views/fields/many2many_tags_email/many2many_tags_email.js:0
 #, python-format
 msgid "Edit: %s"
-msgstr ""
+msgstr "編集：%s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__email
@@ -8849,6 +8856,21 @@ msgstr ""
 "(納税者番号)。ここでの値は、国の形式に基づいて検証されます。取引先に税金がかからないことを示すには、'/' を使用してください。"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "添付の %s は存在しないか、アクセス権がありません。"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
@@ -9785,6 +9807,14 @@ msgstr ""
 " mycompany.odoo.com)の恩恵を受けています。"
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -10066,7 +10096,7 @@ msgstr "あなたは <b>#%s</b> チャネルにいます。"
 #: code:addons/mail/controllers/discuss.py:0
 #, python-format
 msgid "You are not allowed to upload an attachment here."
-msgstr ""
+msgstr "ここに添付をアップロードすることはできません。"
 
 #. module: mail
 #. odoo-javascript
@@ -16089,8 +16119,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
@@ -25146,7 +25176,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "not"
-msgstr ""
+msgstr "以下ではない："
 
 #. module: mail
 #. odoo-javascript
@@ -29451,7 +29481,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "search"
-msgstr ""
+msgstr "検索"
 
 #. module: mail
 #. odoo-javascript
@@ -29555,7 +29585,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "set"
-msgstr ""
+msgstr "設定"
 
 #. module: mail
 #. odoo-javascript
@@ -32597,7 +32627,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "toggle push-to-talk"
-msgstr ""
+msgstr "プッシュツートーク切替"
 
 #. module: mail
 #. odoo-javascript

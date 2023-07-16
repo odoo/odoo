@@ -6,6 +6,7 @@
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # Marcos Rodrigues, 2023
 # Martin Trigaux, 2023
+# Layna Nascimento, 2023
 # Kevilyn Rosa, 2023
 # 
 msgid ""
@@ -313,7 +314,7 @@ msgstr "Atividades Futuras"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__has_message
@@ -355,6 +356,8 @@ msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
+"Indica se o produto é um custo de importação: ao receber uma fatura de "
+"fornecedor, você pode alocar esse custo em recibos anteriores."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -364,13 +367,13 @@ msgstr "É um seguidor"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
 msgid "Is Landed Costs Line"
-msgstr ""
+msgstr "É uma linha de custos no destino "
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr ""
+msgstr "É um custo no destino"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
@@ -420,7 +423,7 @@ msgstr "Custos Adicionais"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr ""
+msgstr "Custo no destino visível"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -489,7 +492,7 @@ msgstr "Novo"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
 msgid "New Value"
-msgstr ""
+msgstr "Novo valor"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
@@ -560,7 +563,7 @@ msgstr "Por favor configurar a conta de despesa para o produto: %s."
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "Defina o %s no qual esses custos adicionais devem ser aplicados."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -641,7 +644,7 @@ msgstr "Custo de Estoque Adicionais"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "Linha de custos no destino - estoque"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
@@ -699,7 +702,7 @@ msgstr "Valorização"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "Linhas de ajuste de avaliação"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -740,6 +743,9 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
+"Não é possível aplicar as despesas de importação nos  %s(s) escolhidos. As "
+"despesas de importação só podem ser aplicadas a produtos com método de "
+"custeio PEPS ou custo médio."
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -749,3 +755,5 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
 msgstr ""
+"Não é possível alterar o tipo de produto ou desativar a opção de despesas de"
+" importação porque o produto é usado em uma linha de movimentação de conta."

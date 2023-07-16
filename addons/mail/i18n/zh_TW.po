@@ -5,8 +5,8 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
-# Martin Trigaux, 2023
 # Tony Ng, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 11:05+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1330,6 +1330,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "必須為每個附件提供存取代碼(token)。"
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -1379,8 +1386,8 @@ msgid "Animals & Nature"
 msgstr "動物及大自然"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -8846,6 +8853,21 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "附件 %s 不存在，或者您沒有存取它的許可權。"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
@@ -9772,6 +9794,14 @@ msgid ""
 msgstr ""
 "在社區和企業版本中，發送/接收電子信件需要使用自己的電子信件伺服器。線上使用者已受益於隨時可用的電子信件伺服器 "
 "(@mycompany.odoo.com)。"
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -16076,8 +16106,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0

@@ -33,11 +33,19 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    안녕하세요, <t t-out=\"object.name or ''\">Abigail Peterson</t>님.<br><br>\n"
+"                    시스템상의 오류가 발생한 경우가 아니라면, 현재 휴가 요청을 제출하지 않은 상태로 사무실에 무단결근하고 계신 것으로 파악됩니다.<br>\n"
+"                    해당 결근에 대해 적절한 조치를 취해주시기 바랍니다.<br>\n"
+"                    자세한 내용은 관리자 또는 인사팀에 문의하여 주십시오. \n"
+"                    <br>감사합니다.<br><br>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
 msgid "Absence/Presence"
-msgstr ""
+msgstr "결근/출근"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -85,7 +93,7 @@ msgstr "보낸 이메일"
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "Employee's Presence to Define"
-msgstr ""
+msgstr "직원의 출근 여부를 정의"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -107,16 +115,19 @@ msgid ""
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
+"시스템상의 오류가 발생한 경우가 아니라면, 현재 휴가 요청을 제출하지 않은 상태로 사무실에 무단결근하고 계신 것으로 파악됩니다.\n"
+"해당 결근에 대해 적절한 조치를 취해주시기 바랍니다.\n"
+"자세한 내용은 관리자 또는 인사팀에 문의하여 주십시오."
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
 msgid "HR Presence: cron"
-msgstr ""
+msgstr "HR 현황: cron"
 
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "HR: Employee Absence email"
-msgstr ""
+msgstr "HR: 직원 결근 이메일"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -178,12 +189,12 @@ msgstr "SMS"
 msgid ""
 "Sent manually in presence module when an employee wasn't working despite not"
 " being off"
-msgstr ""
+msgstr "직원이 퇴근 처리하지 않았음에도 불구하고 근무하고 있지 않을 경우 현황 모듈에 수동으로 전송"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Set as absent"
-msgstr ""
+msgstr "부재로 설정"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban

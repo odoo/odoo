@@ -36,6 +36,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Nessuna milestone trovata. Creiamone una!\n"
+"                </p><p>\n"
+"                    Monitora gli obiettivi principali che dovrebbero essere raggunti per avere successo.\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #. odoo-javascript
@@ -978,6 +985,9 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
+"Conto analitico a cui sono collegati l'attività e il relativo foglio ore.\n"
+"Monitora i costi e le entrate della tua attività configurando il conto analitico nei documenti (ad es. ordini di vendita, fatture, ordini di acquisto, fatture fornitore, spese, ecc.).\n"
+"Il conto analitico del progetto viene configurato per impostazione predefinita. Tuttavia, può essere modificato singolarmente su ogni attività se necessario."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1812,6 +1822,8 @@ msgid ""
 "Date on which the stage of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage to another."
 msgstr ""
+"Data dell'ultima modifica dello stadio della tua attività.\n"
+"Basandoti su questo dato, puoi individuare le attività in stallo e ottenere statisticche sul tempo impiegato di solito per il passaggio da uno stadio all'altro."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1826,6 +1838,9 @@ msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
+"Data in cui l'attività è stata assegnata per l'ultima volta (o non "
+"assegnata). In base a ciò, puoi ottenere statistiche sul tempo che si "
+"impiega per assegnare le attività."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
@@ -1960,6 +1975,8 @@ msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
 msgstr ""
+"Fornisci i tuoi servizi automaticamente quando completi una milestone, "
+"collegandola ad una voce dell'ordine di vendita."
 
 #. module: project
 #. odoo-javascript
@@ -2551,7 +2568,8 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task_type__fold
 msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
-"your tasks. Tasks in a folded stage are considered as closed."
+"your tasks. Tasks in a folded stage are considered as closed (not applicable"
+" to personal stages)."
 msgstr ""
 
 #. module: project
@@ -2704,14 +2722,14 @@ msgstr "Specificazione campo non valida %r."
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "Operatore non valido: %s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "Valore non valido: %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -5139,7 +5157,7 @@ msgstr "Lavoro bloccato"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task description..."
-msgstr ""
+msgstr "Descrizione attività..."
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_progress
@@ -5964,6 +5982,8 @@ msgid ""
 "creating a tag that is already existing in other projects, it won't generate"
 " any duplicates."
 msgstr ""
+"Puoi vedere solo i tag già presenti nel tuo progetto. Se provi a creare un "
+"tag già esistente in altri progetti, non verrà creato nessun doppione."
 
 #. module: project
 #. odoo-python

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -47,6 +47,13 @@ msgid ""
 msgstr ""
 "<strong>Formato utilizzato per importare la fattura: %s</strong> <p><li> %s "
 "</li></p>"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
@@ -90,14 +97,6 @@ msgid ""
 msgstr ""
 "Impossibile recuperare la valuta: %s. Hai abilitato l'opzione multicurrency "
 "e attivato la valuta?"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#, python-format
-msgid "Could not retrieve the %s."
-msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -232,9 +231,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid "No gross price nor net price found for line in xml"
+msgid ""
+"No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
-"Non è stato trovato un prezzo lordo né un prezzo netto per la linea in xml"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -275,9 +274,21 @@ msgid "Report Action"
 msgstr "Azione resoconto"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
+msgid "SG BIS Billing 3.0"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
 msgid "SI-UBL 2.0 (NLCIUS)"
 msgstr "SI-UBL 2.0 (NLCIUS)"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "Tax '%s' is invalid: %s"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -397,14 +408,6 @@ msgstr ""
 "categoria IVA dell'articolo fatturato (BT-151)."
 
 #. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#, python-format
-msgid "customer"
-msgstr ""
-
-#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
 msgstr "factur-x.xml"
@@ -423,11 +426,3 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#, python-format
-msgid "vendor"
-msgstr ""

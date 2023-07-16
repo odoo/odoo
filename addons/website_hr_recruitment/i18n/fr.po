@@ -3,8 +3,8 @@
 # 	* website_hr_recruitment
 # 
 # Translators:
-# Jolien De Paepe, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 10:53+0000\n"
 "PO-Revision-Date: 2023-01-17 15:00+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -757,6 +757,13 @@ msgstr ""
 "qui sera affichée sur la page principale des offres d'emploi."
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "You cannot apply for this job."
+msgstr "Vous ne pouvez pas postuler pour ce poste."
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Your application has been posted successfully."
 msgstr "Votre candidature a bien été envoyée."
@@ -796,3 +803,8 @@ msgstr "partages"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "non publié"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "Optional if you provided a Linkedin profile"
+msgstr "Optionnel si vous donnez un profil LinkedIn"

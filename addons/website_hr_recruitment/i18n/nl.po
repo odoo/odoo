@@ -3,8 +3,8 @@
 # 	* website_hr_recruitment
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -756,6 +756,13 @@ msgstr ""
 "dat op de hoofdvacaturepagina zal worden getoond."
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "You cannot apply for this job."
+msgstr "Je kan niet solliciteren voor deze functie."
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Your application has been posted successfully."
 msgstr "Jouw sollicitatie is succesvol ingediend."
@@ -795,3 +802,8 @@ msgstr "deel het"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "niet gepubliceerd"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "Optional if you provided a Linkedin profile"
+msgstr "Optioneel als u een Linkedin-profiel heeft opgegeven"

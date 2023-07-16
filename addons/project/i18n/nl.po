@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2023-05-25 11:22+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -346,29 +346,29 @@ msgstr ""
 #: model:mail.template,body_html:project.rating_project_request_email_template
 msgid ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Hello,<br/><br/>\n"
+"                Hello,<br><br>\n"
 "            </t>\n"
 "            Please take a moment to rate our services related to the task \"<strong t-out=\"object.name or ''\">Planning and budget</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                .<br/>\n"
+"                .<br>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Tell us how you feel about our service</strong><br/>\n"
+"                    <strong>Tell us how you feel about our service</strong><br>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(click on one of these smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
@@ -376,17 +376,17 @@ msgid ""
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -397,10 +397,10 @@ msgid ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            We appreciate your feedback. It helps us to improve continuously.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
+"                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -409,47 +409,47 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"relatie\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            <t t-if=\"relatie.naam\">\n"
-"                Hallo <t t-out=\"relatie.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"            <t t-if=\"partner.name\">\n"
+"                Hallo <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Hallo,<br/><br/>\n"
+"                Hallo,<br><br>\n"
 "            </t>\n"
 "            Neem even de tijd om onze diensten te beoordelen met betrekking tot de taak \"<strong t-out=\"object.name or ''\">Planning en budget</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                toegewezen aan <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell-beheerder</strong>.<br/>\n"
+"                toegewezen aan <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                .<br/>\n"
+"                .<br>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Vertel ons wat je van onze service vindt</strong><br/>\n"
-"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(klik op een van deze smileys)</span>\n"
+"                    <strong>Vertel ons wat je van onze dienstverlening vindt</strong><br>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(klik op één van deze smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
 "                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Tevreden\" src=\"/rating/static/src/img/rating_5.png\" title=\"Tevreden\"/>\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Oké\" src=\"/rating/static/src/img/rating_3.png\" title=\"Oké\"/>\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Ontevreden\" src=\"/rating/static/src/img/rating_1.png\" title=\"Ontevreden\"/>\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -458,12 +458,12 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            Wij waarderen je feedback. Het helpt ons om continu te verbeteren.\n"
+"            We waarderen je feedback. Het helpt ons om continu te verbeteren.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat je taak is verplaatst naar de fase <b t-out=\"object.stage_id.name or ''\">In uitvoering</b></span>\n"
+"                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat je taak is verplaatst naar de fase <b t-out=\"object.stage_id.name or ''\">In behandeling</b></span>\n"
 "            </t>\n"
-"            <t t-if=\"object.project_id.rating_status == 'periodiek'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Dit klantenonderzoek is verzonden <b t-out=\"object.project_id.rating_status_period or ''\">Wekelijks</b> zolang de taak zich in de fase <b t-out=\"object.stage_id.name or ''\">In uitvoering</b> bevindt.</span>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête wordt <b t-out=\"object.project_id.rating_status_period or ''\">wekelijks</b> verzonden zolang je taak zich in de fase <b t-out=\"object.stage_id.name or ''\">In behandeling</b> bevindt.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -472,30 +472,55 @@ msgstr ""
 "            "
 
 #. module: project
+#: model:mail.template,body_html:project.project_done_email_template
+msgid ""
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
+"            "
+msgstr ""
+"<div>\n"
+"    Beste <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Het is mijn genoegen je te laten weten dat we het project \"<strong t-out=\"object.name or ''\">Renovaties</strong>\" met succes hebben afgerond.\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Je ontvangt deze e-mail omdat je project naar de fase <b t-out=\"object.stage_id.name or ''\">Gereed</b> werd verplaatst</span>\n"
+"            "
+
+#. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    Thank you for your enquiry.<br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Thank you for your enquiry.<br>\n"
 "    If you have any questions, please let us know.\n"
-"    <br/><br/>\n"
+"    <br><br>\n"
 "    Thank you,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
 msgstr ""
 "<div>\n"
-"    Beste <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    Dank je voor je aanvraag.<br/>\n"
-"    Als je vragen hebt, laat het ons weten.\n"
-"    <br/><br/>\n"
-"    Dank je,\n"
+"    Beste <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Hartelijk dank voor je aanvraag.<br>\n"
+"    Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
+"    <br><br>\n"
+"    Hartelijk dank,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -1269,6 +1294,23 @@ msgstr "Blok"
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__blocked
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__kanban_state__blocked
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_blocked:project.project_stage_0
+#: model:project.task.type,legend_blocked:project.project_stage_2
+#: model:project.task.type,legend_blocked:project.project_stage_3
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Blocked"
@@ -1293,6 +1335,11 @@ msgid "Brainstorm"
 msgstr "Brainstorm"
 
 #. module: project
+#: model:project.tags,name:project.project_tags_00
+msgid "Bug"
+msgstr "Bug"
+
+#. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.action_project_task_burndown_chart_report
@@ -1305,6 +1352,11 @@ msgid "Burndown Chart"
 msgstr "Burndown grafiek"
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Buzz of stel in als gereed"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
 msgid "Can Be Marked As Done"
 msgstr "Kan worden gemarkeerd als voltooid"
@@ -1313,6 +1365,9 @@ msgstr "Kan worden gemarkeerd als voltooid"
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #: model:project.project.stage,name:project.project_project_stage_3
+#: model:project.task.type,name:project.project_personal_stage_admin_6
+#: model:project.task.type,name:project.project_personal_stage_demo_6
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Canceled"
 msgstr "Geannuleerd"
@@ -2095,6 +2150,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__done
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__done
 #: model:project.project.stage,name:project.project_project_stage_2
+#: model:project.task.type,name:project.project_personal_stage_admin_5
+#: model:project.task.type,name:project.project_personal_stage_demo_5
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Gereed"
@@ -2217,9 +2275,19 @@ msgid "Expected"
 msgstr "Verwacht"
 
 #. module: project
+#: model:project.tags,name:project.project_tags_02
+msgid "Experiment"
+msgstr "Experiment"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
 msgid "Expiration Date"
 msgstr "Vervaldatum"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_05
+msgid "External"
+msgstr "Extern"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2463,13 +2531,6 @@ msgid "How’s this project going?"
 msgstr "Hoe gaat het met dit project?"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
-msgstr "Ik neem hem"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
 #: model:ir.model.fields,field_description:project.field_project_milestone__id
 #: model:ir.model.fields,field_description:project.field_project_project__id
@@ -2551,11 +2612,12 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task_type__fold
 msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
-"your tasks. Tasks in a folded stage are considered as closed."
+"your tasks. Tasks in a folded stage are considered as closed (not applicable"
+" to personal stages)."
 msgstr ""
-"Indien ingeschakeld, wordt deze fase weergegeven als gevouwen in de Kanban-"
+"Indien ingeschakeld, wordt deze fase weergegeven als gevouwen in de kanban-"
 "weergave van je taken. Taken in een gevouwen fase worden als gesloten "
-"beschouwd."
+"beschouwd (niet van toepassing op persoonlijke fases)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2613,6 +2675,25 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__normal
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__kanban_state__normal
 #: model:project.project.stage,name:project.project_project_stage_1
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_normal:project.project_stage_0
+#: model:project.task.type,legend_normal:project.project_stage_1
+#: model:project.task.type,legend_normal:project.project_stage_2
+#: model:project.task.type,legend_normal:project.project_stage_3
+#: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
 msgstr "In behandeling"
@@ -2627,6 +2708,8 @@ msgstr "In ontwikkeling"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_0
+#: model:project.task.type,name:project.project_personal_stage_demo_0
 #, python-format
 msgid "Inbox"
 msgstr "Postvak in"
@@ -2635,6 +2718,11 @@ msgstr "Postvak in"
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
 msgid "Initially Planned Hours"
 msgstr "Geplande uren"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_04
+msgid "Internal"
+msgstr "Intern"
 
 #. module: project
 #. odoo-javascript
@@ -2961,6 +3049,8 @@ msgstr "Late milstones"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_4
+#: model:project.task.type,name:project.project_personal_stage_demo_4
 #, python-format
 msgid "Later"
 msgstr "Later"
@@ -3112,6 +3202,11 @@ msgstr "Leden"
 #: model:ir.model,name:project.model_ir_ui_menu
 msgid "Menu"
 msgstr "Menu"
+
+#. module: project
+#: model:ir.model,name:project.model_mail_message
+msgid "Message"
+msgstr "Bericht"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_error
@@ -3271,6 +3366,11 @@ msgstr ""
 "taken, tickets, sprints, enz..."
 
 #. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Functionele of technische hulp nodig"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
@@ -3282,10 +3382,16 @@ msgstr "Neutraal gezicht"
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: model:project.task.type,name:project.project_stage_0
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #, python-format
 msgid "New"
 msgstr "Nieuw"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_01
+msgid "New Feature"
+msgstr "Nieuwe functie"
 
 #. module: project
 #. odoo-javascript
@@ -3546,6 +3652,12 @@ msgstr "Oktober"
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
 msgstr "Niet op schema"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_office_design
+#: model:project.project,name:project.project_project_1
+msgid "Office Design"
+msgstr "Kantoorontwerp"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__ok
@@ -4053,6 +4165,11 @@ msgid "Project description..."
 msgstr "Omschrijving van het project..."
 
 #. module: project
+#: model:mail.template,subject:project.project_done_email_template
+msgid "Project status - {{ object.name }}"
+msgstr "Projectstatus - {{ object.name }}"
+
+#. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
 msgstr "Projecttaken"
@@ -4061,6 +4178,11 @@ msgstr "Projecttaken"
 #: model:ir.actions.server,name:project.ir_cron_recurring_tasks_ir_actions_server
 msgid "Project: Create Recurring Tasks"
 msgstr "Project: Maak terugkerende taken"
+
+#. module: project
+#: model:mail.template,name:project.project_done_email_template
+msgid "Project: Project Completed"
+msgstr "Project: Project voltooid"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
@@ -4262,6 +4384,22 @@ msgstr "Alleen lezen"
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__done
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_done:project.project_stage_0
+#: model:project.task.type,legend_done:project.project_stage_2
 #, python-format
 msgid "Ready"
 msgstr "Gereed"
@@ -4270,6 +4408,11 @@ msgstr "Gereed"
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__kanban_state__done
 msgid "Ready for Next Stage"
 msgstr "Klaar voor volgende fase"
+
+#. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Gereed om te heropenen"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4342,6 +4485,12 @@ msgstr "Gerelateerde document ID"
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_model
 msgid "Related Document Model"
 msgstr "Gerelateerde documentmodel"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_renovations
+#: model:project.project,name:project.project_project_3
+msgid "Renovations"
+msgstr "Renovaties"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
@@ -4428,6 +4577,12 @@ msgstr "Rapportages"
 #, python-format
 msgid "Research"
 msgstr "Onderzoek"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_research_development
+#: model:project.project,name:project.project_project_2
+msgid "Research & Development"
+msgstr "Research & Development"
 
 #. module: project
 #. odoo-javascript
@@ -4654,6 +4809,15 @@ msgstr "Status instellen"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
 msgstr "Stel een beoordelings-e-mailsjabloon in op fasen"
+
+#. module: project
+#: model:mail.template,description:project.project_done_email_template
+msgid ""
+"Set on project's stages to inform customers when a project reaches that "
+"stage"
+msgstr ""
+"Bepaald op de fases van het project om klanten in te lichten wanneer een "
+"project die fase bereikt"
 
 #. module: project
 #. odoo-javascript
@@ -5128,6 +5292,9 @@ msgstr "Taak:"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__task_id
 #: model:ir.model.fields,field_description:project.field_res_partner__task_ids
 #: model:ir.model.fields,field_description:project.field_res_users__task_ids
+#: model:project.project,label_tasks:project.project_project_1
+#: model:project.project,label_tasks:project.project_project_2
+#: model:project.project,label_tasks:project.project_project_3
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -5365,6 +5532,8 @@ msgstr "Derde"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_3
+#: model:project.task.type,name:project.project_personal_stage_demo_3
 #, python-format
 msgid "This Month"
 msgstr "Deze maand"
@@ -5372,6 +5541,8 @@ msgstr "Deze maand"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_2
+#: model:project.task.type,name:project.project_personal_stage_demo_2
 #, python-format
 msgid "This Week"
 msgstr "Deze week"
@@ -5487,6 +5658,8 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_1
+#: model:project.task.type,name:project.project_personal_stage_demo_1
 #, python-format
 msgid "Today"
 msgstr "Vandaag"
@@ -5642,6 +5815,11 @@ msgstr "Bijwerken"
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
 msgstr "Update gemaakt"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_03
+msgid "Usability"
+msgstr "Gebruiksvriendelijkheid"
 
 #. module: project
 #. odoo-javascript

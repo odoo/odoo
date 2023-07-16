@@ -10,6 +10,7 @@
 # Martin Trigaux, 2023
 # Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 11:22+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -736,7 +737,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "A new task will be created on the following dates:"
-msgstr ""
+msgstr "Uma nova tarefa será criada nas seguintes datas:"
 
 #. module: project
 #. odoo-python
@@ -1027,7 +1028,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ancestor_id
 msgid "Ancestor Task"
-msgstr ""
+msgstr "Tarefa Ancestral"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -1060,6 +1061,8 @@ msgstr "Arquivado"
 #, python-format
 msgid "Archived tasks cannot be recurring. Please unarchive the task first."
 msgstr ""
+"As tarefas arquivadas não podem ser recorrentes. Desarquive a tarefa "
+"primeiro."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1175,6 +1178,8 @@ msgid ""
 "At each stage, employees can block tasks or mark them as ready for the next step.\n"
 "                                    You can customize here the labels for each state."
 msgstr ""
+"Em cada etapa, os funcionários podem bloquear tarefas ou marcá-las como prontas para a próxima etapa.\n"
+"                                    Você pode customizar aqui os rótulos para cada estado."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1218,6 +1223,9 @@ msgid ""
 " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Modifique automaticamente o estado do kanban quando o cliente responder ao feedback para esta etapa.\n"
+"* Um bom feedback do cliente atualizará o estado do kanban para 'pronto para o novo estágio' (marca verde).\n"
+"* Feedback neutro ou ruim definirá o estado do kanban como 'bloqueado' (marca vermelha).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1557,7 +1565,7 @@ msgstr "Contato"
 #: code:addons/project/static/src/components/project_stop_recurrence_confirmation_dialog/project_stop_recurrence_confirmation_dialog.xml:0
 #, python-format
 msgid "Continue Recurrence"
-msgstr ""
+msgstr "Continuar recorrência"
 
 #. module: project
 #. odoo-javascript
@@ -2604,11 +2612,9 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task_type__fold
 msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
-"your tasks. Tasks in a folded stage are considered as closed."
+"your tasks. Tasks in a folded stage are considered as closed (not applicable"
+" to personal stages)."
 msgstr ""
-"Se ativado, esse estágio será exibido como dobrado na visualização Kanban de"
-" suas tarefas. As tarefas em um estágio dobrado são consideradas como "
-"fechadas."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -3553,7 +3559,7 @@ msgstr "Nenhum"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Not Blocked"
-msgstr ""
+msgstr "Não Bloqueado"
 
 #. module: project
 #. odoo-python
@@ -4859,7 +4865,7 @@ msgstr "Compartilhar projeto"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Readonly"
-msgstr ""
+msgstr "Compartilhar Somente Leitura"
 
 #. module: project
 #. odoo-python

@@ -5,18 +5,19 @@
 # Translators:
 # liulixia <liu.lixia@elico-corp.com>, 2023
 # digitalliuzg8888, 2023
-# Raymond Yu <cl_yu@hotmail.com>, 2023
+# Emily Jia <eji@odoo.com>, 2023
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Martin Trigaux, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
-# Emily Jia <eji@odoo.com>, 2023
+# Raymond Yu <cl_yu@hotmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2023-05-25 11:22+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -344,29 +345,29 @@ msgstr ""
 #: model:mail.template,body_html:project.rating_project_request_email_template
 msgid ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Hello,<br/><br/>\n"
+"                Hello,<br><br>\n"
 "            </t>\n"
 "            Please take a moment to rate our services related to the task \"<strong t-out=\"object.name or ''\">Planning and budget</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                .<br/>\n"
+"                .<br>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Tell us how you feel about our service</strong><br/>\n"
+"                    <strong>Tell us how you feel about our service</strong><br>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(click on one of these smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
@@ -374,17 +375,17 @@ msgid ""
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -395,10 +396,10 @@ msgid ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            We appreciate your feedback. It helps us to improve continuously.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
+"                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -406,97 +407,38 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.project_done_email_template
+msgid ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
-"    <tbody>\n"
-"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"           <t t-if=\"partner.name\">\n"
-"                你好，<t t-out=\"partner.name or ''\">布兰登-弗里曼</t>。<br/><br/>\n"
-"           </t>\n"
-"           <t t-else=\"\">\n"
-"                你好。<br/><br/>\n"
-"           </t>\n"
-"            请花点时间对我们与<strong t-out=\"object.name or ''\">\"规划和预算</strong>\"任务相关的服务进行评价\n"
-"           <t t-if=\"object._rating_get_operator().name\">\n"
-"                分配给<strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>。<br/>\n"
-"           </t>\n"
-"           <t t-else=\"\">\n"
-"                .<br/>\n"
-"           </t>\n"
-"        </td></tr>\n"
-"        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
-"                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>告诉我们您对我们服务的感受</strong><br/>\n"
-"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(点击这些笑脸中的一个)</span>\n"
-"                </td></tr>\n"
-"                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
-"                        <tr>\n"
-"                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
-"                                </a>\n"
-"                            </td>\n"
-"                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
-"                                </a>\n"
-"                            </td>\n"
-"                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
-"                                </a>\n"
-"                            </td>\n"
-"                        </tr>\n"
-"                    </table>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td></tr>\n"
-"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            我们感谢您的反馈。它有助于我们不断改进。\n"
-"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">由于您的任务已被移至<b t-out=\"object.stage_id.name or ''\">进行中</b>阶段，因此该客户调查已被发送。</span>\n"
-"            </t>\n"
-"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">只要任务处于<b t-out=\"object.stage_id.name or ''\">进行中</b>阶段，该客户调查就会<b t-out=\"object.project_id.rating_status_period or ''\">每周</b>发送。</span>\n"
-"            </t>\n"
-"        </td></tr>\n"
-"    </tbody>\n"
-"    </table>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
 "</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
+msgstr ""
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    Thank you for your enquiry.<br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Thank you for your enquiry.<br>\n"
 "    If you have any questions, please let us know.\n"
-"    <br/><br/>\n"
+"    <br><br>\n"
 "    Thank you,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
 msgstr ""
-"<div>\n"
-"    亲爱的<t t-out=\"object.partner_id.name or 'customer'\">布兰登-弗里曼</t><br/>\n"
-"    谢谢您的询问。<br/>\n"
-"    如果您有任何问题，请告诉我们。\n"
-"   <br/><br/>\n"
-"    谢谢您。\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell 管理</t>\n"
-"    </t>\n"
-"</div>\n"
-"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1252,6 +1194,23 @@ msgstr "区块"
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__blocked
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__kanban_state__blocked
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_blocked:project.project_stage_0
+#: model:project.task.type,legend_blocked:project.project_stage_2
+#: model:project.task.type,legend_blocked:project.project_stage_3
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Blocked"
@@ -1276,6 +1235,11 @@ msgid "Brainstorm"
 msgstr "头脑风暴"
 
 #. module: project
+#: model:project.tags,name:project.project_tags_00
+msgid "Bug"
+msgstr "程序错误"
+
+#. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.action_project_task_burndown_chart_report
@@ -1288,6 +1252,11 @@ msgid "Burndown Chart"
 msgstr "燃尽图"
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Buzz或设置已完成"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
 msgid "Can Be Marked As Done"
 msgstr "可以标记为完成"
@@ -1296,6 +1265,9 @@ msgstr "可以标记为完成"
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #: model:project.project.stage,name:project.project_project_stage_3
+#: model:project.task.type,name:project.project_personal_stage_admin_6
+#: model:project.task.type,name:project.project_personal_stage_demo_6
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Canceled"
 msgstr "已取消"
@@ -2040,6 +2012,9 @@ msgstr "没有权限，用户EMail中忽略此数据"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__done
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__done
 #: model:project.project.stage,name:project.project_project_stage_2
+#: model:project.task.type,name:project.project_personal_stage_admin_5
+#: model:project.task.type,name:project.project_personal_stage_demo_5
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "完成"
@@ -2160,9 +2135,19 @@ msgid "Expected"
 msgstr "预计"
 
 #. module: project
+#: model:project.tags,name:project.project_tags_02
+msgid "Experiment"
+msgstr "实验"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
 msgid "Expiration Date"
 msgstr "过期日期"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_05
+msgid "External"
+msgstr "外部"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2394,13 +2379,6 @@ msgid "How’s this project going?"
 msgstr "这个项目进展如何？"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
-msgstr "我来做"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
 #: model:ir.model.fields,field_description:project.field_project_milestone__id
 #: model:ir.model.fields,field_description:project.field_project_project__id
@@ -2477,8 +2455,9 @@ msgstr "如果启用，此阶段将在项目的看板视图中显示为折叠的
 #: model:ir.model.fields,help:project.field_project_task_type__fold
 msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
-"your tasks. Tasks in a folded stage are considered as closed."
-msgstr "如果启用，此阶段将在任务的看板视图中显示为折叠的。 折叠的阶段中的任务被视为已关闭。"
+"your tasks. Tasks in a folded stage are considered as closed (not applicable"
+" to personal stages)."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2528,6 +2507,25 @@ msgstr "如不启用此字段，可以不删除数据来隐藏项目."
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__normal
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__kanban_state__normal
 #: model:project.project.stage,name:project.project_project_stage_1
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_normal:project.project_stage_0
+#: model:project.task.type,legend_normal:project.project_stage_1
+#: model:project.task.type,legend_normal:project.project_stage_2
+#: model:project.task.type,legend_normal:project.project_stage_3
+#: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
 msgstr "进行中"
@@ -2542,6 +2540,8 @@ msgstr "开发中"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_0
+#: model:project.task.type,name:project.project_personal_stage_demo_0
 #, python-format
 msgid "Inbox"
 msgstr "收件箱"
@@ -2550,6 +2550,11 @@ msgstr "收件箱"
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
 msgid "Initially Planned Hours"
 msgstr "最初计划时数"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_04
+msgid "Internal"
+msgstr "内部"
 
 #. module: project
 #. odoo-javascript
@@ -2868,6 +2873,8 @@ msgstr "最近的里程碑"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_4
+#: model:project.task.type,name:project.project_personal_stage_demo_4
 #, python-format
 msgid "Later"
 msgstr "稍后"
@@ -3015,6 +3022,11 @@ msgstr "成员"
 #: model:ir.model,name:project.model_ir_ui_menu
 msgid "Menu"
 msgstr "菜单"
+
+#. module: project
+#: model:ir.model,name:project.model_mail_message
+msgid "Message"
+msgstr "消息"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_error
@@ -3170,6 +3182,11 @@ msgid ""
 msgstr "用来指代项目任务的名称，如任务、票据、冲刺等等……"
 
 #. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "需要功能或者技术帮助"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
@@ -3181,10 +3198,16 @@ msgstr "平静"
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: model:project.task.type,name:project.project_stage_0
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #, python-format
 msgid "New"
 msgstr "新建"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_01
+msgid "New Feature"
+msgstr "新功能"
 
 #. module: project
 #. odoo-javascript
@@ -3445,6 +3468,12 @@ msgstr "十月"
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
 msgstr "关闭跟踪"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_office_design
+#: model:project.project,name:project.project_project_1
+msgid "Office Design"
+msgstr "办公室设计"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__ok
@@ -3941,6 +3970,11 @@ msgid "Project description..."
 msgstr "项目说明..."
 
 #. module: project
+#: model:mail.template,subject:project.project_done_email_template
+msgid "Project status - {{ object.name }}"
+msgstr "项目状态 - {{ object.name }}"
+
+#. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
 msgstr "项目任务"
@@ -3949,6 +3983,11 @@ msgstr "项目任务"
 #: model:ir.actions.server,name:project.ir_cron_recurring_tasks_ir_actions_server
 msgid "Project: Create Recurring Tasks"
 msgstr "项目：创建周期任务"
+
+#. module: project
+#: model:mail.template,name:project.project_done_email_template
+msgid "Project: Project Completed"
+msgstr "项目：项目已完成"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
@@ -4145,6 +4184,22 @@ msgstr "只读"
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__done
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_done:project.project_stage_0
+#: model:project.task.type,legend_done:project.project_stage_2
 #, python-format
 msgid "Ready"
 msgstr "就绪"
@@ -4153,6 +4208,11 @@ msgstr "就绪"
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__kanban_state__done
 msgid "Ready for Next Stage"
 msgstr "下一阶段就绪"
+
+#. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "准备重新打开"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4225,6 +4285,12 @@ msgstr "相关单据编号"
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_model
 msgid "Related Document Model"
 msgstr "相关的单据模型"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_renovations
+#: model:project.project,name:project.project_project_3
+msgid "Renovations"
+msgstr "装修"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
@@ -4311,6 +4377,12 @@ msgstr "报告"
 #, python-format
 msgid "Research"
 msgstr "研究"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_research_development
+#: model:project.project,name:project.project_project_2
+msgid "Research & Development"
+msgstr "研究和发展"
 
 #. module: project
 #. odoo-javascript
@@ -4537,6 +4609,13 @@ msgstr "设定状态"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
 msgstr "设置阶段的评分邮件模版"
+
+#. module: project
+#: model:mail.template,description:project.project_done_email_template
+msgid ""
+"Set on project's stages to inform customers when a project reaches that "
+"stage"
+msgstr "设置在项目的阶段，以便在项目到达该阶段时通知客户"
 
 #. module: project
 #. odoo-javascript
@@ -5003,6 +5082,9 @@ msgstr "任务 :"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__task_id
 #: model:ir.model.fields,field_description:project.field_res_partner__task_ids
 #: model:ir.model.fields,field_description:project.field_res_users__task_ids
+#: model:project.project,label_tasks:project.project_project_1
+#: model:project.project,label_tasks:project.project_project_2
+#: model:project.project,label_tasks:project.project_project_3
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -5224,6 +5306,8 @@ msgstr "第三个"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_3
+#: model:project.task.type,name:project.project_personal_stage_demo_3
 #, python-format
 msgid "This Month"
 msgstr "本月"
@@ -5231,6 +5315,8 @@ msgstr "本月"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_2
+#: model:project.task.type,name:project.project_personal_stage_demo_2
 #, python-format
 msgid "This Week"
 msgstr "本周"
@@ -5342,6 +5428,8 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_1
+#: model:project.task.type,name:project.project_personal_stage_demo_1
 #, python-format
 msgid "Today"
 msgstr "今天"
@@ -5488,6 +5576,11 @@ msgstr "更新"
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
 msgstr "已创建的更新"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_03
+msgid "Usability"
+msgstr "可用性"
 
 #. module: project
 #. odoo-javascript

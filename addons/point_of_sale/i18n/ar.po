@@ -96,7 +96,7 @@ msgstr "(سوف يتم إرسال كليهما عبر البريد الإلكت�
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "(RESCUE FOR %(session)s)"
-msgstr "(استعادة %(session)s)"
+msgstr "(استرجاع %(session)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -177,6 +177,8 @@ msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
 "                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
+"<span class=\"o_form_label\">الباركودات</span>\n"
+"                                <i class=\"fa fa-info-circle me-1\" title=\"هذه الإعدادات مشتركة في كافة نقاط البيع. \" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -709,7 +711,7 @@ msgstr "الفرق المسموح به "
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__auto_validate_terminal_payment
 msgid "Auto Validate Terminal Payment"
-msgstr ""
+msgstr "التصديق التلقائي للمدفوعات عن طريق البطاقة "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
@@ -731,7 +733,7 @@ msgstr "فتح درج النقد تلقائياً. "
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Automatically validate order"
-msgstr ""
+msgstr "تصديق الطلب تلقائياً "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_auto_validate_terminal_payment
@@ -739,7 +741,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_auto_validate_terminal_payment
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Automatically validates orders paid with a payment terminal."
-msgstr ""
+msgstr "يقوم تلقائياً بتصديق الطلبات المدفوعة عن طريق جهاز الدفع بالبطاقة. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -877,7 +879,7 @@ msgstr "الفواتير"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Bills & Receipts"
-msgstr ""
+msgstr "الفواتير والإيصالات "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1495,7 +1497,7 @@ msgstr "التكلفة:"
 #: code:addons/point_of_sale/static/src/app/error_handlers/error_handlers.js:0
 #, python-format
 msgid "Couldn't connect to the server"
-msgstr ""
+msgstr "تعذر الاتصال بالخادم "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1751,7 +1753,7 @@ msgstr "التاريخ"
 #: code:addons/point_of_sale/static/src/js/Popups/DatePickerPopup.js:0
 #, python-format
 msgid "DatePicker"
-msgstr ""
+msgstr "محدِّد التواريخ "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2248,7 +2250,7 @@ msgstr "المتوقع "
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "Expected delivery:"
-msgstr ""
+msgstr "التوصيل المتوقع: "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2675,7 +2677,7 @@ msgstr "الفئة المبدئية"
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #, python-format
 msgid "Insert a positive amount"
-msgstr ""
+msgstr "إدراج مبلغ إيجابي "
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -3280,7 +3282,7 @@ msgstr "المزيد..."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Multi Employees per Session"
-msgstr ""
+msgstr "عدة موظفين لكل جلسة "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -3423,6 +3425,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu,"
 " and install one from the Invoicing tab."
 msgstr ""
+"لم تتم تهيئة شجرة حسابات، اذهب إلى قائمة \"التهيئة / الإعدادات\"، ثم قم "
+"بتثبيت واحدة من علامة تبويب الفوترة. "
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -3525,7 +3529,7 @@ msgstr "عدد أوامر استرداد الأموال "
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__number_of_rescue_session
 msgid "Number of Rescue Session"
-msgstr ""
+msgstr "عدد جلسات الاسترجاع "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
@@ -4455,7 +4459,7 @@ msgstr "دفتر يومية نقطة البيع "
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_tree
 msgid "Point of Sale List"
-msgstr ""
+msgstr "قائمة نقطة البيع "
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
@@ -5455,7 +5459,7 @@ msgstr "قم بتحديد المنتج (المنتجات) لاسترداد قي�
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Select the shipping date"
-msgstr ""
+msgstr "قم بتحديد تاريخ الشحن "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5651,7 +5655,7 @@ msgstr "الشحن لاحقاً"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__shipping_date
 msgid "Shipping Date"
-msgstr ""
+msgstr "تاريخ الشحن "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_policy
@@ -5698,7 +5702,7 @@ msgstr "إظهار شاشة تسجيل دخول الموظفين "
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs on product information"
-msgstr ""
+msgstr "إظهار الهوامش والتكاليف في معلومات المنتج "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -6242,6 +6246,8 @@ msgid ""
 "The operation couldn't be completed because you are offline. Check your "
 "internet connection and try again."
 msgstr ""
+"تعذر إكمال العملية لعدم اتصالك بالإنترنت. تحقق من اتصالك بالإنترنت ثم حاول "
+"مجدداً. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6255,7 +6261,7 @@ msgstr "تعذّر إرسال الطلب إلى الخادم بسبب خطأ م�
 #: code:addons/point_of_sale/static/src/app/error_handlers/error_handlers.js:0
 #, python-format
 msgid "The order couldn't be sent to the server because you are offline"
-msgstr ""
+msgstr "تعذّر إرسال الطلب إلى الخادم لعدم اتصالك بالإنترنت  "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6396,6 +6402,9 @@ msgid ""
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
 msgstr ""
+"تم إغلاق الجلسة بالفعل بواسطة مستخدم آخر. تم حفظ كافة المبيعات التي تم "
+"إكمالها في الوقت الحالي في جلسة استرجاع، والتي يمكن مراجعتها في أي وقت "
+"وترحيلها إلى المحاسبة من لوحة بيانات نقطة البيع. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -6694,7 +6703,7 @@ msgstr "يتم تطبيق هذه الضريبة على كل منتج جديد ي
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Those settings are common to all PoS."
-msgstr ""
+msgstr "هذه الإعدادات مشتركة في كافة نقاط البيع. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7566,7 +7575,7 @@ msgstr "الطلبات المدفوعة "
 #: code:addons/point_of_sale/static/src/xml/CustomerFacingDisplay/CustomerFacingDisplayOrder.xml:0
 #, python-format
 msgid "powered by"
-msgstr ""
+msgstr "مشغل بواسطة "
 
 #. module: point_of_sale
 #. odoo-python

@@ -8,7 +8,6 @@
 # as co02 <asco02@163.com>, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
 # keecome <7017511@qq.com>, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 宇洛 李, 2023
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2023
 # Martin Trigaux, 2023
@@ -16,14 +15,15 @@
 # Emily Jia <eji@odoo.com>, 2023
 # 稀饭~~ <wangwhai@qq.com>, 2023
 # Yazi Tian, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 11:22+0000\n"
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Yazi Tian, 2023\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -210,6 +210,15 @@ msgstr ""
 #, python-format
 msgid "%s is not a stored field"
 msgstr "%s不是存储的字段"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+#, python-format
+msgid ""
+"%s reached an invalid state regarding its related statement line.\n"
+"To be consistent, the journal entry must always have exactly one suspense line."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1096,11 +1105,6 @@ msgid ""
 msgstr ""
 "<strong>该币种已用于生成会计分录。</strong> <br/>\n"
 "                        更改其四舍五入因子不会更改之前分录的四舍五入；可能导致与新数值不一致。"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.document_tax_totals
-msgid "<strong>Total Rounded</strong>"
-msgstr "<strong>总舍入</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2704,8 +2708,8 @@ msgstr "消息编写者。如果未设置，email_from可能包含与任何合�
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
-msgid "Auto Reconcile"
-msgstr "自动对账"
+msgid "Auto validate"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2741,6 +2745,7 @@ msgstr "自动过账直至"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__auto_reconcile
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto-validate"
 msgstr "自动验证"
 
@@ -4138,6 +4143,16 @@ msgid "Counterpart Entries"
 msgstr "对应分录"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
+msgid "Counterpart buttons"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
+msgid "Counterpart rules"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a VAT number"
 msgstr "公司拥有增值税号的国家/地区"
@@ -4883,8 +4898,8 @@ msgid "Data consistency check"
 msgstr "数据一致性检查"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__date
@@ -6023,8 +6038,8 @@ msgid "Example Preview"
 msgstr "示例预览"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -6054,8 +6069,8 @@ msgid "Expects a Chart of Accounts"
 msgstr "预计会计科目表"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -6710,6 +6725,7 @@ msgstr "组"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
@@ -7805,6 +7821,7 @@ msgid "Invoicing"
 msgstr "发票"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
 msgid "Invoicing App Legacy"
 msgstr "旧版发票应用程序"
@@ -7957,8 +7974,8 @@ msgid "Journal Currency"
 msgstr "日记账币种"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: code:addons/account/static/src/js/legacy_mail_activity.js:0
@@ -7978,8 +7995,8 @@ msgid "Journal Entries by Date"
 msgstr "按日期划分的日记账分录"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -8189,6 +8206,7 @@ msgstr "日记账"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_journal_ids
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Journals Availability"
 msgstr "日记账可用性"
 
@@ -8547,6 +8565,22 @@ msgid "Line"
 msgstr "行"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Line \"%s\" defines itself as its parent."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
+"report. The parent must always come first."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
 msgid "Line Subtotals Tax Display"
 msgstr "显示行税费小计"
@@ -8589,6 +8623,11 @@ msgstr "须使用该向导安装的所有税项的列表"
 #: model:ir.model.fields,field_description:account.field_account_report__load_more_limit
 msgid "Load More Limit"
 msgstr "加载更多限制"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
+msgid "Lock Date Message"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -8866,6 +8905,11 @@ msgstr "正在为该行匹配编号，如果仅部分对账，则为“P”，�
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
 msgid "Matching partners"
 msgstr "正在匹配合作伙伴"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
+msgid "Matching rules"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -10019,6 +10063,7 @@ msgid "Package"
 msgstr "服务包"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__paid
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_paid
 #: model:mail.message.subtype,name:account.mt_invoice_paid
@@ -10108,6 +10153,7 @@ msgid "Partial Refund"
 msgstr "部分退款"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__partial
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__partial
 msgid "Partially Paid"
 msgstr "部分已付"
@@ -11526,6 +11572,7 @@ msgid "Reverse Moves"
 msgstr "撤销分录"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11559,7 +11606,11 @@ msgid "Round per Line"
 msgstr "每行舍入"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__rounding
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals
+#, python-format
 msgid "Rounding"
 msgstr "舍入"
 
@@ -11712,6 +11763,7 @@ msgstr "相同币种"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Sample data"
@@ -13497,16 +13549,8 @@ msgstr "当前总计为%s，预期总计为 %s。为了过账发票/账单，可
 #, python-format
 msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
-"The Journal Entry will be accounted on %(accounting_date)s upon posting."
+"The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
-"日期设置在%(lock_type)s锁定日期%(lock_date)s之前。该日记账分录将在过账后%(accounting_date)s入账。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "The date of some related entries is protected by a lock date"
-msgstr "相关分录的日期由锁定日期保护"
 
 #. module: account
 #. odoo-python
@@ -14465,6 +14509,14 @@ msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "该分录在以下会计日期发布：%(date)s"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
 msgid ""
 "This option permanently removes any track of email after it's been sent, "
@@ -14610,7 +14662,6 @@ msgstr "今日活动"
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
-#: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14681,13 +14732,6 @@ msgstr "剩余额总计"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Residual in Currency"
 msgstr "以币种表示的剩余额总计"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
-#, python-format
-msgid "Total Rounded"
-msgstr "已舍入总计"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
@@ -14813,6 +14857,7 @@ msgstr "尝试供应商账单示例"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__rule_type
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__rule_type
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_type
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Type"
 msgstr "类型"
 
@@ -15361,6 +15406,7 @@ msgid "Warning for %s"
 msgstr "警告%s"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
@@ -15495,6 +15541,11 @@ msgstr "用于命名与该银行账户相关的日记账"
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
 msgid "With Odoo, you won't have to record bills manually"
 msgstr "使用Odoo，无需手动记录账单"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
+msgid "With Partner matching"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -15876,6 +15927,15 @@ msgstr "不能删除连结至已过账分录的项目。"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr "您不能删除此分录，因为它已经消耗了一个序列号并且不是相应链中的最后一个. 您可能应该要还原它."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -16170,6 +16230,7 @@ msgid "You must specify the Profit Account (company dependent)"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
@@ -16473,11 +16534,6 @@ msgstr "未结贷项"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
 msgstr "未结借项"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__paid
-msgid "paid"
-msgstr "已付"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

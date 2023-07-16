@@ -8,12 +8,12 @@
 # Mateus Lopes <mateus1@gmail.com>, 2023
 # Silmar <pinheirosilmar@gmail.com>, 2023
 # Peter Leaf <pablleaf@gmail.com>, 2023
-# Martin Trigaux, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # Diego Sayron, 2023
-# Kevilyn Rosa, 2023
 # adrianojprado <adrianojprado@gmail.com>, 2023
+# Kevilyn Rosa, 2023
+# Martin Trigaux, 2023
 # Layna Nascimento, 2023
 # 
 msgid ""
@@ -1360,6 +1360,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Um token de acesso deve ser fornecido para cada anexo."
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -1409,8 +1416,8 @@ msgid "Animals & Nature"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -4684,7 +4691,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Invitation Link"
-msgstr ""
+msgstr "Link de convite"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__invitation_url
@@ -8974,6 +8981,21 @@ msgstr ""
 "país. Use '/' para indicar que o parceiro é isento de impostos."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "O anexo %s não existe ou você não tem direitos para acessá-lo."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
@@ -9928,6 +9950,14 @@ msgstr ""
 "É necessário usar seu próprio servidor de email para enviar / receber emails"
 " nas versões Community e Enterprise. Usuários on-line já se beneficiam de um"
 " servidor de e-mail pronto para uso (@mycompany.odoo.com)."
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -16249,8 +16279,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
@@ -25972,7 +26002,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "package"
-msgstr ""
+msgstr "embalagem"
 
 #. module: mail
 #. odoo-javascript
