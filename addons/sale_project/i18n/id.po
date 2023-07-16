@@ -58,7 +58,7 @@ msgstr "Nama Tampilan"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "Tampilkan project"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -68,12 +68,12 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
 msgid "Generated Project"
-msgstr ""
+msgstr "Project yang Dibuat"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__task_id
 msgid "Generated Task"
-msgstr ""
+msgstr "Task yang Dibuat"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__id
@@ -120,6 +120,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"Pada konfirmasi sales order, produk ini dapat membuat project dan/atau task.         Dari situ, Anda dapat melacak layanan yang Anda tawarkan.\n"
+"         'Di project sale order': Akan menggunakan project sale order yang dikonfigurasi atau membuat         project baru berdasarkan templat yang dipilih."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -144,7 +146,7 @@ msgstr "Proyek"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 msgid "Project Template"
-msgstr ""
+msgstr "Templat Project"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__project_id
@@ -154,7 +156,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "Sale Order project"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -166,7 +168,7 @@ msgstr "Proyek"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr ""
+msgstr "Project yang digunakan di sales order ini"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
@@ -214,12 +216,12 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "Sales order untuk mana project ini di-link."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Sales order untuk mana task di-link."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -240,7 +242,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
+msgstr "Pilih project non billable pada mana task ini dapat dibuat."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -263,7 +265,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Pengulangan Task"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id
@@ -279,7 +281,7 @@ msgstr "Kegiatan"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Task terkait sale ini"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -288,6 +290,8 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"Produk %s seharusnya tidak memiliki project global karena akan membuat "
+"project sendiri."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -296,6 +300,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"Produk %s seharusnya tidak memiliki project atau templat project karena akan"
+" membuatnya sendiri."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -304,6 +310,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"Produk %s seharusnya tidak memiliki templat project karena akan membuat task"
+" di project global."
 
 #. module: sale_project
 #: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
@@ -322,7 +330,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
-msgstr ""
+msgstr "Untuk difaktur"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -331,6 +339,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Anda tidak dapat melink order item %(order_id)s - %(product_id)s untuk task "
+"ini karena ini merupakan pengeluaran yang difaktur ulang."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0

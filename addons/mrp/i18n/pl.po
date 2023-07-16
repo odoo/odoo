@@ -5309,6 +5309,16 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Zużyto inną niż oczekiwana ilość następujących produktów.\n"
+"\n"
+"<b attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">\n"
+"Prosimy o potwierdzenie, że zostało to zrobione celowo.\n"
+"</b>\n"
+"<b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
+"Sprawdź zużycie komponentów lub poproś kierownika o zatwierdzenie \n"
+"<span attrs=\"{'invisible':[('mrp_production_count', '!=', 1)]}\">tego zamówienia produkcyjnego</span>\n"
+"<span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">tych zamówień produkcyjnych</span>.\n"
+"</b>"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:0

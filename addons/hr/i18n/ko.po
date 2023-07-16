@@ -56,7 +56,7 @@ msgstr "'배지 인쇄 - %s' % (object.name).replace('/', '')"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
-msgstr ""
+msgstr "연간 12일,  원하는 날짜 <br>6 포함."
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -158,6 +158,9 @@ msgid ""
 "                                    Not Connected\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    연결되지 않음\n"
+"                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -172,7 +175,7 @@ msgstr "<span class=\"o_stat_text\">현재부터</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Km</span>"
-msgstr ""
+msgstr "<span>Km</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -188,7 +191,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "A full-time position <br>Attractive salary package."
-msgstr ""
+msgstr "정규직 직책 <br>높은 연봉 수준."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
@@ -359,7 +362,7 @@ msgstr "결재권자"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
 msgid "Archive Private Address"
-msgstr ""
+msgstr "개인 주소 보관하기"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -390,6 +393,13 @@ msgid ""
 "                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
+"회사의 직원으로서 여러분은 <b>각 부서와 협력하여 혁신적인 제품을 만들고\n"
+"                                배포하게 됩니다.</b> 뛰어난 역량의 리더들과 함께 배우고 성장할 기회는 물론,\n"
+"                                다양한 복지를 제공하는 회사에서 함께 일해보세요. 풍부한 경험과 잠재력을 지닌 인재를 모십니다.\n"
+"                                <br><br>\n"
+"                                해당 직책은 <b>창의성과 엄격함</b> 모두를 요구하며, 틀에 벗어난 사고를 필요로 합니다..\n"
+"                                능동적이고 \"해내야 한다\"는 정신을 갖추고 있으며,\n"
+"                                탄탄한 문제 해결 능력을 지닌 지원자 여러분을 기다리고 있습니다."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -759,7 +769,7 @@ msgstr "퇴사"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Departure Date"
-msgstr ""
+msgstr "퇴직 날짜"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -851,6 +861,11 @@ msgid ""
 "                        Several activities are often organized all over the year, such as weekly\n"
 "                        sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"각 직원은 본인의 업무 결과가 조직에 어떠한 영향을 미치는지 인지함으로써\n"
+"                        회사의 성공과 발전에 실질적인 기여를 할 수 있습니다.\n"
+"                        <br>\n"
+"                        또한 매주 스포츠 세션과 조직 단합 행사, 매월 진행되는 회식 등\n"
+"                        연중 수시로 진행되는 다양한 활동에 참여할 수 있습니다."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -928,7 +943,7 @@ msgstr "임직원 디렉토리"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
 msgid "Employee Editing"
-msgstr ""
+msgstr "직원 수정"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -2398,7 +2413,7 @@ msgstr "정의하기"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
 msgid "To define"
-msgstr ""
+msgstr "정의하기"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -2436,7 +2451,7 @@ msgstr "레코드에 있는 예외 활동의 유형입니다."
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_undetermined
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
 msgid "Undetermined"
-msgstr ""
+msgstr "미결"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
@@ -2651,14 +2666,14 @@ msgstr "근무 시간"
 msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
 " to update other information."
-msgstr ""
+msgstr "기본 설정만 업데이트할 수 있습니다. 다른 정보를 업데이트하려면 인사 담당자에게 문의하세요."
 
 #. module: hr
 #. openerp-web
 #: code:addons/hr/static/src/models/employee/employee.js:0
 #, python-format
 msgid "You can only chat with employees that have a dedicated user."
-msgstr ""
+msgstr "지정 사용자가 있는 직원하고만 대화할 수 있습니다."
 
 #. module: hr
 #: code:addons/hr/models/hr_department.py:0
@@ -2690,4 +2705,4 @@ msgstr "계획"
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"
-msgstr ""
+msgstr "직원으로 제한"

@@ -47,7 +47,7 @@ msgstr "Konto"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr ""
+msgstr "Dodaj napiwek przez terminal płatniczy (Adyen)"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
@@ -57,7 +57,7 @@ msgstr "Adres"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
-msgstr ""
+msgstr "Klucz API Adyen"
 
 #. module: pos_adyen
 #: model:ir.actions.server,name:pos_adyen.action_pos_adyen_account
@@ -74,17 +74,17 @@ msgstr ""
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
-msgstr ""
+msgstr "Błąd Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Adyen Latest Diagnosis"
-msgstr ""
+msgstr "Najnowsza diagnoza Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
 msgid "Adyen Latest Response"
-msgstr ""
+msgstr "Najnowsza odpowiedź Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_payout_id
@@ -104,12 +104,12 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
-msgstr ""
+msgstr "Identyfikator terminala Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Adyen Test Mode"
-msgstr ""
+msgstr "Tryb testowy Adyen"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_account
@@ -136,7 +136,7 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr ""
+msgstr "Poproś klientów o napiwek"
 
 #. module: pos_adyen
 #. openerp-web
@@ -144,6 +144,8 @@ msgstr ""
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
 msgstr ""
+"Uwierzytelnianie nie powiodło się. Sprawdź swoje dane uwierzytelniające "
+"Adyen."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__city
@@ -241,7 +243,7 @@ msgstr "Data ostatniej aktualizacji"
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
-msgstr ""
+msgstr "Wiadomość od Adyen:  %s"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__name
@@ -269,6 +271,7 @@ msgstr "Numer Telefonu"
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
+"Skonfiguruj produkt napiwków dla POS %s, aby obsługiwać napiwki w Adyen."
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/adyen_account.py:0
@@ -299,7 +302,7 @@ msgstr "Odnośnik"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
-msgstr ""
+msgstr "Uruchom transakcje w środowisku testowym."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_id
@@ -356,7 +359,7 @@ msgstr "Terminal %s jest już używany do metody płatności %s."
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used in company %s on payment method %s."
-msgstr ""
+msgstr "Terminal %s jest już używany w firmie %s do metody płatności %s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__terminal_uuid
@@ -397,6 +400,8 @@ msgid ""
 "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
 "to-get-the-api-key/#description"
 msgstr ""
+"Używany podczas łączenia się z Adyen: https://docs.adyen.com/user-"
+"management/how-to-get-the-api-key/#description"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__zip
@@ -407,4 +412,4 @@ msgstr "Kod pocztowy"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
-msgstr ""
+msgstr "[Model terminala]-[Numer seryjny], na przykład: P400Plus-123456789"
