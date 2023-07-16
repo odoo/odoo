@@ -3,10 +3,10 @@
 # 	* base
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Aimée Mendoza Sánchez, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
 # 
@@ -14810,6 +14810,12 @@ msgid "Compute"
 msgstr "Calcular"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "El método de cálculo no puede depender del campo 'id'"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -15237,6 +15243,12 @@ msgstr "Grupos de países"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Nombre del país"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr "El código del país no puede estar vacío"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -18265,8 +18277,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
-"Campo desde donde se origina la vista.\n"
-"                                                          Útil para resetear (completamente) vistas rotas o para leer el arco des de archivos en dev-xml."
+"Campo desde el que se origina la vista.\n"
+"                                                          Útil para reestablecer (por completo) vistas dañadas o para leer la arquitectura de los archivos en el modo dev-xml."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -20713,6 +20725,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'agrupar por' no valido"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Formato JSON no válido en el campo Valor predeterminado."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -21211,8 +21229,8 @@ msgstr "LGPL versión 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Informes contables"
+msgid "Lithuania - Accounting Reports"
+msgstr "Lituania - Reportes contables "
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -23025,7 +23043,7 @@ msgstr "El modelo '%s' contiene un módulo de datos y no puede ser eliminado."
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
 msgid "Model Access"
-msgstr "Acceso al  modelo"
+msgstr "Acceso al modelo"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_constraint
@@ -26958,12 +26976,12 @@ msgstr "Almacenamiento de parámetros"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__parent_id
 msgid "Parent Application"
-msgstr "Aplicación madre"
+msgstr "Aplicación principal"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_id
 msgid "Parent Category"
-msgstr "Categoría madre"
+msgstr "Categoría principal"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
@@ -26975,13 +26993,13 @@ msgstr "Empresa matriz"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__menu_id
 msgid "Parent Menu"
-msgstr "Menú padre"
+msgstr "Menú principal"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr "Ruta madre"
+msgstr "Ruta principal"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_name
@@ -27042,7 +27060,7 @@ msgstr "Partner con la misma identificación fiscal"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
 msgid "Partner-related data of the user"
-msgstr "Datos relacionados al partner del usuario."
+msgstr "Datos relacionados al contacto del usuario"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__partner_ids
@@ -27054,13 +27072,13 @@ msgstr "Partners"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geolocation"
-msgstr "Geolocalización de los partners"
+msgstr "Geolocalización de los contactos"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: %(category)s"
-msgstr "Partners: %(category)s"
+msgstr "Contactos: %(category)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -31190,6 +31208,12 @@ msgstr "Tailandia - Contabilidad"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr "La acción \"%s\" no se puede seleccionar como acción de inicio. "
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "La acción \"App Switcher\" no se puede seleccionar como acción de inicio."
 
@@ -31267,8 +31291,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "El módulo \"base\" no se puede desinstalar"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Esos módulos no se pueden desinstalar: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -31288,6 +31312,16 @@ msgstr ""
 "estándar, incluso si éstas se redactaron después de los presentes términos y"
 " condiciones estándar de venta. Para que sea válida, cualquier derogación "
 "debe ser acordada expresamente por escrito y con antelación."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"El nombre de la tasa actual está vacío.\n"
+"Establezca uno."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -34432,6 +34466,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "No puede desactivar el usuario que está usando ahora mismo."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "No puede eliminar un grupo vinculado con un campo de ajustes."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -35295,3 +35335,11 @@ msgstr "año"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Islas Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"Esta divisa está establecida en una empresa por lo que no se puede "
+"desactivar."

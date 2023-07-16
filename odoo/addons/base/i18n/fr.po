@@ -13434,7 +13434,7 @@ msgstr "Belgium - E-Facturation (UBL 2.0, e-fff)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr "Importer les extraits de compte CODA - Belgique"
+msgstr "Belgique - Importer les relevés bancaires CODA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
@@ -14704,6 +14704,12 @@ msgid "Compute"
 msgstr "Calculer"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "La méthode de calcul ne peut pas dépendre du champ 'id'"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -15129,6 +15135,12 @@ msgstr "Groupes de pays"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Nom du pays"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr "Le code de pays ne peut pas être vide"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -20622,6 +20634,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Paramètre invalide pour 'group by'"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Format JSON invalide dans le champ Valeur par défaut."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -21121,8 +21139,8 @@ msgstr "LGPL Version 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Rapports comptables"
+msgid "Lithuania - Accounting Reports"
+msgstr "Lituanie - Rapports comptables"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -29448,7 +29466,7 @@ msgstr "Rechercher un partenaire"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 msgid "Search Partner Category"
-msgstr "Rechercher la Catégorie du Partenaire"
+msgstr "Rechercher la Catégorie de Partenaires"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
@@ -30691,7 +30709,7 @@ msgstr "Suède - Rapports comptables"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_l10n_se
 msgid "Sweden Registered Cash Register"
-msgstr "Caisse enregistreuse enregistrée en Suède"
+msgstr "Caisse enregistreuse certifiée en Suède"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -31113,6 +31131,14 @@ msgstr "Comptabilité - Thailande"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+"L'action \"%s\" ne peut pas être sélectionnée comme une action de page "
+"d'accueil."
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 "L'action \"Sélecteur d'app\" ne peut pas être sélectionnée comme une action "
@@ -31192,8 +31218,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Le module \"base\" ne peut pas être désinstallé"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Ces modules ne peuvent pas être désinstallés : %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -31212,6 +31238,16 @@ msgstr ""
 "même si celles-ci ont été établies postérieurement aux présentes conditions "
 "générales de vente. Pour être valable, toute dérogation doit être "
 "expressément convenue au préalable par écrit."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"Le nom du taux actuel est vide.\n"
+"Veuillez le définir."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -34366,6 +34402,12 @@ msgstr ""
 "Vous ne pouvez pas désactiver l'utilisateur avec lequel vous êtes connecté."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "Vous ne pouvez pas supprimer une groupe lié à un champ de paramètres."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -35231,3 +35273,11 @@ msgstr "année"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Iles Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"Cette devise est définie sur une entreprise et ne peut donc pas être "
+"désactivée."

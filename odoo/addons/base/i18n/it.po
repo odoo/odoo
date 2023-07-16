@@ -7,8 +7,8 @@
 # Friederike Fasterling-Nesselbosch, 2022
 # Luca Carlo, 2023
 # Sebastiano Picchi, 2023
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:36+0000\n"
 "PO-Revision-Date: 2022-06-17 09:47+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13564,6 +13564,12 @@ msgid "Compute"
 msgstr "Calcola"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "Il metodo compute non può dipendere dal campo \"id\""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -13989,6 +13995,12 @@ msgstr "Raggruppamenti nazioni"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Nome nazione"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -14864,6 +14876,8 @@ msgid ""
 "Decimal places taken into account for operations on amounts in this "
 "currency. It is determined by the rounding factor."
 msgstr ""
+"Cifre decimali prese in considerazione per le operazioni con importi in "
+"questa valuta. Tutto è determinato dal fattore di arrotondamento."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
@@ -19390,6 +19404,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'raggruppa per' non valido"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -19886,8 +19906,8 @@ msgstr "LGPL versione 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Rendiconti contabili"
+msgid "Lithuania - Accounting Reports"
+msgstr "Lituania - Rendiconti contabili"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -28913,6 +28933,12 @@ msgstr "Thailandia - Contabilità"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 "Non è possibile selezionare il \"Selettore applicazioni\" come azione per la"
@@ -28942,6 +28968,10 @@ msgid ""
 " 1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it "
 "as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
+"Il formato separatore dovrebbe essere [,n] dove 0 < n :partendo dalla cifra "
+"unitaria. -1 terminerà la separazione. Ad es. [3,2,-1] farà che 106500 sia "
+"1,06,500; [1,2,-1] rappresenterà 106,50,0;[3] codificherà 106,500. Le ',' "
+"rappresentano i separatori per le centinaia in ogni caso."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -28952,6 +28982,9 @@ msgid ""
 " 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as"
 " 106,500. Provided as the thousand separator in each case."
 msgstr ""
+"Il formato separatore dovrebbe essere [,n] dove 0 < n :partendo dalla cifra "
+"unitaria. -1 terminerà la separazione. Ad es. [3,2,-1] farà che 106500 sia "
+"1,06,500; [1,2,-1] rappresenterà 106,50,0;[3] codificherà 106,500."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__vat
@@ -28982,8 +29015,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Il modulo \"base\" non può essere disinstallato"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -29004,6 +29037,14 @@ msgstr ""
 "se queste sono state stabilite dopo le presenti condizioni standard di "
 "vendita. Per essere valida, qualsiasi deroga deve essere espressamente "
 "concordata in anticipo per iscritto."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -32132,6 +32173,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "Non puoi disattivare l'utente con cui ti sei registrato."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -32996,3 +33043,11 @@ msgstr "anno"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Isole Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"La presente valuta è stata selezionata per un'azienda e non può essere "
+"disattivata."

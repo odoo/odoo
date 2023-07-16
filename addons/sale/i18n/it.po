@@ -7,8 +7,8 @@
 # Friederike Fasterling-Nesselbosch, 2022
 # Rita Amboni, 2022
 # Jonathan Quique <jqu@odoo.com>, 2022
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-10 09:48+0000\n"
 "PO-Revision-Date: 2022-06-17 09:54+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -643,7 +643,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "Accetta e firma il preventivo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4449,6 +4449,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"Non puoi modificare il tipo di prodotto perché è già utiizzato negli ordini "
+"di vendita."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4547,8 +4549,8 @@ msgid ""
 " }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') e 'Ordine in attesa' o 'Ordine' }} (Ref {{ object.name or "
-"'n/a' }})"
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
+" }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale

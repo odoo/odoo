@@ -8,9 +8,10 @@
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Michael Epstein, 2022
 # David Ramia, 2023
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
-# jabelchi, 2023
+# Josep Anton Belchi, 2023
 # kikopeiro <francisco.peiro@factorlibre.com>, 2023
+# Ana Sanjuán, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:36+0000\n"
 "PO-Revision-Date: 2022-06-17 09:47+0000\n"
-"Last-Translator: kikopeiro <francisco.peiro@factorlibre.com>, 2023\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14627,6 +14628,12 @@ msgid "Compute"
 msgstr "Calcular"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -15054,6 +15061,12 @@ msgstr "Grupos de países"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Nombre del país"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr "El código de país no puede estar vacío"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -20519,6 +20532,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'group by' no valido"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -21017,8 +21036,8 @@ msgstr "LGPL versión 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Informes contables"
+msgid "Lithuania - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -28369,7 +28388,7 @@ msgstr "Registro: %s"
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
 msgid "Recruitment"
-msgstr "Proceso de Selección"
+msgstr "Proceso de selección"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_reports
@@ -30983,6 +31002,12 @@ msgstr "Tailandia - Contabilidad"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "La acción \"App Switcher\" no se puede seleccionar como acción de inicio."
 
@@ -31060,8 +31085,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "El modulo \"base\" no se puede desinstalar"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Estos módulos no pueden ser desinstalados: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -31081,6 +31106,16 @@ msgstr ""
 "estándar, incluso si éstas se redactaron después de los presentes términos y"
 " condiciones estándar de venta. Para que sea válida, se debe acordar "
 "cualquier derogación expresamente por escrito y con antelación."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"El nombre para la tasa de moneda está vacío.\n"
+"Por favor establezca uno."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -34225,6 +34260,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "No puede desactivar el usuario que está usando ahora mismo."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -34436,7 +34477,7 @@ msgstr "account_qr_code_sepa"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_accounting
 msgid "accounting"
-msgstr ""
+msgstr "contabilidad"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__active
@@ -35088,3 +35129,11 @@ msgstr "año"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Islas Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"La moneda está establecida en una compañía y por ello no se puede "
+"desactivar."

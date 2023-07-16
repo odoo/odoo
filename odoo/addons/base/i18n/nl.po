@@ -3,9 +3,9 @@
 # 	* base
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:36+0000\n"
 "PO-Revision-Date: 2022-06-17 09:47+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14675,6 +14675,12 @@ msgid "Compute"
 msgstr "Bereken"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "De berekeningsmethode kan niet afhangen van het 'id' veld"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "Bereken BTW met Taxcloud na de online levering berekening."
@@ -15097,6 +15103,12 @@ msgstr "Landengroepen"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Naam land"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr "De landcode mag niet leeg zijn"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -20576,6 +20588,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Incorrecte 'groep door' instelling"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Ongeldig JSON-formaat in Standaardwaarde-veld."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -21074,8 +21092,8 @@ msgstr "LGPL versie 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Boekhoudkundige rapporten"
+msgid "Lithuania - Accounting Reports"
+msgstr "Litouwen - Boekhoudkundige rapporten"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -31017,6 +31035,12 @@ msgstr "Thailand  - Boekhouding"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr "De actie \"%s\" kan niet als home-actie worden geselecteerd."
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "De \"App Switcher\" actie kan niet geselecteerd worden als home actie."
 
@@ -31093,8 +31117,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "De `base` module kan niet worden gedeinstalleerd"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Deze modules kunnen niet worden verwijderd: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -31115,6 +31139,16 @@ msgstr ""
 "standaardvoorwaarden, ook indien deze zijn opgesteld na deze algemene "
 "verkoopvoorwaarden. Om geldig te zijn, moet elke afwijking vooraf "
 "uitdrukkelijk schriftelijk worden overeengekomen."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"De naam voor de huidige wisselkoers is leeg.\n"
+"Gelieve deze in te stellen."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -34264,6 +34298,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "Je kunt de gebruiker waarmee je bent aangemeld niet deactiveren."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "Je kan een aan een parameterveld gekopppelde groep niet verwijderen."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -35128,3 +35168,11 @@ msgstr "jaar"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Ålandseilanden"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"Deze valuta is ingesteld op een bedrijf en kan dus niet worden "
+"gedeactiveerd."

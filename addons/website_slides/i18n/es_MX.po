@@ -2510,7 +2510,7 @@ msgstr "Inserción de diapositivas externas"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__url
 msgid "External URL"
-msgstr "URL externo"
+msgstr "URL externa"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_embed_view_tree
@@ -2552,9 +2552,7 @@ msgstr "Nombre del archivo"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr ""
-"El archivo es demasiado grande. El archivo no puede tener un tamaño superior"
-" a 25MB"
+msgstr "El archivo es demasiado grande, no puede tener un tamaño mayor a 25MB"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -2597,7 +2595,7 @@ msgid ""
 "First, create your lesson, then edit it with the website builder. You'll be "
 "able to drop building blocks on your page and edit them."
 msgstr ""
-"Primero cree su lección, luego edítela con el creado de sitios web. Podrá "
+"Primero cree su lección, luego edítela con el creador de sitios web. Podrá "
 "arrastrar y soltar bloques en su página y editarlos."
 
 #. module: website_slides
@@ -2939,7 +2937,7 @@ msgstr "Image 512"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_binary_content
 msgid "Image Content"
-msgstr "Contenido de imagen"
+msgstr "Contenido de la imagen"
 
 #. module: website_slides
 #. openerp-web
@@ -2995,8 +2993,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
-msgstr ""
-"Tipo de archivo inválido. Por favor, seleccione un pdf o archivo de imagen"
+msgstr "Tipo de archivo no compatible, seleccione un PDF o archivo de imagen"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -3055,7 +3052,7 @@ msgstr "Es la respuesta correcta"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "It should look similar to"
-msgstr "Debería verse parecido a"
+msgstr "Debería parecerse a"
 
 #. module: website_slides
 #. openerp-web
@@ -3096,19 +3093,20 @@ msgstr "Karma"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_comment
 msgid "Karma needed to add a comment on a slide of this course"
-msgstr "Karma necesario para comentar en las diapositivas de este curso"
+msgstr ""
+"Recompensas necesarias para comentar en las diapositivas de este curso"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_review
 msgid "Karma needed to add a review on the course"
-msgstr "Karma necesario para agregar una reseña para este curso"
+msgstr "Recompensas necesarias para agregar una reseña para este curso"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_vote
 msgid "Karma needed to like/dislike a slide of this course."
 msgstr ""
-"Karma necesario para dejar Me gusta o No me gusta en las diapositivas de "
-"este curso."
+"Recompensas necesarias para dejar Me gusta o No me gusta en las diapositivas"
+" de este curso."
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_profile
@@ -3249,23 +3247,18 @@ msgstr "Enlace"
 #: model:ir.model.fields,help:website_slides.field_slide_slide__document_google_url
 msgid ""
 "Link of the document (we currently only support Google Drive as source)"
-msgstr ""
-"Enlace del documento (actualmente solo somos compatibles con Google Drive "
-"como fuente)"
+msgstr "Enlace del documento (aceptamos Google Drive como fuente)"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__image_google_url
 msgid "Link of the image (we currently only support Google Drive as source)"
-msgstr ""
-"Enlace de la imagen (actualmente solo somos compatibles con Google Drive "
-"como fuente)"
+msgstr "Enlace de la imagen (aceptamos Google Drive como fuente)"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__video_url
 msgid ""
 "Link of the video (we support YouTube, Google Drive and Vimeo as sources)"
-msgstr ""
-"Enlace del video (somos compatibles con YouTube, Google Drive y Vimeo)"
+msgstr "Enlace del video (aceptamos videos de YouTube, Google Drive y Vimeo)"
 
 #. module: website_slides
 #. openerp-web
@@ -3334,8 +3327,8 @@ msgstr "Vistas de miembros"
 msgid ""
 "Members of those groups are automatically added as members of the channel."
 msgstr ""
-"Los miembros de esos grupos se agregan automáticamente como miembros del "
-"canal."
+"Los miembros de esos grupos se agregan de forma automática como miembros del"
+" canal."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
@@ -3519,13 +3512,13 @@ msgstr "No"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "No Attendee has completed this course yet!"
-msgstr "¡Ningún asistente ha completado este curso aún!"
+msgstr "Nadie ha terminado este curso"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "No Attendees Yet!"
-msgstr "¡No hay asistentes aún!"
+msgstr "Todavía no hay asistentes"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -3541,17 +3534,17 @@ msgstr "Sin notificación"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "No Quiz data yet!"
-msgstr "¡Aún no hay datos de cuestionario!"
+msgstr "Todavía no hay datos del cuestionario"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
 msgid "No Reviews yet!"
-msgstr "¡Aún no hay reseñas!"
+msgstr "Todavía no hay reseñas"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "No completed courses yet!"
-msgstr "¡No hay cursos completados aún!"
+msgstr "Todavía no hay cursos completados"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -3576,12 +3569,12 @@ msgstr "Todavía no hay información"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "No followed courses yet!"
-msgstr "¡No hay cursos seguidos aún!"
+msgstr "Todavía no sigue ningún curso"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "No leaderboard currently :("
-msgstr "No hay tabla de clasificación aún :("
+msgstr "Todavía no hay tabla de clasificación :("
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
@@ -3784,7 +3777,7 @@ msgstr "Partner"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_has_new_content
 msgid "Partner Has New Content"
-msgstr "El partner tiene contenido nuevo"
+msgstr "El contacto tiene contenido nuevo"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -3873,7 +3866,7 @@ msgstr "Por favor, ingrese un enlace de Google Drive válido"
 #: code:addons/website_slides/static/src/js/slides_course_quiz_question_form.js:0
 #, python-format
 msgid "Please fill in the question"
-msgstr "Por favor, complete la pregunta"
+msgstr "Complete la pregunta"
 
 #. module: website_slides
 #. openerp-web
@@ -3990,8 +3983,8 @@ msgid ""
 "Publishing is restricted to the responsible of training courses or members "
 "of the publisher group for documentation courses"
 msgstr ""
-"Solamente pueden publicar el responsable del curso de capacitación o los "
-"miembros del grupo de publicadores para cursos de documentación"
+"Solo puede publicar el responsable del curso de capacitación o los miembros "
+"del grupo editorial para cursos de documentación"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__question_id

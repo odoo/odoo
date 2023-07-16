@@ -61,6 +61,7 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
+"Biglietto pagina intera - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -689,6 +690,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
 msgstr ""
+"Aggiungi delle note interne (lista delle cose da fare, informazioni di "
+"contatto...)"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -943,7 +946,7 @@ msgstr "Confermato"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Confirmed Attendees"
-msgstr ""
+msgstr "partecipanti confermati"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -1504,6 +1507,8 @@ msgstr ""
 msgid ""
 "Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}"
 msgstr ""
+"Biglietto pagina intera - {{ (object.event_id.name or "
+"'Event').replace('/','') }}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
@@ -2568,6 +2573,13 @@ msgstr "Il luogo è stato prenotato"
 #, python-format
 msgid "The stop date cannot be earlier than the start date."
 msgstr "La data di fine non può precedere la data di inizio."
+
+#. module: event
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
