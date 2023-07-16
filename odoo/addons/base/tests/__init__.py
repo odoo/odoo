@@ -13,6 +13,7 @@ from . import test_expression
 from . import test_float
 from . import test_format_address_mixin
 from . import test_func
+from . import test_graph
 from . import test_http_case
 from . import test_image
 from . import test_avatar_mixin

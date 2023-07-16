@@ -20,7 +20,7 @@ import psycopg2
 import odoo
 from odoo.modules.db import FunctionStatus
 from odoo.osv.expression import get_unaccent_wrapper
-from .. import SUPERUSER_ID
+from .. import SUPERUSER_ID, tools
 from odoo.sql_db import TestCursor
 from odoo.tools import (config, existing_tables, lazy_classproperty,
                         lazy_property, sql, Collector, OrderedSet)
@@ -71,49 +71,73 @@ class Registry(Mapping):
 
     @classmethod
     @locked
-    def new(cls, db_name, force_demo=False, status=None, update_module=False):
+    def new(cls, db_name, force_demo=False, update_module=False):
         """ Create and return a new registry for the given database name. """
         t0 = time.time()
-        registry = object.__new__(cls)
-        registry.init(db_name)
 
-        # Initializing a registry will call general code which will in
-        # turn call Registry() to obtain the registry being initialized.
-        # Make it available in the registries dictionary then remove it
-        # if an exception is raised.
-        cls.delete(db_name)
-        cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
-        try:
-            registry.setup_signaling()
-            # This should be a method on Registry
+        force_test = not tools.config.options['init'] and \
+            not tools.config.options['update'] and \
+            tools.config.options['test_enable']
+
+        ready = False
+        init_kwargs = {}
+        is_cli_upgrade = bool(tools.config['update'])
+        while not ready:
+            registry = object.__new__(cls)
+            registry.init(db_name, **init_kwargs)
+
+            # Initializing a registry will call general code which will in
+            # turn call Registry() to obtain the registry being initialized.
+            # Make it available in the registries dictionary then remove it
+            # if an exception is raised.
+            cls.delete(db_name)
+            cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
+
             try:
-                odoo.modules.load_modules(registry, force_demo, status, update_module)
+                registry.setup_signaling()
             except Exception:
-                odoo.modules.reset_modules_state(db_name)
+                _logger.exception('Failed to setup signaling')
+                del cls.registries[db_name]  # pylint: disable=unsupported-delete-operation
                 raise
-        except Exception:
-            _logger.exception('Failed to load registry')
-            del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
-            raise
 
-        # load_modules() above can replace the registry by calling
-        # indirectly new() again (when modules have to be uninstalled).
-        # Yeah, crazy.
-        registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
+            try:
+                odoo.modules.load_modules(registry, update_module=update_module, force_test=force_test, force_demo_=force_demo)
+            except Exception as e:
+                odoo.modules.reset_modules_state(db_name)
+                _logger.exception('Some error happen while loading registry: %s', e)
+                tools.config['init'] = {}
+                tools.config['update'] = {}
+                if is_cli_upgrade:
+                    del cls.registries[db_name]  # pylint: disable=unsupported-delete-operation
+                    raise
+                # reload the registry
+
+            # Not all modules can be loaded/updated at once, for example
+            # 1. module A is marked 'to install' by the pre_init_hook of module B
+            # 2. module A is 'to remove'.
+            ready = registry.ready
+            if not ready:
+                force_demo = force_test = False
+                update_module = registry.has_modules_to_update
+                init_kwargs = {
+                    attr: getattr(registry, attr)
+                    for attr in ['_assertion_report', 'updated_modules', 'models_to_fixup', 'has_modules_removed', '_database_translated_fields', 'loaded_xmlids']
+                }
 
         registry._init = False
-        registry.ready = True
         registry.registry_invalidated = bool(update_module)
         registry.new = registry.init = registry.registries = None
+        registry.has_modules_removed = registry.has_to_update_modules = False
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
+
         return registry
 
-    def init(self, db_name):
+    def init(self, db_name, **kwargs):
         self.models = {}    # model name/model instance mapping
         self._sql_constraints = set()
         self._init = True
-        self._database_translated_fields = ()  # names of translated fields in database
+        self._database_translated_fields = None  # names of translated fields in database
         self._assertion_report = odoo.tests.result.OdooTestResult()
         self._fields_by_model = None
         self._ordinary_tables = None
@@ -122,7 +146,16 @@ class Registry(Mapping):
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
-        self.updated_modules = []       # installed/updated modules
+        self.updated_modules = OrderedSet()  # installed/updated modules
+        # models_to_fixup includes models which
+        # 1. are updated and then loaded
+        # 2. are updated with the temporary updating order but not the final loading order
+        # 3. are removed in while uninstalling
+        # 4. has fields to untranslate
+        self.models_to_fixup = OrderedSet()
+        self.all_models_set_up = True
+        self.has_modules_removed = False
+        self.has_modules_to_update = False
         self.loaded_xmlids = set()
 
         self.db_name = db_name
@@ -159,6 +192,9 @@ class Registry(Mapping):
         with closing(self.cursor()) as cr:
             self.has_unaccent = odoo.modules.db.has_unaccent(cr)
             self.has_trigram = odoo.modules.db.has_trigram(cr)
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     @classmethod
     @locked
@@ -511,7 +547,7 @@ class Registry(Mapping):
 
         if 'module' in context:
             _logger.info('module %s: creating or updating database tables', context['module'])
-        elif context.get('models_to_check', False):
+        elif context.get('models_to_fixup', False):
             _logger.info("verifying fields for every extended model")
 
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)

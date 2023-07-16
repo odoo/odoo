@@ -1138,6 +1138,9 @@ class OrderedSet(MutableSet):
     def update(self, elems):
         self._map.update(zip(elems, itertools.repeat(None)))
 
+    def union(*elems):
+        return OrderedSet(itertools.chain.from_iterable(elems))
+
     def difference_update(self, elems):
         for elem in elems:
             self.discard(elem)
