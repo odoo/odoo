@@ -261,6 +261,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Szanowny <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br>\n"
+"    Dziękujemy za przesłane zapytanie.<br>\n"
+"    Oto identyfikator na wydarzenie <t t-out=\"object.event_id.name lub ''\">OpenWood Collection Online Reveal</t>.<br>\n"
+"    Jeśli masz jakieś pytania, daj nam znać.\n"
+"    <br><br>\n"
+"    Dziękujemy,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">.\n"
+"        <br>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3288,6 +3300,16 @@ msgid ""
 msgstr ""
 "Data zakończenia nie może być wcześniejsza niż data rozpoczęcia. Sprawdź "
 "bilet %(ticket_name)s"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
+"Szablon, do którego następuje referencja, powinien pochodzić z modelu "
+"%(model_name)."
 
 #. module: event
 #. odoo-python

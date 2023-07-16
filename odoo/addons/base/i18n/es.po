@@ -20,7 +20,7 @@
 # Martin Trigaux, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Iran Villalobos López, 2023
-# jabelchi, 2023
+# Josep Anton Belchi, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # kikopeiro <francisco.peiro@factorlibre.com>, 2023
 # Fernanda Alvarez, 2023
@@ -22027,7 +22027,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'group by' no valido"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -34885,6 +34890,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -36502,6 +36514,15 @@ msgstr ""
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "No puede crear etiquetas recursivas."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

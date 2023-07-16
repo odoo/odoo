@@ -6184,6 +6184,9 @@ msgid ""
 "GSTR-1 return data set as per point of sale orders\n"
 "    "
 msgstr ""
+"\n"
+"تم إعداد بيانات إرجاع GSTR-1 حسب طلبات نقطة البيع\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -23365,7 +23368,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "معامل 'تجميع حسب' غير صالح"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -36270,6 +36278,13 @@ msgstr "تعذّر إيجاد Wkhtmltopdf في نظامك. لا يمكن إنش�
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -37882,6 +37897,15 @@ msgstr "يمكنك أن ترفع ملفًا من جهازك أو تنسخ وتل
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "لا يمكنك إنشاء علامات تصنيف متداخلة. "
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

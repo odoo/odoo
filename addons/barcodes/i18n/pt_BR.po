@@ -27,6 +27,7 @@ msgstr ""
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
 msgstr ""
+"'*' não é um padrão de código de barras Regex válido. Você quis dizer '.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -53,7 +54,7 @@ msgstr ""
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr ""
+msgstr "Adicionar uma nova nomenclatura de código de barras"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -93,7 +94,7 @@ msgstr "Código de barras"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr ""
+msgstr "Mixin de evento de código de barras"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -130,7 +131,7 @@ msgstr "Código de Barras Digitalizado"
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Barcode: "
-msgstr ""
+msgstr "Código de barras:"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -218,13 +219,19 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Os padrões também podem definir como os valores numéricos, como peso ou preço, podem ser\n"
+"                                codificados no código de barras. Eles são indicados por<code>{NNN}</code> no qual os Ns\n"
+"                              definem onde os dígitos do número são codificados. Os valores flutuantes também são compatíveis com a função\n"
+"                                decimais indicados com Ds como<code>{NNNDD}</code>. Nesses casos,\n"
+"                                o campo de código de barras nos registros associados <i>deve</i> mostrar esses dígitos como\n"
+"                                zeros."
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 #, python-format
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Por favor, escaneie novamente!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -276,6 +283,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
+"Há um erro de sintaxe no padrão de código de barras %(pattern)s: uma regra "
+"só pode conter um par de chaves."
 
 #. module: barcodes
 #. odoo-python
@@ -285,6 +294,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
+"Há um erro de sintaxe no padrão de código de barras %(pattern)s: as chaves "
+"só podem conter Ns seguidos de Ds."
 
 #. module: barcodes
 #. odoo-python
@@ -293,6 +304,8 @@ msgstr ""
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
+"Há um erro de sintaxe no padrão de código de barras %(pattern)s: chaves "
+"vazias."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -345,7 +358,7 @@ msgstr "Produto Unitário"
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Unknown barcode command"
-msgstr ""
+msgstr "Comando de código de barras desconhecido"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence

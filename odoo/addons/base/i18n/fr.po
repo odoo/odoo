@@ -15757,7 +15757,7 @@ msgstr "Belgique - Données des dépenses non admises"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr "Belgique - Importer les extraits de compte CODA"
+msgstr "Belgique - Importer les relevés bancaires CODA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_soda
@@ -23372,7 +23372,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Paramètre invalide pour 'group by'"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Format JSON invalide dans le champ Valeur par défaut."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -32487,7 +32492,7 @@ msgstr "Rechercher un partenaire"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 msgid "Search Partner Category"
-msgstr "Rechercher une catégorie de partenaire"
+msgstr "Rechercher une catégorie de partenaires"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
@@ -34031,7 +34036,7 @@ msgstr "Suède - Rapports comptables"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_l10n_se
 msgid "Sweden Registered Cash Register"
-msgstr "Caisse enregistreuse enregistrée en Suède"
+msgstr "Caisse enregistreuse certifiée en Suède"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
@@ -36405,6 +36410,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr "Impossible d'importer le champ de type '%s'  "
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -38064,6 +38076,17 @@ msgstr ""
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "Vous ne pouvez pas créer d'étiquettes récursives."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+"Il n'est pas autorise de supprimer les utilisateurs du modèle. La "
+"suppression de ce profil compromettra des fonctionnalités essentielles."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

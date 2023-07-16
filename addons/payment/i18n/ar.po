@@ -64,6 +64,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
+"<i class=\"fa fa-info-circle oe_inline\" attrs=\"{'invisible': "
+"[('support_partial_capture', '!=', 'full_only')]}\" title=\"بعض المعاملات "
+"التي تود تحصيلها لا يمكن تحصيلها إلا بشكل كامل. قم بمعالجة المعاملات كل على "
+"حدة لتحصيل المبالغ جزئياً. \"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -74,7 +78,7 @@ msgstr "<i class=\"fa fa-trash\"/> حذف"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "<span class=\"fs-4\">Saved payment methods</span>"
-msgstr ""
+msgstr "<span class=\"fs-4\">طرق الدفع المحفوظة</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -120,6 +124,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
+"<strong>تحذير!</strong> توجد عملية تحصيل دفع جزئي قيد الانتظار. يرجى الانتظار\n"
+"                    قليلاً حتى تتم معالجتها. تحقق من تهيئة مزود الدفع إذا كانت\n"
+"                    عملية تحصيل الدفع لا تزال قيد الانتظار بعد عدة دقائق. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -127,6 +134,8 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
+"<strong>تحذير!</strong> لا يمكنك تحصيل مبلغ بقيمة سالبة لأكثر\n"
+"                    من "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -234,7 +243,7 @@ msgstr "إضافة رسوم إضافية"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Add new payment method"
-msgstr ""
+msgstr "إضافة طريقة دفع جديدة "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -265,12 +274,12 @@ msgstr "السماح بحفظ طرق الدفع "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr ""
+msgstr "تم تحصيل الدفع بالفعل "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
 msgid "Already Voided"
-msgstr ""
+msgstr "تم إبطاله بالفعل "
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_aps
@@ -293,7 +302,7 @@ msgstr "الحد الأقصى للمبلغ "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr ""
+msgstr "المبلغ لتحصيله "
 
 #. module: payment
 #. odoo-javascript
@@ -357,7 +366,7 @@ msgstr "مصرح به "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__authorized_amount
 msgid "Authorized Amount"
-msgstr ""
+msgstr "المبلغ المصرح به "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -429,7 +438,7 @@ msgstr "الرسالة الملغية "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Canceled operations"
-msgstr ""
+msgstr "العمليات الملغاة "
 
 #. module: payment
 #. odoo-python
@@ -437,7 +446,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #, python-format
 msgid "Capture"
-msgstr ""
+msgstr "تحصيل "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -468,7 +477,7 @@ msgstr "المعاملات التابعة "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Child transactions"
-msgstr ""
+msgstr "المعاملات التابعة "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -575,7 +584,7 @@ msgstr "إنشاء مزود دفع جديد "
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "Create a payment method"
-msgstr ""
+msgstr "إنشاء طريقة دفع "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -783,7 +792,7 @@ msgstr "يدعم خاصية الدفع والخروج السريع "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Failed operations"
-msgstr ""
+msgstr "العمليات الفاشلة "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -836,7 +845,7 @@ msgstr "إنشاء رابط دفع المبيعات "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate and Copy Payment Link"
-msgstr ""
+msgstr "إنشاء ونسخ رابط الدفع "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -853,7 +862,7 @@ msgstr "مسار HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
-msgstr ""
+msgstr "به توابع بحالة المسودة "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_providers
@@ -863,7 +872,7 @@ msgstr "يحتوي على عدة مزودي دفع "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
 msgid "Has Remaining Amount"
-msgstr ""
+msgstr "يحتوي على مبلغ متبقي "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
@@ -966,7 +975,7 @@ msgstr "خطأ في الخادم الداخلي "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr ""
+msgstr "المبلغ الذي يجب تحصيله صالح "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1040,7 +1049,7 @@ msgstr "إدارة طرق الدفع "
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Managed by"
-msgstr ""
+msgstr "تتم الإدارة بواسطة "
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1060,7 +1069,7 @@ msgstr "الحد الأقصى للمبلغ "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr ""
+msgstr "الحد الأقصى المسموح به لتحصيل الأموال "
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
@@ -1138,7 +1147,7 @@ msgstr "لا يوجد خيار دفع محدد "
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "No token can be assigned to the public partner."
-msgstr ""
+msgstr "لا يمكن تعيين رمز للشريك العام. "
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__not_done
@@ -1214,7 +1223,7 @@ msgstr "العملية"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Operations in progress"
-msgstr ""
+msgstr "العمليات قيد التنفيذ "
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
@@ -1224,7 +1233,7 @@ msgstr "غير ذلك"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Other payment methods"
-msgstr ""
+msgstr "طرق الدفع الأخرى "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_pdt_token
@@ -1265,7 +1274,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "معالج تحصيل الدفع "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1426,7 +1435,7 @@ msgstr "يرجى تعيين مبلغ أقل من %s. "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid "Please switch to company"
-msgstr ""
+msgstr "يرجى التبديل إلى شركة "
 
 #. module: payment
 #. odoo-javascript
@@ -1554,7 +1563,7 @@ msgstr "حفظ تفاصيل الدفع الخاصة بي "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Saving your payment method, please wait..."
-msgstr ""
+msgstr "جاري حفظ طريقة الدفع، يرجى الانتظار... "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1564,7 +1573,7 @@ msgstr "قم بتحديد الدول. اتركه فارغاً لجعله متا�
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select currencies. Leave empty not to restrict any."
-msgstr ""
+msgstr "قم بتحديد العملات. اتركها فارغة حتى لا تقتصر على أي واحدة. "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1627,7 +1636,7 @@ msgstr "إظهار رسالة الانتهاء "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_payment_method_ids
 msgid "Show Payment Method"
-msgstr ""
+msgstr "إظهار طريقة العرض "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_pending_msg
@@ -1652,6 +1661,8 @@ msgid ""
 "Some of the transactions you intend to capture can only be captured in full."
 " Handle the transactions individually to capture a partial amount."
 msgstr ""
+"بعض المعاملات التي تنوى تحصيلها يمكن تحصيلها بشكل كامل فقط. قم بمعالجة "
+"المعاملات كل على حدة لتحصيل المبلغ الجزئي. "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1686,12 +1697,12 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr ""
+msgstr "دعم التحصيل التلقائي للمدفوعات "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
 msgid "Supported Payment Methods"
-msgstr ""
+msgstr "طرق الدفع المدعومة "
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
@@ -1704,7 +1715,7 @@ msgstr "وضع الاختبار "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.test_token_badge
 msgid "Test Token"
-msgstr ""
+msgstr "رمز الاختبار "
 
 #. module: payment
 #. odoo-python
@@ -1718,12 +1729,12 @@ msgstr "رمز الوصول غير صالح. "
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 #, python-format
 msgid "The amount to capture must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "يجب أن يكون المبلغ المراد تحصيله موجباً ولا يمكن أن يتخطى %s. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the transaction."
-msgstr ""
+msgstr "المعاملات التابعة للمعاملة. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
@@ -1755,6 +1766,7 @@ msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
 msgstr ""
+"العملات المتاحة مع مزود الدفع هذا. اتركه فارغاً حتى لا تقتصر على أي واحدة. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
@@ -1776,7 +1788,7 @@ msgstr "مرجع المعاملة الداخلي "
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method"
-msgstr ""
+msgstr "قائمة مزودي الدفع الذين يدعمون طريقة الدفع هذه "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -1847,7 +1859,7 @@ msgstr "المسار الذي تتم إعادة توجيه المستخدم إل
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of the related child transactions"
-msgstr ""
+msgstr "المعاملة المصدرية للمعاملات التابعة ذات الصلة "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -1928,7 +1940,7 @@ msgstr "لا توجد معاملات لعرضها "
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "There is no token created yet."
-msgstr ""
+msgstr "لم يتم إنشاء رمز بعد. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1974,6 +1986,8 @@ msgstr ""
 msgid ""
 "This field holds the image used for this payment method, limited to 64x64 px"
 msgstr ""
+"يحتوي هذا الحقل على الصورة  المستخدمة لطريقةة الدفع هذه، والتي يجب أن تكون "
+"أبعادها 64x64 px "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -1989,7 +2003,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "This payment has been canceled."
-msgstr ""
+msgstr "لقد تم إلغاء هذا الدفع. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
@@ -2009,6 +2023,8 @@ msgid ""
 "This transaction has been confirmed following the processing of its partial "
 "capture and partial void transactions (%(provider)s)."
 msgstr ""
+"لقد تم تأكيد هذه المعاملة بعد معالجة عمليات تحصيل الدفع الجزئي والمعاملات "
+"الجزية الباطلة (%(provider)s). "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2067,7 +2083,7 @@ msgstr "تصديق طريقة الدفع "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_var
 msgid "Variable domestic fees"
-msgstr ""
+msgstr "الرسوم المحلية المتغيرة "
 
 #. module: payment
 #. odoo-python
@@ -2079,7 +2095,7 @@ msgstr "يجب أن تكون الرسوم المتغيرة موجبة دائما
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_var
 msgid "Variable international fees"
-msgstr ""
+msgstr "الرسوم الدولية المتغيرة "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
@@ -2089,7 +2105,7 @@ msgstr "مصدق "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__void_remaining_amount
 msgid "Void Remaining Amount"
-msgstr ""
+msgstr "المبلغ المتبقي المبطل "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2101,7 +2117,7 @@ msgstr "إبطال المعاملة"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Waiting for operations to process"
-msgstr ""
+msgstr "بانتظار معالجة العمليات "
 
 #. module: payment
 #. odoo-python
@@ -2171,7 +2187,7 @@ msgstr "ما إذا كان رمز الدفع يجب إنشاؤه عند معال
 #: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
-msgstr ""
+msgstr "ما إذا كان مزود كل من المعاملات يدعم التحصيل الجزئي للمدفوعات أم لا. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
@@ -2283,7 +2299,7 @@ msgstr "لقد تم إلغاء الدفع. "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment has been processed."
-msgstr ""
+msgstr "لقد تمت معالجة الدفع. "
 
 #. module: payment
 #. odoo-javascript
@@ -2346,7 +2362,7 @@ msgstr "لم تتم معالجة عملية الدفع بعد. "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment is being processed, please wait..."
-msgstr ""
+msgstr "تتم معالجة الدفع، يرجى الانتظار... "
 
 #. module: payment
 #. odoo-javascript
@@ -2360,7 +2376,7 @@ msgstr "عملية الدفع الخاصة بك معلقة. "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment method has been saved."
-msgstr ""
+msgstr "لقد تم حفظ طريقة الدفع الخاصة بك. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2414,6 +2430,8 @@ msgid ""
 "to make this\n"
 "                    payment."
 msgstr ""
+"لإتمام عملية\n"
+"                    الدفع. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
@@ -2423,9 +2441,9 @@ msgstr "تحذير "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "– created on"
-msgstr ""
+msgstr "– أنشئ في "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "— created on"
-msgstr ""
+msgstr "— أنشئ في "

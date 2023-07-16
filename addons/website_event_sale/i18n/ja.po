@@ -6,6 +6,7 @@
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 10:55+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,8 @@ msgid ""
 "<i class=\"fa fa-ban me-2\"/>\n"
 "                                            Unpublished"
 msgstr ""
+"<i class=\"fa fa-ban me-2\"/>\n"
+"                                            非公開"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
@@ -36,6 +39,10 @@ msgid ""
 "                                            Registered\n"
 "                                        </small>"
 msgstr ""
+"<small class=\"o_wevent_participating text-bg-success\">\n"
+"                                            <i class=\"fa fa-check me-2\"/>\n"
+"                                            登録済\n"
+"                                        </small>"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
@@ -43,6 +50,8 @@ msgid ""
 "<span>Sign In</span>\n"
 "                <span class=\"fa fa-sign-in\"/>"
 msgstr ""
+"<span>ログイン</span>\n"
+"                <span class=\"fa fa-sign-in\"/>"
 
 #. module: website_event_sale
 #. odoo-python
@@ -51,7 +60,7 @@ msgstr ""
 msgid ""
 "A pricelist item with a positive min. quantity cannot be applied to this "
 "event tickets product."
-msgstr ""
+msgstr "このイベントチケットプロダクトには、最小数量がプラスのプライスリスト商品は適用できません。"
 
 #. module: website_event_sale
 #. odoo-python
@@ -60,12 +69,12 @@ msgstr ""
 msgid ""
 "A pricelist item with a positive min. quantity will not be applied to the "
 "event tickets products."
-msgstr ""
+msgstr "最小数量がプラスの価格表項目は、イベントチケットプロダクトには適用されません。"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_event_sale_report
 msgid "Event Sales Report"
-msgstr ""
+msgstr "イベント販売レポート"
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
@@ -85,12 +94,12 @@ msgstr "from"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "Go to Event"
-msgstr ""
+msgstr "イベントへ移動"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "価格表ルール"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -118,7 +127,7 @@ msgstr "販売オーダ明細"
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr ""
+msgstr "申し訳ありません。チケット %(ticket)s （イベント %(event)s用）は売り切れました。"
 
 #. module: website_event_sale
 #. odoo-python
@@ -128,20 +137,22 @@ msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
 " ticket for the %(event)s event."
 msgstr ""
+"申し訳ありません。ご利用可能な残席は%(remaining_seats)d のみです。（チケット %(ticket)s、イベント  %(event)s "
+"用）"
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The provided ticket doesn't exist"
-msgstr ""
+msgstr "提供されたチケットが存在しません"
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The ticket doesn't match with this product."
-msgstr ""
+msgstr "チケットがこのプロダクトに一致しません"
 
 #. module: website_event_sale
 #. odoo-python
@@ -153,7 +164,7 @@ msgstr "警告"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "We are looking forward to meeting you at the following"
-msgstr ""
+msgstr "以下でお目にかかれるのを楽しみにしております："
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
@@ -165,12 +176,12 @@ msgstr "サイト"
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot raise manually the event ticket quantity in your cart"
-msgstr ""
+msgstr "カートにあるイベントチケットの数を手動で追加することはできません"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "event"
-msgstr ""
+msgstr "イベント"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation

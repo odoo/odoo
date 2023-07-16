@@ -20913,8 +20913,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
-"Campo desde donde se origina la vista.\n"
-"                                                          Útil para restablecer (completamente) vistas rotas o para leer el arch desde archivos en el modo dev-xml."
+"Campo desde el que se origina la vista.\n"
+"                                                          Útil para reestablecer (por completo) vistas dañadas o para leer la arquitectura de los archivos en el modo dev-xml."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_binary
@@ -23454,7 +23454,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parámetro 'agrupar por' no valido"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Formato JSON no válido en el campo Valor predeterminado."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -25870,7 +25875,7 @@ msgstr "El modelo '%s' contiene un módulo de datos y no se puede eliminar."
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
 msgid "Model Access"
-msgstr "Acceso al  modelo"
+msgstr "Acceso al modelo"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_constraint
@@ -29817,13 +29822,13 @@ msgstr "Empresa matriz"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__menu_id
 msgid "Parent Menu"
-msgstr "Menú padre"
+msgstr "Menú principal"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr "Ruta padre"
+msgstr "Ruta principal"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_name
@@ -30436,7 +30441,7 @@ msgstr "Valor del prefijo del registro para la secuencia"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__prepend
 msgid "Prepend"
-msgstr "Prepend"
+msgstr "Anteponer"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter_wall
@@ -36484,6 +36489,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr "No es posible importar el campo tipo '%s'  "
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -38124,6 +38136,17 @@ msgstr ""
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "No puede crear etiquetas recursivas."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+"No puede eliminar a los usuarios de la plantilla. Si elimina este perfil, "
+"afectará funcionalidades fundamentales."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

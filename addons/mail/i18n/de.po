@@ -1009,7 +1009,7 @@ msgstr "Zugriffstoken"
 #: code:addons/mail/static/src/models/thread.js:0
 #, python-format
 msgid "Access restricted to group \"%(groupFullName)s\""
-msgstr "Zugang auf die Gruppe „%(groupFullName)s“ beschränkt"
+msgstr "Zugriff auf die Gruppe „%(groupFullName)s“ beschränkt"
 
 #. module: mail
 #. odoo-python
@@ -1054,7 +1054,7 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Aktionen führen gegebenfalls zu weiteren Funktionen wie zur Öffnung der "
+"Aktionen führen gegebenenfalls zu weiteren Funktionen wie zur Öffnung der "
 "Kalenderansicht oder zur automatischen „Erledigt“-Markierung, wenn ein "
 "Dokument hochgeladen wurde."
 
@@ -1423,6 +1423,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Für jeden Anhang muss ein Zugriffstoken angegeben werden."
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -1473,8 +1480,8 @@ msgid "Animals & Nature"
 msgstr "Tiere & Natur"
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -2491,7 +2498,7 @@ msgstr "Unternehmen"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Compose Email"
-msgstr "E-Mail schreiben"
+msgstr "E-Mail verfassen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
@@ -5319,7 +5326,7 @@ msgstr "Kanal beitreten"
 #: code:addons/mail/static/src/components/call_action_list/call_action_list.xml:0
 #, python-format
 msgid "Join Video Call"
-msgstr "Videoanruf beitreten"
+msgstr "An Videoanruf teilnehmen"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -7517,14 +7524,14 @@ msgstr "Port"
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Portal Access Granted"
-msgstr "Portalzugang gewährt"
+msgstr "Portalzugriff gewährt"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Portal Access Revoked"
-msgstr "Portalzugang verweigert"
+msgstr "Portalzugriff verweigert"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__mail_post_method__comment
@@ -9396,6 +9403,21 @@ msgstr ""
 "Partner nicht steuerpflichtig ist."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Der Anhang %s existiert nicht oder Sie besitzen keine Zugriffsrechte."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "Der Dateianhang %s existiert nicht."
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
@@ -10399,6 +10421,16 @@ msgstr ""
 "und Empfangen von E-Mails Ihren eigenen E-Mail-Server zu verwenden. Online-"
 "Benutzer können bereits von einem einsatzbereiten E-Mail-Server "
 "(@mycompany.odoo.com) profitieren."
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"Wert für `mail.catchall.domain.allowed` kann nicht validiert werden.\n"
+"Es sollte eine durch Kommata getrennte Liste von Domains sein, z. B. example.com,example.org."
 
 #. module: mail
 #. odoo-javascript
@@ -16764,8 +16796,8 @@ msgid "doctor"
 msgstr "Doktor"
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
@@ -27629,7 +27661,7 @@ msgstr "Pilot"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "pin"
-msgstr "Pinn"
+msgstr "Nadel"
 
 #. module: mail
 #. odoo-javascript

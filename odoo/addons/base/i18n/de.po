@@ -282,7 +282,7 @@ msgstr ""
 "Lokalisierungsmodul für Dänemark\n"
 "===============================\n"
 "\n"
-"Dies ist das Modul zur Verwaltung des **Kontenplans für Denmark**. Sowohl Einzelunternehmen als auch I/S, IVS, ApS und A/S\n"
+"Dies ist das Modul zur Verwaltung des **Kontenplans für Dänemark**. Sowohl Einzelunternehmen als auch I/S, IVS, ApS und A/S\n"
 "\n"
 "**Modulet opsætter:**\n"
 "\n"
@@ -1738,7 +1738,7 @@ msgstr ""
 "\n"
 "        Mit diesem Modul können Sie Ihren Verkaufsauftrag auf der Grundlage der Produktkonfiguration planen.\n"
 "\n"
-"Für Produkte, bei denen die Option „Services planen“ aktiviert ist, haben Sie die Möglichkeit,\n"
+"Für Produkte, bei denen die Option „Dienstleistungen planen“ aktiviert ist, haben Sie die Möglichkeit,\n"
 "automatisch die Schichten für die Mitarbeiter zu prognostizieren, die die Schicht übernehmen können\n"
 "(d. h. Mitarbeiter, die die gleiche Rolle haben wie die für das Produkt konfigurierte).\n"
 "\n"
@@ -1760,7 +1760,7 @@ msgstr ""
 "\n"
 "Mit diesem Modul können Sie Ihren Verkaufsauftrag auf der Grundlage der Produktkonfiguration planen.\n"
 "\n"
-"Für Produkte, bei denen die Option „Services planen“ aktiviert ist, haben Sie die Möglichkeit\n"
+"Für Produkte, bei denen die Option „Dienstleistungen planen“ aktiviert ist, haben Sie die Möglichkeit\n"
 "automatisch Schichten an Mitarbeiter zuzuweisen, die die Schicht  übernehmen können\n"
 "(d. h. Mitarbeiter, die die gleiche Rolle haben wie die für das Produkt konfigurierte).\n"
 "\n"
@@ -6091,7 +6091,7 @@ msgstr ""
 "* Kontenplan, basierend auf einer Empfehlung von Super Cías\n"
 "* Ecuadorianische Steuern, Steuerkennzeichen und Steuergruppen\n"
 "* Ecuadorianische Steuerpositionen\n"
-"* Dokumenttypen (in Ecuador gibt es etwa 41 Arten von Kaufbelegen)\n"
+"* Dokumenttypen (in Ecuador gibt es etwa 41 Arten von Einkaufsbelegen)\n"
 "* Identifikationstypen\n"
 "* Ecuadorianische Banken\n"
 "* Partner: Consumidor Final, SRI, IESS, und auch grundlegende Mehrwertsteuer-Validierung\n"
@@ -16557,7 +16557,7 @@ msgstr "Tschad"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_my
 msgid "Change My Preferences"
-msgstr "Meine Präferenzen jetzt ändern"
+msgstr "Meine Präferenzen ändern"
 
 #. module: base
 #. odoo-python
@@ -23388,7 +23388,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Fehlerhafter „group by“-Parameter"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Ungültiges JSON-Format im Standardwertfeld."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -23475,7 +23480,7 @@ msgstr "Ungültiges Modus-Attribut:"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "Invalid model name %r in action definition."
-msgstr "Ungültiger Modulname %r in der Aktionsdefinition."
+msgstr "Ungültiger Modellname %r in der Aktionsdefinition."
 
 #. module: base
 #. odoo-python
@@ -33722,7 +33727,7 @@ msgstr "Konfiguration beginnen"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Bundesland/Region"
+msgstr "Status"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -36381,6 +36386,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr "Feldtyp „%s“ konnte nicht importiert werden  "
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -38029,6 +38041,17 @@ msgstr ""
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "Sie können keine rekursiven Stichwörter erstellen."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+"Es ist nicht erlaubt, den Vorlagenbenutzer zu löschen, Durch das Löschen "
+"dieses Profils werden wichtige Funktionen beeinträchtigt."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

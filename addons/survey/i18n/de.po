@@ -245,7 +245,7 @@ msgstr ""
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
-"                <!-- Wir verwenden das Logo des Unternehmens, das diese Umfrage erstellt hat (um Fälle mit mehreren Unternehmen zu behandeln) -->\n"
+"                <!-- Wir verwenden das Logo des Unternehmens, das diese Umfrage erstellt hat (im Falle von mehreren Unternehmen) -->\n"
 "                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Zertifizierung: <t t-out=\"object.survey_id.display_name or ''\">Feedback-Formular</t>\n"
@@ -1438,7 +1438,7 @@ msgstr "Abgeschlossene Umfragen"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Compose Email"
-msgstr "E-Mail schreiben"
+msgstr "E-Mail verfassen"
 
 #. module: survey
 #. odoo-python
@@ -5562,8 +5562,8 @@ msgid ""
 "for successfully completing\n"
 "                                <br/>"
 msgstr ""
-"für den erfolgreichen Abschluss\n"
-"<br/>"
+"für den erfolgreichen Abschluss von\n"
+"                                <br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required

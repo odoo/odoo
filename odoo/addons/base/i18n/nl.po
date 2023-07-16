@@ -23297,7 +23297,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Incorrecte 'groep door' instelling"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Ongeldig JSON-formaat in Standaardwaarde-veld."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -36275,6 +36280,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr "Kon het veld van het soort '%s' niet importeren"
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -37918,6 +37930,17 @@ msgstr ""
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "Je kunt geen recursieve labels aanmaken."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+"Het verwijderen van sjabloongebruikers is niet toegestaan. Het verwijderen "
+"van dit profiel zal essentiële functies in gevaar brengen."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
