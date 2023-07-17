@@ -9,9 +9,9 @@ import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup"
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
-import { EditableTable } from "@pos_restaurant/app/floor_screen/editable_table";
-import { EditBar } from "@pos_restaurant/app/floor_screen/edit_bar";
-import { Table } from "@pos_restaurant/app/floor_screen/table";
+import { EditableTable } from "@pos_restaurant/app/screens/floor_screen/editable_table";
+import { EditBar } from "@pos_restaurant/app/screens/floor_screen/edit_bar";
+import { Table } from "@pos_restaurant/app/screens/floor_screen/table";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import {
