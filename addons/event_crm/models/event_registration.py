@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.phone_validation.tools import phone_validation
@@ -255,17 +256,21 @@ class EventRegistration(models.Model):
                 line_suffix=line_suffix
             ) for registration in self
         ]
-        return ("%s<br/>" % prefix if prefix else "") + (
-            "<ol>" if line_counter else "<ul>") + ("".join(reg_lines)) + ("</ol>" if line_counter else "</ul>")
+        description = (prefix if prefix else '') + Markup("<br/>")
+        if line_counter:
+            description += Markup("<ol>") + Markup('').join(reg_lines) + Markup("</ol>")
+        else:
+            description += Markup("<ul>") + Markup('').join(reg_lines) + Markup("</ul>")
+        return description
 
     def _get_lead_description_registration(self, line_suffix=''):
         """ Build the description line specific to a given registration. """
         self.ensure_one()
-        return "<li>%s (%s)%s</li>" % (
+        return Markup("<li>") + "%s (%s)%s" % (
             self.name or self.partner_id.name or self.email,
             " - ".join(self[field] for field in ('email', 'phone') if self[field]),
-            " %s" % line_suffix if line_suffix else "",
-        )
+            f" {line_suffix}" if line_suffix else "",
+        ) + Markup("</li>")
 
     def _get_lead_tracked_values(self):
         """ Tracked values are based on two subset of fields to track in order
