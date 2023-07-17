@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.addons.phone_validation.tools import phone_validation
 
 
@@ -195,10 +195,18 @@ class EventRegistration(models.Model):
         )  # CHECKME: broader than just public partner
 
         # mono registration mode: keep partner only if email and phone matches;
-        # otherwise registration > partner. Note that _phone_format has to be
-        # taken into account as it may have side effects on phone formatting
+        # otherwise registration > partner. Note that email format has to be
+        # taken into account in comparison
         if len(self) == 1 and valid_partner:
-            if self.email and valid_partner.email and valid_partner.email != self.email:
+            # compare emails: email_normalized or raw
+            if self.email and valid_partner.email:
+                if valid_partner.email_normalized and tools.email_normalize(self.email) != valid_partner.email_normalized:
+                    valid_partner = self.env['res.partner']
+                elif not valid_partner.email_normalized and valid_partner.email != self.email:
+                    valid_partner = self.env['res.partner']
+
+            # compare phone
+            if valid_partner and valid_partner.phone and self.phone and valid_partner.phone != self.phone:
                 valid_partner = self.env['res.partner']
             if valid_partner and self.phone and valid_partner.phone:
                 phone_formatted = phone_validation.phone_format(
