@@ -584,6 +584,12 @@ msgid ""
 "and configs.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"يتيح هذا التطبيق لأمين الصندوق طباعة تقرير مبيعات X و Z\n"
+"لجلسة محددة أو تفاصيل المبيعات لعدة جلسات\n"
+"وتهيئة الإعدادات.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
@@ -1279,6 +1285,11 @@ msgid ""
 "    the account.move form view. If this field is set, it is then read when exporting electronic invoicing formats.\n"
 "    "
 msgstr ""
+"\n"
+"    Some Luxembourg public institutions do not have a VAT number but have been assigned an arbitrary number \n"
+"    (see: https://pch.gouvernement.lu/fr/peppol.html). Thus, this module adds the Peppol Identifier field on \n"
+"    the account.move form view. If this field is set, it is then read when exporting electronic invoicing formats.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -6028,6 +6039,19 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"\n"
+"دمج Transifex\n"
+"=====================\n"
+"سيضيف هذا التطبيق رابطاً إلى مشروع Transifex في نافذة عرض الترجمة.\n"
+"الغرض من هذا التطبيق هو تسريع عملية الترجمة للتطبيقات الرئيسية.\n"
+"\n"
+"حتى يعمل، يستخدم أودو ملفات تهيئة Transifex `.tx/config` لرصد\n"
+"مصدر المشروع. لن تتم ترجمة التطبيقات المخصصة (التطبيقات غير المنشورة على\n"
+"مشروع Transifex الرئيسي).\n"
+"\n"
+"يجب تفعيل اللغة التي يحاول المستخدم ترجمتها في مشروع\n"
+"Transifex.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp
@@ -9393,7 +9417,7 @@ msgstr "أستراليا "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australia - Accounting"
-msgstr ""
+msgstr "Australia - Accounting"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -12026,7 +12050,7 @@ msgstr "DLE 26 110 x 220 مم"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_daily_sales_reports
 msgid "Daily X and Z sales reports of a Point of Sale session"
-msgstr ""
+msgstr "تقارير مبيعات X و Z يومية في جلسة نقطة البيع "
 
 #. module: base
 #. odoo-python
@@ -16097,7 +16121,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "معامل 'تجميع حسب' غير صالح"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -17309,7 +17338,7 @@ msgstr "لوكسمبورغ - المحاسبة "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_peppol_id
 msgid "Luxembourg - Peppol Identifier"
-msgstr ""
+msgstr "Luxembourg - Peppol Identifier"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
@@ -18455,7 +18484,7 @@ msgstr "موزامبيق"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mz
 msgid "Mozambique - Accounting"
-msgstr ""
+msgstr "Mozambique - Accounting"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
@@ -22159,7 +22188,7 @@ msgstr "الدفعات - الحساب"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment_invoice_online_payment_patch
 msgid "Payment - Account / Invoice Online Payment Patch"
-msgstr ""
+msgstr "الدفع - الحساب / تصحيح فواتير الدفع عبر الإنترنت "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
@@ -22419,7 +22448,7 @@ msgstr "نقطة البيع - الكوبونات والولاء "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_daily_sales_reports
 msgid "Point of Sale Daily Sales Reports"
-msgstr ""
+msgstr "تقارير المبيعات اليومية لنقطة البيع "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -27349,6 +27378,13 @@ msgstr "تعذّر إيجاد Wkhtmltopdf في نظامك. لا يمكن إنش�
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -28743,6 +28779,15 @@ msgstr "يمكنك أن ترفع ملفًا من جهازك أو تنسخ وتل
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "لا يمكنك إنشاء علامات تصنيف متداخلة. "
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

@@ -47,17 +47,18 @@ tour.register('account_tax_group', {
     {
         content: "Type item",
         trigger: 'div[name="invoice_line_ids"] .o_selected_row .o_list_many2one[name="product_id"] input',
-        run: "text Large Desk",
+        run: "text Corner Desk Right Sit",
     },
     {
         content: "Valid item",
-        trigger: '.ui-menu-item-wrapper:contains("Large Desk")',
+        trigger: '.ui-menu-item-wrapper:contains("Corner Desk Right Sit")',
     },
     // Save account.move
     {
         content: "Save the account move",
         trigger: '.o_form_button_save',
     },
+    ...tour.stepUtils.saveForm(),
     // Edit tax group amount
     {
         content: "Edit tax group amount",
@@ -75,7 +76,7 @@ tour.register('account_tax_group', {
     // Check new value for total (with modified tax_group_amount).
     {
         content: "Valid total amount",
-        trigger: 'span[name="amount_total"]:contains("1,499.00")',
+        trigger: 'span[name="amount_total"]:contains("800")',
     },
     // Modify the quantity of the object
     {
@@ -101,10 +102,11 @@ tour.register('account_tax_group', {
         content: "Save the account move",
         trigger: '.o_form_button_save',
     },
+    ...tour.stepUtils.saveForm(),
     // Check new tax group value
     {
         content: "Check new value of tax group",
-        trigger: '.o_tax_group_amount_value:contains("389.70")',
+        trigger: '.o_tax_group_amount_value:contains("120")',
     },
     {
         content: "Edit tax value",
@@ -113,7 +115,7 @@ tour.register('account_tax_group', {
     },
     {
         content: "Check new value of total",
-        trigger: '.oe_subtotal_footer_separator:contains("2,600.00")',
+        trigger: '.oe_subtotal_footer_separator:contains("1,202")',
     },
     {
         content: "Discard changes",
@@ -121,6 +123,6 @@ tour.register('account_tax_group', {
     },
     {
         content: "Check tax value is reset",
-        trigger: '.o_tax_group_amount_value:contains("389.70")',
+        trigger: '.o_tax_group_amount_value:contains("120")',
     },
 ]);

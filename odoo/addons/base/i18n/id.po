@@ -5901,6 +5901,43 @@ msgid ""
 "CVC: `123`\n"
 "3DS Password: `password`\n"
 msgstr ""
+"# AsiaPay\n"
+"\n"
+"## Detail Implementasi\n"
+"\n"
+"### Fitur-fitur yang didukung\n"
+"\n"
+"- Pembayaran dengan redirection flow.\n"
+"- Webhook.\n"
+"- Beberapa metode pembayaran termasuk kartu kredit, metode pembayaran China seperti Alipay, dan \n"
+"  [others](https://www.asiapay.com/payment.html#option).\n"
+"\n"
+"Ditambah lagi, AsiaPay memungkinkan implementasi manual capture, refund, express checkout, dan\n"
+"pemrosesanmulti-currency processing.\n"
+"\n"
+"### API dan gateway\n"
+"\n"
+"Kami memilih untuk berintegrasi dengan Client Post Through Browser gateway yang akan memenuhi kebutuhan-kebutuhan kami,\n"
+"salah satu dari tiga pilihan yang AsiaPay berikan pada Agustus 2022.\n"
+"\n"
+"Seluruh referensi API dan pedoman integrasi dapat ditemukan pada [Integration Guide]\n"
+"(https://www.paydollar.com/pdf/op/enpdintguide.pdf).\n"
+"\n"
+"Versi API yang diimplementasi oleh modul ini adalah v3.67.\n"
+"\n"
+"## Merge detail\n"
+"\n"
+"Versi pertama modul ditentukan di tas\n"
+"[2845428](https://www.odoo.com/web#id=2845428&model=project.task) dan di-merge dengan PR\n"
+"odoo/odoo#98441 in `saas-15.5`.\n"
+"\n"
+"## Instruksi Testing\n"
+"\n"
+"Nomor Kartu: `4335900000140045`\n"
+"Tanggal Kadaluwarsa: `07/2030`\n"
+"Nama: `testing card`\n"
+"CVC: `123`\n"
+"3DS Password: `password`\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_flutterwave
@@ -6103,6 +6140,42 @@ msgid ""
 "See https://razorpay.com/docs/payments/payments/test-card-upi-details/ for the list of test\n"
 "payment details.\n"
 msgstr ""
+"# Razorpay\n"
+"\n"
+"## Detail implementasi\n"
+"\n"
+"### Fitur-fitur yang didukung\n"
+"\n"
+"- Pembayaran dengan redirection flow\n"
+"- Manual capture\n"
+"- Refund parsial\n"
+"- Beberapa metode pembayaran seperti kartu debit/kredit, netabnking, UPI, dan\n"
+"  [others](https://razorpay.com/docs/payments/payment-methods/).\n"
+"- [Webhook](https://razorpay.com/docs/webhooks).\n"
+"\n"
+"Ditambah lagi, Razorpay juga mengimplementasi token tapi membutuhkan informasi dari kartu untuk\n"
+"setiap transaksi.\n"
+"\n"
+"### API dan gateway\n"
+"\n"
+"Kami memilih untuk berintegrasi dengan\n"
+"[Razorpay Hosted Checkout](https://razorpay.com/docs/payments/payment-gateway/web-integration/hosted).\n"
+"Gateway lain tidak dipilih. Lihat dev note di task untuk detail mengenai gateway lain.\n"
+"\n"
+"Version API yang diemplementasi modul ini adalah v1.\n"
+"\n"
+"## Detail Merge\n"
+"\n"
+"Versi pertama modul ditentukan di task\n"
+"[2800823](https://www.odoo.com/web#id=2800823&model=project.task) dan di-merge dengan PR\n"
+"odoo/odoo#92848 in `saas-15.5`.\n"
+"\n"
+"## Instruksi Testing\n"
+"\n"
+"Nomor telepon mitra harus merupakan nomor telepon India yang valid. Contoh: +91123456789\n"
+"\n"
+"Lihat https://razorpay.com/docs/payments/payments/test-card-upi-details/ untuk daftar detail\n"
+"test pembayaran.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
@@ -7363,7 +7436,7 @@ msgstr "Nomor Rekening"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Account Security"
-msgstr ""
+msgstr "Keamanan Akun"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__acc_holder_name
@@ -8755,28 +8828,28 @@ msgstr "Avatar"
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_1024
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Avatar 1024"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_128
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_128
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_256
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_256
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Avatar 256"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_512
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_512
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Avatar 512"
 
 #. module: base
 #: model:ir.model,name:base.model_avatar_mixin
@@ -10582,7 +10655,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Kupon & Loyalitas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty_delivery
@@ -15140,7 +15213,12 @@ msgid "Invalid 'group by' parameter"
 msgstr ""
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -16076,7 +16154,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr ""
+msgstr "Pelajari Lebih"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -20716,7 +20794,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_S
 msgid "Other Services"
-msgstr ""
+msgstr "Layanan Lain"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -22090,7 +22168,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Pembuat Quotation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
@@ -25726,7 +25804,7 @@ msgstr "Format Waktu"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr ""
+msgstr "Cuti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_holidays
@@ -26202,6 +26280,13 @@ msgstr ""
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr "Tidak dapat menemukan Wkhtmltopdf pada sistem. PDF tidak bisa dibuat."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -27560,6 +27645,15 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You can not create recursive tags."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
 msgstr ""
 
 #. module: base

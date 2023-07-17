@@ -45,6 +45,11 @@
             th:not(.o_list_record_selector) {
                 border-left: $border-width solid var(--ListRenderer-thead-border-end-color);
             }
+
+            .o_list_number_th {
+                /*rtl:ignore*/
+                text-align: right;
+            }
         }
 
         // Override BS default
@@ -63,6 +68,8 @@
             &.o_list_number {
                 /*rtl:ignore*/
                 text-align: right;
+                /*rtl:ignore*/
+                direction : ltr;
             }
             &.o_list_text {
                 word-break: break-word;
@@ -113,6 +120,13 @@
 
             > tr > td {
                 @include o-text-overflow(table-cell);
+            }
+
+            .o_list_number {
+                /*rtl:ignore*/
+                text-align: right;
+                /*rtl:ignore*/
+                direction : ltr;
             }
         }
 

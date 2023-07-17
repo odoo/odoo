@@ -39,6 +39,7 @@
     position: absolute;
     z-index: 10;
     padding: 0;
+    border: $border-width solid var(--o-table-ui-bg, #{$border-color});
 
     &:hover {
         visibility: visible !important;
@@ -50,9 +51,14 @@
         cursor: pointer;
         background-color: var(--o-table-ui-bg, #{$o-white});
         color: var(--o-table-ui-color, #{$o-main-text-color});
-        border: $border-width solid var(--o-table-ui-border, #{$border-color});
-        border-radius: 5px;
-        padding: 2px 3px;
+        border: $border-width solid rgba($color: $o-brand-odoo, $alpha: 1.0);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        background-color: rgba($color: $o-brand-odoo, $alpha: 0.7);
     }
     .o_table_ui_menu {
         display: none;
@@ -62,6 +68,7 @@
         border: $border-width solid var(--o-table-ui-border, #{$border-color});
         padding: 5px 0;
         white-space: nowrap;
+        margin-left: 50%;
 
         > div:hover {
             background-color: var(--o-table-ui-hover, #{$o-gray-200});
@@ -71,7 +78,7 @@
             color: var(--o-table-ui-color, #{$o-main-text-color});
         }
         div {
-            padding: 0 8px;
+            padding: 2px 8px;
         }
     }
     &.o_open {
@@ -84,6 +91,23 @@
                 display: none;
             }
         }
+    }
+    &.o_row_ui {
+        border-right: none !important;
+        min-width: 1rem;
+
+        .o_table_ui_menu_toggler {
+            min-width: 1rem;
+        }
+        .o_table_ui_menu {
+            position: absolute;
+            margin-left: 100%;
+            top: 50%;
+        }
+    }
+
+    &.o_column_ui {
+        border-bottom: none !important;
     }
 }
 

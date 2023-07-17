@@ -2336,13 +2336,13 @@ msgstr ""
 "Registraties aanmaken met verkooporders.\n"
 "=======================================\n"
 "\n"
-"Deze module stel je in staat om registratiecreatie te koppelen met je verkoopflow en dit te automatiseren,\n"
+"Deze module stel je in staat om de registratie te koppelen met je verkoopflow en dit te automatiseren,\n"
 "wat je in staat stelt om de facturatie functie in te schakelen.\n"
 "\n"
 "Het definieert een nieuwe soort van serviceproducten die je de mogelijkheid bieden om\n"
 "een evenement categorie te kiezen om dit mee te koppelen. Wanneer je een verkooporder codeert voor\n"
-"het product zal je de mogelijkheid hebben om een bestaande evenement te kiezen van de categorie en\n"
-"wanneer je deze verkooporder bevestigt zal er automatisch een registratie worden aangemaakt\n"
+"het product zal je de mogelijkheid hebben om een bestaand evenement te kiezen van de categorie en\n"
+"wanneer je deze verkooporder bevestigt, zal er automatisch een registratie worden aangemaakt\n"
 "voor dit evenement.\n"
 
 #. module: base
@@ -4452,7 +4452,7 @@ msgstr ""
 "    * Facturatie (producten en/of services)\n"
 "    * Garantie\n"
 "    * Rapport voor offerte van de reparatie\n"
-"    * Opmerkingen voor de monteur en voor de klant\n"
+"    * Opmerkingen voor de technicus en voor de klant\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -6019,7 +6019,7 @@ msgstr ""
 "==========================================================\n"
 "\n"
 "Na het voltooien van deze installatie loopt een configuratie wizard.\n"
-"    * Wizard van de account die de template gebruikt\n"
+"    * Wizard van de account die de sjabloon gebruikt\n"
 "      om de bankgegevens, informatie en grootboekschema in te stellen.\n"
 "    "
 
@@ -16115,7 +16115,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Incorrecte 'groep door' instelling"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Ongeldig JSON-formaat in Standaardwaarde-veld."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -17656,7 +17661,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_hr_work_entry
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract
 msgid "Manage work entries"
-msgstr "Beheer werk boekingen"
+msgstr "Beheer werkboekingen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_planning
@@ -27439,6 +27444,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr "Kon het veld van het soort '%s' niet importeren"
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -28723,12 +28735,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
 msgid "Work Entries"
-msgstr "Werk boekingen"
+msgstr "Werkboekingen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
 msgid "Work Entries - Contract"
-msgstr "Werkinvoer - Contract"
+msgstr "Werkboeking - Contract"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
@@ -28862,6 +28874,17 @@ msgstr ""
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "Je kunt geen recursieve labels aanmaken."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+"Het verwijderen van sjabloongebruikers is niet toegestaan. Het verwijderen "
+"van dit profiel zal essentiële functies in gevaar brengen."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

@@ -44,7 +44,7 @@ msgstr "%(empl_name)s %(check_in)s から %(check_out)s まで"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid ": Your user should be linked to an employee to use attendance."
-msgstr ""
+msgstr ": 勤怠管理を利用するためには、ユーザが従業員にリンクされている必要があります。"
 
 #. module: hr_attendance
 #. openerp-web
@@ -53,7 +53,7 @@ msgstr ""
 msgid ""
 "<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
 "right, please contact Human Resource staff"
-msgstr ""
+msgstr "<b>警告 最終チェックインは12時間以上前です</b><br/>もし誤りがある場合は、人事担当者にご連絡ください。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -472,6 +472,14 @@ msgid "Display Time"
 msgstr "表示時間"
 
 #. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid ""
+"Do not have access, user cannot edit the attendances that are not his own."
+msgstr ""
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
@@ -548,7 +556,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Extra hours today:"
-msgstr ""
+msgstr "今日の超過労働時間："
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
@@ -582,7 +590,7 @@ msgstr "お疲れ様でした"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Go back"
-msgstr ""
+msgstr "戻る"
 
 #. module: hr_attendance
 #. openerp-web
@@ -721,7 +729,7 @@ msgstr "仕事が価値があるなら、それはうまくいく価値があり
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Invalid request"
-msgstr ""
+msgstr "無効なリクエスト"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
@@ -810,14 +818,14 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
 msgid "Overtime"
-msgstr ""
+msgstr "時間超過"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "管理者にご連絡ください。"
 
 #. module: hr_attendance
 #. openerp-web
@@ -960,7 +968,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Total extra hours:"
-msgstr ""
+msgstr "超過労働時間合計："
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form

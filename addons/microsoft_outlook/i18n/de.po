@@ -3,8 +3,8 @@
 # 	* microsoft_outlook
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,9 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Outlook account"
-msgstr "<i class=\"fa fa-arrow-right\"/>Verbinden Sie Ihr Outlook-Konto"
+msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Verbinden Sie Ihr Outlook-Konto"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
@@ -61,7 +63,7 @@ msgstr ""
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
-msgstr "Beim Abrufen des Zugangs-Tokens ist ein Fehler aufgetreten. %s"
+msgstr "Beim Abrufen des Zugriffstokens ist ein Fehler aufgetreten. %s"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
@@ -73,7 +75,7 @@ msgstr "Authentifizieren mit"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr "Authentisierungscode"
+msgstr "Authentisierungs-URI"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_config_settings
@@ -105,7 +107,7 @@ msgstr ""
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back to your mail server"
-msgstr "Gehen Sie zurück in Ihren E-Mail Server"
+msgstr "Gehen Sie zurück in Ihren E-Mail-Server"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -120,7 +122,7 @@ msgstr "ID Ihrer Outlook-App"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
 msgid "Incoming Mail Server"
-msgstr "Server für eingehende E-Mails"
+msgstr "Posteingangsserver"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -131,14 +133,14 @@ msgid ""
 "\"TLS (STARTTLS)\"."
 msgstr ""
 "Falsche Verbindungssicherheit für Outlook-Mailserver %r. Bitte setzen Sie "
-"ihn auf \"TLS (STARTTLS)\"."
+"ihn auf „TLS (STARTTLS)“."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr "Sind die Outlook-Anmeldeinformationen konfiguriert?"
+msgstr "Sind die Outlook-Anmeldeinformationen konfiguriert"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -148,21 +150,21 @@ msgstr "Mailserver"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
 msgid "Microsoft Outlook Mixin"
-msgstr "Microsoft Outlook Mixin"
+msgstr "Microsoft-Outlook-Mixin"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr "Nur der Administrator kann einen Outlook Mail Server verbinden."
+msgstr "Nur der Administrator kann einen Outlook-Mailserver verbinden."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr "Outlook Zugangs-Token"
+msgstr "Outlook-Zugriffstoken"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
@@ -174,12 +176,12 @@ msgstr "Ablaufdatum des Outlook-Zugriffstokens"
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr "Outlook Client Id"
+msgstr "Outlook-Client-ID"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr "Outlook Client Secret"
+msgstr "Outlook-Client-Geheimnis"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
@@ -192,7 +194,7 @@ msgstr "Outlook-OAuth-Authentifizierung"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr "Outlook-Aktualisierungs-Token"
+msgstr "Outlook-Aktualisierungstoken"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -206,7 +208,7 @@ msgstr "Bitte konfigurieren Sie Ihre Outlook-Anmeldedaten."
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
-msgstr "Bitte verbinden Sie Ihr Outlook-Konto, bevor Sie es nutzen."
+msgstr "Bitte verbinden Sie Ihr Outlook-Konto, bevor Sie es verwenden."
 
 #. module: microsoft_outlook
 #. odoo-python

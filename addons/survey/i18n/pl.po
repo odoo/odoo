@@ -60,32 +60,32 @@ msgstr "# Losowo wybrane pytania"
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_4
 msgid "$100"
-msgstr ""
+msgstr "100 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_1
 msgid "$20"
-msgstr ""
+msgstr "20 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_5
 msgid "$200"
-msgstr ""
+msgstr "200 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_6
 msgid "$300"
-msgstr ""
+msgstr "300 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_2
 msgid "$50"
-msgstr ""
+msgstr "50 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_3
 msgid "$80"
-msgstr ""
+msgstr "80 USD"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
@@ -266,6 +266,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<table style=\"width:600px;margin:5px auto;\">\n"
+"<tbody>\n"
+"<tr><td>\n"
+"<!-- Używamy logo firmy, która stworzyła ankietę (do obsługi przypadków wielu firm) -->\n"
+"<a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"</td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"Certyfikacja: <t t-out=\"object.survey_id.display_name or ''\">Formularz opinii</t>\n"
+"</td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"<table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"<tbody>\n"
+"<tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"<p>Drogi <span t-out=\"object.partner_id.name or 'participant'\">uczestniku</span></p>\n"
+"<p>\n"
+"W załączniku znajduje się\n"
+"<strong t-out=\"object.survey_id.display_name or ''\">Tworzenie mebli</strong>\n"
+"certyfikat\n"
+"</p>\n"
+"<p>Gratulujemy zdania testu <strong t-out=\"object.scoring_percentage\"></strong>z wynikiem %!</p>\n"
+"</td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</div>"
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -302,6 +327,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Drogi <t t-out=\"object.partner_id.name or 'participant'\">uczestniku</t><br><br>\n"
+"<t t-if=\"object.survey_id.certification\">\n"
+"Zostałeś zaproszony do wzięcia udziału w nowej certyfikacji.\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"Przeprowadzamy ankietę i Twoja odpowiedź będzie mile widziana.\n"
+"</t>\n"
+"<div style=\"margin: 16px 0px 16px 0px;\">\n"
+"<a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"<t t-if=\"object.survey_id.certification\">\n"
+"Rozpocznij certyfikację\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"Rozpocznij ankietę\n"
+"</t>\n"
+"</a>\n"
+"</div>\n"
+"<t t-if=\"object.deadline\">\n"
+"Prosimy o odpowiedź na ankietę z dnia <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
+"</t>\n"
+"<t t-if=\"object.survey_id.certification\">\n"
+"Życzymy powodzenia!\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"Z góry dziękujemy za udział.\n"
+"</t>\n"
+"</p>\n"
+"</div>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
@@ -882,7 +937,7 @@ msgstr "Wszystkie ankiety"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
 msgid "Amenhotep"
-msgstr ""
+msgstr "Amenhotep"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_user_input_unique_token
@@ -974,7 +1029,7 @@ msgstr "Sztuka i kultura"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q1_sug1
 msgid "Arthur B. McDonald"
-msgstr ""
+msgstr "Arthur B. McDonald"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q4_sug2
@@ -1087,7 +1142,7 @@ msgstr "Obrazek tła"
 #: model:ir.model.fields,field_description:survey.field_survey_question__background_image_url
 #: model:ir.model.fields,field_description:survey.field_survey_survey__background_image_url
 msgid "Background Url"
-msgstr ""
+msgstr "URL tła"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
@@ -1464,7 +1519,7 @@ msgstr "Skopiowano !"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug3
 msgid "Cornaceae"
-msgstr ""
+msgstr "Rogowate"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_1
@@ -1743,7 +1798,7 @@ msgstr "Nie wstydź się, bądź dziki!"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q5_sug1
 msgid "Douglas Fir"
-msgstr ""
+msgstr "Jodła Douglas"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_4
@@ -2023,7 +2078,7 @@ msgstr "Pomóż uczestnikom dowiedzieć się, co napisać"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug3
 msgid "Hemiunu"
-msgstr ""
+msgstr "Hemiunu"
 
 #. module: survey
 #. odoo-javascript
@@ -2485,7 +2540,7 @@ msgstr "To belgijskie słowo oznaczające \"zarządzanie\""
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p5_q1_sug3
 msgid "Iznogoud"
-msgstr ""
+msgstr "Iznogoud"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug1
@@ -4253,7 +4308,7 @@ msgstr "Ankiety"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q1_sug3
 msgid "Takaaki Kajita"
-msgstr ""
+msgstr "Takaaki Kajita"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
@@ -4848,7 +4903,7 @@ msgstr "Używaj humoru i żartuj"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Use the breadcrumbs to quickly go back to the dashboard."
-msgstr ""
+msgstr "Użyj bułki tartej, aby szybko wrócić do konsoli."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description
@@ -5195,7 +5250,7 @@ msgstr "Zima"
 msgid ""
 "YYYY-MM-DD\n"
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
-msgstr ""
+msgstr "RRRR-MM-DD"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5203,6 +5258,8 @@ msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"RRRR-MM-DD hh:mm:ss\n"
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 
 #. module: survey
 #. odoo-python
@@ -5247,6 +5304,8 @@ msgid ""
 "You cannot delete questions from surveys \"%(survey_names)s\" while live "
 "sessions are in progress."
 msgstr ""
+"Nie można usuwać pytań z ankiet \"%(survey_names)s\" podczas trwania sesji "
+"na żywo."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -5350,12 +5409,12 @@ msgstr "prób"
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "close"
-msgstr "zamknięcia"
+msgstr "zamknij"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr ""
+msgstr "dropdown-item d-flex align-items-center justify-content-between"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

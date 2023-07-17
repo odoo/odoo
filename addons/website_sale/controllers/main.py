@@ -732,6 +732,7 @@ class WebsiteSale(http.Controller):
             'suggested_products': [],
         })
         if order:
+            values.update(order._get_website_sale_extra_values())
             order.order_line.filtered(lambda l: not l.product_id.active).unlink()
             values['suggested_products'] = order._cart_accessories()
             values.update(self._get_express_shop_payment_values(order))

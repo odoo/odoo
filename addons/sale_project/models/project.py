@@ -612,7 +612,12 @@ class ProjectTask(models.Model):
         'sale.order.line', 'Sales Order Item',
         copy=True, tracking=True, index='btree_not_null', recursive=True,
         compute='_compute_sale_line', store=True, readonly=False,
-        domain="[('company_id', '=', company_id), ('is_service', '=', True), ('order_partner_id', '=?', partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
+        domain="""[
+            ('company_id', '=', company_id),
+            '|', ('order_partner_id', 'child_of', partner_id if partner_id else []),
+                 ('order_partner_id', '=?', partner_id),
+            ('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])
+        ]""",
         help="Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
              "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
              "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually.")

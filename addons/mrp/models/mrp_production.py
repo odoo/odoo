@@ -529,6 +529,7 @@ class MrpProduction(models.Model):
             if production.state != 'draft':
                 continue
             workorders_list = [Command.link(wo.id) for wo in production.workorder_ids.filtered(lambda wo: not wo.operation_id)]
+            workorders_list += [Command.delete(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.operation_id and wo.operation_id.bom_id != production.bom_id)]
             if not production.bom_id and not production._origin.product_id:
                 production.workorder_ids = workorders_list
             if production.product_id != production._origin.product_id:
@@ -776,12 +777,24 @@ class MrpProduction(models.Model):
         for order in self:
             if any(move.cost_share < 0 for move in order.move_byproduct_ids):
                 raise ValidationError(_("By-products cost shares must be positive."))
-            if sum(order.move_byproduct_ids.mapped('cost_share')) > 100:
+            if sum(order.move_byproduct_ids.filtered(lambda m: m.state != 'cancel').mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a manufacturing order's by-products cannot exceed 100."))
 
     def write(self, vals):
         if 'move_byproduct_ids' in vals and 'move_finished_ids' not in vals:
             vals['move_finished_ids'] = vals.get('move_finished_ids', []) + vals['move_byproduct_ids']
+            del vals['move_byproduct_ids']
+        if 'bom_id' in vals and 'move_byproduct_ids' in vals and 'move_finished_ids' in vals:
+            # If byproducts are given, they take precedence over move_finished for byproduts definition
+            bom = self.env['mrp.bom'].browse(vals.get('bom_id'))
+            bom_product = bom.product_id or bom.product_tmpl_id.product_variant_id
+            joined_move_ids = vals.get('move_byproduct_ids', [])
+            for move_finished in vals.get('move_finished_ids', []):
+                # Remove CREATE lines from finished_ids as they do not reflect the form current state (nor the byproduct vals)
+                if move_finished[0] == Command.CREATE and move_finished[2].get('product_id') != bom_product.id:
+                    continue
+                joined_move_ids.append(move_finished)
+            vals['move_finished_ids'] = joined_move_ids
             del vals['move_byproduct_ids']
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
@@ -820,6 +833,8 @@ class MrpProduction(models.Model):
                     finished_move_lines.write({'lot_id': vals.get('lot_producing_id')})
                 if 'qty_producing' in vals:
                     finished_move_lines.write({'qty_done': vals.get('qty_producing')})
+            elif production.state not in ['draft', 'done', 'cancel'] and 'lot_producing_id' in vals:
+                production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id).move_line_ids.write({'lot_id': production.lot_producing_id.id})
             if self._has_workorders() and not production.workorder_ids.operation_id and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
                 new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
                 if not production.date_planned_finished or new_date_planned_start >= production.date_planned_finished:
@@ -1239,8 +1254,6 @@ class MrpProduction(models.Model):
     def action_generate_serial(self):
         self.ensure_one()
         self.lot_producing_id = self.env['stock.lot'].create(self._prepare_stock_lot_values())
-        if self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids:
-            self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids.lot_id = self.lot_producing_id
         if self.product_id.tracking == 'serial':
             self._set_qty_producing()
 
@@ -1718,15 +1731,30 @@ class MrpProduction(models.Model):
 
             move = moves and moves.pop(0)
             move_qty_to_reserve = move.product_qty
+
+            for index, (quantity, move_line, ml_vals) in enumerate(ml_by_move):
+                taken_qty = min(quantity, move_qty_to_reserve)
+                taken_qty_uom = min(product_uom._compute_quantity(taken_qty, move_line.product_uom_id), move_line.qty_done)
+                if float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
+                    continue
+                move_line.with_context(bypass_reservation_update=True).reserved_uom_qty = taken_qty_uom
+                move_qty_to_reserve -= taken_qty_uom
+                ml_by_move[index] = (quantity - taken_qty_uom, move_line, ml_vals)
+
+                if float_compare(move_qty_to_reserve, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                    assigned_moves.add(move.id)
+                    move = moves and moves.pop(0)
+                    move_qty_to_reserve = move and move.product_qty or 0
+
             for quantity, move_line, ml_vals in ml_by_move:
                 while float_compare(quantity, 0, precision_rounding=product_uom.rounding) > 0 and move:
                     # Do not create `stock.move.line` if there is no initial demand on `stock.move`
                     taken_qty = min(move_qty_to_reserve, quantity)
                     taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id)
                     if move == initial_move:
-                        move_line.with_context(bypass_reservation_update=True).reserved_uom_qty = taken_qty_uom
+                        move_line.with_context(bypass_reservation_update=True).reserved_uom_qty += taken_qty_uom
                         if set_consumed_qty:
-                            move_line.qty_done = taken_qty_uom
+                            move_line.qty_done += taken_qty_uom
                     elif not float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
                         new_ml_vals = dict(
                             ml_vals,

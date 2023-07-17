@@ -358,9 +358,10 @@ export class OdooEditor extends EventTarget {
         const parser = new DOMParser();
         for (const direction of ['row', 'column']) {
             // Create the containers and the menu toggler.
+            const iconClass = (direction === 'row') ? 'fa-ellipsis-v' : 'fa-ellipsis-h';
             const ui = parser.parseFromString(`<div class="o_table_ui o_${direction}_ui" style="visibility: hidden;">
                 <div>
-                    <span class="o_table_ui_menu_toggler fa fa-bars"></span>
+                    <span class="o_table_ui_menu_toggler fa ${iconClass}"></span>
                     <div class="o_table_ui_menu"></div>
                 </div>
             </div>`, 'text/html').body.firstElementChild;
@@ -964,7 +965,7 @@ export class OdooEditor extends EventTarget {
                             excludedClasses.push(klass);
                         }
                     }
-                    if (excludedClasses.every(c => this.options.renderingClasses.includes(c))) {
+                    if (excludedClasses.length && excludedClasses.every(c => this.options.renderingClasses.includes(c))) {
                         continue;
                     }
                 }
@@ -2625,13 +2626,13 @@ export class OdooEditor extends EventTarget {
 
         const side1 = isRow ? 'left' : 'top';
         ui.style[side1] = (isRow ? elementRect : tableRect)[props.xy[side1]] - togglerRect[props.size[side1]] + 'px';
-        wrappedUi.style[side1] = (togglerRect[props.size[side1]] / 2) + 'px';
-        ui.style[props.size[side1]] = togglerRect[props.size[side1]] + 'px';
+        ui.style[props.size[side1]] = !isRow && togglerRect[props.size[side1]] + 'px';
 
         const side2 = isRow ? 'top' : 'left';
-        ui.style[side2] = elementRect[props.xy[side2]] + 'px';
-        wrappedUi.style[side2] = (elementRect[props.size[side2]] / 2) - (togglerRect[props.size[side2]] / 2) + 'px';
-        ui.style[props.size[side2]] = elementRect[props.size[side2]] + 'px';
+        wrappedUi.style[props.size[side2]] = elementRect[props.size[side2]] + 'px';
+        ui.style[side2] = tableRect[props.xy[side2]] + 'px';
+        wrappedUi.style[side2] = elementRect[side2] - tableRect[side2] - 1 + 'px';
+        ui.style[props.size[side2]] = tableRect[props.size[side2]] + 'px';
     }
 
     // HISTORY
@@ -3302,8 +3303,7 @@ export class OdooEditor extends EventTarget {
                     selection &&
                     selection.anchorNode &&
                     !closestElement(selection.anchorNode).closest('a') &&
-                    selection.anchorNode.nodeType === Node.TEXT_NODE &&
-                    !this.powerbox.isOpen
+                    selection.anchorNode.nodeType === Node.TEXT_NODE
                 ) {
                     const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
                     const textNodeSplitted = textSliced.split(/\s/);
@@ -3647,6 +3647,9 @@ export class OdooEditor extends EventTarget {
             const selection = this.document.getSelection();
             // Find previous character.
             let { focusNode, focusOffset } = selection;
+            if (!focusNode) {
+                return;
+            }
             let previousCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
             if (!previousCharacter) {
                 focusNode = previousLeaf(focusNode);
@@ -3669,6 +3672,9 @@ export class OdooEditor extends EventTarget {
             const selection = this.document.getSelection();
             // Find next character.
             let { focusNode, focusOffset } = selection;
+            if (!focusNode) {
+                return;
+            }
             let nextCharacter = focusNode.textContent[focusOffset];
             if (!nextCharacter) {
                 focusNode = nextLeaf(focusNode);
@@ -4577,7 +4583,7 @@ export class OdooEditor extends EventTarget {
                         ? splitAroundUrl[i]
                         : 'https://' + splitAroundUrl[i];
                     // Even indexes will always be plain text, and odd indexes will always be URL.
-                    // only allow images emebed inside an existing link. No other url or video embed.
+                    // A url cannot be transformed inside an existing link.
                     if (i % 2 && !selectionIsInsideALink) {
                         this._applyCommand('insert', this._createLink(splitAroundUrl[i], url));
                     } else if (splitAroundUrl[i] !== '') {
@@ -4586,7 +4592,14 @@ export class OdooEditor extends EventTarget {
                         for (const textFragment of textFragments) {
                             this._applyCommand('insert', textFragment);
                             if (textIndex < textFragments.length) {
-                                this._applyCommand('oShiftEnter');
+                                // Break line by inserting new paragraph and
+                                // remove current paragraph's bottom margin.
+                                const p = closestElement(sel.anchorNode, 'p');
+                                if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
+                                    this._applyCommand('oShiftEnter');
+                                } else if (p) {
+                                    p.style.marginBottom = '0px';
+                                }
                             }
                             textIndex++;
                         }

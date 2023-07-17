@@ -11,6 +11,7 @@
 # Éder Brito <britoederr@gmail.com>, 2023
 # Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -744,7 +745,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "A new task will be created on the following dates:"
-msgstr ""
+msgstr "Uma nova tarefa será criada nas seguintes datas:"
 
 #. module: project
 #. odoo-python
@@ -1022,7 +1023,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Ancestor Task"
-msgstr ""
+msgstr "Tarefa Ancestral"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -1064,6 +1065,8 @@ msgstr "Arquivado"
 #, python-format
 msgid "Archived tasks cannot be recurring. Please unarchive the task first."
 msgstr ""
+"As tarefas arquivadas não podem ser recorrentes. Desarquive a tarefa "
+"primeiro."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1176,6 +1179,8 @@ msgid ""
 "At each stage, employees can block tasks or mark them as ready for the next step.\n"
 "                                    You can customize here the labels for each state."
 msgstr ""
+"Em cada etapa, os funcionários podem bloquear tarefas ou marcá-las como prontas para a próxima etapa.\n"
+"                                    Você pode customizar aqui os rótulos para cada estado."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1219,6 +1224,9 @@ msgid ""
 " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Modifique automaticamente o estado do kanban quando o cliente responder ao feedback para esta etapa.\n"
+"* Um bom feedback do cliente atualizará o estado do kanban para 'pronto para o novo estágio' (marca verde).\n"
+"* Feedback neutro ou ruim definirá o estado do kanban como 'bloqueado' (marca vermelha).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1425,13 +1433,13 @@ msgstr "Fechado"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Closed Last 30 Days"
-msgstr ""
+msgstr "Fechado últimos 30 dias"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Closed Last 7 Days"
-msgstr ""
+msgstr "Fechado últimos 7 dias"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -1582,7 +1590,7 @@ msgstr "Contato"
 #: code:addons/project/static/src/components/project_stop_recurrence_confirmation_dialog/project_stop_recurrence_confirmation_dialog.xml:0
 #, python-format
 msgid "Continue Recurrence"
-msgstr ""
+msgstr "Continuar recorrência"
 
 #. module: project
 #. odoo-javascript
@@ -1786,7 +1794,7 @@ msgstr "Avaliação do Cliente"
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr "Endereço do Portal do Consumidor"
+msgstr "URL do portal do cliente"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -2660,11 +2668,9 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task_type__fold
 msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
-"your tasks. Tasks in a folded stage are considered as closed."
+"your tasks. Tasks in a folded stage are considered as closed (not applicable"
+" to personal stages)."
 msgstr ""
-"Se ativado, esse estágio será exibido como dobrado na visualização Kanban de"
-" suas tarefas. As tarefas em um estágio dobrado são consideradas como "
-"fechadas."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2994,7 +3000,7 @@ msgid ""
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
 "Acompanhe o progresso de suas tarefas, desde a criação até a conclusão.<br>\n"
-"                    Colabore de forma eficiente por meio de bate-papo em tempo real ou por e-mail."
+"                    Colabore de forma eficiente por meio de chat em tempo real ou por e-mail."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -3003,7 +3009,7 @@ msgid ""
 "                Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
 "Acompanhe o progresso de suas tarefas, desde a criação até a conclusão.<br>\n"
-"                Colabore de forma eficiente por meio de bate-papo em tempo real ou por e-mail."
+"                Colabore de forma eficiente por meio de chat em tempo real ou por e-mail."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -3385,7 +3391,7 @@ msgstr "Prazo da Minha Atividade"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 msgid "My Favorite Projects"
-msgstr ""
+msgstr "Meus Projetos Favoritos"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3395,7 +3401,7 @@ msgstr "Meus Favoritos"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 msgid "My Private Tasks"
-msgstr ""
+msgstr "Minhas Tarefas Privadas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3674,12 +3680,12 @@ msgstr "Nenhum"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Not Blocked"
-msgstr ""
+msgstr "Não Bloqueado"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Not Blocking"
-msgstr ""
+msgstr "Não bloqueando"
 
 #. module: project
 #. odoo-python
@@ -4247,7 +4253,7 @@ msgstr "Assistente de Exclusão de Estágio de Projeto"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
 #: model:ir.ui.menu,name:project.menu_project_config_project_stage
 msgid "Project Stages"
-msgstr "Project Stages"
+msgstr "Estágios do Projeto"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -4988,7 +4994,7 @@ msgstr "Compartilhar projeto"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Readonly"
-msgstr ""
+msgstr "Compartilhar Somente Leitura"
 
 #. module: project
 #. odoo-python

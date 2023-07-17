@@ -1612,7 +1612,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Permettez aux clients de votre eCommerce de créer et sauvegarder des collections personnalisées de produits qu'ils veulent acheter.\n"
+"Permettez aux clients de votre eCommerce de créer et d'enregistrer des collections personnalisées de produits qu'ils veulent acheter.\n"
 "    "
 
 #. module: base
@@ -1789,7 +1789,7 @@ msgstr ""
 "\n"
 "Permet le calcul du coût d'un produit basé sur sa Nomenclature, le coût de ses composants et les opérations du poste de travail.\n"
 "Ajoute un bouton sur le produit même et une action sur la vue de liste des produits.\n"
-"Si la valorisation automatique de l'inventaire est activée, les écritures comptables nécessaires seront créées.\n"
+"Si la valorisation automatique des stocks est activée, les écritures comptables nécessaires seront créées.\n"
 "\n"
 
 #. module: base
@@ -2604,9 +2604,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Échange de données électroniques\n"
+"Échange de données informatisé\n"
 "=======================================\n"
-"L'EDI est l'échange électronique d'informations commerciales utilisant un format standardisé.\n"
+"L'EDI est l'échange informatisé d'informations commerciales utilisant un format standardisé.\n"
 "\n"
 "Il s'agit du module de base pour l'importation et l'exportation de factures dans différents formats EDI, et la\n"
 " transmission desdits documents aux différentes parties impliquées dans l'échange (autre société,\n"
@@ -6119,7 +6119,7 @@ msgstr ""
 "       toujours disponible, mais ne détecte pas les numéros qui ne sont peut-être pas \n"
 "       alloués ou plus valides.\n"
 "\n"
-"    * Lorsque l'option \"Validation du numéro TVA par VIES\" est cochée (dans la configuration  \n"
+"    * Lorsque l'option \"Vérification du numéro TVA par VIES\" est cochée (dans la configuration  \n"
 "       de la société de l'utilisateur), le numéro de TVA est soumis en ligne à la base de données \n"
 "       européenne VIES, laquelle vérifiera si le numéro est réellement valide et actuellement  \n"
 "       alloué à une entreprise européenne. Ceci est un peu plus lent qu'une simple vérification  \n"
@@ -16174,7 +16174,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Paramètre invalide pour 'group by'"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Format JSON invalide dans le champ Valeur par défaut."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -22263,7 +22268,7 @@ msgstr "Paiement – Compte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment_invoice_online_payment_patch
 msgid "Payment - Account / Invoice Online Payment Patch"
-msgstr "Paiement - Patch de paiement en ligne de compte / facture"
+msgstr "Paiement - Compte / Patch de paiement des factures en ligne"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
@@ -24239,12 +24244,12 @@ msgstr "Arabie saoudite - Point de vente"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Save"
-msgstr "Sauvegarder"
+msgstr "Enregistrer"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
 msgid "Save as Attachment Prefix"
-msgstr "Sauvegarder comme préfixe de pièce jointe"
+msgstr "Enregistrer comme préfixe de pièce jointe"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes
@@ -24332,7 +24337,7 @@ msgstr "Rechercher un partenaire"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 msgid "Search Partner Category"
-msgstr "Rechercher une catégorie de partenaire"
+msgstr "Rechercher une catégorie de partenaires"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
@@ -26822,7 +26827,7 @@ msgid ""
 "with the object and time variables."
 msgstr ""
 "Ceci est le nom de fichier de la pièce jointe qui sera utilisé pour archiver"
-" le résultat de l'impression. Laissez vide pour ne pas sauvegarder les "
+" le résultat de l'impression. Laissez vide pour ne pas enregistrer les "
 "rapports imprimés. Vous pouvez utiliser une expression python avec les "
 "variables object et time."
 
@@ -27531,6 +27536,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr "Impossible d'importer le champ de type '%s'  "
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -27784,7 +27796,7 @@ msgstr "Mettre à jour"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
 msgid "Update Apps List"
-msgstr "Mise à jour de la liste des Applications"
+msgstr "Mettre à jour la liste des Apps"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
@@ -28963,6 +28975,17 @@ msgstr ""
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "Vous ne pouvez pas créer d'étiquettes récursives."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+"La suppression des utilisateurs du modèle n'est pas autorisée. La "
+"suppression de ce profil compromettra des fonctionnalités essentielles."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

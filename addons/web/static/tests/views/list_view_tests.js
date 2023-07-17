@@ -263,8 +263,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(
             target,
-            "thead th:nth(2) .text-end",
-            "header cells of integer fields should be right aligned"
+            "thead th:nth(2) .o_list_number_th",
+            "header cells of integer fields should have o_list_number_th class"
         );
         assert.strictEqual(
             $(target).find("tbody tr:first td:nth(2)").css("text-align"),
@@ -7584,6 +7584,31 @@ QUnit.module("Views", (hooks) => {
             window.getSelection().toString(),
             "1",
             "the selection shouldn't be changed"
+        );
+    });
+
+    QUnit.test("click on a button cell in a list view", async (assert) => {
+        serverData.models.foo.records[0].foo = "bar";
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom" limit="1">
+                    <field name="foo"/>
+                    <button name="action_do_something" type="object" string="Action"/>
+                </tree>`,
+        });
+
+        // Need to set the line in edition. 
+        await click(target, "td[name=foo]");
+        assert.strictEqual(window.getSelection().toString(), "bar");
+
+        await click(target.querySelector(".o_data_cell.o_list_button"));
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "bar",
+            "Focus should have returned to the editable cell without throwing an error"
         );
     });
 
@@ -17261,6 +17286,33 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("list view: prevent record selection when editable list in edit mode", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo" />
+                </tree>`,
+        });
+
+        //  When we try to select new record in edit mode
+        await click(target.querySelector('.o_list_buttons .o_list_button_add'));
+        await click(target.querySelector('.o_data_row .o_list_record_selector'));
+        assert.strictEqual(
+            target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]').checked,
+            false
+        );
+
+        //  When we try to select all records in edit mode
+        await click(target.querySelector('th.o_list_record_selector.o_list_controller'));
+        assert.strictEqual(
+            target.querySelector('.o_list_controller input[type="checkbox"]').checked,
+            false
+        );
+    });
+
     QUnit.test("context keys not passed down the stack and not to fields", async (assert) => {
         patchWithCleanup(AutoComplete, {
             timeout: 0,
@@ -17379,4 +17431,39 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(input, document.activeElement);
         assert.strictEqual(input.value, 'Value 1');
     });
+    QUnit.test("monetary field display for rtl languages", async function (assert){
+        patchWithCleanup(localization, {
+            direction: "rtl",
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/><field name="amount_currency"/></tree>',
+        });
+
+        assert.containsOnce(
+            target,
+            "thead th:nth(2) .o_list_number_th",
+            "header cells of monetary fields should have o_list_number_th class"
+        );
+        assert.strictEqual(
+            $(target).find("thead th:nth(2)").css("text-align"),
+            "right",
+            "header cells of monetary fields should be right alined"
+        );
+
+        assert.strictEqual(
+            $(target).find("tbody tr:first td:nth(2)").css("text-align"),
+            "right",
+            "Monetary cells should be right alined"
+        );
+
+        assert.strictEqual(
+            $(target).find("tbody tr:first td:nth(2)").css("direction"),
+            "ltr",
+            "Monetary cells should have ltr direction"
+        );
+    })
 });

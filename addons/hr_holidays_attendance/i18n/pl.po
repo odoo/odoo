@@ -8,6 +8,7 @@
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
 # Cezary Drożak, 2022
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2023
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
@@ -28,7 +29,7 @@ msgstr ""
 #: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
 #, python-format
 msgid "%s hours available"
-msgstr ""
+msgstr "%s dostępnych godzin"
 
 #. module: hr_holidays_attendance
 #. openerp-web
@@ -45,7 +46,7 @@ msgstr "Firmy"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__hr_attendance_overtime
 msgid "Count Extra Hours"
-msgstr ""
+msgstr "Liczenie dodatkowych godzin"
 
 #. module: hr_holidays_attendance
 #. openerp-web
@@ -59,7 +60,7 @@ msgstr "Dni"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
-msgstr ""
+msgstr "Odliczenie dodatkowych godzin"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -71,13 +72,13 @@ msgstr "Odrzuć"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
 msgid "Extra Hours"
-msgstr ""
+msgstr "Dodatkowe godziny"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
 msgid "Extra Hours Available"
-msgstr ""
+msgstr "Dostępne dodatkowe godziny"
 
 #. module: hr_holidays_attendance
 #. openerp-web
@@ -89,13 +90,13 @@ msgstr "Godziny"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__hr_attendance_overtime
 msgid "Hr Attendance Overtime"
-msgstr ""
+msgstr "Godziny obecności w godzinach nadliczbowych"
 
 #. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
-msgstr ""
+msgstr "Nowy wniosek o alokację"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
@@ -103,17 +104,19 @@ msgid ""
 "Once a time off of this type is approved, extra hours in attendances will be"
 " deducted."
 msgstr ""
+"Po akceptacji tego typu dni wolnych, dodatkowe godziny obecności zostaną "
+"odliczone."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
 msgid "Overtime Deductible"
-msgstr ""
+msgstr "Odliczenie za nadgodziny"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
 msgid "Request Overtime"
-msgstr ""
+msgstr "Wniosek o nadgodziny"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -126,12 +129,16 @@ msgstr "Zapisz"
 msgid ""
 "The employee does not have enough extra hours to extend this allocation."
 msgstr ""
+"Pracownik nie ma wystarczającej liczby dodatkowych godzin, aby przedłużyć tę"
+" alokację."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
 msgstr ""
+"Pracownik nie ma wystarczającej liczby dodatkowych godzin, aby przedłużyć "
+"ten urlop."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
@@ -139,6 +146,8 @@ msgstr ""
 msgid ""
 "The employee does not have enough extra hours to request this allocation."
 msgstr ""
+"Pracownik nie ma wystarczającej liczby dodatkowych godzin, aby ubiegać się o"
+" tę alokację."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
@@ -146,6 +155,8 @@ msgstr ""
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
 msgstr ""
+"Pracownik nie ma wystarczającej liczby dodatkowych godzin, aby złożyć "
+"wniosek o ten urlop."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
@@ -153,6 +164,8 @@ msgstr ""
 msgid ""
 "The employee does not have enough overtime hours to request this leave."
 msgstr ""
+"Pracownik nie ma wystarczającej liczby godzin nadliczbowych, aby złożyć "
+"wniosek o ten urlop."
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -186,3 +199,5 @@ msgstr "Użytkownik"
 #, python-format
 msgid "You do not have enough extra hours to request this leave"
 msgstr ""
+"Nie masz wystarczającej liczby dodatkowych godzin, aby wnioskować o ten "
+"urlop"

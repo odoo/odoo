@@ -6,6 +6,8 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
     const { identifyError } = require('point_of_sale.utils');
     const { ConnectionLostError, ConnectionAbortedError} = require('@web/core/network/rpc_service')
     const { useState } = owl;
+    const { useValidateCashInput } = require('point_of_sale.custom_hooks');
+    const { parse } = require('web.field_utils');
 
     class ClosePosPopup extends AbstractAwaitablePopup {
         setup() {
@@ -19,6 +21,14 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 displayMoneyDetailsPopup: false,
             });
             Object.assign(this.state, this.props.info.state);
+            useValidateCashInput("closingCashInput");
+            if (this.otherPaymentMethods && this.otherPaymentMethods.length > 0) {
+                this.otherPaymentMethods.forEach(pm => {
+                    if (this._getShowDiff(pm)) {
+                        useValidateCashInput("closingCashInput_" + pm.id, this.state.payments[pm.id].counted);
+                    }
+                })
+            }
         }
         //@override
         async confirm() {
@@ -66,7 +76,8 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 },
             });
         }
-        handleInputChange(paymentId) {
+        handleInputChange(paymentId, event) {
+            if (event.target.classList.contains('invalid-cash-input')) return;
             let expectedAmount;
             if (paymentId === this.defaultCashDetails.id) {
                 this.manualInputCashCount = true;
@@ -75,6 +86,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             } else {
                 expectedAmount = this.otherPaymentMethods.find(pm => paymentId === pm.id).amount;
             }
+            this.state.payments[paymentId].counted = parse.float(event.target.value);
             this.state.payments[paymentId].difference =
                 this.env.pos.round_decimals_currency(this.state.payments[paymentId].counted - expectedAmount);
         }

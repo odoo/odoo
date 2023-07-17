@@ -126,7 +126,7 @@ class AccountReport(models.Model):
             else:
                 report[field_name] = default_value
 
-    @api.depends('root_report_id', 'country_id')
+    @api.depends('root_report_id')
     def _compute_default_availability_condition(self):
         for report in self:
             if report.root_report_id:
@@ -139,6 +139,21 @@ class AccountReport(models.Model):
         for report in self:
             if report.root_report_id.root_report_id:
                 raise ValidationError(_("Only a report without a root report of its own can be selected as root report."))
+
+    @api.constrains('line_ids')
+    def _validate_parent_sequence(self):
+        previous_lines = self.env['account.report.line']
+        for line in self.line_ids:
+            if line.parent_id and line.parent_id not in previous_lines:
+                raise ValidationError(
+                    _('Line "%s" defines line "%s" as its parent, but appears before it in the report. '
+                      'The parent must always come first.', line.name, line.parent_id.name))
+            previous_lines |= line
+
+    @api.onchange('availability_condition')
+    def _onchange_availability_condition(self):
+        if self.availability_condition != 'country':
+            self.country_id = None
 
     def write(self, vals):
         # Overridden so that changing the country of a report also creates new tax tags if necessary, or updates the country
@@ -279,6 +294,11 @@ class AccountReportLine(models.Model):
                     "Groupby feature isn't supported by aggregation engine. Please remove the groupby value on '%s'",
                     expression.report_line_id.display_name,
                 ))
+
+    @api.constrains('parent_id')
+    def _check_parent_line(self):
+        for line in self.filtered(lambda x: x.parent_id == x):
+            raise ValidationError(_('Line "%s" defines itself as its parent.', line.name))
 
     def _copy_hierarchy(self, copied_report, parent=None, code_mapping=None):
         ''' Copy the whole hierarchy from this line by copying each line children recursively and adapting the
@@ -462,6 +482,13 @@ class AccountReportExpression(models.Model):
         if 'formula' in vals and isinstance(vals['formula'], str):
             vals['formula'] = re.sub(r'\s+', ' ', vals['formula'].strip())
 
+    def _create_tax_tags(self, tag_name, country):
+        existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
+        if len(existing_tags) < 2:
+            # We can have only one tag in case we archived it and deleted its unused complement sign
+            tag_vals = self._get_tags_create_vals(tag_name, country.id, existing_tag=existing_tags)
+            self.env['account.account.tag'].create(tag_vals)
+
     @api.model_create_multi
     def create(self, vals_list):
         # Overridden so that we create the corresponding account.account.tag objects when instantiating an expression
@@ -475,20 +502,22 @@ class AccountReportExpression(models.Model):
             tag_name = expression.formula if expression.engine == 'tax_tags' else None
             if tag_name:
                 country = expression.report_line_id.report_id.country_id
-                existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
-
-                if len(existing_tags) < 2:
-                    # We can have only one tag in case we archived it and deleted its unused complement sign
-                    tag_vals = self._get_tags_create_vals(tag_name, country.id, existing_tag=existing_tags)
-                    self.env['account.account.tag'].create(tag_vals)
+                self._create_tax_tags(tag_name, country)
 
         return result
 
     def write(self, vals):
-        if 'formula' not in vals:
-            return super().write(vals)
 
         self._strip_formula(vals)
+
+        if vals.get('engine') == 'tax_tags':
+            tag_name = vals.get('formula') or self.formula
+            country = self.report_line_id.report_id.country_id
+            self._create_tax_tags(tag_name, country)
+            return super().write(vals)
+
+        if 'formula' not in vals:
+            return super().write(vals)
 
         tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])

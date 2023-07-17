@@ -3,8 +3,8 @@
 # 	* hr_attendance
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2022
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr "Die Auscheck-Zeit kann nicht früher sein als die Eincheck-Zeit."
+msgstr "Die „Abmelden“-Zeit kann nicht vor der „Anmelden“-Zeit liegen."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -114,7 +114,7 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span> Minutes</span>"
-msgstr "<span>Minuten</span>"
+msgstr "<span> Minuten</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -144,7 +144,7 @@ msgid ""
 "                To create employees go to the Employees menu."
 msgstr ""
 "Fügen Sie einige Mitarbeiter hinzu, um hier einen Mitarbeiter auswählen und seinen Anmeldung / Abmeldung durchführen zu können.\n"
-" Um Mitarbeiter anzulegen, gehen Sie in das Menü Mitarbeiter."
+"                Um Mitarbeiter anzulegen, gehen Sie in das „Mitarbeiter“-Menü."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__adjustment
@@ -163,7 +163,7 @@ msgid ""
 "counted, in benefit of the company"
 msgstr ""
 "Erlauben Sie eine Zeitspanne (um die Arbeitszeit herum), in der Überstunden "
-"nicht angerechnet werden, zugunsten des Unternehmens"
+"zugunsten des Unternehmens nicht angerechnet werden."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -171,8 +171,8 @@ msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "deducted, in benefit of the employee"
 msgstr ""
-"Einräumung einer Zeitspanne (um die Arbeitszeit herum), in der zugunsten des"
-" Arbeitnehmers keine Überstunden abgezogen werden"
+"Erlauben Sie eine Zeitspanne (um die Arbeitszeit herum), in der Überstunden "
+"zugunsten des Mitarbeiters nicht abgezogen werden."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -184,7 +184,7 @@ msgstr "Anzahl Überstunden"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "An apple a day keeps the doctor away"
-msgstr "Wer viel Äpfel isst, bleibt gesund."
+msgstr "Ein Apfel am Tag, mit dem Doktor kein Plag"
 
 #. module: hr_attendance
 #. openerp-web
@@ -205,7 +205,7 @@ msgstr "Anwesenheit"
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action_filtered
 msgid "Attendance Analysis"
-msgstr "Statistik Anwesenheit"
+msgstr "Anwesenheitsanalyse"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
@@ -261,7 +261,7 @@ msgstr "Verfügbar"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
 msgid "Back Camera"
-msgstr "Hintere Kamera"
+msgstr "Rückkamera"
 
 #. module: hr_attendance
 #. openerp-web
@@ -293,8 +293,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
-"Es kann kein neuer Anwesenheitsdatensatz für %(empl_name)s angelegt werden. "
-"Der Mitarbeiter ist seit %(datetime)s nicht abgemeldet"
+"Es kann kein neuer Anwesenheitseintrag für %(empl_name)s angelegt werden. "
+"Der Mitarbeiter ist seit %(datetime)s nicht abgemeldet."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -304,8 +304,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
-"Es kann kein neuer Anwesenheitsdatensatz für %(empl_name)s angelegt werden. "
-"Der Mitarbeiter ist seit %(datetime)s angemeldet"
+"Es kann kein neuer Anwesenheitseintrag für %(empl_name)s angelegt werden. "
+"Der Mitarbeiter ist seit %(datetime)s angemeldet."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -315,9 +315,9 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
-"Kann %(empl_name)s nicht auschecken, weil kein entsprechender Checkin "
-"vorhanden ist. Die Anwesenheiten sind wahrscheinlich manuell geändert "
-"worden."
+"Abmeldung von %(empl_name)s kann nicht durchgeführt werden, weil keine "
+"entsprechende Anmeldung vorhanden ist. Die Anwesenheiten sind wahrscheinlich"
+" manuell geändert worden."
 
 #. module: hr_attendance
 #. openerp-web
@@ -334,7 +334,7 @@ msgstr "Anmelden"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check In"
-msgstr "Anmelden"
+msgstr "Anmeldung"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
@@ -354,12 +354,12 @@ msgstr "Abmelden"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check Out"
-msgstr "Abmelden"
+msgstr "Abmeldung"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out in Kiosk Mode"
-msgstr "An-/Abmeldung im Kiosk-Modus"
+msgstr "An-/Abmeldung im Kioskmodus"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
@@ -407,13 +407,13 @@ msgstr "Unternehmen"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Company Logo"
-msgstr "Unternehmens Logo"
+msgstr "Unternehmenslogo"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Compare attendance with working hours set on employee."
 msgstr ""
-"Vergleiche Anwesenheiten mit den für den Mitarbeiter festgelegten "
+"Vergleichen Sie Anwesenheiten mit den für den Mitarbeiter festgelegten "
 "Arbeitszeiten."
 
 #. module: hr_attendance
@@ -430,12 +430,12 @@ msgstr "Konfiguration"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
 msgid "Count Extra Hours"
-msgstr "Überstunden zählen"
+msgstr "Anzahl Überstunden"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Count of Extra Hours"
-msgstr "Summe Überstunden"
+msgstr "Anzahl der Überstunden"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -471,12 +471,15 @@ msgstr "Tag"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Define the camera used for the barcode scan."
-msgstr "Bestimmen Sie die zum Barcodescannen verwendete Kamera."
+msgstr ""
+"Bestimmen Sie die Kamera, die zum Scannen von Barcodes verwendet werden "
+"soll."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Define the way the user will be identified by the application."
-msgstr "Bestimmen Sie, wei der Benutzer von der Anwendung identifiziert wird."
+msgstr ""
+"Legen Sie fest, wie der Benutzer von der Anwendung identifiziert wird."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
@@ -511,7 +514,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
-msgstr "Early to bed and early to rise, makes a man healthy, wealthy and wise"
+msgstr "Morgenstund hat Gold im Mund"
 
 #. module: hr_attendance
 #. openerp-web
@@ -536,18 +539,18 @@ msgstr "Mitarbeiter"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
 msgid "Employee PIN"
-msgstr "Mitarbeiter PIN"
+msgstr "Mitarbeiter-PIN"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Employee attendances"
-msgstr "Mitarbeiter Anwesenheit"
+msgstr "Mitarbeiteranwesenheiten"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
 msgid "Employees"
-msgstr "Personal"
+msgstr "Mitarbeiter"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
@@ -559,7 +562,7 @@ msgstr "PIN-Benutzung aktivieren"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Error: could not find corresponding employee."
-msgstr "Fehler: Konnte entsprechenden Mitarbeiter nicht finden."
+msgstr "Fehler: Entsprechenden Mitarbeiter konnte nicht gefunden werden."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
@@ -578,7 +581,7 @@ msgstr "Überstunden (Real)"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
 msgid "Extra Hours Starting Date"
-msgstr "Beginn Überstunden"
+msgstr "Startdatum der Überstunden"
 
 #. module: hr_attendance
 #. openerp-web
@@ -609,7 +612,7 @@ msgstr "Frontkamera"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Glad to have you back, it's been a while!"
-msgstr "Wir sind froh Sie zurück zu haben. Es ist eine Weile her!"
+msgstr "Wir sind froh, dass Sie wieder da sind. Es ist eine Weile her!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -667,35 +670,35 @@ msgstr "Gruppieren nach"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 msgid "HR Attendance Search"
-msgstr "HR Anwesenheitssuche"
+msgstr "HR-Anwesenheitssuche"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good afternoon"
-msgstr "Einen schönen Nachmittag"
+msgstr "Einen schönen Nachmittag!"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good day!"
-msgstr "Einen schönen Tag"
+msgstr "Einen schönen Tag!"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good evening"
-msgstr "Einen schönen Abend"
+msgstr "Einen schönen Abend!"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a nice lunch!"
-msgstr "Haben Sie ein schönes Mittagessen!"
+msgstr "Guten Appetit!"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -713,7 +716,7 @@ msgstr "Stunden letzten Monat"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
 msgid "Hours Last Month Display"
-msgstr "Anzeige Stunden letzten Monat"
+msgstr "Anzeige der Stunden des letzten Monats"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
@@ -724,12 +727,12 @@ msgstr "Stunden heute"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
 msgid "Hours Worked"
-msgstr "Geleistete Stunden"
+msgstr "Gearbeitete Stunden"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Hr Attendance Search"
-msgstr "Suche Anwesenheitszeiten"
+msgstr "HR-Anwesenheitssuche"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
@@ -751,7 +754,7 @@ msgstr "Manuell identifizieren"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
-msgstr "Es lohnt sich, eine lohnende Aufgabe gut zu machen!"
+msgstr "Was du auch tust, tue es richtig.!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -808,12 +811,12 @@ msgstr "Nachricht"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
-msgstr "Meine Anwesenheit"
+msgstr "Meine Anwesenheiten"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
-msgstr "Nicht abgemeldet"
+msgstr "Keine Abmeldung"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -824,13 +827,13 @@ msgstr "Keine Anwesenheitseinträge gefunden"
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "No attendance records to display"
-msgstr "Keine Anwesenheitseinträge zum anzeigen"
+msgstr "Keine Anwesenheitseinträge anzuzeigen"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "No employee corresponding to Badge ID '%(barcode)s.'"
-msgstr "Der Ausweis-ID '%(barcode)s.' ist kein Mitarbeiter zugeordnet."
+msgstr "Der Ausweis-ID „%(barcode)s“ ist kein Mitarbeiter zugeordnet."
 
 #. module: hr_attendance
 #. openerp-web
@@ -842,26 +845,26 @@ msgstr "OK"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer : Manage all attendances"
-msgstr "Büroangestellter: Alle Anwesenheiten verwalten"
+msgstr "Sachbearbeiter: Alle Anwesenheiten verwalten"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
 msgid "Overtime"
-msgstr "Überzogen"
+msgstr "Überstunden"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please contact your administrator."
-msgstr "Bitten kontaktieren Sie Ihren Administrator,"
+msgstr "Bitte kontaktieren Sie Ihren Administrator."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please enter your PIN to"
-msgstr "Bitte geben Sie Ihre PIN ein"
+msgstr "Bitte geben Sie Ihre PIN ein zum"
 
 #. module: hr_attendance
 #. openerp-web
@@ -869,7 +872,7 @@ msgstr "Bitte geben Sie Ihre PIN ein"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please return to the main menu."
-msgstr "Bitte zum Hauptmenü zurückgehen."
+msgstr "Bitte gehen Sie zum Hauptmenü zurück."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_public
@@ -891,13 +894,13 @@ msgstr "Ausweis scannen"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__scanner
 msgid "Scanner"
-msgstr "Lesegerät"
+msgstr "Scanner"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
 msgstr ""
-"Legen Sie PIN-Codes im Mitarbeiter-Detailformular (im Tab für HR-"
+"Legen Sie PIN-Codes im Mitarbeiter-Detailformular (im Reiter für HR-"
 "Einstellungen) fest."
 
 #. module: hr_attendance
@@ -916,7 +919,7 @@ msgstr "Abmelden"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Start from"
-msgstr "Starte von"
+msgstr "Start ab"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -928,8 +931,7 @@ msgstr "Eine solche Gruppierung ist nicht zulässig."
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 msgid "The attendance records of your employees will be displayed here."
-msgstr ""
-"Hier werden die Anwesenheitsaufzeichnungen Ihrer Mitarbeiter angezeigt."
+msgstr "Hier werden die Anwesenheitseinträge Ihrer Mitarbeiter angezeigt."
 
 #. module: hr_attendance
 #. openerp-web
@@ -951,8 +953,8 @@ msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
 "him to manage his own attendance."
 msgstr ""
-"Der Benutzer bekommt Zugang zu dem Personal Anwesenheit Menu, welche es ihm "
-"ermöglicht seine eigene an Anwesenheit zu verwalten."
+"Der Benutzer bekommt Zugang zum Anwesenheitsmenü des Personalwesens, welche "
+"es ihm ermöglicht seine eigene Anwesenheit zu verwalten."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -960,7 +962,8 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
-"Der Benutzer muss diese PIN eingeben, um manuell an- und abmelden zu können."
+"Der Benutzer muss diese PIN eingeben, um sich manuell an- und abmelden zu "
+"können."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -970,8 +973,8 @@ msgid ""
 "Officer or above in the Attendance app. Please contact your administrator."
 msgstr ""
 "Um den Kioskmodus ohne Pincode zu aktivieren, müssen Sie in der "
-"Anwesenheits-App das Zugriffsrecht eines Officers oder höher haben. Bitte "
-"wenden Sie sich an Ihren Administrator."
+"Anwesenheitsapp das Zugriffsrecht eines Sachbearbeiters oder höher haben. "
+"Bitte wenden Sie sich an Ihren Administrator."
 
 #. module: hr_attendance
 #. openerp-web
@@ -979,7 +982,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Today's work hours:"
-msgstr "Heutige Arbeitsstunden"
+msgstr "Heutige Arbeitsstunden:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
@@ -993,7 +996,7 @@ msgstr "Toleranzzeit zu Gunsten des Unternehmens"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Tolerance Time In Favor Of Employee"
-msgstr "Toleranzzeit zu Gunsten Beschäftigte"
+msgstr "Toleranzzeit zu Gunsten des Mitarbeiters"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
@@ -1084,7 +1087,7 @@ msgstr "Arbeitsstunden letzten Monat"
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "Wrong PIN"
-msgstr "Falscher PIN"
+msgstr "Falsche PIN"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -1095,7 +1098,7 @@ msgstr "Anwesenheiten können nicht kopiert werden."
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "Your attendance records will be displayed here."
-msgstr "Hier werden Ihre Anwesenheitszeiten angezeigt."
+msgstr "Hier werden Ihre Anwesenheitseinträge angezeigt."
 
 #. module: hr_attendance
 #. openerp-web

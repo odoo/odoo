@@ -3,6 +3,7 @@ import functools
 import hashlib
 import json
 import logging
+import os
 import psycopg2
 import random
 import socket
@@ -14,6 +15,7 @@ from collections import defaultdict, deque
 from contextlib import closing, suppress
 from enum import IntEnum
 from psycopg2.pool import PoolError
+from urllib.parse import urlparse
 from weakref import WeakSet
 
 from werkzeug.local import LocalStack
@@ -22,7 +24,7 @@ from werkzeug.exceptions import BadRequest, HTTPException
 import odoo
 from odoo import api
 from .models.bus import dispatch
-from odoo.http import root, Request, Response, SessionExpiredException
+from odoo.http import root, Request, Response, SessionExpiredException, get_default_session
 from odoo.modules.registry import Registry
 from odoo.service import model as service_model
 from odoo.service.server import CommonServer
@@ -795,7 +797,7 @@ class WebsocketConnectionHandler:
     _HANDSHAKE_GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
     _REQUIRED_HANDSHAKE_HEADERS = {
         'connection', 'host', 'sec-websocket-key',
-        'sec-websocket-version', 'upgrade',
+        'sec-websocket-version', 'upgrade', 'origin',
     }
 
     @classmethod
@@ -808,6 +810,7 @@ class WebsocketConnectionHandler:
         versions the client supports and those we support.
         :raise: BadRequest if the handshake data is incorrect.
         """
+        cls._handle_public_configuration(request)
         response = cls._get_handshake_response(request.httprequest.headers)
         response.call_on_close(functools.partial(
             cls._serve_forever,
@@ -839,6 +842,17 @@ class WebsocketConnectionHandler:
             'Connection': 'Upgrade',
             'Sec-WebSocket-Accept': accept_header,
         })
+
+    @classmethod
+    def _handle_public_configuration(cls, request):
+        if not os.getenv('ODOO_BUS_PUBLIC_SAMESITE_WS'):
+            return
+        headers = request.httprequest.headers
+        origin_url = urlparse(headers.get('origin'))
+        if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
+            request.session = root.session_store.new()
+            request.session.update(get_default_session(), db=request.session.db)
+            request.session.is_explicit = True
 
     @classmethod
     def _assert_handshake_validity(cls, headers):

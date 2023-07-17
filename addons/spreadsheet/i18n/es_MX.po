@@ -84,8 +84,8 @@ msgid ""
 "(0) Exact match. (-1) Return next smaller item if no match. (1) Return next "
 "greater item if no match."
 msgstr ""
-"(0) Coincidencia exacta. (-1) Devolver el siguiente artículo más pequeño si "
-"no hay coincidencia. (1) Devolver el siguiente artículo más grande si no hay"
+"(0) Coincidencia exacta. (-1) Devolver el siguiente elemento más pequeño si "
+"no hay coincidencia. (1) Devolver el siguiente elemento más grande si no hay"
 " coincidencia."
 
 #. module: spreadsheet
@@ -99,10 +99,10 @@ msgid ""
 "    (-2) Perform a binary search that relies on lookup_array being sorted in descending order. If not sorted, invalid results will be returned.\n"
 "    "
 msgstr ""
-"(1) Buscar a partir del primer artículo. \n"
-"    (-1) Buscar a partir del último artículo. \n"
-"    (2) Realizar una búsqueda binaria que se basa en que lookup_array se arregle en orden ascendente. Si no se ordena, los resultados inválidos se devolverán. \n"
-"    (-2) Realizar una búsqueda binaria que se basa en que lookup_array se arregle en orden descendente. Si no se ordena, los resultados inválidos se devolverán.\n"
+"(1) Buscar a partir del primer elemento. \n"
+"    (-1) Buscar a partir del último elemento. \n"
+"    (2) Realizar una búsqueda binaria que se basa en que lookup_array se ordene en orden ascendente. Si no se ordena, se devolverán los resultados que no son válidos. \n"
+"    (-2) Realizar una búsqueda binaria que se basa en que lookup_array se ordene en orden descendente. Si no se ordena, se devolverán los resultados que no son válidos.\n"
 "    "
 
 #. module: spreadsheet
@@ -177,7 +177,7 @@ msgid ""
 "A boolean; if TRUE, empty cells selected in the text arguments won't be "
 "included in the result."
 msgstr ""
-"Un campo booleanos. Si es verdadero, las celdas vacías seleccionadas en los "
+"Un campo booleano. Si es TRUE, las celdas vacías seleccionadas en los "
 "argumentos de texto no se incluirán en el resultado."
 
 #. module: spreadsheet
@@ -241,7 +241,7 @@ msgstr "Es necesario definir un rango"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A sheet with the name %s already exists. Please select another name."
-msgstr "Ya existe una hoja con el nombre %s. Seleccione otro nombre."
+msgstr "Ya existe una hoja con el nombre %s, seleccione otro."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -304,7 +304,7 @@ msgstr "Agregar rango"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional text item(s)."
-msgstr "Artículos de texto adicionales."
+msgstr "Elementos de texto adicionales."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -626,9 +626,7 @@ msgstr "No se puede encontrar un archivo de relación al libro de trabajo"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot open the chart side panel while no chart are selected"
-msgstr ""
-"No se puede abrir el panel lateral de una gráfica si no hay gráfica "
-"seleccionada"
+msgstr "No se puede abrir el panel lateral de un gráfico si no selecciona uno"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -930,14 +928,14 @@ msgstr "Convierte de otra base a decimal."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts hour/minute/second into a time."
-msgstr "Convierte horas/minutos/segundos en tiempo."
+msgstr "Convierte horas/minutos/segundos en la hora."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts year/month/day into a date."
-msgstr "Convierte años/meses/días en tiempo."
+msgstr "Convierte años/meses/días en una fecha."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1064,7 +1062,7 @@ msgstr "Divisa"
 #. module: spreadsheet
 #: model:ir.model,name:spreadsheet.model_res_currency_rate
 msgid "Currency Rate"
-msgstr "Tasa de divisa"
+msgstr "Tasa de cambio"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1078,7 +1076,7 @@ msgstr "La divisa no está disponible para esta empresa."
 #: code:addons/spreadsheet/static/src/currency/currency_data_source.js:0
 #, python-format
 msgid "Currency rate unavailable."
-msgstr "Tasa se cambio no disponible."
+msgstr "Tasa de cambio no disponible."
 
 #. module: spreadsheet
 #. odoo-javascript

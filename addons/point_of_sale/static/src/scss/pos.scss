@@ -1810,6 +1810,7 @@ td {
     }
     body * {
         visibility: hidden;
+        height: 0 !important;
     }
     .pos, .pos * {
         position: static !important;
@@ -1823,6 +1824,7 @@ td {
         visibility: visible;
         background: white !important;
         color: black !important;
+        height: auto !important;
     }
     .pos .pos-receipt {
         margin: 0 !important;
@@ -2182,6 +2184,8 @@ td {
 .pos .order .orderlines {
     flex-grow: 1;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .pos .order .order-empty {
@@ -2661,6 +2665,11 @@ td {
     cursor: pointer;
     border: 1px solid $gray-200;
     color: $primary;
+}
+.pos .popup .button.dynamic-size {
+    width: auto; 
+    white-space: nowrap; 
+    padding: 0 15px;
 }
 
 .pos .popup-textarea textarea {
