@@ -390,7 +390,7 @@ class Event(models.Model):
 
         :param fname_bool: field name (e.g. website_track)
         :param fname_o2m: o2m linking towards website.event.menu matching the
-          boolean fields (normally an entry ot website.event.menu with type matching
+          boolean fields (normally an entry of website.event.menu with type matching
           the boolean field name)
         :param method_name: method returning menu entries information: url, sequence, ...
         """

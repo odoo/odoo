@@ -907,7 +907,7 @@ export class PivotModel extends Model {
      * index, returns the given measure for a group determined by the id
      * groupId and the origin index.
      * If originIndexes is an array of length 2, we compute the variation
-     * ot the measure values for the groups determined by groupId and the
+     * of the measure values for the groups determined by groupId and the
      * different origin indexes.
      *
      * @protected
