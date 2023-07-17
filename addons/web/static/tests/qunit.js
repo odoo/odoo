@@ -568,7 +568,10 @@ export function setupQUnit() {
         if (registry.category("services").get("error", false) && QUnit.config.current) {
             return;
         }
-        if (ev.message === "ResizeObserver loop limit exceeded") {
+        if (
+            ev.message === "ResizeObserver loop limit exceeded" ||
+            ev.message === "ResizeObserver loop completed with undelivered notifications."
+        ) {
             return;
         }
         // Do not log to the console as this will kill python test early
