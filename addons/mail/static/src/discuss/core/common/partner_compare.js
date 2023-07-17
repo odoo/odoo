@@ -22,7 +22,7 @@ partnerCompareRegistry.add(
             return 1;
         }
     },
-    { sequence: 0 }
+    { sequence: 25 }
 );
 
 partnerCompareRegistry.add(
@@ -39,5 +39,5 @@ partnerCompareRegistry.add(
             }
         }
     },
-    { sequence: 15 }
+    { sequence: 40 }
 );

@@ -21,4 +21,35 @@ patch(MockServer.prototype, "im_livechat/models/res_partner", {
         ]);
         return [...this._super(ids), ...livechats];
     },
+    /**
+     * @override
+     */
+    _mockResPartnerSearchForChannelInvite(search_term, channel_id, limit = 30) {
+        const result = this._super(search_term, channel_id, limit);
+        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channel_id]]);
+        if (channel.channel_type !== "livechat") {
+            return result;
+        }
+        const activeLivechatPartners = this.pyEnv["im_livechat.channel"]
+            .searchRead([])
+            .map(({ available_operator_ids }) => available_operator_ids)
+            .flat()
+            .map(
+                (userId) =>
+                    this.pyEnv["res.users"].searchRead([["id", "=", userId]])[0].partner_id[0]
+            );
+        for (const partner of result["partners"]) {
+            partner.is_available = activeLivechatPartners.includes(partner.id);
+            if (partner.lang) {
+                partner.lang_name = this.pyEnv["res.lang"].searchRead([
+                    ["code", "=", partner.lang],
+                ])[0].name;
+            }
+            partner.invite_by_self_count = this.pyEnv["discuss.channel.member"].searchCount([
+                ["partner_id", "=", partner.id],
+                ["create_uid", "=", this.pyEnv.currentUserId],
+            ]);
+        }
+        return result;
+    },
 });
