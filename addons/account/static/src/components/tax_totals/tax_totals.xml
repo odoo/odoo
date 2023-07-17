@@ -7,7 +7,7 @@
                 <label class="o_form_label o_tax_total_label" t-esc="props.taxGroup.tax_group_name"/>
             </td>
 
-            <td>
+            <td  class="o_tax_group">
                 <t t-if="!props.isReadonly">
                     <t t-if="['edit', 'disable'].includes(state.value)">
                         <span class="o_tax_group_edit_input">
