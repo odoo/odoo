@@ -72,61 +72,63 @@
                         <button name="action_cancel" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel" data-hotkey="z"/>
                         <button name="action_retry_failed" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry" data-hotkey="y"/>
 
+                        <div class="alert alert-info mb-2 text-center" role="alert"
+                             attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;',('state', 'not in', ['in_queue', 'done']),('sent', '=', 0),('canceled', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}">
+                            <div class="o_mails_canceled" attrs="{'invisible': [('canceled', '=', 0)]}">
+                                <button class="btn-link py-0"
+                                        name="action_view_traces_canceled"
+                                        type="object">
+                                    <strong>
+                                        <field name="canceled" class="oe_inline me-2"/>
+                                        <span name="canceled_text">emails have been canceled and will not be sent.</span>
+                                    </strong>
+                                </button>
+                            </div>
+                            <div class="o_mails_scheduled" attrs="{'invisible': [('scheduled', '=', 0)]}">
+                                <button class="btn-link py-0"
+                                        name="action_view_traces_scheduled"
+                                        type="object">
+                                    <strong>
+                                        <field name="scheduled" class="oe_inline me-2"/>
+                                        <span name="scheduled_text">emails are in queue and will be sent soon.</span>
+                                    </strong>
+                                </button>
+                            </div>
+                            <div class="o_mails_sent" attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test', 'in_queue'))]}">
+                                <button class="btn-link py-0"
+                                        name="action_view_traces_sent"
+                                        type="object">
+                                    <strong>
+                                        <field name="sent" class="oe_inline me-2"/>
+                                        <span name="sent">emails have been sent.</span>
+                                    </strong>
+                                </button>
+                                <strong class="d-block" attrs="{'invisible': ['|', ('mailing_type', '=', 'mail'), '|', ('ab_testing_enabled', '=', False), '|', ('state', '!=', 'done'), '|', ('sent', '!=', 0), '|', ('failed', '!=', 0), ('canceled', '!=', 0)]}">
+                                    <span name="ab_test_text">There wasn't enough recipients given to this mailing. </span>
+                                </strong>
+                            </div>
+                            <div class="o_mails_failed" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
+                                <button class="btn-link py-0"
+                                        name="action_view_traces_failed"
+                                        type="object">
+                                    <strong>
+                                        <field name="failed" class="oe_inline me-2"/>
+                                        <span name="failed_text">emails could not be sent.</span>
+                                </strong>
+                                </button>
+                            </div>
+                            <div class="o_mails_in_queue" attrs="{'invisible': [('state', '!=', 'in_queue')]}">
+                                <strong>
+                                    <span name="next_departure_text">This mailing is scheduled for </span>
+                                    <field name="next_departure" class="oe_inline"/>.
+                                </strong>
+                            </div>
+                            <div attrs="{'invisible': [('warning_message', '=', False)]}">
+                                <strong><field name="warning_message"/></strong>
+                            </div>
+                        </div>
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info mb-2 text-center" role="alert"
-                        attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('canceled', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}">
-                        <div class="o_mails_canceled" attrs="{'invisible': [('canceled', '=', 0)]}">
-                            <button class="btn-link py-0"
-                                    name="action_view_traces_canceled"
-                                    type="object">
-                                <strong>
-                                    <field name="canceled" class="oe_inline me-2"/>
-                                    <span name="canceled_text">emails have been canceled and will not be sent.</span>
-                                </strong>
-                            </button>
-                        </div>
-                        <div class="o_mails_scheduled" attrs="{'invisible': [('scheduled', '=', 0)]}">
-                            <button class="btn-link py-0"
-                                    name="action_view_traces_scheduled"
-                                    type="object">
-                                <strong>
-                                    <field name="scheduled" class="oe_inline me-2"/>
-                                    <span name="scheduled_text">emails are in queue and will be sent soon.</span>
-                                </strong>
-                            </button>
-                        </div>
-                        <div class="o_mails_sent" attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test', 'in_queue'))]}">
-                            <button class="btn-link py-0"
-                                    name="action_view_traces_sent"
-                                    type="object">
-                                <strong>
-                                    <field name="sent" class="oe_inline me-2"/>
-                                    <span name="sent">emails have been sent.</span>
-                                </strong>
-                            </button>
-                        </div>
-                        <div class="o_mails_failed" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
-                            <button class="btn-link py-0"
-                                    name="action_view_traces_failed"
-                                    type="object">
-                                <strong>
-                                    <field name="failed" class="oe_inline me-2"/>
-                                    <span name="failed_text">emails could not be sent.</span>
-                                </strong>
-                            </button>
-                        </div>
-                        <div class="o_mails_in_queue" attrs="{'invisible': [('state', '!=', 'in_queue')]}">
-                            <strong>
-                                <span name="next_departure_text">This mailing is scheduled for </span>
-                                <field name="next_departure" class="oe_inline"/>.
-                            </strong>
-                        </div>
-                        <div attrs="{'invisible': [('warning_message', '=', False)]}">
-                            <strong><field name="warning_message"/></strong>
-                        </div>
-                    </div>
-
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_delivered"
@@ -274,22 +276,21 @@
                                             attrs="{'required': [('ab_testing_enabled', '=', True), ('mailing_type', '=', 'mail')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'mail')], 'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="ab_testing_schedule_datetime"
                                             attrs="{'required': [('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '!=', 'manual')], 'readonly': ['|', ('ab_testing_enabled', '=', False), ('state', '!=', 'draft')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('ab_testing_winner_selection', '=', 'manual')]}"/>
+                                        <field name="is_ab_test_sent" invisible="1"/>
                                     </group>
                                     <div>
                                         <field name="ab_testing_mailings_count" invisible="1"/>
                                         <field name="ab_testing_completed" invisible="1"/>
                                         <field name="ab_testing_description" nolabel="1"/>
-                                        <div attrs="{'invisible': ['|', ('ab_testing_mailings_count', '&lt;', 2), ('ab_testing_enabled', '=', False)]}">
+                                        <div id="mailing_form_ab_buttons" attrs="{'invisible': ['|', ('ab_testing_mailings_count', '&lt;', 2), ('ab_testing_enabled', '=', False)]}">
                                             <button name="action_compare_versions" type="object" class="btn btn-link d-block">
                                                 <i class="fa fa-bar-chart"/> Compare Version
                                             </button>
                                             <button name="action_duplicate" type="object" class="btn btn-link d-block" attrs="{'invisible': [('ab_testing_completed', '=', True)]}">
                                                 <i class="fa fa-copy"/> Create an Alternative
                                             </button>
-                                            <button name="action_send_winner_mailing" type="object" class="btn btn-link d-block" attrs="{'invisible': [('ab_testing_completed', '=', True)]}">
-                                                <i class="fa fa-envelope"/> <span name="ab_test_manual" attrs="{'invisible': [('ab_testing_winner_selection', '!=', 'manual')]}">
-                                                    Send this version to remaining recipients
-                                                </span> <span name="ab_test_auto" attrs="{'invisible': [('ab_testing_winner_selection', '=', 'manual')]}">
+                                            <button name="action_send_winner_mailing" type="object" class="btn btn-link d-block" attrs="{'invisible': ['|', ('is_ab_test_sent', '!=', True), '|', ('ab_testing_completed', '=', True), ('ab_testing_winner_selection', '=', 'manual')]}">
+                                                <i class="fa fa-envelope"/><span name="ab_test_auto">
                                                     Send Winner Now
                                                 </span>
                                             </button>
