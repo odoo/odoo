@@ -166,16 +166,6 @@ export class Messaging {
                 case "mail.record/insert":
                     this._handleNotificationRecordInsert(notif);
                     break;
-                case "discuss.channel/transient_message": {
-                    const channel =
-                        this.store.threads[createLocalId("discuss.channel", notif.payload.res_id)];
-                    const message = this.messageService.createTransient(
-                        Object.assign(notif.payload, { body: markup(notif.payload.body) })
-                    );
-                    channel.messages.push(message);
-                    channel.transientMessages.push(message);
-                    break;
-                }
                 case "mail.link.preview/delete":
                     {
                         const { id, message_id } = notif.payload;
