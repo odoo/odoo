@@ -1326,6 +1326,17 @@ export class Record extends DataPoint {
      * @returns {Promise<boolean>}
      */
     async _save(options = { stayInEdition: false, noReload: false }) {
+        const changes = this.getChanges();
+        const keys = Object.keys(changes);
+        const hasChanges = this.isVirtual || keys.length;
+        const shouldReload = hasChanges ? !options.noReload : false;
+        const context = this.context;
+
+        if(!hasChanges){
+            // there are no changes => no save needed
+            return true;
+        }
+
         if (!this._checkValidity()) {
             const invalidFields = [...this._invalidFields].map((fieldName) => {
                 return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
@@ -1336,11 +1347,6 @@ export class Record extends DataPoint {
             });
             return false;
         }
-        const changes = this.getChanges();
-        const keys = Object.keys(changes);
-        const hasChanges = this.isVirtual || keys.length;
-        const shouldReload = hasChanges ? !options.noReload : false;
-        const context = this.context;
 
         if (this.isVirtual) {
             if (keys.length === 1 && keys[0] === "display_name") {
