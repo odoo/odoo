@@ -85,6 +85,15 @@ export class DiscussCoreCommon {
                     this._handleNotificationNewMessage(notif);
                 }
             });
+            this.busService.subscribe("discuss.channel/transient_message", (payload) => {
+                const channel =
+                    this.store.threads[createLocalId("discuss.channel", payload.res_id)];
+                const message = this.messageService.createTransient(
+                    Object.assign(payload, { body: markup(payload.body) })
+                );
+                channel.messages.push(message);
+                channel.transientMessages.push(message);
+            });
             this.busService.start();
         });
     }
