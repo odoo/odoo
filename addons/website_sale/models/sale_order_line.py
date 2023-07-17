@@ -32,6 +32,18 @@ class SaleOrderLine(models.Model):
         for record in self:
             record.name_short = record.product_id.with_context(display_default_code=False).display_name
 
+    @api.depends('product_id')
+    def _compute_name(self):
+        for line in self:
+            if not line.product_id:
+                continue
+            if not line.order_partner_id.is_public:
+                line = line.with_context(lang=line.order_partner_id.lang)
+            else:
+                line = line.with_context(lang=self.env.lang)
+            name = line._get_sale_order_line_multiline_description_sale()
+            line.name = name
+
     #=== BUSINESS METHODS ===#
 
     def _get_sale_order_line_multiline_description_sale(self):
