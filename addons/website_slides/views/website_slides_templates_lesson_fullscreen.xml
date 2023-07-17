@@ -136,19 +136,19 @@
                     t-att-data-session-answers="session_answers"
                     t-att-data-website-share-url="slide.website_share_url"
                     t-att-data-email-sharing="bool(slide.channel_id.share_slide_template_id)">
-                    <div class="ms-2 o_wslides_sidebar_content">
+                    <div class="ms-2 o_wslides_sidebar_content overflow-hidden">
                         <a t-if="can_access" class="d-block" href="#">
                             <div class="d-flex">
                                 <t t-if="is_member" t-call="website_slides.slide_sidebar_done_button"/>
                                 <i t-else="" t-attf-class="fa #{slide.slide_icon_class} me-2"/>
-                                <div class="o_wslides_fs_slide_name" t-esc="slide.name"/>
+                                <div class="o_wslides_fs_slide_name text-truncate" t-esc="slide.name"/>
                             </div>
                         </a>
                         <span t-else="" class="d-block" href="#">
                             <div class="d-flex">
                                 <t t-if="is_member" t-call="website_slides.slide_sidebar_done_button"/>
                                 <i t-else="" t-attf-class="fa #{slide.slide_icon_class} me-2 text-600"/>
-                                <div class="o_wslides_fs_slide_name text-600" t-esc="slide.name"/>
+                                <div class="o_wslides_fs_slide_name text-600 text-truncate" t-esc="slide.name"/>
                             </div>
                         </span>
                         <ul class="list-unstyled w-100 small fw-light" t-if="slide._has_additional_resources() or (slide.question_ids and not slide.slide_category =='quiz')" >
