@@ -69,10 +69,11 @@ class ProductProduct(models.Model):
             boms_to_recompute = []
         total = 0
         for opt in bom.operation_ids:
+            capacity_wc = opt.workcenter_id.capacity
             duration_expected = (
                 opt.workcenter_id.time_start +
                 opt.workcenter_id.time_stop +
-                opt.time_cycle * 100 / opt.workcenter_id.time_efficiency)
+                (opt.time_cycle / capacity_wc) * 100 / opt.workcenter_id.time_efficiency)
             total += (duration_expected / 60) * opt.workcenter_id.costs_hour
         for line in bom.bom_line_ids:
             if line._skip_bom_line(self):

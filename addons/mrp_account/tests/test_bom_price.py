@@ -174,11 +174,11 @@ class TestBom(common.TransactionCase):
         # Dinning Table Operation Cost(1 Unit)
         # -----------------------------------------------------------------
         # Operation cost calculate for 1 units
-        # Cutting        (15 + 15 + (20 * 100/80) / 60) * 100 =   91.67
-        # Drilling       (15 + 15 + (25 * 100/80) / 60) * 100 =  102.08
-        # Fitting        (15 + 15 + (30 * 100/80) / 60) * 100 =  112.50
+        # Cutting        (15 + 15 + ((20 / 2) * 100/80)) / 60 * 100 =   70.83
+        # Drilling       (15 + 15 + ((25 / 2) * 100/80)) / 60 * 100 =   76,04
+        # Fitting        (15 + 15 + ((30 / 2) * 100/80)) / 60 * 100 =   81,25
         # ----------------------------------------
-        # Operation Cost  1 unit = 306.25
+        # Operation Cost  1 unit = 228,13
         # -----------------------------------------------------------------
 
 
@@ -186,18 +186,18 @@ class TestBom(common.TransactionCase):
         # Table Head Operation Cost (1 Dozen)
         # --------------------------------------------------------------------------
         # Operation cost calculate for 1 dozens
-        # Cutting        (15 + 15 + (20 * 1 * 100/80) / 60) * 100 =   91.67
-        # Drilling       (15 + 15 + (25 * 1 * 100/80) / 60) * 100 =  102.08
-        # Fitting        (15 + 15 + (30 * 1 * 100/80) / 60) * 100 =  112.50
+        # Cutting        (15 + 15 + (20 * 1 * 100/80) / 60) * 100 =   70.83
+        # Drilling       (15 + 15 + (25 * 1 * 100/80) / 60) * 100 =   76,04
+        # Fitting        (15 + 15 + (30 * 1 * 100/80) / 60) * 100 =   81,25
         # ----------------------------------------
-        # Operation Cost 1 dozen (306.25 per dozen) and 25.52 for 1 Unit
+        # Operation Cost 1 dozen (228,13 per dozen) and 19,01 for 1 Unit
         # --------------------------------------------------------------------------
 
 
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
         self.dining_table.button_bom_cost()
-        # Total cost of Dining Table = (550) + Total cost of operations (306.25) = 856.25
-        self.assertEqual(float_round(self.dining_table.standard_price, precision_digits=2), 856.25, "After computing price from BoM price should be 856.25")
+        # Total cost of Dining Table = (550) + Total cost of operations (228,13) = 778.13
+        self.assertEqual(float_round(self.dining_table.standard_price, precision_digits=2), 778.13, "After computing price from BoM price should be 856.25")
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
-        # Total cost of Dining Table = (718.75) + Total cost of all operations (306.25 + 25.52) = 1050.52
-        self.assertEqual(float_compare(self.dining_table.standard_price, 1050.52, precision_digits=2), 0, "After computing price from BoM price should be 1050.52")
+        # Total cost of Dining Table = (718,75) + Total cost of all operations (228,13 + 19,01) = 965.89
+        self.assertEqual(float_compare(self.dining_table.standard_price, 965.89, precision_digits=2), 0, "After computing price from BoM price should be 1050.52")
