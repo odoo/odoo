@@ -22,6 +22,7 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
         cls.company_data['company'].write({
             'country_id': cls.env.ref('base.ro').id,
             'currency_id': cls.env.ref('base.RON').id,
+            'state_id': cls.env.ref('base.RO_B').id,
             'city': 'Bucharest',
             'zip': '010101',
             'vat': 'RO1234567897',
@@ -40,11 +41,12 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Bucharest",
             'zip': "010101",
             'vat': 'RO1234567897',
-            'phone': '+40 123 456 789',
-            'street': "Strada Kunst, 3",
+            'phone': '+40 123 456 780',
+            'street': "Rolling Roast, 88",
             'country_id': cls.env.ref('base.ro').id,
+            'state_id': cls.env.ref('base.RO_B').id,
             'ref': 'ref_partner_a',
-            'ubl_cii_format': 'ciusro' # should be selected automatically! (?)
+            'ubl_cii_format': 'ciusro'  # should be selected automatically! (?)
         })
 
         cls.partner_b = cls.env['res.partner'].create({
@@ -125,5 +127,5 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
         invoice._generate_pdf_and_send_invoice(self.move_template)
         attachment = invoice.ubl_cii_xml_id
         self.assertTrue(attachment)
-        self.test_anaf(attachment)
+        self.test_anaf(attachment, True)
         self.assertEqual(attachment.name[-11:], "cius_ro.xml")

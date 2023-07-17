@@ -1,16 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models
-
-# ISO_3166_RO_CODES = {"Alba": "RO-AB", "Arad": "RO-AR", "Argeș": "RO-AG", "Bacău": "RO-BC", "Bihor": "RO-BH",
-#                      "Bistrița-Năsăud": "RO-BN", "Botoșani": "RO-BT", "Brașov": "RO-BV", "Brăila": "RO-BR",
-#                      "Buzău": "RO-BZ", "Caraș-Severin": "RO-CS", "Călărași": "RO-CL", "Cluj": "RO-CJ",
-#                      "Constanța": "RO-CT", "Covasna": "RO-CV", "Dâmbovița": "RO-DB", "Dolj": "RO-DJ", "Galați": "RO-GL",
-#                      "Giurgiu": "RO-GR", "Gorj": "RO-GJ", "Harghita": "RO-HR", "Hunedoara": "RO-HD",
-#                      "Ialomița": "RO-IL", "Iași": "RO-IS", "Ilfov": "RO-IF", "Maramureș": "RO-MM", "Mehedinți": "RO-MH",
-#                      "Mureș": "RO-MS", "Neamț": "RO-NT", "Olt": "RO-OT", "Prahova": "RO-PH", "Satu Mare": "RO-SM",
-#                      "Sălaj": "RO-SJ", "Sibiu": "RO-SB", "Suceava": "RO-SV", "Teleorman": "RO-TR", "Timiș": "RO-TM",
-#                      "Tulcea": "RO-TL", "Vaslui": "RO-VS", "Vâlcea": "RO-VL", "Vrancea": "RO-VN", "București": "RO-B", }
+from odoo.exceptions import ValidationError
 
 
 class AccountEdiXmlUBLRO(models.AbstractModel):
@@ -25,8 +16,13 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._get_partner_address_vals(partner)
 
-        # TODO
-        # vals["country_subentity"] = ISO_3166_RO_CODES[vals["city_name"]]
+        if partner.country_code == 'RO':
+            if not partner.state_id:
+                # TODO - if partner country is 'RO', they must have state_id
+                raise ValidationError("partner must be connected to state_id")
+
+            vals["country_subentity"] = 'RO-' + partner.state_id.code
+            # if partner.state_id.code == 'B' and "sector" in partner.city TODO
 
         return vals
 
