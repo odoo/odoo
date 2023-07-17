@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 
 
 class EventRegistration(models.Model):
@@ -190,15 +190,24 @@ class EventRegistration(models.Model):
 
         :return dict: values used for create / write on a lead
         """
-        valid_partner = related_partner = next(
+        valid_partner = next(
             (reg.partner_id for reg in self if reg.partner_id != self.env.ref('base.public_partner')),
             self.env['res.partner']
         )  # CHECKME: broader than just public partner
 
-        # mono registration mode: keep partner only if email and phone matches, otherwise registration > partner
-        if len(self) == 1:
-            if (related_partner.phone and self.phone and related_partner.phone != self.phone) or \
-                (related_partner.email and self.email and related_partner.email != self.email):
+        # mono registration mode: keep partner only if email and phone matches;
+        # otherwise registration > partner. Note that email format has to be
+        # taken into account in comparison
+        if len(self) == 1 and valid_partner:
+            # compare emails: email_normalized or raw
+            if self.email and valid_partner.email:
+                if valid_partner.email_normalized and tools.email_normalize(self.email) != valid_partner.email_normalized:
+                    valid_partner = self.env['res.partner']
+                elif not valid_partner.email_normalized and valid_partner.email != self.email:
+                    valid_partner = self.env['res.partner']
+
+            # compare phone
+            if valid_partner and valid_partner.phone and self.phone and valid_partner.phone != self.phone:
                 valid_partner = self.env['res.partner']
 
         if valid_partner:
