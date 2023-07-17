@@ -3,7 +3,7 @@
 import { useStore } from "@mail/core/common/messaging_hook";
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { useOnBottomScrolled } from "@mail/utils/common/hooks";
-import { markEventHandled } from "@web/core/utils/misc";;
+import { markEventHandled } from "@web/core/utils/misc";
 
 import { Component, onWillStart, useRef, useState } from "@odoo/owl";
 
@@ -262,15 +262,19 @@ export class GifPicker extends Component {
 
     async loadFavorites() {
         this.state.loadingGif = true;
-        const [results] = await this.rpc(
-            "/discuss/gif/favorites",
-            { offset: this.offset },
-            { silent: true }
-        );
-        this.offset += 20;
-        this.state.favorites.gifs.push(...results);
-        for (const gif of results) {
-            this.pushGif(gif);
+        try {
+            const [results] = await this.rpc(
+                "/discuss/gif/favorites",
+                { offset: this.offset },
+                { silent: true }
+            );
+            this.offset += 20;
+            this.state.favorites.gifs.push(...results);
+            for (const gif of results) {
+                this.pushGif(gif);
+            }
+        } catch {
+            this.state.loadingError = true;
         }
         this.state.loadingGif = false;
     }
