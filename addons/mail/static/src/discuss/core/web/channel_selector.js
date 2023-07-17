@@ -2,9 +2,9 @@
 
 import { useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
+import { useDiscussCoreCommon } from "@mail/discuss/core/common/discuss_core_common_service";
 import { cleanTerm } from "@mail/utils/common/format";
 import { createLocalId } from "@mail/utils/common/misc";
-import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 
@@ -12,6 +12,7 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { useService } from "@web/core/utils/hooks";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 export class ChannelSelector extends Component {
     static components = { TagsList, NavigableList };
@@ -20,6 +21,7 @@ export class ChannelSelector extends Component {
     static template = "discuss.ChannelSelector";
 
     setup() {
+        this.discussCoreCommonService = useDiscussCoreCommon();
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = useStore();
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
@@ -137,7 +139,10 @@ export class ChannelSelector extends Component {
             if (selectedPartnerIds.length === 0) {
                 return;
             }
-            await this.threadService.startChat(selectedPartnerIds, this.env.inChatWindow);
+            await this.discussCoreCommonService.startChat(
+                selectedPartnerIds,
+                this.env.inChatWindow
+            );
         }
         if (this.props.onValidate) {
             this.props.onValidate();

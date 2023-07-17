@@ -3,10 +3,11 @@
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { createLocalId } from "@mail/utils/common/misc";
 
-import { markup, reactive } from "@odoo/owl";
+import { markup, reactive, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 
 export class DiscussCoreCommon {
@@ -152,6 +153,26 @@ export class DiscussCoreCommon {
         });
     }
 
+    /**
+     * @param {[number]} partnerIds
+     * @param {boolean} inChatWindow
+     */
+    async startChat(partnerIds, inChatWindow) {
+        const partners_to = [...new Set([this.store.self.id, ...partnerIds])];
+        if (partners_to.length === 1) {
+            const chat = await this.threadService.joinChat(partners_to[0]);
+            this.threadService.open(chat, inChatWindow);
+        } else if (partners_to.length === 2) {
+            const correspondentId = partners_to.find(
+                (partnerId) => partnerId !== this.store.self.id
+            );
+            const chat = await this.threadService.joinChat(correspondentId);
+            this.threadService.open(chat, inChatWindow);
+        } else {
+            await this.threadService.createGroupChat({ partners_to });
+        }
+    }
+
     async _handleNotificationNewMessage(notif) {
         const { id, message: messageData } = notif.payload;
         let channel = this.store.threads[createLocalId("discuss.channel", id)];
@@ -252,5 +273,12 @@ export const discussCoreCommon = {
         return discussCoreCommon;
     },
 };
+
+/**
+ * @returns {DiscussCoreCommon}
+ */
+export function useDiscussCoreCommon() {
+    return useState(useService("discuss.core.common"));
+}
 
 registry.category("services").add("discuss.core.common", discussCoreCommon);
