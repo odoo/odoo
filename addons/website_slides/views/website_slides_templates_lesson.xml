@@ -208,8 +208,8 @@
     <t t-set="is_training_channel" t-value="slide.channel_id.channel_type == 'training'"/>
     <div class="row align-items-center my-3">
         <div class="col-12 col-md order-2 order-md-1 d-flex">
-            <div class="d-flex align-items-center">
-                <h1 class="h4 my-0">
+            <div class="d-flex align-items-center overflow-hidden">
+                <h1 class="h4 my-0 text-truncate">
                     <t t-call="website_slides.slide_icon">
                         <t t-set="icon_class" t-valuef="mr-1"/>
                     </t>

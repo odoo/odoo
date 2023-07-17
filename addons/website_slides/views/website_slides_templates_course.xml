@@ -8,7 +8,7 @@
             <div class="row align-items-center justify-content-between">
                 <!-- Desktop Mode -->
                 <nav aria-label="breadcrumb" class="col-md-8 d-none d-md-flex">
-                    <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0">
+                    <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0 overflow-hidden">
                         <li class="breadcrumb-item">
                             <a href="/slides">Courses</a>
                         </li>
@@ -28,7 +28,7 @@
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_slide_type" t-if="search_slide_type">
                             <a t-att-href="'/slides/%s?slide_type=%s' % (slug(channel), search_slide_type)"><span t-esc="slide_types[search_slide_type]"/></a>
                         </li>
-                        <li t-if="slide" class="breadcrumb-item active">
+                        <li t-if="slide" class="breadcrumb-item active text-truncate text-white">
                             <a t-att-href="'/slides/slide/%s' % slug(slide)"><span t-esc="slide.name"/></a>
                         </li>
                     </ol>
