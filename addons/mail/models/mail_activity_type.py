@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 class MailActivityType(models.Model):
     """ Activity Types are used to categorize activities. Each type is a different
@@ -125,3 +125,13 @@ class MailActivityType(models.Model):
                 activity_type.chaining_type = 'trigger'
             else:
                 activity_type.chaining_type = 'suggest'
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_todo(self):
+        if self.env.ref('mail.mail_activity_data_todo') in self:
+            raise UserError(_("The 'To-Do' activity type is used to create reminders from the top bar menu and the command palette. Consequently, it cannot be archived or deleted."))
+
+    def action_archive(self):
+        if self.env.ref('mail.mail_activity_data_todo') in self:
+            raise UserError(_("The 'To-Do' activity type is used to create reminders from the top bar menu and the command palette. Consequently, it cannot be archived or deleted."))
+        return super().action_archive()
