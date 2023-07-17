@@ -51,6 +51,7 @@ QUnit.test("no call with odoobot", async (assert) => {
 });
 
 QUnit.test("should not display call UI when no more members (self disconnect)", async (assert) => {
+    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
