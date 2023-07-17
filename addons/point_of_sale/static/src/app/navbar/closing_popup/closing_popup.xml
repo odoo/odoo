@@ -65,7 +65,7 @@
                                 <td t-esc="pm.name"/>
                                 <td t-esc="env.utils.formatCurrency(pm.amount)"/>
                                 <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
-                                <td t-if="_showDiff" t-on-input="() => this.handleInputChange(pm.id)">
+                                <td t-if="_showDiff" t-on-input="(event) => this.handleInputChange(pm.id, event)">
                                     <input class="pos-input" t-ref="closingCashInput_{{pm.id}}" t-on-focus="ev=>ev.target.select()"/>
                                 </td>
                                 <td t-if="_showDiff" t-esc="env.utils.formatCurrency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
