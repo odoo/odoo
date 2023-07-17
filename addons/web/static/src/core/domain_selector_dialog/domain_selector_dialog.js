@@ -10,6 +10,7 @@ import { useService } from "../utils/hooks";
 export class DomainSelectorDialog extends Component {
     setup() {
         this.notification = useService("notification");
+        this.rpc = useService("rpc");
         this.orm = useService("orm");
         this.state = useState({ domain: this.props.domain });
         this.confirmButtonRef = useRef("confirm");
@@ -49,12 +50,22 @@ export class DomainSelectorDialog extends Component {
         };
     }
 
-    onConfirm() {
+    async onConfirm() {
         this.confirmButtonRef.el.disabled = true;
+        let domain;
+        let isValid;
         try {
-            const domain = new Domain(this.state.domain);
-            domain.toList(this.props.context);
+            domain = new Domain(this.state.domain).toList(this.props.context);
         } catch {
+            isValid = false;
+        }
+        if (isValid === undefined) {
+            isValid = await this.rpc("/web/domain/validate", {
+                model: this.props.resModel,
+                domain,
+            });
+        }
+        if (!isValid) {
             if (this.confirmButtonRef.el) {
                 this.confirmButtonRef.el.disabled = false;
             }
