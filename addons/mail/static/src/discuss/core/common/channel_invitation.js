@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { ImStatus } from "@mail/core/common/im_status";
+import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 
 import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
@@ -9,7 +10,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class ChannelInvitation extends Component {
-    static components = { ImStatus };
+    static components = { ImStatus, ActionPanel };
     static defaultProps = { hasSizeConstraints: false };
     static props = ["hasSizeConstraints?", "thread", "close", "className?"];
     static template = "discuss.ChannelInvitation";
@@ -139,5 +140,9 @@ export class ChannelInvitation extends Component {
             return _t("Create Group Chat");
         }
         return _t("Invite");
+    }
+
+    get title() {
+        return _t("Invite people");
     }
 }

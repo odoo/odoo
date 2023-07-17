@@ -55,9 +55,10 @@
             </t>
         </div>
         <div t-if="!props.chatWindow.folded or ui.isSmall" class="o-mail-ChatWindow-content bg-view d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
-            <button t-if="threadActions.activeAction" class="o-mail-ChatWindow-closePanel btn position-absolute top-0 end-0 btn opacity-75 opacity-100-hover" title="Close panel" t-on-click.stop="() => threadActions.activeAction.close()"><i class="fa fa-close"/></button>
             <t t-if="thread" name="thread content">
-                <t t-if="threadActions.activeAction?.componentCondition" t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
+                <div t-if="threadActions.activeAction?.componentCondition" class="h-100" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}">
+                    <t t-component="threadActions.activeAction.component" t-props="{ ...threadActions.activeAction.componentProps, thread }"/>
+                </div>
                 <t t-else="">
                     <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
                     <Composer composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>

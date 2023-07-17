@@ -2,9 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallSettings" owl="1">
-        <div class="o-discuss-CallSettings flex-grow-1 py-2 user-select-none bg-view" t-attf-class="{{ props.className }}" t-ref="root">
+        <ActionPanel title="title">
             <div class="d-flex flex-column px-3 overflow-auto">
-                <div class="py-2 fw-bolder text-700 text-truncate text-uppercase">Voice Settings</div>
                 <div class="mb-3 d-flex align-items-center flex-wrap">
                     <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Input device" aria-label="Input device">
                         <span class="me-2 text-truncate">Input device</span>
@@ -101,7 +100,7 @@
                     <button class="btn btn-primary" t-att-disabled="rtc.state.logs.size === 0" t-on-click="onClickDownloadLogs">Download logs</button>
                 </div>
             </div>
-        </div>
+        </ActionPanel>
     </t>
 
 </templates>

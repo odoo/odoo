@@ -5,7 +5,8 @@
 }
 
 .o-mail-Discuss-inspector {
-    width: $o-mail-Discuss-inspector;
+    flex-basis: $o-mail-Discuss-inspector;
+    flex-shrink: 0;
 }
 
 .o-mail-Discuss-selfAvatar {
@@ -44,7 +45,7 @@
             transform: translate(-50%, -50%);
             opacity: 0;
         }
-    
+
         &:hover {
             background-color: rgba($black, 0.5);
             i {
