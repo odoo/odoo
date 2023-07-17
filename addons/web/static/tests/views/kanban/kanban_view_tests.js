@@ -13563,4 +13563,26 @@ QUnit.module("Views", (hooks) => {
         );
         assert.notEqual(previousScrollTop, 0, "Should not have the scrollTop value at 0");
     });
+
+    QUnit.test("kanban quick create column", async function (assert) {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+
+        await click(target, "button.o_kanban_add_column");
+        await editInput(target, ".input-group > input", "new_kanban_stage");
+        await click(target, ".o_kanban_add");
+        assert.containsOnce(target, ".o_column_title:contains('new_kanban_stage')");
+    });
 });

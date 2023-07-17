@@ -2367,7 +2367,8 @@ export class DynamicGroupList extends DynamicList {
      * @returns {Promise<Group>}
      */
     async _createGroup(groupName, groupData = {}, isFolded = false) {
-        groupData = { ...groupData, name: groupName };
+        const fieldName = 'x_name' in this.activeFields ? 'x_name' : 'name';
+        groupData[fieldName] = groupName;
         const [id] = await this.model.orm.create(this.groupByField.relation, [groupData], {
             context: this.context,
         });
