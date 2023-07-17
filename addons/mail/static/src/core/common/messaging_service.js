@@ -114,7 +114,7 @@ export class Messaging {
         });
         this.store.hasLinkPreviewFeature = data.hasLinkPreviewFeature;
         this.store.initBusId = data.initBusId;
-        this.isReady.resolve();
+        this.isReady.resolve(data);
         this.store.isMessagingReady = true;
     }
 

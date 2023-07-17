@@ -14,6 +14,6 @@ patch(Messaging.prototype, "im_livechat", {
             });
         }
         this.store.isMessagingReady = true;
-        this.isReady.resolve();
+        this.isReady.resolve({});
     },
 });

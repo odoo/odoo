@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { GifPicker, useGifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
+import { useGifPickerService } from "@mail/discuss/gif_picker/common/gif_picker_service";
 import { Composer } from "@mail/core/common/composer";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
@@ -18,13 +19,10 @@ const composerPatch = {
         Object.assign(this.KEYBOARD, { GIF: "Gif" });
         onExternalClick("gif-picker", () => (this.state.keyboard = this.KEYBOARD.NONE));
         this.ui = useState(useService("ui"));
-        /** @type {import('@mail/discuss/gif_picker/common/gif_picker_service').GifPickerService} */
-        this.gifPickerService = useService("discuss.gifPicker");
-        if (this.gifPickerService.hasGifPickerFeature && !this.ui.isSmall) {
-            this.gifPicker = useGifPicker("gif-button", {
-                onSelected: this.sendGifMessage.bind(this),
-            });
-        }
+        this.gifPickerService = useGifPickerService();
+        this.gifPicker = useGifPicker("gif-button", {
+            onSelected: this.sendGifMessage.bind(this),
+        });
     },
     /**
      * @param {Event} ev
@@ -39,8 +37,9 @@ const composerPatch = {
     },
     onClickAddGif(ev) {
         markEventHandled(ev, "Composer.onClickAddGif");
-        this.gifPicker?.toggle();
-        if (!this.gifPicker) {
+        if (!this.ui.isSmall) {
+            this.gifPicker.toggle();
+        } else {
             if (this.state.keyboard !== this.KEYBOARD.GIF) {
                 this.state.keyboard = this.KEYBOARD.GIF;
             } else {
