@@ -118,22 +118,6 @@ export class Messaging {
         this.store.isMessagingReady = true;
     }
 
-    loadFailures() {
-        this.rpc("/mail/load_message_failures", {}, { silent: true }).then((messages) => {
-            messages.map((messageData) =>
-                this.messageService.insert({
-                    ...messageData,
-                    body: messageData.body ? markup(messageData.body) : messageData.body,
-                    // implicit: failures are sent by the server at
-                    // initialization only if the current partner is
-                    // author of the message
-                    author: this.store.user,
-                })
-            );
-            this.store.notificationGroups.sort((n1, n2) => n2.lastMessage.id - n1.lastMessage.id);
-        });
-    }
-
     updateImStatusRegistration() {
         this.imStatusService.registerToImStatus(
             "res.partner",
