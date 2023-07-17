@@ -11,7 +11,6 @@ import { markup, reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
-import { sprintf } from "@web/core/utils/strings";
 
 /**
  * @typedef {Messaging} Messaging
@@ -29,7 +28,6 @@ export class Messaging {
         this.orm = services.orm;
         /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
-        this.notificationService = services.notification;
         /** @type {import("@mail/core/common/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
@@ -276,21 +274,6 @@ export class Messaging {
                     }
                     break;
                 }
-                case "discuss.channel/unpin": {
-                    const thread =
-                        this.store.threads[createLocalId("discuss.channel", notif.payload.id)];
-                    if (thread) {
-                        thread.is_pinned = false;
-                        this.notificationService.add(
-                            sprintf(
-                                _t("You unpinned your conversation with %s"),
-                                thread.displayName
-                            ),
-                            { type: "info" }
-                        );
-                    }
-                    break;
-                }
                 case "mail.message/notification_update":
                     {
                         notif.payload.elements.map((message) => {
@@ -468,7 +451,6 @@ export const messagingService = {
         "router",
         "bus_service",
         "im_status",
-        "notification",
         "mail.attachment",
         "mail.user_settings",
         "mail.thread",
