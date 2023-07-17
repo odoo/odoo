@@ -2,16 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelMemberList" owl="1">
-        <div class="o-discuss-ChannelMemberList d-flex flex-column overflow-auto bg-view" t-att-class="props.className">
+        <ActionPanel title="title">
             <t t-if="props.thread.onlineMembers.length > 0">
-                <h6 class="m-2">
+                <h6 class="mx-3 text-700">
                     Online -
                     <t t-esc="props.thread.onlineMembers.length"/>
                 </h6>
                 <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
             </t>
             <t t-if="props.thread.offlineMembers.length > 0">
-                <h6 class="m-2">
+                <h6 class="mx-3 text-700">
                     Offline -
                     <t t-esc="props.thread.offlineMembers.length"/>
                 </h6>
@@ -22,7 +22,7 @@
             <div t-if="!props.thread.areAllMembersLoaded" class="mx-2 my-1">
                 <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => threadService.fetchChannelMembers(props.thread)">Load more</button>
             </div>
-        </div>
+        </ActionPanel>
     </t>
 
     <t t-name="discuss.channel_member" owl="1">

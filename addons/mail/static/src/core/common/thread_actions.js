@@ -108,6 +108,7 @@ function transformAction(component, id, action) {
             }
             action.open?.(component, this);
         },
+        panelOuterClass: action.panelOuterClass,
         /** Determines whether this is a popover linked to this action. */
         popover: null,
         /** Determines the order of this action (smaller first). */

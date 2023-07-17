@@ -65,7 +65,9 @@
                     <Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
                     <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.isNote ? 'note' : 'message') : undefined"/>
                 </div>
-                <t t-if="threadActions.activeAction?.componentCondition" t-component="threadActions.activeAction.component" thread="thread" className="'o-mail-Discuss-inspector border-start'" t-props="threadActions.activeAction.componentProps"/>
+                <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="h-100 border-start o-mail-Discuss-inspector">
+                    <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
+                </div>
             </div>
         </div>
         <div t-if="!thread and (!ui.isSmall or store.discuss.activeTab === 'mailbox')" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">

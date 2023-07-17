@@ -37,6 +37,7 @@ threadActionsRegistry
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
+        panelOuterClass: "o-discuss-CallSettings",
         icon: "fa fa-fw fa-gear",
         iconLarge: "fa fa-fw fa-lg fa-gear",
         name: _t("Show Call Settings"),
