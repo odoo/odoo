@@ -766,3 +766,16 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         # The PDF is generated even in case of error.
         self.assertTrue(invoice.invoice_pdf_report_id)
+
+    def test_with_unlink_invoices(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice)
+
+        invoice.button_draft()
+        invoice.unlink()
+
+        results = wizard.action_send_and_print(allow_fallback_pdf=True)
+        self.assertEqual(results['type'], 'ir.actions.act_window_close')
+
+        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        self.assertFalse(wizard.exists())

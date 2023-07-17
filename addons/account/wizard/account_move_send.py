@@ -619,7 +619,7 @@ class AccountMoveSend(models.Model):
 
         if download:
             attachment = self.move_ids.invoice_pdf_report_id
-            if not attachment:
+            if not attachment and moves_data:
                 attachment = list(moves_data.values())[0].get('proforma_pdf_attachment')
             if attachment:
                 return self._download(attachment.id)
