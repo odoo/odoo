@@ -16,6 +16,7 @@ patch(Messaging.prototype, "im_livechat", {
         this.store.isMessagingReady = true;
         this.isReady.resolve({
             channels: [],
+            current_user_settings: {},
         });
     },
 });

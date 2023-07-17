@@ -25,8 +25,8 @@ export class DiscussCoreWeb {
     }
 
     setup() {
-        this.messagingService.isReady.then(({ channels }) => {
-            for (const channelData of channels) {
+        this.messagingService.isReady.then((data) => {
+            for (const channelData of data.channels) {
                 const thread = this.threadService.createChannelThread(channelData);
                 if (
                     channelData.is_minimized &&
@@ -40,6 +40,10 @@ export class DiscussCoreWeb {
                     });
                 }
             }
+            this.store.discuss.channels.isOpen =
+                data.current_user_settings.is_discuss_sidebar_category_channel_open;
+            this.store.discuss.chats.isOpen =
+                data.current_user_settings.is_discuss_sidebar_category_chat_open;
         });
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
