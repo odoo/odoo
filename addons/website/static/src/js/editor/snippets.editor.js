@@ -462,18 +462,20 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * @private
      */
     _onReloadBundles(ev) {
-        this._mutex.exec(() => {
-            const excludeSelector = this.optionsTabStructure.map(element => element[0]).join(', ');
-            for (const editor of this.snippetEditors) {
-                if (!editor.$target[0].matches(excludeSelector)) {
-                    if (this._currentTab === this.tabs.THEME) {
+        const excludeSelector = this.optionsTabStructure.map(element => element[0]).join(', ');
+        for (const editor of this.snippetEditors) {
+            if (!editor.$target[0].matches(excludeSelector)) {
+                if (this._currentTab === this.tabs.THEME) {
+                    this._mutex.exec(() => {
                         editor.destroy();
-                    } else {
-                        editor.updateOptionsUI(true);
-                    }
+                    });
+                } else {
+                    this._mutex.exec(async () => {
+                        await editor.updateOptionsUI(true);
+                    });
                 }
             }
-        });
+        }
     },
 });
 
