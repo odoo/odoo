@@ -499,29 +499,31 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * @private
      */
     _onReloadBundles(ev) {
-        this._mutex.exec(() => {
-            const excludeSelector = this.optionsTabStructure.map(element => element[0]).join(', ');
-            for (const editor of this.snippetEditors) {
-                if (!editor.$target[0].matches(excludeSelector)) {
-                    if (this._currentTab === this.tabs.THEME) {
+        const excludeSelector = this.optionsTabStructure.map(element => element[0]).join(', ');
+        for (const editor of this.snippetEditors) {
+            if (!editor.$target[0].matches(excludeSelector)) {
+                if (this._currentTab === this.tabs.THEME) {
+                    this._mutex.exec(() => {
                         editor.destroy();
-                    } else {
+                    });
+                } else {
+                    this._mutex.exec(async () => {
                         // TODO In master: add a rerender parameter to
                         // updateOptionsUI.
                         Object.values(editor.styles).map(opt => {
                             opt.rerender = true;
                         });
-                        editor.updateOptionsUI();
+                        await editor.updateOptionsUI();
                         Object.values(editor.styles).map(opt => {
                             if (opt.rerender) {
                                 // 'rerender' was irrelevant for option.
                                 delete opt.rerender;
                             }
                         });
-                    }
+                    });
                 }
             }
-        });
+        }
     },
 });
 
