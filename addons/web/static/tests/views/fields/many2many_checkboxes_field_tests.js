@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { click, clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
+import {
+    click,
+    clickSave,
+    editInput,
+    getFixture,
+    getNodesTextContent,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -123,6 +129,50 @@ QUnit.module("Fields", (hooks) => {
             target.querySelectorAll("div.o_field_widget div.form-check input")[1].checked,
             "second checkbox should not be checked"
         );
+    });
+
+    QUnit.test("Many2ManyCheckBoxesField does not read added record", async function (assert) {
+        serverData.models.partner.records[0].timmy = [];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="timmy" widget="many2many_checkboxes" />
+                    </group>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsN(target, "div.o_field_widget div.form-check", 2);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_field_widget .form-check-label")),
+            ["gold", "silver"]
+        );
+        assert.containsNone(target, "div.o_field_widget div.form-check input:checked");
+
+        await click(target.querySelector("div.o_field_widget div.form-check input"));
+        assert.containsN(target, "div.o_field_widget div.form-check", 2);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_field_widget .form-check-label")),
+            ["gold", "silver"]
+        );
+        assert.containsOnce(target, "div.o_field_widget div.form-check input:checked");
+
+        await clickSave(target);
+        assert.containsN(target, "div.o_field_widget div.form-check", 2);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_field_widget .form-check-label")),
+            ["gold", "silver"]
+        );
+        assert.containsOnce(target, "div.o_field_widget div.form-check input:checked");
+
+        assert.verifySteps(["get_views", "web_read", "name_search", "write", "web_read"]);
     });
 
     QUnit.test(
