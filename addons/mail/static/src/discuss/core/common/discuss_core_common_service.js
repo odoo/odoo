@@ -94,6 +94,16 @@ export class DiscussCoreCommon {
                 channel.messages.push(message);
                 channel.transientMessages.push(message);
             });
+            this.busService.subscribe("discuss.channel/unpin", (payload) => {
+                const thread = this.store.threads[createLocalId("discuss.channel", payload.id)];
+                if (thread) {
+                    thread.is_pinned = false;
+                    this.notificationService.add(
+                        sprintf(_t("You unpinned your conversation with %s"), thread.displayName),
+                        { type: "info" }
+                    );
+                }
+            });
             this.busService.subscribe("discuss.channel.member/fetched", (payload) => {
                 const { channel_id, last_message_id, partner_id } = payload;
                 const channel = this.store.threads[createLocalId("discuss.channel", channel_id)];

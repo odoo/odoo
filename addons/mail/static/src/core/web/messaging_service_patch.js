@@ -11,6 +11,7 @@ patch(Messaging.prototype, "mail/core/web", {
         this._super(env, services, initialThreadLocalId);
         /** @type {import("@mail/core/common/chat_window_service").ChatWindow} */
         this.chatWindowService = services["mail.chat_window"];
+        this.notificationService = services.notification;
         this.ui = services["ui"];
         this.bus.subscribe("res.users/connection", async ({ partnerId, username }) => {
             // If the current user invited a new user, and the new user is
@@ -44,5 +45,5 @@ patch(Messaging.prototype, "mail/core/web", {
 });
 
 patch(messagingService, "mail/core/web", {
-    dependencies: [...messagingService.dependencies, "mail.chat_window", "ui"],
+    dependencies: [...messagingService.dependencies, "mail.chat_window", "notification", "ui"],
 });
