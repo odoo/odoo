@@ -336,8 +336,8 @@ class EventRegistration(models.Model):
 
     def _convert_value(self, value, field_name):
         """ Small tool because convert_to_write is touchy """
-        if value and self._fields[field_name].type in ['many2many', 'one2many']:
+        if isinstance(value, models.BaseModel) and self._fields[field_name].type in ['many2many', 'one2many']:
             return value.ids
-        if value and self._fields[field_name].type == 'many2one':
+        if isinstance(value, models.BaseModel) and self._fields[field_name].type == 'many2one':
             return value.id
         return value
