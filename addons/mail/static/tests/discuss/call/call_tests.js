@@ -53,6 +53,7 @@ QUnit.test("no call with odoobot", async (assert) => {
 });
 
 QUnit.test("should not display call UI when no more members (self disconnect)", async (assert) => {
+    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
@@ -198,6 +199,7 @@ QUnit.test("can share user camera", async (assert) => {
 });
 
 QUnit.test("Create a direct message channel when clicking on start a meeting", async (assert) => {
+    mockGetMedia();
     const { openDiscuss } = await start();
     await openDiscuss();
     await click("button:contains(Start a meeting)");
