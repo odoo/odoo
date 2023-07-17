@@ -1269,7 +1269,7 @@ class Lead(models.Model):
 
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             email = f'{alias_record.alias_name}@{alias_record.alias_domain}'
-            sub_title = Markup(_('Use the top left <i>Create</i> button, or send an email to %(email_link)s to test the email gateway.')) % {
+            sub_title = Markup(_('Use the <i>New</i> button, or send an email to %(email_link)s to test the email gateway.')) % {
                 'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (email, email),
             }
         return super().get_empty_list_help(
