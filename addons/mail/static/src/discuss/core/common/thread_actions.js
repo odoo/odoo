@@ -55,6 +55,15 @@ threadActionsRegistry
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
+        componentProps(action, component) {
+            return {
+                openChannelInvitePanel({ keepPrevious } = {}) {
+                    component.threadActions.actions
+                        .find(({ id }) => id === "add-users")
+                        ?.open({ keepPrevious });
+                },
+            };
+        },
         panelOuterClass: "o-discuss-ChannelMemberList",
         icon: "fa fa-fw fa-users",
         iconLarge: "fa fa-fw fa-lg fa-users",

@@ -9,6 +9,32 @@ class Partners(models.Model):
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
 
+    @api.model
+    def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
+        result = super().search_for_channel_invite(search_term, channel_id, limit)
+        channel = self.env['discuss.channel'].browse(channel_id)
+        partners = self.browse([partner["id"] for partner in result['partners']])
+        if channel.channel_type != 'livechat' or not partners:
+            return result
+        lang_name_by_code = {code: name for code, name in self.env['res.lang'].get_installed()}
+        formatted_partner_by_id = {formatted_partner['id']: formatted_partner for formatted_partner in result['partners']}
+        invite_by_self_count_by_partner_id = {
+            result['partner_id'][0]: result['partner_id_count']
+            for result in self.env["discuss.channel.member"].read_group(
+                [["create_uid", "=", self.env.user.id], ["partner_id", "in", partners.ids]],
+                fields=[],
+                groupby=["partner_id"],
+            )
+        }
+        active_livechat_partner_ids = self.env['im_livechat.channel'].search([]).available_operator_ids.partner_id.ids
+        for partner in partners:
+            formatted_partner_by_id[partner.id].update({
+                'lang_name': lang_name_by_code[partner.lang],
+                'invite_by_self_count': invite_by_self_count_by_partner_id.get(partner.id, 0),
+                'is_available': partner.id in active_livechat_partner_ids,
+            })
+        return result
+
     def _get_channels_as_member(self):
         channels = super()._get_channels_as_member()
         channels |= self.env['discuss.channel'].search([

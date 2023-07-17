@@ -282,6 +282,7 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
                 this.pyEnv["discuss.channel.member"].create({
                     channel_id: channel.id,
                     partner_id: partner.id,
+                    create_uid: this.pyEnv.currentUserId,
                 })
             );
         }
