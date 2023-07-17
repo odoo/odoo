@@ -509,6 +509,10 @@ class AccountMove(models.Model):
         compute="_compute_is_move_sent",
         help="It indicates that the invoice/payment has been sent or the PDF has been generated.",
     )
+    is_being_sent = fields.Boolean(
+        help="Is the move being sent asynchronously",
+        compute='_compute_is_being_sent'
+    )
 
     invoice_user_id = fields.Many2one(
         string='Salesperson',
@@ -620,6 +624,25 @@ class AccountMove(models.Model):
     def _compute_is_move_sent(self):
         for move in self:
             move.is_move_sent = bool(move.invoice_pdf_report_id)
+
+    def _compute_is_being_sent(self):
+        self.is_being_sent = False
+        if self.ids:
+            self.env['account.move.send'].flush_model(['move_ids', 'mode'])
+            self.env.cr.execute(
+                """
+                SELECT move_send_rel.account_move_id
+                  FROM account_move_send send
+                  JOIN account_move_account_move_send_rel move_send_rel
+                    ON move_send_rel.account_move_id in %(move_ids)s
+                   AND send.id = move_send_rel.account_move_send_id
+                 WHERE send.mode != 'done'
+                """,
+                params={'move_ids': tuple(self.ids)}
+            )
+            move_ids = [res[0] for res in self.env.cr.fetchall()]
+            if move_ids:
+                self.env['account.move'].browse(move_ids).is_being_sent = True
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (

@@ -572,6 +572,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # Awaiting the CRON.
         self.assertFalse(invoice1.invoice_pdf_report_id)
         self.assertFalse(invoice2.invoice_pdf_report_id)
+        self.assertTrue(invoice1.is_being_sent)
+        self.assertTrue(invoice2.is_being_sent)
 
         # Run the CRON.
         wizard.action_send_and_print(from_cron=True)
@@ -589,6 +591,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             ('res_field', '=', 'invoice_pdf_report_file'),
         ])
         self.assertEqual(len(invoice_attachments), 1)
+        self.assertFalse(invoice1.is_being_sent)
+        self.assertFalse(invoice2.is_being_sent)
 
         # Mix already sent invoice with a new one.
         invoice3 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 14:39+0000\n"
-"PO-Revision-Date: 2023-07-04 14:39+0000\n"
+"POT-Creation-Date: 2023-07-11 09:57+0000\n"
+"PO-Revision-Date: 2023-07-11 09:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -7445,6 +7445,13 @@ msgid "Is Valid"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
+#: model:ir.model.fields,help:account.field_account_move__is_being_sent
+#: model:ir.model.fields,help:account.field_account_payment__is_being_sent
+msgid "Is the move being sent asynchronously"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
 msgstr ""
@@ -13450,6 +13457,11 @@ msgstr ""
 msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "This invoice is being sent in the background."
 msgstr ""
 
 #. module: account
