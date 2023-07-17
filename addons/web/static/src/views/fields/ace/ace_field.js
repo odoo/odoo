@@ -8,7 +8,6 @@ import { standardFieldProps } from "../standard_field_props";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { Component, useState } from "@odoo/owl";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-import { useDebounced } from "@web/core/utils/timing";
 
 export class AceField extends Component {
     static template = "web.AceField";
@@ -23,12 +22,13 @@ export class AceField extends Component {
 
     setup() {
         this.cookies = useService("cookie");
-        this.debouncedCommit = useDebounced(this.commitChanges, 5000);
 
         this.state = useState({});
         useRecordObserver((record) => {
-            this.state.value = record.data[this.props.name];
+            this.state.initialValue = record.data[this.props.name];
         });
+
+        this.isDirty = false;
 
         const { model } = this.props.record;
         useBus(model.bus, "WILL_SAVE_URGENTLY", () => this.commitChanges());
@@ -44,18 +44,18 @@ export class AceField extends Component {
         return this.cookies.current.color_scheme === "dark" ? "monokai" : "";
     }
 
-    handleChange(newValue) {
+    handleChange(editedValue) {
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", true);
-        this.state.value = newValue;
-        this.debouncedCommit();
+        this.isDirty = true;
+        this.editedValue = editedValue;
     }
 
     async commitChanges() {
-        if (!this.props.readonly) {
-            const value = this.state.value;
-            if (this.props.record.data[this.props.name] !== value) {
-                await this.props.record.update({ [this.props.name]: value });
+        if (!this.props.readonly && this.isDirty) {
+            if (this.state.initialValue !== this.editedValue) {
+                await this.props.record.update({ [this.props.name]: this.editedValue });
             }
+            this.isDirty = false;
         }
     }
 }
