@@ -2257,7 +2257,7 @@ class Lead(models.Model):
         in won_count (if won) or in lost_count (if lost).
 
         This method is also used when reactivating a mistakenly lost lead (using the decrement argument).
-        In this case, the lost count should be de-increment by 1 for each PLS parameter linked ot the lead.
+        In this case, the lost count should be de-increment by 1 for each PLS parameter linked to the lead.
 
         Live increment must be done before writing the new values because we need to know the state change (from and to).
         This would not be an issue for the reach won or reach lost as we just need to increment the frequencies with the
