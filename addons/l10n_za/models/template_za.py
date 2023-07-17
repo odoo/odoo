@@ -29,7 +29,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'cash_account_code_prefix': '1250',
                 'transfer_account_code_prefix': '1010',
                 'account_default_pos_receivable_account_id': '110030',
-                'income_currency_exchange_account_id': '610440',
-                'expense_currency_exchange_account_id': '610440',
+                'income_currency_exchange_account_id': '500100',
+                'expense_currency_exchange_account_id': '610340',
+                'default_cash_difference_income_account_id': '500110',
+                'default_cash_difference_expense_account_id': '610460',
             },
         }
