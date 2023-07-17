@@ -19,21 +19,22 @@ class Employee(models.Model):
 
     def write(self, vals):
         result = super(Employee, self).write(vals)
-        if 'active' in vals:
-            if vals.get('active'):
+        if 'active' in vals or 'resource_calendar_id' in vals:
+            has_calendar_future_holidays = 'resource_calendar_id' in vals and \
+                self.env['resource.calendar.leaves'].search([
+                    ('date_from', '>=', fields.date.today()),
+                    ('calendar_id', '=', vals['resource_calendar_id'])
+                ], limit=1)
+            if not vals.get('active') or has_calendar_future_holidays:
+                # Delete future holiday timesheets
+                self._delete_future_public_holidays_timesheets(vals)
+            if vals.get('active') or has_calendar_future_holidays:
                 # Create future holiday timesheets
                 self._create_future_public_holidays_timesheets(self)
-            else:
-                # Delete future holiday timesheets
-                self._delete_future_public_holidays_timesheets()
-        elif 'resource_calendar_id' in vals:
-            # Update future holiday timesheets
-            self._delete_future_public_holidays_timesheets()
-            self._create_future_public_holidays_timesheets(self)
         return result
 
-    def _delete_future_public_holidays_timesheets(self):
-        future_timesheets = self.env['account.analytic.line'].sudo().search([('global_leave_id', '!=', False), ('date', '>=', fields.date.today()), ('employee_id', 'in', self.ids)])
+    def _delete_future_public_holidays_timesheets(self, vals):
+        future_timesheets = self.env['account.analytic.line'].sudo().search([('global_leave_id.calendar_id', '!=', vals.get('resource_calendar_id', False)), ('date', '>=', fields.date.today()), ('employee_id', 'in', self.ids)])
         future_timesheets.write({'global_leave_id': False})
         future_timesheets.unlink()
 
