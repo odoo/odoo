@@ -125,3 +125,9 @@ class ResPartner(models.Model):
             id_number = re.sub('[^0-9]', '', self.vat)
             res = int(id_number)
         return res
+
+    @api.constrains('l10n_ar_afip_responsibility_type_id')
+    def _foreing_partner_vat(self):
+        """ It is necessary that foreign customers or suppliers have country assigned. """
+        if self.l10n_ar_afip_responsibility_type_id.code == '9' and not self.country_id:
+            raise UserError(_('It is necessary that foreign customers or suppliers have country assigned. Verify partner [%i] %s') % (self.id, self.name))
