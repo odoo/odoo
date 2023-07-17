@@ -52,7 +52,7 @@ patch(BarcodeParser.prototype, {
     },
 
     /**
-     * Perform interpretation of the barcode value depending ot the rule.gs1_content_type
+     * Perform interpretation of the barcode value depending of the rule.gs1_content_type
      *
      * @param {Array} match Result of a regex match with atmost 2 groups (ia and value)
      * @param {Object} rule Matched Barcode Rule

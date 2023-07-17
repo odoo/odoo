@@ -554,7 +554,7 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(picking_client.move_ids.reserved_availability, 5.0)
 
     def test_pick_ship_return(self):
-        """ Create pick and ship. Bring it ot the customer and then return
+        """ Create pick and ship. Bring it to the customer and then return
         it to stock. This test check the state and the quantity after each move in
         order to ensure that it is correct.
         """
