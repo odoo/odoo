@@ -276,27 +276,6 @@ export class Messaging {
                     }
                     break;
                 }
-                case "discuss.channel.member/seen": {
-                    const { channel_id, last_message_id, partner_id } = notif.payload;
-                    const channel =
-                        this.store.threads[createLocalId("discuss.channel", channel_id)];
-                    if (!channel) {
-                        // for example seen from another browser, the current one has no
-                        // knowledge of the channel
-                        continue;
-                    }
-                    if (partner_id && partner_id === this.store.user?.id) {
-                        this.threadService.updateSeen(channel, last_message_id);
-                    }
-                    const seenInfo = channel.seenInfos.find(
-                        (seenInfo) => seenInfo.partner.id === partner_id
-                    );
-                    if (seenInfo) {
-                        seenInfo.lastSeenMessage = { id: last_message_id };
-                    }
-                    break;
-                }
-
                 case "discuss.channel.member/fetched": {
                     const { channel_id, last_message_id, partner_id } = notif.payload;
                     const channel =
