@@ -183,7 +183,7 @@ class TestDiscussController(HttpCase):
         demo = self.authenticate("demo", "demo")
         channel = self.env["mail.channel"].create({"name": "public_channel", "public": "public"})
         channel.add_members(
-            self.env["res.users"].browse(demo.uid).partner_id.id
+            self.env["res.users"].browse(demo.uid).partner_id.ids
         )  # don't care, we just need a channel where demo is follower
         no_access_request = self.url_open("/web/content/" + str(att.id))
         self.assertFalse(
