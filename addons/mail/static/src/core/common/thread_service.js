@@ -447,16 +447,6 @@ export class ThreadService {
         thread.pendingNewMessages = [];
     }
 
-    async createChannel(name) {
-        const data = await this.orm.call("discuss.channel", "channel_create", [
-            name,
-            this.store.internalUserGroupId,
-        ]);
-        const channel = this.createChannelThread(data);
-        this.sortChannels();
-        this.open(channel);
-    }
-
     unpin(thread) {
         if (this.store.discuss.threadLocalId === thread.localId) {
             this.router.replaceState({ active_id: undefined });

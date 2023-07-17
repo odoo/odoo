@@ -20,7 +20,9 @@ export class ChannelSelector extends Component {
     static template = "discuss.ChannelSelector";
 
     setup() {
+        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = useStore();
+        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
         this.personaService = useService("mail.persona");
         /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
@@ -103,7 +105,16 @@ export class ChannelSelector extends Component {
     onSelect(option) {
         if (this.props.category.id === "channels") {
             if (option.channelId === "__create__") {
-                this.threadService.createChannel(option.label);
+                this.env.services.orm
+                    .call("discuss.channel", "channel_create", [
+                        option.label,
+                        this.store.internalUserGroupId,
+                    ])
+                    .then((data) => {
+                        const channel = this.threadService.createChannelThread(data);
+                        this.threadService.sortChannels();
+                        this.threadService.open(channel);
+                    });
             } else {
                 this.threadService.joinChannel(option.channelId, option.label);
             }
