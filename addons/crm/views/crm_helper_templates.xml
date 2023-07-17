@@ -4,13 +4,13 @@
         <t t-if="team.alias_name and team.alias_domain">
             <p class="o_view_nocontent_smiling_face">
                 Create an opportunity to start playing with your pipeline.
-            </p><p>Use the top left <i>Create</i> button, or send an email to
+            </p><p>Use the <i>New</i> button, or send an email to
             <a t-attf-href="mailto:#{team.alias_id.display_name}"><t t-esc="team.alias_id.display_name"/></a>
             to test the email gateway.</p>
         </t>
         <t t-else="">
             <p class='o_view_nocontent_smiling_face'>Create an opportunity to start playing with your pipeline.</p>
-            <p>Use the top left Create button, or configure an email alias to test the email gateway.</p>
+            <p>Use the New button, or configure an email alias to test the email gateway.</p>
         </t>
     </template>
 </odoo>
