@@ -519,17 +519,24 @@ export class RelationalModel extends Model {
         if (!resIds.length) {
             return [];
         }
-        const kwargs = {
-            context: { bin_size: true, ...context },
-            specification: getFieldsSpec(activeFields, fields, evalContext),
-        };
-        const records = await this.orm.call(resModel, "web_read", [resIds], kwargs);
-        if (!records.length) {
-            throw new FetchRecordError(resIds);
-        }
+        const fieldSpec = getFieldsSpec(activeFields, fields, evalContext);
+        if (Object.keys(fieldSpec).length > 0) {
+            const kwargs = {
+                context: { bin_size: true, ...context },
+                specification: fieldSpec,
+            };
+            const records = await this.orm.call(resModel, "web_read", [resIds], kwargs);
+            if (!records.length) {
+                throw new FetchRecordError(resIds);
+            }
 
-        this._applyProperties(records, config);
-        return records;
+            this._applyProperties(records, config);
+            return records;
+        } else {
+            return resIds.map((resId) => {
+                return { id: resId };
+            });
+        }
     }
 
     /**
