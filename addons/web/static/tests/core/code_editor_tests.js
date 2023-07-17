@@ -67,6 +67,7 @@ QUnit.module("Web Components", (hooks) => {
             getSession() {
                 return this.session;
             },
+            on: () => {},
         };
     }
 

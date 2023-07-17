@@ -8,7 +8,6 @@ import { standardFieldProps } from "../standard_field_props";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
-import { useDebounced } from "@web/core/utils/timing";
 
 export class AceField extends Component {
     static template = "web.AceField";
@@ -23,14 +22,10 @@ export class AceField extends Component {
 
     setup() {
         this.cookies = useService("cookie");
-        this.debouncedCommit = useDebounced(this.commitChanges, 10);
 
-        this.state = useState({
-            onChange: (value) => this.handleChange(value),
-            class: "ace-view-editor",
-            theme: this.theme,
-        });
+        this.state = useState({});
 
+        this.isDirty = false;
         this.updateCodeEditor(this.props);
         onWillUpdateProps(this.updateCodeEditor);
 
@@ -45,23 +40,23 @@ export class AceField extends Component {
         return this.cookies.current.color_scheme === "dark" ? "monokai" : "";
     }
 
-    handleChange(newValue) {
-        this.state.value = newValue;
-        this.debouncedCommit();
+    handleChange(editedValue) {
+        this.isDirty = true;
+        this.editedValue = editedValue;
     }
 
     updateCodeEditor({ record, mode, readonly }) {
-        this.state.value = formatText(record.data[this.props.name]);
+        this.state.initialValue = formatText(record.data[this.props.name]);
         this.state.mode = mode === "xml" ? "qweb" : mode;
         this.state.readonly = readonly;
     }
 
     commitChanges() {
-        if (!this.props.readonly) {
-            const value = this.state.value;
-            if (this.props.record.data[this.props.name] !== value) {
-                return this.props.record.update({ [this.props.name]: value });
+        if (!this.props.readonly && this.isDirty) {
+            if (this.state.initialValue !== this.editedValue) {
+                return this.props.record.update({ [this.props.name]: this.editedValue });
             }
+            this.isDirty = false;
         }
     }
 }

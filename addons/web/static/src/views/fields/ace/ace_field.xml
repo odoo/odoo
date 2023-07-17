@@ -5,9 +5,10 @@
         <!-- TODO check if some classes are useless -->
         <div class="o_field_widget oe_form_field o_ace_view_editor oe_ace_open">
             <CodeEditor
-                value="state.value"
+                value="state.initialValue"
                 mode="state.mode"
                 readonly="state.readonly"
+                onBlur.bind="commitChanges"
                 onChange.bind="handleChange"
                 class="'ace-view-editor'"
                 theme="theme"
