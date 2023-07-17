@@ -8,6 +8,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
+from odoo.tests import Form
 from odoo.tests.common import SavepointCase
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 
@@ -747,3 +748,145 @@ class StockQuant(SavepointCase):
         # cache to ensure that the value will be the newest
         quant.invalidate_cache(fnames=['quantity'], ids=quant.ids)
         self.assertEqual(quant.quantity, 11)
+
+    def test_multiple_returns_serial_product(self):
+        """
+        A serial product must be able to be returned to stock more than once.
+        """
+        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+        picking_type_out = self.env.ref('stock.picking_type_out')
+
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product_serial, stock_location, 1.0, lot_id=lot1)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_out.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_lines': [(0, 0, {
+                'name': 'Out 1 x %s' % self.product_serial.name,
+                'product_id': self.product_serial.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_serial.uom_id.id,
+            })],
+        })
+        picking.action_confirm()
+        picking.action_assign()
+
+        package = self.env['stock.quant.package'].create({
+            'name': 'Super Package',
+        })
+        picking.move_lines.move_line_ids.write({
+            'qty_done': 1,
+            'result_package_id': package.id,
+        })
+        picking._action_done()
+
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+                                         .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+                                                       active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+
+        return_picking.move_lines[0].move_line_ids[0].write({
+            'qty_done': 1.0,
+            'lot_id': lot1.id,
+        })
+        return_picking._action_done()
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_out.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_lines': [(0, 0, {
+                'name': 'In 10 x %s' % self.product_serial.name,
+                'product_id': self.product_serial.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_serial.uom_id.id,
+            })],
+        })
+        picking.action_confirm()
+        picking.action_assign()
+
+        picking.move_lines.move_line_ids.write({
+            'qty_done': 1,
+            'result_package_id': package.id,
+        })
+        picking.button_validate()
+
+        # A quant of a serial product in a location other than 'Inventory Loss'
+        # can have more than one unit as long as the absolute number of the sum
+        # of the quantities of that product in that location does not exceed 1.
+        quants = self.env["stock.quant"].search(
+            [
+                ("product_id", "=", self.product_serial.id),
+                ("location_id", "=", customer_location.id),
+                ("lot_id", "=", lot1.id),
+            ]
+        )
+        quant = quants.filtered(lambda x: x.package_id == package)
+        self.assertEqual(len(quant), 1)
+        self.assertEqual(quant.quantity, 2)
+        self.assertLessEqual(abs(sum(quants.mapped("quantity"))), 1)
+
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+                                         .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+                                                       active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+
+        return_picking.move_lines[0].move_line_ids[0].write({
+            'qty_done': 1.0,
+            'lot_id': lot1.id,
+        })
+        return_picking._action_done()
+
+        quants = self.env["stock.quant"].search(
+            [
+                ("product_id", "=", self.product_serial.id),
+                ("location_id", "=", customer_location.id),
+                ("lot_id", "=", lot1.id),
+            ]
+        )
+        quant = quants.filtered(lambda x: x.package_id != package)
+        self.assertEqual(len(quant), 1)
+        self.assertEqual(quant.quantity, -2)
+        self.assertLessEqual(abs(sum(quants.mapped("quantity"))), 1)
+
+    def test_unique_serial_product_location(self):
+        """
+        It should not be possible to have more than one unit for a serial product in a location other than 'Inventory Loss'.
+        """
+        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
+
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        package1 = self.env['stock.quant.package'].create({
+            'name': 'Super Package 1',
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_serial, stock_location, 1.0, lot_id=lot1, package_id=package1)
+
+        self.assertEqual(self.product_serial.qty_available, 1)
+
+        package2 = self.env['stock.quant.package'].create({
+            'name': 'Super Package 2',
+        })
+        with self.assertRaises(ValidationError):
+            self.env['stock.quant']._update_available_quantity(self.product_serial, stock_location, 1.0, lot_id=lot1, package_id=package2)
