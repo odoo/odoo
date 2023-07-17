@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Messaging } from "@mail/core/common/messaging_service";
-import { createLocalId } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -12,15 +11,6 @@ patch(Messaging.prototype, "im_livechat", {
             this.store.discuss.livechat.isOpen = true;
         }
     },
-
-    _handleNotificationLastInterestDtChanged(notif) {
-        this._super(notif);
-        const channel = this.store.threads[createLocalId("discuss.channel", notif.payload.id)];
-        if (channel?.type === "livechat") {
-            this.threadService.sortChannels();
-        }
-    },
-
     _handleNotificationRecordInsert(notif) {
         this._super(notif);
         const { "res.users.settings": settings } = notif.payload;
