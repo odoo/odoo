@@ -48,6 +48,11 @@
             width: 135px;
         }
     }
+
+    .o_notebook .tab-content .tab-pane .alert {
+        margin-left: -$o-sheet-cancel-hpadding;
+        margin-right: -$o-sheet-cancel-hpadding;
+    }
 }
 
 .o_form_view.o_mass_mailing_mailing_form .o_form_renderer {
@@ -178,15 +183,11 @@
 }
 
 .o_mass_mailing_mailing_form.o_mass_mailing_form_full_width .alert.alert-info:not(.o_invisible_modifier) {
+    margin: 0 0 0 12px;
     flex: 1;
-    padding: unset;
+    padding: 0.5rem 0.5rem;
     border-left-width: 1px;
     border-left-color: #dee2e6;
-
-    > div {
-        min-height: 100%;
-        padding: 6px;
-    }
 }
 
 .o_form_view.o_xxl_form_view .o_mass_mailing_mailing_form {

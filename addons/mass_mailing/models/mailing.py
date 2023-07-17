@@ -203,6 +203,7 @@ class MassMailing(models.Model):
         related="campaign_id.ab_testing_winner_selection", readonly=False,
         default="opened_ratio",
         copy=True)
+    is_ab_test_sent = fields.Boolean(compute="_compute_is_ab_test_sent")
     kpi_mail_required = fields.Boolean('KPI mail required', copy=False)
     # statistics data
     mailing_trace_ids = fields.One2many('mailing.trace', 'mass_mailing_id', string='Emails Statistics')
@@ -471,6 +472,13 @@ class MassMailing(models.Model):
                 'mass_mailing.ab_testing_description',
                 mailing._get_ab_testing_description_values()
             )
+
+    @api.depends('campaign_id.mailing_mail_ids.state')
+    def _compute_is_ab_test_sent(self):
+        for rec in self:
+            ab_testing_mailings = rec._get_ab_testing_siblings_mailings()
+            selected_mailings = ab_testing_mailings.filtered(lambda m: m.state == 'done')
+            rec.is_ab_test_sent = bool(selected_mailings)
 
     def _get_ab_testing_description_modifying_fields(self):
         return ['ab_testing_enabled', 'ab_testing_pc', 'ab_testing_schedule_datetime', 'ab_testing_winner_selection', 'campaign_id']
@@ -853,6 +861,7 @@ class MassMailing(models.Model):
             raise ValueError(_("A/B test option has not been enabled"))
         final_mailing = self.copy({
             'ab_testing_pc': 100,
+            'name': _(" %(subject)s (final)", subject=self.name) # Add suffix on name to show it's the final mailing
         })
         self.campaign_id.ab_testing_winner_mailing_id = final_mailing
         final_mailing.action_launch()
@@ -868,6 +877,7 @@ class MassMailing(models.Model):
         self.ensure_one()
         return {
             'mailing': self,
+            'ab_testing_count': self.ab_testing_mailings_count,
             'ab_testing_winner_selection_description': self._get_ab_testing_winner_selection()['description'],
             'total_ab_testing_pc': sum([
                 mailing.ab_testing_pc for mailing in self._get_ab_testing_siblings_mailings()

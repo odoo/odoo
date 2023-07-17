@@ -52,6 +52,7 @@ class Mailing(models.Model):
     ab_testing_sms_winner_selection = fields.Selection(
         related="campaign_id.ab_testing_sms_winner_selection",
         default="clicks_ratio", readonly=False, copy=True)
+    ab_testing_mailings_sms_count = fields.Integer(related="campaign_id.ab_testing_mailings_sms_count")
 
     @api.depends('mailing_type')
     def _compute_medium_id(self):
@@ -337,6 +338,7 @@ class Mailing(models.Model):
         values = super()._get_ab_testing_description_values()
         if self.mailing_type == 'sms':
             values.update({
+                'ab_testing_count': self.ab_testing_mailings_sms_count,
                 'ab_testing_winner_selection': self.ab_testing_sms_winner_selection,
             })
         return values
