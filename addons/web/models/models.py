@@ -90,12 +90,18 @@ class Base(models.AbstractModel):
         if fields_to_read == ['id']:
             # if we request to read only the ids, we have them already so we can build the return dictionaries immediately
             # this also avoid a call to read on the co-model that might have different access rules
-            values_list = [{'id': record._origin.id} for record in self]
+            values_list = [{'id': id_} for id_ in self._ids]
         else:
             values_list: List[Dict] = self.read(fields_to_read, load=None)
 
         if not values_list:
             return values_list
+
+        def cleanup(vals: Dict) -> Dict:
+            """ Fixup vals['id'] of a new record. """
+            if not vals['id']:
+                vals['id'] = vals['id'].origin or False
+            return vals
 
         for field_name, field_spec in specification.items():
             if not field_spec:
@@ -111,16 +117,16 @@ class Base(models.AbstractModel):
                 extra_fields.pop('display_name', None)
 
                 many2one_data = {
-                    vals['id']: vals
+                    vals['id']: cleanup(vals)
                     for vals in co_records.web_read(extra_fields)
                 }
 
                 if 'display_name' in field_spec['fields']:
                     for rec in co_records.sudo():
-                        many2one_data[rec._origin.id]['display_name'] = rec.display_name
+                        many2one_data[rec.id]['display_name'] = rec.display_name
 
                 for values in values_list:
-                    if not values[field_name]:
+                    if values[field_name] is False:
                         continue
                     values[field_name] = many2one_data[values[field_name]]
 

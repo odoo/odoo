@@ -164,7 +164,7 @@ class TestUnityRead(TransactionCase):
             'login': {},
         })
         self.assertEqual(result, [{
-            'id': new_account._origin.id,
+            'id': new_account.id,
             'name': new_account.name,
             'login': new_account.login,
         }])
@@ -176,7 +176,7 @@ class TestUnityRead(TransactionCase):
             'person_id': {'fields': {'name': {}}},
         })
         self.assertEqual(result, [{
-            'id': new_account._origin.id,
+            'id': new_account.id,
             'person_id': {
                 'id': new_account.person_id._origin.id,
                 'name': new_account.person_id.name,
@@ -554,6 +554,26 @@ class TestUnityRead(TransactionCase):
         self.assertEqual(read, [
             {
                 'id': self.course.id,
+                'reference': {
+                    'id': {'id': self.lesson_day1.id, 'model': self.lesson_day1._name},
+                    'display_name': 'special first day'
+                }
+            }
+        ])
+
+    def test_reference_fields_respect_context_with_new_record(self):
+        new_course = self.course.new(origin=self.course)
+        read = new_course.web_read(
+            {
+                'reference':
+                    {
+                        'fields': {'display_name': {}},
+                        'context': {'special': 'yes'}
+                    }
+            })
+        self.assertEqual(read, [
+            {
+                'id': new_course.id,
                 'reference': {
                     'id': {'id': self.lesson_day1.id, 'model': self.lesson_day1._name},
                     'display_name': 'special first day'
