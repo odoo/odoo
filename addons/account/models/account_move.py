@@ -3271,6 +3271,7 @@ class AccountMove(models.Model):
         }
 
         res_per_invoice = {}
+        aml = False
         for aml_values in aml_values_list:
             aml = aml_values['aml']
             invoice = aml.move_id
@@ -3291,7 +3292,7 @@ class AccountMove(models.Model):
                     # Track the balance to handle the exchange difference.
                     open_balance -= vals['balance']
 
-        exchange_diff_sign = aml.company_currency_id.compare_amounts(open_balance, 0.0)
+        exchange_diff_sign = aml and aml.company_currency_id.compare_amounts(open_balance, 0.0)
         if exchange_diff_sign != 0.0:
 
             if exchange_diff_sign > 0.0:
