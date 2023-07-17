@@ -4105,18 +4105,19 @@ class AccountMove(models.Model):
 
         for wizard in to_process[:job_count]:
             move_to_lock = wizard.move_ids
-            try:
-                with self.env.cr.savepoint(flush=False):
-                    self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
+            if move_to_lock:
+                try:
+                    with self.env.cr.savepoint(flush=False):
+                        self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
 
-            except OperationalError as e:
-                if e.pgcode == '55P03':
-                    _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
-                    if not with_commit:
-                        raise UserError(_('This document is being sent by another process already.'))
-                    continue
-                else:
-                    raise e
+                except OperationalError as e:
+                    if e.pgcode == '55P03':
+                        _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
+                        if not with_commit:
+                            raise UserError(_('This document is being sent by another process already.'))
+                        continue
+                    else:
+                        raise e
             wizard.action_send_and_print(from_cron=True)
 
             if with_commit:
