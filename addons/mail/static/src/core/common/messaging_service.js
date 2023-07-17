@@ -4,7 +4,6 @@ import { CannedResponse } from "@mail/core/common/canned_response_model";
 import { LinkPreview } from "@mail/core/common/link_preview_model";
 import { removeFromArray, removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { cleanTerm } from "@mail/utils/common/format";
-import { createLocalId } from "@mail/utils/common/misc";
 
 import { markup, reactive } from "@odoo/owl";
 
@@ -288,9 +287,6 @@ export class Messaging {
                         });
                     }
                     break;
-                case "discuss.channel/last_interest_dt_changed":
-                    this._handleNotificationLastInterestDtChanged(notif);
-                    break;
                 case "ir.attachment/delete":
                     {
                         const { id: attachmentId, message: messageData } = notif.payload;
@@ -306,17 +302,6 @@ export class Messaging {
                     }
                     break;
             }
-        }
-    }
-
-    _handleNotificationLastInterestDtChanged(notif) {
-        const { id, last_interest_dt } = notif.payload;
-        const channel = this.store.threads[createLocalId("discuss.channel", id)];
-        if (channel) {
-            this.threadService.update(channel, { last_interest_dt });
-        }
-        if (["chat", "group"].includes(channel?.type)) {
-            this.threadService.sortChannels();
         }
     }
 
