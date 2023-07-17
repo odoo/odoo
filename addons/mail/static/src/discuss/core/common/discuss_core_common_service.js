@@ -47,6 +47,16 @@ export class DiscussCoreCommon {
                     );
                 }
             });
+            this.busService.subscribe("discuss.channel/last_interest_dt_changed", (payload) => {
+                const { id, last_interest_dt } = payload;
+                const channel = this.store.threads[createLocalId("discuss.channel", id)];
+                if (channel) {
+                    this.threadService.update(channel, { last_interest_dt });
+                    if (channel.type !== "channel") {
+                        this.threadService.sortChannels();
+                    }
+                }
+            });
             this.busService.subscribe("discuss.channel/leave", (payload) => {
                 const thread = this.threadService.insert({
                     ...payload,
