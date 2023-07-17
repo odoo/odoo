@@ -1250,7 +1250,7 @@ class Lead(models.Model):
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
             email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
-            sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
+            sub_title = _('Use the <i>New</i> button, or send an email to %s to test the email gateway.') % (email_link)
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
     # ------------------------------------------------------------
