@@ -59,6 +59,7 @@ export class ChatWindow extends Component {
         this.contentRef = useRef("content");
         this.threadActions = useThreadActions();
         useChildSubEnv({
+            closeActionPanel: () => this.threadActions.activeAction?.close(),
             inChatWindow: true,
             messageHighlight: this.messageHighlight,
         });

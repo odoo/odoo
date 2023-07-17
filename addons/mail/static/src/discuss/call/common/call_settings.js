@@ -1,14 +1,16 @@
 /* @odoo-module */
 
 import { useRtc } from "@mail/discuss/call/common/rtc_hook";
+import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallSettings extends Component {
+    static components = { ActionPanel };
     static template = "discuss.CallSettings";
     static props = ["thread", "className?"];
 
@@ -119,5 +121,9 @@ export class CallSettings extends Component {
 
     onChangeEdgeBlurAmount(ev) {
         this.userSettings.edgeBlurAmount = Number(ev.target.value);
+    }
+
+    get title() {
+        return _t("Voice Settings");
     }
 }

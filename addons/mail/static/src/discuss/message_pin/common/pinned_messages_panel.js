@@ -2,6 +2,7 @@
 
 import { Message } from "@mail/core/common/message";
 import { useMessagePinService } from "@mail/discuss/message_pin/common/message_pin_service";
+import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onWillStart, onWillUpdateProps, useState, useSubEnv } from "@odoo/owl";
 
@@ -11,6 +12,7 @@ import { useService } from "@web/core/utils/hooks";
 export class PinnedMessagesPanel extends Component {
     static components = {
         Message,
+        ActionPanel,
     };
     static props = ["thread", "className?"];
     static template = "discuss.PinnedMessagesPanel";
@@ -70,5 +72,9 @@ export class PinnedMessagesPanel extends Component {
         } else {
             return _t("This conversation doesn't have any pinned messages.");
         }
+    }
+
+    get title() {
+        return _t("Pinned Messages");
     }
 }

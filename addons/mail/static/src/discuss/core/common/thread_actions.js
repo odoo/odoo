@@ -24,6 +24,7 @@ threadActionsRegistry
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
+        panelOuterClass: "o-discuss-ChannelInvitation",
         icon: "fa fa-fw fa-user-plus",
         iconLarge: "fa fa-fw fa-lg fa-user-plus",
         name: _t("Add Users"),
@@ -40,6 +41,7 @@ threadActionsRegistry
             if (!component.props.chatWindow) {
                 action.popover = usePopover(ChannelInvitation, {
                     onClose: () => action.close(),
+                    popoverClass: action.panelOuterClass,
                 });
             }
         },
@@ -53,6 +55,7 @@ threadActionsRegistry
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
+        panelOuterClass: "o-discuss-ChannelMemberList",
         icon: "fa fa-fw fa-users",
         iconLarge: "fa fa-fw fa-lg fa-users",
         name: _t("Show Member List"),

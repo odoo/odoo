@@ -15,6 +15,7 @@ threadActionsRegistry.add("pinned-messages", {
             (!component.props.chatWindow || component.props.chatWindow.isOpen)
         );
     },
+    panelOuterClass: "o-discuss-PinnedMessagesPanel",
     icon: "fa fa-fw fa-thumb-tack",
     iconLarge: "fa fa-fw fa-lg fa-thumb-tack",
     name: _t("Pinned Messages"),
