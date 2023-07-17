@@ -142,7 +142,7 @@ class TestEventCrmFlow(TestEventCrmCommon):
         })
         for email, phone, base_partner, expected_partner in [
             (False, False, self.event_customer, self.event_customer),  # should take partner info
-            ('"Other Name" <constantin@test.example.com>', False, self.event_customer, self.env['res.partner']),  # same email normalized -> currently not supported
+            ('"Other Name" <constantin@test.example.com>', False, self.event_customer, self.event_customer),  # same email normalized
             ('other.email@test.example.com', False, self.event_customer, self.env['res.partner']),  # not same email -> no partner on lead
             (False, '+32485112233', self.event_customer, self.env['res.partner']),  # same phone but differently formatted -> currently not supported
             (False, '0485112244', self.event_customer, self.env['res.partner']),  # other phone -> no partner on lead
