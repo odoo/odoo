@@ -361,5 +361,5 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner_1.id)])
 
         today = fields.Datetime.start_of(fields.Datetime.now(), 'day')
-        self.assertEqual(purchase_order.date_order, today)
+        self.assertEqual(fields.Datetime.start_of(purchase_order.date_order, 'day'), today)
         self.assertEqual(fields.Datetime.start_of(purchase_order.date_planned, 'day'), today + timedelta(days=7))
