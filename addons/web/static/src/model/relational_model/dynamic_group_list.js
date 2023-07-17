@@ -14,6 +14,10 @@ export class DynamicGroupList extends DynamicList {
     setup(config, data) {
         super.setup(...arguments);
         this.isGrouped = true;
+        this._setData(data);
+    }
+
+    _setData(data) {
         /** @type {import("./group").Group[]} */
         this.groups = data.groups.map((g) => this._createGroupDatapoint(g));
         this.count = data.length;
@@ -239,9 +243,11 @@ export class DynamicGroupList extends DynamicList {
             for (const group of groups) {
                 delete configGroups[group.value];
             }
-            const response = await this.model._updateConfig(this.config, { groups: configGroups });
-            this.groups = response.groups.map((group) => this._createGroupDatapoint(group));
-            this.count = response.length;
+            await this.model._updateConfig(
+                this.config,
+                { groups: configGroups },
+                { commit: this._setData.bind(this) }
+            );
         } else {
             for (const group of groups) {
                 this._removeGroup(group);
@@ -258,14 +264,11 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async _load(offset, limit, orderBy, domain) {
-        const response = await this.model._updateConfig(this.config, {
-            offset,
-            limit,
-            orderBy,
-            domain,
-        });
-        this.groups = response.groups.map((group) => this._createGroupDatapoint(group));
-        this.count = response.length;
+        await this.model._updateConfig(
+            this.config,
+            { offset, limit, orderBy, domain },
+            { commit: this._setData.bind(this) }
+        );
     }
 
     _removeGroup(group) {

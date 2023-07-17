@@ -49,28 +49,35 @@ export class Record extends DataPoint {
         }
         const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in data));
         data = { ...this._getDefaultValues(missingFields), ...data };
-        const vals = this._parseServerValues(data);
-        if (this.resId) {
-            this._values = markRaw(vals);
-            this._changes = markRaw({});
-        } else {
-            this._values = markRaw({});
-            this._changes = markRaw(vals);
-        }
-        this.data = { ...this._values, ...this._changes };
         // In db, char, text and html fields can be not set (NULL) and set to the empty string. In
         // the UI, there's no difference, but in the eval context, it's not the same. The next
         // structure keeps track of the server values we received for those fields (which can thus
         // be false or a string). This allows us to properly build the eval context, and to always
         // expose string values (false fallbacks on the empty string) in this.data.
         this._textValues = markRaw({});
-        this._setTextValues(data);
+        this._setData(data);
+    }
+
+    _setData(data) {
+        if (this.resId) {
+            this._values = this._parseServerValues(data);
+            this._changes = markRaw({});
+            this._setTextValues(data);
+        } else {
+            this._values = markRaw({});
+            const allVals = { ...this._getDefaultValues(), ...data };
+            this._changes = this._parseServerValues(allVals);
+            this._setTextValues(allVals);
+        }
+        this.dirty = false;
+        this.data = { ...this._values, ...this._changes };
         this._setEvalContext();
         this._savePoint = markRaw({
             dirty: false,
             changes: { ...this._changes },
             textValues: { ...this._textValues },
         });
+        this._invalidFields.clear();
     }
 
     // -------------------------------------------------------------------------
@@ -535,27 +542,14 @@ export class Record extends DataPoint {
     async _load(nextConfig = {}) {
         // FIXME: do not allow to change resId? maybe add a new method on model to re-generate a
         // new root for the new resId
-        const values = await this.model._updateConfig(this.config, nextConfig);
-        if (this.resId) {
-            this.model._updateSimilarRecords(this, values);
-            this._values = this._parseServerValues(values);
-            this._changes = markRaw({});
-            this._setTextValues(values);
-        } else {
-            this._values = markRaw({});
-            const allVals = { ...this._getDefaultValues(), ...values };
-            this._changes = this._parseServerValues(allVals);
-            this._setTextValues(allVals);
-        }
-        this.dirty = false;
-        this.data = { ...this._values, ...this._changes };
-        this._setEvalContext();
-        this._savePoint = markRaw({
-            dirty: false,
-            changes: { ...this._changes },
-            textValues: { ...this._textValues },
+        await this.model._updateConfig(this.config, nextConfig, {
+            commit: (values) => {
+                if (this.resId) {
+                    this.model._updateSimilarRecords(this, values);
+                }
+                this._setData(values);
+            },
         });
-        this._invalidFields.clear();
     }
 
     _parseServerValues(serverValues, currentValues = {}) {

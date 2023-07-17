@@ -11,6 +11,10 @@ export class DynamicRecordList extends DynamicList {
      */
     setup(config, data) {
         super.setup(config);
+        this._setData(data);
+    }
+
+    _setData(data) {
         /** @type {import("./record").Record[]} */
         this.records = data.records.map((r) => this._createRecordDatapoint(r));
         this._updateCount(data);
@@ -141,14 +145,11 @@ export class DynamicRecordList extends DynamicList {
     }
 
     async _load(offset, limit, orderBy, domain) {
-        const response = await this.model._updateConfig(this.config, {
-            offset,
-            limit,
-            orderBy,
-            domain,
-        });
-        this.records = response.records.map((r) => this._createRecordDatapoint(r));
-        this._updateCount(response);
+        await this.model._updateConfig(
+            this.config,
+            { offset, limit, orderBy, domain },
+            { commit: this._setData.bind(this) }
+        );
     }
 
     _removeRecords(recordIds) {
