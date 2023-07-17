@@ -249,7 +249,7 @@ class Applicant(models.Model):
     @api.depends('job_id')
     def _compute_user(self):
         for applicant in self:
-            applicant.user_id = applicant.job_id.user_id.id or self.env.uid
+            applicant.user_id = applicant.job_id.user_id.id
 
     @api.depends('partner_id')
     def _compute_partner_phone_email(self):
