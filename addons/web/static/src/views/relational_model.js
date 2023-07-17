@@ -11,6 +11,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
+import { RPCError } from "@web/core/network/rpc_service";
 import { ORM, x2ManyCommands } from "@web/core/orm_service";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -1753,8 +1754,14 @@ class DynamicList extends DataPoint {
                     await this.model.orm.write(this.resModel, resIds, changes, { context });
                     await Promise.all(validSelection.map((record) => record.load()));
                     record.switchMode("readonly");
-                } catch {
+                } catch (e) {
                     record.discard();
+                    const errorMessage = e instanceof RPCError ? e.data.message : e.message;
+                    const errorTitle = e instanceof RPCError ? e.message : this.model.env._t("Error");
+                    this.model.notificationService.add(errorMessage, {
+                        title: errorTitle,
+                        type: "danger",
+                    });
                 }
             } else {
                 await record._save();
