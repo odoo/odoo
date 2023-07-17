@@ -276,20 +276,6 @@ export class Messaging {
                     }
                     break;
                 }
-                case "discuss.channel.member/fetched": {
-                    const { channel_id, last_message_id, partner_id } = notif.payload;
-                    const channel =
-                        this.store.threads[createLocalId("discuss.channel", channel_id)];
-                    if (channel) {
-                        const seenInfo = channel.seenInfos.find(
-                            (seenInfo) => seenInfo.partner.id === partner_id
-                        );
-                        if (seenInfo) {
-                            seenInfo.lastFetchedMessage = { id: last_message_id };
-                        }
-                    }
-                    break;
-                }
                 case "discuss.channel/unpin": {
                     const thread =
                         this.store.threads[createLocalId("discuss.channel", notif.payload.id)];
