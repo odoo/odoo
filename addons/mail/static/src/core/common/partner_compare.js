@@ -23,7 +23,7 @@ partnerCompareRegistry.add(
             return 1;
         }
     },
-    { sequence: 10 }
+    { sequence: 35 }
 );
 
 partnerCompareRegistry.add(
@@ -41,7 +41,7 @@ partnerCompareRegistry.add(
             }
         }
     },
-    { sequence: 20 }
+    { sequence: 45 }
 );
 
 partnerCompareRegistry.add(
@@ -62,7 +62,7 @@ partnerCompareRegistry.add(
             return 1;
         }
     },
-    { sequence: 25 }
+    { sequence: 50 }
 );
 
 partnerCompareRegistry.add(
@@ -83,7 +83,7 @@ partnerCompareRegistry.add(
             return 1;
         }
     },
-    { sequence: 30 }
+    { sequence: 55 }
 );
 
 partnerCompareRegistry.add(
@@ -91,5 +91,5 @@ partnerCompareRegistry.add(
     (p1, p2) => {
         return p1.id - p2.id;
     },
-    { sequence: 50 }
+    { sequence: 75 }
 );
