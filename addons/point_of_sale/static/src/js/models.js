@@ -3110,6 +3110,7 @@ exports.Order = Backbone.Model.extend({
             if (fiscal_position) {
                 this.fiscal_position = fiscal_position;
             } else {
+                this.fiscal_position_not_found = true;
                 console.error('ERROR: trying to load a fiscal position not available in the pos');
             }
         }
