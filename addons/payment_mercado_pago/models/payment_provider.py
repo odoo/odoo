@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import logging
 import pprint
 
@@ -79,4 +80,6 @@ class Paymentprovider(models.Model):
             raise ValidationError(
                 "Mercado Pago: " + _("Could not establish the connection to the API.")
             )
+        except json.decoder.JSONDecodeError:
+            raise ValidationError(_('Invalid JSON format'))
         return response.json()
