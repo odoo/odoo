@@ -364,6 +364,10 @@ class AccountMoveLine(models.Model):
         inverse="_inverse_analytic_distribution",
     ) # add the inverse function used to trigger the creation/update of the analytic lines accordingly (field originally defined in the analytic mixin)
 
+    analytic_account_ids = fields.Many2many('account.analytic.account', string='Analytic Accounts',
+                                            compute='_compute_analytic_account_ids', store=True, required=True
+    ) # create a store field to be able to use on the pivot views as a grouping
+
     # === Early Pay fields === #
     discount_date = fields.Date(
         string='Discount Date',
@@ -1156,6 +1160,17 @@ class AccountMoveLine(models.Model):
             line.account_id.tax_ids
             and not line.product_id.taxes_id.filtered(lambda tax: tax.company_id == line.company_id)
         ))
+
+    @api.depends('analytic_distribution')
+    def _compute_analytic_account_ids(self):
+        for line in self:
+            """This method is used to get the analytic account ids from the analytic_distribution field"""
+            if not line.analytic_distribution:
+                line.analytic_account_ids = False
+                return
+
+            analytic_account_ids = [int(key) for key in line.analytic_distribution.keys()]
+            line.analytic_account_ids = [Command.set(analytic_account_ids)]
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
