@@ -1320,7 +1320,8 @@ export function isUnbreakable(node) {
                 node.getAttribute('t-foreach') ||
                 node.getAttribute('t-value') ||
                 node.getAttribute('t-out') ||
-                node.getAttribute('t-raw'))) ||
+                node.getAttribute('t-raw')) ||
+                node.getAttribute('t-field')) ||
         node.classList.contains('oe_unbreakable')
     );
 }
