@@ -279,8 +279,6 @@ class StockMoveLine(models.Model):
         # If this picking is already done we should generate an
         # associated done move.
         for move_line in mls:
-            if self.env.context.get('import_file') and move_line.product_uom_qty and not move_line._should_bypass_reservation(move_line.location_id):
-                raise UserError(_("It is not allowed to import reserved quantity, you have to use the quantity directly."))
             if move_line.move_id or not move_line.picking_id:
                 continue
             if move_line.picking_id.state != 'done':
@@ -306,6 +304,9 @@ class StockMoveLine(models.Model):
             move.with_context(avoid_putaway_rules=True).product_uom_qty = move.quantity_done
 
         for ml, vals in zip(mls, vals_list):
+            if self.env.context.get('import_file') and ml.product_uom_qty and not ml.move_id._should_bypass_reservation():
+                raise UserError(_("It is not allowed to import reserved quantity, you have to use the quantity directly."))
+
             if ml.state == 'done':
                 if ml.product_id.type == 'product':
                     Quant = self.env['stock.quant']
