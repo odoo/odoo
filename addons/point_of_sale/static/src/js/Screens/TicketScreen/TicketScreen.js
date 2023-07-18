@@ -269,6 +269,15 @@ export class TicketScreen extends IndependentToOrderScreen {
             refundDetail.destinationOrderUid = destinationOrder.uid;
         }
 
+        //Add a check too see if the fiscal position exist in the pos
+        if (order.fiscal_position_not_found) {
+            this.showPopup('ErrorPopup', {
+                title: this.env._t('Fiscal Position not found'),
+                body: this.env._t('The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration.')
+            });
+            return;
+        }
+        destinationOrder.fiscal_position = order.fiscal_position;
         // Set the partner to the destinationOrder.
         if (partner && !destinationOrder.get_partner()) {
             destinationOrder.set_partner(partner);
