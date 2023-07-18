@@ -4,11 +4,12 @@
 from freezegun import freeze_time
 
 from odoo import _, Command, fields
+from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.survey.tests import common
 from odoo.tests.common import users
 
 
-class TestSurveyInternals(common.TestSurveyCommon):
+class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
     @users('survey_manager')
     def test_allowed_triggering_question_ids(self):
@@ -604,14 +605,35 @@ class TestSurveyInternals(common.TestSurveyCommon):
         simple_choice_1.write({'triggering_answer_ids': multiple_choice_1.suggested_answer_ids})
         simple_choice_2.write({'triggering_answer_ids': multiple_choice_1.suggested_answer_ids})
         text_box_2.write({'triggering_answer_ids': (multiple_choice_1 | multiple_choice_2).suggested_answer_ids})
-
         invalid_records = page_without_description + simple_choice_1 + simple_choice_2
         question_and_page_ids = my_survey.question_and_page_ids
         returned_questions_and_pages = my_survey._get_pages_and_questions_to_show()
 
         self.assertEqual(question_and_page_ids - invalid_records, returned_questions_and_pages)
 
+    def test_notify_subscribers(self):
+        """Check that messages are posted only if there are participation followers"""
+        survey_2 = self.survey.copy()
+        survey_participation_subtype = self.env.ref('survey.mt_survey_survey_user_input_completed')
+        user_input_participation_subtype = self.env.ref('survey.mt_survey_user_input_completed')
+        # Make survey_user (group_survey_user) follow participation to survey (they follow), not survey 2 (no followers)
+        self.survey.message_subscribe(partner_ids=self.survey_user.partner_id.ids, subtype_ids=survey_participation_subtype.ids)
+        # Complete a participation for both surveys, only one should trigger a notification for followers
+        user_inputs = self.env['survey.user_input'].create([{'survey_id': survey.id} for survey in (self.survey, survey_2)])
+        with self.mock_mail_app():
+            user_inputs._mark_done()
+        self.assertEqual(len(self._new_msgs), 1)
+        self.assertMessageFields(
+            self._new_msgs,
+            {
+                'model': 'survey.user_input',
+                'subtype_id': user_input_participation_subtype,
+                'res_id': user_inputs[0].id,
+                'notified_partner_ids': self.survey_user.partner_id
+            },
+        )
+
     def assertAnswerStatus(self, expected_answer_status, questions_statistics):
-        ''' Assert counts for 'Correct', 'Partially', 'Incorrect', 'Unanswered' are 0, and 1 for our expected answer status '''
+        """Assert counts for 'Correct', 'Partially', 'Incorrect', 'Unanswered' are 0, and 1 for our expected answer status"""
         for status, count in [(total['text'], total['count']) for total in questions_statistics['totals']]:
             self.assertEqual(count, 1 if status == expected_answer_status else 0)
