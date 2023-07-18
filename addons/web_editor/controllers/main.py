@@ -40,6 +40,8 @@ def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
             logger.warning('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
             raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
 
+# This method must be called in a context that has write access to the record as
+# it will write to the bus.
 def handle_history_divergence(record, html_field_name, vals):
     # Do not handle history divergence if the field is not in the values.
     if html_field_name not in vals:
@@ -50,16 +52,37 @@ def handle_history_divergence(record, html_field_name, vals):
     # comes from the odoo editor or the collaboration was not activated. In
     # project, it could come from the collaboration pad. In that case, we do not
     # handle history divergences.
+    if request:
+        channel = (request.db, 'editor_collaboration', record._name, html_field_name, record.id)
     if incoming_history_matches is None:
+        if request:
+            bus_data = {
+                'model_name': record._name,
+                'field_name': html_field_name,
+                'res_id': record.id,
+                'notificationName': 'html_field_write',
+                'notificationPayload': {'last_step_id': None},
+            }
+            request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
         return
     incoming_history_ids = incoming_history_matches[1].split(',')
-    incoming_last_history_id = incoming_history_ids[-1]
+    last_step_id = incoming_history_ids[-1]
+
+    bus_data = {
+        'model_name': record._name,
+        'field_name': html_field_name,
+        'res_id': record.id,
+        'notificationName': 'html_field_write',
+        'notificationPayload': {'last_step_id': last_step_id},
+    }
+    if request:
+        request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
 
     if record[html_field_name]:
         ensure_no_history_divergence(record, html_field_name, incoming_history_ids)
 
     # Save only the latest id.
-    vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + incoming_last_history_id + incoming_html[incoming_history_matches.end(1):]
+    vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + last_step_id + incoming_html[incoming_history_matches.end(1):]
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
