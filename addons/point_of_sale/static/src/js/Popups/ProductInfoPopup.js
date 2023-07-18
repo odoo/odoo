@@ -9,7 +9,7 @@ import Registries from "@point_of_sale/js/Registries";
  *      info: {object of data}
  *  }
  */
-class ProductInfoPopup extends AbstractAwaitablePopup {
+export class ProductInfoPopup extends AbstractAwaitablePopup {
     setup() {
         super.setup();
         Object.assign(this, this.props.info);
