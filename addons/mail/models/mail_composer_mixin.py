@@ -26,7 +26,7 @@ class MailComposerMixin(models.AbstractModel):
         'Contents', compute='_compute_body', readonly=False, store=True,
         render_engine='qweb', render_options={'post_process': True}, sanitize=False)
     body_has_template_value = fields.Boolean(
-        'Body content is the same as tmeplate',
+        'Body content is the same as the template',
         compute='_compute_body_has_template_value',
     )
     template_id = fields.Many2one('mail.template', 'Mail Template', domain="[('model', '=', render_model)]")
