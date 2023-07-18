@@ -204,7 +204,9 @@ def set_not_null(cr, tablename, columnname):
             cr.execute(query, log_exceptions=False)
             _schema.debug("Table %r: column %r: added constraint NOT NULL", tablename, columnname)
     except Exception:
-        raise Exception("Table %r: unable to set NOT NULL on column %r", tablename, columnname)
+        exc = Exception("Table %r: unable to set NOT NULL on column %r", tablename, columnname)
+        exc.sentry_ignored = True
+        raise exc
 
 def drop_not_null(cr, tablename, columnname):
     """ Drop the NOT NULL constraint on the given column. """
