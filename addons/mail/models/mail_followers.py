@@ -112,9 +112,9 @@ class Followers(models.Model):
 
         :param records: fetch data from followers of ``records`` that follow
           ``subtype_id``;
-        :param message_type: mail.message.message_type in order to allow custom
+        :param str message_type: mail.message.message_type in order to allow custom
           behavior depending on it (SMS for example);
-        :param subtype_id: mail.message.subtype to check against followers;
+        :param int subtype_id: mail.message.subtype to check against followers;
         :param pids: additional set of partner IDs from which to fetch recipient
           data independently from following status;
 
