@@ -130,14 +130,6 @@ export class Messaging {
     handleNotification(notifications) {
         for (const notif of notifications) {
             switch (notif.type) {
-                case "mail.activity/updated":
-                    if (notif.payload.activity_created) {
-                        this.store.activityCounter++;
-                    }
-                    if (notif.payload.activity_deleted) {
-                        this.store.activityCounter--;
-                    }
-                    break;
                 case "mail.record/insert":
                     this._handleNotificationRecordInsert(notif);
                     break;
