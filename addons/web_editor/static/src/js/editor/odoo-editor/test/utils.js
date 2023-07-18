@@ -155,7 +155,7 @@ export function setTestSelection(selection, doc = document) {
         domRange.setEnd(selection.anchorNode, selection.anchorOffset);
         domRange.collapse(false);
     }
-    const domSelection = selection.anchorNode.ownerDocument.getSelection();
+    const domSelection = doc.getSelection();
     domSelection.removeAllRanges();
     domSelection.addRange(domRange);
     try {
@@ -244,8 +244,8 @@ export function nodeLength(node) {
  *
  * This is used in the function `testEditor`.
  */
-export function renderTextualSelection() {
-    const selection = document.getSelection();
+export function renderTextualSelection(doc = document) {
+    const selection = doc.getSelection();
     if (selection.rangeCount === 0) {
         return;
     }
@@ -655,5 +655,30 @@ async function pasteData (editor, text, type) {
 export const pasteText = async (editor, text) => pasteData(editor, text, 'text/plain');
 export const pasteHtml = async (editor, html) => pasteData(editor, html, 'text/html');
 export const pasteOdooEditorHtml = async (editor, html) => pasteData(editor, html, 'text/odoo-editor');
+const overridenDomClass = [
+    'HTMLBRElement',
+    'HTMLHeadingElement',
+    'HTMLParagraphElement',
+    'HTMLPreElement',
+    'HTMLQuoteElement',
+    'HTMLTableCellElement',
+    'Text',
+];
+
+export function patchEditorIframe(iframe) {
+    const iframeWindow = iframe.contentWindow;
+
+    for (const overridenClass of overridenDomClass) {
+        const windowClassPrototype = window[overridenClass].prototype;
+        const iframeWindowClassPrototype = iframeWindow[overridenClass].prototype;
+        const iframePrototypeMethodNames = Object.keys(iframeWindowClassPrototype);
+
+        for (const methodName of Object.keys(windowClassPrototype)) {
+            if (!iframePrototypeMethodNames.includes(methodName)) {
+                iframeWindowClassPrototype[methodName] = windowClassPrototype[methodName];
+            }
+        }
+    }
+}
 
 export class BasicEditor extends OdooEditor {}
