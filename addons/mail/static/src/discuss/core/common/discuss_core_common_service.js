@@ -15,6 +15,7 @@ export class DiscussCoreCommon {
         Object.assign(this, {
             busService: services.bus_service,
             env,
+            orm: services.orm,
             presence: services.presence,
             rpc: services.rpc,
         });
@@ -153,6 +154,17 @@ export class DiscussCoreCommon {
         });
     }
 
+    async createGroupChat({ default_display_mode, partners_to }) {
+        const data = await this.orm.call("discuss.channel", "create_group", [], {
+            default_display_mode,
+            partners_to,
+        });
+        const channel = this.threadService.createChannelThread(data);
+        this.threadService.sortChannels();
+        this.threadService.open(channel);
+        return channel;
+    }
+
     /**
      * @param {[number]} partnerIds
      * @param {boolean} inChatWindow
@@ -169,7 +181,7 @@ export class DiscussCoreCommon {
             const chat = await this.threadService.joinChat(correspondentId);
             this.threadService.open(chat, inChatWindow);
         } else {
-            await this.threadService.createGroupChat({ partners_to });
+            await this.createGroupChat({ partners_to });
         }
     }
 
@@ -264,6 +276,7 @@ export const discussCoreCommon = {
         "mail.store",
         "mail.thread",
         "notification",
+        "orm",
         "presence",
         "rpc",
     ],

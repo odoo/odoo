@@ -662,17 +662,6 @@ export class ThreadService {
         }
     }
 
-    async createGroupChat({ default_display_mode, partners_to }) {
-        const data = await this.orm.call("discuss.channel", "create_group", [], {
-            default_display_mode,
-            partners_to,
-        });
-        const channel = this.createChannelThread(data);
-        this.sortChannels();
-        this.open(channel);
-        return channel;
-    }
-
     remove(thread) {
         removeFromArray(this.store.discuss.chats.threads, thread.localId);
         removeFromArray(this.store.discuss.channels.threads, thread.localId);
