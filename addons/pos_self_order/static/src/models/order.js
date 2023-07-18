@@ -67,7 +67,7 @@ export class Order extends Reactive {
         }, {});
     }
 
-    isChange() {
+    hasNotAllLinesSent() {
         return this.lines.find((line) => {
             const lastSend = this.lastChangesSent[line.uuid];
 
@@ -77,5 +77,8 @@ export class Order extends Reactive {
 
             return lastSend.qty !== line.qty || line.isChange(lastSend);
         });
+    }
+    get isSavedOnServer() {
+        return this.isAlreadySent && !this.hasNotAllLinesSent();
     }
 }
