@@ -745,7 +745,7 @@ export const htmlField = {
 
 registry.category("fields").add("html", htmlField, { force: true });
 
-function stripHistoryIds(value) {
+export function stripHistoryIds(value) {
     return value && value.replace(/\sdata-last-history-steps="[^"]*?"/, '') || value;
 }
 
