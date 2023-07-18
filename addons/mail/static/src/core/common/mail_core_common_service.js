@@ -55,6 +55,13 @@ export class MailCoreCommon {
                     this.env.bus.trigger("mail.message/delete", { message });
                 }
             });
+            this.busService.subscribe("mail.message/toggle_star", (payload) => {
+                const { message_ids: messageIds, starred } = payload;
+                for (const messageId of messageIds) {
+                    const message = this.messageService.insert({ id: messageId });
+                    this.messageService.updateStarred(message, starred);
+                }
+            });
             this.busService.subscribe("mail.record/insert", (payload) => {
                 if (payload.Thread) {
                     this.threadService.insert(payload.Thread);
