@@ -48,6 +48,10 @@ export function isAndroidApp() {
     return /OdooMobile.+Android/i.test(browser.navigator.userAgent);
 }
 
+export function isDisplayStandalone() {
+    return browser.matchMedia("(display-mode: standalone)").matches;
+}
+
 export function hasTouch() {
     return browser.ontouchstart !== undefined;
 }

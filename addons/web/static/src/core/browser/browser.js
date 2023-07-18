@@ -33,6 +33,7 @@ export const browser = {
     cancelAnimationFrame: window.cancelAnimationFrame.bind(window),
     console: window.console,
     history: window.history,
+    matchMedia: window.matchMedia.bind(window),
     navigator,
     Notification: window.Notification,
     open: window.open.bind(window),
