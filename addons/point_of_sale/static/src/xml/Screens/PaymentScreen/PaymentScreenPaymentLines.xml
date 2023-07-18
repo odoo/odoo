@@ -13,14 +13,14 @@
                                  <t t-esc="line.payment_method.name" />
                              </div>
                             <div class="payment-amount">
-                                <t t-if="line and line.payment_status and ['done', 'waitingCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
+                                <t t-if="line and line.payment_status and ['done', 'waitingCard', 'WaitingForCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
                                         <t t-esc="env.pos.format_currency_no_symbol(line.get_amount())" />
                                 </t>
                                 <t t-else="">
                                         <t t-esc="formatLineAmount(line)" />
                                 </t>
                             </div>
-                            <t t-if="!line.payment_status or !['done', 'reversed', 'waitingCard', 'waitingCapture'].includes(line.payment_status)">
+                            <t t-if="!line.payment_status or !['done', 'reversed', 'waiting', 'waitingCancel', 'waitingCard', 'waitingCapture'].includes(line.payment_status)">
                                 <div class="delete-button"
                                     t-on-click="() => this.trigger('delete-payment-line', { cid: line.cid })"
                                     aria-label="Delete" title="Delete">
