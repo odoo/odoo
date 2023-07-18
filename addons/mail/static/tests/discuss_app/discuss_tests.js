@@ -821,7 +821,6 @@ QUnit.test(
         assert.hasClass($("button:contains(Inbox)"), "o-active");
         assert.containsN($, ".o-mail-Message", 2);
 
-        await click(".o-mail-Message:contains(not empty 1) [title='Expand']");
         await click(".o-mail-Message:contains(not empty 1) [title='Mark as Read']");
         assert.containsOnce($, ".o-mail-Message");
         assert.containsOnce($, ".o-mail-Message:contains(not empty 2)");
