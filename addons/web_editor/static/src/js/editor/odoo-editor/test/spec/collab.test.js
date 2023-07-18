@@ -6,17 +6,8 @@ import {
     setTestSelection,
     targetDeepest,
     undo,
+    patchEditorIframe,
 } from '../utils.js';
-
-const overridenDomClass = [
-    'HTMLBRElement',
-    'HTMLHeadingElement',
-    'HTMLParagraphElement',
-    'HTMLPreElement',
-    'HTMLQuoteElement',
-    'HTMLTableCellElement',
-    'Text',
-];
 
 const applyConcurentActions = (clientInfos, concurentActions) => {
     const clientInfosList = Object.values(clientInfos);
@@ -87,24 +78,11 @@ const testMultiEditor = spec => {
             clientInfo.iframe.setAttribute('src', ' javascript:void(0);');
         }
         document.body.appendChild(clientInfo.iframe);
+        patchEditorIframe(clientInfo.iframe);
 
         clientInfo.editable = document.createElement('div');
         clientInfo.editable.setAttribute('contenteditable', 'true');
         clientInfo.editable.innerHTML = spec.contentBefore;
-
-        const iframeWindow = clientInfo.iframe.contentWindow;
-
-        for (const overridenClass of overridenDomClass) {
-            const windowClassPrototype = window[overridenClass].prototype;
-            const iframeWindowClassPrototype = iframeWindow[overridenClass].prototype;
-            const iframePrototypeMethodNames = Object.keys(iframeWindowClassPrototype);
-
-            for (const methodName of Object.keys(windowClassPrototype)) {
-                if (!iframePrototypeMethodNames.includes(methodName)) {
-                    iframeWindowClassPrototype[methodName] = windowClassPrototype[methodName];
-                }
-            }
-        }
     }
     const clientInfosList = Object.values(clientInfos);
 

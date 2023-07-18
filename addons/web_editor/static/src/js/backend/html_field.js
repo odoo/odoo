@@ -732,7 +732,7 @@ HtmlField.extractProps = ({ attrs, field }) => {
 
 registry.category("fields").add("html", HtmlField, { force: true });
 
-function stripHistoryIds(value) {
+export function stripHistoryIds(value) {
     return value && value.replace(/\sdata-last-history-steps="[^"]*?"/, '') || value;
 }
 
