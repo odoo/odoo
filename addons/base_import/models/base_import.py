@@ -25,6 +25,7 @@ from odoo import api, fields, models
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.exceptions import UserError
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
@@ -1500,8 +1501,11 @@ class Import(models.TransientModel):
             field_path = field_string.split('/')
             target_field = field_path[-1]
             target_model = self.env[fallback_values[field_string]['field_model']]
+            target_field_data = target_model.fields_get([target_field])
 
-            selection_values = [value.lower() for (key, value) in target_model.fields_get([target_field])[target_field]['selection']]
+            if not target_field_data:
+                raise UserError(_('Field {%s} not present in the model', target_field))
+            selection_values = [value.lower() for (key, value) in target_field_data[target_field]['selection']]
             fallback_values[field_string]['selection_values'] = selection_values
 
         # check fallback values
