@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { batched } from "@point_of_sale/utils";
+import { batched } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { Reactive, effect } from "@web/core/utils/reactive";

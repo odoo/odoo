@@ -10,7 +10,7 @@ import { Order } from "./models/order";
 import { Product } from "./models/product";
 import { Line } from "./models/line";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
-import { batched } from "@point_of_sale/utils";
+import { batched } from "@web/core/utils/timing";
 
 export class SelfOrder {
     constructor(...args) {
