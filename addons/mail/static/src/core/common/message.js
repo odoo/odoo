@@ -237,7 +237,7 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get canToggleStar() {
-        return Boolean(!this.message.isTransient && this.message.resId);
+        return Boolean(!this.message.isTransient && this.message.resId && this.store.user);
     }
 
     get showUnfollow() {
