@@ -13,46 +13,43 @@
                             <th class="text-start align-middle" t-if="show_task"><span>Task</span></th>
                             <th class="text-start align-middle"><span>Description</span></th>
                             <th class="text-end">
-                                <span t-if="is_uom_day">Days Spent</span>
-                                <span t-else="">Hours Spent</span>
+                                <span t-if="not is_uom_day">Hours Spent</span>
+                                <span t-else="">Days Spent</span>
                             </th>
                         </tr>
                    </thead>
                    <tbody>
                         <tr t-foreach="lines" t-as="line" t-att-style="'background-color: #F1F1F1;' if line_index % 2 == 0 else ''">
                             <td class="align-middle">
-                               <span t-field="line.date"/>
+                               <span t-field="line.date">2021-09-01</span>
                             </td>
                             <td class="align-middle">
-                               <span t-field="line.user_id.partner_id.name"/>
-                               <span t-if="not line.user_id.partner_id.name" t-field="line.employee_id"/>
+                               <span t-if="line.user_id.partner_id.name" t-field="line.user_id.partner_id.name">Audrey Peterson</span>
+                               <span t-else="" t-field="line.employee_id">Audrey Peterson</span>
                             </td>
                             <td t-if="show_project" class="align-middle">
-                                <span t-field="line.project_id.sudo().name"/>
+                                <span t-field="line.project_id.sudo().name">Research and Development</span>
                             </td>
                             <td t-if="show_task" class="align-middle">
-                                <span t-if="line.task_id" t-field="line.task_id.sudo().name"/>
+                                <span t-if="line.task_id" t-field="line.task_id.sudo().name">New Portal System</span>
                             </td>
                             <td class="align-middle">
-                                <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                                <span t-field="line.name" t-options="{'widget': 'text'}">Call client and discuss project</span>
                             </td>
                             <td class="text-end align-middle">
-                                <span t-if="is_uom_day" t-esc="line._get_timesheet_time_day()" t-options="{'widget': 'timesheet_uom'}"/>
-                                <span t-else="" t-field="line.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
+                                <span t-if="not is_uom_day" t-field="line.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}">2 hours</span>
+                                <span t-else="" t-esc="line._get_timesheet_time_day()" t-options="{'widget': 'timesheet_uom'}">1 day</span>
                             </td>
                         </tr>
                         <tr>
-                            <t t-set="nbCols" t-value="4"/>
-                            <t t-if="show_project" t-set="nbCols" t-value="nbCols + 1"/>
-                            <t t-if="show_task" t-set="nbCols" t-value="nbCols + 1"/>
-                            <td class="text-end" t-attf-colspan="{{nbCols}}">
-                                <strong t-if="is_uom_day">
-                                    <span style="margin-right: 15px;">Total (Days)</span>
-                                    <t t-esc="lines._convert_hours_to_days(sum(lines.mapped('unit_amount')))" t-options="{'widget': 'timesheet_uom'}"/>
+                            <td class="text-end" t-attf-colspan="{{4 + show_project + show_task}}" colspan="6">
+                                <strong t-if="not is_uom_day">
+                                    <span style="margin-right: 15px;">Total (Hours)</span>
+                                    <t t-esc="sum(lines.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}">2 hours</t>
                                 </strong>
                                 <strong t-else="">
-                                    <span style="margin-right: 15px;">Total (Hours)</span>
-                                    <t t-esc="sum(lines.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
+                                    <span style="margin-right: 15px;">Total (Days)</span>
+                                    <t t-esc="lines._convert_hours_to_days(sum(lines.mapped('unit_amount')))" t-options="{'widget': 'timesheet_uom'}">1 day</t>
                                 </strong>
                             </td>
                         </tr>
@@ -112,7 +109,7 @@
                             <h2>
                                 <span>Timesheets
                                     <t t-if="len(docs.project_id) == 1">
-                                        for the <t t-out="docs.project_id.name"/> Project
+                                        for the <t t-out="docs.project_id.name">Research and Development</t> Project
                                     </t>
                                 </span>
                             </h2>
