@@ -191,7 +191,7 @@ Model({
             if (!this.hasRestartButton) {
                 this.messaging.publicLivechatGlobal.chatWindow.widget
                     .$(".o_livechat_chatbot_main_restart")
-                    .addClass("d-none");
+                    .hide();
             }
         },
         /**
@@ -428,6 +428,12 @@ Model({
             compute() {
                 const { publicLivechat } = this.messaging.publicLivechatGlobal;
                 if (publicLivechat && !publicLivechat.operator) {
+                    return false;
+                }
+                if (
+                    !this.messaging.publicLivechatGlobal.publicLivechat ||
+                    !this.messaging.publicLivechatGlobal.publicLivechat.uuid
+                ) {
                     return false;
                 }
                 if (publicLivechat && !publicLivechat.data.chatbot_script_id) {
