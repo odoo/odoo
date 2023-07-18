@@ -564,6 +564,9 @@ class Meeting(models.Model):
         update_recurrence = recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1
         break_recurrence = values.get('recurrency') is False
 
+        if any(vals in self._get_recurrent_fields() for vals in values) and not (update_recurrence or values.get('recurrency')):
+            raise UserError(_('Unable to save the recurrence with "This Event"'))
+
         update_alarms = False
         update_time = False
         self._set_videocall_location([values])
