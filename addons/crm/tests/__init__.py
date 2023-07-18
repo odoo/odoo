@@ -18,3 +18,4 @@ from . import test_digest
 from . import test_performances
 from . import test_res_partner
 from . import test_sales_team_ui
+from . import test_crm_lead_mail_tracking_duration

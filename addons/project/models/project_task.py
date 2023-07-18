@@ -67,11 +67,18 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_assign"
-    _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
+    _inherit = [
+        'portal.mixin',
+        'mail.thread.cc',
+        'mail.activity.mixin',
+        'rating.mixin',
+        'mail.tracking.duration.mixin'
+    ]
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_deadline asc, id desc"
     _primary_email = 'email_from'
     _check_company_auto = True
+    _track_duration_field = 'stage_id'
 
     @api.model
     def _get_default_partner_id(self, project=None, parent=None):
