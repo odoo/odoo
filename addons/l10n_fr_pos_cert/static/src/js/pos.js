@@ -24,7 +24,13 @@ const L10nFrPosGlobalState = (PosGlobalState) =>
             return _.contains(french_countries, this.company.country.code);
         }
         disallowLineQuantityChange() {
-            const result = super.disallowLineQuantityChange(...arguments);
+            let result = super.disallowLineQuantityChange(...arguments);
+            let selectedOrderLine = this.selectedOrder.get_selected_orderline();
+            //Note: is_reward_line is a field in the pos_loyalty module
+            if (selectedOrderLine.is_reward_line) {
+                //Always allow quantity change for reward lines
+                return false || result;
+            }
             return this.is_french_country() || result;
         }
     };
