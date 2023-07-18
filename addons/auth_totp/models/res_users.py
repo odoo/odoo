@@ -8,7 +8,7 @@ import os
 import re
 
 from odoo import _, api, fields, models
-from odoo.addons.base.models.res_users import check_identity
+from odoo.addons.base.models.res_users import check_identity, check_mfa
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
 from odoo.tools import sql
@@ -91,7 +91,26 @@ class Users(models.Model):
         _logger.info("2FA enable: SUCCESS for %s %r", self, self.login)
         return True
 
+    def _check_credentials_mfa_totp(self, fn, w):
+        cookies = request.httprequest.cookies
+        key = cookies.get('td_id')
+        if key:
+            user_match = request.env['auth_totp.device']._check_credentials_for_uid(
+                scope="browser", key=key, uid=self.id)
+            if not user_match:
+                return {
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'res.users.mfacheck',
+                    'res_id': w.id,
+                    'name': _("Security Control"),
+                    'target': 'new',
+                    'views': [(False, 'form')],
+                }
+            else:
+                return fn
+
     @check_identity
+    @check_mfa
     def action_totp_disable(self):
         logins = ', '.join(map(repr, self.mapped('login')))
         if not (self == self.env.user or self.env.user._is_admin() or self.env.su):

@@ -148,3 +148,23 @@ class Users(models.Model):
             ('limit_type', '=', limit_type),
             ('ip', '=', ip),
         ]).unlink()
+
+    def _check_credentials_mfa_totp_mail(self, fn, w):
+        cookies = request.httprequest.cookies
+        key = cookies.get('td_id')
+        if key:
+            user_match = request.env['auth_totp.device']._check_credentials_for_uid(
+                scope="browser", key=key, uid=self.id)
+            if not user_match:
+                if self._mfa_type() == 'totp_mail':
+                    self._send_totp_mail_code()
+                return {
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'res.users.mfacheck',
+                    'res_id': w.id,
+                    'name': _("Security Control"),
+                    'target': 'new',
+                    'views': [(False, 'form')],
+                }
+            else:
+                return fn
