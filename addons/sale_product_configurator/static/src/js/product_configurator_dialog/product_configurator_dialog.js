@@ -278,8 +278,9 @@ export class ProductConfiguratorDialog extends Component {
                     const disabledPtavId = excludedCombination.find(
                         (ptav) => !combination.includes(ptav)
                     );
-                    if (disabledPtavId) {
-                        ptavList.find(ptav => ptav.id === disabledPtavId).excluded = true;
+                    const excludedPtav = ptavList.find(ptav => ptav.id === disabledPtavId)
+                    if (excludedPtav) {
+                        excludedPtav.excluded = true;
                     }
                 }
             }
