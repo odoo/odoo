@@ -61,23 +61,6 @@ export class ThreadService {
     }
 
     /**
-     * todo: merge this with this.insert() (?)
-     *
-     * @returns {Thread}
-     */
-    createChannelThread(serverData) {
-        const thread = this.insert({
-            ...serverData,
-            model: "discuss.channel",
-            type: serverData.channel.channel_type,
-            isAdmin:
-                serverData.channel.channel_type !== "group" &&
-                serverData.create_uid === this.store.user?.user?.id,
-        });
-        return thread;
-    }
-
-    /**
      * @param {import("@mail/core/common/thread_model").Thread} thread
      * @param {number} id
      * @returns {Promise<Thread>}

@@ -35,7 +35,7 @@ export class DiscussCoreCommon {
     setup() {
         this.messagingService.isReady.then((data) => {
             for (const channelData of data.channels) {
-                this.threadService.createChannelThread(channelData);
+                this.createChannelThread(channelData);
             }
             this.threadService.sortChannels();
             this.busService.subscribe("discuss.channel/joined", (payload) => {
@@ -154,12 +154,29 @@ export class DiscussCoreCommon {
         });
     }
 
+    /**
+     * todo: merge this with ThreadService.insert() (?)
+     *
+     * @returns {Thread}
+     */
+    createChannelThread(serverData) {
+        const thread = this.threadService.insert({
+            ...serverData,
+            model: "discuss.channel",
+            type: serverData.channel.channel_type,
+            isAdmin:
+                serverData.channel.channel_type !== "group" &&
+                serverData.create_uid === this.store.user?.user?.id,
+        });
+        return thread;
+    }
+
     async createGroupChat({ default_display_mode, partners_to }) {
         const data = await this.orm.call("discuss.channel", "create_group", [], {
             default_display_mode,
             partners_to,
         });
-        const channel = this.threadService.createChannelThread(data);
+        const channel = this.createChannelThread(data);
         this.threadService.sortChannels();
         this.threadService.open(channel);
         return channel;

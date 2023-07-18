@@ -16,6 +16,8 @@ export class DiscussCoreWeb {
         });
         /** @type {import("@mail/core/common/chat_window_service").ChatWindowService} */
         this.chatWindowService = services["mail.chat_window"];
+        /** @type {import("@mail/discuss/core/common/discuss_core_common_service").DiscussCoreCommon} */
+        this.discussCoreCommonService = services["discuss.core.common"];
         /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
         /** @type {import("@mail/core/common/store_service").Store} */
@@ -27,7 +29,7 @@ export class DiscussCoreWeb {
     setup() {
         this.messagingService.isReady.then((data) => {
             for (const channelData of data.channels) {
-                const thread = this.threadService.createChannelThread(channelData);
+                const thread = this.discussCoreCommonService.createChannelThread(channelData);
                 if (
                     channelData.is_minimized &&
                     channelData.state !== "closed" &&
@@ -77,6 +79,7 @@ export class DiscussCoreWeb {
 export const discussCoreWeb = {
     dependencies: [
         "bus_service",
+        "discuss.core.common",
         "mail.chat_window",
         "mail.messaging",
         "mail.store",
