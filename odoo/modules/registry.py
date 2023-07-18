@@ -708,9 +708,11 @@ class Registry(Mapping):
             self.cache_invalidated.add(cache_name)
 
         # log information about invalidation_cause
-        caller_info = format_frame(inspect.currentframe().f_back)
-        log = _logger.info if self.loaded else _logger.debug
-        log('Invalidating %s model caches from %s', ','.join(cache_names), caller_info)
+        if _logger.isEnabledFor(logging.DEBUG):
+            # could be interresting to log in info but this will need to minimize invalidation first,
+            # mainly in some setupclass and crons
+            caller_info = format_frame(inspect.currentframe().f_back)
+            _logger.debug('Invalidating %s model caches from %s', ','.join(cache_names), caller_info)
 
     def clear_all_caches(self):
         """ Clear the caches associated to methods decorated with
