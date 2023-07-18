@@ -1533,15 +1533,15 @@ export class Rtc {
 
 export const rtcService = {
     dependencies: [
+        "bus_service",
         "discuss.channel.member",
+        "mail.persona",
+        "mail.sound_effects",
         "mail.store",
+        "mail.thread",
+        "mail.user_settings",
         "notification",
         "rpc",
-        "bus_service",
-        "mail.sound_effects",
-        "mail.user_settings",
-        "mail.thread",
-        "mail.persona",
     ],
     start(env, services) {
         const rtc = new Rtc(env, services);
@@ -1575,9 +1575,13 @@ export const rtcService = {
             const command = rtcSessions[0][0];
             rtc.updateRtcSessions(channel.id, sessionsData, command);
         });
-        services["bus_service"].subscribe("mail.record/insert", ({ RtcSession }) => {
-            if (RtcSession) {
-                rtc.insertSession(RtcSession);
+        services["bus_service"].subscribe("mail.record/insert", (payload) => {
+            if (payload.RtcSession) {
+                rtc.insertSession(payload.RtcSession);
+            }
+            const { "res.users.settings.volumes": volumeSettings } = payload;
+            if (volumeSettings) {
+                services["mail.user_settings"].setVolumes(volumeSettings);
             }
         });
         return rtc;

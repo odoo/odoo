@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { CannedResponse } from "@mail/core/common/canned_response_model";
-import { LinkPreview } from "@mail/core/common/link_preview_model";
 import { removeFromArray, removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { cleanTerm } from "@mail/utils/common/format";
 
@@ -130,9 +129,6 @@ export class Messaging {
     handleNotification(notifications) {
         for (const notif of notifications) {
             switch (notif.type) {
-                case "mail.record/insert":
-                    this._handleNotificationRecordInsert(notif);
-                    break;
                 case "mail.link.preview/delete":
                     {
                         const { id, message_id } = notif.payload;
@@ -275,70 +271,6 @@ export class Messaging {
                     }
                     break;
             }
-        }
-    }
-
-    _handleNotificationRecordInsert(notif) {
-        if (notif.payload.Thread) {
-            this.threadService.insert(notif.payload.Thread);
-        }
-
-        if (notif.payload.Channel) {
-            this.threadService.insert({
-                id: notif.payload.Channel.id,
-                model: "discuss.channel",
-                channel: notif.payload.Channel,
-            });
-        }
-        if (notif.payload.Partner) {
-            const partners = Array.isArray(notif.payload.Partner)
-                ? notif.payload.Partner
-                : [notif.payload.Partner];
-            for (const partner of partners) {
-                if (partner.im_status) {
-                    this.personaService.insert({ ...partner, type: "partner" });
-                }
-            }
-        }
-        if (notif.payload.Guest) {
-            const guests = Array.isArray(notif.payload.Guest)
-                ? notif.payload.Guest
-                : [notif.payload.Guest];
-            for (const guest of guests) {
-                this.personaService.insert({ ...guest, type: "guest" });
-            }
-        }
-        const { LinkPreview: linkPreviews } = notif.payload;
-        if (linkPreviews) {
-            for (const linkPreview of linkPreviews) {
-                this.store.messages[linkPreview.message.id]?.linkPreviews.push(
-                    new LinkPreview(linkPreview)
-                );
-            }
-        }
-        const { Message: messageData } = notif.payload;
-        if (messageData) {
-            const isStarred = this.store.messages[messageData.id]?.isStarred;
-            const message = this.messageService.insert({
-                ...messageData,
-                body: messageData.body ? markup(messageData.body) : messageData.body,
-            });
-            if (isStarred && message.isEmpty) {
-                this.messageService.updateStarred(message, false);
-            }
-        }
-        const { "res.users.settings": settings } = notif.payload;
-        if (settings) {
-            this.userSettingsService.updateFromCommands(settings);
-            this.store.discuss.chats.isOpen =
-                settings.is_discuss_sidebar_category_chat_open ?? this.store.discuss.chats.isOpen;
-            this.store.discuss.channels.isOpen =
-                settings.is_discuss_sidebar_category_channel_open ??
-                this.store.discuss.channels.isOpen;
-        }
-        const { "res.users.settings.volumes": volumeSettings } = notif.payload;
-        if (volumeSettings) {
-            this.userSettingsService.setVolumes(volumeSettings);
         }
     }
 
