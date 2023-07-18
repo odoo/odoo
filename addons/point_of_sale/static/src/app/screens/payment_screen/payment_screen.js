@@ -270,26 +270,32 @@ export class PaymentScreen extends Component {
         }
 
         // 3. Post process.
-        if (syncOrderResult.length && this.currentOrder.wait_for_push_order()) {
-            const postPushResult = await this._postPushOrderResolve(
-                this.currentOrder,
-                syncOrderResult.map((res) => res.id)
-            );
-            if (!postPushResult) {
-                this.popup.add(ErrorPopup, {
-                    title: this.env._t("Error: no internet connection."),
-                    body: this.env._t(
-                        "Some, if not all, post-processing after syncing order failed."
-                    ),
-                });
-            }
+        if (
+            syncOrderResult &&
+            syncOrderResult.length > 0 &&
+            this.currentOrder.wait_for_push_order()
+        ) {
+            await this.postPushOrderResolve(syncOrderResult.map((res) => res.id));
         }
 
+        this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
+    }
+    async postPushOrderResolve(ordersServerId) {
+        const postPushResult = await this._postPushOrderResolve(this.currentOrder, ordersServerId);
+        if (!postPushResult) {
+            this.popup.add(ErrorPopup, {
+                title: this.env._t("Error: no internet connection."),
+                body: this.env._t("Some, if not all, post-processing after syncing order failed."),
+            });
+        }
+    }
+    async afterOrderValidation(suggestToSync = true) {
         // Remove the order from the local storage so that when we refresh the page, the order
         // won't be there
         this.pos.db.remove_unpaid_order(this.currentOrder);
+
         // Ask the user to sync the remaining unsynced orders.
-        if (syncOrderResult && this.pos.db.get_orders().length) {
+        if (suggestToSync && this.pos.db.get_orders().length) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Remaining unsynced orders"),
                 body: this.env._t("There are unsynced orders. Do you want to sync these orders?"),
@@ -301,6 +307,8 @@ export class PaymentScreen extends Component {
                 this.pos.push_orders();
             }
         }
+        // Always show the next screen regardless of error since pos has to
+        // continue working even offline.
         this.pos.showScreen(this.nextScreen);
     }
     get nextScreen() {

@@ -148,23 +148,29 @@ class PosOrder(models.Model):
         pos_order = pos_order.with_company(pos_order.company_id)
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
+        return pos_order._process_saved_order(draft)
 
+    def _process_saved_order(self, draft):
+        self.ensure_one()
         if not draft:
             try:
-                pos_order.action_pos_order_paid()
+                self.action_pos_order_paid()
             except psycopg2.DatabaseError:
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
-            pos_order._create_order_picking()
-            pos_order._compute_total_cost_in_real_time()
+            self._create_order_picking()
+            self._compute_total_cost_in_real_time()
 
-        if pos_order.to_invoice and pos_order.state == 'paid':
-            pos_order._generate_pos_order_invoice()
+        if self.to_invoice and self.state == 'paid':
+            self._generate_pos_order_invoice()
 
-        return pos_order.id
+        return self.id
 
+    def _clean_payment_lines(self):
+        self.ensure_one()
+        self.payment_ids.unlink()
 
     def _process_payment_lines(self, pos_order, order, pos_session, draft):
         """Create account.bank.statement.lines from the dictionary given to the parent function.
@@ -182,8 +188,7 @@ class PosOrder(models.Model):
         """
         prec_acc = order.currency_id.decimal_places
 
-        order_bank_statement_lines= self.env['pos.payment'].search([('pos_order_id', '=', order.id)])
-        order_bank_statement_lines.unlink()
+        order._clean_payment_lines()
         for payments in pos_order['statement_ids']:
             order.add_payment(self._payment_fields(order, payments[2]))
 
@@ -494,7 +499,10 @@ class PosOrder(models.Model):
         return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
     def _get_rounded_amount(self, amount):
-        if self.config_id.cash_rounding:
+        # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
+        if self.config_id.cash_rounding \
+           and (not self.config_id.only_round_cash_method \
+           or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
             amount = float_round(amount, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
         currency = self.currency_id
         return currency.round(amount) if currency else amount
