@@ -21,7 +21,7 @@ import requests
 from PIL import Image
 
 from odoo import api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
@@ -925,7 +925,10 @@ class Import(models.TransientModel):
         name_create_enabled_fields = options.pop('name_create_enabled_fields', {})
         import_limit = options.pop('limit', None)
         model = self.env[self.res_model].with_context(import_file=True, name_create_enabled_fields=name_create_enabled_fields, _import_limit=import_limit)
-        import_result = model.load(import_fields, data)
+        try:
+            import_result = model.load(import_fields, data)
+        except Exception as e:
+            raise UserError(str(e))
         _logger.info('done')
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise
