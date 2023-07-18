@@ -167,7 +167,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 1,
             });
@@ -197,7 +197,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 6,
             });
@@ -218,7 +218,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                        '<field name="header" widget="html" style="height: 100px" />' +
+                        '<field name="header" style="height: 100px" />' +
                       '</form>',
                 res_id: 1,
             });
@@ -247,7 +247,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 1,
             });
@@ -333,7 +333,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 1,
                 mockRPC: function (route, args) {
@@ -398,7 +398,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 1,
                 mockRPC: function (route, args) {
@@ -456,7 +456,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 2,
             });
@@ -505,7 +505,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 3,
             });
@@ -555,7 +555,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 4,
             });
@@ -605,7 +605,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 5,
             });
@@ -675,7 +675,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 1,
                 mockRPC: function (route, args) {
@@ -729,7 +729,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 formMultiClickTime: MULTI_CLICK_DELAY,
                 res_id: 1,
@@ -762,7 +762,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" style="height: 100px"/>' +
                     '</form>',
                 res_id: 7,
             });
@@ -834,7 +834,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'cssReadonly\': \'template.assets\'}"/>' +
+                    '<field name="body" style="height: 100px" options="{\'cssReadonly\': \'template.assets\'}"/>' +
                     '</form>',
                 res_id: 1,
                 debug: 1,
@@ -874,7 +874,7 @@ QUnit.module('web_editor', {}, function () {
                 model: 'note.note',
                 data: this.data,
                 arch: '<form string="Partners">' +
-                    '<field name="body" widget="html"/>' +
+                    '<field name="body"/>' +
                     '</form>',
                 res_id: 1,
                 mockRPC: function (route, args) {

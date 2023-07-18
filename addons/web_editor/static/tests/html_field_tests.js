@@ -78,7 +78,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             serverData,
             arch: `
                 <form>
-                    <field name="txt" widget="html"/>
+                    <field name="txt"/>
                 </form>`,
         });
 
@@ -113,7 +113,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             serverData,
             arch: `
                 <form string="Partner">
-                    <field name="txt" widget="html" readonly="1" options="{'sandboxedPreview': true}"/>
+                    <field name="txt" readonly="1" options="{'sandboxedPreview': true}"/>
                 </form>`,
         });
 
@@ -170,7 +170,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                     <sheet>
                         <notebook>
                                 <page string="Body" name="body">
-                                    <field name="txt" widget="html" options="{'sandboxedPreview': true}"/>
+                                    <field name="txt" options="{'sandboxedPreview': true}"/>
                                 </page>
                         </notebook>
                     </sheet>
@@ -233,7 +233,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             serverData,
             arch: `
                 <form>
-                    <field name="txt" widget="html"/>
+                    <field name="txt"/>
                 </form>`,
         });
 
@@ -255,7 +255,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             serverData,
             arch: `
                 <form>
-                    <field name="txt" widget="html" options="{'sandboxedPreview': true}"/>
+                    <field name="txt" options="{'sandboxedPreview': true}"/>
                 </form>`,
         });
 
@@ -282,7 +282,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             serverData,
             arch: `
                 <form>
-                    <field name="txt" widget="html" readonly="1"/>
+                    <field name="txt" readonly="1"/>
                 </form>`,
         });
 
@@ -404,7 +404,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             serverData,
             arch: `
                 <form>
-                    <field name="txt" widget="html"/>
+                    <field name="txt"/>
                 </form>`,
             mockRPC: mockRPC,
         });
