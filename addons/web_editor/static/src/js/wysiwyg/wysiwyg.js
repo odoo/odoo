@@ -15,8 +15,8 @@ import { ImageCrop } from '@web_editor/js/wysiwyg/widgets/image_crop';
 
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
 import weUtils from "@web_editor/js/common/utils";
-import { isSelectionInSelectors } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
-import { PeerToPeer } from "@web_editor/js/wysiwyg/PeerToPeer";
+import { isSelectionInSelectors, peek } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { PeerToPeer, RequestError } from "@web_editor/js/wysiwyg/PeerToPeer";
 import { uniqueId } from "@web/core/utils/functions";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
@@ -96,6 +96,13 @@ const PTP_CLIENT_DISCONNECTED_STATES = [
     'closed',
     'disconnected',
 ];
+
+// Time in ms to wait when trying to aggregate snapshots from other peers and
+// potentially recover from a missing step before trying to apply those
+// snapshots or recover from the server.
+const PTP_MAX_RECOVERY_TIME = 500;
+
+const REQUEST_ERROR = Symbol('REQUEST_ERROR');
 
 // this is a local cache for ice server descriptions
 let ICE_SERVERS = null;
@@ -310,7 +317,28 @@ export class Wysiwyg extends Component {
         if (options.value) {
             this.$editable.html(options.value);
         }
-        const initialHistoryId = options.value && this._getInitialHistoryId(options.value);
+
+        this._isDocumentStale = false;
+
+        // Each time a reset of the document is triggered, it is assigned a
+        // unique identifier. Since resetting the editor involves asynchronous
+        // requests, it is possible that subsequent resets are triggered before
+        // the previous one is complete. This property identifies the latest
+        // reset and can be compared against to cancel the processing of late
+        // responses from previous resets.
+        this._lastCollaborationResetId = 0;
+        // This ID correspond to the peer that initiated the document and set
+        // the initial oid for all nodes in the tree. It is not the same as
+        // document that had a step id at some point. If a step comes from a
+        // different history, we should not apply it.
+        this._historyShareId = Math.floor(Math.random() * Math.pow(2,52)).toString();
+
+        // The ID is the latest step ID that the server knows through
+        // `data-last-history-steps`. We cannot save to the server if we do not
+        // have that ID in our history ids as it means that our version is
+        // stale.
+        this._serverLastStepId = options.value && this._getLastHistoryStepId(options.value);
+
         this.$editable.data('wysiwyg', this);
         this.$editable.data('oe-model', options.recordInfo.res_model);
         this.$editable.data('oe-id', options.recordInfo.res_id);
@@ -356,7 +384,7 @@ export class Wysiwyg extends Component {
             powerboxFilters: this.options.powerboxFilters || [],
             showEmptyElementHint: this.options.showEmptyElementHint,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
-            initialHistoryId,
+            initialHistoryId: this._serverLastStepId,
             getContentEditableAreas: this.options.getContentEditableAreas,
             getReadOnlyAreas: this.options.getReadOnlyAreas,
             getUnremovableElements: this.options.getUnremovableElements,
@@ -412,7 +440,7 @@ export class Wysiwyg extends Component {
             categories: powerboxOptions.categories,
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
-            collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(session.uid)}`,
+            collaborationClientAvatarUrl: this._getCollaborationClientAvatarUrl(),
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
             dropImageAsAttachment: options.dropImageAsAttachment,
             foldSnippets: !!options.foldSnippets,
@@ -635,6 +663,7 @@ export class Wysiwyg extends Component {
         }
 
         this._collaborationChannelName = channelName;
+        this._historyStepsBuffer = [];
         Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
         const collaborationBusListener = ({ detail: notifications}) => {
@@ -645,7 +674,11 @@ export class Wysiwyg extends Component {
                     payload.field_name === fieldName &&
                     payload.res_id === resId
                 ) {
-                    this._peerToPeerLoading.then(() => this.ptp.handleNotification(payload));
+                    if (payload.notificationName === 'html_field_write') {
+                        this._onServerLastIdUpdate(payload.notificationPayload.last_step_id);
+                    } else if (this._ptpJoined) {
+                        this._peerToPeerLoading.then(() => this.ptp.handleNotification(payload));
+                    }
                 }
             }
         }
@@ -661,7 +694,6 @@ export class Wysiwyg extends Component {
         this._startCollaborationTime = new Date().getTime();
 
         this._checkConnectionChange = () => {
-            this._navigatorCheckOnlineWorking = true;
             if (!this.ptp) {
                 return;
             }
@@ -726,7 +758,7 @@ export class Wysiwyg extends Component {
             }, 50),
             onHistoryMissingParentSteps: async ({ step, fromStepId }) => {
                 if (!this.ptp) return;
-                const missingSteps = await this.ptp.requestClient(
+                const missingSteps = await this.requestClient(
                     step.clientId,
                     'get_missing_steps', {
                         fromStepId: fromStepId,
@@ -734,14 +766,8 @@ export class Wysiwyg extends Component {
                     },
                     { transport: 'rtc' }
                 );
-                // If missing steps === -1, it means that either the
-                // step.clientId has a stale document or the step.clientId has a
-                // snapshot and does not includes the step in its history.
-                if (missingSteps === -1 || !missingSteps.length) {
-                    console.warn('Editor get_missing_steps result is erroneous.');
-                    return;
-                }
-                this.ptp && this.odooEditor.onExternalHistorySteps(missingSteps.concat([step]));
+                if (missingSteps === REQUEST_ERROR) return;
+                this._processMissingSteps(Array.isArray(missingSteps) ? missingSteps.concat(step) : missingSteps);
             },
         };
         if (this.options.postProcessExternalSteps) {
@@ -759,14 +785,12 @@ export class Wysiwyg extends Component {
      */
     destroy() {
         Wysiwyg.activeWysiwygs.delete(this);
-        if (this._collaborationChannelName) {
-            Wysiwyg.activeCollaborationChannelNames.delete(this._collaborationChannelName);
-        }
 
         this._stopPeerToPeer();
         document.removeEventListener("mousemove", this._signalOnline, true);
         document.removeEventListener("keydown", this._signalOnline, true);
         document.removeEventListener("keyup", this._signalOnline, true);
+        this._collaborationStopBus && this._collaborationStopBus();
         if (this.odooEditor) {
             this.odooEditor.document.removeEventListener("mousemove", this._signalOnline, true);
             this.odooEditor.document.removeEventListener("keydown", this._signalOnline, true);
@@ -780,8 +804,8 @@ export class Wysiwyg extends Component {
         // If peer to peer is initializing, wait for properly closing it.
         if (this._peerToPeerLoading) {
             this._peerToPeerLoading.then(()=> {
-                this._collaborationStopBus();
-                this.ptp.closeAllConnections();
+                this._stopPeerToPeer();
+                this._collaborationStopBus && this._collaborationStopBus();
             });
         }
         clearInterval(this._collaborationInterval);
@@ -2645,76 +2669,66 @@ export class Wysiwyg extends Component {
         }
     }
     _signalOffline() {
-        if (!this._isOnline) {
-            return;
-        }
         this._isOnline = false;
-
-        this.preSavePromise = new Promise((resolve, reject) => {
-            this.preSavePromiseResolve = resolve;
-            this.preSavePromiseReject = reject;
-        });
     }
     async _signalOnline() {
         clearTimeout(this._offlineTimeout);
         this._offlineTimeout = undefined;
 
-        if (this._isOnline || !this.preSavePromise || !navigator.onLine) {
+        if (this._isOnline || !navigator.onLine) {
             return;
         }
         this._isOnline = true;
+        if (!this.ptp) return;
 
-        if (this._removeSignalDisconnectCallback) {
-            this._removeSignalDisconnectCallback();
-        }
-        const resetPreSavePromise = () => {
-            this.preSavePromise = undefined;
-            this.preSavePromiseResolve = undefined;
-            this.preSavePromiseReject = undefined;
-        }
-        try {
-            const serverContent = await this._ensureCommonHistory();
-            if (serverContent) {
-                const content = markup(this.odooEditor.editable.cloneNode(true).outerHTML);
-                this.env.services.dialog.add(ConflictDialog, { content });
-
-                await this.resetEditor(serverContent);
-                // We were in a peer to peer session before the conflict, join
-                // it again immediately.
-                this._joinPeerToPeer();
-            }
-            this.preSavePromiseResolve();
-            resetPreSavePromise();
-        } catch (e) {
-            this.preSavePromiseReject && this.preSavePromiseReject(e);
-            resetPreSavePromise();
-        }
-    }
-    _getInitialHistoryId(value) {
-        const matchId = value.match(/data-last-history-steps="(?:[0-9]+,)*([0-9]+)"/);
-        return matchId && matchId[1];
+        // Ask for potential missing steps from all peers.
+        return Promise.all(this._getPtpClients().map(client => {
+            return this.requestClient(
+                client.id,
+                'get_missing_steps', {
+                    fromStepId: peek(this.odooEditor.historyGetBranchIds()).id,
+                },
+                { transport: 'rtc' }
+            ).then(missingSteps => {
+                if (missingSteps === REQUEST_ERROR) return;
+                this._processMissingSteps(missingSteps);
+            });
+        }));
     }
     /**
-     * When the collaboration is active, ensure that we do not try to save with
-     * a different history branch to the database. If the history is different,
-     * return the database html content.
+     * Process missing steps received from a peer.
      *
-     * See `_historyIds` in `historyReset` in OdooEditor.
-     *
-     * @return {string} The database html content if the history is different.
+     * @private
+     * @param {Array<Object>|-1} missingSteps
+     * @return {Promise<boolean>} true if missing steps have been processed
      */
-    async _ensureCommonHistory() {
-        if (!this.ptp) return;
-        const historyIds = this.odooEditor.historyGetBranchIds();
-        return this._serviceRpc(
-            '/web_editor/ensure_common_history',
-            {
-                history_ids: historyIds,
-                model_name: this.options.collaborationChannel.collaborationModelName,
-                field_name: this.options.collaborationChannel.collaborationFieldName,
-                res_id: this.options.collaborationChannel.collaborationResId,
-            },
-        );
+    async _processMissingSteps(missingSteps) {
+        // If missing steps === -1, it means that either:
+        // - the step.clientId has a stale document
+        // - the step.clientId has a snapshot and does not includes the step in
+        //   its history
+        // - if another share history id
+        //   - because the step.clientId has reset from the server and
+        //     step.clientId is not synced with this client
+        //   - because the step.clientId is in a network partition
+        if (missingSteps === -1 || !missingSteps.length) {
+            return false;
+        }
+        this.ptp && this.odooEditor.onExternalHistorySteps(missingSteps);
+        return true;
+    }
+    _showConflictDialog() {
+        if (this._conflictDialogOpened) return;
+        const content = markup(this.odooEditor.editable.cloneNode(true).outerHTML);
+        this._conflictDialogOpened = true;
+        this.env.services.dialog.add(ConflictDialog, {
+            content,
+            close: () => this._conflictDialogOpened = false,
+        });
+    }
+    _getLastHistoryStepId(value) {
+        const matchId = value.match(/data-last-history-steps="(?:[0-9]+,)*([0-9]+)"/);
+        return matchId && matchId[1];
     }
     _generateClientId() {
         // No need for secure random number.
@@ -2730,8 +2744,6 @@ export class Wysiwyg extends Component {
         // Wether or not the history has been sent or received at least
         // once.
         this._historySyncAtLeastOnce = false;
-        this._historySyncFinished = false;
-        this._historyStepsBuffer = [];
 
         return new PeerToPeer({
             peerConnectionConfig: { iceServers: this._iceServers },
@@ -2761,19 +2773,23 @@ export class Wysiwyg extends Component {
                 },
                 get_client_avatar: () => `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(session.uid)}`,
                 get_missing_steps: (params) => this.odooEditor.historyGetMissingSteps(params.requestPayload),
-                get_history_from_snapshot: () => this.odooEditor.historyGetSnapshotSteps(),
+                get_history_from_snapshot: () => this._getHistorySnapshot(),
                 get_collaborative_selection: () => this.odooEditor.getCurrentCollaborativeSelection(),
+                recover_document: (params) => {
+                    const { serverDocumentId, fromStepId } = params.requestPayload;
+                    if (!this.odooEditor.historyGetBranchIds().includes(serverDocumentId)) {
+                        return;
+                    }
+                    return {
+                        missingSteps: this.odooEditor.historyGetMissingSteps({ fromStepId }),
+                        snapshot: this._getHistorySnapshot(),
+                    };
+                },
             },
             onNotification: async ({ fromClientId, notificationName, notificationPayload }) => {
                 switch (notificationName) {
                     case 'ptp_remove':
                         this.odooEditor.multiselectionRemove(notificationPayload);
-                        break;
-                    case 'rtc_signal_description':
-                        const pc = this.ptp.clientsInfos[fromClientId].peerConnection;
-                        if (this._couldBeDisconnected && this._navigatorCheckOnlineWorking && (!pc || pc.connectionState === 'closed')) {
-                            this._signalOnline();
-                        }
                         break;
                     case 'ptp_disconnect':
                         this.ptp.removeClient(fromClientId);
@@ -2781,14 +2797,9 @@ export class Wysiwyg extends Component {
                         break;
                     case 'rtc_data_channel_open': {
                         fromClientId = notificationPayload.connectionClientId;
-                        const remoteStartTime = await this.ptp.requestClient(fromClientId, 'get_start_time', undefined, { transport: 'rtc' });
+                        const remoteStartTime = await this.requestClient(fromClientId, 'get_start_time', undefined, { transport: 'rtc' });
+                        if (remoteStartTime === REQUEST_ERROR) return;
                         this.ptp.clientsInfos[fromClientId].startTime = remoteStartTime;
-                        this.ptp.requestClient(fromClientId, 'get_client_name', undefined, { transport: 'rtc' }).then((clientName) => {
-                            this.ptp.clientsInfos[fromClientId].clientName = clientName;
-                        });
-                        this.ptp.requestClient(fromClientId, 'get_client_avatar', undefined, { transport: 'rtc' }).then(clientAvatarUrl => {
-                            this.ptp.clientsInfos[fromClientId].clientAvatarUrl = clientAvatarUrl;
-                        });
 
                         if (!this._historySyncAtLeastOnce) {
                             const localClient = { id: this._currentClientId, startTime: this._startCollaborationTime };
@@ -2796,40 +2807,31 @@ export class Wysiwyg extends Component {
                             if (isClientFirst(localClient, remoteClient)) {
                                 this._historySyncAtLeastOnce = true;
                             } else {
-                                const { steps, historyIds } = await this.ptp.requestClient(fromClientId, 'get_history_from_snapshot', undefined, { transport: 'rtc' });
-                                // Ensure that the history hasn't been
-                                // synced by another client before this
-                                // `get_history_from_snapshot` finished.
-                                if (this._historySyncAtLeastOnce) {
+                                this._resetCollabRequests();
+                                const response = await this._resetFromClient(fromClientId, this._lastCollaborationResetId);
+                                if (response !== REQUEST_ERROR) {
                                     return;
                                 }
-                                const firstStepId = this.odooEditor.historyGetBranchIds()[0];
-                                const staleDocument = !historyIds.includes(firstStepId);
-                                if (staleDocument) {
-                                    return false;
-                                }
-                                this._historySyncAtLeastOnce = true;
-                                this.odooEditor.historyResetFromSteps(steps, historyIds);
-                                const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
-                                if (remoteSelection) {
-                                    this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
-                                }
                                 this.options.onHistoryResetFromSteps();
-                            }
-                            // In case there are steps received in the meantime, process them.
-                            if (this._historyStepsBuffer.length) {
-                                this.odooEditor.onExternalHistorySteps(this._historyStepsBuffer);
-                                this._historyStepsBuffer = [];
                             }
                             this._historySyncFinished = true;
                         } else {
                             const currentStep = this.odooEditor._historySteps[this.odooEditor._historySteps.length - 1];
-                            const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
-                            if (remoteSelection) {
-                                this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
-                            }
+                            this._setCollaborativeSelection(fromClientId);
                             this.ptp.notifyClient(fromClientId, 'oe_history_step', currentStep, { transport: 'rtc' });
                         }
+
+                        this.requestClient(fromClientId, 'get_client_name', undefined, { transport: 'rtc' }).then((clientName) => {
+                            if (clientName === REQUEST_ERROR) return;
+                            this.ptp.clientsInfos[fromClientId].clientName = clientName;
+                            this.odooEditor.multiselectionRefresh();
+                        });
+                        this.requestClient(fromClientId, 'get_client_avatar', undefined, { transport: 'rtc' }).then(clientAvatarUrl => {
+                            if (clientAvatarUrl === REQUEST_ERROR) return;
+                            this.ptp.clientsInfos[fromClientId].clientAvatarUrl = clientAvatarUrl;
+                            this.odooEditor.multiselectionRefresh();
+                        });
+
                         break;
                     }
                     case 'oe_history_step':
@@ -2854,16 +2856,296 @@ export class Wysiwyg extends Component {
             }
         });
     }
+    _getCollaborationClientAvatarUrl() {
+        return `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(session.uid)}`
+    }
     _stopPeerToPeer() {
+        this._joiningPtp = false;
+        this._ptpJoined = false;
+        this._resetCollabRequests();
         this.ptp && this.ptp.stop();
-        this._collaborationStopBus && this._collaborationStopBus();
     }
     _joinPeerToPeer() {
         this.$editable[0].removeEventListener('focus', this._joinPeerToPeer);
         if (this._peerToPeerLoading) {
-            this._peerToPeerLoading.then(() => this.ptp.notifyAllClients('ptp_join'));
+            return this._peerToPeerLoading.then(async () => {
+                this._joiningPtp = true;
+                if (this._isDocumentStale) {
+                    const success = await this._resetFromServerAndResyncWithClients();
+                    if (!success) return;
+                }
+                this.ptp.notifyAllClients('ptp_join');
+                this._joiningPtp = false;
+                this._ptpJoined = true;
+            });
         }
     }
+    async _setCollaborativeSelection(fromClientId) {
+        const remoteSelection = await this.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
+        if (remoteSelection === REQUEST_ERROR) return;
+        if (remoteSelection) {
+            this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
+        }
+    }
+    /**
+     * Get peer to peer clients.
+     */
+    _getPtpClients() {
+        const clients = Object.entries(this.ptp.clientsInfos).map(([clientId, clientInfo]) => ({id: clientId, ...clientInfo}));
+        return clients.sort((a, b) => isClientFirst(a, b) ? -1 : 1);
+    }
+    async _getCurrentRecord() {
+        const [record] = await this.orm.read(
+            this.options.collaborationChannel.collaborationModelName,
+            [this.options.collaborationChannel.collaborationResId],
+            [this.options.collaborationChannel.collaborationFieldName],
+        );
+        return record;
+    }
+    _isLastDocumentStale() {
+        return !this.odooEditor.historyGetBranchIds().includes(this._serverLastStepId);
+    }
+    /**
+     * Update the server document last step id and recover from a stale document
+     * if this client does not have that step in its history.
+     */
+    _onServerLastIdUpdate(last_step_id) {
+        this._serverLastStepId = last_step_id;
+        // Check if the current document is stale.
+        this._isDocumentStale = this._isLastDocumentStale();
+        if (this._isDocumentStale && this._ptpJoined) {
+            return this._recoverFromStaleDocument();
+        } else if (this._isDocumentStale && this._joiningPtp) {
+            // In case there is a stale document while a previous recovery is
+            // ongoing.
+            this._resetCollabRequests();
+            this._joinPeerToPeer();
+        }
+    }
+    /**
+     * Try to recover from a stale document.
+     *
+     * The strategy is:
+     *
+     * 1.  Try to get a converging document from the other peers.
+     *
+     * 1.1 By recovery from missing steps: it is the best possible case of
+     *     retrieval.
+     *
+     * 1.2 By recovery from snapshot: it reset the whole editor (destroying
+     *     changes and selection made by the user).
+     *
+     * 2. Reset from the server:
+     *    If the recovery from the other peers fails, reset from the server.
+     *
+     *    As we know we have a stale document, we need to reset it at least from
+     *    the server. We shouldn't wait too long for peers to respond because
+     *    the longer we wait for an unresponding peer, the longer a user can
+     *    edit a stale document.
+     *
+     *    The peers timeout is set to PTP_MAX_RECOVERY_TIME.
+     */
+    async _recoverFromStaleDocument() {
+        return new Promise((resolve) => {
+            // 1. Try to recover a converging document from other peers.
+            const resetCollabCount = this._lastCollaborationResetId;
+
+            const allPeers = this._getPtpClients().map(client => client.id);
+
+            if (allPeers.length === 0) {
+                if (this._isDocumentStale) {
+                    this._showConflictDialog();
+                    resolve();
+                    return this._resetFromServerAndResyncWithClients();
+                }
+            }
+
+            let hasRetrievalBudgetTimeout = false;
+            let snapshots = [];
+            let nbPendingResponses = allPeers.length;
+
+            const success = () => {
+                resolve();
+                clearTimeout(timeout);
+            };
+
+            for (const peerId of allPeers) {
+                this.requestClient(
+                    peerId,
+                    'recover_document', {
+                        serverDocumentId: this._serverLastStepId,
+                        fromStepId: peek(this.odooEditor.historyGetBranchIds()),
+                    },
+                    { transport: 'rtc' }
+                ).then((response) => {
+                    nbPendingResponses--;
+                    if (
+                        response === REQUEST_ERROR ||
+                        resetCollabCount !== this._lastCollaborationResetId ||
+                        hasRetrievalBudgetTimeout ||
+                        !response ||
+                        !this._isDocumentStale
+                    ) {
+                        if (nbPendingResponses <= 0) {
+                            processSnapshots();
+                        }
+                        return;
+                    }
+                    this._processMissingSteps(response.missingSteps);
+                    this._isDocumentStale = this._isLastDocumentStale();
+                    snapshots.push(response.snapshot);
+                    if (nbPendingResponses < 1) {
+                        processSnapshots();
+                    }
+                });
+            }
+
+            // Only process the snapshots after having received a response from all
+            // the peers or after PTP_MAX_RECOVERY_TIME in order to try to recover
+            // from missing steps.
+            const processSnapshots = async () => {
+                this._isDocumentStale = this._isLastDocumentStale();
+                if (!this._isDocumentStale) {
+                    return success();
+                }
+                if (snapshots[0]) {
+                    this._showConflictDialog();
+                }
+                for (const snapshot of snapshots) {
+                    this._applySnapshot(snapshot);
+                    this._isDocumentStale = this._isLastDocumentStale();
+                    // Prevent reseting from another snapshot if the document
+                    // converge.
+                    if (!this._isDocumentStale) {
+                        return success();
+                    }
+                }
+
+                // 2. If the document is still stale, try to recover from the server.
+                if (this._isDocumentStale) {
+                    this._showConflictDialog();
+                    await this._resetFromServerAndResyncWithClients();
+                }
+
+                success();
+            }
+
+            // Wait PTP_MAX_RECOVERY_TIME to retrieve data from other peers to
+            // avoid reseting from the server if possible.
+            const timeout = setTimeout(() => {
+                if (resetCollabCount !== this._lastCollaborationResetId) return;
+                hasRetrievalBudgetTimeout = true;
+                this._onRecoveryClientTimeout(processSnapshots);
+            }, PTP_MAX_RECOVERY_TIME);
+        });
+    }
+    /**
+     * Callback for when the timeout PTP_MAX_RECOVERY_TIME fires.
+     *
+     * Used to be hooked in tests.
+     *
+     * @param {Function} processSnapshots The snapshot processing function.
+     */
+    async _onRecoveryClientTimeout(processSnapshots) {
+        processSnapshots();
+    }
+    /**
+     * Reset the document from the server and resync with the clients.
+     */
+    async _resetFromServerAndResyncWithClients() {
+        let collaborationResetId = this._lastCollaborationResetId;
+        const record = await this._getCurrentRecord();
+        if (collaborationResetId !== this._lastCollaborationResetId) return;
+
+        const content = record[this.options.collaborationChannel.collaborationFieldName];
+        const lastHistoryId = content && this._getLastHistoryStepId(content);
+        // If a change was made in the document while retrieving it, the
+        // lastHistoryId will be different if the odoo bus did not have time to
+        // notify the user.
+        if (this._serverLastStepId !== lastHistoryId) {
+            // todo: instrument it to ensure it never happens
+            throw new Error('Concurency detected while recovering from a stale document. The last history id of the server is different from the history id received by the html_field_write event.');
+        }
+
+        this._isDocumentStale = false;
+        this.resetValue(content);
+
+        // After resetting from the server, try to resynchronise with a peer as
+        // if it was the first time connecting to a peer in order to retrieve a
+        // proper snapshot (e.g. This case could arise if we tried to recover
+        // from a client but the timeout (PTP_MAX_RECOVERY_TIME) was reached
+        // before receiving a response).
+        this._historySyncAtLeastOnce = false;
+        this._resetCollabRequests();
+        collaborationResetId = this._lastCollaborationResetId;
+        this._startCollaborationTime = new Date().getTime();
+        await Promise.all(this._getPtpClients().map((client) => {
+            // Reset from the fastest client. The first client to reset will set
+            // this._historySyncAtLeastOnce to true canceling the other peers
+            // resets.
+            return this._resetFromClient(client.id, collaborationResetId);
+        }));
+        return true;
+    }
+    _resetCollabRequests() {
+        this._lastCollaborationResetId++;
+        // By aborting the current requests from ptp, we ensure that the ongoing
+        // `Wysiwyg.requestClient` will return REQUEST_ERROR. Most requests that
+        // calls `Wysiwyg.requestClient` might want to check if the response is
+        // REQUEST_ERROR.
+        this.ptp && this.ptp.abortCurrentRequests();
+    }
+    async _resetFromClient(fromClientId, resetCollabCount) {
+        this._historySyncFinished = false;
+        this._historyStepsBuffer = [];
+        const snapshot = await this.requestClient(fromClientId, 'get_history_from_snapshot', undefined, { transport: 'rtc' });
+        if (snapshot === REQUEST_ERROR) {
+            return REQUEST_ERROR;
+        }
+        if (resetCollabCount !== this._lastCollaborationResetId) {
+            return;
+        }
+        // Ensure that the history hasn't been synced by another client before
+        // this `get_history_from_snapshot` finished.
+        if (this._historySyncAtLeastOnce) {
+            return;
+        }
+        const applied = this._applySnapshot(snapshot);
+        if (!applied) {
+            return;
+        }
+        this._historySyncFinished = true;
+        // In case there are steps received in the meantime, process them.
+        if (this._historyStepsBuffer.length) {
+            this.odooEditor.onExternalHistorySteps(this._historyStepsBuffer);
+            this._historyStepsBuffer = [];
+        }
+        this._setCollaborativeSelection(fromClientId);
+    }
+    async requestClient(clientId, requestName, requestPayload, params) {
+        return this.ptp.requestClient(clientId, requestName, requestPayload, params).catch((e) => {
+            if (e instanceof RequestError) {
+                return REQUEST_ERROR;
+            } else {
+                throw e;
+            }
+        });
+    }
+    /**
+     * Reset the value and history of the editor.
+     */
+    async resetValue(value) {
+        this.setValue(value);
+        this.odooEditor.historyReset();
+        this._historyShareId = Math.floor(Math.random() * Math.pow(2,52)).toString();
+        this._serverLastStepId = value && this._getLastHistoryStepId(value);
+        if (this._serverLastStepId) {
+            this.odooEditor.historySetInitialId(this._serverLastStepId);
+        }
+    }
+    /**
+     * Reset the editor with a new value and potientially new options.
+     */
     async resetEditor(value, options) {
         await this._peerToPeerLoading;
         this.$editable[0].removeEventListener('focus', this._joinPeerToPeer);
@@ -2872,28 +3154,46 @@ export class Wysiwyg extends Component {
         }
         const {collaborationChannel} = this.options;
         this._stopPeerToPeer();
+        this._collaborationStopBus && this._collaborationStopBus();
+        this._isDocumentStale = false;
         this._rulesCache = undefined; // Reset the cache of rules.
         // If there is no collaborationResId, the record has been deleted.
         if (!this._isCollaborationEnabled(this.options)) {
-            this.setValue(value);
-            this.odooEditor.historyReset();
+            this.resetValue(value);
             return;
         }
-        this.setValue(value);
+        this.resetValue(value);
         this.setupCollaboration(collaborationChannel);
         this.odooEditor.collaborationSetClientId(this._currentClientId);
-        this.odooEditor.historyReset();
         if (this.options.collaborativeTrigger === 'start') {
             this._joinPeerToPeer();
         } else if (this.options.collaborativeTrigger === 'focus') {
             // Wait until editor is focused to join the peer to peer network.
             this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
         }
-        const initialHistoryId = value && this._getInitialHistoryId(value);
-        if (initialHistoryId) {
-            this.odooEditor.historySetInitialId(initialHistoryId);
-        }
+
         await this._peerToPeerLoading;
+    }
+    _getHistorySnapshot() {
+        return Object.assign(
+            {},
+            this.odooEditor.historyGetSnapshotSteps(),
+            { historyShareId: this._historyShareId }
+        );
+    }
+    _applySnapshot(snapshot) {
+        const { steps, historyIds, historyShareId } = snapshot;
+        // If there is no serverLastStepId, it means that we use a document
+        // that is not versionned yet.
+        const isStaleDocument = this._serverLastStepId && !historyIds.includes(this._serverLastStepId);
+        if (isStaleDocument) {
+            return;
+        }
+        this._historyShareId = historyShareId;
+        this._historySyncAtLeastOnce = true;
+        this.odooEditor.historyResetFromSteps(steps, historyIds);
+        this.odooEditor.historyResetLatestComputedSelection();
+        return true;
     }
     /**
      * Set `contenteditable` according to `.o_not_editable` and `.o_editable`.
@@ -3144,7 +3444,9 @@ Wysiwyg.setRange = function (startNode, startOffset = 0, endNode = startNode, en
 // Check wether clientA is before clientB.
 function isClientFirst(clientA, clientB) {
     if (clientA.startTime === clientB.startTime) {
-        return clientA.id.localeCompare(clientB.id) < 1;
+        return clientA.id.localeCompare(clientB.id) === -1;
+    } if (clientA.startTime === undefined || clientB.startTime === undefined) {
+        return Boolean(clientA.startTime);
     } else {
         return clientA.startTime < clientB.startTime;
     }
