@@ -277,9 +277,9 @@
 
     <template id="group_name">
         <h1 class="text-center" t-esc="group.name"/>
-        <h4 class="text-center text-muted" t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
+        <h4 class="text-center text-muted" t-if="group.alias_id and group.alias_id.sudo().alias_name and group.alias_id.sudo().alias_domain">
             <i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"/>
-            <a class="text-break" t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}" t-field="group.alias_id"/>
+            <a class="text-break" t-attf-href="mailto:#{group.alias_id.sudo().display_name}" t-field="group.alias_id"/>
         </h4>
     </template>
 
