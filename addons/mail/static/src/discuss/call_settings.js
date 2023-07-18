@@ -17,8 +17,8 @@ export class CallSettings extends Component {
         this.state = useState({
             userDevices: [],
         });
-        useExternalListener(browser, "keydown", this._onKeyDown);
-        useExternalListener(browser, "keyup", this._onKeyUp);
+        useExternalListener(browser, "keydown", this._onKeyDown, { capture: true });
+        useExternalListener(browser, "keyup", this._onKeyUp, { capture: true });
         onWillStart(async () => {
             if (!browser.navigator.mediaDevices) {
                 // zxing-js: isMediaDevicesSuported or canEnumerateDevices is false.
