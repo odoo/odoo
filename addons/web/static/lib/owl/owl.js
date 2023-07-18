@@ -125,14 +125,16 @@
         }
         const node = "node" in params ? params.node : params.fiber.node;
         const fiber = "fiber" in params ? params.fiber : node.fiber;
-        // resets the fibers on components if possible. This is important so that
-        // new renderings can be properly included in the initial one, if any.
-        let current = fiber;
-        do {
-            current.node.fiber = current;
-            current = current.parent;
-        } while (current);
-        fibersInError.set(fiber.root, error);
+        if (fiber) {
+            // resets the fibers on components if possible. This is important so that
+            // new renderings can be properly included in the initial one, if any.
+            let current = fiber;
+            do {
+                current.node.fiber = current;
+                current = current.parent;
+            } while (current);
+            fibersInError.set(fiber.root, error);
+        }
         const handled = _handleError(node, error);
         if (!handled) {
             console.warn(`[Owl] Unhandled error. Destroying the root component`);
@@ -314,20 +316,13 @@
      * @returns a batched version of the original callback
      */
     function batched(callback) {
-        let called = false;
-        return async () => {
-            // This await blocks all calls to the callback here, then releases them sequentially
-            // in the next microtick. This line decides the granularity of the batch.
-            await Promise.resolve();
-            if (!called) {
-                called = true;
-                // wait for all calls in this microtick to fall through before resetting "called"
-                // so that only the first call to the batched function calls the original callback.
-                // Schedule this before calling the callback so that calls to the batched function
-                // within the callback will proceed only after resetting called to false, and have
-                // a chance to execute the callback again
-                Promise.resolve().then(() => (called = false));
-                callback();
+        let scheduled = false;
+        return async (...args) => {
+            if (!scheduled) {
+                scheduled = true;
+                await Promise.resolve();
+                scheduled = false;
+                callback(...args);
             }
         };
     }
@@ -1660,8 +1655,7 @@
             let node = fiber.node;
             fiber.render = throwOnRender;
             if (node.status === 0 /* NEW */) {
-                node.destroy();
-                delete node.parent.children[node.parentKey];
+                node.cancel();
             }
             node.fiber = null;
             if (fiber.bdom) {
@@ -2388,6 +2382,9 @@
             }
         }
         async render(deep) {
+            if (this.status >= 2 /* CANCELLED */) {
+                return;
+            }
             let current = this.fiber;
             if (current && (current.root.locked || current.bdom === true)) {
                 await Promise.resolve();
@@ -2413,7 +2410,7 @@
             this.fiber = fiber;
             this.app.scheduler.addFiber(fiber);
             await Promise.resolve();
-            if (this.status === 2 /* DESTROYED */) {
+            if (this.status >= 2 /* CANCELLED */) {
                 return;
             }
             // We only want to actually render the component if the following two
@@ -2429,6 +2426,18 @@
             //   in the next microtick anyway, so we should not render it again.
             if (this.fiber === fiber && (current || !fiber.parent)) {
                 fiber.render();
+            }
+        }
+        cancel() {
+            this._cancel();
+            delete this.parent.children[this.parentKey];
+            this.app.scheduler.scheduleDestroy(this);
+        }
+        _cancel() {
+            this.status = 2 /* CANCELLED */;
+            const children = this.children;
+            for (let childKey in children) {
+                children[childKey]._cancel();
             }
         }
         destroy() {
@@ -2458,7 +2467,7 @@
                     this.app.handleError({ error: e, node: this });
                 }
             }
-            this.status = 2 /* DESTROYED */;
+            this.status = 3 /* DESTROYED */;
         }
         async updateAndRender(props, parentFiber) {
             this.nextProps = props;
@@ -2991,12 +3000,22 @@
             keys = collection;
             values = collection;
         }
-        else if (collection) {
-            values = Object.keys(collection);
-            keys = Object.values(collection);
+        else if (collection instanceof Map) {
+            keys = [...collection.keys()];
+            values = [...collection.values()];
+        }
+        else if (collection && typeof collection === "object") {
+            if (Symbol.iterator in collection) {
+                keys = [...collection];
+                values = keys;
+            }
+            else {
+                values = Object.keys(collection);
+                keys = Object.values(collection);
+            }
         }
         else {
-            throw new OwlError("Invalid loop expression");
+            throw new OwlError(`Invalid loop expression: "${collection}" is not iterable`);
         }
         const n = values.length;
         return [keys, values, n, new Array(n)];
@@ -4823,10 +4842,10 @@
             parseTCall(node, ctx) ||
             parseTCallBlock(node) ||
             parseTEscNode(node, ctx) ||
+            parseTOutNode(node, ctx) ||
             parseTKey(node, ctx) ||
             parseTTranslation(node, ctx) ||
             parseTSlot(node, ctx) ||
-            parseTOutNode(node, ctx) ||
             parseComponent(node, ctx) ||
             parseDOMNode(node, ctx) ||
             parseTSetNode(node, ctx) ||
@@ -4939,10 +4958,8 @@
                 const typeAttr = node.getAttribute("type");
                 const isInput = tagName === "input";
                 const isSelect = tagName === "select";
-                const isTextarea = tagName === "textarea";
                 const isCheckboxInput = isInput && typeAttr === "checkbox";
                 const isRadioInput = isInput && typeAttr === "radio";
-                const isOtherInput = isInput && !isCheckboxInput && !isRadioInput;
                 const hasLazyMod = attr.includes(".lazy");
                 const hasNumberMod = attr.includes(".number");
                 const hasTrimMod = attr.includes(".trim");
@@ -4954,8 +4971,8 @@
                     specialInitTargetAttr: isRadioInput ? "checked" : null,
                     eventType,
                     hasDynamicChildren: false,
-                    shouldTrim: hasTrimMod && (isOtherInput || isTextarea),
-                    shouldNumberize: hasNumberMod && (isOtherInput || isTextarea),
+                    shouldTrim: hasTrimMod,
+                    shouldNumberize: hasNumberMod,
                 };
                 if (isSelect) {
                     // don't pollute the original ctx
@@ -5017,9 +5034,6 @@
                 ref,
                 content: [tesc],
             };
-        }
-        if (ast.type === 11 /* TComponent */) {
-            throw new OwlError("t-esc is not supported on Component nodes");
         }
         return tesc;
     }
@@ -5462,19 +5476,21 @@
      *
      * @param el the element containing the tree that should be normalized
      */
-    function normalizeTEsc(el) {
-        const elements = [...el.querySelectorAll("[t-esc]")].filter((el) => el.tagName[0] === el.tagName[0].toUpperCase() || el.hasAttribute("t-component"));
-        for (const el of elements) {
-            if (el.childNodes.length) {
-                throw new OwlError("Cannot have t-esc on a component that already has content");
+    function normalizeTEscTOut(el) {
+        for (const d of ["t-esc", "t-out"]) {
+            const elements = [...el.querySelectorAll(`[${d}]`)].filter((el) => el.tagName[0] === el.tagName[0].toUpperCase() || el.hasAttribute("t-component"));
+            for (const el of elements) {
+                if (el.childNodes.length) {
+                    throw new OwlError(`Cannot have ${d} on a component that already has content`);
+                }
+                const value = el.getAttribute(d);
+                el.removeAttribute(d);
+                const t = el.ownerDocument.createElement("t");
+                if (value != null) {
+                    t.setAttribute(d, value);
+                }
+                el.appendChild(t);
             }
-            const value = el.getAttribute("t-esc");
-            el.removeAttribute("t-esc");
-            const t = el.ownerDocument.createElement("t");
-            if (value != null) {
-                t.setAttribute("t-esc", value);
-            }
-            el.appendChild(t);
         }
     }
     /**
@@ -5485,7 +5501,7 @@
      */
     function normalizeXML(el) {
         normalizeTIf(el);
-        normalizeTEsc(el);
+        normalizeTEscTOut(el);
     }
     /**
      * Parses an XML string into an XML document, throwing errors on parser errors
@@ -5538,7 +5554,7 @@
     }
 
     // do not modify manually. This file is generated by the release script.
-    const version = "2.1.4";
+    const version = "2.2.3";
 
     // -----------------------------------------------------------------------------
     //  Scheduler
@@ -5548,10 +5564,17 @@
             this.tasks = new Set();
             this.frame = 0;
             this.delayedRenders = [];
+            this.cancelledNodes = new Set();
             this.requestAnimationFrame = Scheduler.requestAnimationFrame;
         }
         addFiber(fiber) {
             this.tasks.add(fiber.root);
+        }
+        scheduleDestroy(node) {
+            this.cancelledNodes.add(node);
+            if (this.frame === 0) {
+                this.frame = this.requestAnimationFrame(() => this.processTasks());
+            }
         }
         /**
          * Process all current tasks. This only applies to the fibers that are ready.
@@ -5562,21 +5585,28 @@
                 let renders = this.delayedRenders;
                 this.delayedRenders = [];
                 for (let f of renders) {
-                    if (f.root && f.node.status !== 2 /* DESTROYED */ && f.node.fiber === f) {
+                    if (f.root && f.node.status !== 3 /* DESTROYED */ && f.node.fiber === f) {
                         f.render();
                     }
                 }
             }
             if (this.frame === 0) {
-                this.frame = this.requestAnimationFrame(() => {
-                    this.frame = 0;
-                    this.tasks.forEach((fiber) => this.processFiber(fiber));
-                    for (let task of this.tasks) {
-                        if (task.node.status === 2 /* DESTROYED */) {
-                            this.tasks.delete(task);
-                        }
-                    }
-                });
+                this.frame = this.requestAnimationFrame(() => this.processTasks());
+            }
+        }
+        processTasks() {
+            this.frame = 0;
+            for (let node of this.cancelledNodes) {
+                node._destroy();
+            }
+            this.cancelledNodes.clear();
+            for (let task of this.tasks) {
+                this.processFiber(task);
+            }
+            for (let task of this.tasks) {
+                if (task.node.status === 3 /* DESTROYED */) {
+                    this.tasks.delete(task);
+                }
             }
         }
         processFiber(fiber) {
@@ -5589,7 +5619,7 @@
                 this.tasks.delete(fiber);
                 return;
             }
-            if (fiber.node.status === 2 /* DESTROYED */) {
+            if (fiber.node.status === 3 /* DESTROYED */) {
                 this.tasks.delete(fiber);
                 return;
             }
@@ -5681,8 +5711,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         }
         destroy() {
             if (this.root) {
-                this.scheduler.flush();
                 this.root.destroy();
+                this.scheduler.processTasks();
             }
             window.__OWL_DEVTOOLS__.apps.delete(this);
         }
@@ -5813,9 +5843,11 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         switch (component.__owl__.status) {
             case 0 /* NEW */:
                 return "new";
+            case 2 /* CANCELLED */:
+                return "cancelled";
             case 1 /* MOUNTED */:
                 return "mounted";
-            case 2 /* DESTROYED */:
+            case 3 /* DESTROYED */:
                 return "destroyed";
         }
     }
@@ -5991,8 +6023,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.date = '2023-06-28T09:34:39.893Z';
-    __info__.hash = '3001420';
+    __info__.date = '2023-07-20T06:05:29.796Z';
+    __info__.hash = 'b1a3b32';
     __info__.url = 'https://github.com/odoo/owl';
 
 
