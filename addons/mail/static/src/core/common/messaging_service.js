@@ -128,14 +128,6 @@ export class Messaging {
     handleNotification(notifications) {
         for (const notif of notifications) {
             switch (notif.type) {
-                case "mail.message/toggle_star": {
-                    const { message_ids: messageIds, starred } = notif.payload;
-                    for (const messageId of messageIds) {
-                        const message = this.messageService.insert({ id: messageId });
-                        this.messageService.updateStarred(message, starred);
-                    }
-                    break;
-                }
                 case "mail.message/notification_update":
                     {
                         notif.payload.elements.map((message) => {
