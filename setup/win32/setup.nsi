@@ -351,8 +351,8 @@ Section $(TITLE_Ghostscript) SectionGhostscript
     VAR /GLOBAL ghostscript_exe_filename
     VAR /GLOBAL ghostscript_url
 
-    StrCpy $ghostscript_exe_filename "gs1000w64.exe"
-    StrCpy $ghostscript_url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs1000/$ghostscript_exe_filename"
+    StrCpy $ghostscript_exe_filename "gs10012w64.exe"
+    StrCpy $ghostscript_url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10012/$ghostscript_exe_filename"
 
     DetailPrint "Downloading Ghostscript"
     inetc::get "$ghostscript_url" "$TEMP\$ghostscript_exe_filename" /POPUP
