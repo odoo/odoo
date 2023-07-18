@@ -2956,7 +2956,8 @@ export class Order extends PosModel {
             if (fiscal_position) {
                 this.fiscal_position = fiscal_position;
             } else {
-                console.error("ERROR: trying to load a fiscal position not available in the pos");
+                this.fiscal_position_not_found = true;
+                console.error('ERROR: trying to load a fiscal position not available in the pos');
             }
         }
 
