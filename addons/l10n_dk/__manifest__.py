@@ -92,6 +92,7 @@ Produkt setup:
     'data': [
         'data/account_account_tags.xml',
         'data/l10n_dk_chart_template_data.xml',
+        'data/account_group.xml',
         'data/account.account.template.csv',
         'data/l10n_dk_chart_template_post_data.xml',
         'data/account_tax_report_data.xml',
