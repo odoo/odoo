@@ -287,6 +287,30 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("O2M field without relation_field", async function (assert) {
+        delete serverData.models.partner.fields.p.relation_field;
+
+        serverData.models.partner.records[0].p = [2, 4];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="foo" invisible="1"/>
+                            <field name="display_name" />
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        await addRow(target, ".o_field_x2many_list");
+        assert.containsOnce(target, ".o_dialog");
+    });
+
     QUnit.test(
         "O2M List with pager, decoration and default_order: add and cancel adding",
         async function (assert) {
@@ -12807,7 +12831,10 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(target.querySelector("[name=int_field] input").value, "10");
         assert.containsN(target, ".o_data_row", 2);
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["first record", "second record"]);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "first record",
+            "second record",
+        ]);
         assert.strictEqual(
             target.querySelector(".o_x2m_control_panel .o_pager_counter").innerText,
             "1-2 / 3"
@@ -12816,7 +12843,10 @@ QUnit.module("Fields", (hooks) => {
         // trigger the onchange
         await editInput(target, "[name=int_field] input", "16");
         assert.containsN(target, ".o_data_row", 2);
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["first record", "second record"]);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "first record",
+            "second record",
+        ]);
         assert.containsNone(target, ".o_x2m_control_panel .o_pager");
     });
 
