@@ -15,6 +15,7 @@ export class DiscussCoreCommon {
         Object.assign(this, {
             busService: services.bus_service,
             env,
+            notificationService: services.notification,
             orm: services.orm,
             presence: services.presence,
             rpc: services.rpc,
@@ -23,13 +24,12 @@ export class DiscussCoreCommon {
         this.messageService = services["mail.message"];
         /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
-        this.notificationService = services.notification;
         /** @type {import("@mail/core/common/out_of_focus_service").OutOfFocusService} */
         this.outOfFocusService = services["mail.out_of_focus"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = services["mail.thread"];
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
+        /** @type {import("@mail/core/common/thread_service").ThreadService} */
+        this.threadService = services["mail.thread"];
     }
 
     setup() {
@@ -148,6 +148,15 @@ export class DiscussCoreCommon {
                 );
                 if (seenInfo) {
                     seenInfo.lastSeenMessage = { id: last_message_id };
+                }
+            });
+            this.busService.subscribe("mail.record/insert", (payload) => {
+                if (payload.Channel) {
+                    this.threadService.insert({
+                        id: payload.Channel.id,
+                        model: "discuss.channel",
+                        channel: payload.Channel,
+                    });
                 }
             });
             this.busService.start();

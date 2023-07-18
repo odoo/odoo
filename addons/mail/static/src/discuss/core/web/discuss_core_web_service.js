@@ -60,6 +60,17 @@ export class DiscussCoreWeb {
                 }
             }
         );
+        this.busService.subscribe("mail.record/insert", (payload) => {
+            const { "res.users.settings": settings } = payload;
+            if (settings) {
+                this.store.discuss.chats.isOpen =
+                    settings.is_discuss_sidebar_category_chat_open ??
+                    this.store.discuss.chats.isOpen;
+                this.store.discuss.channels.isOpen =
+                    settings.is_discuss_sidebar_category_channel_open ??
+                    this.store.discuss.channels.isOpen;
+            }
+        });
         this.busService.subscribe("res.users/connection", async ({ partnerId, username }) => {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
