@@ -29,7 +29,10 @@ export class OrderCart extends Component {
     }
 
     get buttonToShow() {
-        return this.selfOrder.self_order_mode === "each" ? "Pay" : "Order";
+        return {
+            label: this.selfOrder.self_order_mode === "each" ? _t("Pay") : _t("Order"),
+            disabled: false,
+        };
     }
 
     get orderToPay() {

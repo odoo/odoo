@@ -14,7 +14,7 @@ class ResConfigSettings(models.TransientModel):
         compute="_compute_pos_module_pos_self_order", store=True, readonly=False
     )
     pos_self_order_pay_after = fields.Selection(
-        [("each", "Each Order"), ("meal", "Meal")],
+        [("each", "Each Order (mobile payment only)"), ("meal", "Meal (mobile payment or cashier)")],
         string="Pay After:",
         default="meal",
         help="Choose when the customer will pay",
@@ -40,7 +40,7 @@ class ResConfigSettings(models.TransientModel):
                     {
                         "pos_self_order_view_mode": False,
                         "pos_self_order_table_mode": False,
-                        "pos_self_order_pay_after": "each",
+                        "pos_self_order_pay_after": "meal",
                         "pos_self_order_image": False,
                         "pos_self_order_image_name": False,
                     }
