@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { LinkPreview } from "@mail/core/common/link_preview_model";
+import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 
 import { markup, reactive } from "@odoo/owl";
 
@@ -27,6 +28,16 @@ export class MailCoreCommon {
 
     setup() {
         this.messagingService.isReady.then(() => {
+            this.busService.subscribe("mail.link.preview/delete", (payload) => {
+                const { id, message_id } = payload;
+                const message = this.store.messages[message_id];
+                if (message) {
+                    removeFromArrayWithPredicate(
+                        message.linkPreviews,
+                        (linkPreview) => linkPreview.id === id
+                    );
+                }
+            });
             this.busService.subscribe("mail.record/insert", (payload) => {
                 if (payload.Thread) {
                     this.threadService.insert(payload.Thread);
