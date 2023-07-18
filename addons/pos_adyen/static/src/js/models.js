@@ -14,7 +14,9 @@ patch(Payment.prototype, "pos_adyen.Payment", {
     //@override
     export_as_JSON() {
         const json = this._super(...arguments);
-        json.terminal_service_id = this.terminalServiceId;
+        if (json) {
+            json.terminal_service_id = this.terminalServiceId;
+        }
         return json;
     },
     //@override

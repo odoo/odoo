@@ -1761,7 +1761,6 @@ class PosSession(models.Model):
     def _ensure_access_token(self):
         # Code taken from addons/portal/models/portal_mixin.py
         if not self.access_token:
-            # we use a `write` to force the cache clearing otherwise `return self.access_token` will return False
             self.sudo().write({'access_token': secrets.token_hex(16)})
         return self.access_token
 

@@ -1431,7 +1431,10 @@ export class Order extends PosModel {
         });
         paymentLines = [];
         this.paymentlines.forEach((item) => {
-            return paymentLines.push([0, 0, item.export_as_JSON()]);
+            const itemAsJson = item.export_as_JSON();
+            if (itemAsJson) {
+                return paymentLines.push([0, 0, itemAsJson]);
+            }
         });
         var json = {
             name: this.get_name(),
@@ -2607,16 +2610,18 @@ export class Order extends PosModel {
     }
     _get_qr_code_data() {
         if (this.pos.company.point_of_sale_use_ticket_qr_code) {
-            const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
             // Use the unique access token to ensure the authenticity of the request. Use the order reference as a second check just in case.
-            const address = `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`;
-            const qr_code_svg = new XMLSerializer().serializeToString(
-                codeWriter.write(address, 150, 150)
+            return this._make_qr_code_data(
+                `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
             );
-            return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
         } else {
             return false;
         }
+    }
+    _make_qr_code_data(url) {
+        const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
+        const qr_code_svg = new XMLSerializer().serializeToString(codeWriter.write(url, 150, 150));
+        return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
     }
     /**
      * Returns a random 5 digits alphanumeric code
