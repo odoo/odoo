@@ -230,7 +230,7 @@
                         context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'tree_view_ref': 'stock.view_stock_quant_tree', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': True}"
                         widget="pick_from"
                         invisible="not context.get('show_quant')"
-                        options="{'no_open': True}"/>
+                        options="{'no_create': True, 'no_open': True}"/>
                     <field name="location_dest_id"
                         attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
                         invisible="not context.get('show_destination_location')"
