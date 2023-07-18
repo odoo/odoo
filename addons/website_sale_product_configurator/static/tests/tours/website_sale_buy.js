@@ -10,5 +10,5 @@ var addCartStepIndex = registry.category("web_tour.tours").get("shop_buy_product
 
 registry.category("web_tour.tours").get("shop_buy_product").steps.splice(addCartStepIndex + 1, 1, {
     content: "click in modal on 'Proceed to checkout' button",
-    trigger: 'button:contains("Proceed to Checkout")',
+    trigger: 'button:contains("Proceed to checkout")',
 });

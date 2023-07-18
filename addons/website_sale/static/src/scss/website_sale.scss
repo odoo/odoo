@@ -98,24 +98,15 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
     .address-inline address {
         display: inline-block;
     }
-    table#cart_products tr td, table#suggested_products tr td {
-        vertical-align: middle;
-    }
-
-    table#cart_products {
-        margin-bottom: 0;
-
-        td, th {
-            &:first-child {
-                padding-left: $grid-gutter-width*0.5;
-            }
-        }
-    }
 
     h1[itemprop="name"], .td-product_name {
         word-break: break-word;
         word-wrap: break-word;
         overflow-wrap: break-word;
+
+        @include media-breakpoint-down(md) {
+            vertical-align: middle;
+        }
     }
 
     h1[itemprop="name"] {
@@ -123,15 +114,9 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         font-weight: $font-weight-bold;
     }
 
-    @include media-breakpoint-down(md) {
-        .td-img {
-            display: none;
-        }
-    }
-
     .toggle_summary_div {
         @include media-breakpoint-up(xl) {
-            max-width: 400px;
+            max-width: $o-wsale-input-max-width;
         }
     }
     input.js_quantity {
@@ -177,13 +162,15 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         }
     }
     .o_pricelist_dropdown, .o_sortby_dropdown {
-        min-width: fit-content;
+        //truncates the dropdown pricelist > 8rem
+        .o_pricelist_dropdown_span {
+            max-width: $o-wsale-dropdown-width-overflow;
+        }
     }
 }
 
-#product_detail ~ .oe_structure.oe_empty > section:first-child,
-.o_shop_discussion_rating {
-    border-top: 1px solid map-get($grays, '400');
+#product_detail ~ .oe_structure.oe_empty > section:first-child {
+    border-top: $border-width solid $border-color;
 }
 
 .o_alternative_product {
@@ -248,7 +235,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 
 // ==== THE GRID
 #products_grid {
-    .o_wsale_products_grid_table_wrapper .table {
+    .o_wsale_products_grid_table_wrapper .table:not(.o_wsale_modal_table) {
         table-layout: fixed;
 
         td {
@@ -443,20 +430,13 @@ ul.wizard {
 }
 
 .mycart-popover {
-    max-width: 500px;
-    min-width: 250px;
+    max-width: $o-wsale-input-max-width;
+    min-width: $o-wsale-input-max-width * 0.7;
 
-    .cart_line {
-        border-bottom: 1px #EEE solid;
-    }
     .popover-body {
         max-height: 70vh;
         overflow-y: auto;
     }
-}
-
-tr#empty {
-    display: none;
 }
 
 .js_change_shipping {
@@ -753,5 +733,44 @@ a.no-decoration {
     }
     .o_portal_chatter_avatar {
         border-radius: 50%;
+    }
+}
+
+.o_wsale_share_menu {
+    min-width: 3em;
+}
+
+.o_total_border {
+    border: $border-width solid $border-color;
+
+    @include media-breakpoint-down(lg) {
+        border: 0;
+    }
+}
+
+.o_wsale_address_edit {
+    span[itemprop='name'] {
+        font-size: $h6-font-size;
+        font-weight: $headings-font-weight;
+        line-height: $headings-line-height;
+    }
+
+    div[itemprop="address"] {
+        margin: map-get($spacers, 2) 0;
+        font-size: $font-size-sm;
+    }
+}
+
+.all_shipping {
+    @include media-breakpoint-down(md) {
+        overflow-x: auto;
+
+        > div {
+            width: auto;
+        }
+    }
+
+    .o_wsale_add_address {
+        min-height: 8rem;
     }
 }

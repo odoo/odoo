@@ -1,5 +1,5 @@
 /** @odoo-module **/
-    
+
     import { registry } from "@web/core/registry";
     import tourUtils from "website_sale.tour_utils";
 
@@ -158,6 +158,7 @@
         content: "add product 'Conference Chair' to cart",
         trigger: '.product_summary:contains("Conference Chair") .a-submit:contains("Add to Cart")',
     },
+        // FIXME MANO VFE toast doesn't appear on comparison page when adding product to cart
         tourUtils.goToCart(),
     {
         content: "check product correctly added to cart",

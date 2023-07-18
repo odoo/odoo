@@ -44,7 +44,7 @@ class WebsiteSale(main.WebsiteSale):
         values['optional_product_ids'] = [p.with_context(active_id=p.id) for p in product.optional_product_ids]
         return values
 
-    @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
+    @http.route(['/shop/cart/update_option'], type='json', auth="public", methods=['POST'], website=True, multilang=False)
     def cart_options_update_json(self, product_and_options, goto_shop=None, lang=None, **kwargs):
         """This route is called when submitting the optional product modal.
             The product without parent is the main product, the other are options.
@@ -84,6 +84,7 @@ class WebsiteSale(main.WebsiteSale):
             if value['line_id']:
                 # Link option with its parent iff line has been created.
                 option_parent = {main_product['unique_id']: value['line_id']}
+                line_ids = [value['line_id']]
                 for option in product_and_options[1:]:
                     parent_unique_id = option['parent_unique_id']
                     option_value = order._cart_update(
@@ -95,7 +96,18 @@ class WebsiteSale(main.WebsiteSale):
                         **kwargs
                     )
                     option_parent[option['unique_id']] = option_value['line_id']
+                    line_ids.append(option_value['line_id'])
 
-        request.session['website_sale_cart_quantity'] = order.cart_quantity
+                values = dict({
+                    'cart_quantity': order.cart_quantity,
+                })
 
-        return str(order.cart_quantity)
+                values['website_sale.cart_toast'] = request.env['ir.ui.view']._render_template(
+                    "website_sale.cart_toast", {
+                        'cart_quantity': order.cart_quantity,
+                        'currency_id': order.currency_id,
+                        'lines': request.env['sale.order.line'].browse(line_ids),
+                    }
+                )
+
+                return values

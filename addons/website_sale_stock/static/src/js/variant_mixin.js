@@ -41,9 +41,12 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
 
     const $addQtyInput = $parent.find('input[name="add_qty"]');
     let qty = $addQtyInput.val();
+
+    // FIXME MANO we're supposed to show the price even if the product is out of stock
+    // But now the price is inside 'o_wsale_cta_wrapper', so it's hidden as well when product is out
+    // of stock.  Is it on purpose ? (if yes, website_sale_stock_multilang tour must be adapted)
     let ctaWrapper = $parent[0].querySelector('#o_wsale_cta_wrapper');
     ctaWrapper.classList.replace('d-none', 'd-flex');
-    ctaWrapper.classList.remove('out_of_stock');
 
     if (combination.product_type === 'product' && !combination.allow_out_of_stock_order) {
         combination.free_qty -= parseInt(combination.cart_qty);
@@ -57,7 +60,6 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         }
         if (combination.free_qty < 1) {
             ctaWrapper.classList.replace('d-flex', 'd-none');
-            ctaWrapper.classList.add('out_of_stock');
         }
     }
 

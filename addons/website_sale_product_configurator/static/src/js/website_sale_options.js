@@ -1,11 +1,10 @@
 /** @odoo-module alias=website_sale_options.website_sale **/
+/* global Toast */
 
-import ajax from "web.ajax";
 import core from "web.core";
 import publicWidget from "web.public.widget";
 import { OptionalProductsModal } from "@website_sale_product_configurator/js/sale_product_configurator_modal";
 import "website_sale.website_sale";
-import wsUtils from "website_sale.utils";
 
 var _t = core._t;
 
@@ -22,9 +21,9 @@ publicWidget.registry.WebsiteSale.include({
         this.optionalProductsModal = new OptionalProductsModal(this.$form, {
             rootProduct: this.rootProduct,
             isWebsite: true,
-            okButtonText: _t('Proceed to Checkout'),
-            cancelButtonText: _t('Continue Shopping'),
-            title: _t('Add to cart'),
+            okButtonText: _t('Proceed to checkout'),
+            cancelButtonText: _t('Continue shopping'),
+            title: _t('Item added to your cart!'),
             context: this._getContext(),
             forceDialog: this.forceDialog,
         }).open();
@@ -84,7 +83,6 @@ publicWidget.registry.WebsiteSale.include({
      * @param {Boolean} goToShop Triggers a page refresh to the url "shop/cart"
      */
     _onModalSubmit: function (goToShop) {
-        const self = this;
         const $product = $('#product_detail');
         let currency;
         if ($product.length) {
@@ -110,23 +108,31 @@ publicWidget.registry.WebsiteSale.include({
         this.optionalProductsModal.getAndCreateSelectedProducts()
             .then((products) => {
                 const productAndOptions = JSON.stringify(products);
-                ajax.post('/shop/cart/update_option', {
-                    product_and_options: productAndOptions,
-                    ...this._getOptionalCombinationInfoParam()
-                }).then(function (quantity) {
-                        if (goToShop) {
-                            window.location.pathname = "/shop/cart";
+                this._rpc({
+                    route: '/shop/cart/update_option',
+                    params: {
+                        product_and_options: productAndOptions,
+                        ...this._getOptionalCombinationInfoParam(),
+                    },
+                }).then(function (values) {
+                    if (goToShop) {
+                        window.location.pathname = "/shop/cart";
+                    } else {
+                        // Show the notification about the cart
+                        let divToast = document.getElementById('cart_toast_container');
+                        if (divToast) {
+                            divToast.innerHTML = values['website_sale.cart_toast'];
+                            var toast = new Toast(divToast.getElementsByClassName('toast')[0]);
+                            toast.show();
                         }
-                        const $quantity = $(".my_cart_quantity");
-                        $quantity.parent().parent().removeClass('d-none');
-                        $quantity.text(quantity).hide().fadeIn(600);
-                        // find the closest div that has an img tag in it
-                        const imgContainerEl = self.$form.closest('div:has(img)');
-                        wsUtils.animateClone($('header .o_wsale_my_cart').first(), imgContainerEl, 25, 40);
-                        sessionStorage.setItem('website_sale_cart_quantity', quantity);
-                    }).then(()=>{
-                        this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
-                    });
+                    }
+                    const $quantity = $(".my_cart_quantity");
+                    $quantity.parent().parent().removeClass('d-none');
+                    $quantity.text(values.cart_quantity).hide().fadeIn(600);
+                    sessionStorage.setItem('website_sale_cart_quantity', values.cart_quantity);
+                }).then(()=>{
+                    this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
+                });;
             });
     },
 });

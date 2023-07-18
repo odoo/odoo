@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.tests import tagged
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
 
 @tagged('post_install', '-at_install')
-class TestWEventBoothExhibitorCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
+class TestWEventBoothExhibitor(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_register(self):
-        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer provider is not installed")
-
-        transfer_provider = self.env.ref('payment.payment_provider_transfer')
-        transfer_provider.write({
-            'state': 'enabled',
-            'is_published': True,
-        })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
-
+        module_event_booth_sale = self.env['ir.module.module']._get('event_booth_sale')
+        if module_event_booth_sale.state == 'installed':
+            # The flow of registration with payment is handled in a separate test.
+            self.env.ref('event_booth.event_booth_category_premium').write({
+                'price': 0.0,
+            })
         self.start_tour('/event', 'webooth_exhibitor_register', login='admin')

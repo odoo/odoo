@@ -15,14 +15,9 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         {
             content: 'Add Small Drawer into cart',
-            trigger: 'a:contains(ADD TO CART)',
+            trigger: 'a:contains(Add to cart)',
         },
         tourUtils.goToCart(),
-        {
-            content: 'Click on "I have a promo code"',
-            extra_trigger: '#cart_products',
-            trigger: '.show_coupon',
-        },
         {
             content: 'insert gift card code',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
@@ -34,11 +29,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         {
             content: 'check gift card line',
-            trigger: '.td-product_name:contains("PAY WITH GIFT CARD")',
-        },
-        {
-            content: 'Click on "I have a promo code"',
-            trigger: '.show_coupon',
+            trigger: '.o_cart_product_name:contains("PAY WITH GIFT CARD")',
         },
         {
             content: 'insert gift card code',
@@ -75,7 +66,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "a:contains(ADD TO CART)",
+            trigger: "a:contains(Add to cart)",
         },
             tourUtils.goToCart({quantity: 2}),
         {

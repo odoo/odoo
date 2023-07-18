@@ -64,7 +64,7 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: 'iframe a:contains(ADD TO CART)',
+            trigger: 'iframe a:contains(Add to cart)',
         },
         tourUtils.goToCart({backend: true}),
         {

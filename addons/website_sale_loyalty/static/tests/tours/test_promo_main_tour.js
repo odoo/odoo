@@ -21,14 +21,9 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "a:contains(ADD TO CART)",
+            trigger: "a:contains(Add to cart)",
         },
             tourUtils.goToCart({quantity: 2}),
-        {
-            content: "click on 'I have a promo code'",
-            extra_trigger: '.show_coupon',
-            trigger: '.show_coupon',
-        },
         {
             content: "insert promo code 'testcode'",
             extra_trigger: 'form[name="coupon_code"]',
@@ -41,13 +36,13 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check reward product",
-            trigger: '.td-product_name:contains("10.0% discount on total amount")',
+            trigger: '.o_cart_product_name:contains("10.0% discount on total amount")',
             run: function () {}, // it's a check
         },
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
             content: "go to shop",
-            trigger: '.td-product_name:contains("10.0% discount on total amount")',
+            trigger: '.o_cart_product_name:contains("10.0% discount on total amount")',
             run: function () {
                 ajax.jsonRpc('/web/dataset/call_kw', 'call', {
                     model: 'account.tax',
@@ -90,7 +85,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "a:contains(ADD TO CART)",
+            trigger: "a:contains(Add to cart)",
         },
             tourUtils.goToCart({quantity: 3}),
         {
@@ -117,7 +112,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check free product is added",
-            trigger: '#wrap:has(.td-product_name:contains("Free Product - Small Cabinet"))',
+            trigger: '#wrap:has(.o_cart_product_name:contains("Free Product - Small Cabinet"))',
             run: function () {}, // it's a check
         },
         {
@@ -127,17 +122,14 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check free product is removed",
-            trigger: '#wrap:not(:has(.td-product_name:contains("Free Product - Small Cabinet")))',
+            trigger: '#wrap:not(:has(.o_cart_product_name:contains("Free Product - Small Cabinet")))',
             run: function () {}, // it's a check
         },
         /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_id) */
-        {
-            content: "go to checkout",
-            trigger: 'a[href="/shop/checkout?express=1"]',
-        },
+        tourUtils.goToCheckout(),
         {
             content: "check total is unchanged once we land on payment page",
-            trigger: 'tr#order_total .oe_currency_value:contains("967.50")',
+            trigger: '#order_total .oe_currency_value:contains("967.50")',
             run: function () {}, // it's a check
         },
     ]

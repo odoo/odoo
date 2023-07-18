@@ -44,10 +44,11 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
                 text: params.okButtonText,
                 click: this._onConfirmButtonClick,
                 // the o_sale_product_configurator_edit class is used for tours.
-                classes: 'btn-primary o_sale_product_configurator_edit'
+                classes: 'btn-primary o_sale_product_configurator_edit flex-grow-1 flex-sm-grow-0 order-0 order-sm-1'
             }, {
                 text: params.cancelButtonText,
-                click: this._onCancelButtonClick
+                click: this._onCancelButtonClick,
+                classes: 'ms-sm-auto btn-outline-secondary flex-grow-1 flex-sm-grow-0 order-1 order-sm-0'
             }],
             technical: !params.isWebsite,
         }, params || {});
@@ -323,13 +324,14 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
     _onAddOption: function ($modal, $parent, productTemplateId) {
         var self = this;
         var $selectOptionsText = $modal.find('.o_select_options');
+        var $qtyContainerEl = $parent.find('.o_qty_remove_div')
 
         var parentUniqueId = $parent[0].dataset.parentUniqueId;
         var $optionParent = $modal.find('tr.js_product[data-unique-id="' + parentUniqueId + '"]');
 
         // remove attribute values selection and update + show quantity input
-        $parent.find('.td-product_name').removeAttr("colspan");
-        $parent.find('.td-qty').removeClass('d-none');
+        $qtyContainerEl.removeClass('d-none');
+        $qtyContainerEl.addClass('d-flex');
 
         var productCustomVariantValues = self.getCustomVariantValues($parent);
         var noVariantAttributeValues = self.getNoVariantAttributeValues($parent);
@@ -418,8 +420,7 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
         var uniqueId = $parent[0].dataset.parentUniqueId;
         var qty = $modal.find('tr.js_product.in_cart[data-unique-id="' + uniqueId + '"]').find('input[name="add_qty"]').val();
         $parent.removeClass('in_cart');
-        $parent.find('.td-product_name').attr("colspan", 2);
-        $parent.find('.td-qty').addClass('d-none');
+        $parent.find('.o_qty_remove_div').addClass('d-none');
         $parent.find('input[name="add_qty"]').val(qty);
         $parent.find('.custom_attribute_values_description').remove();
 

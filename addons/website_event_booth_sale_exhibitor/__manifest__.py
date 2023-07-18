@@ -9,7 +9,7 @@
     'auto_install': True,
     'assets': {
         'web.assets_tests': [
-            'website_event_booth_sale_exhibitor/static/tests/tours/website_event_booth_sale_exhibitor.js',
+            'website_event_booth_sale_exhibitor/static/tests/tours/*.js',
         ],
     },
     'license': 'LGPL-3',

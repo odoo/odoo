@@ -839,6 +839,14 @@ class WebsiteSale(http.Controller):
         ),
         values['amount'] = order.amount_total
 
+        values['website_sale.cart_toast'] = request.env['ir.ui.view']._render_template(
+            "website_sale.cart_toast", {
+                'cart_quantity': order.cart_quantity,
+                'currency_id': order.currency_id,
+                'lines': request.env['sale.order.line'].browse(values['line_id']),
+            }
+        )
+
         if not display:
             return values
 
@@ -849,11 +857,13 @@ class WebsiteSale(http.Controller):
                 'suggested_products': order._cart_accessories()
             }
         )
-        values['website_sale.short_cart_summary'] = request.env['ir.ui.view']._render_template(
-            "website_sale.short_cart_summary", {
+        values['website_sale.total'] = request.env['ir.ui.view']._render_template(
+            "website_sale.total", {
                 'website_sale_order': order,
+                'no_rowspan': 1,
             }
         )
+
         return values
 
     @http.route('/shop/save_shop_layout_mode', type='json', auth='public', website=True)

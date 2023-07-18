@@ -112,7 +112,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "iframe a:contains(ADD TO CART)",
+            trigger: "iframe a:contains(Add to cart)",
         },
         {
             content: "check quantity",
@@ -122,7 +122,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         tourUtils.goToCart({backend: true}),
         {
             content: "click on shop",
-            trigger: "iframe a:contains(Continue Shopping)",
+            trigger: "iframe a:contains(Continue shopping)",
             extra_trigger: 'iframe body:not(:has(#products_grid_before .js_attributes))',
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),

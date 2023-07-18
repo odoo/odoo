@@ -74,26 +74,26 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _addNewProducts: function ($el) {
-        var self = this;
-        var productID = $el.data('product-product-id');
-        if ($el.hasClass('o_add_wishlist_dyn')) {
-            productID = parseInt($el.closest('.js_product').find('.product_id:checked').val());;
-        }
-        var $form = $el.closest('form');
-        var templateId = $form.find('.product_template_id').val();
-        // when adding from /shop instead of the product page, need another selector
-        if (!templateId) {
-            templateId = $el.data('product-template-id');
-        }
-        $el.prop("disabled", true).addClass('disabled');
-        var productReady = this.selectOrCreateProduct(
-            $el.closest('form'),
-            productID,
-            templateId,
-            false
-        );
+        const self = this;
 
-        productReady.then(function (productId) {
+        let productID = $el.data('product-product-id');
+        let productTemplateID = $el.data('product-template-id');
+        let $form = undefined; // if we have the product, the form is not necessary
+        if (!(productID && productTemplateID)) {
+            // in case of dynamic attributes (we don't have the product id), the product
+            // configuration form is needed for the selectOrCreateProduct call.
+            $form = $('div#product_details > div > form');
+        }
+
+        // disable the 'Add To Wishlist' button
+        $el.prop("disabled", true).addClass('disabled');
+
+        this.selectOrCreateProduct(
+            $form, // not used, we have a product
+            productID,
+            productTemplateID,
+            false
+        ).then(function (productId) {
             productId = parseInt(productId, 10);
 
             if (productId && !self.wishlistProductIDs.includes(productId)) {
@@ -103,11 +103,9 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                         product_id: productId,
                     },
                 }).then(function () {
-                    var $navButton = $('header .o_wsale_my_wish').first();
                     self.wishlistProductIDs.push(productId);
                     sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(self.wishlistProductIDs));
                     self._updateWishlistView();
-                    wSaleUtils.animateClone($navButton, $el.closest('form'), 25, 40);
                     // It might happen that `onChangeVariant` is called at the same time as this function.
                     // In this case we need to set the button to disabled again.
                     // Do this only if the productID is still the same.
@@ -166,11 +164,9 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _addOrMoveWish: function (e) {
-        var $navButton = $('header .o_wsale_my_cart').first();
         var tr = $(e.currentTarget).parents('tr');
         var product = tr.data('product-id');
         $('.o_wsale_my_cart').removeClass('d-none');
-        wSaleUtils.animateClone($navButton, tr, 25, 40);
 
         if ($('#b2b_wish').is(':checked')) {
             return this._addToCart(product, tr.find('add_qty').val() || 1);
@@ -247,30 +243,34 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @param {Event} ev
      */
     _onChangeVariant: function (ev) {
-        var $input = $(ev.target);
-        var $parent = $input.closest('.js_product');
-        var $el = $parent.find("[data-action='o_wishlist']");
-        if (!this.wishlistProductIDs.includes(parseInt($input.val(), 10))) {
-            $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
+        const productID = parseInt($(ev.target).val(), 10);
+        const $addToWishlistButton = $('.o_add_wishlist_dyn');
+
+        if (!this.wishlistProductIDs.includes(productID)) {
+            $addToWishlistButton.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
         } else {
-            $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
+            $addToWishlistButton.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
         }
-        $el.data('product-product-id', parseInt($input.val(), 10));
+        $addToWishlistButton.data('product-product-id', productID);
     },
     /**
+     * Triggered when the customized view "product_variants" is enabled, because customers choose
+     * variants directly, and not configuration of attributes anymore.
+     *
      * @private
      * @param {Event} ev
      */
     _onChangeProduct: function (ev) {
-        var productID = ev.currentTarget.value;
-        var $el = $(ev.target).closest('.js_add_cart_variants').find("[data-action='o_wishlist']");
+        const productID = parseInt(ev.currentTarget.value, 10);
+        const $addToWishlistButton = $('.o_add_wishlist_dyn');
 
-        if (!this.wishlistProductIDs.includes(parseInt(productID, 10))) {
-            $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
+        if (!this.wishlistProductIDs.includes(productID)) {
+            $addToWishlistButton.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
         } else {
-            $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
+            $addToWishlistButton.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
         }
-        $el.data('product-product-id', productID);
+
+        $addToWishlistButton.data('product-product-id', productID);
     },
     /**
      * @private

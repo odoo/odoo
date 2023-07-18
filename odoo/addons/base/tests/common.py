@@ -94,25 +94,29 @@ class TransactionCaseWithUserDemo(TransactionCase):
 
 class HttpCaseWithUserDemo(HttpCase):
 
-    def setUp(self):
-        super(HttpCaseWithUserDemo, self).setUp()
-        self.user_admin = self.env.ref('base.user_admin')
-        self.user_admin.write({'name': 'Mitchell Admin'})
-        self.partner_admin = self.user_admin.partner_id
-        self.user_demo = self.env['res.users'].search([('login', '=', 'demo')])
-        self.partner_demo = self.user_demo.partner_id
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.user_admin.write({'name': 'Mitchell Admin'})
+        cls.partner_admin = cls.user_admin.partner_id
+        cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
+        cls.partner_demo = cls.user_demo.partner_id
 
-        if not self.user_demo:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            self.partner_demo = self.env['res.partner'].create({
+        if not cls.user_demo:
+            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
             })
-            self.user_demo = self.env['res.users'].create({
+            cls.user_demo = cls.env['res.users'].create({
                 'login': 'demo',
                 'password': 'demo',
-                'partner_id': self.partner_demo.id,
-                'groups_id': [Command.set([self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+                'partner_id': cls.partner_demo.id,
+                'groups_id': [Command.set([
+                    cls.env.ref('base.group_user').id,
+                    cls.env.ref('base.group_partner_manager').id,
+                ])],
             })
 
 

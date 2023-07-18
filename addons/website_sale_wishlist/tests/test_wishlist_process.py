@@ -89,4 +89,5 @@ class TestUi(odoo.tests.HttpCase):
                 ],
             })],
         })
-        self.start_tour("/", 'shop_wishlist_admin', login="admin")
+
+        self.start_tour("/", 'shop_wishlist_admin', login="admin", watch=True)

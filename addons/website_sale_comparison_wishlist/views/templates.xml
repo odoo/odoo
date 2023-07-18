@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="product_wishlist" inherit_id="website_sale_wishlist.product_wishlist">
-        <xpath expr="//button[hasclass('o_wish_rm')]" position="after">
-            <button t-if="is_view_active('website_sale_comparison.add_to_compare')" type="button" class="btn btn-link o_add_to_compare no-decoration" t-att-data-product-id='wish.product_id.id'>
+        <xpath expr="//small[hasclass('o_wish_product_description')]" position="after">
+            <button t-if="is_view_active('website_sale_comparison.add_to_compare')" type="button" class="o_add_to_compare d-block btn btn-link no-decoration p-0" t-att-data-product-id='wish.product_id.id'>
                 <small><i t-attf-class="fa fa-exchange"></i> Add to compare</small>
             </button>
         </xpath>

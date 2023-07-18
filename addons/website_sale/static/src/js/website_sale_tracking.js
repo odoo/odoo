@@ -6,6 +6,7 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
     events: {
         'click form[action="/shop/cart/update"] a.a-submit': '_onAddProductIntoCart',
+        // TODO ANVFE the two following events are probably broken
         'click a[href="/shop/checkout"]': '_onCheckoutStart',
         'click div.oe_cart a[href^="/web?redirect"][href$="/shop/checkout"]': '_onCustomerSignin',
         'click form[action="/shop/confirm_order"] a.a-submit': '_onOrder',

@@ -18,7 +18,7 @@
         run: 'text Wood',
     }, {
         id: 'add_cart_step',
-        trigger: 'a:contains(ADD TO CART)',
+        trigger: 'a:contains(Add to cart)',
         run: 'click',
     },
         tourUtils.goToCart(),

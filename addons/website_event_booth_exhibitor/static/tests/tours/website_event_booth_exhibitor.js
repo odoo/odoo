@@ -1,13 +1,9 @@
-/** @odoo-module **/
-    
-    import { registry } from "@web/core/registry";
-    import FinalSteps from "website_event_booth_exhibitor.tour_steps";
+/** @odoo-module alias=website_event_booth_exhibitor.tour_utils **/
 
+import { registry } from "@web/core/registry";
 
-    registry.category("web_tour.tours").add("webooth_exhibitor_register", {
-        test: true,
-        url: "/event",
-        steps: [{
+const registerSteps = [
+    {
         content: 'Go on "Online Reveal" page',
         trigger: 'a[href*="/event"]:contains("Online Reveal"):first',
     }, {
@@ -42,4 +38,18 @@
         extra_trigger: "input[name='sponsor_name'], input[name='sponsor_email'], input[name='sponsor_phone']",
         trigger: 'button.o_wbooth_registration_confirm',
         run: 'click',
-    }, ...new FinalSteps()._getSteps()].filter(Boolean)});
+    },
+]
+
+registry.category("web_tour.tours").add("webooth_exhibitor_register", {
+    test: true,
+    url: "/event",
+    steps: [
+        ...registerSteps,
+    {
+        trigger: 'h3:contains("Booth Registration completed!")',
+        run: function() {},
+    }
+]});
+
+export default registerSteps;

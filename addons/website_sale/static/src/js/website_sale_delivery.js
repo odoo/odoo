@@ -30,7 +30,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         if (this.carriers.length > 0) {
             const carrierChecked = this.carriers.filter(e =>e.checked)
             if (carrierChecked.length === 0) {
-                const payButton = document.querySelector('button[name="o_payment_submit_button"]');
+                const payButton = document.querySelector('button[name="o_wsale_payment_submit_button"]');
                 payButton? payButton.disabled = true : null;
             } else {
                 carrierChecked[0].click();
@@ -190,7 +190,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         document.querySelectorAll('.error_no_pick_up_point').forEach(el => el.remove());
 
         if (isPickUp.length > 1 && (address == "" || isPickUp[0].classList.contains("d-none"))) {
-            var payButton = document.querySelector('button[name="o_payment_submit_button"]');
+            var payButton = document.querySelector('button[name="o_wsale_payment_submit_button"]');
             payButton? payButton.disabled = true : null;
             const errorNode = document.createElement("i");
             errorNode.classList.add("small", "error_no_pick_up_point","ms-2");
@@ -241,7 +241,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     // FYI we don't cover the case where the payement method is not selected because it already throws an error
     _setIsPayable: function(status=false){
         // abort if no paybutton
-        var payButton = document.querySelector('button[name="o_payment_submit_button"]');
+        var payButton = document.querySelector('button[name="o_wsale_payment_submit_button"]');
         if (!payButton) {
             return;
         }
