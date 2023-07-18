@@ -618,7 +618,7 @@ export class StaticList extends DataPoint {
 
     async _createNewRecordDatapoint(params = {}) {
         const changes = {};
-        if (!params.withoutParent) {
+        if (!params.withoutParent && this.config.relationField) {
             changes[this.config.relationField] = this._parent._getChanges();
             if (!this._parent.isNew) {
                 changes[this.config.relationField].id = this._parent.resId;
