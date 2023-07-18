@@ -213,7 +213,7 @@ export class Rtc {
                 this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
             }
             this.setTalking(true);
-        });
+        }, { capture: true });
         browser.addEventListener("keyup", (ev) => {
             if (
                 !this.state.channel ||
@@ -230,7 +230,7 @@ export class Rtc {
                 () => this.setTalking(false),
                 this.userSettingsService.voiceActiveDuration || 0
             );
-        });
+        }, { capture: true });
 
         browser.addEventListener("pagehide", () => {
             if (this.state.channel) {
