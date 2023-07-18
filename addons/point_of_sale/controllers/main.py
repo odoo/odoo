@@ -33,8 +33,10 @@ class PosController(http.Controller):
                 ('user_id', '=', request.session.uid),
                 ('rescue', '=', False)
                 ]
-        if config_id:
+        if config_id and config_id.isnumeric():
             domain = AND([domain,[('config_id', '=', int(config_id))]])
+        else:
+            return request.not_found()
         pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
 
         # The same POS session can be opened by a different user => search without restricting to
