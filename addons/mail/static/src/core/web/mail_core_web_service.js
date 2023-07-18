@@ -43,6 +43,20 @@ export class MailCoreWeb {
                     this.store.activityCounter--;
                 }
             });
+            this.busService.subscribe("mail.message/inbox", (payload) => {
+                const data = Object.assign(payload, { body: markup(payload.body) });
+                const message = this.messageService.insert(data);
+                const inbox = this.store.discuss.inbox;
+                if (!inbox.messages.includes(message)) {
+                    inbox.messages.push(message);
+                    inbox.counter++;
+                }
+                const thread = message.originThread;
+                if (!thread.needactionMessages.includes(message)) {
+                    thread.needactionMessages.push(message);
+                    thread.message_needaction_counter++;
+                }
+            });
         });
     }
 }
