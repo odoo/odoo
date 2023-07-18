@@ -2590,8 +2590,7 @@ exports.Orderline = Backbone.Model.extend({
             var product_taxes = this.get_taxes_after_fp(taxes_ids);
             return this.compute_all(product_taxes, lst_price, 1, this.pos.currency.rounding).total_included;
         }
-        var digits = this.pos.dp['Product Price'];
-        return lst_price.toFixed(digits)
+        return lst_price;
     },
     get_price_without_tax: function(){
         return this.get_all_prices().priceWithoutTax;
