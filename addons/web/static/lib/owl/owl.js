@@ -86,67 +86,6 @@
     // Custom error class that wraps error that happen in the owl lifecycle
     class OwlError extends Error {
     }
-    // Maps fibers to thrown errors
-    const fibersInError = new WeakMap();
-    const nodeErrorHandlers = new WeakMap();
-    function _handleError(node, error) {
-        if (!node) {
-            return false;
-        }
-        const fiber = node.fiber;
-        if (fiber) {
-            fibersInError.set(fiber, error);
-        }
-        const errorHandlers = nodeErrorHandlers.get(node);
-        if (errorHandlers) {
-            let handled = false;
-            // execute in the opposite order
-            for (let i = errorHandlers.length - 1; i >= 0; i--) {
-                try {
-                    errorHandlers[i](error);
-                    handled = true;
-                    break;
-                }
-                catch (e) {
-                    error = e;
-                }
-            }
-            if (handled) {
-                return true;
-            }
-        }
-        return _handleError(node.parent, error);
-    }
-    function handleError(params) {
-        let { error } = params;
-        // Wrap error if it wasn't wrapped by wrapError (ie when not in dev mode)
-        if (!(error instanceof OwlError)) {
-            error = Object.assign(new OwlError(`An error occured in the owl lifecycle (see this Error's "cause" property)`), { cause: error });
-        }
-        const node = "node" in params ? params.node : params.fiber.node;
-        const fiber = "fiber" in params ? params.fiber : node.fiber;
-        if (fiber) {
-            // resets the fibers on components if possible. This is important so that
-            // new renderings can be properly included in the initial one, if any.
-            let current = fiber;
-            do {
-                current.node.fiber = current;
-                current = current.parent;
-            } while (current);
-            fibersInError.set(fiber.root, error);
-        }
-        const handled = _handleError(node, error);
-        if (!handled) {
-            console.warn(`[Owl] Unhandled error. Destroying the root component`);
-            try {
-                node.app.destroy();
-            }
-            catch (e) {
-                console.error(e);
-            }
-            throw error;
-        }
-    }
 
     const { setAttribute: elemSetAttribute, removeAttribute } = Element.prototype;
     const tokenList = DOMTokenList.prototype;
@@ -1606,6 +1545,68 @@
         vnode.remove();
     }
 
+    // Maps fibers to thrown errors
+    const fibersInError = new WeakMap();
+    const nodeErrorHandlers = new WeakMap();
+    function _handleError(node, error) {
+        if (!node) {
+            return false;
+        }
+        const fiber = node.fiber;
+        if (fiber) {
+            fibersInError.set(fiber, error);
+        }
+        const errorHandlers = nodeErrorHandlers.get(node);
+        if (errorHandlers) {
+            let handled = false;
+            // execute in the opposite order
+            for (let i = errorHandlers.length - 1; i >= 0; i--) {
+                try {
+                    errorHandlers[i](error);
+                    handled = true;
+                    break;
+                }
+                catch (e) {
+                    error = e;
+                }
+            }
+            if (handled) {
+                return true;
+            }
+        }
+        return _handleError(node.parent, error);
+    }
+    function handleError(params) {
+        let { error } = params;
+        // Wrap error if it wasn't wrapped by wrapError (ie when not in dev mode)
+        if (!(error instanceof OwlError)) {
+            error = Object.assign(new OwlError(`An error occured in the owl lifecycle (see this Error's "cause" property)`), { cause: error });
+        }
+        const node = "node" in params ? params.node : params.fiber.node;
+        const fiber = "fiber" in params ? params.fiber : node.fiber;
+        if (fiber) {
+            // resets the fibers on components if possible. This is important so that
+            // new renderings can be properly included in the initial one, if any.
+            let current = fiber;
+            do {
+                current.node.fiber = current;
+                current = current.parent;
+            } while (current);
+            fibersInError.set(fiber.root, error);
+        }
+        const handled = _handleError(node, error);
+        if (!handled) {
+            console.warn(`[Owl] Unhandled error. Destroying the root component`);
+            try {
+                node.app.destroy();
+            }
+            catch (e) {
+                console.error(e);
+            }
+            throw error;
+        }
+    }
+
     function makeChildFiber(node, parent) {
         let current = node.fiber;
         if (current) {
@@ -3010,8 +3011,8 @@
                 values = keys;
             }
             else {
-                values = Object.keys(collection);
-                keys = Object.values(collection);
+                values = Object.values(collection);
+                keys = Object.keys(collection);
             }
         }
         else {
@@ -4349,18 +4350,18 @@
             }
             this.addLine(`for (let ${loopVar} = 0; ${loopVar} < ${l}; ${loopVar}++) {`);
             this.target.indentLevel++;
-            this.addLine(`ctx[\`${ast.elem}\`] = ${vals}[${loopVar}];`);
+            this.addLine(`ctx[\`${ast.elem}\`] = ${keys}[${loopVar}];`);
             if (!ast.hasNoFirst) {
                 this.addLine(`ctx[\`${ast.elem}_first\`] = ${loopVar} === 0;`);
             }
             if (!ast.hasNoLast) {
-                this.addLine(`ctx[\`${ast.elem}_last\`] = ${loopVar} === ${vals}.length - 1;`);
+                this.addLine(`ctx[\`${ast.elem}_last\`] = ${loopVar} === ${keys}.length - 1;`);
             }
             if (!ast.hasNoIndex) {
                 this.addLine(`ctx[\`${ast.elem}_index\`] = ${loopVar};`);
             }
             if (!ast.hasNoValue) {
-                this.addLine(`ctx[\`${ast.elem}_value\`] = ${keys}[${loopVar}];`);
+                this.addLine(`ctx[\`${ast.elem}_value\`] = ${vals}[${loopVar}];`);
             }
             this.define(`key${this.target.loopLevel}`, ast.key ? compileExpr(ast.key) : loopVar);
             if (this.dev) {
@@ -5550,11 +5551,20 @@
         const codeGenerator = new CodeGenerator(ast, { ...options, hasSafeContext });
         const code = codeGenerator.generateCode();
         // template function
-        return new Function("app, bdom, helpers", code);
+        try {
+            return new Function("app, bdom, helpers", code);
+        }
+        catch (originalError) {
+            const { name } = options;
+            const nameStr = name ? `template "${name}"` : "anonymous template";
+            const err = new OwlError(`Failed to compile ${nameStr}: ${originalError.message}\n\ngenerated code:\nfunction(app, bdom, helpers) {\n${code}\n}`);
+            err.cause = originalError;
+            throw err;
+        }
     }
 
     // do not modify manually. This file is generated by the release script.
-    const version = "2.2.3";
+    const version = "2.2.4";
 
     // -----------------------------------------------------------------------------
     //  Scheduler
@@ -6023,8 +6033,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.date = '2023-07-20T06:05:29.796Z';
-    __info__.hash = 'b1a3b32';
+    __info__.date = '2023-08-02T06:20:03.634Z';
+    __info__.hash = '8f9ad98';
     __info__.url = 'https://github.com/odoo/owl';
 
 
