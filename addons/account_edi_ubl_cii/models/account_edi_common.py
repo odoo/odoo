@@ -437,32 +437,6 @@ class AccountEdiCommon(models.AbstractModel):
         invoice.write({'invoice_line_ids': line_vals})
         return logs
 
-    def _import_fill_invoice_down_payment(self, invoice, prepaid_node, qty_factor):
-        """
-        DEPRECATED: removed in master
-        Creates a down payment line on the invoice at import if prepaid_node (TotalPrepaidAmount in CII,
-        PrepaidAmount in UBL) exists.
-        qty_factor -1 if the xml is labelled as an invoice but has negative amounts -> conversion into a credit note
-        needed, so we need this multiplier. Otherwise, qty_factor is 1.
-        """
-        if prepaid_node is not None and float(prepaid_node.text) != 0:
-            invoice.write({
-                'invoice_line_ids': [
-                    Command.create({
-                        'display_type': 'line_section',
-                        'sequence': 9998,
-                        'name': _("Down Payments"),
-                    }),
-                    Command.create({
-                        'sequence': 9999,
-                        'name': _("Down Payment"),
-                        'price_unit': float(prepaid_node.text),
-                        'quantity': qty_factor * -1,
-                        'tax_ids': False,
-                    }),
-                ]
-            })
-
     def _import_log_prepaid_amount(self, invoice_form, prepaid_node, qty_factor):
         """
         Log a message in the chatter at import if prepaid_node (TotalPrepaidAmount in CII, PrepaidAmount in UBL) exists.
