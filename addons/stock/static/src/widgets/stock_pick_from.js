@@ -39,21 +39,18 @@ export class StockPickFrom extends Many2OneField {
         if (this.props.record.resId) {
             // if location group is activated
             const data = this.props.record.data;
-            if (this.enabledGroups?.location && data.location_id) {
-                name_parts.push(data.location_id?.[1])
-            }
+            name_parts.push(data.location_id?.[1])
             if (this.enabledGroups?.lot && data.lot_id) {
                 name_parts.push(data.lot_id?.[1] || data.lot_name)
             }
             if (this.enabledGroups?.package && data.package_id) {
-                name_parts.push(data.pachage_id?.[1])
+                name_parts.push(data.package_id?.[1])
             }
-            if (this.enabledGroups?.owner&& data.owner) {
+            if (this.enabledGroups?.owner && data.owner) {
                 name_parts.push(data.owner?.[1])
             }
             const result = name_parts.join(" - ");
             if (result) return result;
-            return "- no data -";
         }
         return "";
     }
