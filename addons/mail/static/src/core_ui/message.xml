@@ -87,82 +87,89 @@
                                    'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
                                    }"
                         >
-                            <div class="o-mail-Message-content position-relative" t-att-class="{ 'w-100': state.isEditing }">
-                                <t t-if="message.type !== 'notification' and !message.isTransient and (message.hasTextContent or message.subtypeDescription)">
-                                    <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
-                                    <t t-else="">
-                                        <div class="position-relative">
-                                            <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
-                                                'border': state.isEditing and !message.isNote,
-                                                'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
-                                                'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
-                                                'bg-warning-light border border-warning opacity-50': message.isHighlightedFromMention,
-                                                }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
-                                            <div class="position-relative text-break o-mail-Message-body" t-att-class="{
-                                                        'p-1': message.isNote,
-                                                        'mb-0 py-2 px-3': !message.isNote,
-                                                        'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.isNote,
-                                                        'o-mail-Message-editable flex-grow-1': state.isEditing,
-                                                        }" t-ref="body">
-                                                <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
-                                                <t t-else="">
-                                                    <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
-                                                    <t t-if="message.body" t-out="message.body"/>
-                                                    <!-- <small t-if="message.editDate" class="o-mail-Message-edited fst-italic text-muted" t-att-class="{ 'ms-2': !message.isBodyEmpty }" t-att-title="message.editDatetimeHuge">(edited)</small> --> <!-- DISABLED because new messages sent by email are wrongly flagged as (edited) -->
-                                                    <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"/>
-                                                </t>
+                            <div class="o-mail-Message-content" t-att-class="{ 'w-100': state.isEditing }">
+                                <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
+                                    <t t-if="message.type !== 'notification' and !message.isTransient and (message.hasTextContent or message.subtypeDescription)">
+                                        <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
+                                        <t t-else="">
+                                            <div class="position-relative d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
+                                                <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
+                                                    'border': state.isEditing and !message.isNote,
+                                                    'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
+                                                    'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
+                                                    'bg-warning-light border border-warning opacity-50': message.isHighlightedFromMention,
+                                                    }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
+                                                <div class="position-relative text-break o-mail-Message-body" t-att-class="{
+                                                            'p-1': message.isNote,
+                                                            'mb-0 py-2 px-3': !message.isNote,
+                                                            'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.isNote,
+                                                            'o-mail-Message-editable flex-grow-1': state.isEditing,
+                                                            }" t-ref="body">
+                                                    <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
+                                                    <t t-else="">
+                                                        <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
+                                                        <t t-if="message.body" t-out="message.body"/>
+                                                        <!-- <small t-if="message.editDate" class="o-mail-Message-edited fst-italic text-muted" t-att-class="{ 'ms-2': !message.isBodyEmpty }" t-att-title="message.editDatetimeHuge">(edited)</small> --> <!-- DISABLED because new messages sent by email are wrongly flagged as (edited) -->
+                                                        <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"/>
+                                                    </t>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </t>
                                     </t>
-                                </t>
-                            </div>
-                            <div t-if="props.hasActions and !message.isTransient" class="o-mail-Message-actions"
-                                t-att-class="{
-                                    'start-0 ms-3': isAlignedRight,
-                                    'end-0 me-3': (env.inChatWindow or ui.isSmall) and !isAlignedRight,
-                                    'position-absolute top-0 mt-n3': env.inChatWindow or ui.isSmall,
-                                    'ms-2 mt-1': !env.inChatWindow and !ui.isSmall,
-                                    'invisible': !isActive,
-                                    'o-expanded': state.expandOptions
-                                }"
-                            >
-                                <div class="d-flex rounded-1 bg-view shadow-sm overflow-hidden" t-att-class="{
-                                        'flex-row-reverse': env.inChatWindow and isAlignedRight,
-                                    }"
-                                >
-                                    <button t-if="canAddReaction and !isInInbox" class="btn px-1 py-0 rounded-0" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"><i class="fa fa-lg fa-smile-o"/></button>
-                                    <span t-else="" t-ref="emoji-picker"/> <!-- anchor of emoji picker when in dropdown -->
-                                    <button t-if="canReplyTo" class="btn px-1 py-0 rounded-0" t-on-click.stop="onClickReplyTo" tabindex="1" title="Reply" aria-label="Reply"><i class="fa fa-lg fa-reply"/></button>
-                                    <button t-if="canToggleStar" class="btn px-1 py-0 rounded-0" t-on-click="() => messageService.toggleStar(props.message)" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"><i class="fa fa-lg" t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"/></button>
-                                    <button t-if="isInInbox" class="btn px-1 py-0 rounded-0" t-on-click.stop="() => messageService.setDone(props.message)" title="Mark as Read" aria-label="Mark as Read"><i class="fa fa-lg fa-check"/></button>
-                                    <Dropdown t-if="message.reactions.length or editable or deletable or (canAddReaction and isInInbox) or (props.thread?.model === 'discuss.channel' and store.user)" onStateChanged="state => this.state.expandOptions = state.open" position="props.thread?.newestMessage === props.message ? 'top-start' : 'bottom-start'" togglerClass="`btn p-0 ${ state.expandOptions ? 'bg-200' : '' }`" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" class="'d-flex rounded-0'" title="expandText">
-                                        <t t-set-slot="toggler">
-                                            <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
-                                        </t>
-                                        <t t-set-slot="default">
-                                            <DropdownItem t-if="message.reactions.length" class="'px-2 d-flex align-items-center rounded-0'" title="'Reactions'" onSelected="() => this.openReactionMenu()"><i class="fa fa-lg fa-fw fa-smile-o pe-2"/>View Reactions</DropdownItem>
-                                            <DropdownItem t-if="canAddReaction and isInInbox" class="'px-2 d-flex align-items-center rounded-0'" title="'Add a Reaction'" onSelected="() => this.emojiPickerRef.el.click()"><i class="fa fa-lg fa-fw fa-smile-o pe-2"/>Add a Reaction</DropdownItem>
-                                            <DropdownItem t-if="showUnfollow" class="'px-2 d-flex align-items-center rounded-0'" title="'Unfollow'" onSelected="() => messageService.unfollow(props.message)"><i class="fa fa-lg fa-fw fa-user-times pe-2"/>Unfollow</DropdownItem>
-                                            <DropdownItem t-if="store.user and props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center rounded-0'" title="pinOptionText" onSelected="() => this.onClickPin()"><i class="fa fa-lg fa-fw fa-thumb-tack pe-2"/><t t-esc="pinOptionText"/></DropdownItem>
-                                            <DropdownItem t-if="props.thread.model === 'discuss.channel' and store.user" class="'px-2 d-flex align-items-center rounded-0'" title="'Mark as Unread'" onSelected="() => this.onClickMarkAsUnread()"><i class="fa fa-lg fa-fw fa-eye-slash pe-2"/>Mark as Unread</DropdownItem>
-                                            <DropdownItem t-if="editable" class="'px-2 d-flex align-items-center rounded-0'" title="'Edit'" onSelected="() => this.onClickEdit()"><i class="fa fa-lg fa-fw fa-pencil pe-2"/>Edit</DropdownItem>
-                                            <DropdownItem t-if="deletable" class="'px-2 d-flex align-items-center rounded-0'" title="'Delete'" onSelected="() => this.onClickDelete()"><i class="fa fa-lg fa-fw fa-trash pe-2"/>Delete</DropdownItem>
-                                        </t>
-                                    </Dropdown>
+                                    <t t-if="message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
                                 </div>
+                                <AttachmentList
+                                    t-if="message.attachments.length > 0"
+                                    attachments="message.attachments.map((a) => a)"
+                                    unlinkAttachment.bind="onClickAttachmentUnlink"
+                                    imagesHeight="300"/>
+                                <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
                             </div>
+                            <t t-if="!message.hasTextContent or env.inChatWindow" t-call="mail.Message.actions"/>
                         </div>
-                        <AttachmentList
-                            t-if="message.attachments.length > 0"
-                            attachments="message.attachments.map((a) => a)"
-                            unlinkAttachment.bind="onClickAttachmentUnlink"
-                            imagesHeight="300"/>
-                        <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
                         <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
                     </div>
                 </div>
             </div>
         </ActionSwiper>
     </t>
+
+<t t-name="mail.Message.actions" owl="1">
+    <div t-if="props.hasActions and !message.isTransient" class="o-mail-Message-actions"
+        t-att-class="{
+            'start-0 ms-3': isAlignedRight,
+            'end-0 me-3': (env.inChatWindow or ui.isSmall) and !isAlignedRight,
+            'position-absolute top-0 mt-n3': env.inChatWindow or ui.isSmall,
+            'ms-2 mt-1': !env.inChatWindow and !ui.isSmall,
+            'invisible': !isActive,
+            'o-expanded': state.expandOptions
+        }"
+    >
+        <div class="d-flex rounded-1 bg-view shadow-sm overflow-hidden" t-att-class="{
+                'flex-row-reverse': env.inChatWindow and isAlignedRight,
+            }"
+        >
+            <button t-if="canAddReaction and !isInInbox" class="btn px-1 py-0 rounded-0" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"><i class="fa fa-lg fa-smile-o"/></button>
+            <span t-else="" t-ref="emoji-picker"/> <!-- anchor of emoji picker when in dropdown -->
+            <button t-if="canReplyTo" class="btn px-1 py-0 rounded-0" t-on-click.stop="onClickReplyTo" tabindex="1" title="Reply" aria-label="Reply"><i class="fa fa-lg fa-reply"/></button>
+            <button t-if="canToggleStar" class="btn px-1 py-0 rounded-0" t-on-click="() => messageService.toggleStar(props.message)" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"><i class="fa fa-lg" t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"/></button>
+            <button t-if="isInInbox" class="btn px-1 py-0 rounded-0" t-on-click.stop="() => messageService.setDone(props.message)" title="Mark as Read" aria-label="Mark as Read"><i class="fa fa-lg fa-check"/></button>
+            <Dropdown t-if="message.reactions.length or editable or deletable or (canAddReaction and isInInbox) or (props.thread?.model === 'discuss.channel' and store.user)" onStateChanged="state => this.state.expandOptions = state.open" position="props.thread?.newestMessage === props.message ? 'top-start' : 'bottom-start'" togglerClass="`btn p-0 ${ state.expandOptions ? 'bg-200' : '' }`" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" class="'d-flex rounded-0'" title="expandText">
+                <t t-set-slot="toggler">
+                    <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
+                </t>
+                <t t-set-slot="default">
+                    <DropdownItem t-if="message.reactions.length" class="'px-2 d-flex align-items-center rounded-0'" title="'Reactions'" onSelected="() => this.openReactionMenu()"><i class="fa fa-lg fa-fw fa-smile-o pe-2"/>View Reactions</DropdownItem>
+                    <DropdownItem t-if="canAddReaction and isInInbox" class="'px-2 d-flex align-items-center rounded-0'" title="'Add a Reaction'" onSelected="() => this.emojiPickerRef.el.click()"><i class="fa fa-lg fa-fw fa-smile-o pe-2"/>Add a Reaction</DropdownItem>
+                    <DropdownItem t-if="showUnfollow" class="'px-2 d-flex align-items-center rounded-0'" title="'Unfollow'" onSelected="() => messageService.unfollow(props.message)"><i class="fa fa-lg fa-fw fa-user-times pe-2"/>Unfollow</DropdownItem>
+                    <DropdownItem t-if="store.user and props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center rounded-0'" title="pinOptionText" onSelected="() => this.onClickPin()"><i class="fa fa-lg fa-fw fa-thumb-tack pe-2"/><t t-esc="pinOptionText"/></DropdownItem>
+                    <DropdownItem t-if="props.thread.model === 'discuss.channel' and store.user" class="'px-2 d-flex align-items-center rounded-0'" title="'Mark as Unread'" onSelected="() => this.onClickMarkAsUnread()"><i class="fa fa-lg fa-fw fa-eye-slash pe-2"/>Mark as Unread</DropdownItem>
+                    <DropdownItem t-if="editable" class="'px-2 d-flex align-items-center rounded-0'" title="'Edit'" onSelected="() => this.onClickEdit()"><i class="fa fa-lg fa-fw fa-pencil pe-2"/>Edit</DropdownItem>
+                    <DropdownItem t-if="deletable" class="'px-2 d-flex align-items-center rounded-0'" title="'Delete'" onSelected="() => this.onClickDelete()"><i class="fa fa-lg fa-fw fa-trash pe-2"/>Delete</DropdownItem>
+                </t>
+            </Dropdown>
+        </div>
+    </div>
+</t>
 
 </templates>
