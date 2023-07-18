@@ -3,7 +3,7 @@
 import { CannedResponse } from "@mail/core/common/canned_response_model";
 import { cleanTerm } from "@mail/utils/common/format";
 
-import { markup, reactive } from "@odoo/owl";
+import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -128,20 +128,6 @@ export class Messaging {
     handleNotification(notifications) {
         for (const notif of notifications) {
             switch (notif.type) {
-                case "mail.message/notification_update":
-                    {
-                        notif.payload.elements.map((message) => {
-                            this.messageService.insert({
-                                ...message,
-                                body: markup(message.body),
-                                // implicit: failures are sent by the server at
-                                // initialization only if the current partner is
-                                // author of the message
-                                author: this.store.self,
-                            });
-                        });
-                    }
-                    break;
                 case "ir.attachment/delete":
                     {
                         const { id: attachmentId, message: messageData } = notif.payload;

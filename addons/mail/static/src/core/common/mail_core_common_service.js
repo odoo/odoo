@@ -55,6 +55,18 @@ export class MailCoreCommon {
                     this.env.bus.trigger("mail.message/delete", { message });
                 }
             });
+            this.busService.subscribe("mail.message/notification_update", (payload) => {
+                payload.elements.map((message) => {
+                    this.messageService.insert({
+                        ...message,
+                        body: markup(message.body),
+                        // implicit: failures are sent by the server at
+                        // initialization only if the current partner is
+                        // author of the message
+                        author: this.store.self,
+                    });
+                });
+            });
             this.busService.subscribe("mail.message/toggle_star", (payload) => {
                 const { message_ids: messageIds, starred } = payload;
                 for (const messageId of messageIds) {
