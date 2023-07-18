@@ -214,6 +214,15 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             // Use the destinationOrder from props if the order to refund has the same
             // customer as the destinationOrder.
             const destinationOrder = this._setDestinationOrder(this.props.destinationOrder, customer);
+            //Add a check too see if the fiscal position exist in the pos
+            if (order.fiscal_position_not_found) {
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t('Fiscal Position not found'),
+                    body: this.env._t('The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration.')
+                });
+                return;
+            }
+            destinationOrder.fiscal_position = order.fiscal_position;
 
             // Add orderline for each toRefundDetail to the destinationOrder.
             for (const refundDetail of allToRefundDetails) {
