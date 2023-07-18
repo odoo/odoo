@@ -57,7 +57,6 @@ class ResCompany(models.Model):
             ('not_verified', 'Not verified'),
             ('sent_verification', 'Verification code sent'),
             ('pending', 'Pending'),
-            ('manually_approved', 'Approved'),
             ('active', 'Active'),
             ('rejected', 'Rejected'),
             ('canceled', 'Canceled'),

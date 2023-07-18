@@ -82,7 +82,7 @@ class AccountEdiProxyClientUser(models.Model):
 
             message_uuids = [
                 message['uuid']
-                for message in messages['messages']
+                for message in messages.get('messages', [])
                 if message['direction'] == 'incoming'
                 and message['receiver'] == edi_user.edi_identification
             ]
