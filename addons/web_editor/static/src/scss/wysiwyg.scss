@@ -747,7 +747,8 @@ img::selection {
 .o_we_crop_widget {
     background-color: rgba(128, 128, 128, 0.5);
     @include o-position-absolute(0, 0, 0, 0);
-    z-index: 1024;
+    /* This value must be higher than dialog z-index in bootstrap */
+    z-index: 1056;
 
     .o_we_cropper_wrapper {
         position: absolute;
