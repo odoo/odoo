@@ -137,6 +137,17 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(len(mrp_order.move_byproduct_ids), 2)
         self.assertEqual(mrp_order.move_byproduct_ids.product_id, self.product_1 | self.product_3)
 
+        #Test the same mo is created without workorder if the setting is desactivated
+        self.env.user.groups_id -= self.env.ref('mrp.group_mrp_routings')
+        mrp_order_form = Form(self.env['mrp.production'])
+        mrp_order_form.product_id = self.product_7_3
+        mrp_order = mrp_order_form.save()
+        self.assertEqual(mrp_order.bom_id, test_bom)
+        self.assertEqual(len(mrp_order.workorder_ids), 0)
+        self.assertEqual(len(mrp_order.move_byproduct_ids), 1)
+        self.assertEqual(mrp_order.move_byproduct_ids.product_id, self.product_1)
+
+
     def test_11_multi_level_variants(self):
         tmp_picking_type = self.env['stock.picking.type'].create({
             'name': 'Manufacturing',

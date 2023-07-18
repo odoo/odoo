@@ -528,6 +528,8 @@ class MrpProduction(models.Model):
         for production in self:
             if production.state != 'draft':
                 continue
+            if not self.env.user.has_group('mrp.group_mrp_routings'):
+                continue
             workorders_list = [Command.link(wo.id) for wo in production.workorder_ids.filtered(lambda wo: not wo.operation_id)]
             workorders_list += [Command.delete(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.operation_id and wo.operation_id.bom_id != production.bom_id)]
             if not production.bom_id and not production._origin.product_id:
