@@ -52,10 +52,11 @@ class ResConfigSettings(models.TransientModel):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
-    def _call_peppol_proxy(self, endpoint, params, edi_user=None):
+    def _call_peppol_proxy(self, endpoint, params=None, edi_user=None):
         if not edi_user:
             edi_user = self.company_id.account_edi_proxy_client_ids[0]
 
+        params = params or {}
         try:
             response = edi_user._make_request(
                 f"{edi_user._get_server_url()}{endpoint}",
@@ -67,6 +68,12 @@ class ResConfigSettings(models.TransientModel):
         if 'error' in response:
             raise UserError(response['error'].get('message') or response['error']['data']['message'])
         return response
+
+    def _trigger_peppol_crons(self):
+        # fetch all documents and message statuses before migrating/deleting
+        # so that they are acknowledged
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -235,10 +242,7 @@ class ResConfigSettings(models.TransientModel):
                 "Can't cancel registration with this status: %s", self.account_peppol_proxy_state
             ))
 
-        self._call_peppol_proxy(
-            endpoint='/api/peppol/1/cancel_peppol_registration',
-            params={},
-        )
+        self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
         self.account_peppol_proxy_state = 'canceled'
 
     def button_reopen_peppol_registration(self):
@@ -277,9 +281,25 @@ class ResConfigSettings(models.TransientModel):
                 "Can't migrate registration with this status: %s", self.account_peppol_proxy_state
             ))
 
-        response = self._call_peppol_proxy(
-            endpoint='/api/peppol/1/migrate_peppol_registration',
-            params={},
-        )
+        self._trigger_peppol_crons()
+
+        response = self._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
         self.account_peppol_proxy_state = 'canceled'
         self.account_peppol_migration_key = response['migration_key']
+
+    def button_deregister_peppol_participant(self):
+        """
+        Deregister the edi user from Peppol network
+        """
+        self.ensure_one()
+
+        if self.account_peppol_proxy_state != 'active':
+            raise UserError(_(
+                "Can't deregister with this status: %s", self.account_peppol_proxy_state
+            ))
+
+        self._trigger_peppol_crons()
+
+        self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
+        self.account_peppol_proxy_state = 'not_registered'
+        self.account_peppol_edi_user.unlink()

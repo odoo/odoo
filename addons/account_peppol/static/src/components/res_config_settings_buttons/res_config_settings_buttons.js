@@ -50,19 +50,34 @@ class PeppolSettingsButtons extends Component {
         });
     }
 
-    showConfirmation() {
-        const message = this.env._t("This will migrate your Peppol registration away from Odoo. You will not be able to send or receive Peppol documents in Odoo anymore.");
-        const confirmMessage = this.env._t("Are you sure you want to proceed?");
+    showConfirmation(warning, methodName) {
+        const message = this.env._t(warning);
+        const confirmMessage = this.env._t("You will not be able to send or receive Peppol documents in Odoo anymore. Are you sure you want to proceed?");
         this.dialogService.add(ConfirmationDialog, {
             body: markup(
                 `<div class="text-danger">${escape(message)}</div>
                 <div class="text-danger">${escape(confirmMessage)}</div>`
             ),
             confirm: async () => {
-                await this._callConfigMethod("button_migrate_peppol_registration");
+                await this._callConfigMethod(methodName);
             },
             cancel: () => { },
         });
+    }
+
+    migrate() {
+        this.showConfirmation(
+            "This will migrate your Peppol registration away from Odoo. A migration key will be generated. \
+            If the other service does not support migration, consider deregistering instead.",
+            "button_migrate_peppol_registration"
+        )
+    }
+
+    deregister() {
+        this.showConfirmation(
+            "This will delete your Peppol registration.",
+            "button_deregister_peppol_participant"
+        )
     }
 
     async updateDetails() {
