@@ -43,25 +43,25 @@
                 <span t-field="doc.name">SO0000</span>
             </h2>
 
-            <div class="row mt-4 mb-4" id="informations">
+            <div class="row mt-4 mb-2" id="informations">
                 <div t-if="doc.client_order_ref" class="col-auto col-3 mw-100 mb-2" name="informations_reference">
-                    <strong>Your Reference:</strong>
-                    <p class="m-0" t-field="doc.client_order_ref">S:0000</p>
+                    <strong>Your Reference:</strong><br/>
+                    <span class="m-0" t-field="doc.client_order_ref">SO0000</span>
                 </div>
                 <div t-if="doc.date_order" class="col-auto col-3 mw-100 mb-2" name="informations_date">
                     <strong t-if="doc.state in ['draft', 'sent']">Quotation Date:</strong>
-                    <strong t-else="">Order Date:</strong>
-                    <p class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'>2023-07-10</p>
+                    <strong t-else="">Order Date:</strong><br/>
+                    <span class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'>2023-12-31</span>
                 </div>
                 <div t-if="doc.validity_date and doc.state in ['draft', 'sent']"
                     class="col-auto col-3 mw-100 mb-2"
                     name="expiration_date">
-                    <strong>Expiration:</strong>
-                    <p class="m-0" t-field="doc.validity_date">2023-07-10</p>
+                    <strong>Expiration:</strong><br/>
+                    <span class="m-0" t-field="doc.validity_date">2023-12-31</span>
                 </div>
                 <div t-if="doc.user_id.name" class="col-auto col-3 mw-100 mb-2">
-                    <strong>Salesperson:</strong>
-                    <p class="m-0" t-field="doc.user_id">Mitchell Admin</p>
+                    <strong>Salesperson:</strong><br/>
+                    <span class="m-0" t-field="doc.user_id">Mitchell Admin</span>
                 </div>
             </div>
 
@@ -69,6 +69,7 @@
             <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
             <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
 
+            <div class="oe_structure"></div>
             <table class="table table-sm o_main_table table-borderless mt-4">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group">
@@ -99,39 +100,39 @@
 
                         <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
-                                <td name="td_name"><span t-field="line.name">Awesome Product</span></td>
+                                <td name="td_name"><span t-field="line.name">Bacon Burger</span></td>
                                 <td name="td_quantity" class="text-end">
                                     <span t-field="line.product_uom_qty">3</span>
-                                    <span t-field="line.product_uom">mm</span>
+                                    <span t-field="line.product_uom">units</span>
                                 </td>
                                 <td name="td_priceunit" class="text-end">
                                     <span t-field="line.price_unit">3</span>
                                 </td>
                                 <td t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line">
-                                    <span t-field="line.discount">4%</span>
+                                    <span t-field="line.discount">-</span>
                                 </td>
                                 <td name="td_taxes" class="text-end">
                                     <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_id))">
-                                        VAT 21%
+                                        Tax 15%
                                     </span>
                                 </td>
                                 <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
-                                    <span t-field="line.price_subtotal">9</span>
+                                    <span t-field="line.price_subtotal">27.00</span>
                                 </td>
                                 <td name="td_total" class="text-end o_price_total" t-if="doc.company_id.tax_calculation_rounding_method == 'round_per_line'" >
-                                    <span t-field="line.price_total">9</span>
+                                    <span t-field="line.price_total">31.05</span>
                                 </td>
                             </t>
                             <t t-elif="line.display_type == 'line_section'">
                                 <td name="td_section_line" colspan="99">
-                                    <span t-field="line.name">Awesome Services</span>
+                                    <span t-field="line.name">A section title</span>
                                 </td>
                                 <t t-set="current_section" t-value="line"/>
                                 <t t-set="current_subtotal" t-value="0"/>
                             </t>
                             <t t-elif="line.display_type == 'line_note'">
                                 <td name="td_note_line" colspan="99">
-                                    <span t-field="line.name">The previous product should be shipped with additional love</span>
+                                    <span t-field="line.name">A note, whose content usually applies to the section or product above.</span>
                                 </td>
                             </t>
                         </tr>
@@ -143,14 +144,13 @@
                                     <span
                                         t-out="current_subtotal"
                                         t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
-                                    >9</span>
+                                    >31.05</span>
                                 </td>
                             </tr>
                         </t>
                     </t>
                 </tbody>
             </table>
-
             <div class="clearfix" name="so_total_summary">
                 <div id="total" class="row" name="total">
                     <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
@@ -162,8 +162,10 @@
                     </div>
                 </div>
             </div>
+            <div class="oe_structure"></div>
 
-            <div t-if="doc.signature" class="mt-4 ml64 mr4" name="signature">
+            <div t-if="not doc.signature" class="oe_structure"></div>
+            <div t-else="" class="mt-4 ml64 mr4" name="signature">
                 <div class="offset-8">
                     <strong>Signature</strong>
                 </div>
@@ -171,12 +173,11 @@
                     <img t-att-src="image_data_uri(doc.signature)" style="max-height: 4cm; max-width: 8cm;"/>
                 </div>
                 <div class="offset-8 text-center">
-                    <p t-field="doc.signed_by">Oscar Morgan</p>
+                    <span t-field="doc.signed_by">Oscar Morgan</span>
                 </div>
             </div>
-
             <div>
-                <p t-field="doc.note" name="order_note"/>
+                <span t-field="doc.note" name="order_note"/>
                 <p t-if="not is_html_empty(doc.payment_term_id.note)">
                     <span t-field="doc.payment_term_id.note">The payment should also be transmitted with love</span>
                 </p>
