@@ -537,7 +537,9 @@
                             --ListRenderer-margin-x: var(--notebook-margin-x);
                             --ListRenderer-table-padding-x: var(--notebook-padding-x);
 
-                            margin-top: -$o-horizontal-padding;
+                            &:first-child {
+                                margin-top: -$o-horizontal-padding;
+                            }
 
                             // use original padding-left for handle cell in editable list
                             tr > :first-child.o_handle_cell {
