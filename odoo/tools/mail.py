@@ -393,6 +393,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace('&gt;', '>')
     html = html.replace('&lt;', '<')
     html = html.replace('&amp;', '&')
+    html = html.replace('&nbsp;', u'\N{NO-BREAK SPACE}')
 
     # strip all lines
     html = '\n'.join([x.strip() for x in html.splitlines()])
