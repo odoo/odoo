@@ -4,6 +4,9 @@ from odoo import models
 from odoo.exceptions import ValidationError
 
 
+SECTOR_RO_CODES = ['SECTOR1', 'SECTOR2', 'SECTOR3', 'SECTOR4', 'SECTOR5', 'SECTOR6']
+
+
 class AccountEdiXmlUBLRO(models.AbstractModel):
     _inherit = "account.edi.xml.ubl_bis3"
     _name = 'account.edi.xml.ubl_ro'
@@ -19,10 +22,14 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         if partner.country_code == 'RO':
             if not partner.state_id:
                 # TODO - if partner country is 'RO', they must have state_id
-                raise ValidationError("partner must be connected to state_id")
+                raise ValidationError("if country is RO, partner must have a state_id")
 
             vals["country_subentity"] = 'RO-' + partner.state_id.code
-            # if partner.state_id.code == 'B' and "sector" in partner.city TODO
+
+            # TODO if state_id is selected as București (RO), the city name must be SECTOR[1-6]
+            # make it a selection field later
+            if partner.state_id.code == 'B' and partner.city not in SECTOR_RO_CODES:
+                raise ValidationError("if state is București, city must be 'SECTORX', where X is a number between 1-6")
 
         return vals
 

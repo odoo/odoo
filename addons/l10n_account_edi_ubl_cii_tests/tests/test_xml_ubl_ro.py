@@ -23,7 +23,7 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.ro').id,
             'currency_id': cls.env.ref('base.RON').id,
             'state_id': cls.env.ref('base.RO_B').id,
-            'city': 'Bucharest',
+            'city': 'SECTOR1',
             'zip': '010101',
             'vat': 'RO1234567897',
             'phone': '+40 123 456 789',
@@ -38,7 +38,7 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
 
         cls.partner_a = cls.env['res.partner'].create({
             'name': "Roasted Romanian Roller",
-            'city': "Bucharest",
+            'city': "SECTOR3",
             'zip': "010101",
             'vat': 'RO1234567897',
             'phone': '+40 123 456 780',
@@ -89,9 +89,13 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
         print("=====================================================")
         print("\n")
 
-        for message_obj in json['Messages']:
-            message = message_obj['message']
-            print(message, "\n\n")
+        if 'Messages' in json:
+            for message_obj in json['Messages']:
+                message = message_obj['message']
+                print(message, "\n\n")
+        else:
+            print(json, '\n\n')
+
         print("=====================================================")
 
     ####################################################
