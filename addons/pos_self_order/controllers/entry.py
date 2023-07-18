@@ -67,6 +67,7 @@ class PosQRMenuController(http.Controller):
                         'access_token': pos_config_access_token,
                         **pos_config_sudo._get_self_order_data(),
                     },
+                    "base_url": request.env['pos.session'].get_base_url(),
                 }
             }
         )

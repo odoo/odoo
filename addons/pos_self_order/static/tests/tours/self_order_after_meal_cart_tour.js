@@ -71,10 +71,9 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         PosSelf.check.isOrderline("Office Chair Black", "138.58", "kidding"),
         ...PosSelf.action.editSentOrderline("Office Chair Black", "138.58", "kidding", -1),
         PosSelf.check.isNotification("You cannot reduce the quantity"),
-        PosSelf.action.clickPrimaryBtn("Order"),
+        PosSelf.action.clickBack(),
 
         // Here we check that the product attributes are correctly selected.
-        PosSelf.action.clickPrimaryBtn("View Menu"),
         ...PosSelf.action.addProduct("Desk Organizer", 1, "kidding", {
             radio: { name: "Size", value: "M" },
             select: { name: "Fabric", value: "Leather" },
@@ -96,7 +95,6 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         PosSelf.check.isOrderline("Desk Organizer", "11.74", "okkk", "L, Custom"),
         PosSelf.action.clickPrimaryBtn("Order"),
 
-        PosSelf.action.clickBack(),
         PosSelf.check.isPrimaryBtn("My Orders"),
         PosSelf.action.clickPrimaryBtn("My Orders"),
         PosSelf.action.clickBack(),

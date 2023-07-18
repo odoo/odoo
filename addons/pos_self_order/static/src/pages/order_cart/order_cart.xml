@@ -13,7 +13,7 @@
             <div class="d-flex align-items-center w-100 p-3 bg-white shadow-lg">
                 <div t-attf-class="{{ state.cancelConfirmation ? 'flex-row-reverse' : '' }} d-flex mt-2 flex-fill">
                     <button
-                        t-if="order.isChange() and order.lines.length > 0"
+                        t-if="order.hasNotAllLinesSent() and order.lines.length > 0"
                         t-on-click.prevent="cancelToggle"
                         t-attf-class="{{ state.cancelConfirmation ? 'btn-primary' : 'btn-secondary' }} o_self-cancel-toggle-btn btn"
                         t-attf-style="{{ state.cancelConfirmation ? 'margin-left: 10px;' : 'margin-right: 10px;' }}"
@@ -23,10 +23,9 @@
                     <button
                         t-if="!state.cancelConfirmation"
                         t-on-click="processOrder"
-                        t-attf-class="{{ !orderToPay and !order.isChange() ? 'disabled' : '' }} o_self_order_main_button btn btn-primary px-2 py-3 flex-grow-1"
+                        t-attf-class="{{ buttonToShow.disabled ? 'disabled' : '' }} o_self_order_main_button btn btn-primary px-2 py-3 flex-grow-1"
                     >
-                        <span t-if="orderToPay">Pay</span>
-                        <span t-else="">Order</span>
+                        <t t-esc="buttonToShow.label" />
                         <t t-if="!selfOrder.priceLoading">
                             <span> | <t t-esc="selfOrder.formatMonetary(order.amount_total)"/></span>
                         </t>

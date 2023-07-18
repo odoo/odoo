@@ -34,7 +34,7 @@ class PosConfig(models.Model):
         help="Allow customers to Order from their phones",
     )
     self_order_pay_after = fields.Selection(
-        [("each", "Each Order"), ("meal", "Meal")],
+        [("each", "Each Order (mobile payment only)"), ("meal", "Meal (mobile payment or cashier)")],
         string="Pay After:",
         default="meal",
         help="Choose when the customer will pay",

@@ -20,10 +20,7 @@ export class Lines extends Component {
     clickOnLine(line) {
         const order = this.props.order;
         this.selfOrder.editedLine = line;
-        if (
-            !order.access_token ||
-            (order.state === "draft" && this.selfOrder.self_order_mode === "meal")
-        ) {
+        if (order.state === "draft") {
             this.selfOrder.editedOrder = order;
             this.router.navigate("product", { id: line.product_id });
         } else {
