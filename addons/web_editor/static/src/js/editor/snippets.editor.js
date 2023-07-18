@@ -3051,9 +3051,6 @@ var SnippetsMenu = Widget.extend({
         // Register the text nodes that needs to be auto-selected on click
         this._registerDefaultTexts();
 
-        // Force non editable part to contentEditable=false
-        $html.find('.o_not_editable').attr('contentEditable', false);
-
         // Add the computed template and make elements draggable
         this.$el.html($html);
         this.$el.append(this.customizePanel);
