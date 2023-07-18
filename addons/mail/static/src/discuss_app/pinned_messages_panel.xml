@@ -5,7 +5,7 @@
             'flex-grow-1': env.inChatWindow,
             'border-start': !env.inChatWindow,
         }">
-            <p class="o-mail-PinnedMessagesPanel-title position-sticky top-0 py-3 mb-0 fw-bolder text-center text-uppercase text-700">
+            <p class="o-mail-PinnedMessagesPanel-title position-sticky top-0 py-3 mb-0 fw-bolder text-center text-uppercase text-700 bg-view">
                 Pinned messages
             </p>
             <div class="d-flex flex-column" t-att-class="{ 'justify-content-center flex-grow-1': props.thread.pinnedMessages.length === 0 }" t-ref="message-list">
