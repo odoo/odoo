@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 export class MailCoreWeb {
     constructor(env, services) {
         Object.assign(this, {
+            busService: services.bus_service,
             rpc: services.rpc,
         });
         /** @type {import("@mail/core/common/message_service").MessageService} */
@@ -34,12 +35,20 @@ export class MailCoreWeb {
                     (n1, n2) => n2.lastMessage.id - n1.lastMessage.id
                 );
             });
+            this.busService.subscribe("mail.activity/updated", (payload) => {
+                if (payload.activity_created) {
+                    this.store.activityCounter++;
+                }
+                if (payload.activity_deleted) {
+                    this.store.activityCounter--;
+                }
+            });
         });
     }
 }
 
 export const mailCoreWeb = {
-    dependencies: ["mail.message", "mail.messaging", "mail.store", "rpc"],
+    dependencies: ["bus_service", "mail.message", "mail.messaging", "mail.store", "rpc"],
     start(env, services) {
         const mailCoreWeb = reactive(new MailCoreWeb(env, services));
         mailCoreWeb.setup();
