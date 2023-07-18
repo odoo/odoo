@@ -129,45 +129,6 @@ export class Messaging {
     handleNotification(notifications) {
         for (const notif of notifications) {
             switch (notif.type) {
-                case "mail.message/delete": {
-                    for (const messageId of notif.payload.message_ids) {
-                        const message = this.store.messages[messageId];
-                        if (!message) {
-                            continue;
-                        }
-                        if (message.isNeedaction) {
-                            removeFromArrayWithPredicate(
-                                this.store.discuss.inbox.messages,
-                                ({ id }) => id === message.id
-                            );
-                            this.store.discuss.inbox.counter--;
-                        }
-                        if (message.isStarred) {
-                            removeFromArrayWithPredicate(
-                                this.store.discuss.starred.messages,
-                                ({ id }) => id === message.id
-                            );
-                            this.store.discuss.starred.counter--;
-                        }
-                        delete this.store.messages[messageId];
-                        if (message.originThread) {
-                            removeFromArrayWithPredicate(
-                                message.originThread.messages,
-                                ({ id }) => id === message.id
-                            );
-                            if (message.isNeedaction) {
-                                removeFromArrayWithPredicate(
-                                    message.originThread.needactionMessages,
-                                    ({ id }) => id === message.id
-                                );
-                            }
-                            if (message.id > message.originThread.seen_message_id) {
-                                message.originThread.message_unread_counter--;
-                            }
-                        }
-                    }
-                    break;
-                }
                 case "mail.message/mark_as_read": {
                     const { message_ids: messageIds, needaction_inbox_counter } = notif.payload;
                     const inbox = this.store.discuss.inbox;

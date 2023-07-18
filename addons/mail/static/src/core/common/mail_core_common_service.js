@@ -10,6 +10,7 @@ import { registry } from "@web/core/registry";
 export class MailCoreCommon {
     constructor(env, services) {
         Object.assign(this, {
+            env,
             busService: services.bus_service,
         });
         /** @type {import("@mail/core/common/message_service").MessageService} */
@@ -36,6 +37,22 @@ export class MailCoreCommon {
                         message.linkPreviews,
                         (linkPreview) => linkPreview.id === id
                     );
+                }
+            });
+            this.busService.subscribe("mail.message/delete", (payload) => {
+                for (const messageId of payload.message_ids) {
+                    const message = this.store.messages[messageId];
+                    if (!message) {
+                        continue;
+                    }
+                    delete this.store.messages[messageId];
+                    if (message.originThread) {
+                        removeFromArrayWithPredicate(
+                            message.originThread.messages,
+                            ({ id }) => id === message.id
+                        );
+                    }
+                    this.env.bus.trigger("mail.message/delete", { message });
                 }
             });
             this.busService.subscribe("mail.record/insert", (payload) => {
