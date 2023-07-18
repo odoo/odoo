@@ -8,7 +8,7 @@ import wysiwygLoader from "web_editor.loader";
 import publicWidget from "web.public.widget";
 import { Markup } from "web.utils";
 import session from "web.session";
-import { escape } from "@web/core/utils/strings";
+import { escape, sprintf } from "@web/core/utils/strings";
 var qweb = core.qweb;
 
 var _t = core._t;
@@ -26,11 +26,12 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .o_wforum_flag_validator': '_onFlagValidatorClick',
         'click .o_wforum_flag_mark_as_offensive': '_onFlagMarkAsOffensiveClick',
         'click .vote_up:not(.karma_required), .vote_down:not(.karma_required)': '_onVotePostClick',
-        'click .o_js_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
+        'click .o_wforum_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
         'click .o_wforum_validate_toggler:not(.karma_required)': '_onAcceptAnswerClick',
         'click .o_wforum_favourite_toggle': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
         'click .js_close_intro': '_onCloseIntroClick',
+        'click .answer_collapse': '_onExpandAnswerClick',
         'submit .js_wforum_submit_form:has(:not(.karma_required).o_wforum_submit_post)': '_onSubmitForm',
     },
 
@@ -162,7 +163,12 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 forcedOffset: $(scrollingElement).innerHeight() - $(replyEl).innerHeight(),
             });
         });
-
+        document.querySelectorAll('.o_wforum_question, .o_wforum_answer, .o_wforum_post_comment, .o_wforum_last_activity')
+            .forEach((post) => {
+                post.querySelector('.o_wforum_relative_datetime').textContent = luxon.DateTime
+                    .fromSQL(post.dataset.lastActivity, {zone: 'utc'})
+                    .toRelative();
+            });
         return this._super.apply(this, arguments);
     },
 
@@ -229,35 +235,46 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
+    _onExpandAnswerClick: function (ev) {
+        const expandableWindow = ev.currentTarget;
+        if (ev.target.matches('.o_wforum_expand_toggle')) {
+            expandableWindow.classList.toggle('o_expand')
+            expandableWindow.classList.toggle('min-vh-100');
+            expandableWindow.classList.toggle('w-lg-50');
+        } else if (ev.target.matches('.o_wforum_discard_btn')){
+            expandableWindow.classList.remove('o_expand', 'min-vh-100');
+            expandableWindow.classList.add('w-lg-50');
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
     _onKarmaRequiredClick: function (ev) {
         const karma = parseInt(ev.currentTarget.dataset.karma);
         if (!karma) {
             return;
         }
-
         ev.preventDefault();
-        const forumID = parseInt(document.getElementById('wrapwrap').dataset.forum_id);
-        const notifOptions = {
+        if (session.is_website_user) {
+            this._displayAccessDeniedNotification(
+                Markup`<p>${sprintf(_t('Oh no! Please <a href="%s">sign in</a> to vote'), "/web/login")}</p>`
+            );
+            return;
+        }
+        const forumId = parseInt(document.getElementById('wrapwrap').dataset.forum_id);
+        const additionalInfoWithForumID = forumId
+            ? Markup`<br/>
+                <a class="alert-link" href="/forum/${forumId}/faq">
+                    ${_t("Read the guidelines to know how to gain karma.")}
+                </a>`
+            : "";
+        this.displayNotification({
             type: "warning",
             sticky: false,
-        };
-        if (session.is_website_user) {
-            notifOptions.title = _t("Access Denied");
-            notifOptions.message = _t("Sorry you must be logged in to perform this action");
-        } else {
-            notifOptions.title = _t("Karma Error");
-            // FIXME this translation is bad, the number should be part of the
-            // translation, to fix in the appropriate version
-            notifOptions.message = `${karma} ${_t("karma is required to perform this action. ")}`;
-            if (forumID) {
-                const linkLabel = _t("Read the guidelines to know how to gain karma.");
-                notifOptions.message = Markup`
-                    ${notifOptions.message}<br/>
-                    <a class="alert-link" href="/forum/${encodeURIComponent(forumID)}/faq">${linkLabel}</a>
-                `;
-            }
-        }
-        this.displayNotification(notifOptions);
+            title: _t("Karma Error"),
+            message: Markup`${karma} ${_t("karma is required to perform this action. ")}${additionalInfoWithForumID}`
+        });
     },
     /**
      * @private
@@ -305,20 +322,14 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             route: elem.dataset.href || (elem.getAttribute('href') !== '#' && elem.getAttribute('href')) || elem.closest('form').getAttribute('action'),
         }).then(data => {
             if (data.error) {
-                var message;
-                if (data.error === 'anonymous_user') {
-                    message = _t("Sorry you must be logged to flag a post");
-                } else if (data.error === 'post_already_flagged') {
-                    message = _t("This post is already flagged");
-                } else if (data.error === 'post_non_flaggable') {
-                    message = _t("This post can not be flagged");
-                }
-                this.displayNotification({
-                    message: message,
-                    title: _t("Access Denied"),
-                    sticky: false,
-                    type: "warning",
-                });
+                const message = data.error === 'anonymous_user'
+                    ? _t("Sorry you must be logged to flag a post")
+                    : data.error === 'post_already_flagged'
+                        ? _t("This post is already flagged")
+                        : data.error === 'post_non_flaggable'
+                            ? _t("This post can not be flagged")
+                            : data.error;
+                this._displayAccessDeniedNotification(message);
             } else if (data.success) {
                 const child = elem.firstElementChild;
                 if (data.success === 'post_flagged_moderator') {
@@ -327,6 +338,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     elem.prepend(child);
                     if (countFlaggedPosts) {
                         countFlaggedPosts.classList.remove('bg-light');
+                        countFlaggedPosts.classList.remove('d-none');
                         countFlaggedPosts.classList.add('bg-danger');
                         countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
                     }
@@ -352,18 +364,12 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             route: $btn.data('href'),
         }).then(data => {
             if (data.error) {
-                var message;
-                if (data.error === 'own_post') {
-                    message = _t('Sorry, you cannot vote for your own posts');
-                } else if (data.error === 'anonymous_user') {
-                    message = _t('Sorry you must be logged to vote');
-                }
-                this.displayNotification({
-                    message: message,
-                    title: _t("Access Denied"),
-                    sticky: false,
-                    type: "warning",
-                });
+                const message = data.error === 'own_post'
+                    ? _t('Sorry, you cannot vote for your own posts')
+                    : data.error === 'anonymous_user'
+                        ? Markup`<p>${sprintf(_t('Oh no! Please <a href="%s">sign in</a> to vote'), "/web/login")}</p>`
+                        : data.error;
+                this._displayAccessDeniedNotification(message);
             } else {
                 var $container = $btn.closest('.vote');
                 var $items = $container.children();
@@ -401,76 +407,99 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         });
     },
     /**
+     * Call the route to moderate/validate the post, then hide the validated post
+     * and decrement the count in the appropriate queue badge of the sidebar on success.
+     *
      * @private
      * @param {Event} ev
      */
-    _onValidationQueueClick: function (ev) {
+    _onValidationQueueClick: async function (ev) {
         ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        $link.parents('.post_to_validate').hide();
-        $.get($link.attr('href')).then(() => {
-            var left = $('.o_js_validation_queue:visible').length;
-            var type = $('h2.o_page_header a.active').data('type');
-            $('#count_post').text(left);
-            $('#moderation_tools a[href*="/' + type + '_"]').find('strong').text(left);
-            if (!left) {
-                this.$('.o_caught_up_alert').removeClass('d-none');
-            }
-        }, function () {
-            $link.parents('.o_js_validation_queue > div').addClass('bg-danger text-white').css('background-color', '#FAA');
-            $link.parents('.post_to_validate').show();
-        });
+        const approvalLink = ev.currentTarget;
+        const postBeingValidated = this._findParent(approvalLink, '.post_to_validate');
+        if (!postBeingValidated) {
+            return;
+        }
+        postBeingValidated.classList.add('d-none');
+        let ok;
+        try {
+            ok = (await fetch(approvalLink.href)).ok;
+        } catch {
+            // Calling the endpoint like this returns an HTML page. As we can't
+            // extract the error message from that, we disregard it and simply
+            // restore the post's visibility. This __should__ be improved.
+        }
+        if (!ok) {
+            postBeingValidated.classList.remove('d-none');
+            return;
+        }
+        const nbLeftInQueue = Array.from(document.querySelectorAll('.post_to_validate'))
+            .filter(e => window.getComputedStyle(e).display !== 'none')
+            .length;
+        const queueType = document.querySelector('#queue_type').dataset.queueType;
+        const queueCountBadge = document.querySelector(`#count_posts_queue_${queueType}`);
+        queueCountBadge.innerText = nbLeftInQueue;
+        if (!nbLeftInQueue) {
+            document.querySelector('.o_caught_up_alert').classList.remove('d-none');
+            queueCountBadge.classList.add('d-none');
+        }
+    },
+    _findParent: function (el, selector) {
+        while (el.parentElement && !el.matches(selector)) {
+            el = el.parentElement;
+        }
+        return el.matches(selector) ? el : null;
     },
     /**
      * @private
      * @param {Event} ev
      */
-    _onAcceptAnswerClick: function (ev) {
+    _onAcceptAnswerClick: async function (ev) {
         ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        var target = $link.data('target');
-
-        this._rpc({
-            route: $link.data('href'),
-        }).then(data => {
-            if (data.error) {
-                if (data.error === 'anonymous_user') {
-                    var message = _t("Sorry, anonymous users cannot choose correct answer.");
-                }
-                this.displayNotification({
-                    message: message,
-                    title: _t("Access Denied"),
-                    sticky: false,
-                    type: "warning",
-                });
-            } else {
-                this.$('.forum_answer').toArray().forEach((answer) => {
-                    var $answer = $(answer);
-                    var isCorrect = $answer.is(target) ? data : false;
-                    var $toggler = $answer.find('.o_wforum_validate_toggler');
-                    var newHelper = isCorrect ? $toggler.data('helper-decline') : $toggler.data('helper-accept');
-
-                    $answer.toggleClass('o_wforum_answer_correct', isCorrect);
-                    $toggler.tooltip('dispose')
-                            .attr('data-bs-original-title', newHelper)
-                            .tooltip({delay: 0});
-                });
-            }
-        });
+        const link = ev.currentTarget;
+        const target = link.dataset.target;
+        const data = await this._rpc({ route: link.dataset.href });
+        if (data.error) {
+            const message = data.error === 'anonymous_user'
+                ? _t('Sorry, anonymous users cannot choose correct answers.')
+                : data.error === 'own_post'
+                    ? _t('Sorry, you cannot vote for your own posts')
+                    : data.error;
+            this._displayAccessDeniedNotification(message);
+            return;
+        }
+        for (const answer of document.querySelectorAll('.o_wforum_answer')) {
+            const isCorrect = answer.matches(target) ? data : false;
+            const toggler = answer.querySelector('.o_wforum_validate_toggler');
+            toggler.setAttribute('data-bs-original-title', isCorrect ? toggler.dataset.helperDecline : toggler.dataset.helperAccept);
+            const styleForCorrect = isCorrect ? answer.classList.add : answer.classList.remove;
+            const styleForIncorrect = isCorrect ? answer.classList.remove : answer.classList.add;
+            styleForCorrect.call(answer.classList, 'o_wforum_answer_correct', 'my-2', 'mx-n3', 'mx-lg-n2', 'mx-xl-n3', 'py-3', 'px-3', 'px-lg-2', 'px-xl-3');
+            styleForIncorrect.call(toggler.classList, 'opacity-50');
+            const answerBorder = answer.querySelector('div .border-start');
+            styleForCorrect.call(answerBorder.classList, 'border-success');
+            const togglerIcon = toggler.querySelector('.fa');
+            styleForCorrect.call(togglerIcon.classList, 'fa-check-circle', 'text-success');
+            styleForIncorrect.call(togglerIcon.classList, 'fa-check-circle-o');
+            const correctBadge = answer.querySelector('.o_wforum_answer_correct_badge');
+            styleForCorrect.call(correctBadge.classList, 'd-inline');
+            styleForIncorrect.call(correctBadge.classList, 'd-none');
+        }
     },
     /**
      * @private
      * @param {Event} ev
      */
-    _onFavoriteQuestionClick: function (ev) {
+    _onFavoriteQuestionClick: async function (ev) {
         ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        this._rpc({
-            route: $link.data('href'),
-        }).then(function (data) {
-            $link.toggleClass('o_wforum_gold fa-star', data)
-                 .toggleClass('fa-star-o text-muted', !data);
-        });
+        const link = ev.currentTarget;
+        const data = await this._rpc({ route: link.dataset.href });
+        link.classList.toggle('opacity-50', !data);
+        link.classList.toggle('opacity-100-hover', !data);
+        const link_icon = link.querySelector('.fa');
+        link_icon.classList.toggle('fa-star-o', !data);
+        link_icon.classList.toggle('o_wforum_gold', data)
+        link_icon.classList.toggle('fa-star', data)
     },
     /**
      * @private
@@ -516,16 +545,16 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             method: currentTarget.dataset.action,
             args: [parseInt(currentTarget.dataset.postId)],
         });
-        currentTarget.parentElement.querySelectorAll('.flag_validator').forEach((element) => element.classList.toggle('d-none'));
+        this._findParent(currentTarget, '.o_wforum_flag_alert')?.classList.toggle('d-none');
         const flaggedButton = currentTarget.parentElement.firstElementChild,
             child = flaggedButton.firstElementChild,
-            countFlaggedPosts = this.el.querySelector('#count_flagged_posts'),
+            countFlaggedPosts = this.el.querySelector('#count_posts_queue_flagged'),
             count = parseInt(countFlaggedPosts.innerText, 10) - 1;
 
         flaggedButton.innerText = _t(' Flag');
         flaggedButton.prepend(child);
         if (count === 0) {
-            countFlaggedPosts.classList.add("bg-light");
+            countFlaggedPosts.classList.add('bg-light');
         }
         countFlaggedPosts.innerText = count;
     },
@@ -545,12 +574,20 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             renderFooter: false,
         }).open();
         dialog.opened().then(() => {
-            dialog.$(".btn-light:contains('Discard')").click((ev) => {
+            dialog.$(".btn-link:contains('Discard')").click((ev) => {
                 ev.preventDefault();
                 dialog.close();
             });
         });
     },
+    _displayAccessDeniedNotification(message) {
+        this.displayNotification({
+            message: message,
+            title: _t('Access Denied'),
+            sticky: false,
+            type: 'warning',
+        });
+    }
 });
 
 publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({

@@ -37,13 +37,6 @@ var ForumShare = publicWidget.registry.socialShare.extend({
     /**
      * @private
      */
-    _bindSocialEvent: function () {
-        this._super.apply(this, arguments);
-        $('.oe_share_bump').click($.proxy(this._postBump, this));
-    },
-    /**
-     * @private
-     */
     _render: function () {
         var $question = this.$('article.question');
         if (!this.targetType) {
@@ -59,17 +52,6 @@ var ForumShare = publicWidget.registry.socialShare.extend({
             $('#oe_social_share_modal').modal('show');
         }
     },
-    /**
-     * @private
-     */
-    _postBump: function () {
-        this._rpc({ // FIXME
-            route: '/forum/post/bump',
-            params: {
-                post_id: this.element.data('id'),
-            },
-        });
-    },
 });
 
 publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
@@ -84,11 +66,6 @@ publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
             var socialData = JSON.parse(sessionStorage.getItem('social_share'));
             (new ForumShare(this, false, socialData.targetType)).attachTo($(document.body));
             sessionStorage.removeItem('social_share');
-        }
-        // Display an alert if post has no reply and is older than 10 days
-        var $questionContainer = $('.oe_js_bump');
-        if ($questionContainer.length) {
-            new ForumShare(this, false, 'social-alert').attachTo($questionContainer);
         }
 
         return this._super.apply(this, arguments);

@@ -9,7 +9,7 @@
     wTourUtils.registerBackendAndFrontendTour("question", {
         url: '/forum/1',
     }, [{
-        trigger: ".o_forum_ask_btn",
+        trigger: ".o_wforum_ask_btn",
         position: "left",
         content: _t("Create a new post in this forum by clicking on the button."),
     }, {

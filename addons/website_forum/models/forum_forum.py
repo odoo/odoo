@@ -2,10 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import textwrap
+from collections import defaultdict
+from operator import itemgetter
+
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
-from odoo.tools.translate import html_translate
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.tools.translate import html_translate
+
+MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on frontend
 
 
 class Forum(models.Model):
@@ -18,28 +24,30 @@ class Forum(models.Model):
         'website.multi.mixin',
         'website.searchable.mixin',
     ]
-    _order = "sequence"
+    _order = "sequence, id"
 
+    @api.model
     def _get_default_welcome_message(self):
-        return """
-<section>
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="text-center">Welcome!</h1>
-                <p class="text-400 text-center">%(message_intro)s<br/>%(message_post)s</p>
-            </div>
-            <div class="col text-center mt-3">
-                <a href="#" class="js_close_intro btn btn-outline-light mr-2">%(hide_text)s</a>
-                <a class="btn btn-light forum_register_url" href="/web/login">%(register_text)s</a>
-            </div>
-        </div>
-    </div>
-</section>""" % {
-    'message_intro': _("This community is for professionals and enthusiasts of our products and services."),
-    'message_post': _("Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."),
-    'hide_text': _('Hide Intro'),
-    'register_text': _('Register')}
+        return Markup("""
+                <h1 style="text-align: center;clear-both"><font style="font-size: 62px; font-weight: bold;">%(message_intro)s</font></h1>
+                <div class="text-white">
+                    <p class="lead o_default_snippet_text" style="text-align: center;">%(message_post)s</p>
+                    <p style="text-align: center;">
+                        <a class="btn btn-primary forum_register_url" href="/web/login">%(register_text)s</a>
+                        <button type="button" class="btn btn-light js_close_intro" aria-label="Dismiss message">
+                            %(hide_text)s
+                        </button>
+                    </p>
+                </div>
+            """) % {
+            'message_intro': _("Welcome!"),
+            'message_post': _(
+                "Share and discuss the best content and new marketing ideas, build your professional profile and become"
+                " a better marketer together."
+            ),
+            'hide_text': _('Dismiss'),
+            'register_text': _('Sign up'),
+        }
 
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
@@ -69,17 +77,13 @@ class Forum(models.Model):
         sanitize_attributes=False, sanitize_form=False)
     default_order = fields.Selection([
         ('create_date desc', 'Newest'),
-        ('write_date desc', 'Last Updated'),
+        ('last_activity_date desc', 'Last Updated'),
         ('vote_count desc', 'Most Voted'),
         ('relevancy desc', 'Relevance'),
         ('child_count desc', 'Answered')],
-        string='Default', required=True, default='write_date desc')
+        string='Default', required=True, default='last_activity_date desc')
     relevancy_post_vote = fields.Float('First Relevance Parameter', default=0.8, help="This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation")
     relevancy_time_decay = fields.Float('Second Relevance Parameter', default=1.8)
-    allow_bump = fields.Boolean('Allow Bump', default=True,
-                                help='Check this box to display a popup for posts older than 10 days '
-                                     'without any given answer. The popup will offer to share it on social '
-                                     'networks. When shared, a question is bumped at the top of the forum.')
     allow_share = fields.Boolean('Sharing Options', default=True,
                                  help='After posting the user will be proposed to share its question '
                                       'or answer on social networks, enabling social network propagation '
@@ -131,6 +135,12 @@ class Forum(models.Model):
     karma_post = fields.Integer(string='Ask questions without validation', default=100)
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
     has_pending_post = fields.Boolean(string='Has pending post', compute='_compute_has_pending_post')
+    can_moderate = fields.Boolean(string="Is a moderator", compute="_compute_can_moderate")
+
+    # tags
+    tag_ids = fields.One2many('forum.tag', 'forum_id', string='Tags')
+    tag_most_used_ids = fields.One2many('forum.tag', string="Most used tags", compute='_compute_tag_ids_usage')
+    tag_unused_ids = fields.One2many('forum.tag', string="Unused tags", compute='_compute_tag_ids_usage')
 
     @api.depends_context('uid')
     def _compute_has_pending_post(self):
@@ -145,6 +155,41 @@ class Forum(models.Model):
         ])
         pending_forums.has_pending_post = True
         (self - pending_forums).has_pending_post = False
+
+    @api.depends_context('uid')
+    @api.depends('karma_moderate')
+    def _compute_can_moderate(self):
+        for forum in self:
+            forum.can_moderate = self.env.user.karma >= forum.karma_moderate
+
+    @api.depends('post_ids', 'post_ids.tag_ids', 'post_ids.tag_ids.posts_count', 'tag_ids')
+    def _compute_tag_ids_usage(self):
+        forums_without_tags = self.filtered(lambda f: not f.tag_ids)
+        forums_without_tags.tag_most_used_ids = forums_without_tags.tag_unused_ids = False
+        forums_with_tags = self - forums_without_tags
+        if not forums_with_tags:
+            return
+
+        tags_data = self.env['forum.tag'].search_read(
+            [('forum_id', 'in', forums_with_tags.ids)],
+            fields=['id', 'forum_id', 'posts_count'],
+            order='forum_id, posts_count DESC, name, id',
+        )
+        current_forum_id = tags_data[0]['forum_id'][0]
+        forum_tags = defaultdict(lambda: {'most_used_ids': [], 'unused_ids': []})
+
+        for tag_data in tags_data:
+            tag_id, tag_forum_id, posts_count = itemgetter('id', 'forum_id', 'posts_count')(tag_data)
+            if tag_forum_id[0] != current_forum_id:
+                current_forum_id = tag_forum_id[0]
+            if not posts_count:  # Could be 0 or None
+                forum_tags[current_forum_id]['unused_ids'].append(tag_id)
+            elif len(forum_tags[current_forum_id]['most_used_ids']) < MOST_USED_TAGS_COUNT:
+                forum_tags[current_forum_id]['most_used_ids'].append(tag_id)
+
+        for forum in forums_with_tags:
+            forum.tag_most_used_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['most_used_ids'])
+            forum.tag_unused_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['unused_ids'])
 
     @api.depends('description')
     def _compute_teaser(self):
@@ -266,10 +311,13 @@ class Forum(models.Model):
         post_tags.insert(0, [6, 0, existing_keep])
         return post_tags
 
-    def get_tags_first_char(self):
-        """ get set of first letter of forum tags """
-        tags = self.env['forum.tag'].search([('forum_id', '=', self.id), ('posts_count', '>', 0)])
-        return sorted(set([tag.name[0].upper() for tag in tags if len(tag.name)]))
+    def _get_tags_first_char(self, tags=None):
+        """Get set of first letter of forum tags.
+
+        :param tags: tags recordset to further filter forum's tags that are also in these tags.
+        """
+        tag_ids = self.tag_ids if tags is None else (self.tag_ids & tags)
+        return sorted({tag.name[0].upper() for tag in tag_ids if len(tag.name)})
 
     # ----------------------------------------------------------------------
     # WEBSITE
