@@ -150,6 +150,13 @@ export class DiscussCoreCommon {
                     seenInfo.lastSeenMessage = { id: last_message_id };
                 }
             });
+            this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
+                if (message.originThread) {
+                    if (message.id > message.originThread.seen_message_id) {
+                        message.originThread.message_unread_counter--;
+                    }
+                }
+            });
             this.busService.subscribe("mail.record/insert", (payload) => {
                 if (payload.Channel) {
                     this.threadService.insert({
