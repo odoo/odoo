@@ -14,3 +14,12 @@ class ResCurrency(models.Model):
             group_user = self.env.ref('base.group_user').sudo()
             group_user._apply_group(self.env.ref('product.group_product_pricelist'))
             self.env['res.company']._activate_or_create_pricelists()
+
+    def write(self, vals):
+        """ Archive pricelist when the linked currency is archived. """
+        res = super().write(vals)
+
+        if self and 'active' in vals and not vals['active']:
+            self.env['product.pricelist'].search([('currency_id', 'in', self.ids)]).action_archive()
+
+        return res
