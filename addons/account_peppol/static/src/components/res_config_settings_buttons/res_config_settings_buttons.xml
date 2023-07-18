@@ -3,7 +3,7 @@
 <templates>
     <t t-name="account_peppol.ActionButtons" owl="1">
         <xpath expr="//div[hasclass('action_buttons')]" position="inside">
-            <div class="d-flex" colspan="2">
+            <div class="d-flex" colspan="3">
                 <div class="mt-3">
                     <button type="button"
                             class="btn btn-primary"
@@ -15,9 +15,17 @@
                 <div class="mt-3">
                     <button type="button"
                             class="btn btn-secondary me-1"
-                            t-on-click="showConfirmation"
+                            t-on-click="migrate"
                             t-if="proxyState === 'active'">
                             Migrate registration to another service
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-secondary me-1"
+                            t-on-click="deregister"
+                            t-if="proxyState === 'active'">
+                            Deregister from Peppol
                     </button>
                 </div>
                 <div class="mt-3">
