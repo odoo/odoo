@@ -10,7 +10,10 @@ patch(MessagingMenu.prototype, "im_livechat", {
      */
     tabToThreadType(tab) {
         const threadTypes = this._super(tab);
-        if (tab === "chat") {
+        if (tab === "chat" && !this.store.isSmall) {
+            threadTypes.push("livechat");
+        }
+        if (tab === "livechat") {
             threadTypes.push("livechat");
         }
         return threadTypes;
