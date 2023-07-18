@@ -41,7 +41,8 @@ class User(models.Model):
             self.sudo().google_calendar_account_id._refresh_google_calendar_token()
         return self.google_calendar_account_id.calendar_token
 
-    def _sync_google_calendar(self, calendar_service: GoogleCalendarService):
+    def _sync_google_calendar(self, calendar_service: GoogleCalendarService, eventId=None):
+        """ Sync the whole user calendar. Pass an eventId to only sync a specific event. """
         self.ensure_one()
         if self.google_synchronization_stopped:
             return False
@@ -56,11 +57,15 @@ class User(models.Model):
         full_sync = not bool(self.google_calendar_sync_token)
         with google_calendar_token(self) as token:
             try:
-                events, next_sync_token, default_reminders = calendar_service.get_events(self.google_calendar_account_id.calendar_sync_token, token=token)
+                if eventId:
+                    events, next_sync_token, default_reminders = calendar_service.get_event(eventId, self.google_calendar_account_id.calendar_sync_token, token=token)
+                else:
+                    events, next_sync_token, default_reminders = calendar_service.get_events(self.google_calendar_account_id.calendar_sync_token, token=token)
             except InvalidSyncToken:
                 events, next_sync_token, default_reminders = calendar_service.get_events(token=token)
                 full_sync = True
-        self.google_calendar_account_id.calendar_sync_token = next_sync_token
+        if next_sync_token:
+            self.google_calendar_account_id.calendar_sync_token = next_sync_token
 
         # Google -> Odoo
         send_updates = not full_sync
