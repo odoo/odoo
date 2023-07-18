@@ -4,13 +4,12 @@
 import logging
 import math
 import re
-
 from datetime import datetime
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import sql
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 
 _logger = logging.getLogger(__name__)
 
@@ -23,7 +22,7 @@ class Post(models.Model):
         'website.seo.metadata',
         'website.searchable.mixin',
     ]
-    _order = "is_correct DESC, vote_count DESC, write_date DESC"
+    _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
 
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
@@ -48,10 +47,11 @@ class Post(models.Model):
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
     create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
     write_date = fields.Datetime('Updated on', index=True, readonly=True)
-    bump_date = fields.Datetime('Bumped on', readonly=True,
-                                help="Technical field allowing to bump a question. Writing on this field will trigger "
-                                     "a write on write_date and therefore bump the post. Directly writing on write_date "
-                                     "is currently not supported and this field is a workaround.")
+    last_activity_date = fields.Datetime(
+        'Last activity on', readonly=True, required=True, default=fields.Datetime.now,
+        help="Field to keep track of a post's last activity. Updated whenever it is replied to, "
+             "or when a comment is added on the post or one of its replies."
+    )
     write_uid = fields.Many2one('res.users', string='Updated by', index=True, readonly=True)
     relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
 
@@ -271,8 +271,7 @@ class Post(models.Model):
             raise ValueError('Invalid operator: %s' % (operator,))
 
         if not value:
-            operator = operator == "=" and '!=' or '='
-            value = True
+            operator = '!=' if operator == '=' else '='
 
         user = self.env.user
         # Won't impact sitemap, search() in converter is forced as public user
@@ -293,7 +292,7 @@ class Post(models.Model):
                 )
         """
 
-        op = operator == "=" and "inselect" or "not inselect"
+        op = 'inselect' if operator == '=' else "not inselect"
 
         # don't use param named because orm will add other param (test_active, ...)
         return [('id', op, (req, (user.id, user.karma, user.id, user.karma, user.id)))]
@@ -602,15 +601,6 @@ class Post(models.Model):
         _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
         return spams.mark_as_offensive(reason_id)
 
-    def bump(self):
-        """ Bump a question: trigger a write_date by writing on a dummy bump_date
-        field. One cannot bump a question more than once every 10 days. """
-        self.ensure_one()
-        if self.forum_id.allow_bump and not self.child_ids and (datetime.today() - datetime.strptime(self.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9:
-            # write through super to bypass karma; sudo to allow public user to bump any post
-            return self.sudo().write({'bump_date': fields.Datetime.now()})
-        return False
-
     def vote(self, upvote=True):
         self.ensure_one()
         Vote = self.env['forum.post.vote']
@@ -658,18 +648,18 @@ class Post(models.Model):
         return new_message
 
     @api.model
-    def convert_comment_to_answer(self, message_id, default=None):
+    def convert_comment_to_answer(self, message_id):
         """ Tool to convert a comment (mail.message) into an answer (forum.post).
         The original comment is unlinked and a new answer from the comment's author
         is created. Nothing is done if the comment's author already answered the
         question. """
-        comment = self.env['mail.message'].sudo().browse(message_id)
-        post = self.browse(comment.res_id)
-        if not comment.author_id or not comment.author_id.user_ids:  # only comment posted by users can be converted
+        comment_sudo = self.env['mail.message'].sudo().browse(message_id)
+        post = self.browse(comment_sudo.res_id)
+        if not comment_sudo.author_id or not comment_sudo.author_id.user_ids:  # only comment posted by users can be converted
             return False
 
         # karma-based action check: must check the message's author to know if own / all
-        is_author = comment.author_id.id == self.env.user.partner_id.id
+        is_author = comment_sudo.author_id.id == self.env.user.partner_id.id
         karma_own = post.forum_id.karma_comment_convert_own
         karma_all = post.forum_id.karma_comment_convert_all
         karma_convert = is_author and karma_own or karma_all
@@ -682,14 +672,14 @@ class Post(models.Model):
 
         # check the message's author has not already an answer
         question = post.parent_id if post.parent_id else post
-        post_create_uid = comment.author_id.user_ids[0]
+        post_create_uid = comment_sudo.author_id.user_ids[0]
         if any(answer.create_uid.id == post_create_uid.id for answer in question.child_ids):
             return False
 
         # create the new post
         post_values = {
             'forum_id': question.forum_id.id,
-            'content': comment.body,
+            'content': comment_sudo.body,
             'parent_id': question.id,
             'name': _('Re: %s') % (question.name or ''),
         }
@@ -697,32 +687,39 @@ class Post(models.Model):
         new_post = self.with_user(post_create_uid).sudo().create(post_values).sudo(False)
 
         # delete comment
-        comment.unlink()
+        comment_sudo.unlink()
 
         return new_post
 
     def unlink_comment(self, message_id):
+        comment_sudo = self.env['mail.message'].sudo().browse(message_id)
+        if comment_sudo.model != 'forum.post':
+            return [False] * len(self)
+
+        user_karma = self.env.user.karma
         result = []
         for post in self:
-            user = self.env.user
-            comment = self.env['mail.message'].sudo().browse(message_id)
-            if not comment.model == 'forum.post' or not comment.res_id == post.id:
+            if comment_sudo.res_id != post.id:
                 result.append(False)
                 continue
             # karma-based action check: must check the message's author to know if own or all
-            karma_unlink = (
-                comment.author_id.id == user.partner_id.id and
-                post.forum_id.karma_comment_unlink_own or post.forum_id.karma_comment_unlink_all
+            karma_required = (
+                post.forum_id.karma_comment_unlink_own
+                if comment_sudo.author_id.id == self.env.user.partner_id.id
+                else post.forum_id.karma_comment_unlink_all
             )
-            can_unlink = user.karma >= karma_unlink
-            if not can_unlink:
-                raise AccessError(_('%d karma required to unlink a comment.', karma_unlink))
-            result.append(comment.unlink())
+            if user_karma < karma_required:
+                raise AccessError(_('%d karma required to delete a comment.', karma_required))
+            result.append(comment_sudo.unlink())
         return result
 
     def _set_viewed(self):
         self.ensure_one()
         return sql.increment_fields_skiplock(self, 'views')
+
+    def _update_last_activity(self):
+        self.ensure_one()
+        return self.sudo().write({'last_activity_date': fields.Datetime.now()})
 
     # ----------------------------------------------------------------------
     # MESSAGING
