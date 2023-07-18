@@ -58,7 +58,7 @@ QUnit.test('discuss should be marked as closed when the component is unmounted',
     const { messaging, openDiscuss, webClient } = await start();
     await openDiscuss();
 
-    await afterNextRender(() => destroy(webClient));
+    destroy(webClient);
     assert.notOk(
         messaging.discuss.discussView,
         "discuss should be marked as closed when the component is unmounted"
