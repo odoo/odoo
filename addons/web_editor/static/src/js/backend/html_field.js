@@ -404,8 +404,8 @@ export class HtmlField extends Component {
         }
     }
     _isDirty() {
-        const strippedPropValue = stripHistoryIds(String(this.props.value));
-        const strippedEditingValue = stripHistoryIds(this.getEditingValue());
+        const strippedPropValue = normalizeHtml(String(this.props.value));
+        const strippedEditingValue = normalizeHtml(this.getEditingValue());
         return !this.props.readonly && (strippedPropValue || '<p><br></p>') !== strippedEditingValue;
     }
     _getCodeViewEl() {
@@ -733,6 +733,23 @@ registry.category("fields").add("html", HtmlField, { force: true });
 
 function stripHistoryIds(value) {
     return value && value.replace(/\sdata-last-history-steps="[^"]*?"/, '') || value;
+}
+/**
+ * Ensure the html content is normalized.
+ *
+ * This is used to avoid false positive during isDirty check.
+ *
+ * @param {string} htmlValue html content
+ * @returns {string} html content
+ */
+function normalizeHtml(htmlValue) {
+    if (!htmlValue) {
+        return htmlValue;
+    }
+    // Transform <br /> to <br>
+    htmlValue = htmlValue.replace(/<br\s?\/>/g, '<br>');
+    // Remove history ids from the html 
+    return stripHistoryIds(htmlValue);
 }
 
 // Ensure all links are opened in a new tab.
