@@ -19,7 +19,13 @@ patch(PosGlobalState.prototype, "l10n_fr_pos_cert.PosGlobalState", {
         return french_countries.includes(this.company.country?.code);
     },
     disallowLineQuantityChange() {
-        const result = this._super(...arguments);
+        let result = this._super(...arguments);
+        let selectedOrderLine = this.selectedOrder.get_selected_orderline();
+        //Note: is_reward_line is a field in the pos_loyalty module
+        if (selectedOrderLine.is_reward_line) {
+            //Always allow quantity change for reward lines
+            return false || result;
+        }
         return this.is_french_country() || result;
     },
 });
