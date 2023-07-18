@@ -2487,15 +2487,16 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
         this.menuEl.classList.add('o_we_has_pager', 'position-fixed', 'top-0', 'end-0', 'z-index-1', 'rounded-0');
         this.menuTogglerEl.classList.add('o_we_toggler_pager');
 
+        this.pagerContainerEl = this.el.querySelector('.o_pager_container');
         this.__onScroll = throttleForAnimation(this._onScroll.bind(this));
-        this.el.querySelector('.o_pager_container').addEventListener('scroll', this.__onScroll);
+        this.pagerContainerEl.addEventListener('scroll', this.__onScroll);
     },
     /**
      * @override
      */
     destroy() {
         this._super(...arguments);
-        this.el.querySelector('.o_pager_container').removeEventListener('scroll', this.__onScroll);
+        this.pagerContainerEl.removeEventListener('scroll', this.__onScroll);
     },
 
     //--------------------------------------------------------------------------
@@ -2523,9 +2524,8 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
         const attribute = navButtonEl.dataset.scrollTo;
         const destinationOffset = this.menuEl.querySelector('.' + attribute).offsetTop;
 
-        const pagerContainerEl = this.menuEl.querySelector('.o_pager_container');
         const pagerNavEl = this.menuEl.querySelector('.o_pager_nav');
-        pagerContainerEl.scrollTop = destinationOffset - pagerNavEl.offsetHeight;
+        this.pagerContainerEl.scrollTop = destinationOffset - pagerNavEl.offsetHeight;
     },
     /**
      * @private
@@ -2537,12 +2537,11 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
      * @private
      */
     _onScroll(ev) {
-        const pagerContainerEl = ev.currentTarget;
-        const pagerContainerHeight = pagerContainerEl.getBoundingClientRect().height;
+        const pagerContainerHeight = this.pagerContainerEl.getBoundingClientRect().height;
         // The threshold for when a menu element is defined as 'active' is half
         // of the container's height. This has a drawback as if a section
         // is too small it might never get `active` if it's the last section.
-        const threshold = pagerContainerEl.scrollTop + (pagerContainerHeight / 2);
+        const threshold = this.pagerContainerEl.scrollTop + (pagerContainerHeight / 2);
         const anchorElements = this.menuEl.querySelectorAll('[data-scroll-to]');
         for (const anchorEl of anchorElements) {
             const destination = anchorEl.getAttribute('data-scroll-to');
