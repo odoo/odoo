@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
+
 import { markup, reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
@@ -7,6 +9,7 @@ import { registry } from "@web/core/registry";
 export class MailCoreWeb {
     constructor(env, services) {
         Object.assign(this, {
+            env,
             busService: services.bus_service,
             rpc: services.rpc,
         });
@@ -41,6 +44,30 @@ export class MailCoreWeb {
                 }
                 if (payload.activity_deleted) {
                     this.store.activityCounter--;
+                }
+            });
+            this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
+                if (message.isNeedaction) {
+                    removeFromArrayWithPredicate(
+                        this.store.discuss.inbox.messages,
+                        ({ id }) => id === message.id
+                    );
+                    this.store.discuss.inbox.counter--;
+                }
+                if (message.isStarred) {
+                    removeFromArrayWithPredicate(
+                        this.store.discuss.starred.messages,
+                        ({ id }) => id === message.id
+                    );
+                    this.store.discuss.starred.counter--;
+                }
+                if (message.originThread) {
+                    if (message.isNeedaction) {
+                        removeFromArrayWithPredicate(
+                            message.originThread.needactionMessages,
+                            ({ id }) => id === message.id
+                        );
+                    }
                 }
             });
             this.busService.subscribe("mail.message/inbox", (payload) => {
