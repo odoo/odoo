@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
-import re
 from werkzeug.exceptions import NotFound
 
 from odoo import http, tools, _
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.http import request
-from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.tools import html_sanitize
 
 
 class LivechatController(http.Controller):
@@ -169,7 +169,8 @@ class LivechatController(http.Controller):
         )
 
     def _post_feedback_message(self, channel, rating, reason):
-        reason = Markup("<br>" + re.sub(r'\r\n|\r|\n', "<br>", reason) if reason else "")
+        if reason:
+            reason = Markup('<br>%s') % html_sanitize(nl2br(reason))
         body = Markup('''
             <div class="o_mail_notification o_hide_author">
                 %(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s
@@ -177,7 +178,7 @@ class LivechatController(http.Controller):
         ''') % {
             'rating': _('Rating'),
             'rating_url': rating.rating_image_url,
-            'reason': reason,
+            'reason': reason or '',
         }
         channel.message_post(body=body, message_type='notification', subtype_xmlid='mail.mt_comment')
 
@@ -267,7 +268,7 @@ class LivechatController(http.Controller):
             author_id = False
             email_from = channel.anonymous_name or channel.create_uid.company_id.catchall_formatted
         # post a message without adding followers to the channel. email_from=False avoid to get author from email data
-        body = Markup(message_content) # contains html such as links.
+        body = html_sanitize(message_content) # contains html such as links.
         message = channel.with_context(mail_create_nosubscribe=True).message_post(
             author_id=author_id,
             email_from=email_from,
