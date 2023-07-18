@@ -24,7 +24,7 @@
                 <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bolder' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
             </t>
         </div>
-        <div t-if="!env.inDiscussApp or ['chat', 'channel'].includes(store.discuss.activeTab)" class="list-group-flush d-flex flex-column overflow-auto flex-grow-1">
+        <div t-if="!env.inDiscussApp or !['all', 'mailbox'].includes(store.discuss.activeTab)" class="list-group-flush d-flex flex-column overflow-auto flex-grow-1">
             <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="!hasPreviews">
                 No conversation yet...
             </div>
