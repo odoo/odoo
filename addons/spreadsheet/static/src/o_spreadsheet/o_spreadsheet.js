@@ -37268,6 +37268,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sortedIndexOfSortTypeCells = sortCells(sortingCells, sortDirection, Boolean(options.emptyCellAsZero));
             const sortedIndex = sortedIndexOfSortTypeCells.map((x) => x.index);
             const [width, height] = [cells.length, cells[0].length];
+            const cellUpdates = [];
             for (let c = 0; c < width; c++) {
                 for (let r = 0; r < height; r++) {
                     let cell = cells[c][sortedIndex[r]];
@@ -37294,9 +37295,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         newCellValues.format = cell.format;
                         newCellValues.value = cell.evaluated.value;
                     }
-                    this.dispatch("UPDATE_CELL", newCellValues);
+                    cellUpdates.push(newCellValues);
                 }
             }
+            cellUpdates.forEach(value => this.dispatch("UPDATE_CELL", value));
         }
         /**
          * Return the distances between main merge cells in the zone.
