@@ -61,18 +61,15 @@ class PosOrder(models.Model):
         self.send_table_count_notification(tables)
         return order_ids
 
-    @api.model
-    def create_from_ui(self, orders, draft=False):
-        orders = super().create_from_ui(orders, draft)
-        order_ids = self.env['pos.order'].browse([order['id'] for order in orders])
-        self.send_table_count_notification(order_ids.table_id)
-        return orders
+    def _process_saved_order(self, draft):
+        order_id = super()._process_saved_order(draft)
+        self.send_table_count_notification(self.table_id)
+        return order_id
 
     def send_table_count_notification(self, table_ids):
         messages = []
         for config in self.env['pos.config'].search([('floor_ids', 'in', table_ids.floor_id.ids)]):
             config_cur_session = config.current_session_id
-
             if config_cur_session:
                 order_count = config.get_tables_order_count_and_printing_changes()
                 messages.append((config_cur_session._get_bus_channel_name(), 'TABLE_ORDER_COUNT', order_count))

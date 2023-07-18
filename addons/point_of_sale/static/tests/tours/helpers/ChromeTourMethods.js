@@ -27,7 +27,25 @@ class Do {
             {
                 content: "Click on the menu button",
                 trigger: ".menu-button",
-            }
+            },
+        ];
+    }
+    closeSession() {
+        return [
+            ...this.clickMenuButton(),
+            {
+                content: "click on the close session menu button",
+                trigger: ".close-button",
+            },
+            {
+                content: "click on the close session popup button",
+                trigger: ".close-pos-popup .footer .button.highlight",
+            },
+            {
+                content: "check that the session is closed without error",
+                trigger: ".o_web_client",
+                isCheck: true,
+            },
         ];
     }
 }

@@ -25,7 +25,6 @@ PaymentScreen.check.validateButtonIsHighlighted(false);
 PaymentScreen.do.pressNumpad("Backspace Backspace");
 PaymentScreen.do.fillPaymentLineAmountMobile("Cash", "0");
 PaymentScreen.check.selectedPaymentlineHas("Cash", "0.00");
-PaymentScreen.do.pressNumpad("Backspace");
 PaymentScreen.do.clickPaymentlineDelButton("Cash", "0", true);
 PaymentScreen.check.emptyPaymentlines("52.8");
 
@@ -190,16 +189,16 @@ Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 
-ProductScreen.exec.addOrderline('Product Test 1.2', '1');
+ProductScreen.exec.addOrderline("Product Test 1.2", "1");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('1.00');
-PaymentScreen.do.clickPaymentMethod('Cash');
-PaymentScreen.do.pressNumpad('2');
-PaymentScreen.do.fillPaymentLineAmountMobile('Cash', '2');
+PaymentScreen.check.totalIs("1.00");
+PaymentScreen.do.clickPaymentMethod("Cash");
+PaymentScreen.do.pressNumpad("2");
+PaymentScreen.do.fillPaymentLineAmountMobile("Cash", "2");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('1.0');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("1.0");
 
 registry
     .category("web_tour.tours")
@@ -209,20 +208,20 @@ startSteps();
 
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
-ProductScreen.exec.addOrderline('Product Test 40', '1');
+ProductScreen.exec.addOrderline("Product Test 40", "1");
 ProductScreen.do.clickPartnerButton();
-ProductScreen.do.clickCustomer('Nicole Ford');
+ProductScreen.do.clickCustomer("Nicole Ford");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('40.00');
-PaymentScreen.do.clickPaymentMethod('Bank');
-PaymentScreen.do.pressNumpad('3 8');
-PaymentScreen.do.fillPaymentLineAmountMobile('Bank', '38');
-PaymentScreen.check.remainingIs('2.0');
-PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.check.totalIs("40.00");
+PaymentScreen.do.clickPaymentMethod("Bank");
+PaymentScreen.do.pressNumpad("3 8");
+PaymentScreen.do.fillPaymentLineAmountMobile("Bank", "38");
+PaymentScreen.check.remainingIs("2.0");
+PaymentScreen.do.clickPaymentMethod("Cash");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('0.0');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("0.0");
 
 PaymentScreen.do.clickInvoiceButton();
 PaymentScreen.do.clickValidate();
@@ -230,29 +229,30 @@ ReceiptScreen.check.receiptIsThere();
 ReceiptScreen.do.clickNextOrder();
 
 ProductScreen.do.clickHomeCategory();
-ProductScreen.exec.addOrderline('Product Test 41', '1');
+ProductScreen.exec.addOrderline("Product Test 41", "1");
 ProductScreen.do.clickPartnerButton();
-ProductScreen.do.clickCustomer('Nicole Ford');
+ProductScreen.do.clickCustomer("Nicole Ford");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('41.00');
-PaymentScreen.do.clickPaymentMethod('Bank');
-PaymentScreen.do.pressNumpad('3 8');
-PaymentScreen.do.fillPaymentLineAmountMobile('Bank', '38');
-PaymentScreen.check.remainingIs('3.0');
-PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.check.totalIs("41.00");
+PaymentScreen.do.clickPaymentMethod("Bank");
+PaymentScreen.do.pressNumpad("3 8");
+PaymentScreen.do.fillPaymentLineAmountMobile("Bank", "38");
+PaymentScreen.check.remainingIs("3.0");
+PaymentScreen.do.clickPaymentMethod("Cash");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('0.0');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("0.0");
 
 PaymentScreen.do.clickInvoiceButton();
 PaymentScreen.do.clickValidate();
 ReceiptScreen.check.receiptIsThere();
 
-
-registry
-    .category("web_tour.tours")
-    .add("PaymentScreenRoundingHalfUpCashAndBank", { test: true, url: "/pos/ui", steps: getSteps() });
+registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUpCashAndBank", {
+    test: true,
+    url: "/pos/ui",
+    steps: getSteps(),
+});
 
 startSteps();
 

@@ -54,7 +54,7 @@
 
             <!-- Orderlines -->
             <div class="pos-customer_products" name="Products list">
-                <t t-call="point_of_sale.CustomerFacingDisplayOrderLines" />
+                <t t-call="point_of_sale.CustomerFacingDisplayMainContainer" />
             </div>
 
             <div class="pos-payment_info" t-attf-style="background-image: #{backgroundImageCSSValue};">
@@ -87,71 +87,11 @@
         </div>
     </t>
 
-    <t t-name="point_of_sale.CustomerFacingDisplayOrderLines" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayMainContainer" owl="1">
         <div class="pos_orderlines">
             <t t-if="order">
                 <t t-if="order.get_current_screen_data().name != 'ReceiptScreen'">
-                    <t t-if="order.get_orderlines().length > 0">
-                        <div class="pos-order_top_bar">
-                            <span>Your Order</span>
-                        </div>
-                        <div class="pos_orderlines_list" t-att-class="{ 'backend_product_screen': order.get_current_screen_data().name === 'ProductScreen' }">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th colspan="2" class="pos-product-th">
-                                            <span>Product</span>
-                                        </th>
-                                        <th>Quantity</th>
-                                        <th>Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr t-foreach="order.get_orderlines()" t-key="orderline.id" t-as="orderline" class="pos_orderlines_item" t-att-class="{ 'selected_orderline': orderline.id === order.get_selected_orderline().id }">
-                                        <td class="product_img">
-                                            <img t-attf-src="#{productImages[orderline.product.id]}" />
-                                        </td>
-                                        <td class="product_text_info">
-                                            <ul>
-                                                <li t-esc="orderline.get_full_product_name()" />
-                                                <t t-if="orderline.get_discount_str() !== '0'">
-                                                    <li class="product_details">
-                                                        <i class="fa fa-tag" role="img" aria-label="Discount" title="Discount" />
-                                                        <t t-esc="orderline.get_discount_str()" />% <span class="gray">discount</span>
-                                                    </li>
-                                                </t>
-                                                <t t-if="orderline.get_customer_note()">
-                                                    <li class="product_details">
-                                                        <i class="fa fa-sticky-note" role="img" aria-label="Customer Note" title="Customer Note" />
-                                                        <span class="gray" t-esc="orderline.get_customer_note()" />
-                                                    </li>
-                                                </t>
-                                            </ul>
-                                        </td>
-                                        <td class="product_quantity gray">
-                                            <span t-esc="orderline.get_quantity_str()" />
-                                            <span t-esc="orderline.get_unit().name" />
-                                        </td>
-                                        <td>
-                                            <div t-esc="pos.env.utils.formatCurrency(orderline.get_display_price())" />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <script type="text/javascript">
-                            document.addEventListener("DOMContentLoaded", function() {
-                                fixScrollingIfNecessary();
-                            });
-                        </script>
-                    </t>
-                    <t t-else="">
-                        <div class="order-empty">
-                            <i class="fa fa-shopping-cart" role="img" aria-label="Shopping cart"
-                                title="Shopping cart" />
-                            <h1>This order is empty</h1>
-                        </div>
-                    </t>
+                    <t t-call="point_of_sale.CustomerFacingDisplayOrderLines"/>
                 </t>
                 <t t-else="">
                     <div class="pos-thank-you-message">
@@ -160,6 +100,70 @@
                 </t>
             </t>
         </div>
+    </t>
+
+    <t t-name="point_of_sale.CustomerFacingDisplayOrderLines" owl="1">
+        <t t-if="order.get_orderlines().length > 0">
+            <div class="pos-order_top_bar">
+                <span>Your Order</span>
+            </div>
+            <div class="pos_orderlines_list" t-att-class="{ 'backend_product_screen': order.get_current_screen_data().name === 'ProductScreen' }">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="pos-product-th">
+                                <span>Product</span>
+                            </th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="order.get_orderlines()" t-key="orderline.id" t-as="orderline" class="pos_orderlines_item" t-att-class="{ 'selected_orderline': orderline.id === order.get_selected_orderline().id }">
+                            <td class="product_img">
+                                <img t-attf-src="#{productImages[orderline.product.id]}" />
+                            </td>
+                            <td class="product_text_info">
+                                <ul>
+                                    <li t-esc="orderline.get_full_product_name()" />
+                                    <t t-if="orderline.get_discount_str() !== '0'">
+                                        <li class="product_details">
+                                            <i class="fa fa-tag" role="img" aria-label="Discount" title="Discount" />
+                                        <t t-esc="orderline.get_discount_str()" />% <span class="gray">discount</span>
+                                        </li>
+                                    </t>
+                                    <t t-if="orderline.get_customer_note()">
+                                        <li class="product_details">
+                                            <i class="fa fa-sticky-note" role="img" aria-label="Customer Note" title="Customer Note" />
+                                            <span class="gray" t-esc="orderline.get_customer_note()" />
+                                        </li>
+                                    </t>
+                                </ul>
+                            </td>
+                            <td class="product_quantity gray">
+                                <span t-esc="orderline.get_quantity_str()" />
+                                <span t-esc="orderline.get_unit().name" />
+                            </td>
+                            <td>
+                                <div t-esc="pos.env.utils.formatCurrency(orderline.get_display_price())" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <script type="text/javascript">
+                document.addEventListener("DOMContentLoaded", function() {
+                fixScrollingIfNecessary();
+                });
+            </script>
+        </t>
+        <t t-else="">
+            <div class="order-empty">
+                <i class="fa fa-shopping-cart" role="img" aria-label="Shopping cart"
+                    title="Shopping cart" />
+                <h1>This order is empty</h1>
+            </div>
+        </t>
     </t>
 
     <t t-name="point_of_sale.CustomerFacingDisplayPaymentLines" owl="1">
