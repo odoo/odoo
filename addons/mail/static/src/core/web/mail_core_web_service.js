@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
+import { removeFromArray, removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 
 import { markup, reactive } from "@odoo/owl";
 
@@ -82,6 +82,44 @@ export class MailCoreWeb {
                 if (!thread.needactionMessages.includes(message)) {
                     thread.needactionMessages.push(message);
                     thread.message_needaction_counter++;
+                }
+            });
+            this.busService.subscribe("mail.message/mark_as_read", (payload) => {
+                const { message_ids: messageIds, needaction_inbox_counter } = payload;
+                const inbox = this.store.discuss.inbox;
+                for (const messageId of messageIds) {
+                    // We need to ignore all not yet known messages because we don't want them
+                    // to be shown partially as they would be linked directly to cache.
+                    // Furthermore, server should not send back all messageIds marked as read
+                    // but something like last read messageId or something like that.
+                    // (just imagine you mark 1000 messages as read ... )
+                    const message = this.store.messages[messageId];
+                    if (!message) {
+                        continue;
+                    }
+                    // update thread counter (before removing message from Inbox, to ensure isNeedaction check is correct)
+                    const originThread = message.originThread;
+                    if (originThread && message.isNeedaction) {
+                        originThread.message_needaction_counter--;
+                        removeFromArrayWithPredicate(
+                            originThread.needactionMessages,
+                            ({ id }) => id === messageId
+                        );
+                    }
+                    // move messages from Inbox to history
+                    const partnerIndex = message.needaction_partner_ids.find(
+                        (p) => p === this.store.user?.id
+                    );
+                    removeFromArray(message.needaction_partner_ids, partnerIndex);
+                    removeFromArrayWithPredicate(inbox.messages, ({ id }) => id === messageId);
+                    const history = this.store.discuss.history;
+                    if (!history.messages.includes(message)) {
+                        history.messages.push(message);
+                    }
+                }
+                inbox.counter = needaction_inbox_counter;
+                if (inbox.counter > inbox.messages.length) {
+                    this.threadService.fetchMoreMessages(inbox);
                 }
             });
         });
