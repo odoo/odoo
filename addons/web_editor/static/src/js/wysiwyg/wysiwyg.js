@@ -22,6 +22,7 @@ import weWidgets from "wysiwyg.widgets";
 import Link from "wysiwyg.widgets.Link";
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
 import weUtils from "web_editor.utils";
+import { isSelectionInSelectors } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { PeerToPeer } from "@web_editor/js/wysiwyg/PeerToPeer";
 import { uniqueId } from "@web/core/utils/functions";
 import { groupBy } from "@web/core/utils/arrays";
@@ -109,7 +110,6 @@ const Wysiwyg = Widget.extend({
         this._signalOnline = this._signalOnline.bind(this);
         this.tooltipTimeouts = [];
         Wysiwyg.activeWysiwygs.add(this);
-        this._oNotEditableObservers = new Map();
         this._joinPeerToPeer = this._joinPeerToPeer.bind(this);
     },
     /**
@@ -178,7 +178,7 @@ const Wysiwyg = Widget.extend({
             document: this.options.document,
             autohideToolbar: !!this.options.autohideToolbar,
             isRootEditable: this.options.isRootEditable,
-            onPostSanitize: this._setONotEditable.bind(this),
+            onPostSanitize: this._onPostSanitize.bind(this),
             placeholder: this.options.placeholder,
             powerboxFilters: this.options.powerboxFilters || [],
             showEmptyElementHint: this.options.showEmptyElementHint,
@@ -409,12 +409,12 @@ const Wysiwyg = Widget.extend({
         this.setCSSVariables(this.snippetsMenu ? this.snippetsMenu.el : this.toolbar.el);
 
         this.odooEditor.addEventListener('preObserverActive', () => {
-            // The setONotEditable will be called right after the
+            // The onPostSanitize will be called right after the
             // editor sanitization (to be right before the historyStep).
             // If any `.o_not_editable` is created while the observer is
-            // unactive, now is the time to call `setONotEditable` before the
+            // unactive, now is the time to call `onPostSanitize` before the
             // editor could register a mutation.
-            this._setONotEditable(this.odooEditor.editable);
+            this._onPostSanitize(this.odooEditor.editable);
         });
 
         if (this.options.autohideToolbar) {
@@ -716,9 +716,6 @@ const Wysiwyg = Widget.extend({
             this.odooEditor.document.removeEventListener("keydown", this._signalOnline, true);
             this.odooEditor.document.removeEventListener("keyup", this._signalOnline, true);
             this.odooEditor.document.removeEventListener('selectionchange', this._onSelectionChange);
-            for (const observer of this._oNotEditableObservers.values()) {
-                observer.disconnect();
-            }
             this.odooEditor.destroy();
         }
         // If peer to peer is initializing, wait for properly closing it.
@@ -2074,6 +2071,25 @@ const Wysiwyg = Widget.extend({
 
         return finalOptions;
     },
+    _getBannerCommand: function (title, alertClass, iconClass, description, priority) {
+        return {
+            category: _t('Banner'),
+            name: title,
+            priority: priority,
+            description: description,
+            fontawesome: iconClass,
+            isDisabled: () => isSelectionInSelectors('.o_editor_banner') || !this.odooEditor.isSelectionInBlockRoot(),
+            callback: () => {
+                const bannerElement = $(QWeb.render('web_editor.banner', {
+                    label: title,
+                    alertClass: alertClass,
+                    iconClass: iconClass
+                }))[0];
+                this.odooEditor.execCommand('insert', bannerElement);
+                setSelection(bannerElement.querySelector('.o_editor_banner > div'), 0);
+            },
+        }
+    },
     _insertSnippetMenu: function () {
         return this.snippetsMenu.insertBefore(this.$el);
     },
@@ -2124,8 +2140,12 @@ const Wysiwyg = Widget.extend({
     },
     _getPowerboxOptions: function () {
         const editorOptions = this.options;
-        const categories = [];
+        const categories = [{ name: _t('Banners'), priority: 65 },];
         const commands = [
+            this._getBannerCommand(_t('Banner Info'), 'info', 'fa-info-circle', _t('Insert an info banner section'), 24),
+            this._getBannerCommand(_t('Banner Success'), 'success', 'fa-check-circle', _t('Insert a success banner section'), 23),
+            this._getBannerCommand(_t('Banner Warning'), 'warning', 'fa-exclamation-triangle', _t('Insert a warning banner section'), 22),
+            this._getBannerCommand(_t('Banner Danger'), 'danger', 'fa-exclamation-circle', _t('Insert a danger banner section'), 21),
             {
                 category: _t('Structure'),
                 name: _t('Quote'),
@@ -2680,40 +2700,17 @@ const Wysiwyg = Widget.extend({
         await this._peerToPeerLoading;
     },
     /**
-     * Set contenteditable=false for all `.o_not_editable` found within node if
-     * node is an element.
-     *
-     * For all `.o_not_editable` element found, the attribute contenteditable
-     * will be removed if the class is removed.
+     * Set `contenteditable` according to `.o_not_editable` and `.o_editable`.
      *
      * @param {Node} node
      */
-    _setONotEditable: function (node) {
-        const nodes = (node && node.querySelectorAll && node.querySelectorAll('.o_not_editable:not([contenteditable=false])')) || [];
-        for (const node of nodes) {
-            node.setAttribute('contenteditable', false);
-            let observer = this._oNotEditableObservers.get(node);
-            if (!observer) {
-                observer = new MutationObserver((records) => {
-                    for (const record of records) {
-                        if (record.type === 'attributes' && record.attributeName === 'class') {
-                            // Remove contenteditable=false on nodes that were
-                            // previsouly o_not_editable but are no longer
-                            // o_not_editable.
-                            if (!node.classList.contains('o_not_editable')) {
-                                this.odooEditor.observerUnactive('_setONotEditable');
-                                node.removeAttribute('contenteditable');
-                                this.odooEditor.observerActive('_setONotEditable');
-                                observer.disconnect();
-                                this._oNotEditableObservers.delete(node);
-                            }
-                        }
-                    }
-                });
-                this._oNotEditableObservers.set(node, observer);
-                observer.observe(node, {
-                    attributes: true,
-                });
+    _onPostSanitize: function (node) {
+        if (node?.querySelectorAll) {
+            for (const element of node.querySelectorAll('.o_editable, .o_not_editable')) {
+                const editable = element.classList.contains('o_editable');
+                if (element.isContentEditable !== editable) {
+                    element.contentEditable = editable;
+                }
             }
         }
     },
