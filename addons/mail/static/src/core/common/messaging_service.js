@@ -129,18 +129,6 @@ export class Messaging {
     handleNotification(notifications) {
         for (const notif of notifications) {
             switch (notif.type) {
-                case "mail.link.preview/delete":
-                    {
-                        const { id, message_id } = notif.payload;
-                        const message = this.store.messages[message_id];
-                        if (message) {
-                            removeFromArrayWithPredicate(
-                                message.linkPreviews,
-                                (linkPreview) => linkPreview.id === id
-                            );
-                        }
-                    }
-                    break;
                 case "mail.message/inbox": {
                     const data = Object.assign(notif.payload, { body: markup(notif.payload.body) });
                     const message = this.messageService.insert(data);
