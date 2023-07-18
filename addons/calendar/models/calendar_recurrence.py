@@ -334,7 +334,7 @@ class RecurrenceRule(models.Model):
     def _detach_events(self, events):
         events.write({
             'recurrence_id': False,
-            'recurrency': False,
+            'recurrency': True,
         })
         return events
 
