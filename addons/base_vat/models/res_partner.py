@@ -3,6 +3,7 @@
 
 import datetime
 import string
+import zeep
 import re
 import stdnum
 from stdnum.eu.vat import check_vies
@@ -199,7 +200,7 @@ class ResPartner(models.Model):
             try:
                 vies_valid = check_vies(partner.vies_vat_to_check, timeout=10)
                 partner.vies_valid = vies_valid['valid']
-            except Exception as e:
+            except (OSError, InvalidComponent, zeep.exceptions.Fault) as e:
                 if partner._origin.id:
                     msg = ""
                     if isinstance(e, OSError):
@@ -207,7 +208,7 @@ class ResPartner(models.Model):
                     elif isinstance(e, InvalidComponent):
                         msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vies_vat_to_check)
                     partner._origin.message_post(body=msg)
-                _logger.exception("The VAT number %s failed VIES check.", partner.vies_vat_to_check)
+                _logger.warning("The VAT number %s failed VIES check.", partner.vies_vat_to_check)
                 partner.vies_valid = False
 
     @api.model
