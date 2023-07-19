@@ -16,7 +16,7 @@
                     <button type="button"
                             class="btn btn-secondary me-1"
                             t-on-click="migrate"
-                            t-if="proxyState === 'active'">
+                            t-if="proxyState === 'active' and migrationPrepared === false">
                             Migrate registration to another service
                     </button>
                 </div>
@@ -24,7 +24,7 @@
                     <button type="button"
                             class="btn btn-secondary me-1"
                             t-on-click="deregister"
-                            t-if="proxyState === 'active'">
+                            t-if="proxyState === 'active' and migrationPrepared === false">
                             Deregister from Peppol
                     </button>
                 </div>

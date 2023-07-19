@@ -69,12 +69,6 @@ class ResConfigSettings(models.TransientModel):
             raise UserError(response['error'].get('message') or response['error']['data']['message'])
         return response
 
-    def _trigger_peppol_crons(self):
-        # fetch all documents and message statuses before migrating/deleting
-        # so that they are acknowledged
-        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
-        self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
-
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -281,10 +275,7 @@ class ResConfigSettings(models.TransientModel):
                 "Can't migrate registration with this status: %s", self.account_peppol_proxy_state
             ))
 
-        self._trigger_peppol_crons()
-
         response = self._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
-        self.account_peppol_proxy_state = 'canceled'
         self.account_peppol_migration_key = response['migration_key']
 
     def button_deregister_peppol_participant(self):
@@ -298,7 +289,10 @@ class ResConfigSettings(models.TransientModel):
                 "Can't deregister with this status: %s", self.account_peppol_proxy_state
             ))
 
-        self._trigger_peppol_crons()
+        # fetch all documents and message statuses before unlinking the edi user
+        # so that the invoices are acknowledged
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
 
         self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
         self.account_peppol_proxy_state = 'not_registered'
