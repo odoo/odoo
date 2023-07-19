@@ -22,10 +22,16 @@
                 <span t-out="question.name"/>
             </a>
             <span t-if="question.has_validated_answer and question.forum_id.mode == 'questions'"
-                  title="Solved"
-                  aria-label="Solved"
-                  class="badge bg-success">
-                    <i class="fa fa-check me-1"/>Solved
+                title="Solved"
+                aria-label="Solved"
+                class="badge bg-success">
+                <i class="fa fa-check me-1"/>Solved
+            </span>
+            <span t-elif="question.state == 'pending'" 
+                title="Pending"  
+                aria-label="Pending" 
+                class="badge bg-info">
+                <i class="fa fa-clock-o me-1"/>Pending
             </span>
         </div>
     </div>

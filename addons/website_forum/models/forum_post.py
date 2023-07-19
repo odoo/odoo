@@ -802,9 +802,9 @@ class Post(models.Model):
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
-
+        allowed_states = ['active']
         domain = website.website_domain()
-        domain += [('parent_id', '=', False), ('state', '=', 'active'), ('can_view', '=', True)]
+        domain += [('parent_id', '=', False), ('can_view', '=', True)]
         forum = options.get('forum')
         if forum:
             domain += [('forum_id', '=', unslug(forum)[1])]
@@ -822,12 +822,15 @@ class Post(models.Model):
         my = options.get('my')
         if my == 'mine':
             domain += [('create_uid', '=', user.id)]
+            allowed_states.append('pending')
         elif my == 'followed':
             domain += [('message_partner_ids', '=', user.partner_id.id)]
         elif my == 'tagged':
             domain += [('tag_ids.message_partner_ids', '=', user.partner_id.id)]
         elif my == 'favourites':
             domain += [('favourite_ids', '=', user.id)]
+
+        domain += [('state', 'in', allowed_states)]
 
         # 'sorting' from the form's "Order by" overrides order during auto-completion
         order = options.get('sorting', order)
