@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_mx_external_layout_standard" inherit_id="web.external_layout_standard">
+        <div t-field="company.partner_id" position="attributes">
+            <attribute t-if="company.country_id.code == 'MX'" name="t-options">{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": true}</attribute>
+        </div>
+    </template>
+
+    <template id="l10n_mx_external_layout_background" inherit_id="web.external_layout_background">
+        <span t-field="company.partner_id" position="attributes">
+            <attribute t-if="company.country_id.code == 'MX'" name="t-options">{"widget": "contact", "fields": ["address", "vat"], "no_marker": true}</attribute>
+        </span>
+    </template>
+
+    <template id="l10n_mx_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <span t-field="company.partner_id" position="attributes">
+            <attribute t-if="company.country_id.code == 'MX'" name="t-options">{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": true}</attribute>
+        </span>
+    </template>
+</odoo>
