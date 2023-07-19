@@ -2,7 +2,7 @@
 
 import { registry } from '@web/core/registry'
 import { HotkeyCommandItem } from '@web/core/commands/default_providers'
-import Wysiwyg from 'web_editor.wysiwyg'
+import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
 
 // The only way to know if an editor is under focus when the command palette
 // open is to look if there in a selection within a wysiwyg editor in the page.

@@ -5,9 +5,9 @@
     <!--=================-->
 
     <!-- Editor toolbar -->
-    <t t-name="web_editor.toolbar">
+    <t t-name="web_editor.toolbar" owl="1">
         <div id="toolbar" class="oe-toolbar oe-floating">
-            <div id="style" class="btn-group dropdown">
+            <div t-if="props.showStyle" id="style" t-attf-class="btn-group {{ props.dropDirection }}">
                 <button type="button" class="btn dropdown-toggle"
                     data-bs-toggle="dropdown" data-bs-original-title="Text style" tabindex="-1" aria-expanded="false">
                     <span title="Text style">Normal</span>
@@ -19,22 +19,22 @@
                     <li id="pre-dropdown-item">
                         <a class="dropdown-item" href="#" id="pre" data-call="setTag" data-arg1="pre"><pre>Code</pre></a>
                     </li>
-                    <li id="heading1-dropdown-item">
+                    <li t-if="props.showHeading1" id="heading1-dropdown-item">
                         <a class="dropdown-item" href="#" id="heading1" data-call="setTag" data-arg1="h1"><h1>Header 1</h1></a>
                     </li>
-                    <li id="heading2-dropdown-item">
+                    <li t-if="props.showHeading2" id="heading2-dropdown-item">
                         <a class="dropdown-item" href="#" id="heading2" data-call="setTag" data-arg1="h2"><h2>Header 2</h2></a>
                     </li>
-                    <li id="heading3-dropdown-item">
+                    <li t-if="props.showHeading3" id="heading3-dropdown-item">
                         <a class="dropdown-item" href="#" id="heading3" data-call="setTag" data-arg1="h3"><h3>Header 3</h3></a>
                     </li>
-                    <li id="heading4-dropdown-item">
+                    <li t-if="props.showHeading4" id="heading4-dropdown-item">
                         <a class="dropdown-item" href="#" id="heading4" data-call="setTag" data-arg1="h4"><h4>Header 4</h4></a>
                     </li>
-                    <li id="heading5-dropdown-item">
+                    <li t-if="props.showHeading5" id="heading5-dropdown-item">
                         <a class="dropdown-item" href="#" id="heading5" data-call="setTag" data-arg1="h5"><h5>Header 5</h5></a>
                     </li>
-                    <li id="heading6-dropdown-item">
+                    <li t-if="props.showHeading6" id="heading6-dropdown-item">
                         <a class="dropdown-item" href="#" id="heading6" data-call="setTag" data-arg1="h6"><h6>Header 6</h6></a>
                     </li>
                     <li id="blockquote-dropdown-item">
@@ -53,30 +53,29 @@
                 <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw"></div>
             </div>
 
-            <div id="colorInputButtonGroup" class="btn-group">
-                <div class="colorpicker-group note-fore-color-preview" data-name="color">
+            <div t-if="props.showColors" id="colorInputButtonGroup" class="btn-group">
+                <div class="colorpicker-group note-fore-color-preview" data-name="color"  t-ref="textColorpickerDropdown" data-color-type="text">
                     <div id="oe-text-color" class="btn color-button dropdown-toggle editor-ignore"
                         data-bs-toggle="dropdown" tabindex="-1">
                         <i class="fa fa-font color-indicator fore-color" title="Font Color"></i>
                     </div>
                     <ul class="dropdown-menu colorpicker-menu">
-                        <li><div data-event-name="foreColor" class="colorPalette"></div></li>
+                        <li><ColorPalette t-props="props.textColorPaletteProps" /></li>
                     </ul>
                 </div>
-                <div class="colorpicker-group note-back-color-preview" data-name="color">
+                <div class="colorpicker-group note-back-color-preview" data-name="color"  t-ref="backgroundColorpaletteDropdown" data-color-type="background">
                     <button id="oe-fore-color" type="button" class="btn dropdown-toggle editor-ignore"
                         data-bs-toggle="dropdown" tabindex="-1">
                         <i class="fa fa-paint-brush color-indicator hilite-color" title="Background Color"></i>
                     </button>
                     <ul class="dropdown-menu colorpicker-menu">
-                        <li><div data-event-name="backColor" class="colorPalette"></div></li>
+                        <li><ColorPalette t-props="props.backgroundColorPaletteProps" /></li>
                     </ul>
                 </div>
             </div>
 
-            <t t-if="widget.isMobile()"></t>
-            <t t-else="">
-                <div id="font-size" class="btn-group dropdown">
+            <t t-if="!this.isMobile()">
+                <div t-if="props.showFontSize" id="font-size" t-attf-class="btn-group {{ props.dropDirection }}">
                     <button type="button" class="btn dropdown-toggle"
                         data-bs-toggle="dropdown" tabindex="-1"
                         data-bs-original-title="Font Size" aria-expanded="false">
@@ -101,7 +100,7 @@
                 </div>
             </t>
 
-            <div id="justify" class="btn-group dropdown">
+            <div t-if="props.showJustify" id="justify" t-attf-class="btn-group {{ props.dropDirection }}">
                 <button type="button" class="btn dropdown-toggle"
                     data-bs-toggle="dropdown" tabindex="-1" data-bs-original-title="Paragraph" aria-expanded="false">
                     <i id="paragraphDropdownButton" class="fa fa-align-left fa-fw" title="Text align"></i>
@@ -116,17 +115,17 @@
                 </div>
             </div>
 
-            <t t-if="widget.isMobile()"> 
+            <t t-if="this.isMobile()">
                 <button type="button" class="btn dropdown-toggle"
                     data-bs-toggle="dropdown" title="List" tabindex="-1"
                     data-bs-original-title="List" aria-expanded="false">
                     <i class="fa fa-list fa-fw"></i>
                 </button>
                 <div class="dropdown-menu">
-                    <div id="list" class="btn-group">
+                    <div t-if="props.showList" id="list" class="btn-group">
                         <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
                         <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="oe-toggle-ordered fa fa-list-ol fa-fw btn"></div>
-                        <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
+                        <div t-if="props.showChecklist" id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
                             <div class="small">
                                 <div class="fa fa-square-o d-block small"/>
                                 <div class="fa fa-check-square d-block small"/>
@@ -136,10 +135,10 @@
                 </div>
             </t>
             <t t-else="">
-                <div id="list" class="btn-group">
+                <div t-if="props.showList" id="list" class="btn-group">
                     <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
                     <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="oe-toggle-ordered fa fa-list-ol fa-fw btn"></div>
-                    <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
+                    <div t-if="props.showChecklist" id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
                         <div class="small">
                             <div class="fa fa-square-o d-block small"/>
                             <div class="fa fa-check-square d-block small"/>
@@ -152,21 +151,21 @@
                 <div id="image-fullscreen" title="Full screen" class="fa fa-search-plus btn editor-ignore"></div>
             </div>
 
-            <div id="link" class="btn-group">
+            <div t-if="props.showLink" id="link" class="btn-group">
                 <div id="media-insert" title="Insert media" class="fa fa-file-image-o fa-fw btn editor-ignore"></div>
                 <div id="create-link" title="Insert or edit link" class="fa fa-link fa-fw btn editor-ignore"></div>
                 <div id="unlink" data-call="unlink" title="Remove link" class="fa fa-unlink fa-fw btn"></div>
                 <a id="media-description" href="#" title="Edit media description" class="btn editor-ignore">Description</a>
             </div>
 
-            <div id="image-shape" class="btn-group">
+            <div  t-if="props.showImageShape" id="image-shape" class="btn-group">
                 <div id="rounded" title="Shape: Rounded" class="fa fa-square fa-fw btn editor-ignore"></div>
                 <div id="rounded-circle" title="Shape: Circle" class="fa fa-circle-o fa-fw btn editor-ignore"></div>
                 <div id="shadow" title="Shadow" class="fa fa-sun-o fa-fw btn editor-ignore"></div>
                 <div id="img-thumbnail" title="Shape: Thumbnail" class="fa fa-picture-o fa-fw btn editor-ignore"></div>
             </div>
 
-            <div id="image-padding" class="btn-group dropdown">
+            <div  t-if="props.showImagePadding" id="image-padding" t-attf-class="btn-group {{ props.dropDirection }}">
                 <button type="button" class="btn dropdown-toggle"
                     data-bs-toggle="dropdown" tabindex="-1" aria-expanded="false">
                     <span class="fa fa-plus-square-o" title="Image padding"></span>
@@ -180,14 +179,14 @@
                 </ul>
             </div>
 
-            <div id="image-width" class="btn-group">
+            <div  t-if="props.showImageWidth" id="image-width" class="btn-group">
                 <div title="Resize Default" class="btn editor-ignore">Default</div>
                 <div id="100%" title="Resize Full" class="btn editor-ignore">100%</div>
                 <div id="50%" title="Resize Half" class="btn editor-ignore">50%</div>
                 <div id="25%" title="Resize Quarter" class="btn editor-ignore">25%</div>
             </div>
 
-            <div id="image-edit" class="btn-group">
+            <div  t-if="props.showImageEdit" id="image-edit" class="btn-group">
                 <div id="image-crop" title="Crop Image" class="btn fa fa-crop editor-ignore"></div>
                 <div id="image-transform" class="btn editor-ignore fa fa-object-ungroup"
                     title="Transform the picture (click twice to reset transformation)"></div>
@@ -208,8 +207,23 @@
             <div class="btn-group only_fa">
                 <div id="fa-spin" title="Toggle icon spin" class="editor-ignore btn fa fa-play"></div>
             </div>
+
+            <div t-if="props.showHistory" id="history" class="btn-group">
+                <div id="undo" data-call="undo" class="btn fa fa-undo"/>
+                <div id="redo" data-call="redo" class="btn fa fa-repeat"/>
+            </div>
+
+            <t t-slot="default"/>
         </div>
     </t>
+
+    <!-- Editor Toolbar -->
+    <!-- <t t-inherit="web_editor.toolbar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@id='checklist']" position="replace">aoeu</xpath>
+        <xpath expr="//div[@id='list']" position="inside">
+            <div title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text"/>coucou4
+        </xpath>
+    </t> -->
 
     <t t-name="web_editor.toolbar.table-options">
         <we-customizeblock-options id="o-we-editor-table-container">
@@ -261,24 +275,6 @@
                 </div>
             </div>
         </we-customizeblock-options>
-    </t>
-
-    <!-- Collaboration reset dialog -->
-    <t t-name="web_editor.collaboration-reset-dialog">
-        <div>
-            <div style="color: red;">
-                <p>
-                    There is a conflict between your version and the one in the database.
-                </p>
-                <p>
-                    The version from the database will be used.
-                    If you need to keep your changes, copy the content below and edit the new document.
-                </p>
-                <p style="font-weight: bold;">
-                    Warning: after closing this dialog, the version you were working on will be discarded and will never be available anymore.
-                </p>
-            </div>
-        </div>
     </t>
 
     <!--=================-->

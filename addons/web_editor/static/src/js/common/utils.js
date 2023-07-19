@@ -1,6 +1,9 @@
 /** @odoo-module alias=web_editor.utils **/
 
-import {ColorpickerWidget} from "web.Colorpicker";
+import {
+    normalizeCSSColor,
+    isCSSColor,
+} from '@web/core/utils/colors';
 
 let editableWindow = window;
 const _setEditableWindow = (ew) => editableWindow = ew;
@@ -208,8 +211,8 @@ function _areCssValuesEqual(value1, value2, cssProp, $target) {
     }
 
     // They may be colors, normalize then re-compare the resulting string
-    const color1 = ColorpickerWidget.normalizeCSSColor(value1);
-    const color2 = ColorpickerWidget.normalizeCSSColor(value2);
+    const color1 = normalizeCSSColor(value1);
+    const color2 = normalizeCSSColor(value2);
     if (color1 === color2) {
         return true;
     }
@@ -309,7 +312,7 @@ function _getCSSVariableValue(key, htmlStyle) {
     // Get trimmed value from the HTML element
     let value = htmlStyle.getPropertyValue(`--${key}`).trim();
     // If it is a color value, it needs to be normalized
-    value = ColorpickerWidget.normalizeCSSColor(value);
+    value = normalizeCSSColor(value);
     // Normally scss-string values are "printed" single-quoted. That way no
     // magic conversation is needed when customizing a variable: either save it
     // quoted for strings or non quoted for colors, numbers, etc. However,
@@ -325,7 +328,7 @@ function _getCSSVariableValue(key, htmlStyle) {
  * @returns {string} the normalized color
  */
 function _normalizeColor(color) {
-    if (ColorpickerWidget.isCSSColor(color)) {
+    if (isCSSColor(color)) {
         return color;
     }
     return _getCSSVariableValue(color);

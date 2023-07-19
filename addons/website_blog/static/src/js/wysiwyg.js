@@ -1,14 +1,10 @@
 /** @odoo-module **/
 
-
-import Wysiwyg from "website.wysiwyg";
+import { WysiwygAdapterComponent } from '@website/components/wysiwyg_adapter/wysiwyg_adapter';
 import "website.editor.snippets.options";
+import { patch } from "@web/core/utils/patch";
 
-Wysiwyg.include({
-    custom_events: Object.assign({}, Wysiwyg.prototype.custom_events, {
-        'set_blog_post_updated_tags': '_onSetBlogPostUpdatedTags',
-    }),
-
+patch(WysiwygAdapterComponent.prototype, 'website_blog/static/src/js/wysiwyg.js', {
     /**
      * @override
      */
@@ -49,22 +45,14 @@ Wysiwyg.include({
     async _saveBlogTags() {
         for (const [key, tags] of Object.entries(this.blogTagsPerBlogPost)) {
             const proms = tags.filter(tag => typeof tag.id === 'string').map(tag => {
-                return this._rpc({
-                    model: 'blog.tag',
-                    method: 'create',
-                    args: [{
+                return this.orm.create("blog.tag", [{
                         'name': tag.name,
-                    }],
-                });
+                    }]);
             });
-            const createdIDs = await Promise.all(proms);
+            const createdIDs = (await Promise.all(proms)).flat();
 
-            await this._rpc({
-                model: 'blog.post',
-                method: 'write',
-                args: [parseInt(key), {
-                    'tag_ids': [[6, 0, tags.filter(tag => typeof tag.id === 'number').map(tag => tag.id).concat(createdIDs)]],
-                }],
+            await this.orm.write("blog.post", [parseInt(key)], {
+                'tag_ids': [[6, 0, tags.filter(tag => typeof tag.id === 'number').map(tag => tag.id).concat(createdIDs)]],
             });
         }
     },
@@ -79,5 +67,17 @@ Wysiwyg.include({
      */
     _onSetBlogPostUpdatedTags: function (ev) {
         this.blogTagsPerBlogPost[ev.data.blogPostID] = ev.data.tags;
+    },
+
+    /**
+     * @override
+     */
+    _trigger_up(ev) {
+        if (ev.name === 'set_blog_post_updated_tags') {
+            this._onSetBlogPostUpdatedTags(ev);
+            return;
+        } else {
+            return this._super(...arguments);
+        }
     },
 });

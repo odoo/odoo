@@ -38,7 +38,7 @@ This module provides the core of the Odoo Web Client.
         # Examples:
         #   > web.assets_common = assets common to backend clients and others
         #     (not frontend).
-        #   > web_editor.assets_wysiwyg = assets needed by components defined in the "web_editor" module.
+        #   > web_editor.assets_legacy_wysiwyg = assets needed by components defined in the "web_editor" module.
 
         # Warning: Layouts using "assets_frontend" assets do not have the
         # "assets_common" assets anymore. So, if it make sense, files added in
@@ -159,8 +159,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/widgets/name_and_signature.js',
             'web/static/src/legacy/xml/name_and_signature.xml',
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
-            'web/static/src/legacy/js/widgets/colorpicker.js',
-            'web/static/src/legacy/xml/colorpicker.xml',
             'web/static/src/legacy/translations_loaded.js',
         ],
         'web.assets_emoji': [
@@ -244,6 +242,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/tools/tools.js',
             'web/static/src/legacy/js/views/**/*',
+            'web/static/src/legacy/js/widgets/colorpicker_dialog.js',
             'web/static/src/legacy/js/widgets/date_picker.js',
             'web/static/src/legacy/js/widgets/domain_selector_dialog.js',
             'web/static/src/legacy/js/widgets/domain_selector.js',
@@ -392,8 +391,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/widgets/name_and_signature.js',
             'web/static/src/legacy/xml/name_and_signature.xml',
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
-            'web/static/src/legacy/js/widgets/colorpicker.js',
-            'web/static/src/legacy/xml/colorpicker.xml',
 
             'web/static/src/env.js',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files

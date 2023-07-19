@@ -1,13 +1,14 @@
 /** @odoo-module **/
 
-import weWidgets from 'wysiwyg.widgets';
-import {_t} from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
+import { patch } from "@web/core/utils/patch";
 
-weWidgets.LinkPopoverWidget.include({
-    events: Object.assign({}, weWidgets.LinkPopoverWidget.prototype.events, {
-        'click .o_we_full_url, .o_we_url_link': '_onPreviewLinkClick',
-    }),
+import { LinkPopoverWidget } from '@web_editor/js/wysiwyg/widgets/link_popover_widget';
+
+
+
+patch(LinkPopoverWidget.prototype, 'website_link_popower_widget', {
     /**
      * @override
      */
@@ -21,6 +22,7 @@ weWidgets.LinkPopoverWidget.include({
                 timeoutID = setTimeout(() => this.$target.popover('show'), 1500);
             });
         }
+        this.$el.on('click', '.o_we_full_url, .o_we_url_link', this._onPreviewLinkClick.bind(this));
 
         return this._super(...arguments);
     },
@@ -47,23 +49,20 @@ weWidgets.LinkPopoverWidget.include({
     }
 });
 
-const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
-    events: Object.assign({}, weWidgets.LinkPopoverWidget.prototype.events, {
-        'click .js_edit_menu': '_onEditMenuClick',
-    }),
+export class NavbarLinkPopoverWidget extends LinkPopoverWidget {
+    constructor(params) {
+        super(...arguments);
+        this.checkIsWebsiteDesigner = params.checkIsWebsiteDesigner;
+        this.onEditLinkClick = params.onEditLinkClick;
+        this.onEditMenuClick = params.onEditMenuClick;
+    }
     /**
      *
      * @override
      */
     async start() {
-        const _super = this._super.bind(this);
-
-        this.isWebsiteDesigner = await this._rpc({
-            'model': 'res.users',
-            'method': 'has_group',
-            'args': ['website.group_website_designer'],
-        });
-        const $removeLink = this.$('.o_we_remove_link');
+        this.isWebsiteDesigner = await this.checkIsWebsiteDesigner();
+        const $removeLink = this.$el.find('.o_we_remove_link');
         // remove link has no sense on navbar menu links, instead show edit menu
         if (this.isWebsiteDesigner) {
             const $anchor = $('<a/>', {
@@ -71,13 +70,14 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
                 'data-bs-placement': 'top', 'data-bs-toggle': 'tooltip',
             }).append($('<i/>', {class: 'fa fa-sitemap'}));
             $removeLink.replaceWith($anchor);
+            $anchor.on('click', () => this.onEditMenuClick(this));
         } else {
-            this.$('.o_we_edit_link').remove();
+            this.$el.find('.o_we_edit_link').remove();
             $removeLink.remove();
         }
 
-        return _super(...arguments);
-    },
+        return super.start(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -90,53 +90,6 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
      * @param {Event} ev
      */
     _onEditLinkClick(ev) {
-        var self = this;
-        var $menu = this.$target.find('[data-oe-id]');
-        this.trigger_up('menu_dialog', {
-            name: $menu.text(),
-            url: $menu.parent().attr('href'),
-            save: (name, url) => {
-                let websiteId;
-                this.trigger_up('context_get', {
-                    callback: ctx => websiteId = ctx['website_id'],
-                });
-                const data = {
-                    id: $menu.data('oe-id'),
-                    name,
-                    url,
-                };
-                return this._rpc({
-                    model: 'website.menu',
-                    method: 'save',
-                    args: [websiteId, {'data': [data]}],
-                }).then(function () {
-                    self.options.wysiwyg.odooEditor.observerUnactive();
-                    self.$target.attr('href', url);
-                    $menu.text(name);
-                    self.options.wysiwyg.odooEditor.observerActive();
-                });
-            },
-        });
-        this.popover.hide();
-    },
-    /**
-     * Opens the menu tree editor. On menu editor save, current page changes
-     * will also be saved.
-     *
-     * @private
-     * @param {Event} ev
-     */
-     _onEditMenuClick(ev) {
-        const contentMenu = this.target.closest('[data-content_menu_id]');
-        const rootID = contentMenu ? parseInt(contentMenu.dataset.content_menu_id, 10) : undefined;
-        this.trigger_up('action_demand', {
-            actionName: 'edit_menu',
-            params: [rootID],
-        });
-    },
-});
-
-// Exact same static method but instantiating the specialized class.
-NavbarLinkPopoverWidget.createFor = weWidgets.LinkPopoverWidget.createFor;
-
-export default NavbarLinkPopoverWidget;
+        this.onEditLinkClick(this);
+    }
+}

@@ -1,18 +1,24 @@
 /** @odoo-module alias=website.editor.snippets.options **/
 
-import {ColorpickerWidget} from "web.Colorpicker";
 import core from "web.core";
 import { loadBundle, loadCSS } from "@web/core/assets";
 import Dialog from "web.Dialog";
 import {Markup, sprintf} from "web.utils";
 import weUtils from "web_editor.utils";
 import options from "web_editor.snippets.options";
-import wLinkPopoverWidget from "@website/js/widgets/link_popover_widget";
+import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
 import wUtils from "website.utils";
 import {isImageSupportedForStyle} from "web_editor.image_processing";
 import "website.s_popup_options";
 import { range } from "@web/core/utils/numbers";
 import {Domain} from "@web/core/domain";
+import {
+    isCSSColor,
+    convertCSSColorToRgba,
+    convertRgbaToCSSColor,
+    convertRgbToHsl,
+    convertHslToRgb,
+ } from '@web/core/utils/colors';
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -798,7 +804,7 @@ options.Class.include({
             if (color) {
                 if (weUtils.isColorCombinationName(color)) {
                     finalColors[colorName] = parseInt(color);
-                } else if (!ColorpickerWidget.isCSSColor(color)) {
+                } else if (!isCSSColor(color)) {
                     finalColors[colorName] = `'${color}'`;
                 }
             }
@@ -1240,12 +1246,12 @@ options.registry.OptionsTab = options.Class.extend({
         const baseStyle = getComputedStyle(document.documentElement);
         for (let id = 100; id <= 900; id += 100) {
             const gray = weUtils.getCSSVariableValue(`${id}`, style);
-            const grayRGB = ColorpickerWidget.convertCSSColorToRgba(gray);
-            const grayHSL = ColorpickerWidget.convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
+            const grayRGB = convertCSSColorToRgba(gray);
+            const grayHSL = convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
 
             const baseGray = weUtils.getCSSVariableValue(`base-${id}`, baseStyle);
-            const baseGrayRGB = ColorpickerWidget.convertCSSColorToRgba(baseGray);
-            const baseGrayHSL = ColorpickerWidget.convertRgbToHsl(baseGrayRGB.red, baseGrayRGB.green, baseGrayRGB.blue);
+            const baseGrayRGB = convertCSSColorToRgba(baseGray);
+            const baseGrayHSL = convertRgbToHsl(baseGrayRGB.red, baseGrayRGB.green, baseGrayRGB.blue);
 
             if (grayHSL.saturation > 0.01) {
                 if (grayHSL.lightness > 0.01 && grayHSL.lightness < 99.99) {
@@ -1466,12 +1472,12 @@ options.registry.OptionsTab = options.Class.extend({
     _buildGray(id) {
         // Getting base grays defined in color_palette.scss
         const gray = weUtils.getCSSVariableValue(`base-${id}`, getComputedStyle(document.documentElement));
-        const grayRGB = ColorpickerWidget.convertCSSColorToRgba(gray);
-        const hsl = ColorpickerWidget.convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
-        const adjustedGrayRGB = ColorpickerWidget.convertHslToRgb(this.grayParams[this.GRAY_PARAMS.HUE],
+        const grayRGB = convertCSSColorToRgba(gray);
+        const hsl = convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
+        const adjustedGrayRGB = convertHslToRgb(this.grayParams[this.GRAY_PARAMS.HUE],
             Math.min(Math.max(hsl.saturation + this.grayParams[this.GRAY_PARAMS.EXTRA_SATURATION], 0), 100),
             hsl.lightness);
-        return ColorpickerWidget.convertRgbaToCSSColor(adjustedGrayRGB.red, adjustedGrayRGB.green, adjustedGrayRGB.blue);
+        return convertRgbaToCSSColor(adjustedGrayRGB.red, adjustedGrayRGB.green, adjustedGrayRGB.blue);
     },
     /**
      * @override
@@ -1482,8 +1488,8 @@ options.registry.OptionsTab = options.Class.extend({
         if (extraSaturationRangeEl) {
             const baseGrays = range(100, 1000, 100).map(id => {
                 const gray = weUtils.getCSSVariableValue(`base-${id}`);
-                const grayRGB = ColorpickerWidget.convertCSSColorToRgba(gray);
-                const hsl = ColorpickerWidget.convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
+                const grayRGB = convertCSSColorToRgba(gray);
+                const hsl = convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
                 return {id: id, hsl: hsl};
             });
             const first = baseGrays[0];
@@ -1669,7 +1675,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
         let ccPreviewEls = [];
         for (let i = 1; i <= 5; i++) {
             const collapseEl = document.createElement('we-collapse');
-            const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
+            const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview.legacy'))[0];
             ccPreviewEl.classList.add('text-center', `o_cc${i}`, 'o_colored_level', 'o_we_collapse_toggler');
             collapseEl.appendChild(ccPreviewEl);
             const editionEls = $(qweb.render('website.color_combination_edition', {number: i}));
@@ -1697,7 +1703,54 @@ options.registry.menu_data = options.Class.extend({
     start: function () {
         const wysiwyg = $(this.ownerDocument.getElementById('wrapwrap')).data('wysiwyg');
         const popoverContainer = this.ownerDocument.getElementById('oe_manipulators');
-        wLinkPopoverWidget.createFor(this, this.$target[0], { wysiwyg, container: popoverContainer });
+        NavbarLinkPopoverWidget.createFor({
+            target: this.$target[0],
+            wysiwyg,
+            container: popoverContainer,
+            notify: this.displayNotification.bind(this),
+            checkIsWebsiteDesigner: () => this._rpc({
+                'model': 'res.users',
+                'method': 'has_group',
+                'args': ['website.group_website_designer'],
+            }),
+            onEditLinkClick: (widget) => {
+                var $menu = widget.$target.find('[data-oe-id]');
+                this.trigger_up('menu_dialog', {
+                    name: $menu.text(),
+                    url: $menu.parent().attr('href'),
+                    save: (name, url) => {
+                        let websiteId;
+                        this.trigger_up('context_get', {
+                            callback: ctx => websiteId = ctx['website_id'],
+                        });
+                        const data = {
+                            id: $menu.data('oe-id'),
+                            name,
+                            url,
+                        };
+                        return this._rpc({
+                            model: 'website.menu',
+                            method: 'save',
+                            args: [websiteId, {'data': [data]}],
+                        }).then(function () {
+                            widget.wysiwyg.odooEditor.observerUnactive();
+                            widget.$target.attr('href', url);
+                            $menu.text(name);
+                            widget.wysiwyg.odooEditor.observerActive();
+                        });
+                    },
+                });
+                widget.popover.hide();
+            },
+            onEditMenuClick: (widget) => {
+                const contentMenu = widget.target.closest('[data-content_menu_id]');
+                const rootID = contentMenu ? parseInt(contentMenu.dataset.content_menu_id, 10) : undefined;
+                this.trigger_up('action_demand', {
+                    actionName: 'edit_menu',
+                    params: [rootID],
+                });
+            },
+        });
         return this._super(...arguments);
     },
     /**
@@ -3111,16 +3164,16 @@ options.registry.CoverProperties = options.Class.extend({
         const ccValue = colorPickerWidget._ccValue;
         const colorOrGradient = colorPickerWidget._value;
         const isGradient = weUtils.isColorGradient(colorOrGradient);
-        const isCSSColor = !isGradient && ColorpickerWidget.isCSSColor(colorOrGradient);
+        const valueIsCSSColor = !isGradient && isCSSColor(colorOrGradient);
         const colorNames = [];
         if (ccValue) {
             colorNames.push(ccValue);
         }
-        if (colorOrGradient && !isGradient && !isCSSColor) {
+        if (colorOrGradient && !isGradient && !valueIsCSSColor) {
             colorNames.push(colorOrGradient);
         }
         const bgColorClass = weUtils.computeColorClasses(colorNames).join(' ');
-        const bgColorStyle = isCSSColor ? `background-color: ${colorOrGradient};` :
+        const bgColorStyle = valueIsCSSColor ? `background-color: ${colorOrGradient};` :
             isGradient ? `background-color: rgba(0, 0, 0, 0); background-image: ${colorOrGradient};` : '';
         this._updateColorDataset(bgColorStyle, bgColorClass);
     },
@@ -3480,8 +3533,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
         if (this.isAnimatedText) {
             // For animated text, the animation options must be in the editor
             // toolbar.
-            const $toolbar = this.options.wysiwyg.toolbar.$el;
-            $toolbar.append(this.$el);
+            this.options.wysiwyg.toolbarEl.append(this.$el[0]);
             this.$optionsSection.addClass('d-none');
         }
     },
