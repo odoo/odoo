@@ -266,7 +266,8 @@ export class CalendarCommonRenderer extends Component {
         };
         if (end) {
             res.end = luxon.DateTime.fromJSDate(end);
-            if (["week", "month"].includes(this.props.model.scale) && allDay) {
+            if (["week", "month"].includes(this.props.model.scale) && allDay &&
+                res.end.toMillis() !== res.end.startOf('day').toMillis()) {
                 res.end = res.end.minus({ days: 1 });
             }
         }
