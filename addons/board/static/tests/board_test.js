@@ -101,15 +101,15 @@ QUnit.module("Board", (hooks) => {
                         </column>
                     </board>
                 </form>`,
-            mockRPC(route, args) {
+            async mockRPC(route, args) {
                 if (route === "/web/action/load") {
                     assert.step("load action");
-                    return Promise.resolve({
+                    return {
                         res_model: "partner",
                         views: [[4, "list"]],
-                    });
+                    };
                 }
-                if (route === "/web/dataset/call_kw/partner/web_search_read") {
+                if (route === "/web/dataset/call_kw/partner/unity_web_search_read") {
                     assert.deepEqual(
                         args.kwargs.domain,
                         [["foo", "!=", "False"]],
@@ -128,7 +128,7 @@ QUnit.module("Board", (hooks) => {
                 }
                 if (route === "/web/view/edit_custom") {
                     assert.step("edit custom");
-                    return Promise.resolve(true);
+                    return true;
                 }
                 if (args.method === "get_views" && args.model == "partner") {
                     assert.deepEqual(

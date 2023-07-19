@@ -4,9 +4,7 @@ import { registry } from '@web/core/registry';
 import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
 import { ProductMatrixDialog } from "@product_matrix/js/product_matrix_dialog";
 import { useService } from "@web/core/utils/hooks";
-
-const { onWillUpdateProps } = owl;
-
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export class PurchaseOrderLineProductField extends Many2OneField {
 
@@ -15,12 +13,9 @@ export class PurchaseOrderLineProductField extends Many2OneField {
         this.dialog = useService("dialog");
         this.currentValue = this.value;
 
-        onWillUpdateProps(async (nextProps) => {
-            if (nextProps.record.mode === 'edit' && nextProps.record.data[nextProps.name]) {
-                if (
-                    !this.currentValue ||
-                    this.currentValue[0] != nextProps.record.data[nextProps.name][0]
-                ) {
+        useRecordObserver((record) => {
+            if (record.isInEdition && this.value) {
+                if (!this.currentValue || this.currentValue[0] != record.data[this.props.name][0]) {
                     // Field was updated if line was open in edit mode,
                     //      field is not emptied,
                     //      new value is different than existing value.
@@ -28,7 +23,7 @@ export class PurchaseOrderLineProductField extends Many2OneField {
                     this._onProductTemplateUpdate();
                 }
             }
-            this.currentValue = nextProps.record.data[nextProps.name];
+            this.currentValue = record.data[this.props.name];
         });
     }
 
@@ -75,10 +70,10 @@ export class PurchaseOrderLineProductField extends Many2OneField {
         if (edit) {
             // provide attributes of edited line to automatically focus on matching cell in the matrix
             for (let ptnvav of this.props.record.data.product_no_variant_attribute_value_ids.records) {
-                updatedLineAttributes.push(ptnvav.data.id);
+                updatedLineAttributes.push(ptnvav.resId);
             }
             for (let ptav of this.props.record.data.product_template_attribute_value_ids.records) {
-                updatedLineAttributes.push(ptav.data.id);
+                updatedLineAttributes.push(ptav.resId);
             }
             updatedLineAttributes.sort((a, b) => { return a - b; });
         }
@@ -91,7 +86,7 @@ export class PurchaseOrderLineProductField extends Many2OneField {
 
         if (!edit) {
             // remove new line used to open the matrix
-            PurchaseOrderRecord.data.order_line.removeRecord(this.props.record);
+            PurchaseOrderRecord.data.order_line.delete(this.props.record);
         }
     }
 

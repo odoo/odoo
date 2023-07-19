@@ -31,9 +31,9 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
     const { openView } = await start({
         serverData: { views },
         mockRPC(route, args) {
-            if (args.method === "read" && args.model === "res.partner") {
+            if (args.method === "web_read" && args.model === "res.partner") {
                 assert.step(JSON.stringify(args.args[0]));
-                assert.ok(args.args[1].includes("email"));
+                assert.ok("email" in args.kwargs.specification);
             } else if (args.method === "get_formview_id") {
                 return false;
             }
@@ -48,7 +48,7 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
         { mode: "edit" }
     );
 
-    assert.verifySteps([`[${partnerId_1}]`]);
+    assert.verifySteps([]);
     assert.containsOnce(
         $,
         '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0'
@@ -88,7 +88,7 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
     assert.hasAttrValue(firstTag.querySelector(".o_badge_text"), "title", "coucou@petite.perruche");
     // should have read Partner_1 three times: when opening the dropdown, when opening the modal, and
     // after the save
-    assert.verifySteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_2}]`]);
+    assert.verifySteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_1},${partnerId_2}]`]);
 });
 
 QUnit.test("many2many_tags_email widget can load more than 40 records", async (assert) => {

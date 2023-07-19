@@ -6,6 +6,36 @@ import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
 
+async function applyProduct(record, product) {
+    // handle custom values & no variants
+    const contextRecords = [];
+    for (const ptal of product.attribute_lines) {
+        const selectedCustomPTAV = ptal.attribute_values.find(
+            ptav => ptav.is_custom && ptav.id === ptal.selected_attribute_value_id
+        );
+        if (selectedCustomPTAV) {
+            contextRecords.push({
+                default_custom_product_template_attribute_value_id: selectedCustomPTAV.id,
+                default_custom_value: ptal.customValue,
+            });
+        };
+    }
+
+    const proms = [];
+    proms.push(record.data.product_custom_attribute_value_ids.createAndReplace(contextRecords));
+
+    const noVariantPTAVIds = product.attribute_lines.filter(
+        ptal => ptal.create_variant === "no_variant" && ptal.attribute_values.length > 1
+    ).map(ptal => ptal.selected_attribute_value_id);
+
+    proms.push(record.data.product_no_variant_attribute_value_ids.replaceWith(noVariantPTAVIds, { silent: true }));
+    await Promise.all(proms);
+    await record.update({
+        product_id: [product.id, product.display_name],
+        product_uom_qty: product.quantity,
+    });
+};
+
 patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
 
     setup() {
@@ -78,9 +108,9 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         this.dialog.add(ProductConfiguratorDialog, {
             productTemplateId: this.props.record.data.product_template_id[0],
             ptavIds: this.props.record.data.product_template_attribute_value_ids.records.map(
-                record => record.data.id
+                record => record.resId
             ).concat(this.props.record.data.product_no_variant_attribute_value_ids.records.map(
-                record => record.data.id
+                record => record.resId
             )),
             customAttributeValues: customAttributeValues.map(
                 data => {
@@ -98,18 +128,20 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             soDate: serializeDateTime(saleOrderRecord.data.date_order),
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
-                await this.props.record.update(mainProduct);
+                await applyProduct(this.props.record, mainProduct);
+
                 this._onProductUpdate();
+                saleOrderRecord.data.order_line.leaveEditMode();
                 for (const optionalProduct of optionalProducts) {
-                    const line = await saleOrderRecord.data.order_line.addNew({
+                    const line = await saleOrderRecord.data.order_line.addNewRecord({
                         position: 'bottom',
+                        mode: "readonly",
                     });
-                    line.update(optionalProduct);
+                    await applyProduct(line, optionalProduct);
                 }
-                saleOrderRecord.data.order_line.unselectRecord();
             },
             discard: () => {
-                saleOrderRecord.data.order_line.removeRecord(this.props.record);
+                saleOrderRecord.data.order_line.delete(this.props.record);
             },
         });
     },

@@ -6,7 +6,6 @@ import { reposition } from "@web/core/position_hook";
 import {
     Many2ManyAttendee,
     many2ManyAttendee,
-    preloadMany2ManyAttendee,
 } from "@calendar/views/fields/many2many_attendee";
 
 export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
@@ -39,8 +38,3 @@ export const many2ManyAttendeeExpandable = {
 };
 
 registry.category("fields").add("many2manyattendeeexpandable", many2ManyAttendeeExpandable);
-
-registry.category("preloadedData").add("many2manyattendeeexpandable", {
-    loadOnTypes: ["many2many"],
-    preload: preloadMany2ManyAttendee,
-});

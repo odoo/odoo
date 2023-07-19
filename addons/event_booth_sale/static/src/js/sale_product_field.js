@@ -39,7 +39,7 @@ patch(SaleOrderLineProductField.prototype, 'event_booth_sale', {
             if (recordData.event_booth_pending_ids) {
                 actionContext.default_event_booth_ids = recordData.event_booth_pending_ids.records.map(
                     record => {
-                        return [4, record.data.id];
+                        return [4, record.resId];
                     }
                 );
             }
@@ -58,11 +58,15 @@ patch(SaleOrderLineProductField.prototype, 'event_booth_sale', {
                             });
                         }
                     } else {
-                        const eventBoothConfiguration = closeInfo.eventBoothConfiguration;
+                        const { event_id, event_booth_category_id, event_booth_pending_ids } =
+                            closeInfo.eventBoothConfiguration;
+                        this.props.record.data.event_booth_pending_ids.replaceWith(
+                            event_booth_pending_ids,
+                            { silent: true }
+                        );
                         this.props.record.update({
-                            event_id: eventBoothConfiguration.event_id,
-                            event_booth_category_id: eventBoothConfiguration.event_booth_category_id,
-                            event_booth_pending_ids: eventBoothConfiguration.event_booth_pending_ids,
+                            event_id,
+                            event_booth_category_id,
                         });
                     }
                 }

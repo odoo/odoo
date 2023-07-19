@@ -8,7 +8,7 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 
 export class FieldMany2ManyAltPOsRenderer extends ListRenderer {
    isCurrentRecord(record) {
-      return record.data.id === this.env.model.root.data.id;
+      return record.resId === this.props.list.model.root.resId;
   }
 }
 
@@ -31,8 +31,8 @@ export class FieldMany2ManyAltPOs extends X2ManyField {
     * @override
     */
    async openRecord(record) {
-      if (record.data.id !== this.props.record.data.id) {
-         const action = await this.orm.call(record.resModel, "get_formview_action", [[record.data.id]], {
+      if (record.resId !== this.props.record.resId) {
+         const action = await this.orm.call(record.resModel, "get_formview_action", [[record.resId]], {
                context: this.props.context,
          });
          await this.action.doAction(action);

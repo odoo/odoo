@@ -42,7 +42,7 @@ QUnit.test("list activity widget with no activity", async (assert) => {
     });
     assert.containsOnce($, ".o-mail-ActivityButton i.text-muted");
     assert.strictEqual($(".o-mail-ListActivity-summary")[0].innerText, "");
-    assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
+    assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });
 
 QUnit.test("list activity widget with activities", async (assert) => {
@@ -99,7 +99,7 @@ QUnit.test("list activity widget with activities", async (assert) => {
     );
     assert.containsOnce($(".o_data_row:eq(1)"), ".o-mail-ActivityButton i.text-success.fa-clock-o");
     assert.strictEqual($(".o_data_row:eq(1) .o-mail-ListActivity-summary")[0].innerText, "Type 2");
-    assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
+    assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });
 
 QUnit.test("list activity widget with exception", async (assert) => {
@@ -142,7 +142,7 @@ QUnit.test("list activity widget with exception", async (assert) => {
     });
     assert.containsOnce($, ".o-mail-ActivityButton i.text-warning.fa-warning");
     assert.strictEqual($(".o-mail-ListActivity-summary")[0].innerText, "Warning");
-    assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
+    assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });
 
 QUnit.test("list activity widget: open dropdown", async (assert) => {
@@ -226,12 +226,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
     await click(".o-mail-ActivityListPopoverItem-markAsDone"); // mark the first activity as done
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']"); // confirm
     assert.strictEqual($(".o-mail-ListActivity-summary")[0].innerText, "Meet FP");
-    assert.verifySteps([
-        "web_search_read",
-        "activity_format",
-        "action_feedback",
-        "web_search_read",
-    ]);
+    assert.verifySteps(["unity_web_search_read", "activity_format", "action_feedback", "web_read"]);
 });
 
 QUnit.test("list activity exception widget with activity", async (assert) => {

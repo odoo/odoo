@@ -16,10 +16,10 @@ export class DepartmentChart extends Component {
         this.state = useState({
             hierarchy: {}
         });
-        onWillStart(async () => await this.fetchHierarchy(this.props.record.data.id));
+        onWillStart(async () => await this.fetchHierarchy(this.props.record.resId));
 
         onWillUpdateProps(async (nextProps) => {
-            await this.fetchHierarchy(nextProps.record.data.id);
+            await this.fetchHierarchy(nextProps.record.resId);
         });
     }
 

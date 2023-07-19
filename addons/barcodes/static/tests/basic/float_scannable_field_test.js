@@ -119,15 +119,15 @@ QUnit.module("Fields", (hooks) => {
                 </form>
             `,
             mockRPC(_route, args) {
-                if (args.method === "read") {
-                    assert.step("read");
+                if (args.method === "web_read") {
+                    assert.step("web_read");
                 }
             },
             resId: 1,
             resIds: [1, 2],
         });
 
-        assert.verifySteps(["read"], "update should not have been called yet");
+        assert.verifySteps(["web_read"], "update should not have been called yet");
 
         // switch to next record
         simulateBarCode(
@@ -137,6 +137,6 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
         // a first update is done to reload the data (thus followed by a read), but
         // update shouldn't be called afterwards
-        assert.verifySteps(["update", "read"]);
+        assert.verifySteps(["update", "web_read"]);
     });
 });
