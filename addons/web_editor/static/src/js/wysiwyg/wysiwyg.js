@@ -217,12 +217,14 @@ export class Wysiwyg extends Component {
                 onColorPicked: getColorPickedHandler('text'),
                 onCustomColorPicked: getColorPickedHandler('text'),
                 onColorHover: getColorHoverHandler('text'),
+                onColorpaletteTabChange: this.getColorPaletteTabChangeHandler('text').bind(this),
             });
             Object.assign(this.colorPalettesProps.background, colorPaletteCommonOptions, {
                 document: this.options.document,
                 onColorPicked: getColorPickedHandler('background'),
                 onCustomColorPicked: getColorPickedHandler('background'),
                 onColorHover: getColorHoverHandler('background'),
+                onColorpaletteTabChange: this.getColorPaletteTabChangeHandler('background').bind(this),
             });
 
             this._setToolbarProps();
@@ -1929,9 +1931,27 @@ export class Wysiwyg extends Component {
         // mutations to prevent them from being reverted.
         this.odooEditor.historyStash();
     }
+    getColorPaletteTabChangeHandler(colorType) {
+        return (selectedTab) => {
+            this.colorPalettesProps[colorType].selectedTab = selectedTab;
+        }
+    }
     _processAndApplyColor(colorType, color, previewMode) {
         if (color && !isCSSColor(color) && !weUtils.isColorGradient(color)) {
             color = (colorType === "text" ? 'text-' : 'bg-') + color;
+        }
+        const selectedTds = this.odooEditor.document.querySelectorAll('td.o_selected_td');
+        const applyTransparency =
+            color.startsWith('#') && // Check for hex color.
+            !selectedTds.length && // Do not apply to table cells.
+            colorType === 'background' && // Only apply on bg color.
+            // Check if color is coming from theme-colors tab.
+            this.colorPalettesProps.background.selectedTab === 'theme-colors';
+        // Apply default transparency to the selected common color to make
+        // text highlighting more usable between light and dark modes.
+        if (applyTransparency) {
+            const HEX_OPACITY = '99';
+            color = color.concat(HEX_OPACITY);
         }
         let coloredElements = this.odooEditor.execCommand('applyColor', color, colorType === 'text' ? 'color' : 'backgroundColor', this.lastMediaClicked);
         // Some nodes returned by applyColor can be removed of the document by the sanitization in historyStep
