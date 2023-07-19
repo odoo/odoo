@@ -285,7 +285,7 @@
                             <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
                         <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
-                            attrs="{'invisible' : ['|', ('id', '=', False), ('subtask_count', '=', 0)]}" context="{'default_user_ids': user_ids, 'default_project_id': project_id}">
+                            attrs="{'invisible' : ['|', ('id', '=', False), ('subtask_count', '=', 0)]}" context="{'default_user_ids': user_ids, 'default_project_id': project_id, 'subtask_action': True}">
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                         </button>
                         <button name="action_dependent_tasks" type="object" attrs="{'invisible': [('dependent_tasks_count', '=', 0)]}" class="oe_stat_button" icon="fa-tasks" groups="project.group_project_task_dependencies">
