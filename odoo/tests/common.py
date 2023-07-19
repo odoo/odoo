@@ -38,6 +38,7 @@ from datetime import datetime
 from functools import lru_cache
 from itertools import zip_longest as izip_longest
 from unittest.mock import patch, _patch
+from unittest import util
 from xmlrpc import client as xmlrpclib
 
 import requests
@@ -52,7 +53,7 @@ from odoo.exceptions import AccessError
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
-from odoo.tools import float_compare, single_email_re, profiler, lower_logging
+from odoo.tools import float_compare, single_email_re, profiler, lower_logging, mute_logger
 from odoo.tools.misc import find_in_path
 
 from . import case
@@ -739,40 +740,47 @@ class TransactionCase(BaseCase):
             gc_env['ir.attachment']._gc_file_store_unsafe()
 
     @classmethod
+    def clear(cls):
+        if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
+            with cls.registry.cursor() as cr:
+                cls.registry.setup_models(cr)
+        cls.registry_start_sequence = cls.registry.registry_sequence
+        with mute_logger('odoo.modules.registry'):
+            cls.registry.clear_all_caches()
+            cls.registry.cache_invalidated.clear()
+            cls.registry.registry_invalidated = False
+        # restore environments after the test to avoid invoking flush() with an
+        # invalid environment (inexistent user id) from another test
+        for env in list(cls.env.all.envs):
+            env.clear()
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
         cls.addClassCleanup(cls._gc_filestore)
         cls.registry = odoo.registry(get_db_name())
-        cls.registry_start_sequence = cls.registry.registry_sequence
-        def reset_changes():
-            if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
-                with cls.registry.cursor() as cr:
-                    cls.registry.setup_models(cr)
-            cls.registry.registry_invalidated = False
-            cls.registry.clear_all_caches()
-            cls.registry.cache_invalidated.clear()
-
-        cls.addClassCleanup(reset_changes)
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.registry_start_sequence = cls.registry.registry_sequence
+        cls.addClassCleanup(cls.clear)
+        cls.clear()  # ensure all caches are empty before starting class setups
+
+    def _post_setUpClass(cls):
+        # ensure to flush once the setup class before clearing and creating savepoints
+        cls.env.flush_all()
+        # ensure all caches are empty before starting the first test case.
+        # This is not done in setup to avoid clearing any setup done before calling super.setUp
+        cls.clear()
+        self._savepoint_id = f'{next(savepoint_seq)}¸{util.strclass(cls)}'
+
+        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
 
     def setUp(self):
         super().setUp()
-
-        # restore environments after the test to avoid invoking flush() with an
-        # invalid environment (inexistent user id) from another test
-        envs = self.env.all.envs
-        for env in list(envs):
-            self.addCleanup(env.clear)
-        # restore the set of known environments as it was at setUp
-        self.addCleanup(envs.update, list(envs))
-        self.addCleanup(envs.clear)
-
-        self.addCleanup(self.registry.clear_all_caches)
 
         # This prevents precommit functions and data from piling up
         # until cr.flush is called in 'assertRaises' clauses
@@ -785,11 +793,9 @@ class TransactionCase(BaseCase):
         for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
             self.addCleanup(_reset, callback, deque(callback._funcs), dict(callback.data))
 
-        # flush everything in setUpClass before introducing a savepoint
-        self.env.flush_all()
+        # flush everything in setUpClass before introducing a savepoint and clearing everything
+        self.addCleanup(self.clear)  # ensure all cache are empty after setupClass
 
-        self._savepoint_id = next(savepoint_seq)
-        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
 
         self.patch(self.registry['res.partner'], '_get_gravatar_image', lambda *a: False)
