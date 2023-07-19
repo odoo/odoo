@@ -457,11 +457,12 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         ev.stopPropagation();
 
         // Get URL and UTMs
-        var campaignID = $('#campaign-select').attr('value');
-        var mediumID = $('#channel-select').attr('value');
-        var sourceID = $('#source-select').attr('value');
+        const campaignID = document.querySelector('#campaign-select').value;
+        const mediumID = document.querySelector('#channel-select').value;
+        const sourceID = document.querySelector('#source-select').value;
 
-        var params = {};
+        const label = document.querySelector('#label');
+        const params = { label: label.value || undefined };
         params.url = $('#url').val();
         if (campaignID !== '') {
             params.campaign_id = parseInt(campaignID);
@@ -502,7 +503,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
                 $('#campaign-select').select2('val', '');
                 $('#channel-select').select2('val', '');
                 $('#source-select').select2('val', '');
-
+                label.value = '';
                 $('.o_website_links_utm_forms').hide();
             }
         });
