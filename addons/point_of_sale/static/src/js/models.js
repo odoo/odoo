@@ -3109,6 +3109,10 @@ exports.Order = Backbone.Model.extend({
         this.to_invoice = false;    // FIXME
         this.to_ship = false;
 
+        // Tag this order as 'locked' if it is already paid.
+        this.locked = ['paid', 'done', 'invoiced'].includes(json.state);
+        this.state = json.state;
+
         var orderlines = json.lines;
         for (var i = 0; i < orderlines.length; i++) {
             var orderline = orderlines[i][2];
@@ -3128,9 +3132,6 @@ exports.Order = Backbone.Model.extend({
             }
         }
 
-        // Tag this order as 'locked' if it is already paid.
-        this.locked = ['paid', 'done', 'invoiced'].includes(json.state);
-        this.state = json.state;
         this.amount_return = json.amount_return;
         this.account_move = json.account_move;
         this.backendId = json.id;
