@@ -45,7 +45,7 @@ def handle_history_divergence(record, html_field_name, vals):
     if html_field_name not in vals:
         return
     incoming_html = vals[html_field_name]
-    incoming_history_matches = re.search(diverging_history_regex, incoming_html)
+    incoming_history_matches = re.search(diverging_history_regex, incoming_html or '')
     # When there is no incoming history id, it means that the value does not
     # comes from the odoo editor or the collaboration was not activated. In
     # project, it could come from the collaboration pad. In that case, we do not
