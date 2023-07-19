@@ -5710,7 +5710,14 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const values = widgetValue.split(' ');
         const image = this._getImg();
         image.dataset.resizeWidth = values[0];
-        image.dataset.mimetype = values[1];
+        if (image.dataset.shape) {
+            // If the image has a shape, modify its originalMimetype attribute.
+            image.dataset.originalMimetype = values[1];
+        } else {
+            // If the image does not have a shape, modify its mimetype
+            // attribute.
+            image.dataset.mimetype = values[1];
+        }
         return this._applyOptions();
     },
     /**
@@ -5840,8 +5847,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         };
         widths[img.naturalWidth] = [sprintf(_t("%spx"), img.naturalWidth), 'image/webp'];
         widths[optimizedWidth] = [sprintf(_t("%spx (Suggested)"), optimizedWidth), 'image/webp'];
-        widths[maxWidth] = [sprintf(_t("%spx (Original)"), maxWidth), img.dataset.originalMimetype];
-        if (img.dataset.originalMimetype !== 'image/webp') {
+        const imgMimetype = this._getImageMimetype(img);
+        widths[maxWidth] = [sprintf(_t("%spx (Original)"), maxWidth), imgMimetype];
+        if (imgMimetype !== 'image/webp') {
             // Avoid a key collision by subtracting 0.1 - putting the webp
             // above the original format one of the same size.
             widths[maxWidth - 0.1] = [sprintf(_t("%spx"), maxWidth), 'image/webp'];
@@ -5900,9 +5908,6 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         this.originalId = img.dataset.originalId;
         this.originalSrc = img.dataset.originalSrc;
-        if (!img.dataset.originalMimetype) {
-            img.dataset.originalMimetype = img.dataset.mimetype;
-        }
     },
     /**
      * Sets the image's width to its suggested size.
