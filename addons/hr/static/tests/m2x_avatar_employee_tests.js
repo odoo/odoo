@@ -147,8 +147,16 @@ QUnit.test(
         };
         const { openView } = await start({
             mockRPC(route, args) {
-                if (args.method === "read") {
-                    assert.step(`read ${args.model} ${args.args[0]}`);
+                if (args.method === "web_read") {
+                    assert.step(`web_read ${args.model} ${args.args[0]}`);
+                    assert.deepEqual(args.kwargs.specification, {
+                        display_name: {},
+                        employee_id: {
+                            fields: {
+                                display_name: {},
+                            },
+                        },
+                    });
                 }
             },
             serverData: { views },
@@ -173,11 +181,7 @@ QUnit.test(
         );
 
         await dom.click(document.querySelector(".o_m2o_avatar > img"));
-        assert.verifySteps([
-            `read m2x.avatar.employee ${avatarId}`,
-            `read hr.employee.public ${employeeId}`,
-            "notification",
-        ]);
+        assert.verifySteps([`web_read m2x.avatar.employee ${avatarId}`, "notification"]);
     }
 );
 
@@ -201,6 +205,9 @@ QUnit.test("many2many_avatar_employee widget in form view", async function (asse
     };
     const { openView } = await start({
         mockRPC(route, args) {
+            if (args.method === "web_read") {
+                assert.step(`web_read ${args.model} ${args.args[0]}`);
+            }
             if (args.method === "read") {
                 assert.step(`read ${args.model} ${args.args[0]}`);
             }
@@ -232,8 +239,7 @@ QUnit.test("many2many_avatar_employee widget in form view", async function (asse
         document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
     );
     assert.verifySteps([
-        `read m2x.avatar.employee ${avatarId_1}`,
-        `read hr.employee.public ${employeeId_1},${employeeId_2}`,
+        `web_read m2x.avatar.employee ${avatarId_1}`,
         `read hr.employee.public ${employeeId_1}`,
         `read hr.employee.public ${employeeId_2}`,
     ]);
@@ -282,10 +288,7 @@ QUnit.test("many2many_avatar_employee widget in list view", async function (asse
 
     // click on first employee badge
     await afterNextRender(() => dom.click(document.querySelector(".o_data_cell .o_m2m_avatar")));
-    assert.verifySteps([
-        `read hr.employee.public ${employeeId_1},${employeeId_2}`,
-        `read hr.employee.public ${employeeId_1}`,
-    ]);
+    assert.verifySteps([`read hr.employee.public ${employeeId_1}`]);
     assert.containsOnce(document.body, ".o-mail-ChatWindow-name");
     assert.strictEqual(document.querySelector(".o-mail-ChatWindow-name").textContent, "Mario");
 
@@ -368,7 +371,6 @@ QUnit.test("many2many_avatar_employee widget in kanban view", async function (as
     await dom.click(document.querySelectorAll('.o_kanban_record img.o_m2m_avatar')[1]);
     await dom.click(document.querySelectorAll('.o_kanban_record img.o_m2m_avatar')[0]);
     assert.verifySteps([
-        `read hr.employee.public ${employeeId_1},${employeeId_2}`,
         `read hr.employee.public ${employeeId_1}`,
         `read hr.employee.public ${employeeId_2}`,
     ]);
@@ -395,6 +397,9 @@ QUnit.test(
             mockRPC(route, args) {
                 if (args.method === "read") {
                     assert.step(`read ${args.model} ${args.args[0]}`);
+                }
+                if (args.method === "web_read") {
+                    assert.step(`web_read ${args.model} ${args.args[0]}`);
                 }
             },
             serverData: { views },
@@ -428,8 +433,7 @@ QUnit.test(
             document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
         );
         assert.verifySteps([
-            `read m2x.avatar.employee ${employeeId_1}`,
-            `read hr.employee.public ${employeeId_1},${employeeId_2}`,
+            `web_read m2x.avatar.employee ${employeeId_1}`,
             `read hr.employee.public ${employeeId_1}`,
             "notification",
             `read hr.employee.public ${employeeId_2}`,

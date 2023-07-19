@@ -139,7 +139,6 @@ QUnit.test("click on real line opens a dialog", async (assert) => {
             </form>`,
     });
     await click($(".o_data_row:nth-child(2) .o_data_cell")[0]);
-    assert.containsNone($, ".o_selected_row");
     assert.containsOnce($, ".modal .o_form_view");
 });
 

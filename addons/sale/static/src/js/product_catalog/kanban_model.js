@@ -1,25 +1,17 @@
 /** @odoo-module */
-import { KanbanModel, KanbanDynamicRecordList } from "@web/views/kanban/kanban_model";
 
-export class ProductCatalogKanbanDynamicRecordList extends KanbanDynamicRecordList {
+import { RelationalModel } from "@web/model/relational_model/relational_model";
 
-    async load(params = {}) {
+export class ProductCatalogKanbanModel extends RelationalModel {
+    async load() {
         await super.load(...arguments);
-        await this._loadCatalogData();
-    }
 
-    async _loadCatalogData() {
-        const saleOrderLinesInfo = await this.model.rpc("/sales/catalog/sale_order_lines_info", {
-            order_id: this.context.order_id,
-            product_ids: this.records.map((rec) => rec.resId),
+        const saleOrderLinesInfo = await this.rpc("/sales/catalog/sale_order_lines_info", {
+            order_id: this.config.context.order_id,
+            product_ids: this.root.records.map((rec) => rec.resId),
         });
-
-        for (const record of this.records) {
+        for (const record of this.root.records) {
             record.productCatalogData = saleOrderLinesInfo[record.resId];
         }
     }
 }
-
-export class ProductCatalogKanbanModel extends KanbanModel {}
-
-ProductCatalogKanbanModel.DynamicRecordList = ProductCatalogKanbanDynamicRecordList;

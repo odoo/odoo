@@ -12,9 +12,9 @@ export class ProjectProjectKanbanHeader extends KanbanHeader {
     async deleteGroup() {
         if (this.group.groupByField.name === 'stage_id') {
             const action = await this.group.model.orm.call(
-                this.group.resModel,
+                this.group.groupByField.relation,
                 'unlink_wizard',
-                [this.group.resId],
+                [this.group.value],
                 { context: this.group.context },
             );
             this.action.doAction(action);

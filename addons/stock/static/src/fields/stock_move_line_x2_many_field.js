@@ -21,7 +21,7 @@ export class SMLX2ManyField extends X2ManyField {
         this.openRecord = useOpenMany2XRecord({
             resModel: "stock.quant",
             activeActions: this.activeActions,
-            onRecordSaved: (resId) => this.selectRecord([resId.data.id]),
+            onRecordSaved: (record) => this.selectRecord([record.resId]),
             onRecordDiscarted: (resId) => this.selectRecord(resId),
             fieldString: this.props.string,
             is2Many: true,

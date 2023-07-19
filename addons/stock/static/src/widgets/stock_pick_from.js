@@ -36,7 +36,7 @@ export class StockPickFrom extends Many2OneField {
 
     _quant_display_name() {
         let name_parts = [];
-        if (this.props.record.data.id) {
+        if (this.props.record.resId) {
             // if location group is activated
             const data = this.props.record.data;
             if (this.enabledGroups?.location && data.location_id) {

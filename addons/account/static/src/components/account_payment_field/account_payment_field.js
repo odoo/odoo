@@ -35,7 +35,7 @@ export class AccountPaymentField extends Component {
             content: [],
             outstanding: false,
             title: "",
-            move_id: this.props.record.data.id,
+            move_id: this.props.record.resId,
         };
         for (let [key, value] of Object.entries(info.content)) {
             value.index = key;

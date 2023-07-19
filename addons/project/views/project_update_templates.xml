@@ -29,7 +29,7 @@
 
 <ul class="o_checklist" t-if="milestones['list']">
 <t t-foreach="milestones['list']" t-as="milestone">
-<li t-attf-class="{{milestone['is_reached'] and 'o_checked' or ''}}">
+<li t-att-class="milestone['is_reached'] and 'o_checked'" t-attf-id="checkId-{{milestone_index}}">
 <t t-esc="milestone['name']"/>
 <span t-if="milestone['is_deadline_future'] and not milestone['is_reached'] and not milestone['can_be_marked_as_done']"><font style="color: rgb(190, 190, 190);"><t t-set="color_level" t-value="64"/><t t-call="project.milestone_deadline"/></font></span>
 <span t-elif="milestone['is_deadline_exceeded']"><font style="color: rgb(255, 0, 0);"><t t-call="project.milestone_deadline"/></font></span>

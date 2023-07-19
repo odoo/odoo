@@ -19,8 +19,8 @@ export class QtyAtDatePopover extends Component {
                 active_model: 'product.product',
                 active_id: this.props.record.data.product_id[0],
                 warehouse: this.props.record.data.warehouse_id && this.props.record.data.warehouse_id[0],
-                move_to_match_ids: this.props.record.data.move_ids.records.map(record => record.data.id),
-                sale_line_to_match_id: this.props.record.data.id,
+                move_to_match_ids: this.props.record.data.move_ids.records.map(record => record.resId),
+                sale_line_to_match_id: this.props.record.resId,
             },
         });
     }

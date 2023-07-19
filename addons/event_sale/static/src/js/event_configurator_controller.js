@@ -26,7 +26,8 @@ class EventConfiguratorController extends formView.Controller {
      *
      * @override
      */
-    onRecordSaved(record) {
+    async onRecordSaved(record) {
+        await super.onRecordSaved(...arguments);
         const { event_id, event_ticket_id } = record.data;
         return this.action.doAction({
             type: "ir.actions.act_window_close",

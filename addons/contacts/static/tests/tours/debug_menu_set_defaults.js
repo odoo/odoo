@@ -51,7 +51,7 @@
                 trigger: 'button.o_form_button_cancel',
             },
             {
-                trigger: '.o_action_manager .o_kanban_view .o-kanban-button-new',
+                trigger: '.o_action_manager > .o_kanban_view .o-kanban-button-new',
             },
             {
                 content: "Check that Individual is checked instead of Company",

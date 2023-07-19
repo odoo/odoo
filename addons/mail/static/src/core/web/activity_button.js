@@ -72,7 +72,7 @@ export class ActivityButton extends Component {
             this.popover.open(this.buttonRef.el, {
                 activityIds: this.props.record.data.activity_ids.currentIds,
                 onActivityChanged: () => {
-                    this.props.record.model.load({ resId: this.props.record.resId });
+                    this.props.record.load();
                 },
                 resId: this.props.record.resId,
                 resModel: this.props.record.resModel,

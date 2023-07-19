@@ -1,7 +1,7 @@
 /** @odoo-module */
 
+import { evalDomain } from "@web/core/domain";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { evalDomain } from "@web/views/utils";
 
 const { onWillUpdateProps } = owl;
 

@@ -10,6 +10,7 @@ import { shallowEqual } from "@web/core/utils/arrays";
 import { sprintf } from "@web/core/utils/strings";
 import { _lt } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { TagsList } from "@web/core/tags_list/tags_list";
@@ -18,7 +19,7 @@ import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { formatPercentage } from "@web/views/fields/formatters";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-const { Component, useState, useRef, useExternalListener, onWillUpdateProps, onWillStart, onPatched } = owl;
+const { Component, useState, useRef, useExternalListener, onWillStart, onPatched } = owl;
 
 const PLAN_APPLICABILITY = {
     mandatory: _lt("Mandatory"),
@@ -50,7 +51,7 @@ export class AnalyticDistribution extends Component {
         this.currentValue = this.props.record.data[this.props.name];
 
         onWillStart(this.willStart);
-        onWillUpdateProps(this.willUpdate);
+        useRecordObserver(this.willUpdateRecord.bind(this));
         onPatched(this.patched);
 
         useExternalListener(window, "click", this.onWindowClick, true);
@@ -83,43 +84,44 @@ export class AnalyticDistribution extends Component {
     // Lifecycle
     async willStart() {
         if (this.editingRecord) {
-            await this.fetchAllPlans(this.props);
+            await this.fetchAllPlans();
         }
-        await this.formatData(this.props);
+        await this.formatData();
     }
 
-    async willUpdate(nextProps) {
+    async willUpdateRecord(record) {
         // Unless force_applicability, Plans need to be retrieved again as the product or account might have changed
         // and thus different applicabilities apply
         // or a model applies that contains unavailable plans
         // This should only execute when these fields have changed, therefore we use the `_field` props.
         const valueChanged =
             JSON.stringify(this.currentValue) !==
-            JSON.stringify(nextProps.record.data[nextProps.name]);
-        const currentAccount = this.props.account_field && this.props.record.data[this.props.account_field] || false;
-        const currentProduct = this.props.product_field && this.props.record.data[this.props.product_field] || false;
+            JSON.stringify(record.data[this.props.name]);
+        const currentAccount = this.props.account_field && record.data[this.props.account_field] || false;
+        const currentProduct = this.props.product_field && record.data[this.props.product_field] || false;
         const accountChanged = !shallowEqual(this.lastAccount, currentAccount);
         const productChanged = !shallowEqual(this.lastProduct, currentProduct);
         if (valueChanged || accountChanged || productChanged) {
             if (!this.props.force_applicability) {
-                await this.fetchAllPlans(nextProps);
+                await this.fetchAllPlans();
             }
             this.lastAccount = accountChanged && currentAccount || this.lastAccount;
             this.lastProduct = productChanged && currentProduct || this.lastProduct;
-            await this.formatData(nextProps);
+            await this.formatData();
         }
-        this.currentValue = nextProps.record.data[nextProps.name];
+        this.currentValue = record.data[this.props.name];
     }
 
     patched() {
         this.focusToSelector();
     }
 
-    async formatData(nextProps) {
-        const data = nextProps.record.data[nextProps.name];
+    async formatData() {
+        const { record, name } = this.props;
+        const data = record.data[name];
         const analytic_account_ids = Object.keys(data).map((id) => parseInt(id));
         const records = analytic_account_ids.length ? await this.fetchAnalyticAccounts([["id", "in", analytic_account_ids]]) : [];
-        let widgetData = Object.assign({}, ...this.allPlans.map((plan) => ({[plan.id]: {...plan, distribution: []}})));
+        const widgetData = Object.assign({}, ...this.allPlans.map((plan) => ({ [plan.id]: { ...plan, distribution: [] } })));
         records.map((record) => {
             if (!widgetData[record.root_plan_id[0]]) {
                 // plans might not have been retrieved
@@ -144,36 +146,37 @@ export class AnalyticDistribution extends Component {
     }
 
     // ORM
-    fetchPlansArgs(nextProps) {
+    fetchPlansArgs() {
+        const { record, name } = this.props;
         let args = {};
         if (this.props.business_domain_compute) {
-            args['business_domain'] = evaluateExpr(this.props.business_domain_compute, this.props.record.evalContext);
+            args['business_domain'] = evaluateExpr(this.props.business_domain_compute, record.evalContext);
         }
         if (this.props.business_domain) {
             args['business_domain'] = this.props.business_domain;
         }
-        if (this.props.product_field && this.props.record.data[this.props.product_field]) {
-            args['product'] = this.props.record.data[this.props.product_field][0];
+        if (this.props.product_field && record.data[this.props.product_field]) {
+            args['product'] = record.data[this.props.product_field][0];
         }
-        if (this.props.account_field && this.props.record.data[this.props.account_field]) {
-            args['account'] = this.props.record.data[this.props.account_field][0];
+        if (this.props.account_field && record.data[this.props.account_field]) {
+            args['account'] = record.data[this.props.account_field][0];
         }
         if (this.props.force_applicability) {
             args['applicability'] = this.props.force_applicability;
         }
-        const existing_account_ids = Object.keys(nextProps.record.data[nextProps.name]).map((i) => parseInt(i));
+        const existing_account_ids = Object.keys(record.data[name]).map((i) => parseInt(i));
         if (existing_account_ids.length) {
             args['existing_account_ids'] = existing_account_ids;
         }
-        if (this.props.record.data.company_id) {
-            args['company_id'] = this.props.record.data.company_id[0];
+        if (record.data.company_id) {
+            args['company_id'] = record.data.company_id[0];
         }
         return args;
     }
 
-    async fetchAllPlans(nextProps) {
+    async fetchAllPlans() {
         // TODO: Optimize to execute once for all records when `force_applicability` is set
-        const argsPlan =  this.fetchPlansArgs(nextProps);
+        const argsPlan = this.fetchPlansArgs();
         this.allPlans = await this.orm.call("account.analytic.plan", "get_relevant_plans", [], argsPlan);
     }
 
@@ -530,8 +533,8 @@ export class AnalyticDistribution extends Component {
 
     async openAnalyticEditor() {
         if (!this.allPlans.length) {
-            await this.fetchAllPlans(this.props);
-            await this.formatData(this.props);
+            await this.fetchAllPlans();
+            await this.formatData();
         }
         this.autoFill();
         const incompletePlan = this.firstIncompletePlanId;

@@ -172,7 +172,7 @@ QUnit.test("remove a follower in a dirty form view", async (assert) => {
         "res.partner,false,form": `
             <form>
                 <field name="name"/>
-                <field name="channel_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="channel_ids" widget="many2many_tags"/>
                 <div class="oe_chatter">
                     <field name="message_ids"/>
                     <field name="message_follower_ids"/>
@@ -206,7 +206,7 @@ QUnit.test("removing a follower should reload form view", async function (assert
     });
     const { openFormView } = await start({
         async mockRPC(route, args) {
-            if (args.method === "read") {
+            if (args.method === "web_read") {
                 assert.step(`read ${args.args[0][0]}`);
             }
         },

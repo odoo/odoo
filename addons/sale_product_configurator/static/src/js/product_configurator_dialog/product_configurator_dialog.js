@@ -369,55 +369,6 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     /**
-     * Serialize the product into a format understandable by `sale.order.line`.
-     *
-     * @param {Object} product - The product to serialize.
-     * @return {Object} - The serialized product.
-     */
-    _serializeProduct(product) {
-        let serializedProduct = {
-            product_id: [product.id, product.display_name],
-            product_uom_qty: product.quantity,
-        }
-
-        // handle custom values & no variants
-        let customValuesCommands = [{ operation: "DELETE_ALL" }];
-        for (const ptal of product.attribute_lines) {
-            const selectedCustomPTAV = ptal.attribute_values.find(
-                ptav => ptav.is_custom && ptav.id === ptal.selected_attribute_value_id
-            );
-            if (selectedCustomPTAV) customValuesCommands.push({
-                operation: "CREATE",
-                context: [
-                    {
-                        default_custom_product_template_attribute_value_id: selectedCustomPTAV.id,
-                        default_custom_value: ptal.customValue,
-                    },
-                ],
-            });
-        }
-        serializedProduct.product_custom_attribute_value_ids = {
-            operation: "MULTI",
-            commands: customValuesCommands,
-        };
-
-        let noVariantCommands = [{ operation: "DELETE_ALL" }];
-        const noVariantPTAVIds = product.attribute_lines.filter(
-            ptal => ptal.create_variant === "no_variant" && ptal.attribute_values.length > 1
-        ).map(ptal => { return {id: ptal.selected_attribute_value_id}});
-        if (noVariantPTAVIds.length) noVariantCommands.push({
-            operation: "ADD_M2M",
-            ids: noVariantPTAVIds,
-        });
-        serializedProduct.product_no_variant_attribute_value_ids = {
-            operation: "MULTI",
-            commands: noVariantCommands,
-        };
-
-        return serializedProduct;
-    }
-
-    /**
      * Confirm the current combination(s).
      *
      * @return {undefined}
@@ -435,12 +386,12 @@ export class ProductConfiguratorDialog extends Component {
             }
         }
         await this.props.save(
-            this._serializeProduct(this.state.products.find(
+            this.state.products.find(
                 p => p.product_tmpl_id === this.env.mainProductTmplId
-            )),
+            ),
             this.state.products.filter(
                 p => p.product_tmpl_id !== this.env.mainProductTmplId
-            ).map(p => this._serializeProduct(p)),
+            ),
         );
         this.props.close();
     }
