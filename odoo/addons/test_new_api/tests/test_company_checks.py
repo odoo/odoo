@@ -3,84 +3,109 @@
 from odoo.exceptions import UserError, AccessError
 from odoo.tests import common
 from odoo.tools import frozendict
-from odoo import Command
 
 
 class TestCompanyCheck(common.TransactionCase):
 
-    def setUp(self):
-        super(TestCompanyCheck, self).setUp()
-        self.company_a = self.env['res.company'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_a = cls.env['res.company'].create({
             'name': 'Company A'
         })
-        self.company_b = self.env['res.company'].create({
+        cls.company_b = cls.env['res.company'].create({
             'name': 'Company B'
         })
-        self.parent_company_a_id = self.env['test_new_api.model_parent'].create({
-            'name': 'M1',
-            'company_id': self.company_a.id,
-        })
-        self.parent_company_b_id = self.env['test_new_api.model_parent'].create({
-            'name': 'M2',
-            'company_id': self.company_b.id,
-        })
-        self.company_c = self.env['res.company'].create({
+        cls.company_c = cls.env['res.company'].create({
             'name': 'Company C'
         })
-
-        self.test_user = self.env['res.users'].create({
+        cls.parent_0 = cls.env['test_new_api.model_parent'].create({
+            'name': 'M0',
+            'company_id': False,
+        })
+        cls.parent_a = cls.env['test_new_api.model_parent'].create({
+            'name': 'M1',
+            'company_id': cls.company_a.id,
+        })
+        cls.parent_b = cls.env['test_new_api.model_parent'].create({
+            'name': 'M2',
+            'company_id': cls.company_b.id,
+        })
+        cls.test_user = cls.env['res.users'].create({
             'name': 'Test',
             'login': 'test',
-            'company_id': self.company_a.id,
-            'company_ids': (self.company_a | self.company_c).ids,
+            'company_id': cls.company_a.id,
+            'company_ids': (cls.company_a | cls.company_c).ids,
         })
 
-    def test_company_check_0(self):
+    def test_check_company_auto(self):
         """ Check the option _check_company_auto is well set on records"""
         m1 = self.env['test_new_api.model_child'].create({'company_id': self.company_a.id})
         self.assertTrue(m1._check_company_auto)
 
-    def test_company_check_1(self):
+    def test_company_and_same_company(self):
         """ Check you can create an object if the company are consistent"""
         self.env['test_new_api.model_child'].create({
             'name': 'M1',
             'company_id': self.company_a.id,
-            'parent_id': self.parent_company_a_id.id,
+            'parent_id': self.parent_a.id,
         })
 
-    def test_company_check_2(self):
+    def test_company_and_different_company(self):
         """ Check you cannot create a record if the company is inconsistent"""
         with self.assertRaises(UserError):
             self.env['test_new_api.model_child'].create({
                 'name': 'M1',
                 'company_id': self.company_b.id,
-                'parent_id': self.parent_company_a_id.id,
+                'parent_id': self.parent_a.id,
             })
 
-    def test_company_check_3(self):
+    def test_company_and_no_company(self):
+        self.env['test_new_api.model_child'].create({
+            'name': 'M1',
+            'company_id': self.company_a.id,
+            'parent_id': self.parent_0.id,
+        })
+
+    def test_no_company_and_no_company(self):
+        self.env['test_new_api.model_child'].create({
+            'name': 'M1',
+            'company_id': False,
+            'parent_id': self.parent_0.id,
+        })
+
+    def test_no_company_and_some_company(self):
+        with self.assertRaises(UserError):
+            self.env['test_new_api.model_child'].create({
+                'name': 'M1',
+                'company_id': False,
+                'parent_id': self.parent_a.id,
+            })
+
+    def test_no_company_check(self):
         """ Check you can create a record with the inconsistent company if there are no check"""
         self.env['test_new_api.model_child_nocheck'].create({
             'name': 'M1',
             'company_id': self.company_b.id,
-            'parent_id': self.parent_company_a_id.id,
+            'parent_id': self.parent_a.id,
         })
 
-    def test_company_check_4(self):
+    def test_company_write(self):
         """ Check the company consistency is respected at write. """
         child = self.env['test_new_api.model_child'].create({
             'name': 'M1',
             'company_id': self.company_a.id,
-            'parent_id': self.parent_company_a_id.id,
+            'parent_id': self.parent_a.id,
         })
 
         with self.assertRaises(UserError):
             child.company_id = self.company_b.id
 
         with self.assertRaises(UserError):
-            child.parent_id = self.parent_company_b_id.id
+            child.parent_id = self.parent_b.id
 
         child.write({
-            'parent_id': self.parent_company_b_id.id,
+            'parent_id': self.parent_b.id,
             'company_id': self.company_b.id,
         })
 
