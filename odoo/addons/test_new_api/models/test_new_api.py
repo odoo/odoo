@@ -1028,7 +1028,7 @@ class ModelParent(models.Model):
     _description = 'Model Multicompany parent'
 
     name = fields.Char()
-    company_id = fields.Many2one('res.company', required=True)
+    company_id = fields.Many2one('res.company')
 
 
 class ModelChild(models.Model):
@@ -1037,7 +1037,7 @@ class ModelChild(models.Model):
     _check_company_auto = True
 
     name = fields.Char()
-    company_id = fields.Many2one('res.company', required=True)
+    company_id = fields.Many2one('res.company')
     parent_id = fields.Many2one('test_new_api.model_parent', check_company=True)
 
 
@@ -1047,7 +1047,7 @@ class ModelChildNoCheck(models.Model):
     _check_company_auto = True
 
     name = fields.Char()
-    company_id = fields.Many2one('res.company', required=True)
+    company_id = fields.Many2one('res.company')
     parent_id = fields.Many2one('test_new_api.model_parent', check_company=False)
 
 
