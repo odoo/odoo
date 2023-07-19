@@ -67,6 +67,7 @@
         'web.assets_backend': [
             'spreadsheet/static/src/**/*.scss',
             'spreadsheet/static/src/assets_backend/**/*',
+            ('remove', 'spreadsheet/static/src/public_readonly_app/**/*.scss'),
         ],
         'web.qunit_suite_tests': [
             'spreadsheet/static/tests/**/*',
