@@ -430,13 +430,13 @@ class PurchaseOrder(models.Model):
         ir_model_data = self.env['ir.model.data']
         try:
             if self.env.context.get('send_rfq', False):
-                template_id = ir_model_data._xmlid_lookup('purchase.email_template_edi_purchase')[2]
+                template_id = ir_model_data._xmlid_lookup('purchase.email_template_edi_purchase')[1]
             else:
-                template_id = ir_model_data._xmlid_lookup('purchase.email_template_edi_purchase_done')[2]
+                template_id = ir_model_data._xmlid_lookup('purchase.email_template_edi_purchase_done')[1]
         except ValueError:
             template_id = False
         try:
-            compose_form_id = ir_model_data._xmlid_lookup('mail.email_compose_message_wizard_form')[2]
+            compose_form_id = ir_model_data._xmlid_lookup('mail.email_compose_message_wizard_form')[1]
         except ValueError:
             compose_form_id = False
         ctx = dict(self.env.context or {})
@@ -792,7 +792,7 @@ class PurchaseOrder(models.Model):
     def _send_reminder_open_composer(self,template_id):
         self.ensure_one()
         try:
-            compose_form_id = self.env['ir.model.data']._xmlid_lookup('mail.email_compose_message_wizard_form')[2]
+            compose_form_id = self.env['ir.model.data']._xmlid_lookup('mail.email_compose_message_wizard_form')[1]
         except ValueError:
             compose_form_id = False
         ctx = dict(self.env.context or {})
