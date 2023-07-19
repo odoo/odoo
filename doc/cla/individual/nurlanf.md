@@ -1,4 +1,4 @@
-Country, 2022-01-09
+Azerbaijan, 2022-01-09
 
 I hereby agree to the terms of the Odoo Individual Contributor License Agreement v1.0.
 
