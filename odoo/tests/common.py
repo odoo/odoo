@@ -795,34 +795,6 @@ class TransactionCase(BaseCase):
         self.patch(self.registry['res.partner'], '_get_gravatar_image', lambda *a: False)
 
 
-class SingleTransactionCase(BaseCase):
-    """ TestCase in which all test methods are run in the same transaction,
-    the transaction is started with the first test method and rolled back at
-    the end of the last.
-    """
-    @classmethod
-    def __init_subclass__(cls):
-        super().__init_subclass__()
-        if issubclass(cls, TransactionCase):
-            _logger.warning("%s inherits from both TransactionCase and SingleTransactionCase")
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.registry = odoo.registry(get_db_name())
-        cls.addClassCleanup(cls.registry.reset_changes)
-        cls.addClassCleanup(cls.registry.clear_all_caches)
-
-        cls.cr = cls.registry.cursor()
-        cls.addClassCleanup(cls.cr.close)
-
-        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
-
-    def setUp(self):
-        super(SingleTransactionCase, self).setUp()
-        self.env.flush_all()
-
-
 class ChromeBrowserException(Exception):
     pass
 

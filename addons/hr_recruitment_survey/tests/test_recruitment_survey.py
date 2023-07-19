@@ -4,7 +4,7 @@
 from odoo.tests import common, Form
 
 
-class TestRecruitmentSurvey(common.SingleTransactionCase):
+class TestRecruitmentSurvey(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -60,7 +60,6 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
             set(answers.mapped('email')),
             set([self.job_sysadmin.email_from]))
 
-    def test_print_survey(self):
         # We ensure that response is False because we don't know test order
         self.job_sysadmin.response_ids = False
         action_print = self.job_sysadmin.action_print_survey()
