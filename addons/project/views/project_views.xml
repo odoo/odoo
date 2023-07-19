@@ -367,13 +367,14 @@
                                 </span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="%(project.project_update_all_action)d" type="action" groups="project.group_project_manager">
+                        <button class="oe_stat_button" name="%(project.project_update_all_action)d" type="action" groups="project.group_project_user">
                             <div class="pl-4">
                                 <field name="last_update_color" invisible="1"/>
                                 <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
                             </div>
                         </button>
-                        <button class="oe_stat_button o_project_not_clickable" disabled="disabled" groups="!project.group_project_manager">
+                        <!-- To Do: remove me in master -->
+                        <button class="oe_stat_button o_project_not_clickable" disabled="disabled" groups="!project.group_project_manager" invisible="1">
                             <div class="pl-4">
                                 <field name="last_update_color" invisible="1"/>
                                 <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
