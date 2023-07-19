@@ -5,7 +5,7 @@ import session from "web.session";
 
 registry.category("web_tour.tours").add('test_json_auth', {
     test: true,
-    steps: [{
+    steps: () => [{
     trigger: 'body',
     run: async function () {
         await session.rpc('/test_get_dbname').then( function (result){

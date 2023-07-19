@@ -20,7 +20,7 @@ import { callWithUnloadCheck } from "./tour_utils";
  *
  * @typedef Tour
  * @property {string} url
- * @property {TourStep[]} steps
+ * @property {() => TourStep[]} steps
  * @property {boolean} [rainbowMan]
  * @property {number} [sequence]
  * @property {boolean} [test]
@@ -68,10 +68,15 @@ export const tourService = {
             tours[name] = {
                 name: tour.saveAs || name,
                 get steps() {
-                    return tour.steps.map((step) => {
-                        step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
-                        return step;
-                    });
+                    if(typeof tour.steps === "function") {
+                        return tour.steps().map((step) => {
+                            step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
+                            return step;
+                        });
+                    }
+                    else {
+                        throw new Error(`tour.steps has to be a function that returns TourStep[]`)
+                    }
                 },
                 shadow_dom: tour.shadow_dom,
                 url: tour.url,

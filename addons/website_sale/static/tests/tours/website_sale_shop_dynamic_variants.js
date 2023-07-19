@@ -7,7 +7,7 @@ import tourUtils from "website_sale.tour_utils";
 registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
     test: true,
     url: '/shop?search=Dynamic Product',
-    steps: [
+    steps: () => [
     {
         content: "select Dynamic Product",
         trigger: '.oe_product_cart a:containsExact("Dynamic Product")',

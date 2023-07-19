@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('forum_question', {
     test: true,
     url: '/forum/help-1',
-    steps: [
+    steps: () => [
     {
         content: "Ask the question in this forum by clicking on the button.",
         trigger: '.o_wforum_ask_btn',

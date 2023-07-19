@@ -3,8 +3,7 @@
 import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
 import { TourError } from "@web_tour/tour_service/tour_utils";
-
-import surveySessionTools from "survey.session_tour_tools";
+import { accessSurveysteps } from "./survey_tour_session_tools";
 
 /**
  * Since the chart is rendered using SVG, we can't use jQuery triggers to check if everything
@@ -140,7 +139,7 @@ const checkAnswersCount = (chartData, expectedCount) => {
 registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     url: "/web",
     test: true,
-    steps: [].concat(surveySessionTools.accessSurveySteps, [{
+    steps: () => [].concat(accessSurveysteps, [{
     trigger: 'button[name="action_open_session_manager"]',
 }, {
     trigger: 'h1:contains("Nickname")',

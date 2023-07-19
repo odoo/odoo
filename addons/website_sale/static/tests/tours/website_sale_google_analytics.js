@@ -18,7 +18,7 @@ websiteSaleTracking.include({
 registry.category("web_tour.tours").add('google_analytics_view_item', {
     test: true,
     url: '/shop?search=Customizable Desk',
-    steps: [
+    steps: () => [
     {
         content: "select customizable desk",
         trigger: '.oe_product_cart a:contains("Customizable Desk")',
@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
 registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
     test: true,
     url: '/shop?search=Acoustic Bloc Screens',
-    steps: [
+    steps: () => [
     {
         content: "select Acoustic Bloc Screens",
         trigger: '.oe_product_cart a:contains("Acoustic Bloc Screens")',

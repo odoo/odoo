@@ -6,7 +6,7 @@ import wTourUtils from "website.tour_utils";
 registry.category("web_tour.tours").add('configurator_flow', {
     test: true,
     url: '/web#action=website.action_website_configuration',
-    steps: [
+    steps: () => [
     {
         content: "click on create new website",
         trigger: 'button[name="action_website_create_new"]',

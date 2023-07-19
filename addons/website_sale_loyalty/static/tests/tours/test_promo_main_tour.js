@@ -7,7 +7,7 @@ import tourUtils from 'website_sale.tour_utils';
 registry.category("web_tour.tours").add('shop_sale_loyalty', {
     test: true,
     url: '/shop?search=Small%20Cabinet',
-    steps: [
+    steps: () => [
         /* 1. Buy 1 Small Cabinet, enable coupon code & insert 10% code */
         {
             content: "select Small Cabinet",

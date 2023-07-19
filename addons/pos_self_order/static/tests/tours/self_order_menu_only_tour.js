@@ -5,7 +5,7 @@ import { PosSelf } from "./tour_utils";
 
 registry.category("web_tour.tours").add("self_order_menu_only_tour", {
     test: true,
-    steps: [
+    steps: () => [
         PosSelf.check.isNotPrimaryBtn("My Orders"),
         PosSelf.check.isPrimaryBtn("View Menu"),
         PosSelf.action.clickPrimaryBtn("View Menu"),

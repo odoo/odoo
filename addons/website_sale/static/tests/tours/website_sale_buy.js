@@ -6,7 +6,7 @@ import tourUtils from "website_sale.tour_utils";
 registry.category("web_tour.tours").add('shop_buy_product', {
     test: true,
     url: '/shop',
-    steps: [
+    steps: () => [
         {
             content: "search conference chair",
             trigger: 'form input[name="search"]',

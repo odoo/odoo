@@ -7,7 +7,7 @@ import tourUtils from "website_sale.tour_utils";
 registry.category("web_tour.tours").add('shop_mail', {
     test: true,
     url: '/',
-    steps: [
+    steps: () => [
     {
         content: "Change the domain of the websites and go to shop",
         trigger: 'body',

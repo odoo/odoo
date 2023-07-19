@@ -11,7 +11,7 @@
         url: '/web',
         rainbowManMessage: _t('Congratulations, I love your first mailing. :)'),
         sequence: 200,
-        steps: [stepUtils.showAppsMenuItem(), {
+        steps: () => [stepUtils.showAppsMenuItem(), {
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
         content: _t("Let's try the Email Marketing app."),
         width: 225,

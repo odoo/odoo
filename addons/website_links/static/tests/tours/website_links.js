@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('website_links_tour', {
     test: true,
     url: '/r',
-    steps: [
+    steps: () => [
         // 1. Create a tracked URL
         {
             content: "check that existing links are shown",

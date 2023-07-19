@@ -7,7 +7,7 @@ import tourUtils from "website_sale.tour_utils";
 registry.category("web_tour.tours").add('tour_shop_no_variant_attribute', {
     test: true,
     url: '/shop?search=Test Product 3',
-    steps: [
+    steps: () => [
     {
         content: "select Test Product 3",
         trigger: '.oe_product_cart a:containsExact("Test Product 3")',

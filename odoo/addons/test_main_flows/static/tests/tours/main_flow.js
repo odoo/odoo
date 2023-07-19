@@ -9,7 +9,7 @@ import "web.legacy_tranlations_loaded";
 registry.category("web_tour.tours").add('main_flow_tour', {
     test: true,
     url: "/web",
-    steps: [
+    steps: () => [
 ...stepUtils.goToAppSteps('sale.sale_menu_root', Markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
 stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
 {

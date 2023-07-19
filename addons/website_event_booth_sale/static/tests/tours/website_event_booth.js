@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('website_event_booth_tour', {
     test: true,
     url: '/event',
-    steps: [
+    steps: () => [
 {
     content: 'Open "Test Event Booths" event',
     trigger: 'h5.card-title span:contains("Test Event Booths")',

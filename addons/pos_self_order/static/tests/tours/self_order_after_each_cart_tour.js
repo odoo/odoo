@@ -5,7 +5,7 @@ import { PosSelf } from "./tour_utils";
 
 registry.category("web_tour.tours").add("self_order_after_each_cart_tour", {
     test: true,
-    steps: [
+    steps: () => [
         // Verify if the self is open and My Orders is not displayed because we are in "meal" mode
         PosSelf.check.isNotNotification(),
         PosSelf.check.isNotPrimaryBtn("My Orders"),

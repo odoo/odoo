@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
     test: true,
     url: '/shop?search=Test Product 2',
-    steps: [
+    steps: () => [
     {
         content: "select Test Product",
         trigger: '.oe_product_cart a:containsExact("Test Product 2")',

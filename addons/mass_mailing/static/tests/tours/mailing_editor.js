@@ -6,7 +6,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 registry.category("web_tour.tours").add('mailing_editor', {
     url: '/web',
     test: true,
-    steps: [stepUtils.showAppsMenuItem(), {
+    steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
 }, {
     trigger: 'button.o_list_button_add',

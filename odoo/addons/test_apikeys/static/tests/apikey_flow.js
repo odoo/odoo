@@ -6,7 +6,7 @@ import ajax from "web.ajax";
 registry.category("web_tour.tours").add('apikeys_tour_setup', {
     test: true,
     url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
-    steps: [{
+    steps: () => [{
     content: 'Open user account menu',
     trigger: '.o_user_menu .dropdown-toggle',
     run: 'click',
@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     test: true,
     url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
-    steps: [{
+    steps: () => [{
     content: 'Open preferences',
     trigger: '.o_user_menu .dropdown-toggle',
 }, {

@@ -6,7 +6,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', {
     test: true,
     url: '/web',
-    steps: [
+    steps: () => [
     stepUtils.showAppsMenuItem(), {
         content: "Select the 'Email Marketing' app.",
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',

@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add("sale_tour", {
     url: "/web",
     rainbowMan: false,
     sequence: 20,
-    steps: [stepUtils.showAppsMenuItem(), {
+    steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
     content: _t("Open Sales app to send your first quotation in a few clicks."),
     position: "right",
@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         rainbowMan: true,
         rainbowManMessage: markup(_t("<b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.")),
         sequence: 30,
-        steps: [{
+        steps: () => [{
         trigger: ".o_field_res_partner_many2one[name='partner_id']",
         extra_trigger: ".o_sale_order",
         content: _t("Write a company name to create one, or see suggestions."),

@@ -7,7 +7,7 @@
     registry.category("web_tour.tours").add("webooth_exhibitor_register", {
         test: true,
         url: "/event",
-        steps: [{
+        steps: () => [{
         content: 'Go on "Online Reveal" page',
         trigger: 'a[href*="/event"]:contains("Online Reveal"):first',
     }, {

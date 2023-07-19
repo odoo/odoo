@@ -343,7 +343,7 @@ function registerWebsitePreviewTour(name, options, steps) {
         tourSteps[0].timeout = 20000;
     }
 
-    return registry.category("web_tour.tours").add(name, Object.assign({}, options, { url, steps: tourSteps}));
+    return registry.category("web_tour.tours").add(name, Object.assign({}, options, { url, steps: () => tourSteps}));
 }
 
 function registerThemeHomepageTour(name, steps) {
@@ -374,7 +374,7 @@ function registerBackendAndFrontendTour(name, options, steps) {
 
     return registry.category("web_tour.tours").add(name, {
         url: options.url,
-        steps,
+        steps: () => steps,
     });
 }
 

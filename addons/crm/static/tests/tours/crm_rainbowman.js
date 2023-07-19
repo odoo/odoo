@@ -6,7 +6,7 @@
     registry.category("web_tour.tours").add('crm_rainbowman', {
         test: true,
         url: "/web",
-        steps: [
+        steps: () => [
         stepUtils.showAppsMenuItem(),
         {
             trigger: ".o_app[data-menu-xmlid='crm.crm_menu_root']",

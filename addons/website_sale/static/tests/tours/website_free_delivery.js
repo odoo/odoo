@@ -6,7 +6,7 @@ import tourUtils from "website_sale.tour_utils";
 registry.category("web_tour.tours").add('check_free_delivery', {
         test: true,
         url: '/shop?search=office chair black',
-        steps: [
+        steps: () => [
         // Part 1: Check free delivery
         {
             content: "select office chair black",

@@ -6,7 +6,7 @@
     registry.category("web_tour.tours").add('tour_variants_modal_window', {
         test: true,
         url: '/shop?search=Short (TEST)',
-        steps: [
+        steps: () => [
         {
             content: "Select the Short (TEST) product",
             trigger: '.oe_product_cart a:containsExact("Short (TEST)")',

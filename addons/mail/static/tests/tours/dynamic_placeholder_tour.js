@@ -7,7 +7,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 registry.category("web_tour.tours").add("mail/static/tests/tours/dynamic_placeholder_tour.js", {
     url: "/web",
     test: true,
-    steps: [
+    steps: () => [
         stepUtils.showAppsMenuItem(),
         {
             content: 'Go into the Setting "app"',

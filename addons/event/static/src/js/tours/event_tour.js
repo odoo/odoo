@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add('event_tour', {
     url: '/web',
     rainbowManMessage: _t("Great! Now all you have to do is wait for your attendees to show up!"),
     sequence: 210,
-    steps: [stepUtils.showAppsMenuItem(), {
+    steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
     content: Markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
     position: 'bottom',

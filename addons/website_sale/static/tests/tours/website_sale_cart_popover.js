@@ -6,7 +6,7 @@ import wTourUtils from 'website.tour_utils';
 registry.category("web_tour.tours").add('website_sale_cart_popover_tour', {
         test: true,
         url: '/shop',
-        steps: [
+        steps: () => [
         {
             content: "Search for the product",
             trigger: 'form input[name="search"]',

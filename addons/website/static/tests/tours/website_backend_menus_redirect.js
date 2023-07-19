@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('website_backend_menus_redirect', {
     test: true,
     url: '/',
-    steps: [
+    steps: () => [
 {
     content: 'Need at least a step so the tour is not failing in enterprise',
     trigger: 'body',

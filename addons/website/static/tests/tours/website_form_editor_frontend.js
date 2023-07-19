@@ -4,7 +4,7 @@ import rpc from 'web.rpc';
 
 registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     test: true,
-    steps: [
+    steps: () => [
     {
         content:  "Try to send the form with some required fields not filled in",
         extra_trigger:  "form[data-model_name='mail.mail']" +
@@ -154,7 +154,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
 
 registry.category("web_tour.tours").add("website_form_editor_tour_results", {
     test: true,
-    steps: [
+    steps: () => [
     {
         content: "Check mail.mail records have been created",
         trigger: "body",
@@ -187,7 +187,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
 registry.category("web_tour.tours").add('website_form_contactus_submit', {
     test: true,
     url: '/contactus',
-    steps: [
+    steps: () => [
     // As the demo portal user, only two inputs needs to be filled to send
     // the email
     {

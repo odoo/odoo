@@ -6,7 +6,7 @@ import wTourUtils from "website.tour_utils";
 
 registry.category("web_tour.tours").add("test_hide_chat_window_on_preview", {
     test: true,
-    steps: [
+    steps: () => [
         {
             trigger: ".o-mail-ChatWindow",
             run() {
