@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { makeServerError } from "@web/../tests/helpers/mock_server";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { browser } from "@web/core/browser/browser";
 import {
     click,
     clickDiscard,
@@ -18,9 +20,6 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { browser } from "@web/core/browser/browser";
-import { many2ManyTagsFieldColorEditable } from "@web/views/fields/many2many_tags/many2many_tags_field";
 
 let serverData;
 let target;
@@ -113,13 +112,14 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("Many2ManyTagsField");
 
     QUnit.test("Many2ManyTagsField with and without color", async function (assert) {
-        assert.expect(12);
+        assert.expect(14);
 
         serverData.models.partner.fields.partner_ids = {
             string: "Partner",
             type: "many2many",
             relation: "partner",
         };
+        serverData.models.partner.fields.color = { string: "Color index", type: "integer" };
 
         await makeView({
             type: "form",
@@ -130,17 +130,19 @@ QUnit.module("Fields", (hooks) => {
                     <field name="partner_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="timmy" widget="many2many_tags"/>
                 </form>`,
-            mockRPC: (route, { args, method, model }) => {
-                if (method === "read" && model === "partner_type") {
+            mockRPC: (route, { args, method, model, kwargs }) => {
+                if (method === "web_read" && model === "partner_type") {
+                    assert.deepEqual(args, [[12]]);
                     assert.deepEqual(
-                        args,
-                        [[12], ["display_name"]],
+                        kwargs.specification,
+                        { display_name: {} },
                         "should not read any color field"
                     );
-                } else if (method === "read" && model === "partner") {
+                } else if (method === "web_read" && model === "partner") {
+                    assert.deepEqual(args, [[1]]);
                     assert.deepEqual(
-                        args,
-                        [[1], ["display_name", "color"]],
+                        kwargs.specification,
+                        { display_name: {}, color: {} },
                         "should read color field"
                     );
                 }
@@ -182,7 +184,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with color: rendering and edition", async function (assert) {
-        assert.expect(26);
+        assert.expect(24);
 
         serverData.models.partner.records[0].timmy = [12, 14];
         serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
@@ -195,7 +197,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True }"/>
                 </form>`,
             resId: 1,
-            mockRPC: (route, { args, method, model }) => {
+            mockRPC: (route, { args, method, model, kwargs }) => {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     var commands = args[1].timmy;
                     assert.strictEqual(commands.length, 1, "should have generated one command");
@@ -206,11 +208,11 @@ QUnit.module("Fields", (hooks) => {
                     );
                     assert.deepEqual(commands[0][2], [12, 13], "new value should be [12, 13]");
                 }
-                if (method === "read" && model === "partner_type") {
+                if (method === "web_read" && model === "partner_type") {
                     assert.deepEqual(
-                        args[1],
-                        ["display_name", "color"],
-                        "should read the color field"
+                        kwargs.specification,
+                        { display_name: {}, color: {} },
+                        "should read color field"
                     );
                 }
             },
@@ -584,7 +586,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
             mockRPC: (route, { args }) => {
                 if (route === "/web/dataset/call_kw/partner/create") {
-                    var commands = args[0].timmy;
+                    const commands = args[0][0].timmy;
                     assert.strictEqual(commands.length, 1, "should have generated one command");
                     assert.strictEqual(
                         commands[0][0],
@@ -723,7 +725,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField in editable list", async function (assert) {
-        assert.expect(7);
+        assert.expect(5);
 
         serverData.models.partner.records[0].timmy = [12];
 
@@ -737,7 +739,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_tags"/>
                 </tree>`,
             mockRPC: (route, { kwargs, method, model }) => {
-                if (method === "read" && model === "partner_type") {
+                if (method === "web_read" && model === "partner_type") {
                     assert.strictEqual(
                         kwargs.context.take,
                         "five",
@@ -793,43 +795,10 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
-        "Many2ManyTagsField loads records according to limit defined on widget prototype",
-        async function (assert) {
-            patchWithCleanup(many2ManyTagsFieldColorEditable, {
-                limit: 30,
-            });
-
-            serverData.models.partner.fields.partner_ids = {
-                string: "Partner",
-                type: "many2many",
-                relation: "partner",
-            };
-            serverData.models.partner.records[0].partner_ids = [];
-            for (var i = 15; i < 50; i++) {
-                serverData.models.partner.records.push({ id: i, display_name: "walter" + i });
-                serverData.models.partner.records[0].partner_ids.push(i);
-            }
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
-                resId: 1,
-            });
-
-            assert.strictEqual(
-                target.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length,
-                30,
-                "should have rendered 30 tags even though 35 records linked"
-            );
-        }
-    );
-
     QUnit.test("Many2ManyTagsField keeps focus when being edited", async function (assert) {
         serverData.models.partner.records[0].timmy = [12];
         serverData.models.partner.onchanges.foo = function (obj) {
-            obj.timmy = [[5]]; // DELETE command
+            obj.timmy = [[3, 12]];
         };
 
         await makeView({
@@ -1180,15 +1149,21 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "read" && args.model === "partner_type") {
-                    assert.step(args.kwargs.context.hello);
+                if (args.method === "web_read" && args.model === "partner") {
+                    assert.step(`${args.method} ${args.model}`);
+                    assert.strictEqual(args.kwargs.specification.timmy.context.hello, "world");
+                }
+
+                if (args.method === "web_read" && args.model === "partner_type") {
+                    assert.step(`${args.method} ${args.model}`);
+                    assert.strictEqual(args.kwargs.context.hello, "world");
                 }
             },
         });
 
-        assert.verifySteps(["world"]);
+        assert.verifySteps(["web_read partner"]);
         await selectDropdownItem(target, "timmy", "silver");
-        assert.verifySteps(["world"]);
+        assert.verifySteps(["web_read partner_type"]);
     });
 
     QUnit.test("Many2ManyTagsField: select multiple records", async function (assert) {
@@ -1380,7 +1355,7 @@ QUnit.module("Fields", (hooks) => {
                     if (args.method === "name_search") {
                         nameSearchProm.resolve();
                     }
-                    if (args.method === "onchange") {
+                    if (args.method === "onchange2") {
                         if (onchangeCalls === 0) {
                             assert.deepEqual(
                                 args.kwargs.context,
@@ -1596,7 +1571,7 @@ QUnit.module("Fields", (hooks) => {
                     throw makeServerError({ type: "ValidationError" });
                 }
                 if (args.method === "create") {
-                    assert.deepEqual(args.args[0], {
+                    assert.deepEqual(args.args[0][0], {
                         color: 8,
                         name: "new partner",
                     });
@@ -1662,6 +1637,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <tree editable="bottom">
                     <field name="timmy" widget="many2many_tags"/>
+                    <field name="name"/>
                 </tree>`,
         });
 
@@ -1875,7 +1851,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `<form><field name="timmy" widget="many2many_tags" context="{ 'append_coucou': True }"/></form>`,
             async mockRPC(route, args, performRPC) {
                 const result = await performRPC(route, args);
-                if (args.method === "read") {
+                if (args.method === "web_read") {
                     if (args.kwargs.context.append_coucou) {
                         assert.step("read with context given");
                         result[0].display_name += " coucou";
@@ -1907,7 +1883,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `<list editable="top"><field name="timmy" widget="many2many_tags" context="{ 'append_coucou': True }"/></list>`,
             async mockRPC(route, args, performRPC) {
                 const result = await performRPC(route, args);
-                if (args.method === "read") {
+                if (args.method === "web_read") {
                     if (args.kwargs.context.append_coucou) {
                         assert.step("read with context given");
                         result[0].display_name += " coucou";

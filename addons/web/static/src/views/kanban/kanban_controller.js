@@ -1,21 +1,24 @@
 /** @odoo-module **/
 
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
-import { useModel } from "@web/views/model";
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
+import { session } from "@web/session";
+import { useSetupView } from "@web/views/view_hook";
+import { useModel } from "@web/model/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
-import { useSetupView } from "@web/views/view_hook";
+import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
-import { SearchBar } from "@web/search/search_bar/search_bar";
-import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
-import { CogMenu } from "@web/search/cog_menu/cog_menu";
 
-import { Component, reactive, useRef } from "@odoo/owl";
-import { addDependencies } from "../utils";
+import { Component, reactive, useRef, useState } from "@odoo/owl";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
@@ -24,8 +27,61 @@ const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "m
 export class KanbanController extends Component {
     setup() {
         this.actionService = useService("action");
+        this.dialog = useService("dialog");
         const { Model, archInfo } = this.props;
-        this.model = useModel(Model, this.modelParams, this.modelOptions);
+
+        class KanbanSampleModel extends Model {
+            setup() {
+                super.setup(...arguments);
+                this.initialSampleGroups = undefined;
+            }
+
+            /**
+             * @override
+             */
+            hasData() {
+                if (this.root.groups) {
+                    if (!this.root.groups.length) {
+                        // While we don't have any data, we want to display the column quick create and
+                        // example background. Return true so that we don't get sample data instead
+                        return true;
+                    }
+                    return this.root.groups.some((group) => group.hasData);
+                }
+                return super.hasData();
+            }
+
+            async load() {
+                if (this.orm.isSample && this.initialSampleGroups) {
+                    this.orm.setGroups(this.initialSampleGroups);
+                }
+                return super.load(...arguments);
+            }
+
+            async _webReadGroup() {
+                const result = await super._webReadGroup(...arguments);
+                if (!this.initialSampleGroups) {
+                    this.initialSampleGroups = JSON.parse(JSON.stringify(result.groups));
+                }
+                return result;
+            }
+
+            removeSampleDataInGroups() {
+                if (this.useSampleModel) {
+                    for (const group of this.root.groups) {
+                        const list = group.list;
+                        list.count = 0;
+                        if (list.records) {
+                            list.records = [];
+                        } else {
+                            list.groups = [];
+                        }
+                    }
+                }
+            }
+        }
+
+        this.model = useState(useModel(KanbanSampleModel, this.modelParams, this.modelOptions));
         if (archInfo.progressAttributes) {
             const { activeBars } = this.props.state || {};
             this.progressBarState = useProgressBar(
@@ -44,9 +100,8 @@ export class KanbanController extends Component {
             },
             set groupId(groupId) {
                 if (self.model.useSampleModel) {
+                    self.model.removeSampleDataInGroups();
                     self.model.useSampleModel = false;
-                    self.model.root.groups.forEach((g) => g.empty());
-                    self.render();
                 }
                 this._groupId = groupId;
             },
@@ -68,7 +123,7 @@ export class KanbanController extends Component {
             getLocalState: () => {
                 return {
                     activeBars: this.progressBarState?.activeBars,
-                    rootState: this.model.root.exportState(),
+                    modelState: this.model.exportState(),
                 };
             },
         });
@@ -76,16 +131,14 @@ export class KanbanController extends Component {
             const root = this.model.root;
             const { count, hasLimitedCount, isGrouped, limit, offset } = root;
             if (!isGrouped) {
+                console.log(root);
                 return {
                     offset: offset,
                     limit: limit,
                     total: count,
                     onUpdate: async ({ offset, limit }) => {
-                        this.model.root.offset = offset;
-                        this.model.root.limit = limit;
-                        await this.model.root.load();
+                        await this.model.root.load({ offset, limit });
                         await this.onUpdatedPager();
-                        this.render(true); // FIXME WOWL reactivity
                     },
                     updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
                 };
@@ -95,29 +148,33 @@ export class KanbanController extends Component {
     }
 
     get modelParams() {
-        const { resModel, fields, archInfo, limit, defaultGroupBy, state } = this.props;
-        const { rootState } = state || {};
-
-        const activeFields = archInfo.activeFields;
-        addDependencies(this.progressBarAggregateFields, activeFields, fields);
+        const { resModel, archInfo, limit, defaultGroupBy } = this.props;
+        const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, this.props.fields);
+        addFieldDependencies(activeFields, fields, this.progressBarAggregateFields);
+        const modelConfig = this.props.state?.modelState?.config || {
+            resModel,
+            activeFields,
+            fields,
+            openGroupsByDefault: true,
+        };
 
         return {
-            activeFields,
-            fields: { ...fields },
-            resModel,
-            handleField: archInfo.handleField,
-            limit: archInfo.limit || limit,
+            config: modelConfig,
+            state: this.props.state?.modelState,
+            limit: archInfo.limit || limit || 40,
+            groupsLimit: Number.MAX_SAFE_INTEGER, // no limit
             countLimit: archInfo.countLimit,
             defaultGroupBy,
-            defaultOrder: archInfo.defaultOrder,
-            viewMode: "kanban",
-            openGroupsByDefault: true,
-            onRecordSaved: this.onRecordSaved.bind(this),
-            rootState,
+            defaultOrderBy: archInfo.defaultOrder,
+            maxGroupByDepth: 1,
+            activeIdsLimit: session.active_ids_limit,
+            hooks: {
+                onRecordSaved: this.onRecordSaved.bind(this),
+            },
         };
     }
 
-    get modelOptions(){
+    get modelOptions() {
         return {};
     }
 
@@ -137,6 +194,15 @@ export class KanbanController extends Component {
             return classList.join(" ");
         }
         return this.props.className;
+    }
+
+    async deleteRecord(record) {
+        this.dialog.add(ConfirmationDialog, {
+            body: _t("Are you sure you want to delete this record?"),
+            confirm: () => this.model.root.deleteRecords([record]),
+            confirmLabel: _t("Delete"),
+            cancel: () => {},
+        });
     }
 
     async openRecord(record, mode) {
@@ -219,7 +285,10 @@ KanbanController.template = `web.KanbanView`;
 KanbanController.components = { Layout, KanbanRenderer, MultiRecordViewButton, SearchBar, CogMenu };
 KanbanController.props = {
     ...standardViewProps,
-    defaultGroupBy: { validate: (dgb) => !dgb || typeof dgb === "string", optional: true },
+    defaultGroupBy: {
+        validate: (dgb) => !dgb || typeof dgb === "string",
+        optional: true,
+    },
     editable: { type: Boolean, optional: true },
     forceGlobalClick: { type: Boolean, optional: true },
     onSelectionChanged: { type: Function, optional: true },

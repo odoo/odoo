@@ -1,21 +1,21 @@
 /** @odoo-module */
-import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 
 import {
     Component,
     onMounted,
-    useExternalListener,
-    useState,
-    useRef,
     onWillStart,
+    useExternalListener,
+    useRef,
+    useState,
     useSubEnv,
 } from "@odoo/owl";
-import { getDefaultConfig } from "../view";
 import { RPCError } from "@web/core/network/rpc_service";
-import { FormViewDialog } from "../view_dialogs/form_view_dialog";
+import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { formView } from "../form/form_view";
-import { useModel } from "../model";
+import { getDefaultConfig } from "../view";
+import { FormViewDialog } from "../view_dialogs/form_view_dialog";
 
 const DEFAULT_QUICK_CREATE_VIEW = {
     // note: the required modifier is written in the format returned by the server
@@ -55,23 +55,30 @@ class KanbanQuickCreateController extends Component {
         this.state = useState({ disabled: false });
         this.addDialog = useOwnedDialogs();
 
-        this.model = useModel(
-            this.props.Model,
-            {
-                resModel: this.props.resModel,
-                resId: false,
-                resIds: [],
-                fields: this.props.fields,
-                activeFields: this.props.archInfo.activeFields,
-                viewMode: "form",
-                rootType: "record",
-                mode: "edit",
-                component: this,
-            },
-            {
-                ignoreUseSampleModel: true,
-            }
+        const { activeFields, fields } = extractFieldsFromArchInfo(
+            this.props.archInfo,
+            this.props.fields
         );
+
+        const modelServices = Object.fromEntries(
+            this.props.Model.services.map((servName) => {
+                return [servName, useService(servName)];
+            })
+        );
+        modelServices.orm = useService("orm");
+        const config = {
+            resModel: this.props.resModel,
+            resId: false,
+            resIds: [],
+            fields,
+            activeFields,
+            isMonoRecord: true,
+            mode: "edit",
+            context: this.props.context,
+        };
+        this.model = useState(new this.props.Model(this.env, { config }, modelServices));
+
+        onWillStart(() => this.model.load());
 
         onMounted(() => {
             this.uiActiveElement = this.uiService.activeElement;
@@ -126,7 +133,7 @@ class KanbanQuickCreateController extends Component {
 
         const keys = Object.keys(this.model.root.activeFields);
         if (keys.length === 1 && keys[0] === "display_name") {
-            const isValid = await this.model.root.checkValidity(true); // needed to put the class o_field_invalid in the field
+            const isValid = await this.model.root.checkValidity(); // needed to put the class o_field_invalid in the field
             if (isValid) {
                 try {
                     [resId] = await this.model.orm.call(
@@ -141,31 +148,35 @@ class KanbanQuickCreateController extends Component {
                     this.showFormDialogInError(e);
                 }
             } else {
-                this.model.notificationService.add(this.model.env._t("Display Name"), {
+                this.model.notification.add(this.model.env._t("Display Name"), {
                     title: this.model.env._t("Invalid fields: "),
                     type: "danger",
                 });
             }
         } else {
-            try {
-                await this.model.root.save({ closable: true, noReload: true, throwOnError: true });
-            } catch (e) {
-                this.showFormDialogInError(e);
-            }
+            await this.model.root.save({
+                closable: true,
+                noReload: true,
+                force: true,
+                onError: (e) => this.showFormDialogInError(e),
+            });
             resId = this.model.root.resId;
         }
 
         if (resId) {
             await this.props.onValidate(resId, mode);
+            if (mode === "add") {
+                await this.model.root.load(false);
+            }
         }
         this.state.disabled = false;
     }
 
-    cancel(force) {
+    async cancel(force) {
         if (this.state.disabled) {
             return;
         }
-        if (force || !this.model.root.isDirty) {
+        if (force || !(await this.model.root.isDirty())) {
             this.props.onCancel();
         }
     }
@@ -185,6 +196,7 @@ class KanbanQuickCreateController extends Component {
             title: this.env._t("Create"),
             onRecordSaved: async (record) => {
                 await this.props.onValidate(record.resId, "add");
+                await this.model.load();
             },
         });
     }
@@ -246,7 +258,7 @@ export class KanbanRecordQuickCreate extends Component {
             props.resModel
         );
         const context = props.context || {};
-        context[`default_${props.group.groupByField.name}`] = props.group.getServerValue();
+        context[`default_${props.group.groupByField.name}`] = props.group.serverValue;
         this.quickCreateProps = {
             Model: formView.Model,
             Renderer: formView.Renderer,

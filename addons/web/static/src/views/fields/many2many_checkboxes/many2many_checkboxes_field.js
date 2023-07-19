@@ -1,21 +1,29 @@
 /** @odoo-module **/
 
+import { Component } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
-
-import { Component } from "@odoo/owl";
 
 export class Many2ManyCheckboxesField extends Component {
     static template = "web.Many2ManyCheckboxesField";
     static components = { CheckBox };
     static props = {
         ...standardFieldProps,
+        domain: { type: Array, optional: true },
     };
 
+    setup() {
+        this.specialData = useSpecialData((orm, props) => {
+            const { relation } = props.record.fields[props.name];
+            return orm.call(relation, "name_search", ["", props.domain]);
+        });
+    }
+
     get items() {
-        return this.props.record.preloadedData[this.props.name];
+        return this.specialData.data;
     }
 
     isSelected(item) {
@@ -44,7 +52,11 @@ export const many2ManyCheckboxesField = {
     displayName: _lt("Checkboxes"),
     supportedTypes: ["many2many"],
     isEmpty: () => false,
-    legacySpecialData: "_fetchSpecialRelation",
+    extractProps(fieldInfo, dynamicInfo) {
+        return {
+            domain: dynamicInfo.domain(),
+        };
+    },
 };
 
 registry.category("fields").add("many2many_checkboxes", many2ManyCheckboxesField);
@@ -53,8 +65,3 @@ export function preloadMany2ManyCheckboxes(orm, record, fieldName, { domain }) {
     const field = record.fields[fieldName];
     return orm.call(field.relation, "name_search", ["", domain]);
 }
-
-registry.category("preloadedData").add("many2many_checkboxes", {
-    loadOnTypes: ["many2many"],
-    preload: preloadMany2ManyCheckboxes,
-});

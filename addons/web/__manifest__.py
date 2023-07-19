@@ -177,6 +177,7 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
+            'web/static/src/model/**/*',
             'web/static/src/search/**/*',
             'web/static/src/webclient/icons.scss', # variables required in list_controller.scss
             'web/static/src/views/**/*',
@@ -228,7 +229,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/pseudo_web_client.js',
             'web/static/src/legacy/web_client.js',
-            'web/static/src/legacy/js/_deprecated/*',
             'web/static/src/legacy/js/chrome/*',
             'web/static/src/legacy/js/components/*',
             'web/static/src/legacy/js/control_panel/*',
@@ -241,7 +241,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/services/data_manager.js',
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/tools/tools.js',
-            'web/static/src/legacy/js/views/**/*',
             'web/static/src/legacy/js/widgets/colorpicker_dialog.js',
             'web/static/src/legacy/js/widgets/date_picker.js',
             'web/static/src/legacy/js/widgets/domain_selector_dialog.js',

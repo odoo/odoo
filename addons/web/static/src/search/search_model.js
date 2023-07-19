@@ -26,7 +26,7 @@ import { useGetDomainTreeDescription } from "@web/core/domain_selector/utils";
 const { DateTime } = luxon;
 
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
-/** @typedef {import("../views/relational_model").OrderTerm} OrderTerm */
+/** @typedef {import("../views/utils").OrderTerm} OrderTerm */
 
 /**
  * @typedef {Object} ComparisonDomain

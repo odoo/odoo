@@ -679,7 +679,7 @@ QUnit.module("Fields", (hooks) => {
             string: "m2m",
             type: "many2many",
             relation: "partner",
-            default: [[6, false, [2]]],
+            default: [[4, 2]],
         };
         serverData.views = {
             "partner,false,list": `

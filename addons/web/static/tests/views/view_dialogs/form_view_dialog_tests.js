@@ -9,10 +9,9 @@ import {
     triggerHotkey,
     makeDeferred,
 } from "@web/../tests/helpers/utils";
-import { makeViewInDialog } from "@web/../tests/views/helpers";
+import { makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
 
 QUnit.module("ViewDialogs", (hooks) => {
     let serverData;
@@ -67,7 +66,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             },
         };
         target = getFixture();
-        setupControlPanelServiceRegistry();
+        setupViewRegistries();
     });
 
     QUnit.module("FormViewDialog");
@@ -277,10 +276,10 @@ QUnit.module("ViewDialogs", (hooks) => {
 
         assert.containsOnce(target, ".o_dialog .o_form_view");
         assert.containsN(target, ".o_dialog .o_form_view button", 2);
-        assert.verifySteps(["/web/webclient/load_menus", "get_views", "read"]);
+        assert.verifySteps(["/web/webclient/load_menus", "get_views", "web_read"]);
         await click(target.querySelector(".o_dialog .o_form_view .btn1"));
         assert.containsOnce(target, ".o_dialog .o_form_view");
-        assert.verifySteps(["method1", "read"]); // should re-read the record
+        assert.verifySteps(["method1", "web_read"]); // should re-read the record
         await click(target.querySelector(".o_dialog .o_form_view .btn2"));
         assert.containsNone(target, ".o_dialog .o_form_view");
         assert.verifySteps(["method2"]); // should not read as we closed

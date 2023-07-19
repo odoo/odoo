@@ -3,6 +3,7 @@
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
+import { evalDomain } from "@web/core/domain";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
@@ -11,27 +12,36 @@ import { omit } from "@web/core/utils/objects";
 import { createElement } from "@web/core/utils/xml";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
-import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
-import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
-import { ButtonBox } from "./button_box/button_box";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { Field } from "@web/views/fields/field";
+import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { useViewCompiler } from "@web/views/view_compiler";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 
-import { Component, onRendered, useEffect, useRef } from "@odoo/owl";
-import { useViewCompiler } from "../view_compiler";
+import { ButtonBox } from "./button_box/button_box";
 import { FormCompiler } from "./form_compiler";
-import { evalDomain } from "../utils";
+import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
+import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
+
+import {
+    Component,
+    onRendered,
+    onWillStart,
+    onWillUpdateProps,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 
 export async function loadSubViews(
-    activeFields,
+    fieldNodes,
     fields,
     context,
     resModel,
@@ -39,20 +49,20 @@ export async function loadSubViews(
     userService,
     isSmall
 ) {
-    for (const fieldName in activeFields) {
+    for (const fieldInfo of Object.values(fieldNodes)) {
+        const fieldName = fieldInfo.name;
         const field = fields[fieldName];
         if (!isX2Many(field)) {
             continue; // what follows only concerns x2many fields
         }
-        const fieldInfo = activeFields[fieldName];
-        if (fieldInfo.modifiers.invisible === true) {
+        if (fieldInfo.alwaysInvisible) {
             continue; // no need to fetch the sub view if the field is always invisible
         }
-
         if (!fieldInfo.field.useSubView) {
             continue; // the FieldComponent used to render the field doesn't need a sub view
         }
 
+        fieldInfo.views = fieldInfo.views || {};
         let viewType = fieldInfo.viewMode || "list,kanban";
         viewType = viewType.replace("tree", "list");
         if (viewType.includes(",")) {
@@ -94,7 +104,11 @@ export async function loadSubViews(
         });
         const { ArchParser } = viewRegistry.get(viewType);
         const archInfo = new ArchParser().parse(views[viewType].arch, relatedModels, comodel);
-        fieldInfo.views[viewType] = { ...archInfo, fields: comodelFields };
+        fieldInfo.views[viewType] = {
+            ...archInfo,
+            limit: archInfo.limit || 40,
+            fields: comodelFields,
+        };
         fieldInfo.relatedFields = comodelFields;
     }
 }
@@ -111,46 +125,45 @@ export class FormController extends Component {
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
-        const activeFields = this.archInfo.activeFields;
-
         const { create, edit } = this.archInfo.activeActions;
         this.canCreate = create && !this.props.preventCreate;
         this.canEdit = edit && !this.props.preventEdit;
 
-        let mode = this.props.mode || "edit";
-        if (!this.canEdit) {
-            mode = "readonly";
-        }
-
-        this.model = useModel(
-            this.props.Model,
-            {
-                resModel: this.props.resModel,
-                resId: this.props.resId || false,
-                resIds: this.props.resIds,
-                fields: this.props.fields,
-                activeFields,
-                viewMode: "form",
-                rootType: "record",
-                mode,
-                component: this,
-                onRecordSaved: this.onRecordSaved.bind(this),
-                onWillSaveRecord: this.onWillSaveRecord.bind(this),
-            },
-            {
-                ignoreUseSampleModel: true,
-                onWillStart: () =>
-                    loadSubViews(
-                        this.archInfo.activeFields,
-                        this.props.fields,
-                        this.props.context,
-                        this.props.resModel,
-                        this.viewService,
-                        this.user,
-                        this.env.isSmall
-                    ),
-            }
+        const modelServices = Object.fromEntries(
+            this.props.Model.services.map((servName) => {
+                return [servName, useService(servName)];
+            })
         );
+        this.model = useState(new this.props.Model(this.env, this.modelParams, modelServices));
+
+        onWillStart(async () => {
+            await loadSubViews(
+                this.archInfo.fieldNodes,
+                this.props.fields,
+                this.props.context,
+                this.props.resModel,
+                this.viewService,
+                this.user,
+                this.env.isSmall
+            );
+            const { activeFields, fields } = extractFieldsFromArchInfo(
+                this.archInfo,
+                this.props.fields
+            );
+            if (this.props.display.controlPanel) {
+                addFieldDependencies(activeFields, fields, [
+                    { name: "display_name", type: "char", readonly: true },
+                ]);
+            }
+            this.model.config.activeFields = activeFields;
+            this.model.config.fields = fields;
+            return this.model.load();
+        });
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.resId !== this.model.root.resId) {
+                return this.model.root.load(nextProps.resId);
+            }
+        });
 
         this.cpButtonsRef = useRef("cpButtons");
 
@@ -164,14 +177,6 @@ export class FormController extends Component {
                 this.updateURL();
             }
         });
-
-        // enable the archive feature in Actions menu only if the active field is in the view
-        this.archiveEnabled =
-            "active" in activeFields
-                ? !this.props.fields.active.readonly
-                : "x_active" in activeFields
-                ? !this.props.fields.x_active.readonly
-                : false;
 
         // select footers that are not in subviews and move them to another arch
         // that will be moved to the dialog's footer (if we are in a dialog)
@@ -214,9 +219,9 @@ export class FormController extends Component {
             beforeLeave: () => this.beforeLeave(),
             beforeUnload: (ev) => this.beforeUnload(ev),
             getLocalState: () => {
-                // TODO: export the whole model?
                 return {
                     activeNotebookPages: !this.model.root.isNew ? activeNotebookPages : {},
+                    modelState: this.model.exportState(),
                     resId: this.model.root.resId,
                 };
             },
@@ -262,6 +267,38 @@ export class FormController extends Component {
         }
     }
 
+    get modelParams() {
+        let mode = this.props.mode || "edit";
+        if (!this.canEdit && this.props.resId) {
+            mode = "readonly";
+        }
+        return {
+            config: {
+                resModel: this.props.resModel,
+                resId: this.props.resId || false,
+                resIds: this.props.resIds || (this.props.resId ? [this.props.resId] : []),
+                fields: this.props.fields,
+                activeFields: {}, // will be generated after loading sub views (see willStart)
+                isMonoRecord: true,
+                mode,
+                context: this.props.context,
+            },
+            state: this.props.state?.modelState,
+            hooks: {
+                onWillLoadRoot: this.onWillLoadRoot.bind(this),
+                onWillSaveRecord: this.onWillSaveRecord.bind(this),
+                onRecordSaved: this.onRecordSaved.bind(this),
+            },
+        };
+    }
+
+    /**
+     * onWillLoadRoot is a callback that will be executed before (re)loading the
+     * data necessary for the root record datapoint. Note that this.model.root
+     * may not exist yet at this point, if this is the first load.
+     */
+    onWillLoadRoot() {}
+
     /**
      * onRecordSaved is a callBack that will be executed after the save
      * if it was done. It will therefore not be executed if the record
@@ -278,30 +315,44 @@ export class FormController extends Component {
      */
     async onWillSaveRecord(record) {}
 
+    async onSaveError(error, { discard }) {
+        const proceed = await new Promise((resolve) => {
+            this.model.dialog.add(FormErrorDialog, {
+                message: error.data.message,
+                onDiscard: () => {
+                    discard();
+                    resolve(true);
+                },
+                onStayHere: () => resolve(false),
+            });
+        });
+        return proceed;
+    }
+
     displayName() {
         return this.model.root.data.display_name || this.env._t("New");
     }
 
     async onPagerUpdate({ offset, resIds }) {
-        await this.model.root.askChanges(); // ensures that isDirty is correct
+        const dirty = await this.model.root.isDirty();
         let canProceed = true;
-        if (this.model.root.isDirty) {
+        if (dirty) {
             canProceed = await this.model.root.save({
                 stayInEdition: true,
-                useSaveErrorDialog: true,
+                onError: this.onSaveError.bind(this),
             });
         }
         if (canProceed) {
-            return this.model.load({ resId: resIds[offset] });
+            return this.model.root.load(resIds[offset]);
         }
     }
 
     async beforeLeave() {
-        if (this.model.root.isDirty) {
+        if (this.model.root.dirty) {
             return this.model.root.save({
                 noReload: true,
                 stayInEdition: true,
-                useSaveErrorDialog: true,
+                onError: this.onSaveError.bind(this),
             });
         }
     }
@@ -381,9 +432,22 @@ export class FormController extends Component {
         };
     }
 
+    // enable the archive feature in Actions menu only if the active field is in the view
+    get archiveEnabled() {
+        return "active" in this.model.root.activeFields
+            ? !this.props.fields.active.readonly
+            : "x_active" in this.model.root.activeFields
+            ? !this.props.fields.x_active.readonly
+            : false;
+    }
+
     async shouldExecuteAction(item) {
-        if ((this.model.root.isDirty || this.model.root.isNew) && !item.skipSave) {
-            return this.model.root.save({ stayInEdition: true, useSaveErrorDialog: true });
+        const dirty = await this.model.root.isDirty();
+        if ((dirty || this.model.root.isNew) && !item.skipSave) {
+            return this.model.root.save({
+                stayInEdition: true,
+                onError: this.onSaveError.bind(this),
+            });
         }
         return true;
     }
@@ -427,14 +491,20 @@ export class FormController extends Component {
     async beforeExecuteActionButton(clickParams) {
         if (clickParams.special !== "cancel") {
             const noReload = this.env.inDialog && clickParams.close;
-            return this.model.root
-                .save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog, noReload })
-                .then((saved) => {
-                    if (saved && this.props.onSave) {
-                        this.props.onSave(this.model.root);
-                    }
-                    return saved;
-                });
+            const params = {
+                force: true,
+                stayInEdition: true,
+                noReload,
+            };
+            if (!this.env.inDialog) {
+                params.onError = this.onSaveError.bind(this);
+            }
+            return this.model.root.save(params).then((saved) => {
+                if (saved && this.props.onSave) {
+                    this.props.onSave(this.model.root);
+                }
+                return saved;
+            });
         } else if (this.props.onDiscard) {
             this.props.onDiscard(this.model.root);
         }
@@ -442,22 +512,15 @@ export class FormController extends Component {
 
     async afterExecuteActionButton(clickParams) {}
 
-    async edit() {
-        await this.model.root.switchMode("edit");
-    }
-
     async create() {
-        await this.model.root.askChanges(); // ensures that isDirty is correct
-        let canProceed = true;
-        if (this.model.root.isDirty) {
-            canProceed = await this.model.root.save({
-                stayInEdition: true,
-                useSaveErrorDialog: true,
-            });
-        }
+        const canProceed = await this.model.root.save({
+            stayInEdition: true,
+            onError: this.onSaveError.bind(this),
+        });
+        // FIXME: disable/enable not done in onPagerUpdate
         if (canProceed) {
             const btns = this.disableButtons();
-            await this.model.load({ resId: null });
+            await this.model.root.load(false);
             this.enableButtons(btns);
         }
     }
@@ -466,17 +529,18 @@ export class FormController extends Component {
         const btns = this.disableButtons();
         const record = this.model.root;
         let saved = false;
-
-        if (this.props.saveRecord) {
-            saved = await this.props.saveRecord(record, params);
-        } else {
-            saved = await record.save(params);
+        try {
+            if (this.props.saveRecord) {
+                saved = await this.props.saveRecord(record, params);
+            } else {
+                saved = await record.save(params);
+            }
+        } finally {
+            this.enableButtons(btns);
         }
-        this.enableButtons(btns);
         if (saved && this.props.onSave) {
             this.props.onSave(record, params);
         }
-
         return saved;
     }
 

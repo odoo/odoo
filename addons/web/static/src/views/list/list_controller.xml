@@ -80,7 +80,7 @@
                 <button type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="onClickSave">
                     Save
                 </button>
-                <button type="button" class="btn btn-secondary o_list_button_discard" data-hotkey="j" t-on-click="onClickDiscard" t-on-mousedown="onMouseDownDiscard">
+                <button type="button" class="btn btn-secondary o_list_button_discard" data-hotkey="j" t-on-click.stop="onClickDiscard" t-on-mousedown="onMouseDownDiscard">
                     Discard
                 </button>
             </t>

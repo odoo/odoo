@@ -35,7 +35,7 @@ export class FormViewDialog extends Component {
                 this.props.close();
             },
             saveRecord: async (record, { saveAndNew }) => {
-                const saved = await record.save({ stayInEdition: true, noReload: true });
+                const saved = await record.save({ noReload: true });
                 if (saved) {
                     await this.props.onRecordSaved(record);
                     if (saveAndNew) {
@@ -45,7 +45,8 @@ export class FormViewDialog extends Component {
                                 delete context[k];
                             }
                         });
-                        await record.model.load({ resId: null, context });
+                        await record.load(false, context);
+                        // await record.model.load({ resId: null, context }); // FIXME context
                     } else {
                         this.props.close();
                     }

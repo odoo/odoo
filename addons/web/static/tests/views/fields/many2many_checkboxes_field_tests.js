@@ -352,7 +352,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("Many2ManyCheckBoxesField with default values", async function (assert) {
         assert.expect(7);
 
-        serverData.models.partner.fields.timmy.default = [3];
+        serverData.models.partner.fields.timmy.default = [[4, 3]];
         serverData.models.partner.fields.timmy.type = "many2many";
         serverData.models.partner_type.records.push({ id: 3, display_name: "bronze" });
 
@@ -367,7 +367,7 @@ QUnit.module("Fields", (hooks) => {
             mockRPC: function (route, args) {
                 if (args.method === "create") {
                     assert.deepEqual(
-                        args.args[0].timmy,
+                        args.args[0][0].timmy,
                         [[6, false, [12]]],
                         "correct values should have been sent to create"
                     );

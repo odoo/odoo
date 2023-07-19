@@ -1,14 +1,10 @@
 /** @odoo-module */
 
-import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export const X2M_TYPES = ["one2many", "many2many"];
-const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
 const NUMERIC_TYPES = ["integer", "float", "monetary"];
-
-/** @typedef {import("./relational_model").OrderTerm} OrderTerm */
 
 /**
  * @typedef ViewActiveActions {
@@ -69,7 +65,7 @@ export function addDependencies(deps, activeFields, fields) {
             };
         }
         if (!(name in fields)) {
-            fields[name] = { ...dependency };
+            fields[name] = { ...dependency, name };
         }
     }
 }
@@ -174,18 +170,6 @@ export const computeReportMeasures = (fields, fieldAttrs, activeMeasures) => {
 };
 
 /**
- * @param {Array[] | boolean} modifier
- * @param {Object} evalContext
- * @returns {boolean}
- */
-export function evalDomain(modifier, evalContext) {
-    if (modifier && typeof modifier !== "boolean") {
-        modifier = new Domain(modifier).contains(evalContext);
-    }
-    return Boolean(modifier);
-}
-
-/**
  * @param {String} fieldName
  * @param {Object} rawAttrs
  * @param {Record} record
@@ -240,32 +224,6 @@ export function getDecoration(rootNode) {
         }
     }
     return decorations;
-}
-
-/**
- * @param {number | number[]} idsList
- * @returns {number[]}
- */
-export function getIds(idsList) {
-    if (Array.isArray(idsList)) {
-        if (idsList.length === 2 && typeof idsList[1] === "string") {
-            return [idsList[0]];
-        } else {
-            return idsList;
-        }
-    } else if (idsList) {
-        return [idsList];
-    } else {
-        return [];
-    }
-}
-
-/**
- * @param {any} field
- * @returns {boolean}
- */
-export function isRelational(field) {
-    return field && RELATIONAL_TYPES.includes(field.type);
 }
 
 /**
@@ -336,44 +294,6 @@ export function processMeasure(measure) {
         return measure.map(processMeasure);
     }
     return measure === "__count__" ? "__count" : measure;
-}
-
-/**
- * @typedef {Object} OrderTerm ?
- * @property {string} name
- * @property {boolean} asc
- */
-
-/**
- * @param {OrderTerm[]} orderBy
- * @returns {string}
- */
-export function orderByToString(orderBy) {
-    return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
-}
-
-/**
- * @param {any} string
- * @return {OrderTerm[]}
- */
-export function stringToOrderBy(string) {
-    if (!string) {
-        return [];
-    }
-    return string.split(",").map((order) => {
-        const splitOrder = order.trim().split(" ");
-        if (splitOrder.length === 2) {
-            return {
-                name: splitOrder[0],
-                asc: splitOrder[1].toLowerCase() === "asc",
-            };
-        } else {
-            return {
-                name: splitOrder[0],
-                asc: true,
-            };
-        }
-    });
 }
 
 /**

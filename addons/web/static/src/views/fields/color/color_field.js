@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -10,14 +10,8 @@ export class ColorField extends Component {
         ...standardFieldProps,
     };
 
-    setup() {
-        this.state = useState({
-            color: this.props.record.data[this.props.name] || "",
-        });
-
-        onWillUpdateProps((nextProps) => {
-            this.state.color = nextProps.record.data[nextProps.name] || "";
-        });
+    get color() {
+        return this.props.record.data[this.props.name] || "";
     }
 }
 

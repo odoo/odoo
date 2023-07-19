@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { Dialog } from "@web/core/dialog/dialog";
+import { evalDomain } from "@web/core/domain";
 import { is24HourFormat } from "@web/core/l10n/dates";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/views/record";
-import { evalDomain } from "@web/views/utils";
-import { getFormattedDateSpan } from '@web/views/calendar/utils';
+import { getFormattedDateSpan } from "@web/views/calendar/utils";
 
 import { Component } from "@odoo/owl";
 
@@ -19,6 +19,9 @@ export class CalendarCommonPopover extends Component {
         this.computeDateTimeAndDuration();
     }
 
+    get activeFields() {
+        return this.props.model.popoverFields;
+    }
     get isEventEditable() {
         return true;
     }
@@ -29,9 +32,8 @@ export class CalendarCommonPopover extends Component {
         return this.isEventEditable || this.isEventDeletable;
     }
 
-    isInvisible(fieldName, record) {
-        const { invisible } = this.props.model.popoverFields[fieldName].modifiers;
-        return evalDomain(invisible, record.evalContext);
+    isInvisible(fieldNode, record) {
+        return evalDomain(fieldNode.modifiers.invisible, record.evalContext);
     }
 
     computeDateTimeAndDuration() {
