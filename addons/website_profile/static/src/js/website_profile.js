@@ -1,7 +1,7 @@
 /** @odoo-module alias=website_profile.website_profile **/
 
 import publicWidget from "web.public.widget";
-import wysiwygLoader from "web_editor.loader";
+import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
@@ -59,7 +59,7 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
 
         var $textarea = this.$('textarea.o_wysiwyg_loader');
 
-        this._wysiwyg = await wysiwygLoader.loadFromTextarea(this, $textarea[0], {
+        this._wysiwyg = await loadWysiwygFromTextarea(this, $textarea[0], {
             recordInfo: {
                 context: this._getContext(),
                 res_model: 'res.users',

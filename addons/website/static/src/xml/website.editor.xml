@@ -1,41 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
-    <t t-extend="wysiwyg.widgets.link">
-        <t t-jquery="#o_link_dialog_url_input" t-operation="after">
-            <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
-        </t>
-    </t>
-
-    <t t-extend="wysiwyg.widgets.linkTools">
-        <t t-jquery="#url_row" t-operation="after">
-            <div style="text-align: center" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
-                <small>
-                    Type '<span class="highlighted-text">/</span>' to search a page.
-                    '<span class="highlighted-text">#</span>' to link to an anchor.
-                </small>
-            </div>
-            <we-row class="o_link_dialog_page_anchor d-none" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
-                <we-select class="o_we_user_value_widget o_we_sublevel_1">
-                    <we-title>Page Anchor</we-title>
-                    <div>
-                        <div class="dropdown">
-                            <button class="dropdown-toggle"
-                                data-bs-toggle="dropdown" tabindex="-1" aria-expanded="false">
-                                <we-toggler>
-                                    Loading...
-                                </we-toggler>
-                            </button>
-                            <we-selection-items name="link_anchor" class="dropdown-menu link-style">
-                                <we-button class="dropdown-item o_anchors_loading">Loading...</we-button>
-                            </we-selection-items>
-                            <span class="o_we_dropdown_caret"></span>
-                        </div>
-                    </div>
-                </we-select>
-            </we-row>
-        </t>
-    </t>
     <!-- Anchor Name option dialog -->
     <div t-name="website.dialog.anchorName">
         <div class="mb-3 row">
@@ -159,12 +123,4 @@
         <div class="mb-2" t-esc="contentText"/>
         <div class="o_ace_editor_container"/>
     </div>
-
-    <!-- Editor Toolbar -->
-    <t t-extend="web_editor.toolbar">
-        <t t-jquery="#list .oe-toggle-checklist" t-operation="replace"/>
-        <t t-jquery="#list" t-operation="append">
-            <div title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text"/>
-        </t>
-    </t>
 </templates>

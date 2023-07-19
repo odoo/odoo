@@ -755,6 +755,7 @@ export class OdooEditor extends EventTarget {
                 });
             }
         }
+        this._updateToolbar();
     }
 
     resetContent(value) {

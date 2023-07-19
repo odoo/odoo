@@ -46,7 +46,6 @@
         'views/res_config_settings_views.xml',
         'views/utm_campaign_views.xml',
         'views/mailing_menus.xml',
-        'views/assets.xml',
         'views/mailing_templates_portal_layouts.xml',
         'views/mailing_templates_portal_management.xml',
         'views/mailing_templates_portal_unsubscribe.xml',
@@ -84,9 +83,26 @@
     ],
     'application': True,
     'assets': {
+        'mass_mailing.iframe_css_assets_edit': [
+            ('include', 'mass_mailing.assets_mail_themes'),
+            ('include', 'web.assets_frontend'),
+            ('after', 'web/static/lib/bootstrap/scss/_variables.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
+            ('include', 'web_editor.assets_wysiwyg'),
+            ('include', 'web_editor.assets_legacy_wysiwyg'),
+
+            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
+        ],
+        'mass_mailing.iframe_css_assets_readonly': [
+            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
+            'mass_mailing/static/src/css/basic_theme_readonly.css'
+        ],
         'mass_mailing.mailing_assets': [
             'mass_mailing/static/src/scss/mailing_portal.scss',
             'mass_mailing/static/src/js/mailing_portal.js',
+        ],
+        'web_editor.assets_wysiwyg': [
+            'mass_mailing/static/src/js/mass_mailing_wysiwyg.js',
+            'mass_mailing/static/src/scss/mass_mailing.wysiwyg.scss',
         ],
         'web.assets_backend': [
             'mass_mailing/static/src/scss/mailing_filter_widget.scss',
@@ -112,18 +128,14 @@
             'mass_mailing/static/src/scss/mass_mailing.ui.scss',
         ],
         'mass_mailing.assets_wysiwyg': [
-            'mass_mailing/static/src/js/mass_mailing_link_dialog_fix.js',
             'mass_mailing/static/src/js/mass_mailing_snippets.js',
             'mass_mailing/static/src/snippets/s_masonry_block/options.js',
             'mass_mailing/static/src/snippets/s_media_list/options.js',
             'mass_mailing/static/src/snippets/s_showcase/options.js',
             'mass_mailing/static/src/snippets/s_rating/options.js'
         ],
-        'web_editor.assets_wysiwyg': [
+        'web_editor.assets_legacy_wysiwyg': [
             'mass_mailing/static/src/js/snippets.editor.js',
-            'mass_mailing/static/src/js/wysiwyg.js',
-            'mass_mailing/static/src/xml/mass_mailing.editor.xml',
-            'mass_mailing/static/src/scss/mass_mailing.wysiwyg.scss',
         ],
         'web.assets_common': [
             'mass_mailing/static/src/js/tours/**/*',

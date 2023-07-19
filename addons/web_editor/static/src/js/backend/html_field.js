@@ -1,16 +1,11 @@
 /** @odoo-module **/
 
-import legacyEnv from 'web.commonEnv';
-import { ComponentAdapter } from 'web.OwlCompatibility';
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { getWysiwygClass } from 'web_editor.loader';
 import { QWebPlugin } from '@web_editor/js/backend/QWebPlugin';
 import { TranslationButton } from "@web/views/fields/translation_button";
 import { useDynamicPlaceholder } from "@web/views/fields/dynamic_placeholder_hook";
-import { QWeb } from 'web.core';
-import ajax from 'web.ajax';
 import {
     useBus,
     useService,
@@ -22,11 +17,10 @@ import {
     getRangePosition
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from 'web_editor.convertInline';
-import { loadJS } from '@web/core/assets';
+import { loadJS, getBundle } from '@web/core/assets';
 import {
     Component,
     useRef,
-    useSubEnv,
     useState,
     onWillStart,
     onMounted,
@@ -35,46 +29,31 @@ import {
     onWillUnmount,
 } from "@odoo/owl";
 import { uniqueId } from '@web/core/utils/functions';
-
-export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
-    setup() {
-        super.setup();
-        useSubEnv(legacyEnv);
-
-        let started = false;
-        onMounted(() => {
-            if (!started) {
-                this.props.startWysiwyg(this.widget);
-                started = true;
-            }
-        });
-    }
-
-    updateWidget(newProps) {
-        const lastValue = String(this.props.widgetArgs[0].value || '');
-        const lastRecordInfo = this.props.widgetArgs[0].recordInfo;
-        const lastCollaborationChannel = this.props.widgetArgs[0].collaborationChannel;
-        const newValue = String(newProps.widgetArgs[0].value || '');
-        const newRecordInfo = newProps.widgetArgs[0].recordInfo;
-        const newCollaborationChannel = newProps.widgetArgs[0].collaborationChannel;
-
-        if (
-            (
-                stripHistoryIds(newValue) !== stripHistoryIds(newProps.editingValue) &&
-                stripHistoryIds(lastValue) !== stripHistoryIds(newValue)
-            ) ||
-            JSON.stringify(lastRecordInfo) !== JSON.stringify(newRecordInfo) ||
-            JSON.stringify(lastCollaborationChannel) !== JSON.stringify(newCollaborationChannel)
-            )
-        {
-            this.widget.resetEditor(newValue, newProps.widgetArgs[0]);
-            this.env.onWysiwygReset && this.env.onWysiwygReset();
-        }
-    }
-    renderWidget() {}
-}
+import { Wysiwyg, stripHistoryIds } from '../wysiwyg/wysiwyg';
 
 export class HtmlField extends Component {
+    static template = "web_editor.HtmlField";
+    static components = {
+        TranslationButton,
+        Wysiwyg,
+    };
+    static defaultProps = { dynamicPlaceholder: false };
+    static props = {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+        codeview: { type: Boolean, optional: true },
+        isCollaborative: { type: Boolean, optional: true },
+        dynamicPlaceholder: { type: Boolean, optional: true, default: false },
+        dynamicPlaceholderModelReferenceField: { type: String, optional: true },
+        cssReadonlyAssetId: { type: String, optional: true },
+        cssEditAssetId: { type: String, optional: true },
+        isInlineStyle: { type: Boolean, optional: true },
+        sandboxedPreview: {type: Boolean, optional: true},
+        wrapper: { type: String, optional: true },
+        wysiwygOptions: { type: Object },
+        hasReadonlyModifiers: { type: Boolean, optional: true },
+    };
+
     setup() {
         this.containsComplexHTML = this.computeContainsComplexHTML();
         this.sandboxedPreview = this.props.sandboxedPreview || this.containsComplexHTML;
@@ -109,13 +88,12 @@ export class HtmlField extends Component {
         this._onUpdateIframeId = "onLoad_" + uniqueId("FieldHtml");
 
         onWillStart(async () => {
-            this.Wysiwyg = await this._getWysiwygClass();
             if (this.props.cssReadonlyAssetId) {
-                this.cssReadonlyAsset = await ajax.loadAsset(this.props.cssReadonlyAssetId);
+                this.cssReadonlyAsset = await getBundle(this.props.cssReadonlyAssetId);
             }
             if (this.props.cssEditAssetId || this.props.isInlineStyle) {
                 await loadJS('/web_editor/static/lib/html2canvas.js');
-                this.cssEditAsset = await ajax.loadAsset(this.props.cssEditAssetId || 'web_editor.assets_edit_html_field');
+                await getBundle(this.props.cssEditAssetId || 'web_editor.assets_edit_html_field');
             }
         });
         this._lastRecordInfo = {
@@ -235,7 +213,7 @@ export class HtmlField extends Component {
             }
         }
 
-        const wysiwygOptions = { ...this.props.wysiwygOptions };
+        const wysiwygOptions = {...this.props.wysiwygOptions};
         const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];
         if (sanitize_tags || (sanitize_tags === undefined && sanitize)) {
             wysiwygOptions.allowCommandVideo = false; // Tag-sanitized fields remove videos.
@@ -288,14 +266,6 @@ export class HtmlField extends Component {
         }
         return selectionIsInForbidenSnippet ? commands.filter((o) => o.title !== "Dynamic Placeholder") : commands;
     }
-    get translationButtonWrapperStyle() {
-        return `
-            font-size: 15px;
-            position: absolute;
-            right: ${this.props.codeview ? '40px' : '5px'};
-            top: 5px;
-        `;
-    }
 
     getEditingValue () {
         const codeViewEl = this._getCodeViewEl();
@@ -335,7 +305,7 @@ export class HtmlField extends Component {
                     </button>
                 </div>
             `);
-            this.wysiwyg.toolbar.$el.append($codeviewButtonToolbar);
+            this.wysiwyg.toolbarEl.append($codeviewButtonToolbar[0]);
             $codeviewButtonToolbar.click(this.toggleCodeView.bind(this));
         }
         this.wysiwyg.odooEditor.addEventListener("historyStep", () =>
@@ -353,6 +323,7 @@ export class HtmlField extends Component {
         if (this.wysiwyg) {
             this.wysiwyg.odooEditor.observerUnactive('toggleCodeView');
             if (this.state.showCodeView) {
+                this.wysiwyg.$editable.remove();
                 this.wysiwyg.odooEditor.toolbarHide();
                 const value = this.wysiwyg.getValue();
                 this.props.record.update({ [this.props.name]: value });
@@ -447,9 +418,6 @@ export class HtmlField extends Component {
         }
         this.iframePromise = new Promise((resolve) => {
             let value = this.props.record.data[this.props.name];
-            if (this.props.wrapper) {
-                value = this._wrap(value);
-            }
 
             // this bug only appears on some computers with some chrome version.
             let avoidDoubleLoad = 0;
@@ -494,15 +462,14 @@ export class HtmlField extends Component {
                             '</html>');
                 }
                 if (this.props.cssReadonlyAssetId) {
-                    const asset = await ajax.loadAsset(this.props.cssReadonlyAssetId);
-                    for (const cssLib of asset.cssLibs) {
+                    for (const cssLib of this.cssReadonlyAsset.cssLibs) {
                         const link = cwindow.document.createElement('link');
                         link.setAttribute('type', 'text/css');
                         link.setAttribute('rel', 'stylesheet');
                         link.setAttribute('href', cssLib);
                         cwindow.document.head.append(link);
                     }
-                    for (const cssContent of asset.cssContents) {
+                    for (const cssContent of this.cssReadonlyAsset.cssContents) {
                         const style = cwindow.document.createElement('style');
                         style.setAttribute('type', 'text/css');
                         const textNode = cwindow.document.createTextNode(cssContent);
@@ -546,32 +513,6 @@ export class HtmlField extends Component {
         return this.iframePromise;
     }
     /**
-     * Wrap HTML in order to create a custom display.
-     *
-     * The wrapper (this.props.wrapper) must be a static
-     * XML template with content id="wrapper".
-     *
-     * @private
-     * @param {string} html content
-     * @returns {string} html content
-     */
-    _wrap(html) {
-        return $(QWeb.render(this.props.wrapper))
-            .find('#wrapper').html(html)
-            .end().prop('outerHTML');
-    }
-    /**
-     * Move HTML contents out of their wrapper.
-     *
-     * @private
-     * @param {string} html content
-     * @returns {string} html content
-     */
-    _unWrap(html) {
-        const $wrapper = $(html).find('#wrapper');
-        return $wrapper.length ? $wrapper.html() : html;
-    }
-    /**
      * Converts CSS dependencies to CSS-independent HTML.
      * - CSS display for attachment link -> real image
      * - Font icons -> images
@@ -594,9 +535,6 @@ export class HtmlField extends Component {
 
         this.wysiwyg.setValue($editable.html());
         this.wysiwyg.odooEditor.sanitize(this.wysiwyg.odooEditor.editable);
-    }
-    async _getWysiwygClass() {
-        return getWysiwygClass();
     }
     _onAttachmentChange(attachment) {
         // This only needs to happen for the composer for now
@@ -674,28 +612,6 @@ export class HtmlField extends Component {
     }
 }
 
-HtmlField.template = "web_editor.HtmlField";
-HtmlField.components = {
-    TranslationButton,
-    HtmlFieldWysiwygAdapterComponent,
-};
-HtmlField.defaultProps = { dynamicPlaceholder: false };
-HtmlField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-    codeview: { type: Boolean, optional: true },
-    isCollaborative: { type: Boolean, optional: true },
-    dynamicPlaceholder: { type: Boolean, optional: true, default: false },
-    dynamicPlaceholderModelReferenceField: { type: String, optional: true },
-    cssReadonlyAssetId: { type: String, optional: true },
-    cssEditAssetId: { type: String, optional: true },
-    isInlineStyle: { type: Boolean, optional: true },
-    sandboxedPreview: {type: Boolean, optional: true},
-    wrapper: { type: String, optional: true },
-    wysiwygOptions: { type: Object },
-    hasReadonlyModifiers: { type: Boolean, optional: true },
-};
-
 export const htmlField = {
     component: HtmlField,
     displayName: _lt("Html"),
@@ -754,7 +670,9 @@ export const htmlField = {
                 noVideos: 'noVideos' in options ? options.noVideos : true,
                 useMediaLibrary: true,
             },
-            linkForceNewWindow: true,
+            linkOptions: {
+                forceNewWindow: true,
+            },
             tabsize: 0,
             height: options.height,
             minHeight: options.minHeight,
@@ -793,7 +711,6 @@ export const htmlField = {
             dynamicPlaceholderModelReferenceField: options?.dynamic_placeholder_model_reference_field || "",
             cssEditAssetId: options.cssEdit,
             isInlineStyle: options['style-inline'],
-            wrapper: options.wrapper,
 
             wysiwygOptions,
             hasReadonlyModifiers: dynamicInfo.readonly,
@@ -802,10 +719,6 @@ export const htmlField = {
 };
 
 registry.category("fields").add("html", htmlField, { force: true });
-
-function stripHistoryIds(value) {
-    return value && value.replace(/\sdata-last-history-steps="[^"]*?"/, '') || value;
-}
 
 // Ensure all links are opened in a new tab.
 const retargetLinks = (container) => {

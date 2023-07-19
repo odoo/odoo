@@ -3,11 +3,11 @@
 import concurrency from 'web.concurrency';
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
-import {ColorpickerWidget} from 'web.Colorpicker';
 import {_lt} from 'web.core';
 import {svgToPNG} from 'website.utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { mixCssColors } from '@web/core/utils/colors';
 
 const { Component, onMounted, reactive, useEnv, useRef, useState, useSubEnv, onWillStart, useExternalListener } = owl;
 
@@ -561,14 +561,14 @@ class Store {
     setRecommendedPalette(color1, color2) {
         if (color1 && color2) {
             if (color1 === color2) {
-                color2 = ColorpickerWidget.mixCssColors('#FFFFFF', color1, 0.2);
+                color2 = mixCssColors('#FFFFFF', color1, 0.2);
             }
             const recommendedPalette = {
                 color1: color1,
                 color2: color2,
-                color3: ColorpickerWidget.mixCssColors('#FFFFFF', color2, 0.9),
+                color3: mixCssColors('#FFFFFF', color2, 0.9),
                 color4: '#FFFFFF',
-                color5: ColorpickerWidget.mixCssColors(color1, '#000000', 0.75),
+                color5: mixCssColors(color1, '#000000', 0.75),
             };
             CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
                 recommendedPalette[attr] = recommendedPalette[this.defaultColors[attr]];

@@ -43,8 +43,8 @@ export class MenuDialog extends Component {
 
         useEffect(() => {
             const $input = $(this.urlInputRef.el);
-            // This is only there to avoid changing the
-            // wUtils.autocompleteWithPages api
+            // wUtils.autocompleteWithPages rely on a widget that has a _rpc and
+            // trigger_up method.
             const fakeWidget = {
                 _rpc: ({ route, params }) => this.rpc(route, params),
                 trigger_up: () => {

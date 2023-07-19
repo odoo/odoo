@@ -7,13 +7,14 @@
     <div t-if="state.showWysiwyg"
         t-ref="wysiwyg-adapter"
         t-att-class="{ o_w_wysiwyg_transition: !this.state.reloading, o_w_wysiwyg: this.websiteContext.snippetsLoaded }">
-        <WysiwygAdapterComponent Component="this.Wysiwyg"
+        <WysiwygAdapterComponent
+            editingValue="this.wysiwygOptions.value"
+            options="this.wysiwygOptions"
             snippetSelector="this.reloadSelector"
             willReload.bind="this.willReload"
             reloadCallback.bind="this.reload"
             quitCallback.bind="this.quit"
             wysiwygReady.bind="this.wysiwygReady"
-            wysiwygOptions="this.wysiwygOptions"
             editableElements="this.editableElements"
             savableSelector="this.savableSelector"
             beforeEditorActive="this.beforeEditorActive"

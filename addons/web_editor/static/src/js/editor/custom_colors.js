@@ -1,5 +1,5 @@
 
-/** @odoo-module alias=web_editor.custom_colors **/
+/** @odoo-module **/
 
 // These colors are already normalized as per normalizeCSSColor in web.Colorpicker
 export default [

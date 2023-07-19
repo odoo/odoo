@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from '@web/core/registry';
-import { getWysiwygClass } from 'web_editor.loader';
+import { loadLegacyWysiwygAssets } from '@web_editor/js/frontend/loader';
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
 import { WebsiteLoader } from '../components/website_loader/website_loader';
@@ -34,7 +34,6 @@ export const websiteService = {
         let contentWindow;
         let lastUrl;
         let websiteRootInstance;
-        let Wysiwyg;
         let isRestrictedEditor;
         let isDesigner;
         let hasMultiWebsites;
@@ -221,13 +220,7 @@ export const websiteService = {
                 websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name']))];
             },
             async loadWysiwyg() {
-                if (!Wysiwyg) {
-                    Wysiwyg = await getWysiwygClass({
-                        moduleName: 'website.wysiwyg',
-                        additionnalAssets: ['website.assets_wysiwyg']
-                    });
-                }
-                return Wysiwyg;
+                await loadLegacyWysiwygAssets(['website.assets_wysiwyg']);
             },
             blockPreview(showLoader, processId) {
                 if (!blockingProcesses.length) {
