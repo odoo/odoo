@@ -43,187 +43,110 @@ class AccountMoveLine(models.Model):
             if float_is_zero(quantity, precision_rounding=uom.rounding):
                 continue
 
-            layers = line._get_valued_in_moves().stock_valuation_layer_ids.filtered(lambda svl: svl.product_id == line.product_id and not svl.stock_valuation_layer_id)
-            if not layers:
-                continue
-
-            new_svl_vals_list, new_aml_vals_list = line._generate_price_difference_vals(layers)
+            new_svl_vals_list, new_aml_vals_list = line._generate_price_difference_vals()
             svl_vals_list += new_svl_vals_list
             aml_vals_list += new_aml_vals_list
         return self.env['stock.valuation.layer'].sudo().create(svl_vals_list), self.env['account.move.line'].sudo().create(aml_vals_list)
 
-    def _generate_price_difference_vals(self, layers):
+    def _calculate_unit_price_difference(self, svl):
         """
-        The method will determine which layers are impacted by the AML (`self`) and, in case of a price difference, it
-        will then return the values of the new AMLs and SVLs
+            Return the unit price difference between this line and the provided SVL.
         """
+        layer_price_unit = svl._get_layer_price_unit()
+        aml_gross_price_unit = self._get_gross_unit_price()
+        aml_price_unit = aml_gross_price_unit / self.currency_rate
+        aml_price_unit = self.product_uom_id._compute_price(aml_price_unit, self.product_id.uom_id)
+        return aml_price_unit - layer_price_unit
+
+    def _generate_correction_amls(self, price_diff, qty):
+        """
+            Convert the price_diff and qty to the correct currency and uom,
+            and return the values for AML entries that need to be created.
+        """
+        unit_valuation_difference_curr = price_diff * self.currency_rate
+        unit_valuation_difference_curr = self.product_id.uom_id._compute_price(unit_valuation_difference_curr, self.product_uom_id)
+        out_qty_to_invoice = self.product_id.uom_id._compute_quantity(qty, self.product_uom_id)
+        if not float_is_zero(unit_valuation_difference_curr * out_qty_to_invoice, precision_rounding=self.currency_id.rounding):
+            return self._prepare_pdiff_aml_vals(out_qty_to_invoice, unit_valuation_difference_curr)
+
+    def _generate_correction_svls(self, price_diff, qty, parent_layer, price_diff_curr, valued_in, valued_out):
+        """
+            Return the values for creating for a correction SVL based on the provided values
+            and update the remaining value of the parent layer.
+            In case the value of the SVL would be 0, we make sure it is an empty layer.
+        """
+        if float_is_zero(price_diff * qty, precision_rounding=self.company_id.currency_id.rounding):
+            # Set all to 0 to create an empty SVL
+            svl_vals = self._prepare_pdiff_svl_vals(parent_layer, 0, 0, 0, valued_in, valued_out)
+        else:
+            svl_vals = self._prepare_pdiff_svl_vals(parent_layer, qty, price_diff, price_diff_curr, valued_in, valued_out)
+            parent_layer.remaining_value += svl_vals['value']
+        return svl_vals
+
+    def _generate_price_difference_vals(self):
         self.ensure_one()
-        po_line = self.purchase_line_id
         product_uom = self.product_id.uom_id
-
-        # `history` is a list of tuples: (time, aml, layer)
-        # aml and layer will never be both defined
-        # we use this to get an order between posted AML and layers
-        history = [(layer.create_date, False, layer) for layer in layers]
-        am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
-        for aml in po_line.invoice_lines:
-            move = aml.move_id
-            if move.state != 'posted':
-                continue
-            state_trackings = move.message_ids.tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
-            time = state_trackings[-1:].create_date or move.create_date  # `or` in case it has been created in posted state
-            history.append((time, aml, False))
-        # Sort history based on the datetime. In case of equality, the prority is given to SVLs, then to IDs.
-        # That way, we ensure a deterministic behaviour
-        history.sort(key=lambda item: (item[0], bool(item[1]), (item[1] or item[2]).id))
-
-        # the next dict is a matrix [layer L, invoice I] where each cell gives two info:
-        # [initial qty of L invoiced by I, remaining invoiced qty]
-        # the second info is usefull in case of a refund
-        layers_and_invoices_qties = defaultdict(lambda: [0, 0])
-
-        # the next dict will also provide two info:
-        # [total qty to invoice, remaining qty to invoice]
-        # we need the total qty to invoice, so we will be able to deduce the invoiced qty before `self`
-        qty_to_invoice_per_layer = defaultdict(lambda: [0, 0])
-
-        # Replay the whole history: we want to know what are the links between each layer and each invoice,
-        # and then the links between `self` and the layers
-        history.append((False, self, False))  # time was only usefull for the sorting
-        for _time, aml, layer in history:
-            if layer:
-                total_layer_qty_to_invoice = abs(layer.quantity)
-                initial_layer = layer.stock_move_id.origin_returned_move_id.stock_valuation_layer_ids
-                if initial_layer:
-                    # `layer` is a return. We will cancel the qty to invoice of the returned layer
-                    # /!\ we will cancel the qty not yet invoiced only
-                    initial_layer_remaining_qty = qty_to_invoice_per_layer[initial_layer][1]
-                    common_qty = min(initial_layer_remaining_qty, total_layer_qty_to_invoice)
-                    qty_to_invoice_per_layer[initial_layer][0] -= common_qty
-                    qty_to_invoice_per_layer[initial_layer][1] -= common_qty
-                    total_layer_qty_to_invoice = max(0, total_layer_qty_to_invoice - common_qty)
-                if float_compare(total_layer_qty_to_invoice, 0, precision_rounding=product_uom.rounding) > 0:
-                    qty_to_invoice_per_layer[layer] = [total_layer_qty_to_invoice, total_layer_qty_to_invoice]
-            else:
-                invoice = aml.move_id
-                impacted_invoice = False
-                aml_qty = aml.product_uom_id._compute_quantity(aml.quantity, product_uom)
-                if aml.is_refund:
-                    reversed_invoice = aml.move_id.reversed_entry_id
-                    if reversed_invoice:
-                        sign = -1
-                        impacted_invoice = reversed_invoice
-                        # it's a refund, therefore we can only consume the quantities invoiced by
-                        # the initial invoice (`reversed_invoice`)
-                        layers_to_consume = []
-                        for layer in layers:
-                            remaining_invoiced_qty = layers_and_invoices_qties[(layer, reversed_invoice)][1]
-                            layers_to_consume.append((layer, remaining_invoiced_qty))
-                    else:
-                        # the refund has been generated because of a stock return, let's find and use it
-                        sign = 1
-                        layers_to_consume = []
-                        for layer in qty_to_invoice_per_layer:
-                            if layer.stock_move_id._is_out():
-                                layers_to_consume.append((layer, qty_to_invoice_per_layer[layer][1]))
-                else:
-                    # classic case, we are billing a received quantity so let's use the incoming SVLs
-                    sign = 1
-                    layers_to_consume = []
-                    for layer in qty_to_invoice_per_layer:
-                        if layer.stock_move_id._is_in():
-                            layers_to_consume.append((layer, qty_to_invoice_per_layer[layer][1]))
-                while float_compare(aml_qty, 0, precision_rounding=product_uom.rounding) > 0 and layers_to_consume:
-                    layer, total_layer_qty_to_invoice = layers_to_consume[0]
-                    layers_to_consume = layers_to_consume[1:]
-                    if float_is_zero(total_layer_qty_to_invoice, precision_rounding=product_uom.rounding):
-                        continue
-                    common_qty = min(aml_qty, total_layer_qty_to_invoice)
-                    aml_qty -= common_qty
-                    qty_to_invoice_per_layer[layer][1] -= sign * common_qty
-                    layers_and_invoices_qties[(layer, invoice)] = [common_qty, common_qty]
-                    layers_and_invoices_qties[(layer, impacted_invoice)][1] -= common_qty
-
-        # Now we know what layers does `self` use, let's check if we have to create a pdiff SVL
-        # (or cancel such an SVL in case of a refund)
-        invoice = self.move_id
+        po_line = self.purchase_line_id
+        po_pu_curr = po_line.currency_id._convert(po_line.price_unit, self.currency_id, self.company_id, self.move_id.invoice_date or self.date or fields.Date.context_today(self), round=False)
         svl_vals_list = []
         aml_vals_list = []
-        for layer in layers:
-            # use the link between `self` and `layer` (i.e. the qty of `layer` billed by `self`)
-            invoicing_layer_qty = layers_and_invoices_qties[(layer, invoice)][1]
-            if float_is_zero(invoicing_layer_qty, precision_rounding=product_uom.rounding):
-                continue
-            # We will only consider the total quantity to invoice of the layer because we don't
-            # want to invoice a part of the layer that has not been invoiced and that has been
-            # returned in the meantime
-            total_layer_qty_to_invoice = qty_to_invoice_per_layer[layer][0]
-            remaining_qty = layer.remaining_qty
-            out_layer_qty = total_layer_qty_to_invoice - remaining_qty
-            if self.is_refund:
-                sign = -1
-                reversed_invoice = invoice.reversed_entry_id
-                if not reversed_invoice:
-                    # this is a refund for a returned quantity, we don't have anything to do
-                    continue
-                initial_invoiced_qty = layers_and_invoices_qties[(layer, reversed_invoice)][0]
-                initial_pdiff_svl = layer.stock_valuation_layer_ids.filtered(lambda svl: svl.account_move_line_id.move_id == reversed_invoice)
-                if not initial_pdiff_svl or float_is_zero(initial_invoiced_qty, precision_rounding=product_uom.rounding):
-                    continue
-                # We have an already-out quantity: we must skip the part already invoiced. So, first,
-                # let's compute the already invoiced quantity...
-                previously_invoiced_qty = 0
-                for item in history:
-                    previous_aml = item[1]
-                    if not previous_aml or previous_aml.is_refund:
-                        continue
-                    previous_invoice = previous_aml.move_id
-                    if previous_invoice == reversed_invoice:
-                        break
-                    previously_invoiced_qty += layers_and_invoices_qties[(layer, previous_invoice,)][1]
-                # ... Second, skip it:
-                out_qty_to_invoice = max(0, out_layer_qty - previously_invoiced_qty)
-                qty_to_correct = max(0, invoicing_layer_qty - out_qty_to_invoice)
-                if out_qty_to_invoice:
-                    # In case the out qty is different from the one posted by the initial bill, we should compensate
-                    # this quantity with debit/credit between stock_in and expense, but we are reversing an initial
-                    # invoice and don't want to do more than the original one
-                    out_qty_to_invoice = 0
-                aml = initial_pdiff_svl.account_move_line_id
-                parent_layer = initial_pdiff_svl.stock_valuation_layer_id
-                layer_price_unit = parent_layer._get_layer_price_unit()
+        remaining_bill_qty = self.product_uom_id._compute_quantity(self.qty_to_value, product_uom) # Make sure to work in product UoM instead of invoice UoM
+
+        if self.is_refund:
+            reversed_invoice = self.move_id.reversed_entry_id
+            if reversed_invoice:
+                initial_aml = po_line.invoice_lines.filtered(lambda aml: aml.move_id == reversed_invoice)
             else:
-                sign = 1
-                # get the invoiced qty of the layer without considering `self`
-                invoiced_layer_qty = total_layer_qty_to_invoice - qty_to_invoice_per_layer[layer][1] - invoicing_layer_qty
-                remaining_out_qty_to_invoice = max(0, out_layer_qty - invoiced_layer_qty)
-                out_qty_to_invoice = min(remaining_out_qty_to_invoice, invoicing_layer_qty)
-                qty_to_correct = invoicing_layer_qty - out_qty_to_invoice
-                layer_price_unit = layer._get_layer_price_unit()
-                aml = self
+                # This refund was created manually without a linked initial invoice, we try to find one manually
+                initial_aml = next((aml for aml in po_line.invoice_lines if aml != self and not aml.is_refund), None)
+                if not initial_aml:
+                    return (), ()
+            price_difference_curr = po_pu_curr - initial_aml._get_gross_unit_price()
+            for correction_svl in initial_aml.stock_valuation_layer_ids:
+                if float_is_zero(remaining_bill_qty, precision_rounding=product_uom.rounding):
+                    break
 
-            aml_gross_price_unit = aml._get_gross_unit_price()
-            # convert from aml currency to company currency
-            aml_price_unit = aml_gross_price_unit / aml.currency_rate
-            aml_price_unit = aml.product_uom_id._compute_price(aml_price_unit, product_uom)
+                parent_layer = correction_svl.stock_valuation_layer_id
+                original_pdiff = initial_aml._calculate_unit_price_difference(parent_layer)
 
-            unit_valuation_difference = aml_price_unit - layer_price_unit
+                overvalued, still_in, meanwhile_out, already_out = correction_svl.calculate_refund_quantities(remaining_bill_qty)
+                remaining_bill_qty -= overvalued + still_in + meanwhile_out + already_out
 
-            # Generate the AML values for the already out quantities
-            # convert from company currency to aml currency
-            unit_valuation_difference_curr = unit_valuation_difference * self.currency_rate
-            unit_valuation_difference_curr = product_uom._compute_price(unit_valuation_difference_curr, self.product_uom_id)
-            out_qty_to_invoice = product_uom._compute_quantity(out_qty_to_invoice, self.product_uom_id)
-            if not float_is_zero(unit_valuation_difference_curr * out_qty_to_invoice, precision_rounding=self.currency_id.rounding):
-                aml_vals_list += self._prepare_pdiff_aml_vals(out_qty_to_invoice, unit_valuation_difference_curr)
+                to_compensate_in = still_in + overvalued + meanwhile_out
+                to_compensate_out = already_out + meanwhile_out
+                svl_vals = self._generate_correction_svls(original_pdiff, -still_in, parent_layer, price_difference_curr, -to_compensate_in, -to_compensate_out)
+                if svl_vals:
+                    svl_vals_list.append(svl_vals)
 
-            # Generate the SVL values for the on hand quantities (and impact the parent layer)
-            po_pu_curr = po_line.currency_id._convert(po_line.price_unit, self.currency_id, self.company_id, self.move_id.invoice_date or self.date or fields.Date.context_today(self), round=False)
-            price_difference_curr = po_pu_curr - aml_gross_price_unit
-            if not float_is_zero(unit_valuation_difference * qty_to_correct, precision_rounding=self.company_id.currency_id.rounding):
-                svl_vals = self._prepare_pdiff_svl_vals(layer, sign * qty_to_correct, unit_valuation_difference, price_difference_curr)
-                layer.remaining_value += svl_vals['value']
-                svl_vals_list.append(svl_vals)
+                if float_is_zero(meanwhile_out, precision_rounding=product_uom.rounding):
+                    aml_vals = self._generate_correction_amls(original_pdiff, -already_out)
+                    if aml_vals:
+                        aml_vals_list += aml_vals
+        else:
+            price_difference_curr = po_pu_curr - self._get_gross_unit_price()
+            for layer in self._get_valued_in_moves().stock_valuation_layer_ids.filtered(lambda svl: svl.product_id == self.product_id and not svl.stock_valuation_layer_id):
+                if float_is_zero(remaining_bill_qty, precision_rounding=product_uom.rounding):
+                    break
+
+                if float_compare(layer.qty_to_value_already_out + layer.qty_to_value_in_stock, 0, precision_rounding=product_uom.rounding) <= 0:
+                    continue
+
+                unit_valuation_difference = self._calculate_unit_price_difference(layer)
+
+                already_out = min(remaining_bill_qty, layer.qty_to_value_already_out)
+                remaining_bill_qty -= already_out
+
+                still_in = min(remaining_bill_qty, layer.qty_to_value_in_stock)
+                remaining_bill_qty -= still_in
+
+                svl_vals = self._generate_correction_svls(unit_valuation_difference, still_in, layer, price_difference_curr, still_in, already_out)
+                if svl_vals:
+                    svl_vals_list.append(svl_vals)
+
+                aml_vals = self._generate_correction_amls(unit_valuation_difference, already_out)
+                if aml_vals:
+                    aml_vals_list += aml_vals
+
         return svl_vals_list, aml_vals_list
 
     def _prepare_pdiff_aml_vals(self, qty, unit_valuation_difference):
@@ -261,7 +184,7 @@ class AccountMoveLine(models.Model):
             })
         return vals_list
 
-    def _prepare_pdiff_svl_vals(self, corrected_layer, quantity, unit_cost, pdiff):
+    def _prepare_pdiff_svl_vals(self, corrected_layer, quantity, unit_cost, pdiff, valued_in, valued_out):
         self.ensure_one()
         common_svl_vals = {
             'account_move_id': self.move_id.id,
@@ -279,6 +202,9 @@ class AccountMoveLine(models.Model):
             **common_svl_vals,
             'stock_valuation_layer_id': corrected_layer.id,
             'price_diff_value': self.currency_id.round(pdiff * quantity),
+            'qty_valued_in_stock': valued_in,
+            'qty_valued_already_out': valued_out,
+            'is_dummy': quantity == 0 and unit_cost == 0,
         }
 
     def _get_price_unit_val_dif_and_relevant_qty(self):
