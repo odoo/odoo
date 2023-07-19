@@ -35,7 +35,8 @@ class TestMailingControllers(MassMailCommon, HttpCase):
         # freeze time base value
         cls._reference_now = datetime.datetime(2022, 6, 14, 10, 0, 0)
 
-    def _request_handler(self, s: Session, r: PreparedRequest, /, **kw):
+    @classmethod
+    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         if r.url.startswith('https://www.example.com/foo/bar'):
             r = Response()
             r.status_code = 200
