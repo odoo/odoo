@@ -68,7 +68,8 @@
                                 </t>
                                 <t t-elif="groupby == 'task'">
                                     <th colspan="5">
-                                        <span t-field="timesheets[0].task_id.name"/>
+                                        <span t-if="timesheets[0].task_id" t-field="timesheets[0].task_id.name"/>
+                                        <span t-else="">No Task</span>
                                     </th>
                                     <th colspan="1" class="text-end text-muted">
                                         <t t-if="is_uom_day">

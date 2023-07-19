@@ -129,7 +129,8 @@ class TestCRUDVisibilityPortal(TestAccessRights):
         self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
         self.task.flush_model()
         self.task.invalidate_model()
-        self.task.with_user(self.env.user).name
+        with self.assertRaises(AccessError, msg=f"{self.env.user.name} should not be able to read the task"):
+            self.task.with_user(self.env.user).name
 
     @users('Internal user')
     def test_task_internal_read(self):

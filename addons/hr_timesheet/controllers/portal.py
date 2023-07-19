@@ -76,6 +76,11 @@ class TimesheetCustomerPortal(CustomerPortal):
             'name': {'label': _('Description'), 'order': 'name'},
         }
 
+    def _project_get_page_view_values(self, project, access_token, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, **kwargs):
+        values = super()._project_get_page_view_values(project, access_token, page, date_begin, date_end, sortby, search, search_in, groupby, **kwargs)
+        values['allow_timesheets'] = project.allow_timesheets
+        return values
+
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
         Timesheet = request.env['account.analytic.line']

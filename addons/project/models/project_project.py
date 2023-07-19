@@ -124,8 +124,8 @@ class Project(models.Model):
             "A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n\n"
             "- All internal users: all internal users can access the project and all of its tasks without distinction.\n\n"
             "- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-            "When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n\n"
-            "When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+            "When following a project, portal users will only get access to the specific tasks they are following.\n\n"
+            "When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks they are following, but not edit them.\n"
             "When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n\n"
             "In any case, an internal user with no project access rights can still access a task, "
             "provided that they are given the corresponding URL (and that they are part of the followers if the project is private).")
@@ -358,7 +358,7 @@ class Project(models.Model):
     def _compute_access_instruction_message(self):
         for project in self:
             if project.privacy_visibility == 'portal':
-                project.access_instruction_message = _('Grant portal users access to your project or tasks by adding them as followers. Customers automatically get access to their tasks in their portal.')
+                project.access_instruction_message = _('Grant portal users access to your project by adding them as followers (the tasks of the project are not included). To grant access to tasks to a portal user, add them as followers for these tasks.')
             elif project.privacy_visibility == 'followers':
                 project.access_instruction_message = _('Grant employees access to your project or tasks by adding them as followers. Employees automatically get access to the tasks they are assigned to.')
             else:
@@ -645,6 +645,19 @@ class Project(models.Model):
             'active_id_chatter': self.id,
         }
         action['display_name'] = self.name
+        return action
+
+    def action_open_share_project_wizard(self):
+        template = self.env.ref('project.mail_template_project_sharing', raise_if_not_found=False)
+
+        local_context = self.env.context | {
+            'default_template_id': template.id if template else False,
+            'default_email_layout_xmlid': 'mail.mail_notification_light',
+        }
+        action = self.env["ir.actions.actions"]._for_xml_id("project.project_share_wizard_action")
+        if self.env.context.get('default_access_mode'):
+            action['name'] = _("Share Project")
+        action['context'] = local_context
         return action
 
     def toggle_favorite(self):
@@ -964,3 +977,23 @@ class Project(models.Model):
                 'partner_id': collaborator.id,
             }) for collaborator in new_collaborators],
         })
+
+    def _add_followers(self, partners):
+        self.ensure_one()
+        self.message_subscribe(partners.ids)
+
+        dict_tasks_per_partner = {}
+        dict_partner_ids_to_subscribe_per_partner = {}
+        for task in self.task_ids:
+            if task.partner_id in dict_tasks_per_partner:
+                dict_tasks_per_partner[task.partner_id] |= task
+            else:
+                partner_ids_to_subscribe = [
+                    partner.id for partner in partners
+                    if partner == task.partner_id or partner in task.partner_id.child_ids
+                ]
+                if partner_ids_to_subscribe:
+                    dict_tasks_per_partner[task.partner_id] = task
+                    dict_partner_ids_to_subscribe_per_partner[task.partner_id] = partner_ids_to_subscribe
+        for partner, tasks in dict_tasks_per_partner.items():
+            tasks.message_subscribe(dict_partner_ids_to_subscribe_per_partner[partner])

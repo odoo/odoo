@@ -35,10 +35,10 @@
                     <field name="company_id" invisible="1"/>
                     <field name="analytic_account_id" invisible="1"/>
                     <header>
-                        <button name="%(project.project_share_wizard_action)d" string="Share Read-only" type="action" class="oe_highlight" groups="project.group_project_manager"
-                        invisible="privacy_visibility != 'portal'" context="{'default_access_mode': 'read', 'dialog_size': 'medium'}" data-hotkey="r"/>
-                        <button name="%(project.project_share_wizard_action)d" string="Share Editable" type="action" class="oe_highlight" groups="project.group_project_manager"
-                        invisible="privacy_visibility != 'portal'" context="{'default_access_mode': 'edit', 'dialog_size': 'medium'}" data-hotkey="e"/>
+                        <button name="action_open_share_project_wizard" string="Share Read-only" type="object" class="oe_highlight" groups="project.group_project_manager"
+                        invisible="privacy_visibility != 'portal'" context="{'default_access_mode': 'read'}" data-hotkey="r"/>
+                        <button name="action_open_share_project_wizard" string="Share Editable" type="object" class="oe_highlight" groups="project.group_project_manager"
+                        invisible="privacy_visibility != 'portal'" context="{'default_access_mode': 'edit'}" data-hotkey="e"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages" domain="[('company_id', 'in', (company_id, False))]"/>
                     </header>
                 <sheet string="Project">
@@ -453,7 +453,9 @@
                                         <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
                                     </div>
                                     <div role="menuitem" class="col-6" groups="project.group_project_manager">
-                                        <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action" context="{'dialog_size': 'medium'}">Share Project</a>
+
+                                        <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="action_open_share_project_wizard" type="object">Share Project</a>
+
                                         <a class="dropdown-item" role="menuitem" type="edit">Settings</a>
                                     </div>
                                     <div class="o_kanban_card_manage_section o_kanban_manage_view col-12 ps-0" groups="!project.group_project_manager">

@@ -21,7 +21,7 @@ class ProjectCustomerPortal(CustomerPortal):
             values['project_count'] = request.env['project.project'].search_count([]) \
                 if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)]) \
+            values['task_count'] = request.env['project.task'].sudo().search_count([('project_id', '!=', False), ('message_partner_ids', 'in', request.env.user.partner_id.ids), ('project_privacy_visibility', '=', 'portal')]) \
                 if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
         return values
 
@@ -45,6 +45,7 @@ class ProjectCustomerPortal(CustomerPortal):
             page_name='project',
             pager=pager,
             project=project,
+            multiple_projects=False,
             task_url=f'projects/{project.id}/task',
             preview_object=project,
         )
@@ -71,7 +72,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
         searchbar_sortings = self._prepare_searchbar_sortings()
         if not sortby:
-            sortby = 'date'
+            sortby = 'name'
         order = searchbar_sortings[sortby]['order']
 
         if date_begin and date_end:
@@ -224,10 +225,43 @@ class ProjectCustomerPortal(CustomerPortal):
 
             values.update({
                 'project': project_sudo,
+                'show_project': True,
                 'task': task_sudo,
                 'grouped_tasks': values['grouped_tasks'](pager['offset']),
                 'pager': pager,
                 'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+                'filterby': filterby,
+            })
+            return request.render("project.portal_my_tasks", values)
+        except (AccessError, MissingError):
+            return request.not_found()
+
+    @http.route('/my/projects/<int:project_id>/task/<int:task_id>/recurrent_tasks', type='http', auth='user', methods=['GET'], website=True)
+    def portal_my_project_recurrent_tasks(self, project_id, task_id, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby=None, **kw):
+        try:
+            project_sudo = self._document_check_access('project.project', project_id)
+            task_sudo = request.env['project.task'].search([('project_id', '=', project_id), ('id', '=', task_id)], limit=1).sudo()
+            task_domain = [('id', 'in', task_sudo.recurrence_id.task_ids.ids)]
+            searchbar_filters = self._get_my_tasks_searchbar_filters([('id', '=', project_id)], task_domain)
+
+            if not filterby:
+                filterby = 'all'
+            domain = searchbar_filters.get(filterby, searchbar_filters.get('all'))['domain']
+
+            values = self._prepare_tasks_values(
+                page, date_begin, date_end, sortby, search, search_in, groupby,
+                url=f'/my/projects/{project_id}/task/{task_id}/recurrent_tasks',
+                domain=AND([task_domain, domain])
+            )
+            values['page_name'] = 'project_recurrent_tasks'
+            pager = portal_pager(**values['pager'])
+
+            values.update({
+                'project': project_sudo,
+                'task': task_sudo,
+                'grouped_tasks': values['grouped_tasks'](pager['offset']),
+                'pager': pager,
+                'searchbar_filters': dict(sorted(searchbar_filters.items())),
                 'filterby': filterby,
             })
             return request.render("project.portal_my_tasks", values)
@@ -374,8 +408,8 @@ class ProjectCustomerPortal(CustomerPortal):
         values = self._prepare_portal_layout_values()
 
         Task = request.env['project.task']
-        milestone_domain = AND([domain, [('allow_milestones', '=', True)]])
-        milestones_allowed = Task.sudo().search_count(milestone_domain, limit=1) == 1
+        milestone_domain = AND([domain, [('allow_milestones', '=', True)], [('milestone_id', '!=', False)]])
+        milestones_allowed = Task.search_count(milestone_domain, limit=1) == 1
         searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings(milestones_allowed, project).items(),
                                          key=lambda item: item[1]["sequence"]))
         searchbar_inputs = self._task_get_searchbar_inputs(milestones_allowed, project)
@@ -450,6 +484,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'date_end': date_end,
             'grouped_tasks': get_grouped_tasks,
             'allow_milestone': milestones_allowed,
+            'multiple_projects': True,
             'page_name': 'task',
             'default_url': url,
             'task_url': 'tasks',
@@ -508,8 +543,10 @@ class ProjectCustomerPortal(CustomerPortal):
         pager_vals['url_args'].update(filterby=filterby)
         pager = portal_pager(**pager_vals)
 
+        grouped_tasks = values['grouped_tasks'](pager['offset'])
         values.update({
-            'grouped_tasks': values['grouped_tasks'](pager['offset']),
+            'grouped_tasks': grouped_tasks,
+            'show_project': True,
             'pager': pager,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,

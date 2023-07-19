@@ -26,15 +26,15 @@
                         <th>Name</th>
                         <th>Assignees</th>
                         <th t-if="groupby != 'milestone' and allow_milestone" name="project_portal_milestones">Milestone</th>
+                        <th t-if="groupby != 'project' and multiple_projects">Project</th>
                         <th t-if="groupby != 'status'"/>
-                        <th t-if="groupby != 'project'">Project</th>
                         <th t-if="groupby != 'stage'" class="text-end">Stage</th>
                     </tr>
                 </thead>
                 <t t-foreach="grouped_tasks" t-as="tasks">
                     <tbody t-if="tasks">
                         <tr t-if="not groupby == 'none'" class="table-light">
-                            <th t-if="groupby == 'project'" t-attf-colspan="{{grouped_tasks_colspan}}">
+                            <th t-if="groupby == 'project' and multiple_projects" t-attf-colspan="{{ grouped_tasks_colspan }}">
                                 <!-- This div is necessary for documents_project_sale -->
                                 <div name="project_name" class="d-flex w-100 align-items-center">
                                     <span t-if="tasks[0].sudo().project_id" t-field="tasks[0].sudo().project_id.name"/>
@@ -91,13 +91,13 @@
                                         <span t-esc="task.milestone_id.name" />
                                     </t>
                                 </td>
-                                <td t-if="groupby != 'status'" align="right" class="align-middle">
+                                <td t-if="groupby != 'project' and multiple_projects">
+                                    <span title="Current project of the task" t-esc="task.project_id.name" />
+                                </td>
+                                <td t-if="groupby != 'status'" align="right"  class="align-middle">
                                     <t t-call="project.portal_my_tasks_state_widget_template">
                                         <t t-set="path" t-value="'tasks'"/>
                                     </t>
-                                </td>
-                                <td t-if="groupby != 'project'">
-                                    <span title="Current project of the task" t-esc="task.project_id.name" />
                                 </td>
                                 <td t-if="groupby != 'stage'" class="text-end lh-1">
                                     <span t-attf-class="badge #{'text-bg-success' if task.stage_id.fold else 'text-bg-primary'} fw-normal o_text_overflow" t-attf-title="#{task.stage_id.name}" t-esc="task.stage_id.name"/>

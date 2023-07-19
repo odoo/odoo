@@ -32,7 +32,8 @@ class ProjectShareWizard(models.TransientModel):
         project_model = self.env['ir.model']._get('project.project')
         return [(project_model.model, project_model.name)]
 
-    access_mode = fields.Selection([('read', 'Readonly'), ('edit', 'Edit')])
+    access_mode = fields.Selection([('read', 'Read-only'), ('edit', 'Edit')])
+    send_email = fields.Boolean(string="Send by Email")
     display_access_mode = fields.Boolean()
 
     @api.depends('res_model', 'res_id')
@@ -63,11 +64,13 @@ class ProjectShareWizard(models.TransientModel):
 
     def action_send_mail(self):
         self.env['project.project'].browse(self.res_id).privacy_visibility = 'portal'
-        if self.access_mode == 'edit':
+        if self.access_mode == 'edit' or self.send_email:
             portal_partners = self.partner_ids.filtered('user_ids')
-            self.resource_ref._add_collaborators(self.partner_ids)
+            if self.access_mode == 'edit':
+                self.resource_ref._add_collaborators(self.partner_ids)
+            # send mail to users
             self._send_public_link(portal_partners)
             self._send_signup_link(partners=self.with_context({'signup_valid': True}).partner_ids - portal_partners)
-            self.resource_ref.message_subscribe(partner_ids=self.partner_ids.ids)
+            self.resource_ref._add_followers(self.partner_ids)
             return {'type': 'ir.actions.act_window_close'}
         return super().action_send_mail()

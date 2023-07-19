@@ -19,17 +19,17 @@
                 <field name="res_id" invisible="1"/>
                 <field name="display_access_mode" invisible="1" />
                 <group>
-                    <field options="{'horizontal': true}" name="access_mode" widget="radio" invisible="not display_access_mode" class="mb-4"/>
-                    <field name="share_link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}" invisible="access_mode == 'edit'" string="Link" class="mb-4"/>
-                    <div class="o_td_label mb-4">
+                    <field options="{'horizontal': true}" name="access_mode" widget="radio" invisible="not display_access_mode"/>
+                    <field name="share_link" widget="CopyClipboardChar" invisible="access_mode == 'edit'"/>
+                    <field name="send_email" widget="boolean_toggle" options="{'autosave': False}" invisible="access_mode == 'edit'"/>
+                    <div invisible="not send_email and access_mode == 'read'" class="o_td_label mb-0">
                         <label for="partner_ids" string="Invite People" invisible="access_mode == 'read'"/>
                         <label for="partner_ids" invisible="access_mode == 'edit'"/>
                     </div>
-                    <field name="partner_ids" widget="many2many_tags_email" options="{'no_quick_create': True}" placeholder="Add contacts to share the project..." nolabel="1" context="{'force_email':True}" class="mb-4"/>
+                    <field name="partner_ids" widget="many2many_tags_email" options="{'no_quick_create': True}" placeholder="Add the contacts you would like to share the project with..." invisible="not send_email and access_mode == 'read'" nolabel="1" context="{'show_email': True, 'force_email':True}"/>
                 </group>
-                <field name="note" placeholder="Add a note" nolabel="1"/>
                 <footer>
-                    <button string="Send" name="action_share_record" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Send invitation" name="action_share_record" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
                 </footer>
             </form>
@@ -53,13 +53,11 @@
     </record>
 
     <record id="project_share_wizard_action" model="ir.actions.act_window">
-        <field name="name">Share Project</field>
+        <field name="name">Share a Project</field>
         <field name="res_model">project.share.wizard</field>
         <field name="binding_model_id" ref="model_project_project"/>
         <field name="view_mode">form</field>
-        <field name="context">{'dialog_size': 'medium'}</field>
         <field name="target">new</field>
-        <field name="context">{'dialog_size': 'medium'}</field>
     </record>
 
 </odoo>
