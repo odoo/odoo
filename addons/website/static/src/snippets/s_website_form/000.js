@@ -53,7 +53,6 @@
             this._super(...arguments);
             this._recaptcha = new ReCaptcha();
             this.initialValues = new Map();
-            this._visibilityFunctionByFieldName = new Map();
             this._visibilityFunctionByFieldEl = new Map();
             this.__started = new Promise(resolve => this.__startResolve = resolve);
         },
@@ -80,18 +79,9 @@
             this.resetForm();
 
             // Prepare visibility data and update field visibilities
-            const visibilityFunctionsByFieldName = new Map();
             for (const fieldEl of this.el.querySelectorAll('[data-visibility-dependency]')) {
-                const inputName = fieldEl.querySelector('.s_website_form_input').name;
-                if (!visibilityFunctionsByFieldName.has(inputName)) {
-                    visibilityFunctionsByFieldName.set(inputName, []);
-                }
                 const func = this._buildVisibilityFunction(fieldEl);
-                visibilityFunctionsByFieldName.get(inputName).push(func);
                 this._visibilityFunctionByFieldEl.set(fieldEl, func);
-            }
-            for (const [name, funcs] of visibilityFunctionsByFieldName.entries()) {
-                this._visibilityFunctionByFieldName.set(name, () => funcs.some(func => func()));
             }
 
             this._onFieldInputDebounced = debounce(this._onFieldInput.bind(this), 400);
@@ -746,11 +736,15 @@
         _buildVisibilityFunction(fieldEl) {
             const visibilityCondition = fieldEl.dataset.visibilityCondition;
             const dependencyName = fieldEl.dataset.visibilityDependency;
+            const inputDependencyEl = this.el.querySelector(
+                `.s_website_form_input[name="${dependencyName}"]`);
+            const dependencyFieldEl = inputDependencyEl.closest(".s_website_form_field");
             const comparator = fieldEl.dataset.visibilityComparator;
             const between = fieldEl.dataset.visibilityBetween;
             return () => {
-                // To be visible, at least one field with the dependency name must be visible.
-                const dependencyVisibilityFunction = this._visibilityFunctionByFieldName.get(dependencyName);
+                // To be visible, the dependent field must be visible.
+                const dependencyVisibilityFunction = this._visibilityFunctionByFieldEl.get(
+                                                                                dependencyFieldEl);
                 const dependencyIsVisible = !dependencyVisibilityFunction || dependencyVisibilityFunction();
                 if (!dependencyIsVisible) {
                     return false;
