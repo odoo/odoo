@@ -109,15 +109,16 @@ QUnit.module("Components", (hooks) => {
                 assert.strictEqual(domain, "[('foo', '=', uid)]");
                 assert.step("confirmed");
             },
-            mockRPC(_, args) {
-                if (args.method === "search_count") {
-                    assert.step("rpc validation");
+            mockRPC(route) {
+                if (route === "/web/domain/validate") {
+                    assert.step("validation");
+                    return true;
                 }
             },
         });
         const confirmButton = fixture.querySelector(".o_dialog footer button");
         await click(confirmButton);
-        assert.verifySteps(["confirmed"]);
+        assert.verifySteps(["validation", "confirmed"]);
     });
 
     QUnit.test("can extend eval context", async (assert) => {
@@ -129,15 +130,16 @@ QUnit.module("Components", (hooks) => {
                 assert.step("confirmed");
             },
 
-            mockRPC(_, args) {
-                if (args.method === "search_count") {
-                    assert.step("rpc validation");
+            mockRPC(route) {
+                if (route === "/web/domain/validate") {
+                    assert.step("validation");
+                    return true;
                 }
             },
         });
         const confirmButton = fixture.querySelector(".o_dialog footer button");
         await click(confirmButton);
-        assert.verifySteps(["confirmed"]);
+        assert.verifySteps(["validation", "confirmed"]);
     });
 
     QUnit.test("a domain with an unknown expression is not valid", async (assert) => {
@@ -146,9 +148,9 @@ QUnit.module("Components", (hooks) => {
             onConfirm() {
                 assert.step("confirmed");
             },
-            mockRPC(_, args) {
-                if (args.method === "search_count") {
-                    assert.step("rpc validation");
+            mockRPC(route) {
+                if (route === "/web/domain/validate") {
+                    assert.step("validation");
                 }
             },
         });

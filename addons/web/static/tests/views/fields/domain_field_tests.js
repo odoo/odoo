@@ -914,6 +914,11 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="display_name" widget="domain" options="{'model': 'partner', 'in_dialog': True}"/>
                 </form>`,
+            mockRPC: (route) => {
+                if (route === "/web/domain/validate") {
+                    return true;
+                }
+            },
         });
         assert.containsNone(target, ".o_domain_leaf");
         assert.containsNone(target, ".modal");
