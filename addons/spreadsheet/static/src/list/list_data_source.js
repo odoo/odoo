@@ -4,13 +4,13 @@ import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_s
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { orderByToString } from "@web/views/utils";
 import {
     formatDateTime,
     deserializeDateTime,
     formatDate,
     deserializeDate,
 } from "@web/core/l10n/dates";
+import { orderByToString } from "@web/search/utils/order_by";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 

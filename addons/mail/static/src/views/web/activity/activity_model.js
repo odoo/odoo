@@ -1,15 +1,9 @@
 /* @odoo-module */
 
-import { DynamicRecordList, RelationalModel } from "@web/views/relational_model";
+import { RelationalModel } from "@web/model/relational_model/relational_model";
 
-class ActivityDynamicRecordList extends DynamicRecordList {
-    setup() {
-        super.setup(...arguments);
-        this.limit = null;
-    }
-}
 export class ActivityModel extends RelationalModel {
-    static DynamicRecordList = ActivityDynamicRecordList;
+    static DEFAULT_LIMIT = null;
 
     async load(params = {}) {
         this.originalDomain = params.domain ? [...params.domain] : [];
@@ -17,13 +11,15 @@ export class ActivityModel extends RelationalModel {
         if (params && "groupBy" in params) {
             params.groupBy = [];
         }
-        this.activityData = await this.fetchActivityData(params);
-        await super.load(params);
+        const prom = this.fetchActivityData(params).then((data) => {
+            this.activityData = data;
+        });
+        await Promise.all([prom, super.load(params)]);
     }
 
     fetchActivityData(params) {
         return this.orm.call("mail.activity", "get_activity_data", [], {
-            res_model: this.rootParams.resModel,
+            res_model: this.config.resModel,
             domain: params.domain || this.env.searchModel._domain,
         });
     }

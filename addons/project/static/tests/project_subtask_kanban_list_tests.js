@@ -110,8 +110,9 @@ QUnit.module('Subtask Kanban List tests', {
         assert.verifySteps([
             "project.task/search_read",
             "project.task/write",
-            "project.task/read",
-            "project.task/read", // read the parent task to recompute the subtask count
+            "project.task/web_read",
+            "project.task/search_read",
+            "project.task/web_read", // read the parent task to recompute the subtask count
         ]);
     });
 });

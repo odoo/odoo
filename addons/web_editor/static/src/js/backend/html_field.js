@@ -541,12 +541,7 @@ export class HtmlField extends Component {
         if (!(this.props.record.fieldNames.includes('attachment_ids') && this.props.record.resModel === 'mail.compose.message')) {
             return;
         }
-        this.props.record.update({
-            attachment_ids: {
-                operation: "ADD_M2M",
-                ids: attachment,
-            },
-        });
+        this.props.record.data.attachment_ids.linkTo(attachment.res_id, attachment);
     }
     _onDblClickEditableMedia(ev) {
         const el = ev.target;

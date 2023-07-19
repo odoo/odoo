@@ -1,11 +1,12 @@
 /* @odoo-module */
 
-import { useService } from '@web/core/utils/hooks';
-import { registry } from '@web/core/registry'
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 import { formatDate } from "@web/core/l10n/dates";
 
-const { Component, useState, onWillStart, onWillUpdateProps } = owl;
+const { Component, useState, onWillStart } = owl;
 const { DateTime } = luxon;
 
 export class LeaveStatsComponent extends Component {
@@ -25,24 +26,30 @@ export class LeaveStatsComponent extends Component {
             await this.loadLeaves(this.date, this.employee);
             await this.loadDepartmentLeaves(this.date, this.department, this.employee);
         });
-        onWillUpdateProps(async (nextProps) => {
-            const dateFrom = nextProps.record.data.date_from || DateTime.now();
+
+        useRecordObserver(async (record) => {
+            const dateFrom = record.data.date_from || DateTime.now();
             const dateChanged = this.date !== dateFrom;
-            const employee = nextProps.record.data.employee_id;
-            const department = nextProps.record.data.department_id;
+            const employee = record.data.employee_id;
+            const department = record.data.department_id;
 
-            if (dateChanged || employee && (this.employee && this.employee[0]) !== employee[0]) {
-                await this.loadLeaves(dateFrom, employee);
+            const proms = [];
+            if (dateChanged || (employee && (this.employee && this.employee[0]) !== employee[0])) {
+                proms.push(this.loadLeaves(dateFrom, employee));
             }
 
-            if (dateChanged || department && (this.department && this.department[0]) !== department[0]) {
-                await this.loadDepartmentLeaves(dateFrom, department, employee);
+            if (
+                dateChanged ||
+                (department && (this.department && this.department[0]) !== department[0])
+            ) {
+                proms.push(this.loadDepartmentLeaves(dateFrom, department, employee));
             }
+            await Promise.all(proms);
 
             this.date = dateFrom;
             this.employee = employee;
             this.department = department;
-        })
+        });
     }
 
     get thisYear() {

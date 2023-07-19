@@ -10,7 +10,7 @@
                 <page string="Optional Products"
                     name="optional_products"
                     attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}">
-                    <field name="sale_order_option_ids" mode="tree,form,kanban">
+                    <field name="sale_order_option_ids" mode="tree,kanban">
                         <form string="Optional Products">
                             <group>
                                 <field name="product_id"

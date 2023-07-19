@@ -113,7 +113,7 @@ export class FieldMany2OneMailingFilter extends Many2OneField {
         ev.target.disabled = true;
 
         await this.orm.unlink('mailing.filter', [filterId]);
-        this.update([{ id: false, name: false }]);
+        this.update(false);
         this.props.record.update({[this.props.domain_field]: mailingDomain});
     }
 

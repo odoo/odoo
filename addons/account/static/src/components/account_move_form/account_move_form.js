@@ -37,7 +37,7 @@ AccountMoveFormNotebook.props = {
 }
 export class AccountMoveFormRenderer extends FormRenderer {
     async saveBeforeTabChange() {
-        if (this.props.record.mode === "edit" && this.props.record.isDirty) {
+        if (this.props.record.mode === "edit" && await this.props.record.isDirty()) {
             const contentEl = document.querySelector('.o_content');
             const scrollPos = contentEl.scrollTop;
             await this.props.record.save({
