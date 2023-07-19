@@ -55,13 +55,9 @@ class HrWorkLocation(models.Model):
     _inherit = 'hr.work.location'
 
     _populate_sizes = {'small': 2, 'medium': 5, 'large': 20}
-
     def _populate_factories(self):
-        address_id = self.env.ref('base.main_partner').id
-
         return [
             ('name', populate.constant('work_location_{counter}')),
-            ('address_id', populate.constant(address_id)),
         ]
 
 class HrEmployeeCategory(models.Model):
