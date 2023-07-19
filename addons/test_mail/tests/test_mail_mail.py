@@ -798,4 +798,4 @@ class TestMailMailRace(common.TransactionCase):
 
         # because we committed the cursor, the savepoint of the test method is
         # gone, and this would break TransactionCase cleanups
-        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+        self.cr.execute(f'SAVEPOINT test_{self._savepoint_id}')

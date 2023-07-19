@@ -3,10 +3,10 @@
 
 from datetime import datetime
 
-from odoo.tests.common import SingleTransactionCase
+from odoo.tests.common import TransactionCase
 
 
-class TestCalendarSms(SingleTransactionCase):
+class TestCalendarSms(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

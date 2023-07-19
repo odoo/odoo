@@ -60,6 +60,7 @@ class TestSuite(BaseTestSuite):
 
         try:
             currentClass.setUpClass()
+            currentClass._post_setUpClass()
         except Exception as e:
             currentClass._classSetupFailed = True
             className = util.strclass(currentClass)

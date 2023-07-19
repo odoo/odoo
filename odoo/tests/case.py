@@ -248,6 +248,10 @@ class TestCase(_TestCase):
             except Exception:
                 cls.tearDown_exceptions.append(sys.exc_info())
 
+    @classmethod
+    def _post_setUpClass(cls):
+        pass
+
 
 class _SubTest(TestCase):
 
