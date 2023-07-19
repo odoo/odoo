@@ -1612,6 +1612,11 @@ QUnit.module("Search", (hooks) => {
                 context: {
                     search_default_filter: true,
                 },
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
             });
             assert.deepEqual(getFacetTexts(target), ["Filter"]);
             assert.deepEqual(getDomain(controlPanel), [["foo", "=", "abc"]]);
@@ -1669,6 +1674,11 @@ QUnit.module("Search", (hooks) => {
                 searchMenuTypes: ["filter"],
                 searchViewId: false,
                 searchViewArch: `<search />`,
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
             });
             assert.deepEqual(getFacetTexts(target), []);
             assert.deepEqual(getDomain(controlPanel), []);
@@ -1694,6 +1704,11 @@ QUnit.module("Search", (hooks) => {
                 searchMenuTypes: ["filter"],
                 searchViewId: false,
                 searchViewArch: `<search />`,
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
             });
             assert.deepEqual(getFacetTexts(target), []);
             assert.deepEqual(getDomain(controlPanel), []);
@@ -1717,6 +1732,11 @@ QUnit.module("Search", (hooks) => {
                 searchMenuTypes: ["filter"],
                 searchViewId: false,
                 searchViewArch: `<search />`,
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
             });
             await toggleSearchBarMenu(target);
             await openAddCustomFilterDialog(target);
@@ -1747,6 +1767,11 @@ QUnit.module("Search", (hooks) => {
                 resModel: "foo",
                 Component: SearchBar,
                 searchMenuTypes: ["filter"],
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
             });
             assert.deepEqual(getFacetTexts(target), []);
             assert.deepEqual(getDomain(controlPanel), []);
@@ -1796,6 +1821,42 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(getDomain(controlPanel), [["boolean", "!=", true]]);
         });
 
+        QUnit.test("Add a custom filter: notification on invalid domain", async function (assert) {
+            assert.expect(3);
+            patchWithCleanup(odoo, { debug: true });
+            registry.category("services").add(
+                "notification",
+                {
+                    start() {
+                        return {
+                            add(message, options) {
+                                assert.strictEqual(message, "Domain is invalid. Please correct it");
+                                assert.deepEqual(options, { type: "danger" });
+                            },
+                        };
+                    },
+                },
+                { force: true }
+            );
+            await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: SearchBar,
+                searchMenuTypes: ["filter"],
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return false;
+                    }
+                },
+            });
+
+            await toggleSearchBarMenu(target);
+            await openAddCustomFilterDialog(target);
+            await editInput(target, ".o_domain_debug_input", "[(uid, uid, uid)]");
+            await click(target.querySelector(".modal footer button"));
+            assert.containsOnce(target, ".modal .o_domain_selector");
+        });
+
         QUnit.test("display names in facets", async function (assert) {
             patchWithCleanup(odoo, { debug: true });
             serverData.models.partner = {
@@ -1813,6 +1874,11 @@ QUnit.module("Search", (hooks) => {
                 searchMenuTypes: ["filter"],
                 searchViewId: false,
                 searchViewArch: `<search />`,
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
             });
             await toggleSearchBarMenu(target);
             await openAddCustomFilterDialog(target);
