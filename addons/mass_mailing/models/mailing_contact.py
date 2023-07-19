@@ -45,7 +45,7 @@ class MassMailingContact(models.Model):
     be able to deal with large contact list to email without bloating the partner
     base."""
     _name = 'mailing.contact'
-    _inherit = ['mail.thread.blacklist']
+    _inherit = ['mail.thread.blacklist', 'mail.activity.mixin']
     _description = 'Mailing Contact'
     _order = 'email'
 
