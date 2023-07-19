@@ -5,7 +5,7 @@ import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
 import { localization } from "./localization";
-import { _t, translatedTerms } from "./translation";
+import { _t, translatedTerms, translationLoaded, translationIsReady } from "./translation";
 
 const { Settings } = luxon;
 
@@ -54,7 +54,9 @@ export const localizationService = {
             }
         }
 
-        Object.setPrototypeOf(translatedTerms, terms);
+        Object.assign(translatedTerms, terms);
+        translatedTerms[translationLoaded] = true;
+        translationIsReady.resolve(true);
         env._t = _t;
 
         // Setup lang inside luxon. The locale codes received from the server contain "_",

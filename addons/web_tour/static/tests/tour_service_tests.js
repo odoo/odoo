@@ -104,7 +104,7 @@ QUnit.module("Tour service", (hooks) => {
     QUnit.test("points to next step", async function (assert) {
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
-            steps: [
+            steps: () => [
                 {
                     trigger: "button.inc",
                 },
@@ -138,7 +138,7 @@ QUnit.module("Tour service", (hooks) => {
     QUnit.test("perform edit on next step", async function (assert) {
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
-            steps: [
+            steps:() => [
                 {
                     trigger: ".interval input",
                 },
@@ -178,7 +178,7 @@ QUnit.module("Tour service", (hooks) => {
     QUnit.test("trigger an event when a step is consummed", async function (assert) {
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
-            steps: [{ trigger: ".interval input" }],
+            steps: () => [{ trigger: ".interval input" }],
         });
         const env = await makeTestEnv({});
 
@@ -210,7 +210,7 @@ QUnit.module("Tour service", (hooks) => {
     QUnit.test("should show only 1 pointer at a time", async function (assert) {
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
-            steps: [
+            steps: () => [
                 {
                     trigger: ".interval input",
                 },
@@ -218,7 +218,7 @@ QUnit.module("Tour service", (hooks) => {
         });
         registry.category("web_tour.tours").add("tour2", {
             sequence: 10,
-            steps: [
+            steps: () => [
                 {
                     trigger: "button.inc",
                 },
@@ -254,7 +254,7 @@ QUnit.module("Tour service", (hooks) => {
     QUnit.test("hovering to the anchor element should show the content", async function (assert) {
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
-            steps: [
+            steps: () => [
                 {
                     content: "content",
                     trigger: "button.inc",

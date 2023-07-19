@@ -5,7 +5,7 @@ import { registry } from '@web/core/registry';
 
 registry.category('web_tour.tours').add('invite_check_channel_preview_as_logged', {
     test: true,
-    steps: [
+    steps: () => [
 {
     trigger: 'a:contains("Gardening: The Know-How")',
     content: 'Check that the previews are accessible',

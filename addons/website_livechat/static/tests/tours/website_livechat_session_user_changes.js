@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("website_livechat_login_after_chat_start
     test: true,
     url: "/",
     shadow_dom: ".o-livechat-root",
-    steps: [
+    steps: () => [
         {
             trigger: ".o-livechat-LivechatButton",
             run: "click",
@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
     test: true,
     url: "/",
     shadow_dom: ".o-livechat-root",
-    steps: [
+    steps: () => [
         {
             trigger: ".o-livechat-LivechatButton",
             run: "click",

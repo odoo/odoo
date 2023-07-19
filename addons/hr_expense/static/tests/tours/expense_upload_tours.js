@@ -6,7 +6,7 @@
     registry.category("web_tour.tours").add('hr_expense_test_tour', {
         test: true,
         url: "/web",
-        steps: [stepUtils.showAppsMenuItem(),
+        steps: () => [stepUtils.showAppsMenuItem(),
         {
             content: "Go to Expense",
             trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',

@@ -14,7 +14,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('course_member', {
     url: '/slides',
     test: true,
-    steps: [
+    steps: () => [
 // eLearning: go on free course and join it
 {
     trigger: 'a:contains("Basics of Gardening - Test")'

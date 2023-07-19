@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import surveySessionTools from "survey.session_tour_tools";
+import { accessSurveysteps } from "./survey_tour_session_tools";
 
 /**
  * Small tour that will open the session manager and check
@@ -11,7 +11,7 @@ import surveySessionTools from "survey.session_tour_tools";
 registry.category("web_tour.tours").add('test_survey_session_start_tour', {
     url: "/web",
     test: true,
-    steps: [].concat(surveySessionTools.accessSurveySteps, [{
+    steps: () => [].concat(accessSurveysteps, [{
     trigger: 'button[name="action_open_session_manager"]',
 }, {
     trigger: '.o_survey_session_attendees_count:contains("3")',

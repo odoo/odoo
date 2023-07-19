@@ -76,7 +76,7 @@ var registerSteps = [{
 
 registry.category("web_tour.tours").add('wevent_performance_register', {
     test: true,
-    steps: [].concat(
+    steps: () => [].concat(
         registerSteps,
     )
 });

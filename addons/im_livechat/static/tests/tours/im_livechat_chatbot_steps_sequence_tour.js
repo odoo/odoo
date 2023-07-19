@@ -61,7 +61,7 @@ const commonSteps = [
 registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_tour", {
     test: true,
     url: "/web",
-    steps: [
+    steps: () => [
         ...commonSteps,
         {
             trigger: 'button:contains("Save & Close")',
@@ -80,7 +80,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_tour
 registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with_move_tour", {
     test: true,
     url: "/web",
-    steps: [
+    steps: () => [
         ...commonSteps,
         {
             trigger: 'button:contains("Save & New")',

@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('event_buy_last_ticket', {
     test: true,
     url: '/event',
-    steps: [{
+    steps: () => [{
         content: "Open the Last ticket test event page",
         trigger: '.o_wevent_events_list a:contains("Last ticket test")',
     },

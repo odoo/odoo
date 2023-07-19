@@ -324,4 +324,8 @@ steps = steps.concat([
     },
 ]);
 
-registry.category("web_tour.tours").add("pos_pricelist", { test: true, url: "/pos/ui", steps });
+registry.category("web_tour.tours").add("pos_pricelist", { 
+    test: true, 
+    url: "/pos/ui", 
+    steps: () => steps,
+});

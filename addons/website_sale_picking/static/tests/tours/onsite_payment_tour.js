@@ -7,7 +7,7 @@ import wsTourUtils from 'website_sale.tour_utils';
 registry.category("web_tour.tours").add('onsite_payment_tour', {
         test: true,
         url: '/web',
-        steps: [
+        steps: () => [
         ...wsTourUtils.addToCart({productName: 'Chair floor protection'}),
         wsTourUtils.goToCart(),
         wTourUtils.clickOnElement('Proceed to checkout', 'a:contains(Process Checkout)'),

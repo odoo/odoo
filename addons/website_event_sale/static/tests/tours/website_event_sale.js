@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('event_buy_tickets', {
     test: true,
     url: '/event',
-    steps: [
+    steps: () => [
         {
             content: "Go to the `Events` page",
             trigger: 'a[href*="/event"]:contains("Conference for Architects TEST"):first',

@@ -6,7 +6,7 @@ import wTourUtils from "website.tour_utils";
 registry.category("web_tour.tours").add('edit_translated_page_redirect', {
     test: true,
     url: '/nl/contactus',
-    steps: [
+    steps: () => [
     {
         content: "Enter backend",
         trigger: 'a.o_frontend_to_backend_edit_btn',

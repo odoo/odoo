@@ -10,51 +10,59 @@ import { BillScreen } from "@pos_restaurant/../tests/tours/helpers/BillScreenTou
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
-// signal to start generating steps
-// when finished, steps can be taken from getSteps
-startSteps();
+registry
+    .category("web_tour.tours")
+    .add("ControlButtonsTour", { 
+        test: true, 
+        url: "/pos/ui", 
+        steps: () => {
+            // signal to start generating steps
+            // when finished, steps can be taken from getSteps
+            startSteps();
+            
+            // Test TransferOrderButton
+            FloorScreen.do.clickTable("2");
+            ProductScreen.exec.addOrderline("Water", "5", "2", "10.0");
+            ProductScreen.do.clickTransferButton();
+            FloorScreen.do.clickTable("4");
+            ProductScreen.do.clickOrderline("Water", "5", "2");
+            Chrome.do.backToFloor();
+            FloorScreen.do.clickTable("2");
+            ProductScreen.check.orderIsEmpty();
+            Chrome.do.backToFloor();
+            FloorScreen.do.clickTable("4");
+            ProductScreen.do.clickOrderline("Water", "5", "2");
+            
+            // Test SplitBillButton
+            ProductScreen.do.clickSplitBillButton();
+            SplitBillScreen.do.clickBack();
+            
+            // Test OrderlineNoteButton
+            ProductScreen.do.clickNoteButton();
+            TextAreaPopup.check.isShown();
+            TextAreaPopup.do.inputText("test note");
+            TextAreaPopup.do.clickConfirm();
+            ProductScreen.check.orderlineHasNote("Water", "5", "test note");
+            ProductScreen.exec.addOrderline("Water", "8", "1", "8.0");
+            
+            // Test PrintBillButton
+            ProductScreen.do.clickPrintBillButton();
+            BillScreen.check.isShown();
+            BillScreen.do.clickOk();
+            
+            // Test GuestButton
+            ProductScreen.do.clickGuestButton();
+            NumberPopup.do.enterValue("15");
+            NumberPopup.check.inputShownIs("15");
+            NumberPopup.do.clickConfirm();
+            ProductScreen.check.guestNumberIs("15");
+            
+            ProductScreen.do.clickGuestButton();
+            NumberPopup.do.enterValue("5");
+            NumberPopup.check.inputShownIs("5");
+            NumberPopup.do.clickConfirm();
+            ProductScreen.check.guestNumberIs("5");
 
-// Test TransferOrderButton
-FloorScreen.do.clickTable("2");
-ProductScreen.exec.addOrderline("Water", "5", "2", "10.0");
-ProductScreen.do.clickTransferButton();
-FloorScreen.do.clickTable("4");
-ProductScreen.do.clickOrderline("Water", "5", "2");
-Chrome.do.backToFloor();
-FloorScreen.do.clickTable("2");
-ProductScreen.check.orderIsEmpty();
-Chrome.do.backToFloor();
-FloorScreen.do.clickTable("4");
-ProductScreen.do.clickOrderline("Water", "5", "2");
-
-// Test SplitBillButton
-ProductScreen.do.clickSplitBillButton();
-SplitBillScreen.do.clickBack();
-
-// Test OrderlineNoteButton
-ProductScreen.do.clickNoteButton();
-TextAreaPopup.check.isShown();
-TextAreaPopup.do.inputText("test note");
-TextAreaPopup.do.clickConfirm();
-ProductScreen.check.orderlineHasNote("Water", "5", "test note");
-ProductScreen.exec.addOrderline("Water", "8", "1", "8.0");
-
-// Test PrintBillButton
-ProductScreen.do.clickPrintBillButton();
-BillScreen.check.isShown();
-BillScreen.do.clickOk();
-
-// Test GuestButton
-ProductScreen.do.clickGuestButton();
-NumberPopup.do.enterValue("15");
-NumberPopup.check.inputShownIs("15");
-NumberPopup.do.clickConfirm();
-ProductScreen.check.guestNumberIs("15");
-
-ProductScreen.do.clickGuestButton();
-NumberPopup.do.enterValue("5");
-NumberPopup.check.inputShownIs("5");
-NumberPopup.do.clickConfirm();
-ProductScreen.check.guestNumberIs("5");
-
-registry.category("web_tour.tours").add("ControlButtonsTour", { test: true, url: "/pos/ui", steps: getSteps() });
+            return getSteps(); 
+        }
+    });

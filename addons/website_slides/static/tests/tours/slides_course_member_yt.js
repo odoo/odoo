@@ -31,7 +31,7 @@ FullScreen.include({
 registry.category("web_tour.tours").add('course_member_youtube', {
     url: '/slides',
     test: true,
-    steps: [
+    steps: () => [
 // eLearning: go on /all, find free course and join it
 {
     trigger: 'a.o_wslides_home_all_slides'

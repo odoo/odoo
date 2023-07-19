@@ -6,7 +6,7 @@
     registry.category("web_tour.tours").add('product_comparison', {
         test: true,
         url: "/shop",
-        steps: [
+        steps: () => [
     // test from shop page
     {
         content: "add first product 'Warranty' in a comparison list",

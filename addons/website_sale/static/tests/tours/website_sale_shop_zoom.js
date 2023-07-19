@@ -10,7 +10,7 @@ var nameGreen = "Forest Green";
 registry.category("web_tour.tours").add('shop_zoom', {
     test: true,
     url: '/shop?debug=1&search=' + imageName,
-    steps: [
+    steps: () => [
     {
         content: "select " + imageName,
         trigger: '.oe_product_cart a:containsExact("' + imageName + '")',

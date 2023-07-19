@@ -5,7 +5,7 @@ import { stepUtils } from '@web_tour/tour_service/tour_utils';
 
 registry.category("web_tour.tours").add('test_mrp_manual_consumption', {
     test: true,
-    steps: [
+    steps: () => [
         {
             trigger: 'div[name=move_raw_ids] td[name="quantity_done"]:last:contains("5.00")',
             run: () => {},

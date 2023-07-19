@@ -32,7 +32,7 @@ wTourUtils.registerWebsitePreviewTour('category_page_and_products_snippet_editio
 registry.category("web_tour.tours").add('category_page_and_products_snippet_use', {
     test: true,
     url: `/shop/category/${PRODUCT_CATEGORY_ID}`,
-    steps: [
+    steps: () => [
     {
         content: "Check that the snippet displays the right products",
         // Wait for at least one shown product

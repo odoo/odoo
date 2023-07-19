@@ -10,7 +10,7 @@
     registry.category("web_tour.tours").add('account_render_report', {
         test: true,
         url: '/web',
-    steps: [stepUtils.showAppsMenuItem(),
+    steps: () => [stepUtils.showAppsMenuItem(),
     {
         id: 'account_menu_click',
         trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',

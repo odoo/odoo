@@ -6,7 +6,7 @@
     registry.category("web_tour.tours").add('crm_email_and_phone_propagation_edit_save', {
         test: true,
         url: '/web',
-        steps: [
+        steps: () => [
         stepUtils.showAppsMenuItem(),
         {
             trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
@@ -26,7 +26,7 @@
     registry.category("web_tour.tours").add('crm_email_and_phone_propagation_remove_email_and_phone', {
         test: true,
         url: '/web',
-        steps: [
+        steps: () => [
         stepUtils.showAppsMenuItem(),
         {
             trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',

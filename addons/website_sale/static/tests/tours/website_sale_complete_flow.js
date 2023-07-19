@@ -8,7 +8,7 @@
         test: true,
         checkDelay: 250,
         url: '/shop?search=Storage Box Test',
-        steps: [
+        steps: () => [
     // Testing b2c with Tax-Excluded Prices
     {
         content: "Open product page",
@@ -327,7 +327,7 @@
     registry.category("web_tour.tours").add('website_sale_tour_2', {
         test: true,
         url: '/shop/cart',
-        steps: [
+        steps: () => [
     {
         content: "Open Dropdown for logout",
         extra_trigger: '.progress-wizard-step:contains("Extra Info")',

@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
     // To run the tour locally, you need to insert the URL sent by the python
     // tour here. There is currently an issue with tours which don't have an URL
     // url: '/?enable_editor=1&snippets_names=s_showcase,s_numbers,s_...',
-    steps: [
+    steps: () => [
     ...websiteTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Ensure snippets are actually passed at the test.",
