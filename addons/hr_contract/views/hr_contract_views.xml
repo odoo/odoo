@@ -80,9 +80,10 @@
             <field name="inherit_id" ref="hr.view_employee_filter"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//filter[@name='message_needaction']" position="after">
+                    <xpath expr="//filter[@name='inactive']" position="before">
                         <separator/>
                         <filter string="Contract Warning" name="with_contract_warning" domain="[('contract_warning', '=', True)]"/>
+                        <separator/>
                     </xpath>
                 </data>
             </field>

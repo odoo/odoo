@@ -20,7 +20,7 @@ class HrEmployeeBase(models.AbstractModel):
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in employees:
             if employee.attendance_state == "checked_out" and employee.hr_presence_state == "to_define" and \
-                    employee.id not in working_now_list:
+                    employee.id in working_now_list:
                 employee.hr_presence_state = "absent"
             elif employee.attendance_state == "checked_in":
                 employee.hr_presence_state = "present"

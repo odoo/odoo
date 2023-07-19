@@ -109,5 +109,23 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
         </record>
+
+        <record id="home_work_location" model="hr.work.location">
+            <field name="name">Home</field>
+            <field name="location_type">home</field>
+            <field name="address_id" ref="base.main_partner"/>
+        </record>
+
+        <record id="home_work_office" model="hr.work.location">
+            <field name="name">Office</field>
+            <field name="location_type">office</field>
+            <field name="address_id" ref="base.main_partner"/>
+        </record>
+
+        <record id="home_work_other" model="hr.work.location">
+            <field name="name">Other</field>
+            <field name="location_type">other</field>
+            <field name="address_id" ref="base.main_partner"/>
+        </record>
     </data>
 </odoo>
