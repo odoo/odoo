@@ -1209,12 +1209,15 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    def _get_suitable_journal_domain(self):
+        journal_type = self.invoice_filter_type_domain or 'general'
+        company_id = self.company_id.id or self.env.company.id
+        return [('company_id', '=', company_id), ('type', '=', journal_type)]
+
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):
         for m in self:
-            journal_type = m.invoice_filter_type_domain or 'general'
-            company_id = m.company_id.id or self.env.company.id
-            domain = [('company_id', '=', company_id), ('type', '=', journal_type)]
+            domain = m._get_suitable_journal_domain()
             m.suitable_journal_ids = self.env['account.journal'].search(domain)
 
     @api.depends('posted_before', 'state', 'journal_id', 'date')
