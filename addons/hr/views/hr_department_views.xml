@@ -24,7 +24,7 @@
                                 <field name="manager_id" widget="many2one_avatar_user"/>
                                 <field name="parent_id"/>
                                 <field name="child_ids" invisible="1"/>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <div attrs="{'invisible': ['|', ('id', '=', False), '&amp;', '&amp;', ('id', '!=', False), ('child_ids', '=', []), ('parent_id', '=', False)]}">
                                 <widget name="hr_department_chart"/>

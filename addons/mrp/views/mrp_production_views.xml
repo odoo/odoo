@@ -447,10 +447,10 @@
                             <group>
                                 <group>
                                     <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="location_src_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_src_id" groups="stock.group_stock_multi_locations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="location_src_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                                     <field name="warehouse_id" invisible="1"/>
-                                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                                 </group>
                                 <group>
@@ -459,7 +459,7 @@
                                         attrs="{'invisible': ['|', ('state', 'in', ('done', 'cancel')), ('date_deadline', '=', False)]}"
                                         decoration-danger="date_deadline and date_deadline &lt; current_date"
                                         decoration-bf="date_deadline and date_deadline &lt; current_date"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
+                                    <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
 
                                 </group>
                             </group>

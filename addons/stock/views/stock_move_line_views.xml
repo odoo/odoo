@@ -79,8 +79,8 @@
                             <field name="reference" string="Reference"/>
                             <field name="origin"/>
                             <field name="product_id"/>
-                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                            <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                         </group>
                         <group>
                             <label for="reserved_uom_qty" string="Quantity Reserved" attrs="{'invisible': [('state', '=', 'done')]}"/>

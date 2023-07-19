@@ -98,7 +98,7 @@
                             </div>
                             <field name="priority" widget="priority"/>
                             <field name="email_cc" string="Email cc" groups="base.group_no_one"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <group>
@@ -351,7 +351,7 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="category_id" options="{&quot;no_open&quot;: True}" context="{'default_company_id':company_id}"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <field name="owner_user_id" string="Owner"/>
                         </group>
                         <group>
@@ -594,7 +594,7 @@
                 </div>
                 <group>
                     <field name="technician_user_id" class="oe_inline" domain="[('share', '=', False)]"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" class="oe_inline"/>
+                    <field name="company_id" groups="base.group_multi_company" class="oe_inline"/>
                 </group>
                 <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_no_one">
                     <label for="alias_name" string="Email Alias"/>
@@ -761,7 +761,7 @@
                         <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" domain="[('share', '=', False)]"/>
                     </group>
                     <group>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                 </group>
                 </sheet>
@@ -776,7 +776,7 @@
             <tree string="Maintenance Team" editable="bottom">
                 <field name="name"/>
                 <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" domain="[('share', '=', False)]"/>
-                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>

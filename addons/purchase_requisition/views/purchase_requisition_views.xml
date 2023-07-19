@@ -145,7 +145,7 @@
                         <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
                         <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
                         <field name="origin" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                 </group>
                 <notebook>
@@ -178,7 +178,7 @@
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"
                                            options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                             </form>
                         </field>
@@ -203,7 +203,7 @@
                 <field name="message_needaction" invisible="1"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="user_id" optional="show" widget='many2one_avatar_user'/>
-                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="ordering_date" optional="show"/>
                 <field name="schedule_date" optional="hide"/>
                 <field name="date_end" optional="show" widget='remaining_days' decoration-danger="date_end and date_end&lt;current_date" attrs="{'invisible': [('state','in', ('done', 'cancel'))]}"/>
