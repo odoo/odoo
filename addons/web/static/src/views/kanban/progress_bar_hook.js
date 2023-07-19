@@ -219,9 +219,9 @@ class ProgressBarState {
     }
 
     async _updateAggregates() {
-        const { context, groupBy, domain, resModel, firstGroupBy } = this.model.root;
+        const { context, groupBy, domain, resModel } = this.model.root;
         const fieldsName = this._aggregateFields.map((f) => f.name);
-        const firstGroupByName = firstGroupBy.split(":")[0];
+        const firstGroupByName = groupBy[0].split(":")[0];
         const kwargs = { context };
         const res = await this.model.orm.webReadGroup(
             resModel,

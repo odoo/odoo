@@ -143,7 +143,6 @@ QUnit.module("Fields", (hooks) => {
                             display_name: "third partner",
                             properties: [
                                 { name: "property_1", type: "char" },
-                                { name: "property_2", type: "char", definition_deleted: true },
                                 { name: "property_3", type: "char", definition_changed: true },
                                 { name: "property_4", type: "char" },
                             ],
@@ -152,10 +151,7 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 4,
                             display_name: "fourth partner",
-                            properties: [
-                                { name: "property_2", type: "char", definition_deleted: true },
-                                { name: "property_3", type: "char", definition_deleted: true },
-                            ],
+                            properties: [],
                             company_id: 37,
                         },
                     ],
@@ -1184,7 +1180,7 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        assert.verifySteps(["get_views", "read", "check_access_rights"]);
+        assert.verifySteps(["get_views", "web_read", "check_access_rights"]);
 
         // check initial properties
         assert.equal(
@@ -1215,7 +1211,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         assert.verifySteps([]);
         await clickSave(target);
-        assert.verifySteps(["write", "read"]);
+        assert.verifySteps(["write", "web_read"]);
     });
 
     /**

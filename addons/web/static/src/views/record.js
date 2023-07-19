@@ -1,67 +1,70 @@
 /** @odoo-module **/
 
-import { useBus, useService } from "@web/core/utils/hooks";
-import { RelationalModel } from "@web/views/relational_model";
-import { Component, xml, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { pick } from "@web/core/utils/objects";
+import { RelationalModel } from "@web/model/relational_model/relational_model";
+import { Component, xml, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
+
+class StandaloneRelationalModel extends RelationalModel {
+    load(params = {}) {
+        if (params.values) {
+            const data = params.values;
+            if (params.mode) {
+                this.config.mode = params.mode;
+            }
+            this.root = this._createRoot(this.config, data);
+            return;
+        }
+        return super.load(params);
+    }
+}
 
 class _Record extends Component {
     setup() {
         const resModel = this.props.info.resModel;
         const modelParams = {
-            resModel,
-            fields: this.props.fields,
-            viewMode: "form",
-            rootType: "record",
-            activeFields: this.getActiveFields(),
-            onRecordSaved: this.props.info.onRecordSaved || (() => {}),
-            onWillSaveRecord: this.props.info.onWillSaveRecord || (() => {}),
+            config: {
+                resModel,
+                fields: this.props.fields,
+                isMonoRecord: true,
+                activeFields: this.getActiveFields(),
+                resId: this.props.info.resId,
+                mode: this.props.info.mode,
+            },
+            hooks: {
+                onRecordSaved: this.props.info.onRecordSaved || (() => {}),
+                onWillSaveRecord: this.props.info.onWillSaveRecord || (() => {}),
+                onRecordChanged: this.props.info.onRecordChanged || (() => {}),
+            },
         };
         const modelServices = Object.fromEntries(
-            RelationalModel.services.map((servName) => {
+            StandaloneRelationalModel.services.map((servName) => {
                 return [servName, useService(servName)];
             })
         );
-        if (resModel) {
-            modelServices.orm = useService("orm");
-        }
+        modelServices.orm = useService("orm");
+        this.model = useState(new StandaloneRelationalModel(this.env, modelParams, modelServices));
 
-        this.model = new RelationalModel(this.env, modelParams, modelServices);
-        useBus(this.model.bus, "update", () => this.render(true));
-
-        let loadKey;
-        const load = (props) => {
-            const loadParams = {
-                resId: props.info.resId,
-                mode: props.info.mode,
-                values: props.values,
-            };
-            const nextLoadKey = JSON.stringify(loadParams);
-            if (loadKey === nextLoadKey) {
-                return;
-            }
-            loadKey = nextLoadKey;
-            return this.model.load(loadParams);
+        const loadWithValues = (values) => {
+            values = pick(values, ...Object.keys(modelParams.config.activeFields));
+            return this.model.load({ values });
         };
-        onWillStart(() => load(this.props));
-        onWillUpdateProps((nextProps) => {
-            // don't wait because the keeplast may make willUpdateProps hang forever
-            load(nextProps);
+        onWillStart(() => {
+            if (this.props.values) {
+                return loadWithValues(this.props.values);
+            } else {
+                return this.model.load();
+            }
         });
-
-        if (this.props.info.onRecordChanged) {
-            const load = this.model.load;
-            this.model.load = async (...args) => {
-                const res = await load.call(this.model, ...args);
-                const root = this.model.root;
-                root.onChanges = async () => {
-                    const changes = root.getChanges();
-                    this.props.info.onRecordChanged(root, changes);
-                };
-                return res;
-            };
-        }
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.values) {
+                return loadWithValues(nextProps.values);
+            } else if (nextProps.info.resId !== this.model.root.resId) {
+                return this.model.root.load(nextProps.info.resId);
+            }
+        });
     }
 
     getActiveFields() {

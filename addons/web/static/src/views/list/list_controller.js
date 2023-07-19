@@ -6,13 +6,12 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { unique } from "@web/core/utils/arrays";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
-import { sprintf } from "@web/core/utils/strings";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
-import { session } from "@web/session";
-import { useModel } from "@web/views/model";
-import { DynamicRecordList } from "@web/views/relational_model";
+import { useModel } from "@web/model/model";
+import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
+import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -23,6 +22,7 @@ import { ListConfirmationDialog } from "./list_confirmation_dialog";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { session } from "@web/session";
 
 import {
     Component,
@@ -31,6 +31,7 @@ import {
     onWillStart,
     useEffect,
     useRef,
+    useState,
     useSubEnv,
 } from "@odoo/owl";
 
@@ -40,7 +41,6 @@ export class ListController extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
-        this.notificationService = useService("notification");
         this.userService = useService("user");
         this.rpc = useService("rpc");
         this.rootRef = useRef("root");
@@ -49,7 +49,7 @@ export class ListController extends Component {
         this.activeActions = this.archInfo.activeActions;
         this.editable =
             this.activeActions.edit && this.props.editable ? this.archInfo.editable : false;
-        this.model = useModel(this.props.Model, this.modelParams);
+        this.model = useState(useModel(this.props.Model, this.modelParams));
 
         // In multi edition, we save or notify invalidity directly when a field is updated, which
         // occurs on the change event for input fields. But we don't want to do it when clicking on
@@ -88,13 +88,7 @@ export class ListController extends Component {
         useSetupView({
             rootRef: this.rootRef,
             beforeLeave: async () => {
-                const list = this.model.root;
-                const editedRecord = list.editedRecord;
-                if (editedRecord) {
-                    if (!(await list.unselectRecord(true))) {
-                        return false;
-                    }
-                }
+                return this.model.root.leaveEditMode();
             },
             beforeUnload: async (ev) => {
                 const editedRecord = this.model.root.editedRecord;
@@ -109,8 +103,11 @@ export class ListController extends Component {
             getLocalState: () => {
                 const renderer = this.rootRef.el.querySelector(".o_list_renderer");
                 return {
-                    rootState: this.model.root.exportState(),
-                    rendererScrollPositions: { left: renderer.scrollLeft, top: renderer.scrollTop },
+                    modelState: this.model.exportState(),
+                    rendererScrollPositions: {
+                        left: renderer.scrollLeft,
+                        top: renderer.scrollTop,
+                    },
                 };
             },
             getOrderBy: () => {
@@ -119,8 +116,7 @@ export class ListController extends Component {
         });
 
         usePager(() => {
-            const list = this.model.root;
-            const { count, hasLimitedCount, isGrouped, limit, offset } = list;
+            const { count, hasLimitedCount, isGrouped, limit, offset } = this.model.root;
             return {
                 offset: offset,
                 limit: limit,
@@ -131,13 +127,13 @@ export class ListController extends Component {
                             return;
                         }
                     }
-                    await list.load({ limit, offset });
-                    this.render(true); // FIXME WOWL reactivity
+                    await this.model.root.load({ limit, offset });
                     if (hasNavigated) {
                         this.onPageChangeScroll();
                     }
                 },
-                updateTotal: !isGrouped && hasLimitedCount ? () => list.fetchCount() : undefined,
+                updateTotal:
+                    !isGrouped && hasLimitedCount ? () => this.model.root.fetchCount() : undefined,
             };
         });
 
@@ -155,32 +151,47 @@ export class ListController extends Component {
         onWillPatch(() => {
             this.firstLoad = false;
         });
-        useBus(this.env.searchModel, 'direct-export-data', this.onDirectExportData.bind(this));
+        useBus(this.env.searchModel, "direct-export-data", this.onDirectExportData.bind(this));
     }
 
     get modelParams() {
-        const { rootState } = this.props.state || {};
         const { defaultGroupBy, rawExpand } = this.archInfo;
-        return {
+        const { activeFields, fields } = extractFieldsFromArchInfo(
+            this.archInfo,
+            this.props.fields
+        );
+        const groupByInfo = {};
+        for (const fieldName in this.archInfo.groupBy.fields) {
+            const fieldNodes = this.archInfo.groupBy.fields[fieldName].fieldNodes;
+            const fields = this.archInfo.groupBy.fields[fieldName].fields;
+            groupByInfo[fieldName] = extractFieldsFromArchInfo({ fieldNodes }, fields);
+        }
+
+        const modelConfig = this.props.state?.modelState?.config || {
             resModel: this.props.resModel,
-            fields: { ...this.props.fields },
-            activeFields: this.archInfo.activeFields,
-            handleField: this.archInfo.handleField,
-            viewMode: "list",
-            groupByInfo: this.archInfo.groupBy.fields,
+            fields,
+            activeFields,
+            openGroupsByDefault: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
+        };
+
+        return {
+            config: modelConfig,
+            state: this.props.state?.modelState,
+            groupByInfo,
             limit: this.archInfo.limit || this.props.limit,
             countLimit: this.archInfo.countLimit,
-            defaultOrder: this.archInfo.defaultOrder,
+            defaultOrderBy: this.archInfo.defaultOrder,
             defaultGroupBy: this.props.searchMenuTypes.includes("groupBy") ? defaultGroupBy : false,
-            expand: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
             groupsLimit: this.archInfo.groupsLimit,
             multiEdit: this.archInfo.multiEdit,
-            rootState,
-            onRecordSaved: this.onRecordSaved.bind(this),
-            onWillSaveRecord: this.onWillSaveRecord.bind(this),
-            onWillSaveMultiRecords: this.onWillSaveMultiRecords.bind(this),
-            onSavedMultiRecords: this.onSavedMultiRecords.bind(this),
-            onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
+            activeIdsLimit: session.active_ids_limit,
+            hooks: {
+                onRecordSaved: this.onRecordSaved.bind(this),
+                onWillSaveRecord: this.onWillSaveRecord.bind(this),
+                onWillSaveMulti: this.onWillSaveMulti.bind(this),
+                onSavedMulti: this.onSavedMulti.bind(this),
+                onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
+            },
         };
     }
 
@@ -206,11 +217,9 @@ export class ListController extends Component {
             if (!(list instanceof DynamicRecordList)) {
                 throw new Error("List should be a DynamicRecordList");
             }
-            if (list.editedRecord) {
-                await list.editedRecord.save();
-            }
+            await list.leaveEditMode();
             if (!list.editedRecord) {
-                await (group || list).createRecord({}, this.editable === "top");
+                await (group || list).addNewRecord(this.editable === "top");
             }
             this.render();
         } else {
@@ -238,21 +247,25 @@ export class ListController extends Component {
         }
     }
 
-    onClickCreate() {
-        this.createRecord();
+    async onClickCreate() {
+        this.disableButtons();
+        await this.createRecord();
+        this.enableButtons();
     }
 
-    onClickDiscard() {
-        const editedRecord = this.model.root.editedRecord;
-        if (editedRecord.isNew) {
-            this.model.root.removeRecord(editedRecord);
-        } else {
-            editedRecord.discard();
+    async onClickDiscard() {
+        this.disableButtons();
+        await this.model.root.leaveEditMode({ discard: true });
+        this.enableButtons();
+    }
+
+    async onClickSave() {
+        this.disableButtons();
+        const saved = await this.model.root.editedRecord.save();
+        if (saved) {
+            await this.model.root.leaveEditMode();
         }
-    }
-
-    onClickSave() {
-        this.model.root.editedRecord.save();
+        this.enableButtons();
     }
 
     onMouseDownDiscard(mouseDownEvent) {
@@ -352,7 +365,7 @@ export class ListController extends Component {
     }
 
     async onSelectDomain() {
-        this.model.root.selectDomain(true);
+        await this.model.root.selectDomain(true);
         if (this.props.onSelectionChanged) {
             const resIds = await this.model.root.getResIds(true);
             this.props.onSelectionChanged(resIds);
@@ -385,7 +398,7 @@ export class ListController extends Component {
 
     get nbTotal() {
         const list = this.model.root;
-        return list.isGrouped ? list.nbTotalRecords : list.count;
+        return list.isGrouped ? list.recordCount : list.count;
     }
 
     get defaultExportList() {
@@ -424,7 +437,10 @@ export class ListController extends Component {
             type: field.field_type || field.type,
         }));
         if (import_compat) {
-            exportedFields.unshift({ name: "id", label: this.env._t("External ID") });
+            exportedFields.unshift({
+                name: "id",
+                label: this.env._t("External ID"),
+            });
         }
         await download({
             data: {
@@ -481,30 +497,10 @@ export class ListController extends Component {
      * @returns {Promise}
      */
     async toggleArchiveState(archive) {
-        let resIds;
-        const isDomainSelected = this.model.root.isDomainSelected;
-        const total = this.model.root.count;
         if (archive) {
-            resIds = await this.model.root.archive(true);
-        } else {
-            resIds = await this.model.root.unarchive(true);
+            return this.model.root.archive(true);
         }
-        if (
-            isDomainSelected &&
-            resIds.length === session.active_ids_limit &&
-            resIds.length < total
-        ) {
-            this.notificationService.add(
-                sprintf(
-                    this.env._t(
-                        "Of the %s records selected, only the first %s have been archived/unarchived."
-                    ),
-                    resIds.length,
-                    total
-                ),
-                { title: this.env._t("Warning") }
-            );
-        }
+        return this.model.root.unarchive(true);
     }
 
     get deleteConfirmationDialogProps() {
@@ -515,28 +511,8 @@ export class ListController extends Component {
                 : this.env._t("Are you sure you want to delete this record?");
         return {
             body,
-            confirm: async () => {
-                const total = root.count;
-                const resIds = await this.model.root.deleteRecords();
-                this.model.notify();
-                if (
-                    root.isDomainSelected &&
-                    resIds.length === session.active_ids_limit &&
-                    resIds.length < total
-                ) {
-                    this.notificationService.add(
-                        sprintf(
-                            this.env._t(
-                                `Only the first %s records have been deleted (out of %s selected)`
-                            ),
-                            resIds.length,
-                            total
-                        ),
-                        { title: this.env._t("Warning") }
-                    );
-                }
-            },
             confirmLabel: this.env._t("Delete"),
+            confirm: () => this.model.root.deleteRecords(),
             cancel: () => {},
         };
     }
@@ -559,7 +535,22 @@ export class ListController extends Component {
 
     async afterExecuteActionButton(clickParams) {}
 
-    onWillSaveMultiRecords(editedRecord, validSelectedRecords) {
+    disableButtons() {
+        const btns = [...this.rootRef.el.querySelectorAll("button:not([disabled])")];
+        for (const btn of btns) {
+            btn.setAttribute("disabled", "1");
+        }
+        this.disabledButtons = btns;
+    }
+
+    enableButtons() {
+        for (const btn of this.disabledButtons) {
+            btn.removeAttribute("disabled");
+        }
+        this.disabledButtons = null;
+    }
+
+    onWillSaveMulti(editedRecord, changes, validSelectedRecords) {
         if (this.hasMousedownDiscard) {
             this.nextActionAfterMouseup = () => this.model.root.multiSave(editedRecord);
             return false;
@@ -570,22 +561,25 @@ export class ListController extends Component {
                 const dialogProps = {
                     confirm: () => resolve(true),
                     cancel: () => {
-                        editedRecord.discard();
+                        this.model.root.leaveEditMode({ discard: true });
                         resolve(false);
                     },
                     isDomainSelected,
-                    fields: Object.keys(editedRecord.getChanges()).map((fieldName) => {
-                        const activeField = editedRecord.activeFields[fieldName];
+                    fields: Object.keys(changes).map((fieldName) => {
+                        const fieldNode = Object.values(this.archInfo.fieldNodes).find(
+                            (fieldNode) => fieldNode.name === fieldName
+                        );
+                        const label = fieldNode && fieldNode.string;
                         return {
                             name: fieldName,
-                            label: activeField.string || editedRecord.fields[fieldName].string,
-                            widget: activeField.widget,
+                            label: label || editedRecord.fields[fieldName].string,
+                            fieldNode,
+                            widget: fieldNode && fieldNode.widget,
                         };
                     }),
                     nbRecords: selection.length,
                     nbValidRecords: validSelectedRecords.length,
                     record: editedRecord,
-                    fieldNodes: this.archInfo.fieldNodes,
                 };
 
                 const focusedCellBeforeDialog = document.activeElement.closest(".o_data_cell");
@@ -594,7 +588,7 @@ export class ListController extends Component {
                         if (focusedCellBeforeDialog) {
                             focusedCellBeforeDialog.focus();
                         }
-                        editedRecord.discard();
+                        this.model.root.leaveEditMode({ discard: true });
                         resolve(false);
                     },
                 });
@@ -611,7 +605,7 @@ export class ListController extends Component {
         return true;
     }
 
-    onSavedMultiRecords(records) {
+    onSavedMulti(records) {
         records.forEach((record) => {
             record.selected = false;
         });

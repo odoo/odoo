@@ -5,7 +5,7 @@ import { _t, _lt } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { Layout } from "@web/search/layout";
-import { useModel } from "@web/views/model";
+import { useModel } from "@web/model/model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useSetupView } from "@web/views/view_hook";
 import { CalendarDatePicker } from "./date_picker/calendar_date_picker";

@@ -346,14 +346,15 @@ QUnit.module("Fields", (hooks) => {
                     <field name="int_field" />
                     <field name="trululu" context="{'blip': int_field, 'blop': 3}" options="{'always_reload': 1}" />
                 </form>`,
-            mockRPC(route, { method, kwargs }) {
-                if (method === "read") {
+            mockRPC(route, { method, args }) {
+                if (method === "onchange2") {
+                    const context = args[3].trululu.context;
                     assert.strictEqual(
-                        kwargs.context.blip,
+                        context.blip,
                         undefined,
                         "context should not contain dynamic keys depending on the data"
                     );
-                    assert.strictEqual(kwargs.context.blop, 3);
+                    assert.strictEqual(context.blop, 3);
                 }
             },
         });
@@ -422,14 +423,14 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC(route, { args, method, kwargs }) {
-                if (
-                    method === "read" &&
-                    args[1].length === 1 &&
-                    args[1][0] === "display_name" &&
-                    kwargs.context.show_address
-                ) {
-                    return [{ id: 4, display_name: "aaa\nStreet\nCity ZIP" }];
+            async mockRPC(route, { method, kwargs }) {
+                if (method === "web_read" && kwargs.specification.trululu.context.show_address) {
+                    return [
+                        {
+                            display_name: "",
+                            trululu: { display_name: "aaa\nStreet\nCity ZIP" },
+                        },
+                    ];
                 }
             },
         });
@@ -466,14 +467,18 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC(route, { args, kwargs, method }) {
-                if (
-                    method === "read" &&
-                    args[1].length === 1 &&
-                    args[1][0] === "display_name" &&
-                    kwargs.context.show_address
-                ) {
-                    return args.map((id) => ({ id, display_name: namegets[id] }));
+            async mockRPC(route, { args, kwargs, method }, performRPC) {
+                if (method === "web_read" && kwargs.specification.trululu.context.show_address) {
+                    const result = await performRPC(...arguments);
+                    result[0].trululu = {
+                        id: result[0].trululu.id,
+                        display_name: namegets[result[0].trululu.id],
+                    };
+                    return result;
+                }
+                if (method === "name_search") {
+                    const result = await performRPC(...arguments);
+                    return result.map(([id]) => [id, namegets[id]]);
                 }
             },
         });
@@ -531,14 +536,21 @@ QUnit.module("Fields", (hooks) => {
                         <field name="display_name" />
                         <field name="turtles" />
                     </form>`,
-                mockRPC(route, { args, kwargs, method }) {
-                    if (
-                        method === "read" &&
-                        args[1].length === 1 &&
-                        args[1][0] === "display_name" &&
-                        kwargs.context.show_address
-                    ) {
-                        return [{ id: 2, display_name: "second record\nrue morgue\nparis 75013" }];
+                mockRPC(route, { kwargs, method, model }) {
+                    if (method === "web_read" && model === "turtle") {
+                        assert.deepEqual(kwargs.specification.turtle_trululu.context, {
+                            show_address: 1,
+                        });
+                        return [
+                            {
+                                id: 1,
+                                display_name: "donatello",
+                                turtle_trululu: {
+                                    id: 2,
+                                    display_name: "second record\nrue morgue\nparis 75013",
+                                },
+                            },
+                        ];
                     }
                 },
             });
@@ -547,55 +559,6 @@ QUnit.module("Fields", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector('[name="turtle_trululu"]').textContent,
-                "second recordrue morgueparis 75013",
-                "The partner's address should be displayed"
-            );
-        }
-    );
-
-    QUnit.test(
-        "many2one data is reloaded if there is a context to take into account",
-        async function (assert) {
-            serverData.models.turtle.records[1].turtle_trululu = 2;
-            serverData.views = {
-                "turtle,false,form": `
-                    <form>
-                        <field name="display_name" />
-                        <field name="turtle_trululu" context="{'show_address': 1}" options="{'always_reload': 1}" />
-                    </form>`,
-                "turtle,false,list": `
-                    <tree>
-                        <field name="display_name" />
-                        <field name="turtle_trululu" />
-                    </tree>`,
-            };
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                resId: 1,
-                arch: `
-                    <form edit="0">
-                        <field name="display_name" />
-                        <field name="turtles" />
-                    </form>`,
-                mockRPC(route, { kwargs, method, args }) {
-                    if (
-                        method === "read" &&
-                        args[1].length === 1 &&
-                        args[1][0] === "display_name" &&
-                        kwargs.context.show_address
-                    ) {
-                        return [{ id: 2, display_name: "second record\nrue morgue\nparis 75013" }];
-                    }
-                },
-            });
-            // click the turtle field, opens a modal with the turtle form view
-            await click(target.querySelector(".o_data_row td.o_data_cell"));
-
-            assert.strictEqual(
-                target.querySelector('.modal [name="turtle_trululu"]').textContent,
                 "second recordrue morgueparis 75013",
                 "The partner's address should be displayed"
             );
@@ -733,7 +696,7 @@ QUnit.module("Fields", (hooks) => {
             await selectDropdownItem(target, "trululu", "Create and edit...");
 
             await clickSave(target.querySelector(".modal"));
-            assert.verifySteps([`create: [{"name":"yy"}]`]);
+            assert.verifySteps([`create: [[{"name":"yy"}]]`]);
             assert.strictEqual(
                 target.querySelector(".o_field_widget[name=trululu] input").value,
                 "yy"
@@ -837,7 +800,7 @@ QUnit.module("Fields", (hooks) => {
                     if (method === "get_formview_id") {
                         return Promise.resolve(false);
                     }
-                    if (method === "onchange") {
+                    if (method === "onchange2") {
                         assert.strictEqual(
                             args[1].user_id,
                             17,
@@ -855,17 +818,18 @@ QUnit.module("Fields", (hooks) => {
                 "wood"
             );
 
+            // TODISCUSS ? Same record, don't change the display name (opti ?)
             // save the modal and make sure an onchange is triggered
             await clickSave(target.querySelectorAll(".modal")[1]);
             assert.verifySteps([
                 "get_views",
-                "read",
+                "web_read",
                 "get_formview_id",
                 "get_views",
-                "read",
+                "web_read",
                 "write",
                 "read",
-                "onchange",
+                "onchange2",
             ]);
         }
     );
@@ -1118,60 +1082,6 @@ QUnit.module("Fields", (hooks) => {
             "autocomplete should contains start typing option"
         );
     });
-
-    QUnit.test(
-        "empty many2one should not be considered modified on onchange if still empty",
-        async function (assert) {
-            serverData.models.partner.onchanges = {
-                foo: function () {},
-            };
-
-            assert.strictEqual(
-                serverData.models.partner.records[2].trululu,
-                undefined,
-                "no value must be provided for trululu to make sure the test works as expected"
-            );
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                resId: 4, // trululu m2o must be empty
-                serverData,
-                arch: `
-                    <form>
-                        <sheet>
-                            <group>
-                                <field name="trululu" />
-                                <field name="foo" /> <!-- onchange will be triggered on this field -->
-                            </group>
-                        </sheet>
-                    </form>`,
-                mockRPC(route, { method, args }) {
-                    if (method === "onchange") {
-                        assert.step("onchange");
-                        return Promise.resolve({
-                            value: {
-                                trululu: false,
-                            },
-                        });
-                    } else if (method === "write") {
-                        assert.step("write");
-                        // non modified trululu should not be sent
-                        // as write value
-                        assert.deepEqual(args[1], { foo: "3" });
-                    }
-                },
-            });
-
-            // trigger the onchange
-            await editInput(target, ".o_field_widget[name='foo'] input", "3");
-            assert.verifySteps(["onchange"]);
-
-            // save
-            await clickSave(target);
-            assert.verifySteps(["write"]);
-        }
-    );
 
     QUnit.test("many2one in edit mode", async function (assert) {
         assert.expect(17);
@@ -1448,18 +1358,29 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC(route, { args, kwargs, method }) {
-                if (method === "read" && args[1].length === 1 && args[1][0] === "display_name") {
+            async mockRPC(route, { args, kwargs, method }, performRPC) {
+                if (method === "web_read") {
                     assert.step(method);
-                    return args.map((id) => ({ id, display_name: namegets[id] }));
+                    const result = await performRPC(...arguments);
+                    result[0].trululu = {
+                        id: result[0].trululu.id,
+                        display_name: namegets[result[0].trululu.id],
+                    };
+                    return result;
                 }
                 if (method === "name_search") {
                     assert.step(method);
-                    return Object.keys(namegets).map((id) => [id, namegets[id]]);
+                    return Object.keys(namegets).map((id) => [parseInt(id), namegets[id]]);
+                }
+                if (method === "write") {
+                    assert.step(method);
+                    assert.deepEqual(args[1], {
+                        trululu: 2,
+                    });
                 }
             },
         });
-        assert.verifySteps(["read"]);
+        assert.verifySteps(["web_read"]);
 
         const input = target.querySelector(".o_field_widget input");
 
@@ -1482,13 +1403,15 @@ QUnit.module("Fields", (hooks) => {
         );
         await click(target.querySelector(".dropdown-menu li"));
 
-        // Check the selection has been taken into account
-        assert.verifySteps(["read"]);
+        assert.verifySteps([]);
         assert.strictEqual(input.value, "fizz");
         assert.strictEqual(
             target.querySelector(".o_field_many2one_extra").innerHTML,
             "<span>buzz</span><br><span>fizzbuzz</span>"
         );
+
+        await clickSave(target);
+        assert.verifySteps(["write", "web_read"]);
     });
 
     QUnit.test("many2one search with trailing and leading spaces", async function (assert) {
@@ -1550,37 +1473,8 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["search: ", "search: first", "search: first", "search: first"]);
     });
 
-    QUnit.test("many2one field with option always_reload (readonly)", async function (assert) {
-        let count = 0;
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 2,
-            serverData,
-            arch: `
-                <form>
-                    <field name="trululu" options="{'always_reload': 1}" readonly="1" />
-                </form>`,
-            mockRPC(route, { method, args }) {
-                if (method === "read" && args[1].length === 1 && args[1][0] === "display_name") {
-                    count++;
-                    return Promise.resolve([
-                        { id: 1, display_name: "first record\nand some address" },
-                    ]);
-                }
-            },
-        });
-
-        assert.strictEqual(count, 1, "an extra read should have been done");
-        assert.ok(
-            target.querySelector("a.o_form_uri").textContent.includes("and some address"),
-            "should display additional result"
-        );
-        assert.containsNone(target, ".o_field_many2one_extra");
-    });
-
+    // Should be removed ?
     QUnit.test("many2one field with option always_reload (edit)", async function (assert) {
-        let count = 0;
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1590,17 +1484,18 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="trululu" options="{'always_reload': 1}" />
                 </form>`,
-            mockRPC(route, { method, args }) {
-                if (method === "read" && args[1].length === 1 && args[1][0] === "display_name") {
-                    count++;
-                    return Promise.resolve([
-                        { id: 1, display_name: "first record\nand some address" },
-                    ]);
+            async mockRPC(route, { method, args }, performRPC) {
+                if (method === "web_read") {
+                    const result = await performRPC(...arguments);
+                    result[0].trululu = {
+                        ...result[0].trululu,
+                        display_name: "first record\nand some address",
+                    };
+                    return result;
                 }
             },
         });
 
-        assert.strictEqual(count, 1, "an extra read should have been done");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='trululu'] input").value,
             "first record",
@@ -1711,7 +1606,7 @@ QUnit.module("Fields", (hooks) => {
                 if (method === "create") {
                     assert.step("create");
                     assert.strictEqual(
-                        args[0].trululu,
+                        args[0][0].trululu,
                         newRecordId,
                         "should create with the correct m2o id"
                     );
@@ -1844,7 +1739,7 @@ QUnit.module("Fields", (hooks) => {
                 if (method === "create") {
                     assert.step("create");
                     assert.strictEqual(
-                        args[0].p[0][2].trululu,
+                        args[0][0].p[0][2].trululu,
                         newRecordId,
                         "should create with the correct m2o id"
                     );
@@ -1942,7 +1837,7 @@ QUnit.module("Fields", (hooks) => {
                     await def;
                 }
                 if (method === "create") {
-                    assert.deepEqual(args[0].p[0][2].trululu, newRecordId);
+                    assert.deepEqual(args[0][0].p[0][2].trululu, newRecordId);
                 }
             },
         });
@@ -1961,7 +1856,7 @@ QUnit.module("Fields", (hooks) => {
             "the row should still be in edition"
         );
 
-        await def.resolve();
+        def.resolve();
         await nextTick();
 
         assert.strictEqual(
@@ -2111,7 +2006,6 @@ QUnit.module("Fields", (hooks) => {
                 "",
                 "should have empty string in the required field on this record"
             );
-            // FIXME: I added the await here and 6 lines below
             await click(target.querySelector(".o_data_row .o_data_cell"));
             assert.hasClass(
                 target.querySelectorAll(".o_selected_row .o_data_cell")[1],
@@ -2527,19 +2421,10 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, { args, method }) {
                 if (method === "create") {
                     assert.deepEqual(
-                        args[0],
+                        args[0][0],
                         {
-                            int_field: 2,
-                            timmy: [
-                                [6, false, []],
-                                // LPE TODO 1 taskid-2261084: remove this entire comment including code snippet
-                                // when the change in behavior has been thoroughly tested.
-                                // We can't distinguish a value coming from a default_get
-                                // from one coming from the onchange, and so we can either store and
-                                // send it all the time, or never.
-                                // [0, args[0].timmy[1][1], { display_name: displayName, name: 'brandon' }],
-                                [0, args[0].timmy[1][1], { display_name: displayName }],
-                            ],
+                            int_field: 1,
+                            timmy: [[0, args[0][0].timmy[0][1], { display_name: "new value" }]],
                         },
                         "should send the correct values to create"
                     );
@@ -2571,7 +2456,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            serverData.models.partner.fields.turtles.default = [[6, 0, [2, 3]]];
+            serverData.models.partner.fields.turtles.default = [
+                [4, 2],
+                [4, 3],
+            ];
 
             await makeView({
                 type: "form",
@@ -2591,10 +2479,10 @@ QUnit.module("Fields", (hooks) => {
                 mockRPC(route, { args, method }) {
                     if (method === "create") {
                         assert.deepEqual(
-                            args[0].turtles,
+                            args[0][0].turtles,
                             [
-                                [4, 2, false],
-                                [4, 3, false],
+                                [4, 2],
+                                [4, 3],
                             ],
                             "should send proper commands to create method"
                         );
@@ -2709,6 +2597,8 @@ QUnit.module("Fields", (hooks) => {
             relation: "turtle",
         };
         serverData.models.product.records[0].turtle_ids = [1];
+        serverData.models.product.records[0].display_name = "leonardo";
+        serverData.models.product.records[0].name = "xphone";
 
         serverData.models.turtle.fields.partner_types_ids = {
             string: "Partner",
@@ -2720,6 +2610,7 @@ QUnit.module("Fields", (hooks) => {
             type: "many2one",
             relation: "partner_type",
         };
+        serverData.models.turtle.records[0].type_id = 12;
 
         serverData.models.partner_type.fields.partner_ids = {
             string: "Partner",
@@ -2754,20 +2645,9 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-            mockRPC(route) {
-                if (route === "/web/dataset/call_kw/product/read") {
-                    return Promise.resolve([
-                        { id: 37, name: "xphone", display_name: "leonardo", turtle_ids: [1] },
-                    ]);
-                }
-                if (route === "/web/dataset/call_kw/turtle/read") {
-                    return Promise.resolve([{ id: 1, type_id: [12, "gold"] }]);
-                }
+            async mockRPC(route) {
                 if (route === "/web/dataset/call_kw/partner_type/get_formview_id") {
-                    return Promise.resolve(false);
-                }
-                if (route === "/web/dataset/call_kw/partner_type/read") {
-                    return Promise.resolve([{ id: 12, partner_ids: [1, 2], display_name: "gold" }]);
+                    return false;
                 }
                 if (route === "/web/dataset/call_kw/partner_type/write") {
                     assert.step("partner_type write");
@@ -2854,8 +2734,6 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        let count = 0;
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -2864,28 +2742,25 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="trululu" options="{'always_reload': 1}" />
                 </form>`,
-            mockRPC(route, { args, method }) {
-                count++;
-                if (
-                    method === "read" &&
-                    args[1].length === 1 &&
-                    args[1][0] === "display_name" &&
-                    args[0] === 2
-                ) {
-                    // LPE: any call_kw route can take either [ids] or id as the first
-                    // argument as model.browse() in python supports both
-                    // With the basic_model, read is passed only an id, not an array
-                    return Promise.resolve([{ id: 2, display_name: "hello world\nso much noise" }]);
+            async mockRPC(route, { args, method }, performRPC) {
+                assert.step(method);
+                if (method === "onchange2") {
+                    const result = await performRPC(...arguments);
+                    result.value.trululu = {
+                        ...result.value.trululu,
+                        display_name: "hello world\nso much noise",
+                    };
+                    return result;
                 }
             },
         });
 
-        assert.strictEqual(count, 3, "should have done 3 rpcs (get_views, onchange and read)");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='trululu'] input").value,
             "hello world",
             "should have taken the correct display name"
         );
+        assert.verifySteps(["get_views", "onchange2"]);
     });
 
     QUnit.test(
@@ -3060,7 +2935,7 @@ QUnit.module("Fields", (hooks) => {
                         throw makeServerError({ type: "ValidationError" });
                     }
                     if (method === "create") {
-                        assert.deepEqual(args[0], { name: "xyz" });
+                        assert.deepEqual(args[0][0], { name: "xyz" });
                     }
                 },
             });
@@ -3133,7 +3008,7 @@ QUnit.module("Fields", (hooks) => {
                         throw makeServerError({ type: "ValidationError" });
                     }
                     if (method === "create") {
-                        assert.deepEqual(args[0], { name: "xyz" });
+                        assert.deepEqual(args[0][0], { name: "xyz" });
                     }
                 },
             });
@@ -3714,11 +3589,11 @@ QUnit.module("Fields", (hooks) => {
             assert.containsNone(target, ".modal", "should not have any modal in DOM");
             assert.verifySteps([
                 "get_views",
-                "web_search_read", // to display results in the dialog
+                "unity_web_search_read", // to display results in the dialog
                 "name_search",
-                "onchange",
+                "onchange2",
                 "write",
-                "read",
+                "web_read",
             ]);
         }
     );
@@ -3764,11 +3639,11 @@ QUnit.module("Fields", (hooks) => {
             assert.containsNone(target, ".modal", "should not have any modal in DOM");
             assert.verifySteps([
                 "get_views",
-                "web_search_read", // to display results in the dialog
+                "unity_web_search_read", // to display results in the dialog
                 "name_search",
-                "onchange",
+                "onchange2",
                 "write",
-                "read",
+                "web_read",
             ]);
         }
     );
@@ -3899,7 +3774,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="trululu" /></form>',
             mockRPC(route, { kwargs, method }) {
                 assert.step(method);
-                if (method === "web_search_read") {
+                if (method === "unity_web_search_read") {
                     assert.deepEqual(
                         kwargs.domain,
                         [],
@@ -3918,10 +3793,10 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps([
             "get_views", // main form view
-            "onchange",
+            "onchange2",
             "name_search", // to display results in the dropdown
             "get_views", // list view in dialog
-            "web_search_read", // to display results in the dialog
+            "unity_web_search_read", // to display results in the dialog
         ]);
     });
 
@@ -3951,7 +3826,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="trululu" /></form>',
             mockRPC(route, { kwargs, method }) {
                 assert.step(method || route);
-                if (method === "web_search_read") {
+                if (method === "unity_web_search_read") {
                     assert.deepEqual(kwargs.domain, expectedDomain);
                 }
             },
@@ -3976,13 +3851,13 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps([
             "get_views", // main form view
-            "onchange",
+            "onchange2",
             "name_search", // empty search, triggered when the user clicks in the input
             "name_search", // to display results in the dropdown
             "name_search", // to get preselected ids matching the search
             "get_views", // list view in dialog
-            "web_search_read", // to display results in the dialog
-            "web_search_read", // after removal of dynamic filter
+            "unity_web_search_read", // to display results in the dialog
+            "unity_web_search_read", // after removal of dynamic filter
         ]);
     });
 
@@ -4073,7 +3948,8 @@ QUnit.module("Fields", (hooks) => {
 
         // Test whether the value has changed
         assert.strictEqual(
-            target.querySelectorAll(".o_data_cell")[1].textContent,
+            target.querySelector(".o_dialog:not(.o_inactive_modal) div[name=turtle_trululu] input")
+                .value,
             "test",
             "the partner name should have been updated to 'test'"
         );
@@ -4102,7 +3978,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="trululu" /></form>',
             mockRPC(route, { kwargs, method }) {
                 assert.step(method || route);
-                if (method === "web_search_read") {
+                if (method === "unity_web_search_read") {
                     assert.deepEqual(
                         kwargs.domain,
                         [],
@@ -4126,10 +4002,10 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps([
             "get_views",
-            "onchange",
+            "onchange2",
             "name_search", // to display results in the dropdown
             "get_views", // list view in dialog
-            "web_search_read", // to display results in the dialog
+            "unity_web_search_read", // to display results in the dialog
             "/web/dataset/resequence", // resequencing lines
             "read",
         ]);

@@ -5,7 +5,7 @@ import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
-import { Model } from "@web/views/model";
+import { Model } from "@web/model/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
 import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";

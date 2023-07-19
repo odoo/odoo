@@ -381,7 +381,7 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.containsOnce(target, ".breadcrumb-item");
         assert.containsOnce(target, ".o_breadcrumb .active");
         assert.strictEqual(target.querySelector(".o_breadcrumb .active").textContent, "Edit view");
-        assert.strictEqual(target.querySelector(".o_field_widget[name=id] input").value, "18");
+        assert.strictEqual(target.querySelector(".o_field_widget[name=id]").textContent, "18");
 
         await click(target, ".breadcrumb .o_back_button");
         assert.containsOnce(target, ".o_breadcrumb .active");
@@ -425,7 +425,7 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.containsOnce(target, ".breadcrumb-item");
         assert.containsOnce(target, ".o_breadcrumb .active");
         assert.strictEqual(target.querySelector(".o_breadcrumb .active").textContent, "Edit view");
-        assert.strictEqual(target.querySelector(".o_field_widget[name=id] input").value, "293");
+        assert.strictEqual(target.querySelector(".o_field_widget[name=id]").textContent, "293");
     });
 
     QUnit.test("edit search view on action without search_view_id", async (assert) => {
@@ -488,7 +488,7 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.containsOnce(target, ".breadcrumb-item");
         assert.containsOnce(target, ".o_breadcrumb .active");
         assert.strictEqual(target.querySelector(".o_breadcrumb .active").textContent, "Edit view");
-        assert.strictEqual(target.querySelector(".o_field_widget[name=id] input").value, "293");
+        assert.strictEqual(target.querySelector(".o_field_widget[name=id]").textContent, "293");
     });
 
     QUnit.test(

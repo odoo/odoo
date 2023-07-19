@@ -31,7 +31,7 @@ export class Reactive {
  * Creates a side-effect that runs based on the content of reactive objects.
  *
  * @template {object[]} T
- * @param {(...args: [...T]) => void} cb callback for the effect
+ * @param {(...args: [...T]) => X} cb callback for the effect
  * @param {[...T]} deps the reactive objects that the effect depends on
  */
 export function effect(cb, deps) {

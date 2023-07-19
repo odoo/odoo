@@ -10,8 +10,11 @@ import {
 import { ORM } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { cartesian, sortBy as arraySortBy } from "@web/core/utils/arrays";
+import { parseServerValue } from "./relational_model/utils";
 
 class UnimplementedRouteError extends Error {}
+
+let searchReadNumber = 0;
 
 /**
  * Helper function returning the value from a list of sample strings
@@ -24,15 +27,15 @@ function getSampleFromId(id, sampleTexts) {
     return sampleTexts[(id - 1) % sampleTexts.length];
 }
 
-function serializeGroupValue(value, type) {
-    switch (type) {
-        case "date":
-            return serializeDate(value);
-        case "datetime":
-            return serializeDateTime(value);
-        default:
-            return value;
+function serializeGroupDateValue(range, field) {
+    if (!range) {
+        return false;
     }
+    let dateValue = parseServerValue(field, range.to);
+    dateValue = dateValue.minus({
+        [field.type === "date" ? "day" : "second"]: 1,
+    });
+    return field.type === "date" ? serializeDate(dateValue) : serializeDateTime(dateValue);
 }
 
 /**
@@ -126,6 +129,8 @@ export class SampleServer {
                 return this._mockSearchReadController(params);
             case "web_search_read":
                 return this._mockWebSearchRead(params);
+            case "unity_web_search_read":
+                return this._mockWebSearchReadUnity(params);
             case "web_read_group":
                 return this._mockWebReadGroup(params);
             case "read_group":
@@ -632,6 +637,43 @@ export class SampleServer {
         return { records, length: records.length };
     }
 
+    _mockWebSearchReadUnity(params) {
+        const fields = Object.keys(params.specification);
+        let result;
+        if (this.existingGroups) {
+            const groups = this.existingGroups;
+            const group = groups[searchReadNumber++ % groups.length];
+            result = {
+                records: group.__data.records,
+                length: group.__data.records.length,
+            };
+        } else {
+            result = this._mockWebSearchRead({ ...params, fields });
+        }
+        // populate x2many values
+        for (const fieldName in params.specification) {
+            const field = this.data[params.model].fields[fieldName];
+            if (field.type === "one2many" || field.type === "many2many") {
+                const relFields = Object.keys(params.specification[fieldName].fields || {});
+                if (relFields.length) {
+                    const relIds = result.records.map((r) => r[fieldName]).flat();
+                    const relRecords = {};
+                    const _relRecords = this._mockRead({
+                        model: field.relation,
+                        args: [relIds, relFields],
+                    });
+                    for (const relRecord of _relRecords) {
+                        relRecords[relRecord.id] = relRecord;
+                    }
+                    for (const record of result.records) {
+                        record[fieldName] = record[fieldName].map((resId) => relRecords[resId]);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     /**
      * Mocks calls to the web_read_group method to return groups populated
      * with sample records. Only handles the case where the real call to
@@ -668,22 +710,26 @@ export class SampleServer {
      * @param {string[]} params.groupBy
      */
     _populateExistingGroups(params) {
-        if (!this.existingGroupsPopulated) {
-            const groups = this.existingGroups;
-            const groupBy = params.groupBy[0].split(":")[0];
-            const groupByField = this.data[params.model].fields[groupBy];
-            const groupedByM2O = groupByField.type === "many2one";
-            if (groupedByM2O) {
-                // re-populate co model with relevant records
-                this.data[groupByField.relation].records = groups.map((g) => {
-                    return { id: g.value, display_name: g.displayName };
-                });
+        const groups = this.existingGroups;
+        const groupBy = params.groupBy[0].split(":")[0];
+        const groupByField = this.data[params.model].fields[groupBy];
+        const groupedByM2O = groupByField.type === "many2one";
+        if (groupedByM2O) {
+            // re-populate co model with relevant records
+            this.data[groupByField.relation].records = groups.map((g) => {
+                return { id: g.value, display_name: g.displayName };
+            });
+        }
+        for (const r of this.data[params.model].records) {
+            const group = getSampleFromId(r.id, groups);
+            if (["date", "datetime"].includes(groupByField.type)) {
+                r[groupBy] = serializeGroupDateValue(
+                    group.__range[params.groupBy[0]],
+                    groupByField
+                );
+            } else {
+                r[groupBy] = group[params.groupBy[0]];
             }
-            for (const r of this.data[params.model].records) {
-                const group = getSampleFromId(r.id, groups);
-                r[groupBy] = serializeGroupValue(group.value, groupByField.type);
-            }
-            this.existingGroupsPopulated = true;
         }
     }
 
@@ -748,16 +794,20 @@ export class SampleServer {
         const records = this.data[params.model].records;
         for (const g of groups) {
             const recordsInGroup = records.filter((r) => {
-                return r[groupBy] === serializeGroupValue(g.value, groupByField.type);
+                if (["date", "datetime"].includes(groupByField.type)) {
+                    return (
+                        r[groupBy] === serializeGroupDateValue(g.__range[fullGroupBy], groupByField)
+                    );
+                }
+                return r[groupBy] === g[fullGroupBy];
             });
-            g[`${groupBy}_count`] = recordsInGroup.length;
-            g[fullGroupBy] = g.__rawValue;
             for (const field of params.fields) {
                 const fieldType = this.data[params.model].fields[field].type;
                 if (["integer, float", "monetary"].includes(fieldType)) {
                     g[field] = recordsInGroup.reduce((acc, r) => acc + r[field], 0);
                 }
             }
+            g[`${groupBy}_count`] = recordsInGroup.length;
             g.__data = {
                 records: this._mockRead({
                     model: params.model,
@@ -765,7 +815,6 @@ export class SampleServer {
                 }),
                 length: recordsInGroup.length,
             };
-            g.__range = { ...g.range };
         }
     }
 }

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, clickSave, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -86,11 +86,19 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_radio").textContent.replace(/\s+/g, ""),
             "xphonexpad"
         );
-        assert.containsNone(target, "input:checked", "none of the input should be checked");
+        assert.containsNone(
+            target,
+            "input.o_radio_input:checked",
+            "none of the input should be checked"
+        );
 
         await click(target.querySelectorAll("input.o_radio_input")[0]);
 
-        assert.containsOnce(target, "input:checked", "one of the input should be checked");
+        assert.containsOnce(
+            target,
+            "input.o_radio_input:checked",
+            "one of the input should be checked"
+        );
 
         await clickSave(target);
 
@@ -148,7 +156,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await click(target, "input[type='checkbox']");
+        await click(target, ".o_field_boolean input[type='checkbox']");
 
         assert.containsOnce(
             target,
@@ -161,7 +169,7 @@ QUnit.module("Fields", (hooks) => {
             "the other of the input should be checked"
         );
 
-        await click(target, "input[type='checkbox']");
+        await click(target, ".o_field_boolean input[type='checkbox']");
         assert.containsOnce(
             target,
             "input.o_radio_input[data-value='41']:checked",
@@ -287,61 +295,6 @@ QUnit.module("Fields", (hooks) => {
             "'Black' should be checked"
         );
     });
-
-    QUnit.test(
-        "widget radio on a many2one: domain updated by an onchange",
-        async function (assert) {
-            assert.expect(4);
-
-            serverData.models.partner.onchanges = {
-                int_field() {},
-            };
-
-            let domain = [];
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                resId: 1,
-                serverData,
-                arch: `
-                    <form>
-                        <field name="int_field" />
-                        <field name="trululu" widget="radio" />
-                    </form>`,
-                mockRPC(route, { kwargs, method }) {
-                    if (method === "onchange") {
-                        domain = [["id", "in", [10]]];
-                        return Promise.resolve({
-                            value: {
-                                trululu: false,
-                            },
-                            domain: {
-                                trululu: domain,
-                            },
-                        });
-                    }
-                    if (method === "search_read") {
-                        assert.deepEqual(kwargs.domain, domain, "sent domain should be correct");
-                    }
-                },
-            });
-
-            assert.containsN(
-                target,
-                ".o_field_widget[name='trululu'] .o_radio_item",
-                3,
-                "should be 3 radio buttons"
-            );
-
-            // trigger an onchange that will update the domain
-            await editInput(target, ".o_field_widget[name='int_field'] input", "2");
-            assert.containsNone(
-                target,
-                ".o_field_widget[name='trululu'] .o_radio_item",
-                "should be no more radio button"
-            );
-        }
-    );
 
     QUnit.test("field is empty", async function (assert) {
         await makeView({

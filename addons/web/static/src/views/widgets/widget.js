@@ -1,8 +1,8 @@
 /* @odoo-module */
 
+import { evalDomain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { evalDomain } from "@web/views/utils";
 
 import { Component, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");

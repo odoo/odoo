@@ -41,6 +41,16 @@ export class SettingsFormController extends formView.Controller {
         this.initialApp = "module" in this.props.context ? this.props.context.module : "";
     }
 
+    get modelParams() {
+        const headerFields = Object.values(this.archInfo.fieldNodes)
+            .filter((fieldNode) => fieldNode.options.isHeaderField)
+            .map((fieldNode) => fieldNode.name);
+        return {
+            ...super.modelParams,
+            headerFields,
+        };
+    }
+
     /**
      * @override
      */
@@ -49,7 +59,7 @@ export class SettingsFormController extends formView.Controller {
             return true;
         }
         if (
-            this.model.root.isDirty &&
+            (await this.model.root.isDirty()) &&
             !["execute"].includes(clickParams.name) &&
             !clickParams.noSaveDialog
         ) {
@@ -63,8 +73,9 @@ export class SettingsFormController extends formView.Controller {
         return this.env._t("Settings");
     }
 
-    beforeLeave() {
-        if (this.model.root.isDirty) {
+    async beforeLeave() {
+        const dirty = await this.model.root.isDirty();
+        if (dirty) {
             return this._confirmSave();
         }
     }
@@ -116,7 +127,7 @@ export class SettingsFormController extends formView.Controller {
                 },
                 cancel: async () => {
                     await this.model.root.discard();
-                    await this.model.root.save({ stayInEdition: true });
+                    await this.model.root.save();
                     _continue = true;
                     resolve();
                 },

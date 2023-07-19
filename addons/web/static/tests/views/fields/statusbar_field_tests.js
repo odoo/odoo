@@ -1,8 +1,5 @@
 /** @odoo-module **/
 
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
@@ -13,6 +10,10 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
 import { EventBus } from "@odoo/owl";
 
@@ -308,9 +309,8 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.doesNotHaveClass(target.querySelector(".o_statusbar_status"), "o_field_empty");
-        const tooltipInfo = target.querySelector(".o_field_statusbar").attributes[
-            "data-tooltip-info"
-        ];
+        const tooltipInfo =
+            target.querySelector(".o_field_statusbar").attributes["data-tooltip-info"];
         assert.strictEqual(
             JSON.parse(tooltipInfo.value).field.help,
             "some info about the field",
@@ -622,4 +622,48 @@ QUnit.module("Fields", (hooks) => {
         await click(clickableButtons[clickableButtons.length - 1]);
         assert.verifySteps(["write"]);
     });
+
+    QUnit.test(
+        "For the same record, a single rpc is done to recover the specialData",
+        async function (assert) {
+            serverData.views = {
+                "partner,3,list": '<tree><field name="display_name"/></tree>',
+                "partner,9,search": `<search></search>`,
+                "partner,false,form": `<form>
+                <header>
+                    <field name="trululu" widget="statusbar" readonly="1"/>
+                </header>
+            </form>`,
+            };
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Partners",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [
+                        [false, "list"],
+                        [false, "form"],
+                    ],
+                },
+            };
+
+            const mockRPC = (route, args) => {
+                if (args.method === "search_read") {
+                    assert.step("search_read");
+                }
+            };
+
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1);
+
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.verifySteps(["search_read"]);
+
+            await click(target, ".o_back_button");
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.verifySteps([]);
+        }
+    );
 });

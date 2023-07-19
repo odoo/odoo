@@ -43,7 +43,6 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { userService } from "@web/core/user_service";
-import { CharField } from "@web/views/fields/char/char_field";
 import { actionService } from "@web/webclient/actions/action_service";
 import { getTimePickers } from "../../core/datetime/datetime_test_helpers";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
@@ -51,7 +50,6 @@ import { calendarView } from "@web/views/calendar/calendar_view";
 import { onWillRender } from "@odoo/owl";
 
 const fieldRegistry = registry.category("fields");
-const preloadedDataRegistry = registry.category("preloadedData");
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
 
@@ -1398,34 +1396,6 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         await click(target, ".o_cw_popover .o_cw_popover_close");
         assert.containsNone(target, ".o_cw_popover", "should close a popover");
-    });
-
-    QUnit.test(`render popover with widget which has specialData attribute`, async (assert) => {
-        assert.expect(3);
-
-        fieldRegistry.add("specialWidget", { component: CharField });
-        preloadedDataRegistry.add("specialWidget", {
-            loadOnTypes: ["char"],
-            preload: () => {
-                assert.step("_fetchSpecialDataForMyWidget");
-            },
-        });
-
-        await makeView({
-            type: "calendar",
-            resModel: "event",
-            serverData,
-            arch: `
-                <calendar date_start="start" date_stop="stop" all_day="allday" mode="week">
-                    <field name="name" string="Custom Name" widget="specialWidget" />
-                    <field name="partner_id" />
-                </calendar>
-            `,
-        });
-
-        await clickEvent(target, 4);
-        assert.containsOnce(target, ".o_cw_popover", "should open a popover clicking on event");
-        assert.verifySteps(["_fetchSpecialDataForMyWidget"]);
     });
 
     QUnit.test("render popover: inside fullcalendar popover", async (assert) => {
@@ -4392,14 +4362,16 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
             mockRPC(route, { args, method }) {
                 if (method === "create") {
-                    assert.deepEqual(args[0], {
-                        allday: false,
-                        name: "foobar",
-                        start: "2016-12-13 07:00:00",
-                        start_date: false,
-                        stop: "2016-12-13 15:00:00",
-                        stop_date: false,
-                    });
+                    assert.deepEqual(args[0], [
+                        {
+                            allday: false,
+                            name: "foobar",
+                            start: "2016-12-13 07:00:00",
+                            start_date: false,
+                            stop: "2016-12-13 15:00:00",
+                            stop_date: false,
+                        },
+                    ]);
                 }
                 if (method === "write") {
                     assert.deepEqual(args[1], {

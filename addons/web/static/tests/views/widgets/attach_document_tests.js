@@ -78,7 +78,7 @@ QUnit.module("Widgets", (hooks) => {
                 if (args.method === "write") {
                     assert.deepEqual(args.args[1], { display_name: "yop" });
                 }
-                if (args.method === "read") {
+                if (args.method === "web_read") {
                     assert.deepEqual(args.args[0], [1]);
                 }
             },
@@ -88,13 +88,13 @@ QUnit.module("Widgets", (hooks) => {
                     <field name="display_name" required="1"/>
                 </form>`,
         });
-        assert.verifySteps(["get_views", "read"]);
+        assert.verifySteps(["get_views", "web_read"]);
 
         await editInput(target, "[name='display_name'] input", "yop");
         await click(target, ".o_attach_document");
         fileInput.dispatchEvent(new Event("change"));
         await nextTick();
-        assert.verifySteps(["write", "read", "post", "my_action", "read"]);
+        assert.verifySteps(["write", "web_read", "post", "my_action", "web_read"]);
     });
 
     QUnit.test(
@@ -133,9 +133,9 @@ QUnit.module("Widgets", (hooks) => {
                         return true;
                     }
                     if (args.method === "create") {
-                        assert.deepEqual(args.args[0], { display_name: "yop" });
+                        assert.deepEqual(args.args[0], [{ display_name: "yop" }]);
                     }
-                    if (args.method === "read") {
+                    if (args.method === "web_read") {
                         assert.deepEqual(args.args[0], [2]);
                     }
                 },
@@ -145,13 +145,13 @@ QUnit.module("Widgets", (hooks) => {
                     <field name="display_name" required="1"/>
                 </form>`,
             });
-            assert.verifySteps(["get_views", "onchange"]);
+            assert.verifySteps(["get_views", "onchange2"]);
 
             await editInput(target, "[name='display_name'] input", "yop");
             await click(target, ".o_attach_document");
             fileInput.dispatchEvent(new Event("change"));
             await nextTick();
-            assert.verifySteps(["create", "read", "post", "my_action", "read"]);
+            assert.verifySteps(["create", "web_read", "post", "my_action", "web_read"]);
         }
     );
 });

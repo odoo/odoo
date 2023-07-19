@@ -166,7 +166,7 @@ export class FormCompiler extends ViewCompiler {
             append(buttonBox, mainSlot);
         }
 
-        return hasContent ? buttonBox : '';
+        return hasContent ? buttonBox : "";
     }
 
     compileButton(el, params) {
@@ -214,7 +214,7 @@ export class FormCompiler extends ViewCompiler {
             ? `d-flex {{ __comp__.uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`
             : "d-block";
         const stateClasses =
-            "{{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}";
+            "{{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}";
         const form = createElement("div", {
             class: "o_form_renderer",
             "t-att-class": "__comp__.props.class",

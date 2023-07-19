@@ -3,6 +3,9 @@
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
+import { evalDomain } from "@web/core/domain";
+import { RPCError } from "@web/core/network/rpc_service";
+import { Cache } from "@web/core/utils/cache";
 import {
     useBus,
     useChildRef,
@@ -15,7 +18,8 @@ import { createElement } from "@web/core/utils/xml";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { computeViewClassName, evalDomain, isNull } from "@web/views/utils";
+import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { computeViewClassName, isNull } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -35,11 +39,12 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 
 import {
     Component,
+    onWillStart,
+    onWillUpdateProps,
     useComponent,
     useEffect,
     useEnv,
     useSubEnv,
-    onWillUpdateProps,
 } from "@odoo/owl";
 
 //
@@ -137,6 +142,30 @@ export function useActiveActions({
     return activeActions;
 }
 
+export function useSpecialData(loadFn) {
+    const component = useComponent();
+    const record = component.props.record;
+    const key = `${record.resModel}-${component.props.name}`;
+    const { specialDataCaches, orm } = record.model;
+    const ormWithCache = Object.create(orm);
+    if (!specialDataCaches[key]) {
+        specialDataCaches[key] = new Cache(
+            (...args) => orm.call(...args),
+            (...path) => JSON.stringify(path)
+        );
+    }
+    ormWithCache.call = (...args) => specialDataCaches[key].read(...args);
+
+    const result = {};
+    onWillStart(async () => {
+        result.data = await loadFn(ormWithCache, component.props);
+    });
+    onWillUpdateProps(async (props) => {
+        result.data = await loadFn(ormWithCache, props);
+    });
+    return result;
+}
+
 //
 // Many2X
 //
@@ -153,7 +182,7 @@ export class Many2XAutocomplete extends Component {
             activeActions,
             isToMany,
             onRecordSaved: (record) => {
-                return update([record.data]);
+                return update([{ ...record.data, id: record.resId }]);
             },
             onRecordDiscarded: () => {
                 if (!isToMany) {
@@ -221,7 +250,7 @@ export class Many2XAutocomplete extends Component {
         }
         const record = {
             id: option.value,
-            name: option.label,
+            display_name: option.displayName,
         };
         this.props.update([record], params);
     }
@@ -239,6 +268,7 @@ export class Many2XAutocomplete extends Component {
         return {
             value: result[0],
             label: result[1].split("\n")[0],
+            displayName: result[1],
         };
     }
     async loadOptionsSource(request) {
@@ -259,26 +289,13 @@ export class Many2XAutocomplete extends Component {
                         await this.props.quickCreate(request, params);
                     } catch (e) {
                         if (
-                            e &&
-                            e.name === "RPC_ERROR" &&
+                            e instanceof RPCError &&
                             e.exceptionName === "odoo.exceptions.ValidationError"
                         ) {
                             const context = this.getCreationContext(request);
                             return this.openMany2X({ context });
                         }
-                        // Compatibility with legacy code
-                        if (
-                            e &&
-                            e.message &&
-                            e.message.name === "RPC_ERROR" &&
-                            e.message.exceptionName === "odoo.exceptions.ValidationError"
-                        ) {
-                            // The event.preventDefault() is necessary because we still use the legacy
-                            e.event.preventDefault();
-                            const context = this.getCreationContext(request);
-                            return this.openMany2X({ context });
-                        }
-                        throw e.message ? e.message : e;
+                        throw e;
                     }
                 },
             });
@@ -573,7 +590,15 @@ export class X2ManyFieldDialog extends Component {
     async save({ saveAndNew }) {
         const disabledButtons = this.disableButtons();
         if (await this.record.checkValidity()) {
-            this.record = (await this.props.save(this.record, { saveAndNew })) || this.record;
+            try {
+                await this.props.save(this.record);
+            } catch (error) {
+                this.enableButtons(disabledButtons);
+                throw error;
+            }
+            if (saveAndNew) {
+                this.record = await this.props.addNew();
+            }
         } else {
             this.record.openInvalidFieldsNotification();
             this.enableButtons(disabledButtons);
@@ -606,6 +631,7 @@ X2ManyFieldDialog.props = {
     archInfo: Object,
     close: Function,
     record: Object,
+    addNew: Function,
     save: Function,
     title: String,
     delete: { optional: true },
@@ -615,24 +641,29 @@ X2ManyFieldDialog.props = {
 X2ManyFieldDialog.template = "web.X2ManyFieldDialog";
 
 async function getFormViewInfo({ list, activeField, viewService, userService, env }) {
-    let formViewInfo = activeField.views.form;
+    let formArchInfo = activeField.views.form;
+    let fields = activeField.fields;
     const comodel = list.resModel;
-    if (!formViewInfo) {
-        const { fields, relatedModels, views } = await viewService.loadViews({
+    if (!formArchInfo) {
+        const {
+            fields: formFields,
+            relatedModels,
+            views,
+        } = await viewService.loadViews({
             context: list.context,
             resModel: comodel,
             views: [[false, "form"]],
         });
-        const archInfo = new FormArchParser().parse(views.form.arch, relatedModels, comodel);
+        formArchInfo = new FormArchParser().parse(views.form.arch, relatedModels, comodel);
         // Fields that need to be defined are the ones in the form view, this is natural,
-        // plus the ones that the list record has, that is, present in either the list arch or the kanban arch
-        // of the one2many field
-        formViewInfo = { ...archInfo, fields: { ...list.fields, ...fields } }; // should be good to memorize this on activeField
+        // plus the ones that the list record has, that is, present in either the list arch
+        // or the kanban arch of the one2many field
+        fields = { ...list.fields, ...formFields }; // FIXME: update in place?
     }
 
     await loadSubViews(
-        formViewInfo.activeFields,
-        formViewInfo.fields,
+        formArchInfo.fieldNodes,
+        fields,
         {}, // context
         comodel,
         viewService,
@@ -640,7 +671,7 @@ async function getFormViewInfo({ list, activeField, viewService, userService, en
         env.isSmall
     );
 
-    return formViewInfo;
+    return { archInfo: formArchInfo, fields };
 }
 
 export function useAddInlineRecord({ addNew }) {
@@ -661,12 +692,12 @@ export function useAddInlineRecord({ addNew }) {
 
 export function useOpenX2ManyRecord({
     resModel,
-    activeField,
+    activeField, // TODO: this should be renamed (object with keys "viewMode", "views" and "string")
     activeActions,
     getList,
     updateRecord,
     saveRecord,
-    withParentId,
+    isMany2Many,
 }) {
     const viewService = useService("view");
     const userService = useService("user");
@@ -681,78 +712,65 @@ export function useOpenX2ManyRecord({
             title = sprintf(title, activeField.string);
         }
         const list = getList();
-        const model = list.model;
-        const form = await getFormViewInfo({ list, activeField, viewService, userService, env });
+        const { archInfo, fields: _fields } = await getFormViewInfo({
+            list,
+            activeField,
+            viewService,
+            userService,
+            env,
+        });
+
+        const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, _fields);
 
         let deleteRecord;
         let deleteButtonLabel = undefined;
         const isDuplicate = !!record;
 
+        const params = { activeFields, fields, mode };
         if (record) {
-            const _record = record;
-            record = await model.duplicateDatapoint(record, {
-                mode,
-                viewMode: "form",
-                fields: { ...form.fields },
-                views: { form },
-            });
             const { delete: canDelete, onDelete } = activeActions;
-            deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(_record) : null;
+            deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(record) : null;
             deleteButtonLabel =
                 activeActions.type === "one2many" ? env._t("Delete") : env._t("Remove");
         } else {
-            const recordParams = {
-                context: makeContext([list.context, context]),
-                resModel: resModel,
-                activeFields: form.activeFields,
-                fields: { ...form.fields },
-                views: { form },
-                mode: "edit",
-                viewType: "form",
-            };
-            record = await model.addNewRecord(list, recordParams, withParentId);
+            params.context = makeContext([list.context, context]);
+            params.withoutParent = isMany2Many;
         }
+        record = await list.extendRecord(params, record);
+
+        const _onClose = () => {
+            list.editedRecord?.switchMode("readonly");
+            onClose?.();
+        };
 
         addDialog(
             X2ManyFieldDialog,
             {
                 config: env.config,
-                archInfo: form,
+                archInfo,
                 record,
-                save: async (rec, { saveAndNew }) => {
+                addNew: () => {
+                    return getList().extendRecord(params);
+                },
+                save: (rec) => {
                     if (isDuplicate && rec.id === record.id) {
-                        await updateRecord(rec);
+                        return updateRecord(rec);
                     } else {
-                        await saveRecord(rec);
-                    }
-                    if (saveAndNew) {
-                        return model.addNewRecord(
-                            list,
-                            {
-                                context: makeContext([list.context, context]),
-                                resModel: resModel,
-                                activeFields: form.activeFields,
-                                fields: { ...form.fields },
-                                views: { form },
-                                mode: "edit",
-                                viewType: "form",
-                            },
-                            withParentId
-                        );
+                        return saveRecord(rec);
                     }
                 },
                 title,
                 delete: deleteRecord,
                 deleteButtonLabel: deleteButtonLabel,
             },
-            { onClose }
+            { onClose: _onClose }
         );
     }
     return openRecord;
 }
 
 export function useX2ManyCrud(getList, isMany2Many) {
-    let saveRecord;
+    let saveRecord; // FIXME: isn't this "createRecord" instead?
     if (isMany2Many) {
         saveRecord = async (object) => {
             const list = getList();
@@ -760,31 +778,34 @@ export function useX2ManyCrud(getList, isMany2Many) {
             let resIds;
             if (Array.isArray(object)) {
                 resIds = [...currentIds, ...object];
-            } else if (object.resId) {
-                if (object.isDirty) {
-                   await object.save();
+            } else {
+                // object instanceof Record
+                if (!object.resId || object.isDirty) {
+                    await object.save();
                 }
                 resIds = [...currentIds, object.resId];
-            } else {
-                return list.add(object, { isM2M: isMany2Many });
             }
             return list.replaceWith(resIds);
         };
     } else {
-        saveRecord = (record) => {
-            return getList().add(record);
+        saveRecord = async (record) => {
+            return getList().validateExtendedRecord(record);
         };
     }
 
-    const updateRecord = (record) => {
-        const list = getList();
-        return list.model.updateRecord(list, record, { isM2M: isMany2Many });
+    const updateRecord = async (record) => {
+        if (isMany2Many) {
+            await record.save();
+        }
+        return getList().validateExtendedRecord(record);
     };
 
-    const operation = isMany2Many ? "FORGET" : "DELETE";
     const removeRecord = (record) => {
         const list = getList();
-        return list.delete(record.id, operation);
+        if (isMany2Many) {
+            return list.forget(record);
+        }
+        return list.delete(record);
     };
 
     return {
