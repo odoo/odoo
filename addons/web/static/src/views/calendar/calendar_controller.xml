@@ -26,20 +26,20 @@
                             >
                                 Today
                             </button>
-                            <div class="d-flex gap-1 o_calendar_navigation_buttons">
+                            <div class="btn-group d-flex o_calendar_navigation_buttons">
                                 <button
                                     class="btn btn-secondary btn-sm d-none d-md-block o_calendar_button_prev"
                                     title="Previous"
                                     aria-label="Previous"
                                     t-on-click.stop="() => this.setDate('previous')"
-                                ><i class="fa fa-chevron-left"/></button>
+                                ><i class="fa fa-arrow-left"/></button>
                                 <ViewScaleSelector scales="scales" currentScale="model.scale" setScale.bind="setScale" />
                                 <button
                                     class="btn btn-secondary btn-sm d-none d-md-block o_calendar_button_next"
                                     title="Next"
                                     aria-label="Next"
                                     t-on-click.stop="() => this.setDate('next')"
-                                ><i class="fa fa-chevron-right"/></button>
+                                ><i class="fa fa-arrow-right"/></button>
                             </div>
                         </div>
                         <div class="o_calendar_sidebar">
