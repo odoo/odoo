@@ -26,11 +26,18 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         cls.partner = cls.user.partner_id
 
     def test_message_invite(self):
+        self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
         }):
             self.event.partner_ids = self.partner
+
+        # remove custom threshold, sends immediately instead of queuing
+        email_partner = self.env['res.partner'].create({'name': 'bob invitee', 'email': 'bob.invitee@test.lan'})
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            self.event.partner_ids += email_partner
+        self.assertMailMail(email_partner, 'sent', author=self.env.ref('base.partner_root'))
 
     def test_message_invite_allday(self):
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
@@ -45,6 +52,23 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
                 'partner_ids': [(4, self.partner.id)],
             }])
 
+    def test_message_invite_email_notif_mass_queued(self):
+        """Check that more than 20 notified attendees means mails are queued."""
+        self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
+        additional_attendees = self.env['res.partner'].create([{
+            'name': f'test{n}',
+            'email': f'test{n}@example.com'} for n in range(101)])
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+            self.event.partner_ids = additional_attendees
+
+        self.assertNotified(
+            self._new_msgs,
+            [{
+                'is_read': True,
+                'partner': partner,
+                'type': 'email',
+            } for partner in additional_attendees],
+        )
 
     def test_message_invite_self(self):
         with self.assertNoNotifications():
