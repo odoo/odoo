@@ -159,7 +159,8 @@ class TestProjectSharing(TestProjectSharingCommon):
             ],
         })
         project_share_wizard.action_send_mail()
-
+        # the portal user is set as follower for the task_cow. Without it he does not have read access to the task, and thus can not access its view form
+        self.task_cow.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
         with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id, 'uid': self.user_portal.id}), self.user_portal) as form:
             form.name = 'Test'
             task = form.save()
@@ -223,7 +224,8 @@ class TestProjectSharing(TestProjectSharingCommon):
             ],
         })
         project_share_wizard.action_send_mail()
-
+        # subscribe the portal user to give him read access to the task.
+        self.task_cow.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
         self.assertFalse(self.task_cow.with_user(self.user_portal).user_ids, 'the portal user should see no assigness in the task.')
         task_portal_read = self.task_cow.with_user(self.user_portal).read(['portal_user_names'])
         self.assertEqual(self.task_cow.portal_user_names, task_portal_read[0]['portal_user_names'], 'the portal user should see assignees name in the task via the `portal_user_names` field.')
@@ -321,3 +323,40 @@ class TestProjectSharing(TestProjectSharingCommon):
                 'name': 'Test Project new Milestone',
                 'project_id': self.project_portal.id,
             })
+
+    def test_add_followers_from_share_edit_wizard(self):
+        """
+            This test ensures that when a project is shared in edit mode, the partners are correctly set as follower in the project and their respective tasks.
+        """
+        company_partner = self.env.company.partner_id
+        partners = partner_a, partner_b, partner_d = self.env['res.partner'].create([
+            {'name': "Solanum", 'parent_id': company_partner.id},
+            {'name': "Zana", 'parent_id': company_partner.id},
+            {'name': "Thresh"},
+        ])
+        partners |= company_partner
+        project_to_share = self.env['project.project'].create({'name': "project to share"})
+        task_with_partner_1, task_with_partner_2, task_with_parent_partner, task_without_partner = self.env['project.task'].create([{
+            'name': "Task with partner 1",
+            'partner_id': partner_a.id,
+            'project_id': project_to_share.id,
+        }, {
+            'name': "Task with partner 2",
+            'partner_id': partner_b.id,
+            'project_id': project_to_share.id,
+        }, {
+            'name': "Task with company",
+            'partner_id': company_partner.id,
+            'project_id': project_to_share.id,
+        }, {
+            'name': "Task with no partner",
+            'project_id': project_to_share.id,
+        }])
+        project_to_share._add_followers(partners)
+
+        self.assertEqual(partners, project_to_share.message_partner_ids, "All the partner should be set as a new follower of the project")
+        self.assertEqual(partner_a, task_with_partner_1.message_partner_ids, "Only the first partner should be set as a new follower for the task 1")
+        self.assertEqual(partner_b, task_with_partner_2.message_partner_ids, "Only the second partner should be set as a new follower for the task 2")
+        self.assertEqual(partners - partner_d, task_with_parent_partner.message_partner_ids,
+                         "The first, second, and the company partner should be set as new followers for the task 3 because the partner of this task is the parent of the other 2")
+        self.assertFalse(task_without_partner.message_partner_ids, "Since this task has no partner, no follower should be added")

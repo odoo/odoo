@@ -38,15 +38,20 @@
     </template>
 
     <template id="portal_tasks_list_inherit" inherit_id="project.portal_tasks_list" name="Portal: My Tasks with Timesheets">
+        <xpath expr="//thead" position="before">
+            <t t-set="allow_timesheets" t-value="any(task.allow_timesheets for group in grouped_tasks for task in group)"/>
+        </xpath>
         <xpath expr="//t[@t-foreach='tasks']/tr" position="before">
             <t t-set="timesheet_ids" t-value="task.sudo().timesheet_ids"/>
             <t t-set="is_uom_day" t-value="timesheet_ids._is_timesheet_encode_uom_day()"/>
         </xpath>
-        <xpath expr="//thead/tr/t[@t-set='number_of_header']" position="attributes">
-            <attribute name="t-value">9</attribute>
+        <xpath expr="//thead/tr/t[@t-set='number_of_header']" position="after">
+            <t t-if="allow_timesheets">
+                 <t t-set="number_of_header" t-value="number_of_header + 1"/>
+            </t>
         </xpath>
         <xpath expr="//thead/tr/th[@name='project_portal_milestones']" position="after">
-            <t t-if="not project or project.allow_timesheets">
+            <t t-if="allow_timesheets">
                 <th t-if="is_uom_day" class="text-end">Days Spent</th>
                 <th t-else="" class="text-end">Hours Spent</th>
             </t>

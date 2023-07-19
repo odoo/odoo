@@ -28,6 +28,7 @@
                 archivable="0"
                 import="0"
                 groups_draggable="0"
+                default_order="priority desc, sequence, state, date_deadline asc, id desc"
             >
                 <field name="color"/>
                 <field name="priority"/>
@@ -134,10 +135,15 @@
                 <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
                         <field name="display_parent_task_button" invisible="1"/>
+                        <field name="recurrence_id" invisible="1" />
                         <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" invisible="not display_parent_task_button">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Parent Task</span>
                             </div>
+                        </button>
+                        <button name="action_project_sharing_recurring_tasks" type="object" invisible="not active or not recurrence_id"
+                                class="oe_stat_button" icon="fa-repeat" context="{'default_user_ids': [(6, 0, [uid])]}">
+                            <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
                         <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
                             invisible="not id or subtask_count == 0" context="{'default_user_ids': [(6, 0, [uid])]}">
@@ -184,6 +190,18 @@
                             <field name="allow_task_dependencies" invisible="1" />
                             <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
                             <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date"/>
+                            <field name="recurring_task" />
+                            <label for="repeat_interval" invisible="not recurring_task"/>
+                            <div invisible="not recurring_task" class="d-flex" >
+                                <field name="repeat_interval" required="recurring_task"
+                                       class="me-2" style="max-width: 2rem !important;" />
+                                <field name="repeat_unit" required="recurring_task"
+                                       class="me-2" style="max-width: 4rem !important;" />
+                                <field name="repeat_type" required="recurring_task"
+                                       class="me-2" style="max-width: 15rem !important;" />
+                                <field name="repeat_until" invisible="not repeat_type == 'until'" required="repeat_type == 'until'"
+                                       class="me-2" />
+                            </div>
                         </group>
                     </group>
                     <notebook>
@@ -390,6 +408,40 @@
     <record id="project_sharing_subtasks_form_action_view" model="ir.actions.act_window.view">
         <field name="view_mode">form</field>
         <field name="act_window_id" ref="project.project_sharing_project_task_action_sub_task"/>
+        <field name="view_id" ref="project.project_sharing_project_task_view_form"/>
+    </record>
+
+    <record id="project_sharing_project_task_recurring_tasks_action" model="ir.actions.act_window">
+        <field name="name">Project Sharing Recurrence</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks found. Let's create one!
+            </p>
+            <p>
+                Keep track of the progress of your tasks from creation to completion.<br/>
+                Collaborate efficiently by chatting in real-time or via email.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_sharing_recurring_tasks_tree_action_view" model="ir.actions.act_window.view">
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="project.project_sharing_project_task_recurring_tasks_action"/>
+        <field name="view_id" ref="project.project_sharing_project_task_view_tree"/>
+    </record>
+
+    <record id="project_sharing_recurring_tasks_kanban_action_view" model="ir.actions.act_window.view">
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="project.project_sharing_project_task_recurring_tasks_action"/>
+        <field name="view_id" ref="project.project_sharing_project_task_view_kanban"/>
+    </record>
+
+    <record id="project_sharing_recurring_tasks_form_action_view" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="project.project_sharing_project_task_recurring_tasks_action"/>
         <field name="view_id" ref="project.project_sharing_project_task_view_form"/>
     </record>
 </odoo>

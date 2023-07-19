@@ -44,6 +44,12 @@ PROJECT_TASK_READABLE_FIELDS = {
     'dependent_tasks_count',
     'depend_on_ids',
     'depend_on_count',
+    'repeat_interval',
+    'repeat_unit',
+    'repeat_type',
+    'repeat_until',
+    'recurrence_id',
+    'recurring_count',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -252,18 +258,18 @@ class Task(models.Model):
     recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False)
-    repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', compute_sudo=True, readonly=False)
     repeat_unit = fields.Selection([
         ('day', 'Days'),
         ('week', 'Weeks'),
         ('month', 'Months'),
         ('year', 'Years'),
-    ], default='week', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    ], default='week', compute='_compute_repeat', compute_sudo=True, readonly=False)
     repeat_type = fields.Selection([
         ('forever', 'Forever'),
         ('until', 'Until'),
-    ], default="forever", string="Until", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
-    repeat_until = fields.Date(string="End Date", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    ], default="forever", string="Until", compute='_compute_repeat', compute_sudo=True, readonly=False)
+    repeat_until = fields.Date(string="End Date", compute='_compute_repeat', compute_sudo=True, readonly=False)
 
     # Account analytic
     analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null', compute='_compute_analytic_account_id', store=True, readonly=False,
@@ -1705,6 +1711,27 @@ class Task(models.Model):
             'view_mode': 'tree,form,kanban,calendar,pivot,graph,activity',
             'context': {'create': False},
             'domain': [('recurrence_id', 'in', self.recurrence_id.ids)],
+        }
+
+    def action_project_sharing_recurring_tasks(self):
+        self.ensure_one()
+        recurrent_tasks = self.env['project.task'].search([('recurrence_id', 'in', self.recurrence_id.ids)])
+        # If all the recurrent tasks are in the same project, open the list view in sharing mode.
+        if recurrent_tasks.project_id == self.project_id:
+            action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_recurring_tasks_action')
+            action.update({
+                'context': {'default_project_id': self.project_id.id},
+                'domain': [
+                    ('project_id', '=', self.project_id.id),
+                    ('recurrence_id', 'in', self.recurrence_id.ids)
+                ]
+            })
+            return action
+        # If at least one recurrent task belong to another project, open the portal page
+        return {
+            'name': 'Portal Recurrent Tasks',
+            'type': 'ir.actions.act_url',
+            'url':  f'/my/projects/{self.project_id.id}/task/{self.id}/recurrent_tasks',
         }
 
     def action_open_ratings(self):
