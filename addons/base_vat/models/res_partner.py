@@ -135,7 +135,7 @@ class ResPartner(models.Model):
             # TIMEOUT or SERVER_BUSY. There is no way we can validate the input
             # with VIES if any of these arise, including the first one (it means invalid
             # country code or empty VAT number), so we return True and ignore the result.
-            _logger.exception("Failed VIES VAT check.")
+            _logger.warning("Failed VIES VAT check.")
             return True
 
     @api.model
