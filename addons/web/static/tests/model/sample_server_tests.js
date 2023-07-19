@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { SampleServer } from "@web/views/sample_server";
+import { SampleServer } from "@web/model/sample_server";
 
 const {
     MAIN_RECORDSET_SIZE,
@@ -300,8 +300,8 @@ QUnit.module(
 
             const server = new DeterministicSampleServer("hobbit", fields.hobbit);
             const existingGroups = [
-                { value: "gardener", profession_count: 0 }, // fake group
-                { value: "adventurer", profession_count: 0 }, // fake group
+                { profession: "gardener", count: 0 }, // fake group
+                { profession: "adventurer", count: 0 }, // fake group
             ];
             server.setExistingGroups(existingGroups);
 
@@ -316,7 +316,7 @@ QUnit.module(
             assert.strictEqual(result.groups.length, 2);
 
             assert.deepEqual(
-                result.groups.map((g) => g.value),
+                result.groups.map((g) => g.profession),
                 ["gardener", "adventurer"]
             );
 
@@ -332,9 +332,9 @@ QUnit.module(
 
             const server = new DeterministicSampleServer("hobbit", fields.hobbit);
             const existingGroups = [
-                { value: "gardener", profession_count: 0 }, // fake group
-                { value: "brewer", profession_count: 0 }, // fake group
-                { value: "adventurer", profession_count: 0 }, // fake group
+                { profession: "gardener", count: 0 }, // fake group
+                { profession: "brewer", count: 0 }, // fake group
+                { profession: "adventurer", count: 0 }, // fake group
             ];
             server.setExistingGroups(existingGroups);
 
@@ -349,7 +349,7 @@ QUnit.module(
             assert.strictEqual(result.groups.length, 3);
 
             assert.deepEqual(
-                result.groups.map((g) => g.value),
+                result.groups.map((g) => g.profession),
                 ["gardener", "brewer", "adventurer"]
             );
 

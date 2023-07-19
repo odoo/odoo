@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Layout } from "@web/search/layout";
-import { useModel } from "@web/views/model";
+import { useModel } from "@web/model/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
 import { SearchBar } from "@web/search/search_bar/search_bar";

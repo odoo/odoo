@@ -12,7 +12,7 @@ import {
 } from "@web/core/l10n/dates";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { intersection } from "@web/core/utils/arrays";
+import { intersection, unique } from "@web/core/utils/arrays";
 import { deepCopy, pick } from "@web/core/utils/objects";
 import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { patchWithCleanup } from "./utils";
@@ -599,24 +599,41 @@ export class MockServer {
      * @param {Object} values: an object representing a record
      * @returns {Object}
      */
-    convertToOnChange(modelName, values) {
+    convertToOnChange(modelName, values, specification) {
         Object.entries(values).forEach(([fname, val]) => {
             const field = this.models[modelName].fields[fname];
             if (field.type === "many2one" && typeof val === "number") {
-                const m2oRecord = this.models[field.relation].records.find((r) => r.id === val);
-                values[fname] = [val, m2oRecord.display_name];
+                values[fname] = this.mockWebRead(field.relation, [[val]], {
+                    specification: specification[fname].fields || {},
+                })[0];
             } else if (field.type === "one2many" || field.type === "many2many") {
-                // TESTS ONLY
-                // one2many_ids = [1,2,3] is a simpler way to express it than orm commands
-                const isCommandList = Array.isArray(val) && Array.isArray(val[0]);
-                if (!isCommandList) {
-                    values[fname] = [[6, false, val]];
-                } else {
-                    val.forEach((cmd) => {
-                        if (cmd[0] === 0 || cmd[0] === 1) {
-                            cmd[2] = this.convertToOnChange(field.relation, cmd[2]);
-                        }
+                val.forEach((cmd) => {
+                    switch (cmd[0]) {
+                        case 0: // CREATE
+                        case 1: // UPDATE
+                            cmd[2] = this.convertToOnChange(
+                                field.relation,
+                                cmd[2],
+                                specification[fname].fields || {}
+                            );
+                            break;
+                        case 4: // LINK_TO
+                            cmd[2] = this.mockWebRead(field.relation, [[cmd[1]]], {
+                                specification: specification[fname].fields || {},
+                            })[0];
+                    }
+                });
+            } else if (field.type === "reference") {
+                if (val) {
+                    const [model, i] = val.split(",");
+                    const id = parseInt(i, 10);
+                    const result = this.mockWebRead(model, [[id]], {
+                        specification: specification[fname].fields || {},
                     });
+                    values[fname] = {
+                        ...result[0],
+                        id: { id, model },
+                    };
                 }
             }
         });
@@ -672,7 +689,7 @@ export class MockServer {
                 return this.mockNameCreate(args.model, args.args[0], args.kwargs);
             case "name_search":
                 return this.mockNameSearch(args.model, args.args, args.kwargs);
-            case "onchange":
+            case "onchange2":
                 return this.mockOnchange(args.model, args.args, args.kwargs);
             case "read":
                 return this.mockRead(args.model, args.args);
@@ -688,12 +705,16 @@ export class MockServer {
                 return this.mockSearchRead(args.model, args.args, args.kwargs);
             case "unlink":
                 return this.mockUnlink(args.model, args.args);
+            case "web_read":
+                return this.mockWebRead(args.model, args.args, args.kwargs);
             case "web_search_read":
                 return this.mockWebSearchRead(args.model, args.args, args.kwargs);
             case "read_group":
                 return this.mockReadGroup(args.model, args.kwargs);
             case "web_read_group":
                 return this.mockWebReadGroup(args.model, args.kwargs);
+            case "unity_web_search_read":
+                return this.mockWebSearchReadUnity(args.model, args.args, args.kwargs);
             case "read_progress_bar":
                 return this.mockReadProgressBar(args.model, args.kwargs);
             case "write":
@@ -768,7 +789,12 @@ export class MockServer {
             const field = model.fields[fieldName];
             const key = "default_" + fieldName;
             if (kwargs.context && key in kwargs.context) {
-                result[fieldName] = kwargs.context[key];
+                if (field.type === "one2many" || field.type === "many2many") {
+                    const ids = kwargs.context[key] || [];
+                    result[fieldName] = ids.map((id) => [4, id]);
+                } else {
+                    result[fieldName] = kwargs.context[key];
+                }
                 continue;
             }
             if ("default" in field) {
@@ -839,6 +865,7 @@ export class MockServer {
                 modelFields[modelName] = modelFields[modelName] || new Set();
                 fields.forEach((field) => modelFields[modelName].add(field));
             });
+            delete views[viewType].models;
         });
 
         // For each model, fetch the information of the fields used in the views only
@@ -899,50 +926,50 @@ export class MockServer {
     }
 
     mockOnchange(modelName, args, kwargs) {
-        const currentData = args[1];
-        const onChangeSpec = args[3];
+        const resId = args[0][0];
+        const changes = args[1];
+        const specification = args[3];
         let fields = args[2] ? (Array.isArray(args[2]) ? args[2] : [args[2]]) : [];
+
         const onchanges = this.models[modelName].onchanges || {};
         const firstOnChange = !fields.length;
-        const onchangeVals = {};
-        let defaultVals = undefined;
-        const nullValues = {};
-        if (firstOnChange) {
-            const fieldsFromView = Object.keys(onChangeSpec).reduce((acc, fname) => {
-                fname = fname.split(".", 1)[0];
-                if (!acc.includes(fname)) {
-                    acc.push(fname);
-                }
-                return acc;
-            }, []);
-            const defaultingFields = fieldsFromView.filter((fname) => !(fname in currentData));
-            defaultVals = this.mockDefaultGet(modelName, [defaultingFields], kwargs);
+        const fieldsFromView = Object.keys(specification);
+
+        let serverValues = {};
+        const onchangeValues = {};
+        if (resId) {
+            serverValues = this.mockRead(modelName, [args[0], fieldsFromView], kwargs)[0];
+        } else if (firstOnChange) {
             // It is the new semantics: no field in arguments means we are in
             // a default_get + onchange situation
             fields = fieldsFromView;
             fields
-                .filter((fName) => !Object.keys(defaultVals).includes(fName) && fName !== "id")
+                .filter((fName) => !Object.keys(serverValues).includes(fName) && fName !== "id")
                 .forEach((fName) => {
-                    nullValues[fName] = false;
+                    onchangeValues[fName] = false;
                 });
+            const defaultValues = this.mockDefaultGet(modelName, [fieldsFromView], kwargs);
+            Object.assign(onchangeValues, defaultValues);
         }
-        Object.assign(currentData, defaultVals);
         fields.forEach((field) => {
             if (field in onchanges) {
-                const changes = Object.assign({}, nullValues, currentData);
-                onchanges[field](changes);
-                Object.entries(changes).forEach(([key, value]) => {
-                    if (currentData[key] !== value) {
-                        onchangeVals[key] = value;
-                    }
-                });
+                const target = Object.assign({}, serverValues, onchangeValues, changes);
+                const handler = {
+                    set(_, key, val) {
+                        if (target[key] !== val) {
+                            onchangeValues[key] = val;
+                            target[key] = val;
+                        }
+                        return true;
+                    },
+                };
+                onchanges[field](new Proxy(target, handler));
             }
         });
-        const value = this.convertToOnChange(
-            modelName,
-            Object.assign(nullValues, defaultVals, onchangeVals)
-        );
-        return { value };
+
+        return {
+            value: this.convertToOnChange(modelName, onchangeValues, specification),
+        };
     }
 
     mockRead(modelName, args) {
@@ -1953,6 +1980,19 @@ export class MockServer {
         return result.records;
     }
 
+    mockWebRead(modelName, args, kwargs) {
+        const ids = args[0];
+        let fieldNames = Object.keys(kwargs.specification);
+        if (!fieldNames.length) {
+            fieldNames = ["id"];
+        }
+        const records = this.mockRead(modelName, [ids, fieldNames], {
+            context: kwargs.context,
+        });
+        this._unityReadRecords(modelName, kwargs.specification, records);
+        return records;
+    }
+
     mockWebSearchRead(modelName, args, kwargs) {
         const result = this.mockSearchReadController({
             model: modelName,
@@ -1967,6 +2007,17 @@ export class MockServer {
         if (countLimit) {
             result.length = Math.min(result.length, countLimit);
         }
+        return result;
+    }
+
+    mockWebSearchReadUnity(modelName, args, kwargs) {
+        let fieldNames = Object.keys(kwargs.specification);
+        if (!fieldNames.length) {
+            fieldNames = ["id"];
+        }
+        const _kwargs = { ...kwargs, fields: fieldNames };
+        const result = this.mockWebSearchRead(modelName, [], _kwargs);
+        this._unityReadRecords(modelName, kwargs.specification, result.records);
         return result;
     }
 
@@ -2422,6 +2473,74 @@ export class MockServer {
                     record[fieldName] = [];
                 } else {
                     record[fieldName] = false;
+                }
+            }
+        }
+    }
+
+    _unityReadRecords(modelName, spec, records) {
+        for (const fieldName in spec) {
+            const field = this.models[modelName].fields[fieldName];
+            const relatedFields = spec[fieldName].fields;
+            switch (field.type) {
+                case "reference": {
+                    for (const record of records) {
+                        if (!record[fieldName]) {
+                            continue;
+                        }
+                        const [model, i] = record[fieldName].split(",");
+                        const id = parseInt(i, 10);
+                        record[fieldName] = {};
+                        if (relatedFields && Object.keys(relatedFields).length) {
+                            const result = this.mockWebRead(model, [[id]], {
+                                specification: relatedFields,
+                                context: spec[fieldName].context,
+                            });
+                            record[fieldName] = result[0];
+                        }
+                        record[fieldName].id = { id, model };
+                    }
+                    break;
+                }
+                case "one2many":
+                case "many2many": {
+                    if (relatedFields && Object.keys(relatedFields).length) {
+                        const ids = unique(records.map((r) => r[fieldName]).flat());
+                        const result = this.mockWebRead(field.relation, [ids], {
+                            specification: relatedFields,
+                            context: spec[fieldName].context,
+                        });
+                        const allRelRecords = {};
+                        for (const relRecord of result) {
+                            allRelRecords[relRecord.id] = relRecord;
+                        }
+                        const { limit, order } = spec[fieldName];
+                        for (const record of records) {
+                            const relResIds = record[fieldName];
+                            let relRecords = relResIds.map((resId) => allRelRecords[resId]);
+                            if (order) {
+                                relRecords = this.sortByField(relRecords, field.relation, order);
+                            }
+                            if (limit) {
+                                relRecords = relRecords.map((r, i) => {
+                                    return i < limit ? r : { id: r.id };
+                                });
+                            }
+                            record[fieldName] = relRecords;
+                        }
+                    }
+                    break;
+                }
+                case "many2one": {
+                    for (const record of records) {
+                        if (record[fieldName] !== false) {
+                            const displayName = record[fieldName][1];
+                            record[fieldName] = { id: record[fieldName][0] };
+                            if (relatedFields && relatedFields.display_name) {
+                                record[fieldName].display_name = displayName;
+                            }
+                        }
+                    }
                 }
             }
         }

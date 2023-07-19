@@ -26,7 +26,7 @@ QUnit.module("ActionManager", (hooks) => {
         Boom.template = xml`<div><t t-esc="a.b.c"/></div>`;
         actionRegistry.add("Boom", Boom);
         const mockRPC = (route, args) => {
-            if (args.method === "web_search_read") {
+            if (args.method === "unity_web_search_read") {
                 assert.step("web_search_read");
             }
         };

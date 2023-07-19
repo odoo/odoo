@@ -2,8 +2,8 @@
 
 import { useBus, useService } from "@web/core/utils/hooks";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
-import { buildSampleORM } from "@web/views/sample_server";
 import { useSetupView } from "@web/views/view_hook";
+import { buildSampleORM } from "./sample_server";
 
 import { EventBus, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
 
@@ -20,7 +20,6 @@ export class Model {
         this.env = env;
         this.orm = services.orm;
         this.bus = new EventBus();
-        this.useSampleModel = false; // will be set to true by the "useModel" hook if necessary
         this.setup(params, services);
     }
 
@@ -81,12 +80,36 @@ function getSearchParams(props) {
  * @param {T} ModelClass
  * @param {Object} params
  * @param {Object} [options]
- * @param {Function} [options.onUpdate]
- * @param {Function} [options.onWillStart] callback executed before the first load of the model
- * @param {boolean} [options.ignoreUseSampleModel]
+ * @param {Function} [options.beforeFirstLoad]
  * @returns {InstanceType<T>}
  */
 export function useModel(ModelClass, params, options = {}) {
+    const component = useComponent();
+    const services = {};
+    for (const key of ModelClass.services) {
+        services[key] = useService(key);
+    }
+    services.orm = services.orm || useService("orm");
+    const model = new ModelClass(component.env, params, services);
+    onWillStart(async () => {
+        await options.beforeFirstLoad?.();
+        return model.load(component.props);
+    });
+    onWillUpdateProps((nextProps) => model.load(nextProps));
+    return model;
+}
+
+/**
+ * @template {typeof Model} T
+ * @param {T} ModelClass
+ * @param {Object} params
+ * @param {Object} [options]
+ * @param {Function} [options.onUpdate]
+ * @param {Function} [options.onWillStart]
+ * @param {Function} [options.onWillStartAfterLoad]
+ * @returns {InstanceType<T>}
+ */
+export function useModelWithSampleData(ModelClass, params, options = {}) {
     const component = useComponent();
     if (!(ModelClass.prototype instanceof Model)) {
         throw new Error(`the model class should extend Model`);
@@ -98,6 +121,7 @@ export function useModel(ModelClass, params, options = {}) {
     services.orm = services.orm || useService("orm");
 
     const model = new ModelClass(component.env, params, services);
+
     useBus(
         model.bus,
         "update",
@@ -108,33 +132,31 @@ export function useModel(ModelClass, params, options = {}) {
     );
 
     const globalState = component.props.globalState || {};
+    const localState = component.props.state || {};
     let useSampleModel = Boolean(
         "useSampleModel" in globalState
             ? globalState.useSampleModel
             : component.props.useSampleModel
     );
-    model.useSampleModel = !options.ignoreUseSampleModel ? useSampleModel : false;
+    model.useSampleModel = useSampleModel;
     const orm = model.orm;
-    let sampleORM = globalState.sampleORM;
+    let sampleORM = localState.sampleORM;
     const user = useService("user");
     let started = false;
+
     async function load(props) {
         const searchParams = getSearchParams(props);
         await model.load(searchParams);
-        if (!options.ignoreUseSampleModel) {
-            if (useSampleModel && !model.hasData()) {
-                sampleORM =
-                    sampleORM ||
-                    buildSampleORM(component.props.resModel, component.props.fields, user);
-                sampleORM.setGroups(model.getGroups());
-                // Load data with sampleORM then restore real ORM.
-                model.orm = sampleORM;
-                await model.load(searchParams);
-                model.orm = orm;
-            } else {
-                useSampleModel = false;
-                model.useSampleModel = useSampleModel;
-            }
+        if (useSampleModel && !model.hasData()) {
+            sampleORM =
+                sampleORM || buildSampleORM(component.props.resModel, component.props.fields, user);
+            // Load data with sampleORM then restore real ORM.
+            model.orm = sampleORM;
+            await model.load(searchParams);
+            model.orm = orm;
+        } else {
+            useSampleModel = false;
+            model.useSampleModel = useSampleModel;
         }
         if (started) {
             model.notify();
@@ -151,15 +173,16 @@ export function useModel(ModelClass, params, options = {}) {
         started = true;
     });
     onWillUpdateProps((nextProps) => {
-        if (!options.ignoreUseSampleModel) {
-            useSampleModel = false;
-        }
+        useSampleModel = false;
         load(nextProps);
     });
 
     useSetupView({
         getGlobalState() {
-            return { sampleORM, useSampleModel };
+            return { useSampleModel };
+        },
+        getLocalState: () => {
+            return { sampleORM };
         },
     });
 

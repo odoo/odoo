@@ -113,7 +113,11 @@ export function useInputField(params) {
      * If it is not such a case, we update the field with the new value.
      */
     useEffect(() => {
-        if (inputRef.el && !isDirty && !component.props.record.isInvalid(component.props.name)) {
+        if (
+            inputRef.el &&
+            !isDirty &&
+            !component.props.record.isFieldInvalid(component.props.name)
+        ) {
             inputRef.el.value = params.getValue();
             lastSetValue = inputRef.el.value;
         }
@@ -154,10 +158,9 @@ export function useInputField(params) {
             }
 
             if ((val || false) !== (component.props.record.data[component.props.name] || false)) {
-                const nextValue = inputRef.el.value;
+                lastSetValue = inputRef.el.value;
                 await component.props.record.update({ [component.props.name]: val });
                 component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
-                lastSetValue = nextValue;
             }
         }
     }

@@ -271,7 +271,6 @@ export const many2ManyTagsField = {
         },
     ],
     supportedTypes: ["many2many"],
-    isSet: (value) => value.count > 0,
     relatedFields: ({ options }) => {
         const relatedFields = [{ name: "display_name", type: "char" }];
         if (options.color_field) {

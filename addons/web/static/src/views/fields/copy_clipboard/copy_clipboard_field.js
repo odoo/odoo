@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
+import { evalDomain } from "@web/core/domain";
 import { _lt } from "@web/core/l10n/translation";
 import { evaluateExpr } from "@web/core/py_js/py";
-import { evalDomain } from "@web/views/utils";
 import { registry } from "@web/core/registry";
 import { omit } from "@web/core/utils/objects";
 

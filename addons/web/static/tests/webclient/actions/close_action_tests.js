@@ -203,8 +203,8 @@ QUnit.module("ActionManager", (hooks) => {
         });
 
         const readOnFirstRecordDef = testUtils.makeTestPromise();
-        const mockRPC = (route, args) => {
-            if (args.method === "read" && args.args[0][0] === 1) {
+        const mockRPC = (route, { method, args, kwargs }) => {
+            if (method === "web_read" && args[0][0] === 1) {
                 return readOnFirstRecordDef;
             }
         };

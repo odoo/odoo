@@ -18,7 +18,7 @@ export function useTranslationDialog() {
     const addDialog = useOwnedDialogs();
 
     async function openTranslationDialog({ record, fieldName }) {
-        const saved = await record.save({ stayInEdition: true });
+        const saved = await record.save({ force: true });
         if (!saved) {
             return;
         }

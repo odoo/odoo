@@ -33,7 +33,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/run",
             "/web/action/load",
             "get_views",
-            "web_search_read",
+            "unity_web_search_read",
         ]);
     });
 
@@ -63,7 +63,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "onchange",
+            "onchange2",
             "/web/action/load",
             "/web/action/run",
             "close handler",

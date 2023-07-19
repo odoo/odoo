@@ -293,7 +293,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps([
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/call_kw/partner/read",
+            "/web/dataset/call_kw/partner/web_read",
         ]);
     });
 
@@ -524,7 +524,11 @@ QUnit.module("Fields", (hooks) => {
 
             await editInput(target, ".o_progressbar_value .o_input", "trente sept virgule neuf");
             await clickSave(target);
-            assert.containsOnce(target, ".o_form_dirty", "The form has not been saved");
+            assert.containsOnce(
+                target,
+                ".o_form_status_indicator span.text-danger",
+                "The form has not been saved"
+            );
             assert.strictEqual(
                 target.querySelector(".o_form_button_save").disabled,
                 true,

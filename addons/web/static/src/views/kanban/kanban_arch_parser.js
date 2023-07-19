@@ -1,15 +1,10 @@
 /** @odoo-module **/
 
 import { extractAttributes, XMLParser } from "@web/core/utils/xml";
+import { stringToOrderBy } from "@web/search/utils/order_by";
 import { Field } from "@web/views/fields/field";
 import { Widget } from "@web/views/widgets/widget";
-import {
-    addFieldDependencies,
-    archParseBoolean,
-    getActiveActions,
-    processButton,
-    stringToOrderBy,
-} from "@web/views/utils";
+import { archParseBoolean, getActiveActions, processButton } from "@web/views/utils";
 
 /**
  * NOTE ON 't-name="kanban-box"':
@@ -61,10 +56,9 @@ export class KanbanArchParser extends XMLParser {
         const type = xmlDoc.getAttribute("type");
         const openAction = action && type ? { action, type } : null;
         const templateDocs = {};
-        const activeFields = {};
         let headerButtons = [];
         const creates = [];
-        let buttonId = 0;
+        let button_id = 0;
         // Root level of the template
         this.visitXML(xmlDoc, (node) => {
             if (node.hasAttribute("t-name")) {
@@ -77,7 +71,7 @@ export class KanbanArchParser extends XMLParser {
                     .map((node) => ({
                         ...processButton(node),
                         type: "button",
-                        id: buttonId++,
+                        id: button_id++,
                     }))
                     .filter((button) => button.modifiers.invisible !== true);
                 return false;
@@ -121,17 +115,15 @@ export class KanbanArchParser extends XMLParser {
                 if (fieldInfo.options.group_by_tooltip) {
                     tooltipInfo[name] = fieldInfo.options.group_by_tooltip;
                 }
-                if (fieldInfo.widget === "handle") {
+                if (fieldInfo.isHandle) {
                     handleField = name;
                 }
-                addFieldDependencies(fieldInfo, activeFields, models[modelName]);
             }
             if (node.tagName === "widget") {
                 const widgetInfo = Widget.parseWidgetNode(node);
                 const widgetId = `widget_${++widgetNextId}`;
                 widgetNodes[widgetId] = widgetInfo;
                 node.setAttribute("widget_id", widgetId);
-                addFieldDependencies(widgetInfo, activeFields, models[modelName]);
             }
 
             // Keep track of last update so images can be reloaded when they may have changed.
@@ -171,25 +163,9 @@ export class KanbanArchParser extends XMLParser {
             defaultOrder = stringToOrderBy(handleField);
         }
 
-        for (const fieldNode of Object.values(fieldNodes)) {
-            const fieldName = fieldNode.name;
-            if (activeFields[fieldName]) {
-                const { alwaysInvisible } = fieldNode;
-                activeFields[fieldName] = {
-                    ...fieldNode,
-                    // a field can only be considered to be always invisible
-                    // if all its nodes are always invisible
-                    alwaysInvisible: activeFields[fieldName].alwaysInvisible && alwaysInvisible,
-                };
-            } else {
-                activeFields[fieldName] = fieldNode;
-            }
-        }
-
         return {
             arch,
             activeActions,
-            activeFields,
             className,
             creates,
             defaultGroupBy,

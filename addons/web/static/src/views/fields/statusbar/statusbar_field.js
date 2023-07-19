@@ -1,15 +1,16 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
+import { Component } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
+import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
 import { escape, sprintf } from "@web/core/utils/strings";
-import { Domain } from "@web/core/domain";
-import { _lt } from "@web/core/l10n/translation";
+import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
-import { Component } from "@odoo/owl";
 
 export class StatusBarField extends Component {
     static template = "web.StatusBarField";
@@ -25,6 +26,8 @@ export class StatusBarField extends Component {
         isDisabled: { type: Boolean, optional: true },
         visibleSelection: { type: Array, optional: true },
         withCommand: { type: Boolean, optional: true },
+        foldField: { type: String, optional: true },
+        domain: { type: typeof Domain, optional: true },
     };
     static defaultProps = {
         visibleSelection: [],
@@ -90,6 +93,25 @@ export class StatusBarField extends Component {
                 }
             );
         }
+
+        if (this.type === "many2one") {
+            this.specialData = useSpecialData((orm, props) => {
+                const { foldField, name: fieldName, record } = props;
+                const { relation } = record.fields[fieldName];
+                const fieldNames = ["display_name"];
+                if (foldField) {
+                    fieldNames.push(foldField);
+                }
+                const value = props.record.data[fieldName];
+                let domain = props.domain;
+                if (domain.length && value) {
+                    domain = Domain.or([[["id", "=", value[0]]], domain]).toList(
+                        props.record.evalContext
+                    );
+                }
+                return orm.searchRead(relation, domain, fieldNames);
+            });
+        }
     }
 
     get currentName() {
@@ -114,7 +136,7 @@ export class StatusBarField extends Component {
     get options() {
         switch (this.type) {
             case "many2one":
-                return this.props.record.preloadedData[this.props.name];
+                return this.specialData.data;
             case "selection":
                 return this.props.record.fields[this.props.name].selection;
             default:
@@ -147,7 +169,7 @@ export class StatusBarField extends Component {
             return {
                 id: i.id,
                 name: i.display_name,
-                isFolded: i.fold,
+                isFolded: i[this.props.foldField],
             };
         });
         return items.map((item) => ({
@@ -234,40 +256,16 @@ export const statusBarField = {
     ],
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.model.env.isSmall && !record.data[fieldName],
-    legacySpecialData: "_fetchSpecialStatus",
-    extractProps: ({ attrs, options, viewType }) => ({
+    extractProps: ({ attrs, options, viewType }, dynamicInfo) => ({
         canCreate: Boolean(attrs.can_create),
         canWrite: Boolean(attrs.can_write),
         isDisabled: !options.clickable,
         visibleSelection:
             attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
         withCommand: viewType === "form",
+        foldField: options.fold_field,
+        domain: dynamicInfo.domain(),
     }),
 };
 
 registry.category("fields").add("statusbar", statusBarField);
-
-export async function preloadStatusBar(orm, record, fieldName, { domain }) {
-    const fieldNames = ["id", "display_name"];
-    const foldField = record.activeFields[fieldName].options.fold_field;
-    if (foldField) {
-        fieldNames.push(foldField);
-    }
-
-    if (domain.length && record.data[fieldName]) {
-        domain = Domain.or([[["id", "=", record.data[fieldName][0]]], domain]).toList(
-            record.evalContext
-        );
-    }
-
-    const relation = record.fields[fieldName].relation;
-    return await orm.searchRead(relation, domain, fieldNames);
-}
-
-registry.category("preloadedData").add("statusbar", {
-    loadOnTypes: ["many2one"],
-    extraMemoizationKey: (record, fieldName) => {
-        return record.data[fieldName];
-    },
-    preload: preloadStatusBar,
-});
