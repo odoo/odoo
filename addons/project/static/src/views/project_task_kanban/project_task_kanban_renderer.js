@@ -12,32 +12,12 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
 
     }
 
-    get canMoveRecords() {
-        let canMoveRecords = super.canMoveRecords;
-        if (!canMoveRecords && this.canResequenceRecords && this.props.list.isGroupedByPersonalStages) {
-            const { groupByField } = this.props.list;
-            const { modifiers } = groupByField;
-            canMoveRecords = !(modifiers && modifiers.readonly);
-        }
-        return canMoveRecords;
-    }
-
-    get canResequenceGroups() {
-        let canResequenceGroups = super.canResequenceGroups;
-        if (!canResequenceGroups && this.props.list.isGroupedByPersonalStages) {
-            const { modifiers } = this.props.list.groupByField;
-            const { groupsDraggable } = this.props.archInfo;
-            canResequenceGroups = groupsDraggable && !(modifiers && modifiers.readonly);
-        }
-        return canResequenceGroups;
-    }
-
     canCreateGroup() {
-        return (super.canCreateGroup() && this.isProjectTasksContext() && this.props.list.isGroupedByStage) || this.props.list.isGroupedByPersonalStages;
+        return super.canCreateGroup() && (this.isProjectTasksContext() == this.props.list.isGroupedByStage);// || this.props.list.isGroupedByPersonalStages;--> why is it needed ???
     }
 
     isProjectTasksContext() {
-        return this.props.list.context.active_model === "project.project" && this.props.list.context.default_project_id;
+        return this.props.list.context.active_model === "project.project" && !!this.props.list.context.default_project_id;
     }
 }
 

@@ -25,9 +25,15 @@
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="mail_template_id" context="{'default_model': 'project.task'}"/>
-                                <field name="rating_template_id" groups="project.group_project_rating" context="{'default_model': 'project.task'}"/>
-                                <div class="alert alert-warning" role="alert" colspan='2' attrs="{'invisible': ['|', ('rating_template_id','=', False), ('disabled_rating_warning', '=', False)]}" groups="project.group_project_rating">
+                                <field name="user_id" invisible="1"/>
+                                <field name="mail_template_id" context="{'default_model': 'project.task'}" attrs="{'invisible': [('user_id', '!=', False)]}"/>
+                                <field name="rating_template_id"
+                                       groups="project.group_project_rating"
+                                       context="{'default_model': 'project.task'}"
+                                       attrs="{'invisible': [('user_id', '!=', False)]}"/>
+                                <div class="alert alert-warning" role="alert" colspan='2'
+                                     attrs="{'invisible': ['|', '|', ('rating_template_id','=', False), ('disabled_rating_warning', '=', False), ('user_id', '!=', False)]}"
+                                     groups="project.group_project_rating">
                                     <i class="fa fa-warning" title="Customer disabled on projects"/><b> Customer Ratings</b> are disabled on the following project(s) : <br/>
                                     <field name="disabled_rating_warning" class="mb-0" />
                                 </div>
@@ -36,29 +42,8 @@
                             </group>
                             <group>
                                 <field name="fold"/>
-                                <field name="project_ids" required="1" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="personal_task_type_edit" model="ir.ui.view">
-            <field name="name">project.task.type.form</field>
-            <field name="model">project.task.type</field>
-            <field name="arch" type="xml">
-                <form string="Task Stage" delete="0">
-                    <field name="active" invisible="1" />
-                    <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
-                        <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="sequence" groups="base.group_no_one"/>
-                            </group>
-                            <group>
-                                <field name="fold"/>
+                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                                       attrs="{'invisible': [('user_id', '!=', False)], 'required': [('user_id', '=', False)]}"/>
                             </group>
                         </group>
                     </sheet>
