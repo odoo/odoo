@@ -35,7 +35,7 @@
                                 context="{'default_composition_mode':'comment', 'default_parent_id': mail_message_id_int}" states='received,sent,exception,cancel'/>
                         </div>
                         <group>
-                            <field name="email_from"/>
+                            <field name="email_from" required="1"/>
                             <field name="email_to"/>
                             <field name="recipient_ids" widget="many2many_tags"
                                 domain="[('active', '=', True)]"/>
