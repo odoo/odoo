@@ -175,7 +175,7 @@
                     <t t-set="bg_color" t-value="td_product['ribbon']['bg_color'] or ''"/>
                     <t t-set="text_color" t-value="td_product['ribbon']['text_color']"/>
                     <t t-set="bg_class" t-value="td_product['ribbon']['html_class']"/>
-                    <span t-attf-class="o_ribbon #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-out="td_product['ribbon']['html'] or ''"/>
+                    <span t-attf-class="text-truncate o_ribbon #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-out="td_product['ribbon']['html'] or ''"/>
                 </a>
             </div>
             <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
@@ -370,6 +370,7 @@
                                                         t-att-rowspan="td_product['y'] != 1 and td_product['y']"
                                                         t-attf-class="oe_product"
                                                         t-att-data-ribbon-id="td_product['ribbon'].id"
+                                                        t-attf-title="#{td_product['ribbon'].html}"
                                                         t-att-data-name="product_block_name">
                                                         <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
                                                             <t t-call="website_sale.products_item">
@@ -2372,6 +2373,11 @@
         <t t-set="product_carousel_block_name">Product Carousel</t>
         <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-bs-ride="carousel" data-bs-interval="0" t-att-data-name="product_carousel_block_name">
             <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1">
+                <span t-attf-class="text-truncate o_ribbon z-index-1 #{product.website_ribbon_id['html_class']}"
+                    t-attf-title="#{product.website_ribbon_id['html']}"
+                    t-attf-style="#{product.website_ribbon_id['text_color'] and ('color: %s; ' % product.website_ribbon_id['text_color'])}#{product.website_ribbon_id['bg_color'] and 'background-color:' + product.website_ribbon_id['bg_color']}"
+                    t-out="product.website_ribbon_id['html'] or ''"
+                    t-if="product.website_ribbon_id"/>
                 <div class="carousel-inner h-100">
                     <t t-set="image_classes" t-value="'d-flex align-items-center justify-content-center h-100'"/>
                     <t t-foreach="product_images" t-as="product_image">
@@ -2428,7 +2434,12 @@
     <!-- Product page images: Grid -->
     <template id="website_sale.shop_product_grid" name="Shop Product Grid">
         <div id="o-grid-product" class="o_wsale_product_page_grid mb-3" data-name="Product Grid" t-att-data-image_spacing="website.product_page_image_spacing" t-att-data-grid_columns="website.product_page_grid_columns">
-            <div class="container">
+            <div class="container position-relative overflow-hidden">
+                <span t-attf-class="text-truncate o_ribbon #{product.website_ribbon_id['html_class']}"
+                    t-attf-style="#{product.website_ribbon_id['text_color'] and ('color: %s; ' % product.website_ribbon_id['text_color'])}#{product.website_ribbon_id['bg_color'] and 'background-color:' + product.website_ribbon_id['bg_color']}"
+                    t-attf-title="#{product.website_ribbon_id['html']}"
+                    t-out="product.website_ribbon_id['html'] or ''"
+                    t-if="product.website_ribbon_id"/>
                 <!-- One row for every two images -->
                 <t t-set="image_classes" t-value="'w-100'"/>
                 <t t-set="col_classes" t-value="website._get_product_page_grid_image_classes()"/>
