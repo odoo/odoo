@@ -141,18 +141,18 @@
                                         </p>
                                     </div>
                                     <div attrs="{'invisible': ['|',
-                                        ('account_peppol_proxy_state', '!=', 'canceled'),
+                                        ('account_peppol_proxy_state', '!=', 'active'),
                                         ('account_peppol_migration_key', '=', False)]}">
-                                        Your migration key is
+                                        Your migration key is:
                                         <field name="account_peppol_migration_key"
                                                nolabel="1"
                                                attrs="{'readonly': [
-                                                        ('account_peppol_proxy_state', '=', 'canceled'),
+                                                        ('account_peppol_proxy_state', '=', 'active'),
                                                         ('account_peppol_migration_key', '!=', False)
                                                      ]}"/>
                                     </div>
                                     <div attrs="{'invisible': [('account_peppol_proxy_state', '!=', 'active')]}">
-                                        Your Peppol identification is
+                                        Your Peppol identification is:
                                         <field name="account_peppol_edi_identification"
                                                nolabel="1"/>
                                     </div>

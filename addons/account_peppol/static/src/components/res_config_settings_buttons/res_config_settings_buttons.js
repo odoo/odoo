@@ -26,6 +26,10 @@ class PeppolSettingsButtons extends Component {
         return this.props.record.data.account_peppol_proxy_state;
     }
 
+    get migrationPrepared() {
+        return this.props.record.data.account_peppol_proxy_state === "active" && Boolean(this.props.record.data.account_peppol_migration_key);
+    }
+
     async _callConfigMethod(methodName, save = false) {
         if (save) {
             await this._save();
