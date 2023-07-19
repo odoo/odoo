@@ -497,6 +497,9 @@ QUnit.module("Fields", (hooks) => {
                 if (method === "search_count") {
                     assert.step(JSON.stringify(args[0]));
                 }
+                if (route === "/web/domain/validate") {
+                    return true;
+                }
             },
         });
 
@@ -561,6 +564,9 @@ QUnit.module("Fields", (hooks) => {
                     }
                     if (method === "write") {
                         throw new Error("should not save");
+                    }
+                    if (route === "/web/domain/validate") {
+                        return false;
                     }
                 },
             });
@@ -734,6 +740,9 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, { method, args }) {
                 if (method === "write") {
                     assert.strictEqual(args[1].foo, rawDomain);
+                }
+                if (route === "/web/domain/validate") {
+                    return true;
                 }
             },
         });
@@ -942,4 +951,42 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".modal-footer .btn-primary");
         assert.containsOnce(target, ".modal", "the domain is invalid: the dialog is not closed");
     });
+
+    QUnit.test(
+        "quick check on save if domain has been edited via the  debug input",
+        async function (assert) {
+            patchWithCleanup(odoo, { debug: true });
+            serverData.models.partner.fields.display_name.default = "[['id', '=', False]]";
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="display_name" widget="domain" options="{'model': 'partner'}"/>
+                </form>`,
+                mockRPC: (route, args) => {
+                    if (route === "/web/domain/validate") {
+                        assert.step(route);
+                        assert.deepEqual(args, {
+                            domain: [["id", "!=", false]],
+                            model: "partner",
+                        });
+                        return true;
+                    }
+                },
+            });
+            assert.strictEqual(
+                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
+                "0 record(s)"
+            );
+            await editInput(target, ".o_domain_debug_input", "[['id', '!=', False]]");
+            await click(target, "button.o_form_button_save");
+            assert.verifySteps(["/web/domain/validate"]);
+            assert.strictEqual(
+                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
+                "6 record(s)"
+            );
+        }
+    );
 });

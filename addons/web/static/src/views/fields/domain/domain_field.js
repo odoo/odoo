@@ -27,6 +27,7 @@ export class DomainField extends Component {
     };
 
     setup() {
+        this.rpc = useService("rpc");
         this.orm = useService("orm");
         this.addDialog = useOwnedDialogs();
 
@@ -50,8 +51,12 @@ export class DomainField extends Component {
             if (this.isDebugEdited) {
                 const props = this.props;
                 ev.detail.proms.push(
-                    this.checkProps(props).then(() => {
-                        if (!this.state.isValid) {
+                    this.quickValidityCheck(props).then((isValid) => {
+                        if (isValid) {
+                            this.isDebugEdited = false; // will allow the count to be loaded if needed
+                        } else {
+                            this.state.isValid = false;
+                            this.state.recordCount = 0;
                             props.record.setInvalidField(props.name);
                         }
                     })
@@ -155,6 +160,18 @@ export class DomainField extends Component {
             isDebugMode: !!this.env.debug,
             onConfirm: this.update.bind(this),
         });
+    }
+
+    async quickValidityCheck(props) {
+        const resModel = this.getResModel(props);
+        if (!resModel) {
+            return false;
+        }
+        const domain = this.getEvaluatedDomain(props);
+        if (domain.isInvalid) {
+            return false;
+        }
+        return this.rpc("/web/domain/validate", { model: resModel, domain });
     }
 
     update(domain, isDebugEdited = false) {
