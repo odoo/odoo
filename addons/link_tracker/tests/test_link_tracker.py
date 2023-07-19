@@ -68,11 +68,19 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
             'title': 'Odoo',
             'campaign_id': campaign_id.id,
         })
+        self.assertEqual(link_1.label, False)
 
         with self.assertRaises(UserError):
             self.env['link.tracker'].create({
                 'url': 'https://odoo.com',
                 'title': 'Odoo',
+            })
+
+        with self.assertRaises(UserError):
+            self.env['link.tracker'].create({
+                'url': 'https://odoo.com',
+                'title': 'Odoo',
+                'label': '',
             })
 
         with self.assertRaises(UserError):
@@ -86,7 +94,8 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
                 'url': '2nd url',
                 'title': 'Odoo',
                 'campaign_id': campaign_id.id,
-                'medium_id': self.env['utm.medium'].search([], limit=1).id
+                'medium_id': self.env['utm.medium'].search([], limit=1).id,
+                'label': ''
             })
 
         # test in batch
@@ -96,6 +105,10 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
 
         with self.assertRaises(UserError):
             (link_1 | link_2).write({'medium_id': False})
+
+        # Adding a label on one makes them different
+        link_1.label = 'Something'
+        (link_1 | link_2).write({'medium_id': False})
 
     def test_no_external_tracking(self):
         self.env['ir.config_parameter'].set_param('link_tracker.no_external_tracking', '1')

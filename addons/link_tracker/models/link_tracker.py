@@ -2,16 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
-import requests
 import string
 
-from lxml import html
 from werkzeug import urls
 
 from odoo import tools, models, fields, api, _
+from odoo.addons.mail.tools import link_preview
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.addons.mail.tools import link_preview
+
+
+LINK_TRACKER_UNIQUE_FIELDS = ('url', 'campaign_id', 'medium_id', 'source_id', 'label')
 
 
 class LinkTracker(models.Model):
@@ -25,7 +26,7 @@ class LinkTracker(models.Model):
     _name = "link.tracker"
     _rec_name = "short_url"
     _description = "Link Tracker"
-    _order="count DESC"
+    _order = "count DESC"
     _inherit = ["utm.mixin"]
 
     # URL info
@@ -116,9 +117,14 @@ class LinkTracker(models.Model):
             return preview['og_title']
         return url
 
-    @api.constrains('url', 'campaign_id', 'medium_id', 'source_id')
+    @api.constrains(*LINK_TRACKER_UNIQUE_FIELDS)
     def _check_unicity(self):
         """Check that the link trackers are unique."""
+        def _format_value(tracker, field_name):
+            if field_name == 'label' and not tracker[field_name]:
+                return False
+            return tracker[field_name]
+
         # build a query to fetch all needed link trackers at once
         search_query = expression.OR([
             expression.AND([
@@ -126,28 +132,27 @@ class LinkTracker(models.Model):
                 [('campaign_id', '=', tracker.campaign_id.id)],
                 [('medium_id', '=', tracker.medium_id.id)],
                 [('source_id', '=', tracker.source_id.id)],
+                [('label', '=', tracker.label) if tracker.label else ('label', 'in', (False, ''))],
             ])
             for tracker in self
         ])
 
-        # Can not be implemented with a SQL constraint because we want to care about null values.
-        all_link_trackers = self.search(search_query)
-
-        # check for unicity
-        for tracker in self:
-            if all_link_trackers.filtered(
-                lambda l: l.url == tracker.url
-                and l.campaign_id == tracker.campaign_id
-                and l.medium_id == tracker.medium_id
-                and l.source_id == tracker.source_id
-            ) != tracker:
-                raise UserError(_(
-                    'Link Tracker values (URL, campaign, medium and source) must be unique (%s, %s, %s, %s).',
-                    tracker.url,
-                    tracker.campaign_id.name,
-                    tracker.medium_id.name,
-                    tracker.source_id.name,
-                ))
+        # Can not be implemented with a SQL constraint because we care about null values.
+        potential_duplicates = self.search(search_query)
+        duplicates = self.browse()
+        seen = set()
+        for tracker in potential_duplicates:
+            unique_fields = tuple(_format_value(tracker, field_name) for field_name in LINK_TRACKER_UNIQUE_FIELDS)
+            if unique_fields in seen or seen.add(unique_fields):
+                duplicates += tracker
+        if duplicates:
+            error_lines = '\n- '.join(
+                str((tracker.url, tracker.campaign_id.name, tracker.medium_id.name, tracker.source_id.name, tracker.label or '""'))
+                for tracker in duplicates
+            )
+            raise UserError(
+                _('Combinations of Link Tracker values (URL, campaign, medium, source, and label) must be unique.\n'
+                  'The following combinations are already used: \n- %(error_lines)s', error_lines=error_lines))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -192,7 +197,7 @@ class LinkTracker(models.Model):
         search_domain = [
             (fname, '=', value)
             for fname, value in vals.items()
-            if fname in ['url', 'campaign_id', 'medium_id', 'source_id']
+            if fname in {*LINK_TRACKER_UNIQUE_FIELDS}
         ]
         result = self.search(search_domain, limit=1)
 
