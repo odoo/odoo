@@ -1440,6 +1440,11 @@ QUnit.module("Search", (hooks) => {
                 search_default_filter: true,
                 search_default_bool: true,
             },
+            mockRPC(route) {
+                if (route === "/web/domain/validate") {
+                    return true;
+                }
+            },
         });
         assert.deepEqual(getFacetTexts(target), ["Filter", "Bool"]);
         assert.containsN(target, ".o_searchview_facet .o_searchview_facet_label", 2);
@@ -1497,6 +1502,11 @@ QUnit.module("Search", (hooks) => {
                 context: {
                     search_default_filter: true,
                 },
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
             });
             assert.deepEqual(getFacetTexts(target), ["Filter"]);
             assert.deepEqual(getContext(controlPanel).specialKey, "abc");
@@ -1533,6 +1543,11 @@ QUnit.module("Search", (hooks) => {
                 </search>
             `,
             irFilters,
+            mockRPC(route) {
+                if (route === "/web/domain/validate") {
+                    return true;
+                }
+            },
         });
         assert.deepEqual(getFacetTexts(target), ["My favorite"]);
         assert.containsOnce(
@@ -1577,6 +1592,11 @@ QUnit.module("Search", (hooks) => {
             `,
             context: {
                 search_default_birthday: true,
+            },
+            mockRPC(route) {
+                if (route === "/web/domain/validate") {
+                    return true;
+                }
             },
         });
         assert.deepEqual(getFacetTexts(target), ["Birthday: April 2023"]);
@@ -1632,6 +1652,11 @@ QUnit.module("Search", (hooks) => {
             `,
             context: {
                 search_default_foo: "abc",
+            },
+            mockRPC(route) {
+                if (route === "/web/domain/validate") {
+                    return true;
+                }
             },
         });
         assert.deepEqual(getFacetTexts(target), ["Foo\nabc"]);
