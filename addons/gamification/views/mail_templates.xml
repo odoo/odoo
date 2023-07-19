@@ -8,7 +8,7 @@
             <field name="email_to"></field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="body_html" type="html">
-<div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+<div style="color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
 <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
     <tbody>
         <tr>
@@ -38,7 +38,7 @@
                 </p>
             </td>
         </tr>
-        % if user.signature
+        % if user.signature and not user.has_group('base.group_portal'):
         <tr>
             <td style="padding:15px 20px 10px 20px;">
                 ${user.signature | safe}
