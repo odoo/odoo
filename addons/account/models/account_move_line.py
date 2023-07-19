@@ -62,6 +62,11 @@ class AccountMoveLine(models.Model):
         copy=False,
         group_operator='min',
     )
+    invoice_date = fields.Date(
+        related='move_id.invoice_date', store=True,
+        copy=False,
+        group_operator='min',
+    )
     ref = fields.Char(
         related='move_id.ref', store=True,
         copy=False,
