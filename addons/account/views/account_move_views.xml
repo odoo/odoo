@@ -166,6 +166,7 @@
                 <tree string="Journal Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <field name="move_id" invisible="1"/>
                     <field name="date" readonly="1"/>
+                    <field name="invoice_date" string="Invoice Date" optional="hide"/>
                     <field name="company_id" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="journal_id" readonly="1" options='{"no_open":True}' optional="hide"/>
@@ -312,6 +313,7 @@
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="date"/>
+                    <field name="invoice_date"/>
                     <field name="account_id"/>
                     <field name="account_type"/>
                     <field name="partner_id"/>
@@ -342,6 +344,7 @@
                     <filter string="P&amp;L Accounts" domain="[('account_id.internal_group', 'in', ('income', 'expense'))]" help="From P&amp;L accounts" name="pl_accounts"/>
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
+                    <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
                     <separator/>
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
@@ -352,6 +355,7 @@
                         <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                        <filter string="Invoice Date" name="groupby_invoice_date" domain="[]" context="{'group_by': 'invoice_date'}"/>
                         <filter string="Taxes" name="group_by_taxes" domain="[]" context="{'group_by': 'tax_ids'}"/>
                         <filter string="Tax Grid" name="group_by_tax_tags" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
                         <filter string="Matching #" name="group_by_matching" domain="[]" context="{'group_by': 'full_reconcile_id'}"/>
@@ -373,6 +377,7 @@
                     <field name="company_currency_id" invisible="1"/>
                     <field name="made_sequence_hole" invisible="1"/>
                     <field name="date"/>
+                    <field name="invoice_date" string="Invoice Date" optional="hide"/>
                     <field name="name" decoration-danger="made_sequence_hole"/>
                     <field name="partner_id" optional="show"/>
                     <field name="ref" optional="show"/>
@@ -1293,6 +1298,7 @@
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="date"/>
+                    <field name="invoice_date"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <filter string="Unposted" name="unposted" domain="[('state', '=', 'draft')]" help="Unposted Journal Entries"/>
@@ -1309,12 +1315,14 @@
                     <filter string="Miscellaneous" name="misc_filter" domain="[('journal_id.type', '=', 'general')]" context="{'default_journal_type': 'general'}"/>
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
+                    <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
                     <separator/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Date" name="by_date" domain="[]" context="{'group_by': 'date'}" help="Journal Entries by Date"/>
+                        <filter string="Invoice Date" name="by_invoice_date" domain="[]" context="{'group_by': 'invoice_date'}"/>
                         <filter string="Company" name="by_company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
