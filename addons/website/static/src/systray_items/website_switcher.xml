@@ -11,12 +11,17 @@
                 <i class="fa fa-globe"/>
             </div>
         </t>
+        <t t-set="tooltipValue">This website does not have a domain configured.</t>
         <t t-foreach="getElements()" t-as="element" t-key="element_index">
             <DropdownItem
-                t-esc="element.name"
                 onSelected="element.callback"
                 class="element.class"
-            />
+                dataset="!element.domain ? {'tooltip': tooltipValue, 'tooltipPosition': 'left'} : undefined">
+                <t t-if="!element.domain">
+                    <span class="fa fa-warning me-2 text-warning"/>
+                </t>
+                <t t-out="element.name"/>
+            </DropdownItem>
         </t>
     </Dropdown>
 </t>
