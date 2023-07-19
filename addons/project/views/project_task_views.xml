@@ -292,7 +292,8 @@
                             <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
                         <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
-                            invisible="not id or subtask_count == 0" context="{'default_user_ids': user_ids, 'default_project_id': project_id, 'default_milestone_id': milestone_id}">
+                            invisible="not id or subtask_count == 0"
+                            context="{'default_user_ids': user_ids, 'default_project_id': project_id, 'default_milestone_id': milestone_id, 'subtask_action': True}">
                             <div class="o_field_widget o_stat_info">
                                 <div class="d-flex align-items-baseline gap-1">
                                     <span class="o_stat_value order-1">
