@@ -143,6 +143,7 @@ class PaymentTransaction(models.Model):
             'currency': self.currency_id.name.lower(),
             'description': self.reference,
             'capture_method': 'manual' if self.provider_id.capture_manually else 'automatic',
+            'automatic_payment_methods[enabled]': True,
         }
         if self.operation in ['online_token', 'offline']:
             if not self.token_id.stripe_payment_method:  # Pre-SCA token, migrate it.
@@ -154,12 +155,8 @@ class PaymentTransaction(models.Model):
                 'off_session': True,
                 'payment_method': self.token_id.stripe_payment_method,
                 'mandate': self.token_id.stripe_mandate or None,
-                'payment_method_types[]': ['card', 'sepa_debit'],  # The only possible tokens PMTs.
             })
         else:
-            payment_intent_payload.update({
-                'automatic_payment_methods[enabled]': True,
-            })
             if self.tokenize:
                 customer = self._stripe_create_customer()
                 payment_intent_payload.update(
@@ -435,7 +432,8 @@ class PaymentTransaction(models.Model):
             customer_id = notification_data['payment_intent']['customer']
         else:  # 'validation'
             customer_id = notification_data['setup_intent']['customer']
-        if not payment_method:  # Another payment method (e.g., SEPA) might have been generated.
+        # Another payment method (e.g., SEPA) might have been generated.
+        if not payment_method[payment_method['type']]:
             payment_methods = self.provider_id._stripe_make_request(
                 f'customers/{customer_id}/payment_methods', method='GET'
             )
