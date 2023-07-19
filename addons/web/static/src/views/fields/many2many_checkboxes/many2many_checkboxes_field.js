@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
-import { Component } from "@odoo/owl";
+import { Component, onWillUnmount } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useBus } from "@web/core/utils/hooks";
+import { debounce } from "@web/core/utils/timing";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -20,6 +22,14 @@ export class Many2ManyCheckboxesField extends Component {
             const { relation } = props.record.fields[props.name];
             return orm.call(relation, "name_search", ["", props.domain]);
         });
+        // these two sets track pending changes in the relation, and allow us to
+        // batch consecutive changes into a single replaceWith, thus saving
+        // unnecessary potential intermediate onchanges
+        this.idsToAdd = new Set();
+        this.idsToRemove = new Set();
+        this.debouncedCommitChanges = debounce(this.commitChanges.bind(this), 500);
+        useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", this.commitChanges.bind(this));
+        onWillUnmount(this.commitChanges.bind(this));
     }
 
     get items() {
@@ -30,20 +40,37 @@ export class Many2ManyCheckboxesField extends Component {
         return this.props.record.data[this.props.name].currentIds.includes(item[0]);
     }
 
+    commitChanges() {
+        if (this.idsToAdd.size === 0 && this.idsToRemove.size === 0) {
+            return;
+        }
+        const ids = new Set(this.props.record.data[this.props.name].currentIds);
+        for (const el of this.idsToAdd) {
+            ids.add(el);
+        }
+        for (const el of this.idsToRemove) {
+            ids.delete(el);
+        }
+        this.idsToAdd.clear();
+        this.idsToRemove.clear();
+        return this.props.record.data[this.props.name].replaceWith([...ids]);
+    }
+
     onChange(resId, checked) {
         if (checked) {
-            this.props.record.data[this.props.name].replaceWith([
-                ...this.props.record.data[this.props.name].currentIds,
-                resId,
-            ]);
-        } else {
-            const currentIds = [...this.props.record.data[this.props.name].currentIds];
-            const index = currentIds.indexOf(resId);
-            if (index > -1) {
-                currentIds.splice(index, 1);
+            if (this.idsToRemove.has(resId)) {
+                this.idsToRemove.delete(resId);
+            } else {
+                this.idsToAdd.add(resId);
             }
-            this.props.record.data[this.props.name].replaceWith(currentIds);
+        } else {
+            if (this.idsToAdd.has(resId)) {
+                this.idsToAdd.delete(resId);
+            } else {
+                this.idsToRemove.add(resId);
+            }
         }
+        this.debouncedCommitChanges();
     }
 }
 

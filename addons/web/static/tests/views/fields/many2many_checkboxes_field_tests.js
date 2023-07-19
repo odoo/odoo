@@ -1,11 +1,14 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import {
     click,
     clickSave,
     editInput,
     getFixture,
     getNodesTextContent,
+    nextTick,
+    patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
@@ -457,5 +460,132 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickSave(target);
+    });
+
+    QUnit.test("Many2ManyCheckBoxesField batches successive changes", async function (assert) {
+        serverData.models.partner.records[0].timmy = [];
+        serverData.models.partner.onchanges = {
+            timmy: () => {},
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="timmy" widget="many2many_checkboxes" />
+                    </group>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsN(target, "div.o_field_widget div.form-check", 2);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_field_widget .form-check-label")),
+            ["gold", "silver"]
+        );
+        assert.containsNone(target, "div.o_field_widget div.form-check input:checked");
+
+        let mockSetTimeout;
+        patchWithCleanup(browser, { setTimeout: (fn) => (mockSetTimeout = fn) });
+        await click(target.querySelectorAll("div.o_field_widget div.form-check input")[0]);
+        await click(target.querySelectorAll("div.o_field_widget div.form-check input")[1]);
+        // checkboxes are updated directly
+        assert.containsN(target, "div.o_field_widget div.form-check input:checked", 2);
+        // but no onchanges has been fired yet
+        assert.verifySteps(["get_views", "web_read", "name_search"]);
+        // execute the setTimeout callback
+        mockSetTimeout();
+        await nextTick();
+        assert.verifySteps(["onchange2"]);
+    });
+
+    QUnit.test("Many2ManyCheckBoxesField sends batched changes on save", async function (assert) {
+        serverData.models.partner.records[0].timmy = [];
+        serverData.models.partner.onchanges = {
+            timmy: () => {},
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="timmy" widget="many2many_checkboxes" />
+                    </group>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsN(target, "div.o_field_widget div.form-check", 2);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_field_widget .form-check-label")),
+            ["gold", "silver"]
+        );
+        assert.containsNone(target, "div.o_field_widget div.form-check input:checked");
+
+        patchWithCleanup(browser, { setTimeout: () => {} }); // never call it
+        await click(target.querySelectorAll("div.o_field_widget div.form-check input")[0]);
+        await click(target.querySelectorAll("div.o_field_widget div.form-check input")[1]);
+        // checkboxes are updated directly
+        assert.containsN(target, "div.o_field_widget div.form-check input:checked", 2);
+        // but no onchanges has been fired yet
+        assert.verifySteps(["get_views", "web_read", "name_search"]);
+        // save
+        await clickSave(target);
+        assert.verifySteps(["onchange2", "write", "web_read"]);
+    });
+
+    QUnit.test("Many2ManyCheckBoxesField in a notebook tab", async function (assert) {
+        serverData.models.partner.records[0].timmy = [];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <notebook>
+                        <page string="Page 1">
+                            <field name="timmy" widget="many2many_checkboxes" />
+                        </page>
+                        <page string="Page 2">
+                            <field name="int_field" />
+                        </page>
+                    </notebook>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsOnce(target, "div.o_field_widget[name=timmy]");
+        assert.containsN(target, "div.o_field_widget[name=timmy] div.form-check", 2);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_field_widget .form-check-label")),
+            ["gold", "silver"]
+        );
+        assert.containsNone(target, "div.o_field_widget[name=timmy] div.form-check input:checked");
+
+        patchWithCleanup(browser, { setTimeout: () => {} }); // never call it
+        await click(target.querySelectorAll("div.o_field_widget div.form-check input")[0]);
+        await click(target.querySelectorAll("div.o_field_widget div.form-check input")[1]);
+        // checkboxes are updated directly
+        assert.containsN(target, "div.o_field_widget div.form-check input:checked", 2);
+        // go to the other tab
+        await click(target.querySelectorAll(".o_notebook .nav-link")[1]);
+        assert.containsNone(target, "div.o_field_widget[name=timmy]");
+        assert.containsOnce(target, "div.o_field_widget[name=int_field]");
+        // save
+        await clickSave(target);
+        assert.verifySteps(["get_views", "web_read", "name_search", "write", "web_read"]);
     });
 });
