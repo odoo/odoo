@@ -2014,10 +2014,10 @@ class IrModelData(models.Model):
         Return (id, res_model, res_id) or raise ValueError if not found
         """
         module, name = xmlid.split('.', 1)
-        query = "SELECT id, model, res_id FROM ir_model_data WHERE module=%s AND name=%s"
+        query = "SELECT model, res_id FROM ir_model_data WHERE module=%s AND name=%s"
         self.env.cr.execute(query, [module, name])
         result = self.env.cr.fetchone()
-        if not (result and result[2]):
+        if not (result and result[1]):
             raise ValueError('External ID not found in the system: %s' % xmlid)
         return result
 
@@ -2025,7 +2025,7 @@ class IrModelData(models.Model):
     def _xmlid_to_res_model_res_id(self, xmlid, raise_if_not_found=False):
         """ Return (res_model, res_id)"""
         try:
-            return self._xmlid_lookup(xmlid)[1:3]
+            return self._xmlid_lookup(xmlid)
         except ValueError:
             if raise_if_not_found:
                 raise
@@ -2040,7 +2040,7 @@ class IrModelData(models.Model):
     def check_object_reference(self, module, xml_id, raise_on_access_error=False):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached), if and only if the user has the necessary access rights
         to see that object, otherwise raise a ValueError if raise_on_access_error is True or returns a tuple (model found, False)"""
-        model, res_id = self._xmlid_lookup("%s.%s" % (module, xml_id))[1:3]
+        model, res_id = self._xmlid_lookup("%s.%s" % (module, xml_id))
         #search on id found in result to check if current user has read access right
         if self.env[model].search([('id', '=', res_id)]):
             return model, res_id
@@ -2114,6 +2114,7 @@ class IrModelData(models.Model):
             try:
                 self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
                 self.env.registry.clear_cache()
+
             except Exception:
                 _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
                 raise
