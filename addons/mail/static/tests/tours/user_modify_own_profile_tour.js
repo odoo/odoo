@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
  */
 registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own_profile_tour.js", {
     test: true,
-    steps: [
+    steps: () => [
         {
             content: "Open user account menu",
             trigger: ".o_user_menu button",

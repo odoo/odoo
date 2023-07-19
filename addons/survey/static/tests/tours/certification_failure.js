@@ -103,4 +103,4 @@ var lastSteps = [{
 registry.category("web_tour.tours").add('test_certification_failure', {
     test: true,
     url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac',
-    steps: [].concat(failSteps, retrySteps, failSteps, lastSteps) });
+    steps: () => [].concat(failSteps, retrySteps, failSteps, lastSteps) });

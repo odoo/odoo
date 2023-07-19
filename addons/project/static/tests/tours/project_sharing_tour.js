@@ -93,11 +93,17 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 registry.category("web_tour.tours").add('project_sharing_tour', {
     test: true,
     url: '/web',
-    steps: projectSharingSteps });
+    steps: () => {
+        return projectSharingSteps;
+    } 
+});
 
-// The begining of the project sharing feature
-const projectSharingStepIndex = projectSharingSteps.findIndex(s => s.id && s.id === 'project_sharing_feature');
-registry.category("web_tour.tours").add('portal_project_sharing_tour', {
+registry.category("web_tour.tours").add("portal_project_sharing_tour", {
     test: true,
-    url: '/my/projects',
-    steps: projectSharingSteps.slice(projectSharingStepIndex, projectSharingSteps.length) });
+    url: "/my/projects",
+    steps: () => {
+        // The begining of the project sharing feature
+        const projectSharingStepIndex = projectSharingSteps.findIndex(s => s?.id === 'project_sharing_feature');
+        return projectSharingSteps.slice(projectSharingStepIndex, projectSharingSteps.length);
+    }
+});

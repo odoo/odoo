@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("mail.load_message_order", {
     test: true,
-    steps: [
+    steps: () => [
         {
             trigger: ".o-mail-DiscussCategoryItem:contains(MyTestChannel)",
             run: "click",

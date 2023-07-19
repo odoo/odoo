@@ -6,7 +6,7 @@ import tourUtils from 'website_sale.tour_utils';
 registry.category("web_tour.tours").add('shop_sale_gift_card', {
     test: true,
     url: '/shop?search=Small%20Drawer',
-    steps: [
+    steps: () => [
         // Add a small drawer to the order (50$)
         {
             content: 'select Small Drawer',

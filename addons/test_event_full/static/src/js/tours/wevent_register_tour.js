@@ -156,7 +156,7 @@ var browseMeetSteps = [{
 registry.category("web_tour.tours").add('wevent_register', {
     url: '/event',
     test: true,
-    steps: [].concat(
+    steps: () => [].concat(
         initTourSteps('Online Reveal'),
         browseTalksSteps,
         discoverTalkSteps('What This Event Is All About', true, true),

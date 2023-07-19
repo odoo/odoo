@@ -5,7 +5,7 @@ import { registry } from '@web/core/registry';
 
 registry.category('web_tour.tours').add('invite_check_channel_preview_as_public', {
     test: true,
-    steps: [
+    steps: () => [
 {
     trigger: '.o_wslides_identification_banner',
     content: 'Check that there is an identification banner',

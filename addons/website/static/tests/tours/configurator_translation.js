@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('configurator_translation', {
     test: true,
     url: '/website/configurator',
-    steps: [
+    steps: () => [
     // Configurator first screen
     {
         content: "click next",

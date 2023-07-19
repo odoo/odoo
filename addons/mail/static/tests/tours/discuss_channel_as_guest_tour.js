@@ -6,7 +6,7 @@ registry
     .category("web_tour.tours")
     .add("mail/static/tests/tours/discuss_channel_as_guest_tour.js", {
         test: true,
-        steps: [
+        steps: () => [
             {
                 content: "Channel secret token has been hidden on welcome page",
                 trigger: ".o-mail-WelcomePage",

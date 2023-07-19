@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
     test: true,
     checkDelay: 250,
     url: '/shop?search=Customizable Desk',
-    steps: [
+    steps: () => [
         {
             content: "click on add to wishlist",
             trigger: '.o_add_wishlist',

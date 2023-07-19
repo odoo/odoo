@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('tour_shop_deleted_archived_variants', {
     test: true,
     url: '/shop?search=Test Product 2',
-    steps: [
+    steps: () => [
     {
         content: "check price on /shop (template price)",
         trigger: '.oe_product_cart .oe_currency_value:contains("1.00")',

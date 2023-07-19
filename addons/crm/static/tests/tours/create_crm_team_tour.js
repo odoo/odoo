@@ -6,7 +6,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 registry.category("web_tour.tours").add('create_crm_team_tour', {
     url: "/web",
     test: true,
-    steps: [
+    steps: () => [
     ...stepUtils.goToAppSteps('crm.crm_menu_root'),
 {
     trigger: 'button[data-menu-xmlid="crm.crm_menu_config"]',

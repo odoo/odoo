@@ -46,12 +46,12 @@ registry.category("web_tour.tours").add("website_livechat_chat_request_part_1_no
     test: true,
     url: "/",
     shadow_dom: ".o-livechat-root",
-    steps: [].concat(chatRequest),
+    steps: () => [].concat(chatRequest),
 });
 
 registry.category("web_tour.tours").add("website_livechat_chat_request_part_2_end_session_tour", {
     test: true,
     url: "/",
     shadow_dom: ".o-livechat-root",
-    steps: [].concat(endDiscussion, okRating, feedback, transcript, close),
+    steps: () => [].concat(endDiscussion, okRating, feedback, transcript, close),
 });

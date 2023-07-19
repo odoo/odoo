@@ -6,7 +6,7 @@
     registry.category("web_tour.tours").add('sql_constaint', {
         url: '/web?debug=1#action=test_new_api.action_categories',
         test: true,
-        steps: [
+        steps: () => [
     {
         content: "wait web client",
         trigger: '.o_breadcrumb:contains(Categories)',

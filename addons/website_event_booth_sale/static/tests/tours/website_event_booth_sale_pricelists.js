@@ -6,7 +6,7 @@ import { getPriceListChecksSteps } from 'website_event_booth_sale.tour.WebsiteEv
 registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_currencies', {
     test: true,
     url: '/event',
-    steps: [
+    steps: () => [
     // Init: registering the booth
     {
         content: 'Open "Test Event Booths" event',

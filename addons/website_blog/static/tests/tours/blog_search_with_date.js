@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("blog_autocomplete_with_date", {
     test: true,
     url: '/blog',
-    steps: [{
+    steps: () => [{
     content: "Select first month",
     trigger: 'select[name=archive]',
     run: 'text option 2',

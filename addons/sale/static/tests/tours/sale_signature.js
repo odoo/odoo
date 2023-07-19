@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('sale_signature', {
     test: true,
     url: '/my/quotes',
-    steps: [
+    steps: () => [
     {
         content: "open the test SO",
         trigger: 'a:containsExact("test SO")',

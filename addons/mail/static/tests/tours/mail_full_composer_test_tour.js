@@ -11,7 +11,7 @@ import { createFile, inputFiles } from "web.test_utils_file";
  */
 registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_composer_test_tour.js", {
     test: true,
-    steps: [
+    steps: () => [
         {
             content: "Click on Send Message",
             trigger: "button:contains(Send message)",

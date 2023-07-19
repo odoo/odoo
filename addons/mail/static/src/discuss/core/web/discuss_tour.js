@@ -8,7 +8,7 @@ import { Markup } from "web.utils";
 registry.category("web_tour.tours").add("mail_tour", {
     url: "/web#action=mail.action_discuss",
     sequence: 80,
-    steps: [
+    steps: () => [
         {
             trigger: ".o-mail-DiscussCategory-channel .o-mail-DiscussCategory-add",
             content: Markup(

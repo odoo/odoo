@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
     url: '/web',
     rainbowManMessage: _t("Congrats, we can see that your request has been validated."),
     test: false,
-    steps: [
+    steps: () => [
     stepUtils.showAppsMenuItem(),
     {
         trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',

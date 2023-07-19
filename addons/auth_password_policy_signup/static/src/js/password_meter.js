@@ -4,6 +4,7 @@ import { _t } from "web.core";
 import Widget from "web.Widget";
 import { computeScore } from "@auth_password_policy/password_policy";
 import { sprintf } from "@web/core/utils/strings";
+import { translationIsReady } from "@web/core/l10n/translation";
 
 export default Widget.extend({
     tagName: "meter",
@@ -21,6 +22,9 @@ export default Widget.extend({
         this._super(parent);
         this._required = required;
         this._recommended = recommended;
+    },
+    willStart() {
+        return translationIsReady
     },
     start() {
         var helpMessage = _t(

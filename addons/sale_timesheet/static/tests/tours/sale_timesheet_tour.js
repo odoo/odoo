@@ -7,7 +7,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 registry.category("web_tour.tours").add('sale_timesheet_tour', {
     test: true,
     url: '/web',
-    steps: [...stepUtils.goToAppSteps("sale.sale_menu_root", 'Go to the Sales App'),
+    steps: () => [...stepUtils.goToAppSteps("sale.sale_menu_root", 'Go to the Sales App'),
 {
     trigger: 'button.o_list_button_add',
     content: 'Click on CREATE button to create a quotation with service products.',

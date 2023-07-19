@@ -7,7 +7,7 @@ import wTourUtils from 'website.tour_utils';
 registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         test: true,
         url: '/my/orders',
-        steps: [
+        steps: () => [
         // Initial reorder, nothing in cart
         {
             content: 'Select first order',

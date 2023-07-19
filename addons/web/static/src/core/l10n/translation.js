@@ -1,7 +1,11 @@
 /** @odoo-module **/
 
-export const translatedTerms = {};
-
+import { Deferred } from "@web/core/utils/concurrency";
+export const translationLoaded = Symbol("translationLoaded");
+export const translatedTerms = {
+    [translationLoaded]: false,
+};
+export const translationIsReady = new Deferred();
 /**
  * Translate a term, or return the term if no translation can be found.
  *
@@ -14,16 +18,10 @@ export const translatedTerms = {};
  * @returns {string}
  */
 export function _t(term) {
-    return translatedTerms[term] || term;
-}
-
-class LazyTranslatedString extends String {
-    valueOf() {
-        const str = super.valueOf();
-        return _t(str);
-    }
-    toString() {
-        return this.valueOf();
+    if (translatedTerms[translationLoaded]) {
+        return translatedTerms[term] || term;
+    } else {
+        return new LazyTranslatedString(term);
     }
 }
 
@@ -37,8 +35,20 @@ class LazyTranslatedString extends String {
  * @param {string} term
  * @returns {LazyTranslatedString}
  */
-export function _lt(term) {
-    return new LazyTranslatedString(term);
+export const _lt = (term) => _t(term);
+
+class LazyTranslatedString extends String {
+    valueOf() {
+        const term = super.valueOf();
+        if (translatedTerms[translationLoaded]) {
+            return translatedTerms[term] || term;
+        } else {
+            throw new Error(`translation error`);
+        }
+    }
+    toString() {
+        return this.valueOf();
+    }
 }
 
 /*

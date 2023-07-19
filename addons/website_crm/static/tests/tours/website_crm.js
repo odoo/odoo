@@ -29,7 +29,7 @@
     registry.category("web_tour.tours").add('website_crm_tour', {
         test: true,
         url: '/contactus',
-        steps: [{
+        steps: () => [{
         content: "Complete name",
         trigger: "input[name=contact_name]",
         run: "text John Smith",
@@ -64,7 +64,7 @@
     registry.category("web_tour.tours").add('website_crm_catch_logged_partner_info_tour', {
         test: true,
         url: '/contactus',
-        steps: [{
+        steps: () => [{
         content: "Complete Subject",
         trigger: "input[name=name]",
         run: "text Useless subject"

@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('website_reset_password', {
     test: true,
-    steps: [
+    steps: () => [
     {
         content: "fill new password",
         trigger: '.oe_reset_password_form input[name="password"]',

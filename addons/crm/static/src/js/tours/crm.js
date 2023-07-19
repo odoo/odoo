@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     url: "/web",
     rainbowManMessage: _t("Congrats, best of luck catching such big fish! :)"),
     sequence: 10,
-    steps: [stepUtils.showAppsMenuItem(), {
+    steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: Markup(_t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.')),
     position: 'bottom',

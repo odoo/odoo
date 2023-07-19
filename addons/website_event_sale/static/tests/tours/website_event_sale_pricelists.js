@@ -6,7 +6,7 @@
     registry.category("web_tour.tours").add('event_sale_pricelists_different_currencies', {
         test: true,
         url: '/event',
-        steps: [
+        steps: () => [
         // Register for tickets
         {
             content: "Open the Pycon event",

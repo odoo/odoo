@@ -18,7 +18,7 @@ wTourUtils.registerWebsitePreviewTour("generic_website_editor", {
 // unknown reason.
 registry.category("web_tour.tours").add('specific_website_editor', {
     test: true,
-    steps: [
+    steps: () => [
     ...wTourUtils.clickOnEditAndWaitEditMode(),
 {
     trigger: 'iframe body[data-hello="world"]',

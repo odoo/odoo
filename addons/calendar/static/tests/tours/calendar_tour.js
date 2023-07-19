@@ -15,7 +15,7 @@
     registry.category("web_tour.tours").add('calendar_appointments_hour_tour', {
         url: '/web',
         test: true,
-        steps: [stepUtils.showAppsMenuItem(),
+        steps: () => [stepUtils.showAppsMenuItem(),
         {
             trigger: '.o_app[data-menu-xmlid="calendar.mail_menu_calendar"]',
             content: 'Open Calendar',

@@ -38,7 +38,7 @@
     registry.category("web_tour.tours").add('website_hr_recruitment_tour', {
         test: true,
         url: '/jobs',
-        steps: [
+        steps: () => [
         ...applyForAJob('Guru', {
             name: 'John Smith',
             email: 'john@smith.com',

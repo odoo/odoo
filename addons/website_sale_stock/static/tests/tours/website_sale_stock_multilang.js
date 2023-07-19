@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('website_sale_stock_multilang', {
     test: true,
     url: '/fr/shop?search=unavailable',
-    steps: [{
+    steps: () => [{
         content: "Open unavailable product page",
         trigger: 'a[content="unavailable_product"]',
     }, {

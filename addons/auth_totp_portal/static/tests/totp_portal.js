@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('totportal_tour_setup', {
     test: true,
     url: '/my/security',
-    steps: [{
+    steps: () => [{
     content: "Open totp wizard",
     trigger: 'button#auth_totp_portal_enable',
 }, {
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
 registry.category("web_tour.tours").add('totportal_login_enabled', {
     test: true,
     url: '/',
-    steps: [{
+    steps: () => [{
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)'
 }, {
@@ -101,7 +101,7 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
 registry.category("web_tour.tours").add('totportal_login_disabled', {
     test: true,
     url: '/',
-    steps: [{
+    steps: () => [{
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)'
 }, {

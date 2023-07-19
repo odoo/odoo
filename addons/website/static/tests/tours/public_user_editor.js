@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('public_user_editor', {
     test: true,
-    steps: [{
+    steps: () => [{
     trigger: '.note-editable',
     run: function () {}, // Simple check
 }]});

@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add("point_of_sale_tour", {
     url: "/web",
     rainbowMan: false,
     sequence: 45,
-    steps: [
+    steps: () => [
         stepUtils.showAppsMenuItem(),
         {
             trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"]',

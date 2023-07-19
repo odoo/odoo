@@ -7,7 +7,7 @@ import { boundariesIn, setSelection } from "@web_editor/js/editor/odoo-editor/sr
 registry.category("web_tour.tours").add('mailing_editor_theme', {
     test: true,
     url: '/web',
-    steps: [
+    steps: () => [
         stepUtils.showAppsMenuItem(),
         {
             content: "Select the 'Email Marketing' app.",

@@ -14,14 +14,14 @@ const requestChatSteps = [
 
 registry.category("web_tour.tours").add("im_livechat_request_chat", {
     test: true,
-    steps: requestChatSteps,
+    steps: () => requestChatSteps,
     shadow_dom: ".o-livechat-root",
 });
 
 registry.category("web_tour.tours").add("im_livechat_request_chat_and_send_message", {
     test: true,
     shadow_dom: ".o-livechat-root",
-    steps: [
+    steps: () => [
         ...requestChatSteps,
         {
             trigger: ".o-mail-Composer-input",

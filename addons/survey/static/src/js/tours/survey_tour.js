@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     url: "/web",
     rainbowManMessage: _t("Congratulations! You are now ready to collect feedback like a pro :-)"),
     sequence: 225,
-    steps: [
+    steps: () => [
     ...stepUtils.goToAppSteps('survey.menu_surveys', Markup(_t("Ready to change the way you <b>gather data</b>?"))),
 {
     trigger: '.btn-outline-primary.o_survey_load_sample',

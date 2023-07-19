@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add(
     {
         test: true,
         url: '/shop',
-        steps: [
+        steps: () => [
             {
                 content: "Check pricelist",
                 trigger: ".o_pricelist_dropdown .dropdown-toggle:not(:contains('User Pricelist'))",

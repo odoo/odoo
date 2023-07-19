@@ -5,7 +5,7 @@ import { createFile, inputFiles } from "web.test_utils_file";
 
 registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_tour.js", {
     test: true,
-    steps: [
+    steps: () => [
         {
             trigger: ".o-mail-DiscussPublic",
             extraTrigger: ".o-mail-Thread",

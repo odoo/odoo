@@ -16,7 +16,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('test_certification_success', {
     test: true,
     url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac',
-    steps: [{ // Page-1
+    steps: () => [{ // Page-1
         content: "Clicking on Start Certification",
         trigger: 'button.btn.btn-primary.btn-lg:contains("Start Certification")',
     }, { // Question: Do we sell Acoustic Bloc Screens?

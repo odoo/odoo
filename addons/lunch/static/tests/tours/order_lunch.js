@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('order_lunch_tour', {
     url: "/web",
     test: true,
-    steps: [{
+    steps: () => [{
     trigger: 'a[data-menu-xmlid="lunch.menu_lunch"]',
     content: _t("Start by accessing the lunch app."),
     position: 'bottom',

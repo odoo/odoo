@@ -30,7 +30,7 @@ function openProjectUpdateAndReturnToTasks(view, viewClass) {
 registry.category("web_tour.tours").add('project_update_tour', {
     test: true,
     url: '/web',
-    steps: [stepUtils.showAppsMenuItem(), {
+    steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
 }, {
     trigger: '.o-kanban-button-new',

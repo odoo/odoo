@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
     test: true,
-    steps: [
+    steps: () => [
         {
             trigger: "button:contains('Activities')",
         },

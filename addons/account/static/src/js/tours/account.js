@@ -11,7 +11,7 @@ var _t = core._t;
 registry.category("web_tour.tours").add('account_tour', {
     url: "/web",
     sequence: 60,
-    steps: [
+    steps: () => [
     ...stepUtils.goToAppSteps('account.menu_finance', _t('Send invoices to your customers in no time with the <b>Invoicing app</b>.')),
     {
         trigger: "a.o_onboarding_step_action[data-method=action_open_step_company_data]",

@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('conditional_visibility_2', {
     test: true,
     url: '/?utm_medium=Email',
-    steps: [{
+    steps: () => [{
     content: 'The content previously hidden should now be visible',
     trigger: 'body #wrap',
     run: function (actions) {

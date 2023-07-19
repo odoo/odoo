@@ -11,7 +11,7 @@ import PurchaseAdditionalTourSteps from "purchase.purchase_steps";
 registry.category("web_tour.tours").add('purchase_tour' , {
     url: "/web",
     sequence: 40,
-    steps: [stepUtils.showAppsMenuItem(), {
+    steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
     content: _t("Let's try the Purchase app to manage the flow from purchase to reception and invoice control."),
     position: 'right',

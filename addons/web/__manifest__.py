@@ -587,6 +587,7 @@ This module provides the core of the Odoo Web Client.
             ('after', 'web/static/src/owl2_compatibility/app.js', 'web/static/tests/owl2_compatibility_app.js'),
         ],
         'web.tests_assets': [
+            'web/static/tests/patch_translations.js',
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/legacy/helpers/**/*',

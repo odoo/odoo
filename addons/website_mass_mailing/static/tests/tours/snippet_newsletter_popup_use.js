@@ -20,7 +20,7 @@ function ensurePopupNotVisible() {
 registry.category("web_tour.tours").add('snippet_newsletter_popup_use', {
     test: true,
     url: '/',
-    steps: [
+    steps: () => [
     {
         content: "Check the modal is not yet opened and force it opened",
         trigger: 'body:has(.o_newsletter_popup)',

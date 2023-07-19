@@ -6,7 +6,7 @@ import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services
 import { getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { localizationService } from "@web/core/l10n/localization_service";
-import { translatedTerms, _lt } from "@web/core/l10n/translation";
+import { translatedTerms, translationLoaded, _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { session } from "@web/session";
@@ -67,16 +67,18 @@ QUnit.test("can translate a text node", async (assert) => {
 });
 
 QUnit.test("can lazy translate", async (assert) => {
+    // Can't use patchWithCleanup cause it doesn't support Symbol
+    translatedTerms[translationLoaded] = false;
     assert.expect(3);
-
     TestComponent.template = xml`<div><t t-esc="constructor.someLazyText" /></div>`;
-    TestComponent.someLazyText = _lt("Hello");
-    assert.strictEqual(TestComponent.someLazyText.toString(), "Hello");
-    assert.strictEqual(TestComponent.someLazyText.valueOf(), "Hello");
+    TestComponent.someLazyText = _t("Hello");
+    assert.throws(() => TestComponent.someLazyText.toString());
+    assert.throws(() => TestComponent.someLazyText.valueOf());
 
     serviceRegistry.add("localization", makeFakeLocalizationService());
     const env = await makeTestEnv();
     patch(translatedTerms, "add translations", terms);
+    translatedTerms[translationLoaded] = true;
     const target = getFixture();
     await mount(TestComponent, target, { env });
     assert.strictEqual(target.innerText, "Bonjour");

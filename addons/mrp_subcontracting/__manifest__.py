@@ -134,6 +134,7 @@
             'mrp_subcontracting/static/src/subcontracting_portal/*',
             'web/static/src/start.js',
             'web/static/src/legacy/legacy_setup.js',
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
         ],
     },
     'uninstall_hook': 'uninstall_hook',

@@ -12,7 +12,7 @@ function fail (errorMessage) {
 registry.category("web_tour.tours").add('autocomplete_tour', {
     test: true,
     url: '/shop', // /shop/address is redirected if no sales order
-    steps: [{
+    steps: () => [{
     content: "search test product",
     trigger: 'form input[name="search"]',
     run: "text A test product",

@@ -5,7 +5,7 @@ import { PosSelf } from "./tour_utils";
 
 registry.category("web_tour.tours").add("self_order_after_meal_product_tour", {
     test: true,
-    steps: [
+    steps: () => [
         // Verify if the self is open
         PosSelf.check.isNotNotification(),
         PosSelf.check.isNotPrimaryBtn("My Orders"),

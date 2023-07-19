@@ -6,7 +6,7 @@ import wsTourUtils from "website_sale.tour_utils";
 registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
         test: true,
         url: '/shop?search=Accoustic',
-        steps: [
+        steps: () => [
         {
             content: "select Small Cabinet",
             trigger: '.oe_product a:contains("Acoustic Bloc Screens")',

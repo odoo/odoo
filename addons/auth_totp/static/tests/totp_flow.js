@@ -76,7 +76,7 @@ function closeProfileDialog({content, totp_state}) {
 registry.category("web_tour.tours").add('totp_tour_setup', {
     test: true,
     url: '/web',
-    steps: [...openUserProfileAtSecurityTab(), {
+    steps: () => [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
     trigger: 'button[name=action_totp_enable_wizard]',
 }, {
@@ -121,7 +121,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 registry.category("web_tour.tours").add('totp_login_enabled', {
     test: true,
     url: '/',
-    steps: [{
+    steps: () => [{
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)'
 }, {
@@ -161,7 +161,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 registry.category("web_tour.tours").add('totp_login_device', {
     test: true,
     url: '/',
-    steps: [{
+    steps: () => [{
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)'
 }, {
@@ -242,7 +242,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 registry.category("web_tour.tours").add('totp_login_disabled', {
     test: true,
     url: '/',
-    steps: [{
+    steps: () => [{
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)'
 }, {
@@ -270,7 +270,7 @@ const columns = {};
 registry.category("web_tour.tours").add('totp_admin_disables', {
     test: true,
     url: '/web',
-    steps: [stepUtils.showAppsMenuItem(), {
+    steps: () => [stepUtils.showAppsMenuItem(), {
     content: 'Go to settings',
     trigger: '[data-menu-xmlid="base.menu_administration"]'
 }, {
