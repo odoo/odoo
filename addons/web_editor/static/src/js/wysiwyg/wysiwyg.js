@@ -1691,6 +1691,21 @@ const Wysiwyg = Widget.extend({
         if (color && (!ColorpickerWidget.isCSSColor(color) && !weUtils.isColorGradient(color))) {
             color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
         }
+        const selectedTds = this.odooEditor.document.querySelectorAll('td.o_selected_td');
+        const applyTransparency =
+            color.startsWith('#') && // Check for hex color.
+            !selectedTds.length && // Do not apply to table cells.
+            eventName === 'backColor' && // Only apply on bg color.
+            // Check if color is coming from theme-colors tab.
+            !this.colorpickers['backColor'].sections[
+                'theme-colors'
+            ].classList.contains('d-none');
+        // Apply default transparency to the selected common color to make
+        // text highlighting more usable between light and dark modes.
+        if (applyTransparency) {
+            const HEX_OPACITY = '99';
+            color = color.concat(HEX_OPACITY);
+        }
         let coloredElements = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
         // Some nodes returned by applyColor can be removed of the document by the sanitization in historyStep
         coloredElements = coloredElements.filter(element => this.odooEditor.document.contains(element));
