@@ -280,10 +280,10 @@ class AccountBankStatement(models.Model):
                 order='internal_index desc',
             )
         # single line edit
-        elif context_st_line_id and len(active_ids) <= 1:
+        elif context_st_line_id and active_ids and len(active_ids) <= 1:
             lines = self.env['account.bank.statement.line'].browse(context_st_line_id)
         # multi edit
-        elif context_st_line_id and len(active_ids) > 1:
+        elif context_st_line_id and active_ids and len(active_ids) > 1:
             lines = self.env['account.bank.statement.line'].browse(active_ids).sorted()
             if len(lines.journal_id) > 1:
                 raise UserError(_("A statement should only contain lines from the same journal."))
