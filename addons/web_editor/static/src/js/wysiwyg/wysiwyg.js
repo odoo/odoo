@@ -59,6 +59,21 @@ const parseHTML = OdooEditorLib.parseHTML;
 const closestBlock = OdooEditorLib.closestBlock;
 const getRangePosition = OdooEditorLib.getRangePosition;
 
+function getJqueryFromDocument(doc) {
+    if (doc.defaultView && doc.defaultView.$) {
+        return doc.defaultView.$;
+    } else {
+        const _jquery = window.$;
+        return (...args) => {
+            if (args.length <= 2 && typeof args[0] === "string") {
+                return _jquery(args[0], args[1] || doc);
+            } else {
+                return _jquery(...args)
+            }
+        }
+    }
+}
+
 var id = 0;
 const basicMediaSelector = 'img, .fa, .o_image, .media_iframe_video';
 // (see isImageSupportedForStyle).
@@ -2501,7 +2516,7 @@ export class Wysiwyg extends Component {
     _saveViewBlocks(context) {
         // TODO should be review to probably not search in the whole body,
         // iframe or not.
-        const $ = (this.$editable[0].ownerDocument.defaultView.$ || window.$);
+        const $ = getJqueryFromDocument(this.$editable[0].ownerDocument);
         const $allBlocks = $((this.options || {}).savableSelector).filter('.o_dirty');
 
         const $dirty = $('.o_dirty');
