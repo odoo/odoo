@@ -29,7 +29,7 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=16.0
-VERSION_IOTBOX=23.07
+VERSION_IOTBOX=23.09
 REPO=https://github.com/odoo/odoo.git
 
 if ! file_exists *raspios*.img ; then
@@ -136,10 +136,10 @@ mkdir -pv "${MOUNT_POINT}"/var/odoo
 echo "${VERSION_IOTBOX}" | tee "${MOUNT_POINT}"/var/odoo/iotbox_version "${MOUNT_POINT}"/home/pi/iotbox_version
 
 # get rid of the git clone
-rm -rfv "${CLONE_DIR}"
+rm -rf "${CLONE_DIR}"
 # and the ngrok usr/bin
-rm -rfv "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
-cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
+rm -rf "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
+cp -a "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
 
 find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
     DIR=$(dirname "${iotpatch}")
