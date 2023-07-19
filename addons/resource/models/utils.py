@@ -52,8 +52,8 @@ def _boundaries(intervals, opening, closing):
             yield (start, opening, recs)
             yield (stop, closing, recs)
 
-def filter_domain_leaf(domain, field_check, field_name_mapping=None):
-    """
+def filter_domain_leaf(domain, field_check, leaf_pre_transform=lambda leaf: leaf, leaf_post_transform=lambda leaf: leaf):
+    """ # TODO: DOC TO UPDATE !!!!
     filter_domain_lead only keep the leaves of a domain that verify a given check. Logical operators that involves
     a leaf that is undetermined (because it does not pass the check) are ignored.
 
@@ -71,8 +71,6 @@ def filter_domain_leaf(domain, field_check, field_name_mapping=None):
     returns: The filtered version of the domain
     """
     domain = normalize_domain(domain)
-    field_name_mapping = field_name_mapping or {}
-
     stack = [] # stack of elements (leaf or operator) to conserve (reversing it gives a domain)
     ignored_elems = [] # history of ignored elements in the domain (not added to the stack)
     # if the top of the stack ignored_elems is:
@@ -83,10 +81,9 @@ def filter_domain_leaf(domain, field_check, field_name_mapping=None):
     while domain:
         next_elem = domain.pop() # Browsing the domain backward simplifies the filtering
         if is_leaf(next_elem):
-            field_name, op, value = next_elem
-            field_name = field_name_mapping.get(field_name, field_name)
+            field_name, op, value = leaf_pre_transform(next_elem)
             if field_check(field_name):
-                stack.append((field_name, op, value))
+                stack.append(leaf_post_transform((field_name, op, value)))
                 ignored_elems.append(False)
             else:
                 ignored_elems.append(True)
@@ -108,6 +105,37 @@ def filter_domain_leaf(domain, field_check, field_name_mapping=None):
             else:
                 ignored_elems.append(False) # the AND/OR operation is replaced by one of its operand which cannot be ignored
     return list(reversed(stack))
+
+def project_domain_to_comodel(domain, source_model, dest_model_name, field_name_mapping=None):# use regex for pre/post_field_name_mapping ????
+    """
+    Ideally, would be in model.py to use dest_model_name as arg instead of passing the two ir.model records
+    keep only leaf related to field that are m2x to the comodel #TO DOCUMENT
+    other fields can be replaced by comodel field, e.g. date replaced by user_id.date in the field_name_mapping
+    """
+    field_name_mapping = field_name_mapping or {}
+    fields_to_keep = source_model.field_id.filtered_domain([('relation', '=', dest_model_name)]).mapped('name') # source model fields related to dest model
+
+    def complete_relational_field_name(leaf):
+        field_name, op, value = leaf
+        field_name = field_name_mapping.get(field_name, field_name)
+        if field_name not in fields_to_keep:
+            return (field_name, op, value)
+        elif len(field_name.split('.')) > 1:
+            return (field_name, op, value)
+        elif isinstance(value, str) or isinstance(value, (list, tuple)) and all(isinstance(item, str) for item in value):
+            return field_name + ".name", op, value
+        else:
+            return field_name + ".id", op, value
+
+    def adapt_field_name_to_comodel(leaf):
+        field_name, op, value = leaf
+        split_field_name = field_name.split('.') #TODO: better name ????
+        if split_field_name[0] in fields_to_keep and len(split_field_name) > 1:
+            return ('.'.join(split_field_name[1:]), op, value)
+        else:
+            return leaf
+
+    return filter_domain_leaf(domain, lambda f: f.split('.')[0] in fields_to_keep, complete_relational_field_name, adapt_field_name_to_comodel)
 
 class Intervals(object):
     """ Collection of ordered disjoint intervals with some associated records.
