@@ -23,6 +23,21 @@ class AccountEdiProxyClientUser(models.Model):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
+    def _make_request(self, url, params=False):
+        # extends account_edi_proxy_client to update peppol_proxy_state
+        # of archived users
+        try:
+            result = super()._make_request(url, params)
+        except AccountEdiProxyError as e:
+            if (
+                e.code == 'no_such_user'
+                and not self.active
+                and not self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+            ):
+                self.company_id.account_peppol_proxy_state = 'not_registered'
+            raise AccountEdiProxyError(e.code, e.message)
+        return result
+
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
         urls['peppol'] = {
