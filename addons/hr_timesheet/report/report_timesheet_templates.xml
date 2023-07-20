@@ -42,7 +42,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-end" t-attf-colspan="{{4 + show_project + show_task}}" colspan="6">
+                            <td class="text-end" colspan="100">
                                 <strong t-if="not is_uom_day">
                                     <span style="margin-right: 15px;">Total (Hours)</span>
                                     <t t-esc="sum(lines.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}">2 hours</t>
