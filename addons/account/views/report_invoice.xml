@@ -263,7 +263,8 @@
                                         Payment Communication: <span class="fw-bold" t-field="o.payment_reference">INV/2023/00001</span>
                                     </p>
                                 </div>
-                                <div t-if="not (o.display_qr_code and o.amount_residual > 0)" class="oe_structure"></div>
+                                <t t-set="show_qr" t-value="o.display_qr_code and o.amount_residual > 0"/>
+                                <div t-if="not show_qr" name="qr_code_placeholder" class="oe_structure"></div>
                                 <div id="qrcode" class="d-flex mb-3 avoid-page-break-inside" t-else="">
                                     <div class="qrcode me-3" id="qrcode_image">
                                         <t t-set="qr_code_url" t-value="o._generate_qr_code(silent_errors=True)"/>
