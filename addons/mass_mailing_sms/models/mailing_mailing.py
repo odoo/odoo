@@ -171,18 +171,12 @@ class Mailing(models.Model):
         partner_fields = []
         if issubclass(type(target), self.pool['mail.thread.phone']):
             phone_fields = ['phone_sanitized']
-        elif issubclass(type(target), self.pool['mail.thread']):
+        else:
             phone_fields = [
-                fname for fname in target._sms_get_number_fields()
+                fname for fname in target._phone_get_number_fields()
                 if fname in target._fields and target._fields[fname].store
             ]
-            partner_fields = target._sms_get_partner_fields()
-        else:
-            phone_fields = []
-            if 'mobile' in target._fields and target._fields['mobile'].store:
-                phone_fields.append('mobile')
-            if 'phone' in target._fields and target._fields['phone'].store:
-                phone_fields.append('phone')
+            partner_fields = target._mail_get_partner_fields()
         partner_field = next(
             (fname for fname in partner_fields if target._fields[fname].store and target._fields[fname].type == 'many2one'),
             False
