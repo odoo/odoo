@@ -206,7 +206,7 @@
                                 <t t-set="classes" t-value="'btn-outline-primary flex-grow-1'"/>
                             </t>
                             <t t-if="queue_type == 'close'" t-call="website_forum.link_button">
-                                <t t-set="url" t-valuef="#{ post_url }/delete'"/>
+                                <t t-set="url" t-valuef="#{ post_url }/delete"/>
                                 <t t-set="label">Delete</t>
                                 <t t-set="icon" t-value="'fa fa-trash'"/>
                                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
