@@ -4,7 +4,7 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 import '@website_slides/js/slides';
 import { _t } from "@web/legacy/js/services/core";
 
-var ShareMail = publicWidget.Widget.extend({
+export const ShareMail = publicWidget.Widget.extend({
     events: {
         'click button': '_sendMail',
         'keypress input': '_onKeypress',
@@ -160,3 +160,6 @@ publicWidget.registry.websiteSlidesEmbedShare = publicWidget.Widget.extend({
         })
     },
 });
+
+export const WebsiteSlidesShare = publicWidget.registry.websiteSlidesShare;
+export const WebsiteSlidesEmbedShare = publicWidget.registry.websiteSlidesEmbedShare;
