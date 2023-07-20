@@ -10,6 +10,7 @@
                     </a>
                     <t t-call="website_slides.slide_share_modal">
                         <t t-set="record" t-value="channel_id"/>
+                        <t t-set="email_sharing" t-value="channel_id.share_channel_template_id"/>
                     </t>
                 </t>
             </xpath>
