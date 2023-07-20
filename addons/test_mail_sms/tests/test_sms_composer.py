@@ -212,7 +212,7 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
             'phone_nbr': False,
             'mobile_nbr': False,
         })
-        default_field_name = self.env['mail.test.sms']._sms_get_number_fields()[0]
+        default_field_name = self.env['mail.test.sms']._phone_get_number_fields()[0]
 
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(

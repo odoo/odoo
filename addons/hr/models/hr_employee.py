@@ -529,6 +529,9 @@ class HrEmployeePrivate(models.Model):
     # Messaging
     # ---------------------------------------------------------
 
+    def _phone_get_number_fields(self):
+        return ['mobile_phone']
+
     def _message_log(self, **kwargs):
         return super(HrEmployeePrivate, self._post_author())._message_log(**kwargs)
 
@@ -536,8 +539,5 @@ class HrEmployeePrivate(models.Model):
     def message_post(self, **kwargs):
         return super(HrEmployeePrivate, self._post_author()).message_post(**kwargs)
 
-    def _sms_get_partner_fields(self):
+    def _mail_get_partner_fields(self, introspect_fields=False):
         return ['user_partner_id']
-
-    def _sms_get_number_fields(self):
-        return ['mobile_phone']
