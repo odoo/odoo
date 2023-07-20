@@ -49,19 +49,23 @@ class Project(models.Model):
             project.doc_count = docs_count.get(project.id, 0)
 
     def _compute_task_count(self):
-        task_count_per_project = {
-            project.id: count
-            for project, count in self.env['project.task'].with_context(
-                active_test=any(project.active for project in self)
-            )._read_group(
-                [('state', 'not in', list(CLOSED_STATES)), ('project_id', 'in', self.ids)],
-                ['project_id'],
-                ['__count'],
-            )
-        }
+        project_and_state_counts = self.env['project.task'].with_context(
+            active_test=any(project.active for project in self)
+        )._read_group(
+            [('project_id', 'in', self.ids)],
+            ['project_id', 'state'],
+            ['__count'],
+        )
+        task_counts_per_project_id = defaultdict(lambda: {
+            'open_task_count': 0,
+            'closed_task_count': 0,
+        })
+        for project, state, count in project_and_state_counts:
+            task_counts_per_project_id[project.id]['closed_task_count' if state in CLOSED_STATES else 'open_task_count'] += count
         for project in self:
-            task_count = task_count_per_project.get(project.id, 0)
-            project.task_count = task_count
+            open_task_count, closed_task_count = task_counts_per_project_id[project.id].values()
+            project.closed_task_count = closed_task_count
+            project.task_count = open_task_count + closed_task_count
 
     def _default_stage_id(self):
         # Since project stages are order by sequence first, this should fetch the one with the lowest sequence number.
@@ -125,6 +129,7 @@ class Project(models.Model):
         'resource.calendar', string='Working Time', compute='_compute_resource_calendar_id')
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
+    closed_task_count = fields.Integer(compute='_compute_task_count', string="Closed Task Count")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=[('state', 'not in', list(CLOSED_STATES))])
     color = fields.Integer(string='Color Index')
@@ -820,10 +825,23 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         self.ensure_one()
+        if self.task_count:
+            number = _lt(
+                "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)",
+                closed_task_count=self.closed_task_count,
+                task_count=self.task_count,
+                closed_rate=round(100 * self.closed_task_count / self.task_count),
+            )
+        else:
+            number = _lt(
+                "%(closed_task_count)s / %(task_count)s",
+                closed_task_count=self.closed_task_count,
+                task_count=self.task_count,
+            )
         buttons = [{
-            'icon': 'tasks',
+            'icon': 'check',
             'text': _lt('Tasks'),
-            'number': self.task_count,
+            'number': number,
             'action_type': 'object',
             'action': 'action_view_tasks',
             'show': True,

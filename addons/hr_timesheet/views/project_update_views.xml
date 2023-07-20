@@ -12,5 +12,18 @@
                 </xpath>
             </field>
         </record>
+        <record id="project_update_view_kanban_inherit" model="ir.ui.view">
+            <field name="name">project.update.view.kanban.inherit</field>
+            <field name="model">project.update</field>
+            <field name="inherit_id" ref="project.project_update_view_kanban"/>
+            <field name="arch" type="xml">
+                <b id="tasks_stats" position='after'>
+                    <field name="display_timesheet_stats" invisible="1"/>
+                    <div invisible="not display_timesheet_stats">
+                        <field name="timesheet_time"/><span invisible="not allocated_time"> / <field name="allocated_time"/></span> <field name="uom_id" no_open="1"/><span invisible="not allocated_time"> (<field name="timesheet_percentage"/>%)</span>
+                    </div>
+                </b>
+            </field>
+        </record>
     </data>
 </odoo>
