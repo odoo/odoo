@@ -7,10 +7,16 @@
                 <table class="table table-sm">
                     <thead>
                         <tr>
+                            <t t-set="timesheet_record_label" t-value="False"/>
+                            <t t-if="show_task">
+                                <t t-set="timesheet_record_label">Task</t>
+                            </t>
+                            <t t-elif="show_project">
+                                <t t-set="timesheet_record_label">Project</t>
+                            </t>
                             <th class="text-start align-middle"><span>Date</span></th>
                             <th class="text-start align-middle"><span>Employee</span></th>
-                            <th class="text-start align-middle" t-if="show_project"><span>Project</span></th>
-                            <th class="text-start align-middle" t-if="show_task"><span>Task</span></th>
+                            <th class="text-start align-middle" t-if="timesheet_record_label"><span t-out="timesheet_record_label"/></th>
                             <th class="text-start align-middle"><span>Description</span></th>
                             <th class="text-end">
                                 <span t-if="not is_uom_day">Hours Spent</span>
@@ -27,11 +33,14 @@
                                <span t-if="line.user_id.partner_id.name" t-field="line.user_id.partner_id.name">Audrey Peterson</span>
                                <span t-else="" t-field="line.employee_id">Audrey Peterson</span>
                             </td>
-                            <td t-if="show_project" class="align-middle">
-                                <span t-field="line.project_id.sudo().name">Research and Development</span>
-                            </td>
-                            <td t-if="show_task" class="align-middle">
-                                <span t-if="line.task_id" t-field="line.task_id.sudo().name">New Portal System</span>
+                            <t t-set="timesheet_record_info" t-value="False"/>
+                            <t t-if="show_project">
+                                <t t-set="timesheet_record_info" t-value="line.project_id.sudo().name"/>
+                                <t t-if="show_task and line.task_id" t-set="timesheet_record_info" t-value="'%s / %s' % (timesheet_record_info, line.task_id.sudo().name)"/>
+                            </t>
+                            <t t-elif="show_task" t-set="timesheet_record_info" t-value="line.task_id.sudo().name"/>
+                            <td t-if="timesheet_record_info" class="align-middle">
+                                <span t-out="timesheet_record_info">Research and Development/New Portal System</span>
                             </td>
                             <td class="align-middle">
                                 <span t-field="line.name" t-options="{'widget': 'text'}">Call client and discuss project</span>
