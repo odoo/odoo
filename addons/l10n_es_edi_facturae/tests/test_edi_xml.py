@@ -234,3 +234,20 @@ class TestEdiFacturaeXmls(AccountEdiTestCommon):
             with file_open("l10n_es_edi_facturae/tests/data/expected_refund_document.xml", "rt") as f:
                 expected_xml = lxml.etree.fromstring(f.read().encode())
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    def test_discount_100_percent(self):
+        """ Create an invoice with a 100% discount """
+        with freeze_time(self.frozen_today), \
+                patch(f"{self.certificate_module}.fields.datetime.now", lambda x=None: self.frozen_today), \
+                patch(f"{self.certificate_module}.sha1", lambda x: sha1()):
+            invoice = self.create_invoice(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[{'product_id': self.product_a.id, 'price_unit': 1000.0, 'discount': 100.0, 'quantity': 2}],
+            )
+            invoice.action_post()
+            wizard = self.create_send_and_print(invoice)
+            result = wizard.action_send_and_print()
+
+            self.assertEqual(result['type'], 'ir.actions.act_url')
+            self.assertEqual(invoice.invoice_line_ids[0].price_subtotal, 0.0)
