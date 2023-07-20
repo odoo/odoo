@@ -19,14 +19,14 @@ patch(Message.prototype, "mail/core/web", {
         this.action = useService("action");
         this.userService = useService("user");
     },
-    get authorText() {
-        return this.hasAuthorClickable ? _t("Open profile") : undefined;
+    getAuthorText() {
+        return this.hasAuthorClickable() ? _t("Open profile") : undefined;
     },
-    get hasAuthorClickable() {
+    hasAuthorClickable() {
         return this.message.author && !this.message.isSelfAuthored;
     },
     onClickAuthor(ev) {
-        if (this.hasAuthorClickable) {
+        if (this.hasAuthorClickable()) {
             markEventHandled(ev, "Message.ClickAuthor");
             this.messaging.openDocument({
                 model: "res.partner",
