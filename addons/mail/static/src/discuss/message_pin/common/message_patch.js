@@ -34,7 +34,7 @@ patch(Message.prototype, "discuss/message_pin/common", {
     get isAlignedRight() {
         return !this.env.pinnedPanel && this._super();
     },
-    get pinOptionText() {
+    getPinOptionText() {
         return this.messagePinService.getPinnedAt(this.message.id) ? _t("Unpin") : _t("Pin");
     },
     get shouldDisplayAuthorName() {
