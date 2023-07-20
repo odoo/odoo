@@ -10,7 +10,7 @@ from pytz import utc, timezone
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.misc import get_lang, format_date
 
@@ -42,8 +42,16 @@ class Event(models.Model):
     # description
     subtitle = fields.Char('Event Subtitle', translate=True)
     # registration
-    is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
+    is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating",
+                                      search="_search_is_participating")
     # website
+    is_visible_on_website = fields.Boolean(string="Visible On Website", compute='_compute_is_visible_on_website', search='_search_is_visible_on_website')
+    event_register_url = fields.Char('Event Registration Link', compute='_compute_event_register_url')
+    website_visibility = fields.Selection(
+        [('public', 'Public'), ('link', 'Via a Link'), ('logged_users', 'Logged Users')],
+        string="Website Visibility", required=True, default='public', tracking=True,
+        help="""Defines the Visibility of the Event on the Website and searches.\n
+            Note that the Event is however always available via its link.""")
     website_published = fields.Boolean(tracking=True)
     website_menu = fields.Boolean(
         string='Website Menu',
@@ -101,7 +109,25 @@ class Event(models.Model):
     specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
                                             domain=[('once_per_order', '=', False)])
 
+    @api.depends('registration_ids')
+    @api.depends_context('uid')
     def _compute_is_participating(self):
+        participating_events = self._fetch_is_participating_events()
+        participating_events.is_participating = True
+        (self - participating_events).is_participating = False
+
+    @api.model
+    def _search_is_participating(self, operator, value):
+        if operator not in ['=', '!=']:
+            raise NotImplementedError(_('This operator is not supported'))
+        if not isinstance(value, bool):
+            raise UserError(_('Value should be True or False (not %)', value))
+        check_is_participating = operator == '=' and value or operator == '!=' and not value
+
+        return [('id', 'in' if check_is_participating else 'not in', self._fetch_is_participating_events().ids)]
+
+    @api.model
+    def _fetch_is_participating_events(self):
         """Heuristic
 
           * public, no visitor: not participating as we have no information;
@@ -116,28 +142,62 @@ class Event(models.Model):
             registration;
         """
         current_visitor = self.env['website.visitor']._get_visitor_from_request()
-        base_domain = [('event_id', 'in', self.ids), ('state', 'in', ['open', 'done'])]
         if self.env.user._is_public() and not current_visitor:
-            events = self.env['event.event']
-        elif self.env.user._is_public():
-            events = self.env['event.registration'].sudo().search(
-                expression.AND([base_domain, [('visitor_id', '=', current_visitor.id)]])
-            ).event_id
-        else:
-            if current_visitor:
-                domain = [
-                    '|',
-                    ('partner_id', '=', self.env.user.partner_id.id),
-                    ('visitor_id', '=', current_visitor.id)
-                ]
-            else:
-                domain = [('partner_id', '=', self.env.user.partner_id.id)]
-            events = self.env['event.registration'].sudo().search(
-                expression.AND([base_domain, domain])
-            ).event_id
+            return self.env['event.event']
 
+        base_domain = [('state', 'in', ['open', 'done'])]
+        if self:
+            base_domain = expression.AND([[('event_id', 'in', self.ids)], base_domain])
+
+        visitor_domain = []
+        partner_id = self.env.user.partner_id
+        if current_visitor:
+            visitor_domain = [('visitor_id', '=', current_visitor.id)]
+            partner_id = current_visitor.partner_id
+        if partner_id:
+            visitor_domain = expression.OR([visitor_domain, [('partner_id', '=', partner_id.id)]])
+
+        registrations_events = self.env['event.registration'].sudo()._read_group(
+            expression.AND([visitor_domain, base_domain]),
+            ['event_id'], ['__count'])
+        return self.env['event.event'].browse([event.id for event, _reg_count in registrations_events])
+
+    @api.depends_context('uid')
+    @api.depends('website_visibility', 'is_participating')
+    def _compute_is_visible_on_website(self):
+        if all(event.website_visibility == 'public' for event in self):
+            self.is_visible_on_website = True
+            return
         for event in self:
-            event.is_participating = event in events
+            if event.website_visibility == 'public' or event.is_participating:
+                event.is_visible_on_website = True
+            elif not self.env.user._is_public() and event.website_visibility == 'logged_users':
+                event.is_visible_on_website = True
+            else:
+                event.is_visible_on_website = False
+
+    @api.model
+    def _search_is_visible_on_website(self, operator, value):
+        if operator not in ['=', '!=']:
+            raise NotImplementedError(_('This operator is not supported'))
+        if not isinstance(value, bool):
+            raise UserError(_('Value should be True or False (not %)', value))
+        check_is_visible_on_website = operator == '=' and value or operator == '!=' and not value
+        user = self.env.user
+        domain = [('is_participating', '=', True)]
+
+        if not user._is_public():
+            domain = expression.OR([domain, [('website_visibility', 'in', ['public', 'logged_users'])]])
+        else:
+            domain = expression.OR([domain, [('website_visibility', '=', 'public')]])
+
+        event_ids = self.env['event.event']._search(domain)
+        return [('id', 'in' if check_is_visible_on_website else 'not in', event_ids)]
+
+    @api.depends('website_url')
+    def _compute_event_register_url(self):
+        for event in self:
+            event.event_register_url = werkzeug.urls.url_join(event.get_base_url(), f"{event.website_url}/register")
 
     @api.depends('event_type_id')
     def _compute_website_menu(self):
@@ -535,6 +595,8 @@ class Event(models.Model):
         event_type = options.get('type', 'all')
 
         domain = [website.website_domain()]
+        domain.append([('is_visible_on_website', '=', True)])
+
         if event_type != 'all':
             domain.append([("event_type_id", "=", int(event_type))])
         search_tags = self.env['event.tag']

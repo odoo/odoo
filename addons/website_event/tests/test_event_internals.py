@@ -5,12 +5,23 @@ from datetime import datetime, timedelta
 
 from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests.common import users
+from odoo.addons.website.tests.test_website_visitor import MockVisitor
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.addons.website_event.tests.common import TestEventQuestionCommon
 
 
-class TestEventData(TestEventQuestionCommon):
+class TestEventData(TestEventQuestionCommon, MockVisitor):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestEventData, cls).setUpClass()
+        cls.event_public, cls.event_link_only, cls.event_logged_users = cls.env['event.event'].sudo().create([{
+            'name': 'event',
+            'website_visibility': website_visibility,
+            'website_published': True,
+        } for website_visibility in ['public', 'link', 'logged_users']])
+        cls.events_visibility_test = cls.event_public | cls.event_link_only | cls.event_logged_users
 
     @users('user_eventmanager')
     def test_event_type_configuration_from_type(self):
@@ -224,3 +235,51 @@ class TestEventData(TestEventQuestionCommon):
         # should fetch "registration_2" because the answer to the first question is "Q1-Answer2"
         # should fetch "registration_3" because the answer to the third question is "Answer2" (as free text)
         self.assertEqual(search_res, registration_2 | registration_3)
+
+    @users('demo')
+    def test_website_visibility_internal_user(self):
+        """ Check website visibility value for an internal user """
+        visible_events = self.env['event.event'].search([
+            ('id', 'in', self.events_visibility_test.ids),
+            ('is_visible_on_website', '=', True)])
+        self.assertIn(self.event_public, visible_events)
+        self.assertNotIn(self.event_link_only, visible_events)
+        self.assertIn(self.event_logged_users, visible_events)
+
+    @users('portal')
+    def test_website_visibility_portal_user(self):
+        """ Check website visibility value for a portal user """
+        visible_events = self.env['event.event'].search([
+            ('id', 'in', self.events_visibility_test.ids),
+            ('is_visible_on_website', '=', True)])
+        self.assertIn(self.event_public, visible_events)
+        self.assertNotIn(self.event_link_only, visible_events)
+        self.assertIn(self.event_logged_users, visible_events)
+
+    @users('public')
+    def test_website_visibility_public_user(self):
+        """ Check website visibility value for public user """
+        visible_events = self.env['event.event'].search([
+            ('id', 'in', self.events_visibility_test.ids),
+            ('is_visible_on_website', '=', True)])
+        self.assertIn(self.event_public, visible_events)
+        self.assertNotIn(self.event_link_only, visible_events)
+        self.assertNotIn(self.event_logged_users, visible_events)
+
+        # Check that a visitor can see event where he is participating
+        website_visitor = self.env['website.visitor'].sudo().create({
+            "name": 'Website Visitor',
+            "access_token": 'c8d20bd006c3bf46b875451defb5991d'
+        })
+        self.env['event.registration'].sudo().create({
+            'name': "Registration from visitor",
+            'event_id': self.event_link_only.id,
+            'visitor_id': website_visitor.id,
+        })
+        with self.mock_visitor_from_request(force_visitor=website_visitor):
+            visible_events = self.env['event.event'].search([
+                ('id', 'in', self.events_visibility_test.ids),
+                ('is_visible_on_website', '=', True)])
+            self.assertIn(self.event_public, visible_events)
+            self.assertIn(self.event_link_only, visible_events, "Should now be visible because visitor is participating")
+            self.assertNotIn(self.event_logged_users, visible_events)
