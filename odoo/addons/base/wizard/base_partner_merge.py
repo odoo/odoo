@@ -229,6 +229,24 @@ class MergePartnerAutomatic(models.TransientModel):
 
         self.env.flush_all()
 
+        # Company-dependent fields
+        with self._cr.savepoint():
+            params = {
+                'destination_id': f'res.partner,{dst_partner.id}',
+                'source_ids': tuple(f'res.partner,{src}' for src in src_partners.ids),
+            }
+            self._cr.execute("""
+        UPDATE ir_property AS _ip1
+        SET res_id = %(destination_id)s
+        WHERE res_id IN %(source_ids)s
+        AND NOT EXISTS (
+             SELECT
+             FROM ir_property AS _ip2
+             WHERE _ip2.res_id = %(destination_id)s
+             AND _ip2.fields_id = _ip1.fields_id
+             AND _ip2.company_id = _ip1.company_id
+        )""", params)
+
     def _get_summable_fields(self):
         """ Returns the list of fields that should be summed when merging partners
         """
