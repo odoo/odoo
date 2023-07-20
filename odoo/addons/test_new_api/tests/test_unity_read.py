@@ -152,6 +152,41 @@ class TestUnityRead(TransactionCase):
                 }
             }])
 
+    def test_read_many2one_with_new_record(self):
+        values = {'author_id': {'id': self.author.id}}
+        new_course = self.course.new(values, origin=self.course)
+
+        # new_course.author_id is a new record
+        self.assertTrue(new_course.author_id)
+        self.assertFalse(new_course.author_id.id)
+
+        result = new_course.web_read({
+            'display_name': {},
+            'author_id': {},
+        })
+        self.assertEqual(result, [
+            {
+                'id': new_course.id,
+                'display_name': 'introduction to OWL',
+                'author_id': self.author.id,
+            }
+        ])
+
+        result = new_course.web_read({
+            'display_name': {},
+            'author_id': {'fields': {'display_name': {}}},
+        })
+        self.assertEqual(result, [
+            {
+                'id': new_course.id,
+                'display_name': 'introduction to OWL',
+                'author_id': {
+                    'id': self.author.id,
+                    'display_name': 'ged'
+                }
+            }
+        ])
+
     def test_new_record_with_inherits(self):
         # virtualize a record
         new_account = self.account.new(origin=self.account)
