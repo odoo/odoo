@@ -714,3 +714,34 @@ img.o_we_selected_image {
 textarea.o_codeview {
     min-height: 400px;
 }
+
+.o-chatgpt-content {
+    position: absolute;
+    background-color: lightgreen;
+    opacity: 0.3;
+    animation: fade 1.5s ease-in-out;
+    border: dashed 5px green;
+    z-index: 1;
+}
+.o-prompt-input {
+    position: relative;
+    // see .o-mail-Composer-input
+    > textarea {
+        padding-top: 10px; // carefully crafted to have the text in the middle in chat window
+        padding-bottom: 10px;
+        min-height: 40px;
+        max-height: 110px;
+        resize: none;
+    }
+}
+button.o-message-insert {
+    line-height: 1;
+}
+.o-chatgpt-message > div > *:last-child, .o-chatgpt-alternative > *:last-child {
+    margin-bottom: 0;
+}
+.o-message-error {
+    color: #d44c59;
+    font-weight: bold;
+    --bg-opacity: 0.25;
+}

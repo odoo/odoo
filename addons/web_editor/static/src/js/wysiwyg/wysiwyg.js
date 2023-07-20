@@ -11,6 +11,8 @@ import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor
 import { Toolbar } from "@web_editor/js/editor/toolbar";
 import { LinkPopoverWidget } from '@web_editor/js/wysiwyg/widgets/link_popover_widget';
 import { AltDialog } from '@web_editor/js/wysiwyg/widgets/alt_dialog';
+import { ChatGPTPromptDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_prompt_dialog';
+import { ChatGPTAlternativesDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_alternatives_dialog';
 import { ImageCrop } from '@web_editor/js/wysiwyg/widgets/image_crop';
 
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
@@ -1416,6 +1418,55 @@ export class Wysiwyg extends Component {
         }
     }
     /**
+     * Open one of the ChatGPTDialogs to generate or modify content.
+     *
+     * @param {'prompt'|'alternatives'} [mode='prompt']
+     */
+    openChatGPTDialog(mode = 'prompt') {
+        const restore = preserveCursor(this.odooEditor.document);
+        const params = {
+            insert: content => {
+                this.odooEditor.historyPauseSteps();
+                const insertedNodes = this.odooEditor.execCommand('insert', content);
+                this.odooEditor.historyUnpauseSteps();
+                this.notification.add(_t('Your content was successfully generated.'), {
+                    title: _t('Content generated'),
+                    type: 'success',
+                });
+                this.odooEditor.historyStep();
+                // Add a frame around the inserted content to highlight it for 2
+                // seconds.
+                const start = insertedNodes?.length && closestElement(insertedNodes[0]);
+                const end = insertedNodes?.length && closestElement(insertedNodes[insertedNodes.length - 1]);
+                if (start && end) {
+                    const divContainer = this.odooEditor.editable.parentElement;
+                    let [parent, left] = [start.offsetParent, start.offsetLeft];
+                    while (parent && !parent.contains(divContainer)) {
+                        left += parent.offsetLeft;
+                        parent = parent.offsetParent;
+                    }
+                    const div = document.createElement('div');
+                    div.classList.add('o-chatgpt-content');
+                    div.style.left = `${left - 10}px`;
+                    div.style.top = `${start.offsetTop - 10}px`;
+                    div.style.width = `${Math.max(start.clientWidth, end.clientWidth) + 20}px`;
+                    div.style.height = `${end.offsetTop + end.clientHeight - start.offsetTop + 20}px`;
+                    divContainer.prepend(div);
+                    setTimeout(() => div.remove(), 2000);
+                }
+            },
+        };
+        if (mode === 'alternatives') {
+            params.originalText = this.odooEditor.document.getSelection().toString() || '';
+        }
+        this.odooEditor.document.getSelection().collapseToEnd();
+        this.env.services.dialog.add(
+            mode === 'prompt' ? ChatGPTPromptDialog : ChatGPTAlternativesDialog,
+            params,
+            { onClose: restore },
+        );
+    }
+    /**
      * Removes the current Link.
      */
     removeLink() {
@@ -1725,6 +1776,10 @@ export class Wysiwyg extends Component {
                     });
                     break;
                 }
+                case 'open-chatgpt': {
+                    this.openChatGPTDialog(this.odooEditor.document.getSelection()?.isCollapsed ? 'prompt' : 'alternatives');
+                    break;
+                }
             }
         };
         if (!options.snippets) {
@@ -1738,6 +1793,7 @@ export class Wysiwyg extends Component {
     })
         $toolbar.find('#media-insert, #media-replace, #media-description').click(openTools);
         $toolbar.find('#create-link').click(openTools);
+        $toolbar.find('#open-chatgpt').click(openTools);
         $toolbar.find('#image-shape div, #fa-spin').click(e => {
             if (!this.lastMediaClicked) {
                 return;
@@ -2291,6 +2347,15 @@ export class Wysiwyg extends Component {
                         this.odooEditor.execCommand('insert', parseHTML(this.odooEditor.document, user.signature));
                     }
                 },
+            },
+            {
+                category: _t('AI Tools'),
+                name: _t('ChatGPT'),
+                description: _t('Generate or transform content with AI.'),
+                fontawesome: 'fa-magic',
+                priority: 1,
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
+                callback: async () => this.openChatGPTDialog(),
             },
         ];
         if (!editorOptions.inlineStyle) {
