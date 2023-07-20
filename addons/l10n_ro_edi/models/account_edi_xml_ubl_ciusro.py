@@ -37,6 +37,11 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._export_invoice_vals(invoice)
 
+        vals.update({
+            'InvoiceType_template': 'l10n_ro_edi.ubl_21_InvoiceType_ciusro',
+        })
+
         vals['vals']['customization_id'] = 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
+        vals['vals']['tax_currency_code'] = 'RONNIE'
 
         return vals
