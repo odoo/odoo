@@ -372,6 +372,9 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             isWebsite: true, // If set to true, it will trigger isolated behaviours in website patches. (.include)
             powerboxCommands: powerboxItems[0],
             powerboxCategories: powerboxItems[1],
+            allowCommandVideo: true,
+            allowCommandImage: true,
+            allowCommandLink: true,
             bindLinkTool: true,
             showEmptyElementHint: false,
             getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
