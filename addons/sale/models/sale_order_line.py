@@ -60,6 +60,7 @@ class SaleOrderLine(models.Model):
         related='order_id.state',
         string="Order Status",
         copy=False, store=True, precompute=True)
+    tax_country_id = fields.Many2one(related='order_id.tax_country_id')
 
     # Fields specifying custom line logic
     display_type = fields.Selection(
