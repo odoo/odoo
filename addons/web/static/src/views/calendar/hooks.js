@@ -10,6 +10,7 @@ import {
     onPatched,
     onWillStart,
     onWillUnmount,
+    onWillUpdateProps,
     useComponent,
     useExternalListener,
     useRef,
@@ -124,8 +125,14 @@ export function useFullCalendar(refName, params) {
             throw new Error(`Cannot instantiate FullCalendar\n${e.message}`);
         }
     });
+
+    let isWeekendVisible = params.isWeekendVisible;
+    onWillUpdateProps((np) => {
+        isWeekendVisible = np.isWeekendVisible;
+    });
     onPatched(() => {
         instance.refetchEvents();
+        instance.setOption("weekends", isWeekendVisible);
     });
     onWillUnmount(() => {
         instance.destroy();
