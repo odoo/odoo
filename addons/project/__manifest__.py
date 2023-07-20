@@ -131,6 +131,8 @@
             'web/static/lib/py.js/lib/py_extras.js',
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
 
+            ('include', 'web_editor.assets_wysiwyg'),
+
             'web/static/src/legacy/scss/fields.scss',
             'web/static/src/legacy/scss/views.scss',
 
