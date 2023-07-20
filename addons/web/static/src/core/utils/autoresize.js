@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useEffect } from "@odoo/owl";
+import { browser } from "../browser/browser";
 
 /**
  * This is used on text inputs or textareas to automatically resize it based on its
@@ -42,17 +43,19 @@ function resizeInput(input) {
     // This mesures the maximum width of the input which can get from the flex layout.
     input.style.width = "100%";
     const maxWidth = input.clientWidth;
+    // Somehow Safari 16 computes input sizes incorrectly. This is fixed in Safari 17
+    const isSafari16 = /Version\/16.+Safari/i.test(browser.navigator.userAgent);
     // Minimum width of the input
     input.style.width = "10px";
     if (input.value === "" && input.placeholder !== "") {
         input.style.width = "auto";
         return;
     }
-    if (input.scrollWidth + 5 > maxWidth) {
+    if (input.scrollWidth + 5 + (isSafari16 ? 8 : 0) > maxWidth) {
         input.style.width = "100%";
         return;
     }
-    input.style.width = input.scrollWidth + 5 + "px";
+    input.style.width = input.scrollWidth + 5 + (isSafari16 ? 8 : 0) + "px";
 }
 
 function resizeTextArea(textarea, options) {
