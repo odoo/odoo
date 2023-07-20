@@ -39,7 +39,7 @@
 <template id='slide_social_email' name="Share by Email">
     <h5 class="mt-4">Share by Email</h5>
     <div t-if="not is_public_user">
-        <form class="oe_slide_js_share_email" role="form">
+        <div class="oe_slide_js_share_email">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="your-friend@domain.com, your-friend2@domain.com"/>
                 <button class="btn btn-primary" type="button"
@@ -54,7 +54,7 @@
                 <strong>Sharing is caring!</strong> Email(s) sent.
             </div>
             <div class="alert alert-warning d-none" role="alert">Please enter valid email(s)</div>
-        </form>
+        </div>
     </div>
     <div t-if="is_public_user" class="alert alert-info d-inline-block">
         <p class="mb-0">Please <a t-attf-href="/web?redirect=#{request.httprequest.url}" class="fw-bold"> login </a> to share this
