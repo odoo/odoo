@@ -192,10 +192,18 @@ class AccountMove(models.Model):
                 continue
             invoice_line_values = {}
 
-            price_before_discount = line.currency_id.round(line.price_subtotal / (1 - line.discount / 100.0))
+            tax_base_before_discount = self.env['account.tax']._convert_to_tax_base_line_dict(
+                base_line=line,
+                currency=line.currency_id,
+                taxes=line.tax_ids,
+                price_unit=line.price_unit,
+                quantity=line.quantity,
+            )
+            tax_before_discount = self.env['account.tax']._compute_taxes([tax_base_before_discount])
+            price_before_discount = sum(to_update['price_subtotal'] for _dummy, to_update in tax_before_discount['base_lines_to_update'])
             discount = max(0., (price_before_discount - line.price_subtotal))
             surcharge = abs(min(0., (price_before_discount - line.price_subtotal)))
-            totals['total_gross_amount'] += line.price_subtotal
+            totals['total_gross_amount'] += price_before_discount
             totals['total_general_discounts'] += discount
             totals['total_general_surcharges'] += surcharge
             base_line = self.env['account.tax']._convert_to_tax_base_line_dict(
