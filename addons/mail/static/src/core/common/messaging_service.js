@@ -328,9 +328,44 @@ export class Messaging {
                 ...messageData,
                 body: messageData.body ? markup(messageData.body) : messageData.body,
             });
+<<<<<<< HEAD:addons/mail/static/src/core/common/messaging_service.js
+||||||| parent of c0f65e2137a (temp):addons/mail/static/src/core/messaging_service.js
+            if (
+                message.pinned_at &&
+                !message.originThread?.pinnedMessages.some(({ id }) => id === message.id)
+            ) {
+                message.originThread.pinnedMessages.unshift(message);
+            }
+=======
+            if (
+                message.pinned_at &&
+                message.originThread &&
+                !message.originThread?.pinnedMessages.some(({ id }) => id === message.id)
+            ) {
+                message.originThread.pinnedMessages.unshift(message);
+            }
+>>>>>>> c0f65e2137a (temp):addons/mail/static/src/core/messaging_service.js
             if (isStarred && message.isEmpty) {
                 this.messageService.updateStarred(message, false);
             }
+<<<<<<< HEAD:addons/mail/static/src/core/common/messaging_service.js
+||||||| parent of c0f65e2137a (temp):addons/mail/static/src/core/messaging_service.js
+            if (message.pinned_at && message.isEmpty) {
+                message.pinned_at = false;
+                removeFromArrayWithPredicate(
+                    message.originThread.pinnedMessages,
+                    ({ id }) => id === message.id
+                );
+            }
+=======
+            if (message.pinned_at && message.originThread && message.isEmpty) {
+                message.pinned_at = false;
+                removeFromArrayWithPredicate(
+                    message.originThread.pinnedMessages,
+                    ({ id }) => id === message.id
+                );
+            }
+>>>>>>> c0f65e2137a (temp):addons/mail/static/src/core/messaging_service.js
         }
         const { "res.users.settings": settings } = notif.payload;
         if (settings) {
