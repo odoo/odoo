@@ -9,7 +9,21 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='right_event_details']/field[@name='company_id']" position="after">
                 <field name="website_id" invisible="1"/>
+                <field name="website_published" invisible="1"/>
                 <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="website.group_multi_website"/>
+                <label for="website_visibility" string="Visibility"/>
+                <div class="d-flex row">
+                    <div class="col-5 pe-0">
+                        <field name="website_visibility"/>
+                    </div>
+                    <div class="col-7 ps-0">
+                        <button name="website_publish_button" type="object" string="Publish"
+                            invisible="website_published or website_visibility == 'public'" class="btn btn-sm btn-link h-100 ms-2"/>
+                        <span invisible="not website_published or website_visibility == 'public'" class="ms-2">
+                            <field name="event_register_url" widget="CopyClipboardButton"/>
+                        </span>
+                    </div>
+                </div>
             </xpath>
             <xpath expr="//field[@name='tag_ids']" position="attributes">
                 <attribute name="context">{'default_website_id': website_id}</attribute>
