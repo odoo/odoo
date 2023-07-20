@@ -16,6 +16,7 @@ import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { browser } from "@web/core/browser/browser";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -43,20 +44,28 @@ export class CalendarController extends Component {
         this.orm = useService("orm");
         this.displayDialog = useUniqueDialog();
 
-        this.model = useModelWithSampleData(this.props.Model, {
-            ...this.props.archInfo,
-            resModel: this.props.resModel,
-            domain: this.props.domain,
-            fields: this.props.fields,
-        }, {
-            onWillStart: this.onWillStartModel.bind(this),
-        });
+        this.model = useModelWithSampleData(
+            this.props.Model,
+            {
+                ...this.props.archInfo,
+                resModel: this.props.resModel,
+                domain: this.props.domain,
+                fields: this.props.fields,
+            },
+            {
+                onWillStart: this.onWillStartModel.bind(this),
+            }
+        );
 
         useSetupView({
             getLocalState: () => this.model.exportedState,
         });
 
         this.state = useState({
+            isWeekendVisible:
+                browser.localStorage.getItem("calendar.isWeekendVisible") != null
+                    ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))
+                    : true,
             showSideBar: !this.env.isSmall,
         });
 
@@ -66,6 +75,7 @@ export class CalendarController extends Component {
     get rendererProps() {
         return {
             model: this.model,
+            isWeekendVisible: this.model.scale === "day" || this.state.isWeekendVisible,
             createRecord: this.createRecord.bind(this),
             deleteRecord: this.deleteRecord.bind(this),
             editRecord: this.editRecord.bind(this),
@@ -216,7 +226,7 @@ export class CalendarController extends Component {
     }
 
     onWillStartModel() {}
-    
+
     async setDate(move) {
         let date = null;
         switch (move) {
@@ -241,6 +251,11 @@ export class CalendarController extends Component {
 
     async setScale(scale) {
         await this.model.load({ scale });
+    }
+
+    toggleWeekendVisibility() {
+        this.state.isWeekendVisible = !this.state.isWeekendVisible;
+        browser.localStorage.setItem("calendar.isWeekendVisible", this.state.isWeekendVisible);
     }
 }
 CalendarController.components = {

@@ -33,7 +33,7 @@
                                     aria-label="Previous"
                                     t-on-click.stop="() => this.setDate('previous')"
                                 ><i class="oi oi-arrow-left"/></button>
-                                <ViewScaleSelector scales="scales" currentScale="model.scale" setScale.bind="setScale" />
+                                <ViewScaleSelector scales="scales" currentScale="model.scale" isWeekendVisible="state.isWeekendVisible" setScale.bind="setScale" toggleWeekendVisibility.bind="toggleWeekendVisibility" />
                                 <button
                                     class="o_calendar_button_next btn btn-secondary btn-sm d-none d-md-block"
                                     title="Next"

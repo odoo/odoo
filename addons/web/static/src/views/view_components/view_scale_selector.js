@@ -13,7 +13,9 @@ export class ViewScaleSelector extends Component {
     static props = {
         scales: { type: Object },
         currentScale: { type: String },
+        isWeekendVisible: { type: Boolean, optional: true },
         setScale: { type: Function },
+        toggleWeekendVisibility: { type: Function, optional: true },
     };
     get scales() {
         return Object.entries(this.props.scales).map(([key, value]) => ({ key, ...value }));

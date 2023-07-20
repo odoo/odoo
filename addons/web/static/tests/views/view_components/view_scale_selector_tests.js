@@ -45,9 +45,13 @@ QUnit.module("ViewComponents", (hooks) => {
                             description: "Yearly",
                         },
                     },
+                    isWeekendVisible: true,
                     setScale: (scale) => {
                         this.state.scale = scale;
                         assert.step(scale);
+                    },
+                    toggleWeekendVisibility: () => {
+                        assert.step("toggleWeekendVisibility");
                     },
                     currentScale: this.state.scale,
                 };
@@ -89,6 +93,10 @@ QUnit.module("ViewComponents", (hooks) => {
             "Daily",
             "the right text is displayed on the toggler"
         );
+
+        await click(target, ".scale_button_selection");
+        await click(target, ".dropdown-item:last-child");
+        assert.verifySteps(["toggleWeekendVisibility"]);
     });
 
     QUnit.test("ViewScaleSelector with only one scale available", async (assert) => {
@@ -110,6 +118,8 @@ QUnit.module("ViewComponents", (hooks) => {
                         },
                     },
                     setScale: () => {},
+                    isWeekendVisible: false,
+                    toggleWeekendVisibility: () => {},
                     currentScale: this.state.scale,
                 };
             }
