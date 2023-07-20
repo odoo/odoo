@@ -104,12 +104,12 @@
         </t>
         <t t-else="">
             <div class="d-inline-flex o_domain_tree_connector_selector" aria-atomic="true">
-                <Dropdown togglerClass="'btn btn-link btn-primary py-0 px-1 o_domain_tree_connector_caret'">
-                    <t t-set-slot="toggler">
-                        <t t-esc="title"/>
+                <Dropdown>
+                    <button class="btn btn-link btn-primary py-0 px-1 o_domain_tree_connector_caret" t-esc="title"></button>
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="() => this.updateBranchConnector(node, '&amp;')">all</DropdownItem>
+                        <DropdownItem onSelected="() => this.updateBranchConnector(node, '|')">any</DropdownItem>
                     </t>
-                    <DropdownItem onSelected="() => this.updateBranchConnector(node, '&amp;')">all</DropdownItem>
-                    <DropdownItem onSelected="() => this.updateBranchConnector(node, '|')">any</DropdownItem>
                 </Dropdown>
             </div>
         </t>
@@ -173,7 +173,7 @@
                 <Editor info="getEditorInfo(node)" value="node.value" update="(value) => this.updateLeafValue(node, value)" fieldDef="getFieldDef(node.path)"/>
             </div>
         </t>
-       
+
     </t>
 
 </templates>

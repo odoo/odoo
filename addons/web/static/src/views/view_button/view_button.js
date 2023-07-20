@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { DROPDOWN } from "@web/core/dropdown/dropdown";
+import { DROPDOWN } from "@web/core/dropdown/dropdown_behaviours/dropdown_nesting";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 

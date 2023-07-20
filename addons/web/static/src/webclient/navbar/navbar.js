@@ -19,30 +19,7 @@ const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 
-class NavBarDropdownItem extends DropdownItem {}
-NavBarDropdownItem.template = "web.NavBar.DropdownItem";
-NavBarDropdownItem.props = {
-    ...DropdownItem.props,
-    style: { type: String, optional: true },
-};
-
-export class MenuDropdown extends Dropdown {
-    setup() {
-        super.setup();
-        useEffect(
-            () => {
-                if (this.props.xmlid) {
-                    this.togglerRef.el.dataset.menuXmlid = this.props.xmlid;
-                }
-            },
-            () => []
-        );
-    }
-}
-MenuDropdown.props.xmlid = {
-    type: String,
-    optional: true,
-};
+export class MenuDropdown extends Dropdown {}
 
 export class NavBar extends Component {
     setup() {
@@ -215,5 +192,5 @@ export class NavBar extends Component {
     }
 }
 NavBar.template = "web.NavBar";
-NavBar.components = { Dropdown, DropdownItem: NavBarDropdownItem, MenuDropdown, ErrorHandler };
+NavBar.components = { Dropdown, DropdownItem, MenuDropdown, ErrorHandler };
 NavBar.props = {};

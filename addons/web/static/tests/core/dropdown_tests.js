@@ -388,9 +388,9 @@ QUnit.module("Components", ({ beforeEach }) => {
                         <Dropdown>
                             <button class="dropdown-b">Dropdown B</button>
                             <t t-set-slot="content">
-                                <DropdownItem class="'item1'" parentClosingMode="'none'">A</DropdownItem>
-                                <DropdownItem class="'item2'" parentClosingMode="'closest'">B</DropdownItem>
-                                <DropdownItem class="'item3'" parentClosingMode="'all'">C</DropdownItem>
+                                <DropdownItem class="'item1'" closingMode="'none'">A</DropdownItem>
+                                <DropdownItem class="'item2'" closingMode="'closest'">B</DropdownItem>
+                                <DropdownItem class="'item3'" closingMode="'all'">C</DropdownItem>
                                 <DropdownItem class="'item4'">D</DropdownItem>
                             </t>
                         </Dropdown>
@@ -406,18 +406,18 @@ QUnit.module("Components", ({ beforeEach }) => {
         await mouseEnter(target, ".dropdown-b");
         await nextTick();
 
-        // Select item (parentClosingMode=none)
+        // Select item (closingMode=none)
         await click(target, ".item1");
         assert.containsN(target, DROPDOWN_MENU, 2);
 
-        // Select item (parentClosingMode=closest)
+        // Select item (closingMode=closest)
         await click(target, ".item2");
         assert.containsN(target, DROPDOWN_MENU, 1);
 
         // Reopen second level dropdown
         await mouseEnter(target, ".dropdown-b");
 
-        // Select item (parentClosingMode=all)
+        // Select item (closingMode=all)
         await click(target, ".item3");
         assert.containsNone(target, DROPDOWN_MENU);
 
@@ -427,7 +427,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await mouseEnter(target, ".dropdown-b");
         await nextTick();
 
-        // Select item (default should be parentClosingMode=all)
+        // Select item (default should be closingMode=all)
         await click(target, ".item4");
         assert.containsNone(target, DROPDOWN_MENU);
     });

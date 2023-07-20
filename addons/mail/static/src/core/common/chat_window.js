@@ -15,7 +15,7 @@ import { isEventHandled } from "@web/core/utils/misc";
 
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dropdown, useDropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
@@ -58,6 +58,9 @@ export class ChatWindow extends Component {
         this.ui = useState(useService("ui"));
         this.contentRef = useRef("content");
         this.threadActions = useThreadActions();
+        this.actionsDropdown = useDropdown({
+            onChange: (isOpen) => this.onActionsMenuStateChanged(isOpen),
+        });
         useChildSubEnv({
             closeActionPanel: () => this.threadActions.activeAction?.close(),
             inChatWindow: true,
@@ -149,8 +152,8 @@ export class ChatWindow extends Component {
         this.state.editingName = false;
     }
 
-    async onActionsMenuStateChanged(state) {
+    async onActionsMenuStateChanged(isOpen) {
         await new Promise(setTimeout); // wait for bubbling header
-        this.state.actionsMenuOpened = state.open;
+        this.state.actionsMenuOpened = isOpen;
     }
 }

@@ -47,16 +47,13 @@
             <t t-set-slot="control-panel-navigation-additional">
                 <div class="d-flex gap-1 w-100 w-sm-auto">
                     <div class="col d-flex gap-1">
-                        <t t-if="props.warehouses.length > 1">
-                            <Dropdown class="'btn-group flex-grow-1 flex-md-grow-0'" togglerClass="'btn btn-secondary'" showCaret="true">
-                                <t t-set-slot="toggler">
+                        <div t-if="props.warehouses.length > 1" class="btn-group flex-grow-1 flex-md-grow-0">
+                            <Dropdown items="wharehousesItems">
+                                <button class="btn btn-secondary o-dropdown-caret">
                                     <span class="fa fa-home"/> Warehouse
-                                </t>
-                                <t t-foreach="props.warehouses" t-as="wh" t-key="wh.id">
-                                    <DropdownItem onSelected="() => this.props.changeWarehouse(wh.id)" t-esc="wh.name" class="{selected : wh.name === props.currentWarehouse.name }"/>
-                                </t>
+                                </button>
                             </Dropdown>
-                        </t>
+                        </div>
                         <BomOverviewDisplayFilter
                             showOptions="props.showOptions"
                             changeDisplay.bind="props.changeDisplay"/>

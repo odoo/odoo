@@ -27,7 +27,7 @@ import {
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dropdown, useDropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -92,7 +92,6 @@ export class Message extends Component {
             isEditing: false,
             isHovered: false,
             isClicked: false,
-            expandOptions: false,
             lastReadMoreIndex: 0,
             isReadMoreByIndex: new Map(),
             originalEmail: false,
@@ -112,6 +111,7 @@ export class Message extends Component {
         this.dialog = useService("dialog");
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
+        this.optionsDropdown = useDropdown();
         useChildSubEnv({
             alignedRight: this.isAlignedRight,
         });
@@ -287,7 +287,7 @@ export class Message extends Component {
             this.state.isHovered ||
             this.state.isClicked ||
             this.emojiPicker?.isOpen ||
-            this.state.expandOptions
+            this.optionsDropdown.isOpen
         );
     }
 

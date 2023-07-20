@@ -6,19 +6,24 @@
             <t t-set="items" t-value="computeItems()" />
 
             <t t-if="items.folded.length">
-                <button type="button" class="btn btn-secondary dropdown-toggle" t-att-class="{ 'o_arrow_button': !env.isSmall, 'btn-primary': env.isSmall }">
-                    <Dropdown toggler="'parent'">
+                <Dropdown>
+                    <button type="button" class="btn btn-secondary dropdown-toggle" t-att-class="{ 'o_arrow_button': !env.isSmall, 'btn-primary': env.isSmall }">
+                        <t t-if="env.isSmall">
+                            <t t-esc="currentName" />
+                        </t>
+                        <t t-else="">More</t>
+                    </button>
+                    <t t-set-slot="content">
                         <t t-foreach="items.folded" t-as="item" t-key="item.id">
-                            <DropdownItem class="getDropdownItemClassNames(item)" onSelected="() => this.selectItem(item)">
-                                <t t-esc="item.name" />
+                            <DropdownItem
+                                onSelected="() => this.selectItem(item)"
+                                class="{ active: item.isSelected, disabled: item.isSelected || this.props.isDisabled }"
+                            >
+                                <t t-esc="item.name"/>
                             </DropdownItem>
                         </t>
-                    </Dropdown>
-                    <t t-if="env.isSmall">
-                        <t t-esc="currentName" />
                     </t>
-                    <t t-else="">More</t>
-                </button>
+                </Dropdown>
             </t>
 
             <t t-foreach="items.unfolded.reverse()" t-as="item" t-key="item.id">

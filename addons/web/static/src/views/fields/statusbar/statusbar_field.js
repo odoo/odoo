@@ -151,17 +151,6 @@ export class StatusBarField extends Component {
         return this.props.record.fields[this.props.name].type;
     }
 
-    getDropdownItemClassNames(item) {
-        const classNames = [];
-        if (item.isSelected) {
-            classNames.push("active");
-        }
-        if (item.isSelected || this.props.isDisabled) {
-            classNames.push("disabled");
-        }
-        return classNames.join(" ");
-    }
-
     getVisibleMany2Ones() {
         let items = this.options;
         // FIXME: do this somewhere else

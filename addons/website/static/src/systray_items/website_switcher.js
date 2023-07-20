@@ -19,7 +19,6 @@ export class WebsiteSwitcherSystray extends Component {
 
     getElements() {
         return this.websiteService.websites.map((website) => ({
-            name: website.name,
             id: website.id,
             domain: website.domain,
             callback: () => {

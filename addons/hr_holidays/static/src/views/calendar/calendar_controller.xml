@@ -9,12 +9,17 @@
                         <button class="btn btn-primary btn-time-off " t-on-click="newTimeOffRequest" type="button">
                             New
                         </button>
-                        <Dropdown togglerClass="'btn btn-primary'" showCaret="true" class="'btn-group'">
-                                <button class="btn btn-link" t-on-click="newAllocationRequest" type="button">
-                                    <t t-if="employeeId">Grant Time</t>
-                                    <t t-else="">New Allocation Request</t>
-                                </button>
-                        </Dropdown>
+                        <div class="btn-group">
+                            <Dropdown>
+                                <button class="btn btn-primary o-dropdown-caret"></button>
+                                <t t-set-slot="content">
+                                    <button class="btn btn-link" t-on-click="newAllocationRequest" type="button">
+                                        <t t-if="employeeId">Grant Time</t>
+                                        <t t-else="">New Allocation Request</t>
+                                    </button>
+                                </t>
+                            </Dropdown>
+                        </div>
                     </div>
                 </span>
             </t>

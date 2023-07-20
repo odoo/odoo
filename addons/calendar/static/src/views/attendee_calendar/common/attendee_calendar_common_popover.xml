@@ -15,19 +15,21 @@
         <xpath expr="//t[@t-if='isEventDeletable']" position="after">
             <a t-if="isEventArchivable and isEventDetailsVisible" href="#" class="btn btn-secondary o_cw_popover_archive_g" t-on-click="onClickArchive">Delete</a>
             <div t-if="displayAttendeeAnswerChoice" class="d-inline-block">
-                <Dropdown togglerClass="'btn btn-secondary ms-1'">
-                    <t t-set-slot="toggler">
+                <Dropdown>
+                    <button class="btn btn-secondary ms-1">
                         <i t-attf-class="fa fa-circle o-calendar-attendee-status-icon #{selectedStatusInfo.color}"/> <span class="o-calendar-attendee-status-text" t-esc="selectedStatusInfo.text"></span>
+                    </button>
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="() => this.changeAttendeeStatus('accepted')">
+                            <i class="fa fa-circle text-success"/> Accept
+                        </DropdownItem>
+                        <DropdownItem onSelected="() => this.changeAttendeeStatus('declined')">
+                            <i class="fa fa-circle text-danger"/> Decline
+                        </DropdownItem>
+                        <DropdownItem onSelected="() => this.changeAttendeeStatus('tentative')">
+                            <i class="fa fa-circle text-muted"/> Uncertain
+                        </DropdownItem>
                     </t>
-                    <DropdownItem onSelected="() => this.changeAttendeeStatus('accepted')">
-                        <i class="fa fa-circle text-success"/> Accept
-                    </DropdownItem>
-                    <DropdownItem onSelected="() => this.changeAttendeeStatus('declined')">
-                        <i class="fa fa-circle text-danger"/> Decline
-                    </DropdownItem>
-                    <DropdownItem onSelected="() => this.changeAttendeeStatus('tentative')">
-                        <i class="fa fa-circle text-muted"/> Uncertain
-                    </DropdownItem>
                 </Dropdown>
             </div>
         </xpath>

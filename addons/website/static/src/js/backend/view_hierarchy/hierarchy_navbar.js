@@ -7,7 +7,14 @@ import { Component, useRef, useState } from "@odoo/owl";
 export class HierarchyNavbar extends Component {
     setup() {
         this.searchInput = useRef("search");
-        this.websiteNames = useState(Array.from(this.props.websites.names));
+        this.websiteNamesState = useState(Array.from(this.props.websites.names));
+    }
+
+    get websiteNames() {
+        return this.websiteNamesState.map((websiteName) => ({
+            label: websiteName,
+            onSelected: () => this.props.selectWebsite(websiteName),
+        }));
     }
 
     /**
