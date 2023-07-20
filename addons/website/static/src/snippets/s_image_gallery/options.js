@@ -117,6 +117,7 @@ options.registry.gallery = options.Class.extend({
                         alt: attachments[i].description || '',
                         'data-name': _t('Image'),
                         style: $images.length > 0 ? $images[0].style.cssText : '',
+                        contenteditable: 'true',
                     }).appendTo($container);
                 }
                 if (attachments.length > 0) {
