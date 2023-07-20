@@ -17,5 +17,6 @@
     },
     {
         trigger: 'iframe .o_report_stock_rule',
+        isCheck: true,
     },
     ]});

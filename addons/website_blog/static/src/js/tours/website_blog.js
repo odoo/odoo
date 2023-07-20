@@ -87,5 +87,9 @@
         extra_trigger: "iframe body:not(.editor_enable)",
         position: "bottom",
         content: Markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
-    },
+    }, {
+        trigger: '.o_menu_systray_item a:contains("Published")',
+        auto: true,
+        isCheck: true,
+    }
 ]);

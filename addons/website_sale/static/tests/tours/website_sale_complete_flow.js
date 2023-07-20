@@ -366,4 +366,9 @@
         content: "Pay Now",
         extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
         trigger: 'button[name="o_payment_submit_button"]:visible',
+    },
+    {
+        content: "Check payment status confirmation window",
+        trigger: ".oe_website_sale_tx_status[data-order-tracking-info]",
+        isCheck: true,
     }]});

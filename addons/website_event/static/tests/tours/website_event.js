@@ -53,4 +53,5 @@
         trigger: ".o_website_edit_in_backend > a",
         content: _t("Click here to customize your event further."),
         position: "bottom",
+        isCheck: true,
     }]);

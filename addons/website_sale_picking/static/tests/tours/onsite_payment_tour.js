@@ -40,6 +40,7 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
         {
             content: 'Assert pay on site is NOT an option',
             trigger: 'body:not(:contains("Test Payment Provider"))',
+            isCheck: true,
         },
     ]
 });

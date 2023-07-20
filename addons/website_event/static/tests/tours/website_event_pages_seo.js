@@ -29,5 +29,6 @@ registry.category("web_tour.tours").add('website_event_pages_seo', {
         content: "Check that the page title is adapted, inside and outside the iframe",
         trigger: 'html:has(title:containsExactText(Hello, world!))',
         extra_trigger: 'iframe html:has(title:containsExactText(Hello, world!))',
+        isCheck: true,
     },
 ]});

@@ -88,6 +88,10 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }, {
     trigger: 'iframe button.o_switch_view.o_list',
     content: 'Go to the list view',
+}, {
+    trigger: 'iframe .o_list_view',
+    content: 'Check the list view',
+    isCheck: true,
 }];
 
 registry.category("web_tour.tours").add('project_sharing_tour', {

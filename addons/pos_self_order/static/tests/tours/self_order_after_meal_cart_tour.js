@@ -101,5 +101,6 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         PosSelf.check.isPrimaryBtn("My Orders"),
         PosSelf.action.clickPrimaryBtn("My Orders"),
         PosSelf.action.clickBack(),
+        PosSelf.check.isPrimaryBtn("View Menu"),
     ],
 });
