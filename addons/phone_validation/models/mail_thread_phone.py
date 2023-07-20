@@ -12,9 +12,9 @@ from odoo.osv import expression
 class PhoneMixin(models.AbstractModel):
     """ Purpose of this mixin is to offer two services
 
-      * compute a sanitized phone number based on ´´_sms_get_number_fields´´.
+      * compute a sanitized phone number based on _phone_get_number_fields.
         It takes first sanitized value, trying each field returned by the
-        method (see ``MailThread._sms_get_number_fields()´´ for more details
+        method (see ``BaseModel._phone_get_number_fields()´´ for more details
         about the usage of this method);
       * compute blacklist state of records. It is based on phone.blacklist
         model and give an easy-to-use field and API to manipulate blacklisted
