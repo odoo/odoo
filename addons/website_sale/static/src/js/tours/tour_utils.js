@@ -158,6 +158,7 @@ function payWithTransfer(redirect=false) {
             content: "Last step",
             trigger: '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
             timeout: 30000,
+            isCheck: true,
         }]
     } else {
         return [

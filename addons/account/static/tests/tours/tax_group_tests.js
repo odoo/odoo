@@ -124,5 +124,6 @@ registry.category("web_tour.tours").add('account_tax_group', {
     {
         content: "Check tax value is reset",
         trigger: '.o_tax_group_amount_value:contains("120")',
+        isCheck: true,
     },
 ]});

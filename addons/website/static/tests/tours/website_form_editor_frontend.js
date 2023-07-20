@@ -153,7 +153,8 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     },
     {
         content:  "Check form is submitted without errors",
-        trigger:  "#wrap:has(h1:contains('Thank You!'))"
+        trigger:  "#wrap:has(h1:contains('Thank You!'))",
+        isCheck: true,
     }
 ]});
 
@@ -187,6 +188,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
         content:  "Check mail.mail records have been created",
         trigger:  "#website_form_editor_success_test_tour_mail_mail",
         allowInvisible: true,
+        isCheck: true,
     }
 ]});
 registry.category("web_tour.tours").add('website_form_contactus_submit', {
@@ -210,5 +212,6 @@ registry.category("web_tour.tours").add('website_form_contactus_submit', {
     {
         content: 'Check form is submitted without errors',
         trigger: '#wrap:has(h1:contains("Thank You!"))',
+        isCheck: true,
     },
 ]});

@@ -39,6 +39,7 @@ const chatRequest = [
         content: "Is your message correctly sent ?",
         shadow_dom: false,
         trigger: "body.no_duplicated_message",
+        isCheck: true,
     },
 ];
 

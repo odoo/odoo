@@ -12,7 +12,8 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
         },
         {
             content: "Load my account details",
-            trigger: 'input[value="Joel Willis"]'
+            trigger: 'input[value="Joel Willis"]',
+            isCheck: true,
         }
     ]
 });

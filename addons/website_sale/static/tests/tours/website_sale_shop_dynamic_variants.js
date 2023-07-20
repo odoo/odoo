@@ -30,5 +30,6 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
     {
         content: "check the variant is in the cart",
         trigger: 'td.td-product_name:contains(Dynamic Product (Dynamic Value 2))',
+        isCheck: true,
     },
 ]});

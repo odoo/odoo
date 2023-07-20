@@ -57,4 +57,5 @@ wTourUtils.registerWebsitePreviewTour("snippet_version", {
     content: "s_share is outdated",
     extra_trigger: 'we-customizeblock-options:contains(Share) .snippet-option-VersionControl > we-alert',
     trigger: 'iframe body',
+    isCheck: true,
 }]);

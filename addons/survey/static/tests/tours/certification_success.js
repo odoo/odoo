@@ -92,5 +92,6 @@ registry.category("web_tour.tours").add('test_certification_success', {
     }, {
         content: "test passed",
         trigger: 'div:contains("Congratulations, you have passed the test!")',
+        isCheck: true,
     }
 ]});

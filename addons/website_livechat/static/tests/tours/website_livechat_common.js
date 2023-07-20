@@ -50,6 +50,7 @@ export const start = [
         content: "Is your message correctly sent ?",
         trigger: "body.no_duplicated_message",
         shadow_dom: false,
+        isCheck: true,
     },
 ];
 
@@ -79,6 +80,7 @@ export const feedback = [
     {
         content: "Thanks for your feedback",
         trigger: "p:contains('Thank you for your feedback')",
+        isCheck: true,
     },
 ];
 
@@ -118,6 +120,7 @@ export const close = [
         content: "Is the Test succeded ?",
         trigger: "body.tour_success",
         shadow_dom: false,
+        isCheck: true,
     },
 ];
 

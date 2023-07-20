@@ -22,7 +22,11 @@ function openProjectUpdateAndReturnToTasks(view, viewClass) {
             trigger: '.o_back_button',
             content: 'Go back to the task view : ' + view,
             // extra_trigger: '.o_list_view', // FIXME: [XBO] uncomment it when the sample data will be displayed after discarding the creation of a project update record.
-        },
+        }, {
+            trigger: `.${viewClass}`,
+            content: 'Check the task view : ' + view,
+            isCheck: true,
+        }
     ];
 }
 

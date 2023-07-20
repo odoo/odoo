@@ -51,5 +51,6 @@
             run: 'click',
         },{
             trigger: '.o_kanban_renderer',
+            isCheck: true,
         }
     ]});

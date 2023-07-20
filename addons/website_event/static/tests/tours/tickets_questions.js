@@ -52,5 +52,5 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
     // The tour stops too early and the registration fails if we don't wait the confirmation.
     content: 'Wait for confirmation',
     trigger: '.o_wereg_confirmed, .oe_cart',
-    auto: true
+    isCheck: true,
 }]});

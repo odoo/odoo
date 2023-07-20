@@ -30,6 +30,7 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
         },
         {
             trigger: ".o-mail-Message:contains('Play Mario Kart')",
+            isCheck: true,
         },
     ],
 });

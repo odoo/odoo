@@ -161,6 +161,11 @@ const addImageToSection = (sectionName, pageName, backend) => {
 {
     content: 'eLearning: back to course',
     trigger: `${prefix}.o_wslides_fs_sidebar_header a:contains("Déboulonnate")`,
+},
+{
+    content: 'eLearning: check course page',
+    trigger: `${prefix}.o_wslides_course_main`,
+    isCheck: true,
 }];
 };
 
@@ -214,6 +219,10 @@ const addPdfToSection = function (sectionName, pageName, backend) {
 }, {
     content: 'eLearning: back to course',
     trigger: `${prefix}.o_wslides_fs_sidebar_header a:contains("Déboulonnate")`,
+}, {
+    content: 'eLearning: check course page',
+    trigger: `${prefix}.o_wslides_course_main`,
+    isCheck: true,
 }];
 };
 

@@ -84,5 +84,6 @@
             trigger: ".o_menu_brand",
             extra_trigger: ".o_reward_rainbow",
             content: "last rainbowman appears",
+            isCheck: true,
         }
     ]});

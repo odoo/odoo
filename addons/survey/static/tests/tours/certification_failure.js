@@ -98,6 +98,7 @@ var lastSteps = [{
     }
 }, {
     trigger: 'h1.tour_success',
+    isCheck: true,
 }];
 
 registry.category("web_tour.tours").add('test_certification_failure', {

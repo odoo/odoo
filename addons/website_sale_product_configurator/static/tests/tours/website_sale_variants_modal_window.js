@@ -60,5 +60,6 @@
         {
             content: "Check never custom variant",
             trigger: 'td.td-product_name:contains(Never attribute size custom: Yes never custom: TEST)',
+            isCheck: true,
         }
     ]});

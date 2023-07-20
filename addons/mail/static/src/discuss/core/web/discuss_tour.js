@@ -88,5 +88,10 @@ registry.category("web_tour.tours").add("mail_tour", {
             ),
             position: "bottom",
         },
+        {
+            trigger: ".o-discuss-ChannelSelector",
+            auto: true,
+            isCheck: true,
+        }
     ],
 });

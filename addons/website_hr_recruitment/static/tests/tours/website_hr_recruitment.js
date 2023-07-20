@@ -32,6 +32,7 @@
         }, {
             content: "Check the form is submitted without errors",
             trigger: "#jobs_thankyou h1:contains('Congratulations')",
+            isCheck: true,
         }];
     }
 

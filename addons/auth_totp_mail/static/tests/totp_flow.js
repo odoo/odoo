@@ -56,7 +56,8 @@ registry.category("web_tour.tours").add('totp_admin_self_invite', {
     }
 }, {
     content: "check that user cannot invite themself.",
-    trigger: "body.CannotInviteYourself"
+    trigger: "body.CannotInviteYourself",
+    isCheck: true,
 }]});
 
 registry.category("web_tour.tours").add('totp_admin_invite', {
@@ -71,4 +72,5 @@ registry.category("web_tour.tours").add('totp_admin_invite', {
 }, {
     content: "check that demo user can be invited to use 2FA.",
     trigger: "button:contains(Invite to use 2FA)",
+    isCheck: true,
 }]});

@@ -104,6 +104,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
         {
             content: "Check message contains the attachment",
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+            isCheck: true,
         },
     ],
 });

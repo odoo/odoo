@@ -492,6 +492,7 @@
             content: 'Verify that the recipient email has been saved',
             // We have to this that way because the input type = hidden.
             trigger: 'iframe form:has(input[name="email_to"][value="test@test.test"])',
+            isCheck: true,
         },
     ]);
 

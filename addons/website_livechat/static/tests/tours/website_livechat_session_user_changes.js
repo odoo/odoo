@@ -57,6 +57,7 @@ registry.category("web_tour.tours").add("website_livechat_login_after_chat_start
             content:
                 "Livechat button is present since the old livechat session was linked to the public user, not the current user.",
             trigger: ".o-livechat-LivechatButton",
+            isCheck: true,
         },
     ],
 });
@@ -98,6 +99,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
             content:
                 "Livechat button is present since the old livechat session was linked to the logged user, not the public one.",
             trigger: ".o-livechat-LivechatButton",
+            isCheck: true,
         },
     ],
 });

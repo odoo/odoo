@@ -67,6 +67,7 @@
         {
             trigger: '.o_event_title:contains("TEST EVENT")',
             content: 'Check the event title',
+            isCheck: true,
         },
     ]});
 
@@ -119,6 +120,7 @@
         {
             content: 'Wait declined status',
             trigger: '.o_attendee_status_declined',
+            isCheck: true,
         },
     ]});
     
@@ -149,5 +151,6 @@
         {
             content: 'Wait declined status',
             trigger: '.o_attendee_status_declined',
+            isCheck: true,
         },
     ]});

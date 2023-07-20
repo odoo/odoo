@@ -146,6 +146,7 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
             $('.o_survey_title').addClass('tour_success_2');
         }
     }, {
-        trigger: '.o_survey_title.tour_success_2'
+        trigger: '.o_survey_title.tour_success_2',
+        isCheck: true,
     }
 ]});
