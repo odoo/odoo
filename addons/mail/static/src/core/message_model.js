@@ -181,7 +181,7 @@ export class Message {
     }
 
     get hasTextContent() {
-        return (this.editDate && this.attachments.length) || !this.isBodyEmpty;
+        return /*(this.editDate && this.attachments.length) || */ !this.isBodyEmpty;
     }
 
     get isEmpty() {
