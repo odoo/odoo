@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from odoo.tools.misc import split_every
 
 
 class ResConfigSettings(models.TransientModel):
@@ -71,13 +72,21 @@ class ResConfigSettings(models.TransientModel):
         """
         Generate the data needed to print the QR codes page
         """
-        if len(self.pos_config_id.floor_ids.table_ids) == 0:
-            raise UserError(_("Before you can create QR codes, you need to create tables for the restaurant."))
-
         return self.env.ref("pos_self_order.report_self_order_qr_codes_page").report_action(
-            [], data=self.pos_config_id._generate_data_for_qr_codes_page(cols=3)
+            [], data={'floors': [
+                {
+                    "name": floor.get("name"),
+                    "type": floor.get("type"),
+                    "table_rows": list(split_every(3, floor["tables"], list)),
+                }
+                for floor in self.pos_config_id._get_qr_code_data()
+            ]}
         )
 
     def preview_self_order_app(self):
         self.ensure_one()
         return self.pos_config_id.preview_self_order_app()
+
+    def update_access_tokens(self):
+        self.ensure_one()
+        self.pos_config_id._update_access_token()
