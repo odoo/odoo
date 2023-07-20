@@ -17,19 +17,21 @@ from math import floor
 from os.path import join as opj
 
 from odoo.http import request, Response
-from odoo import http, tools, _, SUPERUSER_ID
+from odoo import http, tools, _, SUPERUSER_ID, release
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.web_editor.tools import get_video_url_data
-from odoo.exceptions import UserError, MissingError, ValidationError
+from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.tools.misc import file_open
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, binary_to_image
+from odoo.addons.iap.tools import iap_tools
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
+DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 
 
 class Web_Editor(http.Controller):
@@ -762,3 +764,22 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
+
+    @http.route("/web_editor/generate_text", type="json", auth="user")
+    def generate_text(self, prompt, conversation_history):
+        try:
+            IrConfigParameter = request.env['ir.config_parameter'].sudo()
+            olg_api_endpoint = IrConfigParameter.get_param('web_editor.olg_api_endpoint', DEFAULT_OLG_ENDPOINT)
+            response = iap_tools.iap_jsonrpc(olg_api_endpoint + "/api/olg/1/chat", params={
+                'prompt': prompt,
+                'conversation_history': conversation_history or [],
+                'version': release.version,
+            }, timeout=300)
+            if response['status'] == 'success':
+                return response['content']
+            elif response['status'] == 'error_prompt_too_long':
+                raise UserError(_("Sorry, your prompt is too long. Try to say it in fewer words."))
+            else:
+                raise UserError(_("Sorry, we could not generate a response. Please try again later."))
+        except AccessError:
+            raise AccessError(_("Oops, it looks like our AI is unreachable!"))
