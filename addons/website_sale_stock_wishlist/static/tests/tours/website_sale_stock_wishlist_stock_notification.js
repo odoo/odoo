@@ -22,6 +22,7 @@ registry.category("web_tour.tours").add('stock_notification_wishlist', {
         {
             content: "Success Message",
             trigger: '#stock_notification_success_message',
+            isCheck: true,
         },
     ],
 });

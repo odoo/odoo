@@ -26,6 +26,7 @@ registry.category("web_tour.tours").add('back_in_stock_notification_product', {
         {
             content: "Success Message",
             trigger: '#stock_notification_success_message',
+            isCheck: true,
         },
     ],
 });

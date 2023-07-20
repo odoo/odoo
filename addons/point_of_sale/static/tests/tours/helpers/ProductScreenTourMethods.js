@@ -34,6 +34,11 @@ class Do {
                 trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
+            {
+                content: "Check the product page",
+                trigger: ".product-list-container .product-list",
+                isCheck: true,
+            },
         ];
     }
 
@@ -365,6 +370,10 @@ class Check {
             content: "go back to the products",
             trigger: ".pos-rightheader .floor-button",
             mobile: true,
+        }, {
+            content: "Check the product page",
+            trigger: ".product-list-container .product-list",
+            isCheck: true,
         });
         return res;
     }
@@ -414,6 +423,11 @@ class Check {
                 trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
+            {
+                content: "Check the product page",
+                trigger: ".product-list-container .product-list",
+                isCheck: true,
+            }
         ];
     }
     totalTaxIs(amount) {

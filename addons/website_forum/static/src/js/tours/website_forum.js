@@ -60,4 +60,9 @@
         trigger: ".o_wforum_validate_toggler[data-karma]:first",
         content: _t("Click here to accept this answer."),
         position: "right",
+    }, {
+        content: "Check edit button is there",
+        trigger: "a:contains('Edit your answer')",
+        auto: true,
+        isCheck: true,
     }]);

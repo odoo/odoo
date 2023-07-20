@@ -73,5 +73,6 @@ registry.category("web_tour.tours").add('shop_mail', {
     {
         content: "wait mail to be sent, and go see it",
         trigger: '.o-mail-Message-body:contains("Your"):contains("order")',
+        isCheck: true,
     },
 ]});

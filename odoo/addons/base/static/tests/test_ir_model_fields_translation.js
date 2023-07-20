@@ -19,6 +19,7 @@ function checkLoginColumn(translation) {
         }, {
             content: `Login column should be ${translation}`,
             trigger: `[data-name="login"] span:contains("${translation}")`,
+            isCheck: true,
         }
     ]
 }
