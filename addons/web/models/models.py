@@ -104,11 +104,17 @@ class Base(models.AbstractModel):
             return vals
 
         for field_name, field_spec in specification.items():
-            if not field_spec:
+            field = self._fields.get(field_name)
+            if field is None:
                 continue
-            field = self._fields[field_name]
 
-            if field.type == 'many2one' and 'fields' in field_spec:
+            if field.type == 'many2one':
+                if 'fields' not in field_spec:
+                    for values in values_list:
+                        if isinstance(values[field_name], NewId):
+                            values[field_name] = values[field_name].origin
+                    continue
+
                 co_records = self[field_name]
                 if 'context' in field_spec:
                     co_records = co_records.with_context(**field_spec['context'])
@@ -128,9 +134,13 @@ class Base(models.AbstractModel):
                 for values in values_list:
                     if values[field_name] is False:
                         continue
-                    values[field_name] = many2one_data[values[field_name]]
+                    vals = many2one_data[values[field_name]]
+                    values[field_name] = vals['id'] and vals
 
             elif field.type in ('one2many', 'many2many'):
+                if not field_spec:
+                    continue
+
                 co_records = self[field_name]
 
                 if 'order' in field_spec and field_spec['order']:
@@ -164,6 +174,9 @@ class Base(models.AbstractModel):
                         values[field_name] = [x2many_data.get(id_) or {'id': id_} for id_ in values[field_name]]
 
             elif field.type in ('reference', 'many2one_reference'):
+                if not field_spec:
+                    continue
+
                 values_by_id = {
                     vals['id']: vals
                     for vals in values_list
