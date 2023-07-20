@@ -265,9 +265,9 @@ class ImLivechatChannel(models.Model):
             'button_background_color': self.button_background_color,
             'title_color': self.title_color,
             'button_text_color': self.button_text_color,
-            'button_text': self.button_text,
-            'input_placeholder': self.input_placeholder,
-            'default_message': self.default_message,
+            'button_text': _(self.button_text),
+            'input_placeholder': _(self.input_placeholder),
+            'default_message': _(self.default_message),
             "channel_name": self.name,
             "channel_id": self.id,
         }
