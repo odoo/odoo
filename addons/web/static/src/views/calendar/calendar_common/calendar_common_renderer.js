@@ -96,6 +96,7 @@ export class CalendarCommonRenderer extends Component {
             unselectAuto: false,
             weekLabel:
                 this.props.model.scale === "month" && this.env.isSmall ? "" : this.env._t("Week"),
+            weekends: this.props.isWeekendVisible,
             weekNumberCalculation: "ISO",
             weekNumbers: true,
             weekNumbersWithinDays: !this.env.isSmall,
@@ -158,7 +159,7 @@ export class CalendarCommonRenderer extends Component {
         this.popover.open(
             target,
             this.getPopoverProps(record),
-            `o_cw_popover o_calendar_color_${typeof(color) === "number" ? color : 0}`
+            `o_cw_popover o_calendar_color_${typeof color === "number" ? color : 0}`
         );
     }
     updateSize() {

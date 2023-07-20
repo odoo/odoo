@@ -15,6 +15,14 @@
                     <t t-esc="scale.description" />
                 </DropdownItem>
             </t>
+            <div t-if="this.props.isWeekendVisible !== undefined" class="dropdown-divider" role="separator"/>
+            <DropdownItem
+                    t-if="this.props.isWeekendVisible !== undefined"
+                    class="`${props.isWeekendVisible ? 'active' : ''}`"
+                    onSelected="props.toggleWeekendVisibility"
+                >
+                Show weekends
+            </DropdownItem>
         </Dropdown>
     </t>
 

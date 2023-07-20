@@ -2688,7 +2688,10 @@ QUnit.module("Views", ({ beforeEach }) => {
                 </calendar>
             `,
         });
-        const colorClass = Array.from(findEvent(target, 1).classList).find(className => className.startsWith("o_calendar_color_"));
+
+        const colorClass = Array.from(findEvent(target, 1).classList).find((className) =>
+            className.startsWith("o_calendar_color_")
+        );
         assert.notOk(isNaN(Number(colorClass.split("_").at(-1))));
         await clickEvent(target, 1);
         assert.hasClass(target.querySelector(".o_cw_popover"), colorClass);
