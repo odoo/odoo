@@ -172,6 +172,56 @@ class TestXMLID(TransactionCase):
         with self.assertRaisesRegex(IntegrityError, 'ir_model_data_name_nospaces'):
             model._load_records(data_list)
 
+    def test_update_xmlid(self):
+        def assert_xmlid(xmlid, value, message):
+            expected_values = (value._name, value.id)
+            with self.assertQueryCount(0):
+                self.assertEqual(self.env['ir.model.data']._xmlid_lookup(xmlid), expected_values, message)
+            module, name = xmlid.split('.')
+            self.env.cr.execute("SELECT model, res_id FROM ir_model_data where module=%s and name=%s", [module, name])
+            self.assertEqual((value._name, value.id), self.env.cr.fetchone(), message)
+
+        xmlid = 'base.test_xmlid'
+        records = self.env['ir.model.data'].search([], limit=6)
+        with self.assertQueryCount(1):
+            self.env['ir.model.data']._update_xmlids([
+                {'xml_id': xmlid, 'record': records[0]},
+            ])
+        assert_xmlid(xmlid, records[0], f'The xmlid {xmlid} should have been created with record {records[0]}')
+
+        with self.assertQueryCount(1):
+            self.env['ir.model.data']._update_xmlids([
+                {'xml_id': xmlid, 'record': records[1]},
+            ], update=True)
+        assert_xmlid(xmlid, records[1], f'The xmlid {xmlid} should have been updated with record {records[1]}')
+
+        with self.assertQueryCount(1):
+            self.env['ir.model.data']._update_xmlids([
+                {'xml_id': xmlid, 'record': records[2]},
+            ])
+        assert_xmlid(xmlid, records[2], f'The xmlid {xmlid} should have been updated with record {records[1]}')
+
+        # noupdate case
+        # note: this part is mainly there to avoid breaking the current behaviour, not asserting that it makes sence
+        xmlid = 'base.test_xmlid_noupdates'
+        with self.assertQueryCount(1):
+            self.env['ir.model.data']._update_xmlids([
+                {'xml_id': xmlid, 'record': records[3], 'noupdate':True}, # record created as noupdate
+            ])
+
+        assert_xmlid(xmlid, records[3], f'The xmlid {xmlid} should have been created for record {records[2]}')
+
+        with self.assertQueryCount(1):
+            self.env['ir.model.data']._update_xmlids([
+                {'xml_id': xmlid, 'record': records[4]},
+            ], update=True)
+        assert_xmlid(xmlid, records[3], f'The xmlid {xmlid} should not have been updated (update mode)')
+
+        with self.assertQueryCount(1):
+            self.env['ir.model.data']._update_xmlids([
+                {'xml_id': xmlid, 'record': records[5]},
+            ])
+        assert_xmlid(xmlid, records[5], f'The xmlid {xmlid} should have been updated with record (not an update) {records[1]}')
 
 class TestIrModel(TransactionCase):
 
