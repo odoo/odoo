@@ -1555,7 +1555,7 @@ export class PosStore extends Reactive {
      * Make the products corresponding to the given ids to be available_in_pos and
      * fetch them to be added on the loaded products.
      */
-    async _addProducts(ids, setAvailable = true) {
+    async _addProducts(ids, setAvailable = false) {
         if (setAvailable) {
             await this.orm.write("product.product", ids, { available_in_pos: true });
         }

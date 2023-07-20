@@ -7,7 +7,9 @@
         t-on-click="() => this.props.onClickSaleOrder(props.order)">
             <div class="col name">
                 <div t-if="ui.isSmall">Order</div>
+                <div t-if="isProcessed and ui.isSmall" class="isProcessed">Being processed</div>
                 <div><t t-esc="name"/></div>
+                <div t-if="isProcessed and !ui.isSmall" class="isProcessed">Being processed</div>
             </div>
             <div class="col date">
                 <div t-if="ui.isSmall">Date</div>

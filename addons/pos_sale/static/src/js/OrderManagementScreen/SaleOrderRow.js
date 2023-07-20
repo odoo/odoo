@@ -64,4 +64,14 @@ export class SaleOrderRow extends Component {
         const salesman = this.order.user_id;
         return salesman ? salesman[1] : null;
     }
+    get isProcessed() {
+        for (let order of this.env.services.pos.get_order_list()) {
+            for (let lines of order.get_orderlines()) {
+                if(this.order.id === lines.sale_order_origin_id.id) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
