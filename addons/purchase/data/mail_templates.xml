@@ -5,12 +5,12 @@
         <div>
             <strong>The ordered quantity has been updated.</strong>
             <ul>
-                <li><t t-esc="line.product_id.display_name"/>:</li>
-                Ordered Quantity: <t t-esc="line.product_qty" /> -&gt; <t t-esc="float(product_qty)"/><br/>
+                <li><span t-field="line.product_id.display_name"/>:</li>
+                Ordered Quantity: <span t-field="line.product_qty" /> -&gt; <t t-out="float(product_qty)" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/><br/>
                 <t t-if='line.order_id.product_id.type in ("consu", "product")'>
-                    Received Quantity: <t t-esc="line.qty_received" /><br/>
+                    Received Quantity: <span t-field="line.qty_received" /><br/>
                 </t>
-                Billed Quantity: <t t-esc="line.qty_invoiced"/>
+                Billed Quantity: <span t-field="line.qty_invoiced"/>
             </ul>
         </div>
     </template>
@@ -19,8 +19,8 @@
         <div>
             <strong>The received quantity has been updated.</strong>
             <ul>
-                <li><t t-esc="line.product_id.display_name"/>:</li>
-                Received Quantity: <t t-esc="line.qty_received" /> -&gt; <t t-esc="float(qty_received)"/><br/>
+                <li><span t-field="line.product_id.display_name"/>:</li>
+                Received Quantity: <span t-field="line.qty_received" /> -&gt; <t t-out="float(qty_received)" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/><br/>
             </ul>
         </div>
     </template>
