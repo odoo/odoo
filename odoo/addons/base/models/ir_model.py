@@ -2113,7 +2113,19 @@ class IrModelData(models.Model):
             query = self._build_update_xmlids_query(sub_rows, update)
             try:
                 self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
-                self.env.registry.clear_cache()
+                result = self.env.cr.fetchall()
+                if result:
+                    for module, name, model, res_id, create_date, write_date in result:
+                        # small optimisation: during install a lot of xmlid are created/updated.
+                        # Instead of clearing the cache, set the correct value in the cache to avoid a bunch of query
+                        self._xmlid_lookup.cache.add_value(self, f"{module}.{name}", cache_value=(model, res_id))
+                        if create_date != write_date:
+                            # something was updated, notify other workers
+                            # it is possible that create_date and write_date
+                            # have the same value after an update if it was
+                            # created in the same transaction, no need to invalidate other worker cache
+                            # cache in this case.
+                            self.env.registry.cache_invalidated.add('default')
 
             except Exception:
                 _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
@@ -2124,18 +2136,32 @@ class IrModelData(models.Model):
 
     # NOTE: this method is overriden in web_studio; if you need to make another
     #  override, make sure it is compatible with the one that is there.
+    def _build_insert_xmlids_values(self):
+        return {
+            'module': '%s',
+            'name': '%s',
+            'model': '%s',
+            'res_id': '%s',
+            'noupdate': '%s',
+        }
+
     def _build_update_xmlids_query(self, sub_rows, update):
-        rowf = "(%s, %s, %s, %s, %s)"
+        rows = self._build_insert_xmlids_values()
+        row_names = f"({','.join(rows.keys())})"
+        row_placeholders = f"({','.join(rows.values())})"
+        row_placeholders = ", ".join([row_placeholders] * len(sub_rows))
         return """
-            INSERT INTO ir_model_data (module, name, model, res_id, noupdate)
-            VALUES {rows}
+            INSERT INTO ir_model_data {row_names}
+            VALUES {row_placeholder}
             ON CONFLICT (module, name)
             DO UPDATE SET (model, res_id, write_date) =
                 (EXCLUDED.model, EXCLUDED.res_id, now() at time zone 'UTC')
-                {where}
+                WHERE (ir_model_data.res_id != EXCLUDED.res_id OR ir_model_data.model != EXCLUDED.model) {and_where}
+            RETURNING module, name, model, res_id, create_date, write_date
         """.format(
-            rows=", ".join([rowf] * len(sub_rows)),
-            where="WHERE NOT ir_model_data.noupdate" if update else "",
+            row_names=row_names,
+            row_placeholder=row_placeholders,
+            and_where="AND NOT ir_model_data.noupdate" if update else "",
         )
 
     @api.model
