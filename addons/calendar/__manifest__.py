@@ -57,6 +57,9 @@ If you need to manage your meetings, you should install the CRM module.
             'calendar/static/src/xml/base_calendar.xml',
             'calendar/static/src/components/activity/activity.xml',
         ],
+        'web.assets_tests': [
+            'calendar/static/tests/tours/calendar_tour.js'
+        ],
     },
     'license': 'LGPL-3',
 }
