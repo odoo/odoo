@@ -10,21 +10,23 @@ import { nextTick } from "@web/../tests/helpers/utils";
 QUnit.module("out of focus");
 
 QUnit.test("Spaces in notifications are not encoded", async (assert) => {
-    const { env, openDiscuss, pyEnv } = await start({
+    const { openDiscuss, pyEnv } = await start({
         services: {
             notification: makeFakeNotificationService((message) => assert.step(message)),
             presence: makeFakePresenceService({ isOdooFocused: () => false }),
         },
     });
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     await openDiscuss();
-    await env.services.rpc("/mail/message/post", {
-        post_data: {
+    pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
+        id: channelId,
+        message: {
             body: "Hello world!",
-            attachment_ids: [],
+            id: 126,
+            model: "discuss.channel",
+            res_id: channelId,
         },
-        thread_id: channelId,
-        thread_model: "discuss.channel",
     });
     await nextTick();
     assert.verifySteps(["Hello world!"]);
