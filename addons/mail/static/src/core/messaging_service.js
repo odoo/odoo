@@ -525,7 +525,11 @@ export class Messaging {
             }
         }
         if (channel.chatPartnerId !== this.store.odoobot?.id) {
-            if (!this.presence.isOdooFocused() && channel.isChatChannel) {
+            if (
+                !this.presence.isOdooFocused() &&
+                channel.isChatChannel &&
+                !message.isSelfAuthored
+            ) {
                 this.outOfFocusService.notify(message, channel);
             }
 
