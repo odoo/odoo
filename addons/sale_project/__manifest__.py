@@ -16,6 +16,7 @@ This module allows to generate a project/task from sales orders.
         'security/sale_project_security.xml',
         'views/product_views.xml',
         'views/project_task_views.xml',
+        'views/sale_order_line_views.xml',
         'views/sale_order_views.xml',
         'views/sale_project_portal_templates.xml',
         'views/project_sharing_views.xml',

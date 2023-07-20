@@ -195,7 +195,9 @@ class Project(models.Model):
     def _compute_sale_order_count(self):
         billable_projects = self.filtered('allow_billable')
         super(Project, billable_projects)._compute_sale_order_count()
-        (self - billable_projects).sale_order_count = 0
+        non_billable_projects = self - billable_projects
+        non_billable_projects.sale_order_line_count = 0
+        non_billable_projects.sale_order_count = 0
 
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):

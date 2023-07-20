@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_line_tree_with_create" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.with.create</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="create">true</attribute>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sale_order_line_view_form_editable" model="ir.ui.view">
+        <field name="name">sale.order.line.view.form.editable</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.sale_order_line_view_form_readonly"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="edit">true</attribute>
+            </form>
+            <field name="product_id" position="attributes">
+                <attribute name="domain">[('type', '=', 'service')]</attribute>
+                <attribute name="context">{
+                    'default_detailed_type': 'service',
+                }</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

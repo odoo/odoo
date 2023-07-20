@@ -5,6 +5,7 @@ from collections import defaultdict
 from markupsafe import escape
 
 from odoo import api, Command, fields, models, _
+from odoo.exceptions import AccessError
 from odoo.tools import format_amount
 from odoo.tools.sql import column_exists, create_column
 
@@ -21,6 +22,59 @@ class SaleOrderLine(models.Model):
         index=True, copy=False)
     # used to know if generate a task and/or a project, depending on the product settings
     reached_milestones_ids = fields.One2many('project.milestone', 'sale_line_id', string='Reached Milestones', domain=[('is_reached', '=', True)])
+
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable':
+            default_values = {
+                'name': _("New Sales Order Item"),
+            }
+
+            # If we can't add order lines to the default order, discard it
+            if 'order_id' in res:
+                try:
+                    self.env['sale.order'].browse(res['order_id']).check_access_rule('write')
+                except AccessError:
+                    del res['order_id']
+
+            if 'order_id' in fields and 'order_id' not in res:
+                assert (partner_id := self.env.context.get('default_partner_id'))
+                project_id = self.env.context.get('link_to_project')
+                sale_order = None
+                if project_id:
+                    try:
+                        project_so = self.env['project.project'].browse(project_id).sale_order_id
+                        project_so.check_access_rule('write')
+                        sale_order = project_so
+                    except AccessError:
+                        pass
+
+                    if not sale_order:
+                        so_create_values = {
+                            'partner_id': partner_id,
+                            'project_ids': [Command.link(project_id)],
+                        }
+                else:
+                    so_create_values = {
+                        'partner_id': partner_id,
+                    }
+
+                if not sale_order:
+                    company_id = self.env.context.get('defaut_company_id', False)
+                    if company_id:
+                        so_create_values['company_id'] = company_id
+                    sale_order = self.env['sale.order'].create(so_create_values)
+                    sale_order.action_confirm()
+                default_values['order_id'] = sale_order.id
+            if (name := self.env.context.get('default_name')):
+                product = self.env['product.product'].search([
+                    ('name', 'ilike', name),
+                    ('company_id', 'in', [False, self.env.company.id]),
+                ], limit=1)
+                if product:
+                    default_values['product_id'] = product.id
+            return {**res, **default_values}
+        return res
 
     @api.depends('product_id.type')
     def _compute_product_updatable(self):
@@ -70,6 +124,13 @@ class SaleOrderLine(models.Model):
                 if line.task_id and not has_task:
                     msg_body = escape(_("Task Created (%s): %s")) % (line.product_id.name, line.task_id._get_html_link())
                     line.order_id.message_post(body=msg_body)
+
+        # Set a service SOL on the project, if any is given
+        if (project_id := self.env.context.get('link_to_project')):
+            assert (service_line := next((line for line in lines if line.is_service), False))
+            project = self.env['project.project'].browse(project_id)
+            if not project.sale_line_id:
+                project.sale_line_id = service_line
         return lines
 
     def write(self, values):
