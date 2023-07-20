@@ -5683,6 +5683,55 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "create a column in grouped on m2o without sequence field on view model",
+        async (assert) => {
+            delete serverData.models.partner.fields.sequence;
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban on_create="quick_create">
+                        <field name="product_id"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div><field name="foo"/></div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+                groupBy: ["product_id"],
+                async mockRPC(route, args) {
+                    if (args.method === "create" || route === "/web/dataset/resequence") {
+                        assert.step(args.method || route);
+                        if (route === "/web/dataset/resequence") {
+                            assert.step(args.ids.toString());
+                            return true;
+                        }
+                    }
+                },
+            });
+
+            assert.containsN(target, ".o_kanban_group", 2);
+            assert.containsOnce(
+                target,
+                ".o_column_quick_create",
+                "should have a quick create column"
+            );
+            assert.containsNone(
+                target,
+                ".o_column_quick_create input",
+                "the input should not be visible"
+            );
+
+            await createColumn();
+            await editColumnName("new value");
+            await validateColumn();
+
+            assert.verifySteps(["create", "/web/dataset/resequence", "3,5,6"]);
+        }
+    );
+
     QUnit.test("auto fold group when reach the limit", async (assert) => {
         for (let i = 0; i < 12; i++) {
             serverData.models.product.records.push({

@@ -259,8 +259,8 @@ export class DynamicGroupList extends DynamicList {
         return group.value;
     }
 
-    _getDPHandleField(group) {
-        return group[this.handleField];
+    _getDPFieldValue(group, handleField) {
+        return group[handleField];
     }
 
     async _load(offset, limit, orderBy, domain) {
