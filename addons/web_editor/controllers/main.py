@@ -16,14 +16,15 @@ from datetime import datetime
 from math import floor
 
 from odoo.http import request, Response
-from odoo import http, tools, _, SUPERUSER_ID
+from odoo import http, tools, _, SUPERUSER_ID, release
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.web_editor.tools import get_video_url_data
-from odoo.exceptions import UserError, MissingError, ValidationError
+from odoo.exceptions import UserError, MissingError, ValidationError, AccessError
 from odoo.modules.module import get_resource_path
 from odoo.tools import file_open
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, binary_to_image
+from odoo.addons.iap.tools import iap_tools
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
@@ -801,3 +802,16 @@ class Web_Editor(http.Controller):
             ensure_no_history_divergence(record, field_name, history_ids)
         except ValidationError:
             return record[field_name]
+
+    @http.route("/web_editor/generate_text", type="json", auth="user")
+    def generate_text(self, prompt, context):
+        try:
+            params = {'prompt': prompt, 'ctxt': context, 'version': release.version}  # context is a protected var
+            IrConfigParameter = request.env['ir.config_parameter'].sudo()
+            olg_api_endpoint = IrConfigParameter.get_param('editor.olg_api_endpoint', 'https://olg.api.odoo.com')
+            endpoint = olg_api_endpoint + "/api/olg/1/generate_text"
+            generated, error = iap_tools.iap_jsonrpc(endpoint, params=params, timeout=300)
+            return generated, error
+        except AccessError:
+            return [], "Oops, it look like our AI un unreachable !"
+            #raise AccessError(_("Oops, it look like our AI un unreachable !"))

@@ -11,6 +11,7 @@ import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor
 import { Toolbar } from "@web_editor/js/editor/toolbar";
 import { LinkPopoverWidget } from '@web_editor/js/wysiwyg/widgets/link_popover_widget';
 import { AltDialog } from '@web_editor/js/wysiwyg/widgets/alt_dialog';
+import { GenerationDialog } from '@web_editor/js/wysiwyg/widgets/generation_dialog';
 import { ImageCrop } from '@web_editor/js/wysiwyg/widgets/image_crop';
 
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
@@ -43,6 +44,7 @@ import {
 import { requireWysiwygLegacyModule } from "@web_editor/js/frontend/loader";
 import { isCSSColor } from '@web/core/utils/colors';
 import { EmojiPicker } from '@web/core/emoji_picker/emoji_picker';
+import {ancestors} from "../editor/odoo-editor/src/utils/utils";
 
 const OdooEditor = OdooEditorLib.OdooEditor;
 const getDeepRange = OdooEditorLib.getDeepRange;
@@ -1496,6 +1498,85 @@ export class Wysiwyg extends Component {
         }
     }
     /**
+     * Toggle the generate content dialog to generate some content.
+     */
+    generateContentDialog() {
+        const restoreSelection = preserveCursor(this.odooEditor.document);
+        this.env.services.dialog.add(GenerationDialog, {
+            prompt: "",
+            context: this.getContext(),
+            restore: () => restoreSelection(),
+            confirm: (prompt, context) => {
+                const loadingEl = this.insertLoading();
+                const response  = this._serviceRpc(
+                    '/web_editor/generate_text',
+                    {'prompt':prompt,'context':context},
+                    { shadow: true }
+                );
+                response.then((response) => {
+                    let content=response[0];
+                    const error=response[1];
+                    if(error){
+                        content = parseHTML(`
+                            <div class="d-inline-flex align-items-center row border rounded w-50 align-baseline p-3" contenteditable="false">
+                                <div class="col-2">
+                                    <i class="fa fa-exclamation-circle" aria-hidden="true" style="font-size: 2.5rem;color: black;"></i>
+                                </div>
+                                <h2 class="col">Error : ${error} </h2> 
+                            </div>
+                        `).childNodes[0]; // TODO STYLE ICON CORRECTLY and style h2
+                    }
+                    this.replaceLoading(loadingEl,content);
+                });
+            }
+        });
+    }
+    /**
+     * Get all the text of the Editor.
+     */
+    getContext() {
+        let $editable = $(this.odooEditor.editable).clone();
+        $editable.find('[contenteditable]').removeAttr('contenteditable');
+        $editable.find('[class=""]').removeAttr('class');
+        $editable.find('[style=""]').removeAttr('style');
+        $editable.find('[title=""]').removeAttr('title');
+        $editable.find('[alt=""]').removeAttr('alt');
+        $editable.find('[data-bs-original-title=""]').removeAttr('data-bs-original-title');
+        $editable.find('[data-editor-message]').removeAttr('data-editor-message');
+        $editable.find('a.o_image, span.fa, i.fa').html('');
+        $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-bs-original-title');
+        return($editable.html());
+    }
+    /**
+     * Insert a loading snippet.
+     */
+    insertLoading(){
+        const selection = this.odooEditor.document.getSelection();
+        const range = selection.getRangeAt(0);
+        const element = closestElement(range.startContainer);
+
+        if (element && ancestors(element).includes(this.odooEditor.editable)) {
+            const loadingEl = parseHTML(`
+                <div class="d-inline-flex align-items-center row border rounded w-50 align-baseline p-3 oe_unremovable" contenteditable="false">
+                    <div class="col-2 o_spinner">
+                        <img src="/web/static/img/spin.svg" alt="Loading..." style="filter:invert(1)"/>
+                    </div>
+                    <h2 class="col"> Thinking... </h2> 
+                </div>
+            `).childNodes[0]; // TODO WE NEED TO STYLE THE H2 PROPERLY (for website per example) TODO make the unremovable working TODO make it unsavable
+
+            this.odooEditor.execCommand('insert', loadingEl);
+            return(loadingEl);
+        }
+    }
+    /**
+     * Replace the Loading snippet by "content".
+     */
+    replaceLoading(element,content){
+        this.odooEditor.execCommand('insert', content);
+        element.remove();
+    }
+    /**
      * Removes the current Link.
      */
     removeLink() {
@@ -2380,6 +2461,17 @@ export class Wysiwyg extends Component {
                     if (user && user.signature) {
                         this.odooEditor.execCommand('insert', parseHTML(user.signature));
                     }
+                },
+            },
+            {
+                category: _t('AI Tools'),
+                name: _t('Generate'),
+                description: _t('Generate content by giving a prompt to an AI.'),
+                fontawesome: 'fa-magic',
+                priority: 1,
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
+                callback: async () => {
+                    this.generateContentDialog();
                 },
             },
         ];

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web_edior.GenerationDialog">
+    <Dialog size="'xl'" title="'AI Prompt'">
+        <form action="#">
+            <div class="md-8">
+                <label class="col-md-8 col-form-label" for="alt"
+                       title="'Type here a request, you can try to translate or summarize something for example.">
+                What do you want the ai to generate ?
+                </label>
+                <div class="mb-8">
+                    <textarea id="prompt" t-ref="prompt" name="prompt" required="required" t-att-value="props.prompt" maxlength="14000"></textarea>
+                </div>
+            </div>
+        </form>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="_confirm">Generate</button>
+            <button class="btn btn-secondary" t-on-click="_cancel">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+</templates>
