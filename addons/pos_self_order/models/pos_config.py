@@ -188,65 +188,34 @@ class PosConfig(models.Model):
             "has_active_session": self.has_active_session,
         }
 
-    def _generate_data_for_qr_codes_page(self, cols: int = 4) -> Dict[str, List[Dict]]:
-        """
-        :cols: the number of qr codes per row
-        """
+    def _get_qr_code_data(self):
         self.ensure_one()
-        return {
-            "floors": self._split_qr_codes_list(
-                self._get_qr_codes_info(cols * cols),
-                cols,
-            )
-        }
 
-    def _get_qr_codes_info(self, total_number: int) -> List[Dict]:
-        """
-        total_number: the number of qr codes to generate (in the case where we don't have
-                floor management)
-        return: a list of dictionaries with the following keys:
-            - name: the name of the floor
-            - tables: a list of dictionaries with the following keys:
-                - id: the id of the table
-                - url: the url of the table
-                - name?: the name of the table
-        """
-        self.ensure_one()
+        table_qr_code = []
         if self.self_order_table_mode:
-            return self.floor_ids._get_data_for_qr_codes_page(self._get_self_order_url)
-        else:
-            return self._get_default_qr_codes(total_number, self._get_self_order_url)
+            table_qr_code.extend([{
+                    'name': floor.name,
+                    'type': 'table',
+                    'tables': [
+                        {
+                            'identifier': table.identifier,
+                            'id': table.id,
+                            'name': table.name,
+                            'url': self._get_self_order_url(table.id),
+                        }
+                        for table in floor.table_ids.filtered("active")
+                    ]
+                }
+                for floor in self.floor_ids]
+            )
 
-    def _split_qr_codes_list(self, floors: List[Dict], cols: int) -> List[Dict]:
-        """
-        :floors: the list of floors
-        :cols: the number of qr codes per row
-        """
-        self.ensure_one()
-        return [
-            {
-                "name": floor.get("name"),
-                "rows_of_tables": list(split_every(cols, floor["tables"], list)),
-            }
-            for floor in floors
-        ]
+        table_qr_code.extend([{
+            'name': 'Generic',
+            'type': 'default',
+            'tables': [{
+                'id': i,
+                'url': self._get_self_order_url(),
+            } for i in range(0, 11)]
+        }])
 
-    def _get_default_qr_codes(
-        self, number: int, url: Callable[[Optional[int]], str]
-    ) -> List[Dict]:
-        """
-        :number: the number of qr codes to generate
-        :url: a function that takes a table id and returns the url of the table
-        """
-        self.ensure_one()
-        return [
-            {
-                "tables": [
-                    {
-                        "id": 0,
-                        "url": url(),
-                    }
-                ]
-                * number,
-            }
-        ]
+        return table_qr_code

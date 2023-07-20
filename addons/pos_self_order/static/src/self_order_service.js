@@ -282,7 +282,9 @@ export class SelfOrder {
         const order = this.orders.filter((o) => o.access_token === access_token);
         let message = _t("Your order status has been changed");
 
-        if (order.length !== 1) {
+        if (order.length === 0) {
+            throw new Error("Warning, no order with this access_token");
+        } else if (order.length !== 1) {
             throw new Error("Warning, two orders with the same access_token");
         } else {
             order[0].state = state;

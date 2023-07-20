@@ -19,77 +19,66 @@
     </data>
 
     <template id="qr_codes_page">
-        <t t-call="web.basic_layout">
-            <div class="page">
-                <h1 class="text-center">
-                    QR Code Menu
-                </h1>
-                <!-- There is a very annoying problem here:
-                wkhtmltopdf does not handle flex-wrap. ( at least not in this version )
-                This makes it so the bootstrap grid system does not work.
-                We have to do a workaround -->
-
-                <t t-foreach="floors" t-as="floor">
-                <!-- MDN states that "page-break-after" has been replaced by "break-after",
-                but "break-after" is not supported in this version of wkhtmltopdf so we 
-                have to keep using "page-break-after" -->
-                    <div style="page-break-after: always;">
-                        <h3 t-if="floor.get('name')" t-out="floor['name']" class="mb-5"/>
-                        <div
-                            t-foreach="floor['rows_of_tables']"
-                            t-as="row_of_tables"
-                            class="d-flex"
-                            >
-                            <t t-foreach="row_of_tables"
-                                t-as="table"
-                                t-call="pos_self_order.qr_code"
-                                />
-                        </div>
-                    </div>
-                </t>
-            </div>
-        </t>
-    </template>
-
-    <template id="qr_code">
-        <t t-set="qr_code_size" t-value="180"/>
-        <div style="padding: 0px 40px; margin-bottom:40px; page-break-inside: avoid;">
-            <!-- This page-break-inside does not seem to work;
+        <!-- This page-break-inside does not seem to work;
             It would be nice to have the qr codes so the title is never on
             a different page then the qr code itself -->
-            <h4 class="fw-bold text-center"
-                style="margin-top: 20px"
-                t-if="table['id']"
-                >
-                Table: <t t-esc="table['name']"/>
-            </h4>
-            <div class="p-3">
-                <div class="mt-1 mb-4 position-relative top-0 start-0">
-                    <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)"
-                        class="position-relative top-0 start-0"
-                    />
-                    <t t-call="pos_self_order.first_letter_of_odoo_logo_svg"/>
-                </div>
+        <t t-set="qr_code_size" t-value="190"/>
+        <t t-call="web.basic_layout">
+            <div style="display: flex; align-items: center; padding: 0 20px; margin-bottom: 35px;  padding-left: 0; margin-left: 0;">
+                <img src="/pos_self_order/static/img/default_qrcode_odoo.png" style="width: 100px; height: 100px; margin-right: 25px;"/>
+                <h2 stlye="color: #714C67;">Place the QR codes on your tables,<br/>
+                    so your customer scan it to order</h2>
             </div>
-        </div>
-    </template>
 
-    <template id="first_letter_of_odoo_logo_svg">
-        <svg
-            class="position-absolute top-50 start-50"
-            style="-webkit-transform: translate(-50%, -50%);"
-            t-att-width="qr_code_size/4"
-            t-att-height="qr_code_size/4"
-            viewBox="0 0 120 120" fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <g>
-                <rect width="120" height="120" rx="33" fill="white"/>
-                <g>
-                    <path d="M60 110C87.6142 110 110 87.6142 110 60C110 32.3858 87.6142 10 60 10C32.3858 10 10 32.3858 10 60C10 87.6142 32.3858 110 60 110Z" fill="#9C5789"/>
-                    <path d="M59.5166 89.6961C75.8029 89.6961 89.0055 76.4935 89.0055 60.2072C89.0055 43.9209 75.8029 30.7182 59.5166 30.7182C43.2303 30.7182 30.0276 43.9209 30.0276 60.2072C30.0276 76.4935 43.2303 89.6961 59.5166 89.6961Z" fill="white"/>
-                </g>
-            </g>
-        </svg>
+            <div>
+                <h3 style="color: #0C7285">How to use</h3>
+                <p>The below QR codes are predefined with a table number. One per table configured in your floor plan.</p>
+                <p>Want to customise table stand ? Either use any of the below QR codes as-is in your composition
+                or generate new ones with the online tool of your choice. Retrieve a URL by scanning the related QR code.</p>
+            </div>
+
+            <!-- Table with access token -->
+            <t t-if="floors" t-foreach="floors" t-as="floor">
+                <div t-att-style="'page-break-before: always;' if floor.get('type') == 'default' else ''">
+                    <div t-if="floor.get('type') == 'default'" class="margin-bottom: 50px; page-break-before: always;">
+                        <h3 style="color: #0C7285">Generic QR codes</h3>
+                        <p>When one QR code is enough everywhere. If used in self-ordering, customer will be asked to enter the
+                        table number before he can place an order.</p>
+                        <p>Want to customise table stand ? Either use any of the below QR codes as-is in your composition
+                        or generate new ones with the online tool of your choice. Retrieve a URL by scanning the related QR code.</p>
+                    </div>
+                    <h4 t-if="floor.get('name')" t-out="floor['name']" class="mb-3 mt-5"/>
+                    <table style="border: none; border-collapse: collapse; width: 100%;">
+                        <tbody style="border: none;">
+                            <tr t-foreach="floor.get('table_rows')" t-as="row" style="border: none;">
+                                <td t-foreach="row" t-as="table" style="width: 33%; text-align:center; border: none;">
+                                    <div class="mb-3" style="page-break-inside: avoid">
+                                        <h4 class="fw-bold text-center" t-if="table.get('name')">
+                                            Table: <t t-esc="table['name']"/>
+                                        </h4>
+                                        <div class="mt-1 mb-1 position-relative top-0 start-0">
+                                            <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)" class="position-relative top-0 start-0" />
+                                            <svg class="position-absolute top-50 start-50" style="-webkit-transform: translate(-50%, -50%);" t-att-width="qr_code_size/4" t-att-height="qr_code_size/4" viewBox="0 0 120 120" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <g>
+                                                    <rect width="120" height="120" rx="33" fill="white"/>
+                                                    <g>
+                                                        <path d="M60 110C87.6142 110 110 87.6142 110 60C110 32.3858 87.6142 10 60 10C32.3858 10 10 32.3858 10 60C10 87.6142 32.3858 110 60 110Z" fill="#9C5789"/>
+                                                        <path d="M59.5166 89.6961C75.8029 89.6961 89.0055 76.4935 89.0055 60.2072C89.0055 43.9209 75.8029 30.7182 59.5166 30.7182C43.2303 30.7182 30.0276 43.9209 30.0276 60.2072C30.0276 76.4935 43.2303 89.6961 59.5166 89.6961Z" fill="white"/>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <h6 class="fw-bold text-center mb-3" t-if="table.get('identifier')">
+                                            (<t t-esc="table['identifier']"/>)
+                                        </h6>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
     </template>
 </odoo>
