@@ -57,6 +57,8 @@ from . import res_company
 from . import res_config_settings
 from . import res_users
 from . import update
+from . import web_push
+from . import partner_devices
 
 # after mail specifically as discuss module depends on mail
 from . import discuss

@@ -130,6 +130,12 @@
                         </setting>
                     </block>
 
+                    <block title="Progressive Web App" id="pwa_settings" groups="base.group_no_one">
+                        <setting help="This name will be used for the application when Odoo is installed through the browser.">
+                            <field name="web_app_name" placeholder="Odoo"/>
+                        </setting>
+                    </block>
+
                         <block title="Integrations" name="integration">
                             <setting string="Mail Plugin" documentation="/applications/productivity/mail_plugins.html" help="Integrate with mail client plugins" id="mail_pluggin_setting">
                                 <field name="module_mail_plugin" />
