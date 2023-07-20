@@ -14,8 +14,9 @@ class HrOrgChartController(http.Controller):
             return None
         employee_id = int(employee_id)
 
-        if 'allowed_company_ids' in request.env.context:
-            cids = request.env.context['allowed_company_ids']
+        context = kw.get('context', request.env.context)
+        if 'allowed_company_ids' in context:
+            cids = context['allowed_company_ids']
         else:
             cids = [request.env.company.id]
 
