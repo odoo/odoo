@@ -21,6 +21,10 @@
         'web.assets_backend': [
             'spreadsheet/static/src/**/*.scss',
             'spreadsheet/static/src/assets_backend/**/*',
+            ('remove', 'spreadsheet/static/src/**/*.dark.scss'),
+        ],
+        "web.dark_mode_assets_backend": [
+            'spreadsheet/static/src/**/*.dark.scss',
         ],
         'web.qunit_suite_tests': [
             'spreadsheet/static/tests/**/*',
