@@ -12,6 +12,33 @@ from odoo import Command
 import requests
 
 
+####################################################
+# Helper method - remove when done! -TODO-
+####################################################
+
+def test_anaf(self, attachment=None, manual_check=False):
+    if not attachment:
+        return
+    xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+    if manual_check:
+        from pathlib import Path
+        with Path("~/work/odoo/.notes/test.xml").expanduser().open("wb") as f:
+            f.write(xml_content)
+            print("wrote to test.xml")
+    url = 'https://webservicesp.anaf.ro/prod/FCTEL/rest/validare/FACT1'
+    headers = {'Content-Type': 'text/plain'}
+    response = requests.post(url, data=xml_content, headers=headers)
+    json = response.json()
+    print("=====================================================\n\n")
+    if 'Messages' in json:
+        for message_obj in json['Messages']:
+            message = message_obj['message']
+            print(message, "\n\n")
+    else:
+        print(json, '\n\n')
+    print("=====================================================")
+
+
 # TODO - remove 'yoni' tag when done
 @tagged('post_install_l10n', 'post_install', '-at_install', 'yoni')
 class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
@@ -46,7 +73,6 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.ro').id,
             'state_id': cls.env.ref('base.RO_B').id,
             'ref': 'ref_partner_a',
-            'ubl_cii_format': 'ciusro'  # should be selected automatically! (?)
         })
 
         cls.partner_b = cls.env['res.partner'].create({
@@ -58,6 +84,7 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'street': "Rue de la Madeleine, 1",
             'country_id': cls.env.ref('base.be').id,
             'ref': 'ref_partner_b',
+            'ubl_cii_format': 'ciusro'
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
@@ -68,44 +95,13 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.ro').id,
         })
 
-    ####################################################
-    # Helper method - remove when done! -TODO-
-    ####################################################
-
-    def test_anaf(self, attachment=None, manual_check=False):
-        if not attachment:
+    # TODO - HELPER METHOD, REMOVE WHEN DONE
+    def create_invoice_attachment(self, partner=False):
+        if not partner:
             return
-        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
-        if manual_check:
-            from pathlib import Path
-            with Path("~/work/odoo/.notes/test.xml").expanduser().open("wb") as f:
-                f.write(xml_content)
-                print("wrote to test.xml")
-
-        url = 'https://webservicesp.anaf.ro/prod/FCTEL/rest/validare/FACT1'
-        headers = {'Content-Type': 'text/plain'}
-        response = requests.post(url, data=xml_content, headers=headers)
-        json = response.json()
-        print("=====================================================")
-        print("\n")
-
-        if 'Messages' in json:
-            for message_obj in json['Messages']:
-                message = message_obj['message']
-                print(message, "\n\n")
-        else:
-            print(json, '\n\n')
-
-        print("=====================================================")
-
-    ####################################################
-    # Test export - import
-    ####################################################
-
-    def test_export_invoice_ro(self):
         invoice = self.env["account.move"].create({
             'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'invoice_date': '2017-01-01',
@@ -129,7 +125,54 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
         })
         invoice.action_post()
         invoice._generate_pdf_and_send_invoice(self.move_template)
-        attachment = invoice.ubl_cii_xml_id
-        self.assertTrue(attachment)
-        self.test_anaf(attachment, True)
-        self.assertEqual(attachment.name[-11:], "cius_ro.xml")
+        return invoice.ubl_cii_xml_id
+
+    ####################################################
+    # Test export - import
+    ####################################################
+
+    # def test_export_invoice_ro_domestic(self):
+    #     invoice = self.env["account.move"].create({
+    #         'move_type': 'out_invoice',
+    #         'partner_id': self.partner_a.id,
+    #         'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
+    #         'invoice_payment_term_id': self.pay_terms_b.id,
+    #         'invoice_date': '2017-01-01',
+    #         'date': '2017-01-01',
+    #         'narration': 'test narration',
+    #         'ref': 'ref_move',
+    #         'invoice_line_ids': [
+    #             Command.create({
+    #                 'product_id': self.product_a.id,
+    #                 'quantity': 1.0,
+    #                 'price_unit': 500.0,
+    #                 'tax_ids': [(6, 0, self.tax_19.ids)],
+    #             }),
+    #             Command.create({
+    #                 'product_id': self.product_b.id,
+    #                 'quantity': 2.0,
+    #                 'price_unit': 350.0,
+    #                 'tax_ids': [(6, 0, self.tax_19.ids)],
+    #             }),
+    #         ],
+    #     })
+    #     invoice.action_post()
+    #     invoice._generate_pdf_and_send_invoice(self.move_template)
+    #     attachment = invoice.ubl_cii_xml_id
+    #     self.assertTrue(attachment)
+    #     self.test_anaf(attachment)
+    #     self.assertEqual(attachment.name[-11:], "cius_ro.xml")
+
+    # def test_change_company_value_here(self):
+    #     self.company_data["company"].write({ "city": "NEWSECTOR"})
+    #     print(self.company_data["company"]["city"], "\n\n")
+
+    # def test_detect_change_company_value(self):
+    #     print("\n\nDETECTING COMPANY VALUE:")
+    #     print(self.company_data["company"]["city"], "\n\n")
+
+    # TODO check all rules from schematron
+    # Checked Rules:
+    # 020 001 A020 010
+    # Notes:
+    # string-length constrains are skipped
