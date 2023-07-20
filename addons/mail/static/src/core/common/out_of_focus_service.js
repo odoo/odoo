@@ -35,7 +35,14 @@ export class OutOfFocusService {
         });
     }
 
-    notify(message, channel) {
+    async notify(message, channel) {
+        const modelsHandleByPush = ["mail.thread", "discuss.channel"];
+        if (
+            modelsHandleByPush.includes(message.resModel) &&
+            (await this.hasServiceWorkInstalledAndPushSubscriptionActive())
+        ) {
+            return;
+        }
         const author = message.author;
         let notificationTitle;
         if (!author) {
@@ -64,6 +71,18 @@ export class OutOfFocusService {
             part: "_chat",
             title: this.counter === 1 ? _t("1 Message") : _t("%s Messages", this.counter),
         });
+    }
+
+    async hasServiceWorkInstalledAndPushSubscriptionActive() {
+        const registration = await browser.navigator.serviceWorker?.getRegistration();
+        if (registration) {
+            const pushManager = await registration.pushManager;
+            if (pushManager) {
+                const subscription = await pushManager.getSubscription();
+                return !!subscription;
+            }
+        }
+        return false;
     }
 
     /**
