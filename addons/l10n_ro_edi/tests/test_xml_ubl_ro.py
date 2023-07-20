@@ -105,7 +105,7 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         if manual_check:
             from pathlib import Path
-            with Path("~/work/odoo/.notes/test.xml").expanduser().open("wb") as f:
+            with Path("/.notes/test.xml").expanduser().open("wb") as f:
                 f.write(xml_content)
                 print("wrote to test.xml")
         url = 'https://webservicesp.anaf.ro/prod/FCTEL/rest/validare/FACT1'
