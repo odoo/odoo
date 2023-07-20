@@ -9,7 +9,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 
-import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useExternalListener, useState } from "@odoo/owl";
 
 export class WebClient extends Component {
     setup() {
@@ -47,6 +47,7 @@ export class WebClient extends Component {
             this.env.bus.trigger("WEB_CLIENT_READY");
         });
         useExternalListener(window, "click", this.onGlobalClick, { capture: true });
+        onWillStart(this.registerServiceWorker);
     }
 
     async loadRouterState() {
@@ -106,6 +107,19 @@ export class WebClient extends Component {
         ) {
             ev.stopImmediatePropagation();
             return;
+        }
+    }
+
+    registerServiceWorker() {
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker
+                .register("/web/service-worker.js", { scope: "/web" })
+                .then((registration) => {
+                    console.info("Registration successful, scope is:", registration.scope);
+                })
+                .catch((error) => {
+                    console.error("Service worker registration failed, error:", error);
+                });
         }
     }
 }

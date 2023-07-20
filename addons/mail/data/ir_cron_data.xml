@@ -65,5 +65,17 @@
             <field name="code">model._send_notifications_cron()</field>
             <field name="state">code</field>
         </record>
+
+        <record id="ir_cron_web_push_notification" model="ir.cron">
+            <field name="name">Mail: send web push notification</field>
+            <field name="model_id" ref="model_mail_notification_web_push"/>
+            <field name="state">code</field>
+            <field name="code">model._push_notification_to_endpoint()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+        </record>
     </data>
 </odoo>

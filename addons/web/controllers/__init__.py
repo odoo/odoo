@@ -11,7 +11,9 @@ from . import pivot
 from . import profiling
 from . import report
 from . import session
+from . import vcard
 from . import view
 from . import webclient
+from . import webmanifest
 
 from . import main  # deprecated

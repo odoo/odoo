@@ -8,6 +8,7 @@ from . import mailbox
 from . import message_reaction
 from . import thread
 from . import webclient
+from . import webmanifest
 
 # after mail specifically as discuss module depends on mail
 from . import discuss
