@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/** @odoo-module alias=website_slides.slides_share**/
 
 import publicWidget from 'web.public.widget';
 import '@website_slides/js/slides';
@@ -162,3 +162,9 @@ publicWidget.registry.websiteSlidesEmbedShare = publicWidget.Widget.extend({
         })
     },
 });
+
+export default {
+    ShareMail,
+    WebsiteSlidesShare: publicWidget.registry.websiteSlidesShare,
+    WebsiteSlidesEmbedShare: publicWidget.registry.websiteSlidesEmbedShare,
+};
