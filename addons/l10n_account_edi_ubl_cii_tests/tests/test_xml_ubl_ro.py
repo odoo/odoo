@@ -1,42 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import base64
-
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.tests import tagged
-from odoo.tools.misc import file_open
-from lxml import etree, isoschematron
 from odoo import Command
-
 import requests
-
-
-####################################################
-# Helper method - remove when done! -TODO-
-####################################################
-
-def test_anaf(self, attachment=None, manual_check=False):
-    if not attachment:
-        return
-    xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
-    if manual_check:
-        from pathlib import Path
-        with Path("~/work/odoo/.notes/test.xml").expanduser().open("wb") as f:
-            f.write(xml_content)
-            print("wrote to test.xml")
-    url = 'https://webservicesp.anaf.ro/prod/FCTEL/rest/validare/FACT1'
-    headers = {'Content-Type': 'text/plain'}
-    response = requests.post(url, data=xml_content, headers=headers)
-    json = response.json()
-    print("=====================================================\n\n")
-    if 'Messages' in json:
-        for message_obj in json['Messages']:
-            message = message_obj['message']
-            print(message, "\n\n")
-    else:
-        print(json, '\n\n')
-    print("=====================================================")
 
 
 # TODO - remove 'yoni' tag when done
@@ -95,13 +64,15 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.ro').id,
         })
 
-    # TODO - HELPER METHOD, REMOVE WHEN DONE
-    def create_invoice_attachment(self, partner=False):
-        if not partner:
+    ####################################################
+    # Helper method - remove when done! -TODO-
+    ####################################################
+    def create_invoice_attachment(self, partner_id=False):
+        if not partner_id:
             return
         invoice = self.env["account.move"].create({
             'move_type': 'out_invoice',
-            'partner_id': self.partner.id,
+            'partner_id': partner_id,
             'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'invoice_date': '2017-01-01',
@@ -126,6 +97,29 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
         invoice.action_post()
         invoice._generate_pdf_and_send_invoice(self.move_template)
         return invoice.ubl_cii_xml_id
+
+    @staticmethod
+    def post_anaf(attachment=None, manual_check=False):
+        if not attachment:
+            return
+        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        if manual_check:
+            from pathlib import Path
+            with Path("~/work/odoo/.notes/test.xml").expanduser().open("wb") as f:
+                f.write(xml_content)
+                print("wrote to test.xml")
+        url = 'https://webservicesp.anaf.ro/prod/FCTEL/rest/validare/FACT1'
+        headers = {'Content-Type': 'text/plain'}
+        response = requests.post(url, data=xml_content, headers=headers)
+        json = response.json()
+        print("=====================================================\n\n")
+        if 'Messages' in json:
+            for message_obj in json['Messages']:
+                message = message_obj['message']
+                print(message, "\n\n")
+        else:
+            print(json, '\n\n')
+        print("=====================================================")
 
     ####################################################
     # Test export - import
@@ -160,7 +154,7 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
     #     invoice._generate_pdf_and_send_invoice(self.move_template)
     #     attachment = invoice.ubl_cii_xml_id
     #     self.assertTrue(attachment)
-    #     self.test_anaf(attachment)
+    #     self.post_anaf(attachment)
     #     self.assertEqual(attachment.name[-11:], "cius_ro.xml")
 
     # def test_change_company_value_here(self):
@@ -176,3 +170,17 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
     # 020 001 A020 010
     # Notes:
     # string-length constrains are skipped
+
+    """
+    (normalize-space(cbc:TaxCurrencyCode) = 'RON' and normalize-space(cbc:DocumentCurrencyCode) != 'RON') or 
+    (normalize-space(cbc:TaxCurrencyCode) = 'RON' and normalize-space(cbc:DocumentCurrencyCode) = 'RON')  or 
+    (normalize-space(cbc:TaxCurrencyCode) != 'RON' and normalize-space(cbc:DocumentCurrencyCode) = 'RON') or 
+    (not(exists (cbc:TaxCurrencyCode)) and normalize-space(cbc:DocumentCurrencyCode) = 'RON')
+    # If the Invoice currency code (BT-5) is other than RON, then the VAT accounting currency code(BT-6) must be RON.
+    """
+    def test_diff_currency_code(self):
+        self.company_data["company"].write({
+            "currency_id": self.env.ref("base.AUD").id,
+        })
+        attachment = self.create_invoice_attachment(self.partner_a.id)
+        self.post_anaf(attachment, True)
