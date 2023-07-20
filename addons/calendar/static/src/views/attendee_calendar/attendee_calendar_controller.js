@@ -38,7 +38,7 @@ export class AttendeeCalendarController extends CalendarController {
             this.orm.call(
                 "calendar.attendee",
                 "do_decline",
-                [record.attendeeId],
+                [record.calendarAttendeeId],
             ).then(this.model.load.bind(this.model));
         }
     }
