@@ -199,6 +199,8 @@
 
             'web/static/src/env.js',
 
+            ('include', 'web_editor.assets_wysiwyg'),
+
             'web/static/src/legacy/scss/fields.scss',
 
             'base/static/src/scss/res_partner.scss',
