@@ -270,7 +270,7 @@ export class DynamicList extends DataPoint {
         if (this.resModel === resModel && !this.canResequence()) {
             return originalList;
         }
-        const handleField = this.handleField;
+        const handleField = this.resModel === resModel ? this.handleField : DEFAULT_HANDLE_FIELD;
         const dataPoints = [...originalList];
         const order = this.orderBy.find((o) => o.name === handleField);
         const asc = !order || order.asc;
@@ -283,13 +283,13 @@ export class DynamicList extends DataPoint {
             toIndex = fromIndex > targetIndex ? targetIndex + 1 : targetIndex;
         }
 
-        const getSequence = (dp) => dp && this._getDPHandleField(dp, handleField);
+        const getSequence = (dp) => dp && this._getDPFieldValue(dp, handleField);
 
         // Determine which records/groups need to be modified
         const firstIndex = Math.min(fromIndex, toIndex);
         const lastIndex = Math.max(fromIndex, toIndex) + 1;
         let reorderAll = dataPoints.some(
-            (dp) => this._getDPHandleField(dp, handleField) === undefined
+            (dp) => this._getDPFieldValue(dp, handleField) === undefined
         );
         if (!reorderAll) {
             let lastSequence = (asc ? -1 : 1) * Infinity;

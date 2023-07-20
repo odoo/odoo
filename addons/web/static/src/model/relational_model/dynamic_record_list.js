@@ -140,8 +140,8 @@ export class DynamicRecordList extends DynamicList {
         return record.resId;
     }
 
-    _getDPHandleField(record) {
-        return record.data[this.handleField];
+    _getDPFieldValue(record, handleField) {
+        return record.data[handleField];
     }
 
     async _load(offset, limit, orderBy, domain) {
