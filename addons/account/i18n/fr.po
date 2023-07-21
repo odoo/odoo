@@ -9,13 +9,13 @@
 # laje_odoo, 2022
 # Malika Berardi, 2022
 # Loïc De Greef, 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Christophe Klopfert, 2022
 # beau sebastien <sebastien.beau@akretion.com>, 2022
 # HASSAN ABDELLAH <aitabdellahhassan@gmail.com>, 2022
 # sig-odoo Odoo, 2023
 # Rémi CAZENAVE, 2023
 # Martin Trigaux, 2023
+# Cécile Collart <cco@odoo.com>, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -1936,7 +1936,7 @@ msgstr "Comptabilité"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr "Tableau de bord de la comptabilité"
+msgstr "Tableau de bord de comptabilité"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -2794,7 +2794,7 @@ msgstr "Lignes analytiques"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytics"
-msgstr "Analytics"
+msgstr "Analytique"
 
 #. module: account
 #. odoo-python
@@ -3712,7 +3712,7 @@ msgstr "Espèces"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
-msgstr "Compte en espèces"
+msgstr "Compte d'espèces"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -4641,7 +4641,7 @@ msgstr "Créer un nouveau produit vendable"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Create a new reconciliation model"
-msgstr "Créer un nouveau modèle de réconciliation"
+msgstr "Créer un nouveau modèle de lettrage"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
@@ -10200,7 +10200,7 @@ msgid ""
 msgstr ""
 "Une fois installé, configurez les 'relevés bancaires' sur 'Import de "
 "fichier' dans les paramètres du compte bancaire. Cela ajoute un bouton pour "
-"importer depuis votre tableau de bord de la comptabilité."
+"importer depuis votre tableau de bord de comptabilité."
 
 #. module: account
 #. odoo-javascript
@@ -10784,7 +10784,7 @@ msgstr "Partenaire est défini"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "Correspondance de partenaires pour les modèles de réconciliation"
+msgstr "Correspondance de partenaires pour les modèles de lettrage"
 
 #. module: account
 #. odoo-python
@@ -11354,12 +11354,12 @@ msgstr "Préfixe pour les comptes bancaires"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__cash_account_code_prefix
 msgid "Prefix of the cash accounts"
-msgstr "Préfixe pour les comptes de trésorerie"
+msgstr "Préfixe pour les comptes d'espèces"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__cash_account_code_prefix
 msgid "Prefix of the main cash accounts"
-msgstr "Préfixe pour les comptes de trésorerie principaux"
+msgstr "Préfixe pour les comptes d'espèces principaux"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__transfer_account_code_prefix
@@ -11749,14 +11749,14 @@ msgstr "Lignes de relevé réconciliées"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
 msgid "Reconciliation Model"
-msgstr "Modèle de réconciliation"
+msgstr "Modèle de lettrage"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_reconcile_model
 #: model:ir.ui.menu,name:account.action_account_reconcile_model_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
-msgstr "Modèles de réconciliation"
+msgstr "Modèles de lettrage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
@@ -12239,7 +12239,7 @@ msgstr "Règle pour suggérer l'écriture de la contrepartie"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
-msgstr "Règles pour les modèles de réconciliation"
+msgstr "Règles pour les modèles de lettrage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
@@ -14445,7 +14445,7 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
 "La pièce comptable %s a atteint un statut non valide en ce qui concerne sa ligne de relevé associée.\n"
-"Pour être cohérent, la pièce comptable doit toujours avoir exactement une écriture comptable impliquant le compte bancaire/de trésorerie."
+"Pour être cohérent, la pièce comptable doit toujours avoir exactement une écriture comptable impliquant le compte bancaire/d'espèces."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -14623,7 +14623,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
-"Le modèle de réconciliation ne sera appliqué qu'aux catégories de clients / "
+"Le modèle de lettrage ne sera appliqué qu'aux catégories de clients / "
 "fournisseurs sélectionnées."
 
 #. module: account
@@ -14633,7 +14633,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customers/vendors."
 msgstr ""
-"Le modèle de réconciliation ne sera appliqué qu'aux clients/fournisseurs "
+"Le modèle de lettrage ne sera appliqué qu'aux clients/fournisseurs "
 "sélectionnés."
 
 #. module: account
@@ -14645,7 +14645,7 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
-"Le modèle de rapprochement ne sera appliqué qu'au type de transaction sélectionné:\n"
+"Le modèle de lettrage ne sera appliqué qu'au type de transaction sélectionné:\n"
 "         * Montant reçu : S'applique uniquement à la réception d'un montant.\n"
 "         * Montant payé : S'applique uniquement lors du paiement d'un montant.\n"
 "         * Montant payé/reçu : appliqué dans les deux cas."
@@ -14656,8 +14656,8 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
-"Le modèle de réconciliation ne sera appliqué que lorsqu'un "
-"client/fournisseur est défini."
+"Le modèle de lettrage ne sera appliqué que lorsqu'un client/fournisseur est "
+"défini."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -14666,8 +14666,8 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
-"Le modèle de réconciliation ne sera appliqué que lorsque le montant est plus"
-" petit que, plus grand que, ou entre le(s) montant(s) spécifié(s)."
+"Le modèle de lettrage ne sera appliqué que lorsque le montant est plus petit"
+" que, plus grand que, ou entre le(s) montant(s) spécifié(s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -14678,7 +14678,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Le modèle de réconciliation ne sera appliqué que lorsque le libellé :\n"
+"Le modèle de lettrage ne sera appliqué que lorsque le libellé :\n"
 "        * Contient : la proposition de libellé doit contenir cette chaine (insensible à la casse).\n"
 "        * Ne contient pas : l'opposé de \"Contient\".\n"
 "        * Match Regex : définissez vos propres expressions régulières."
@@ -14706,7 +14706,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Le modèle de réconciliation ne sera appliqué que lorsque le type de transaction :\n"
+"Le modèle de lettrage ne sera appliqué que lorsque le type de transaction :\n"
 "        * Contient : la proposition de libellé doit contenir cette chaine (insensible à la casse).\n"
 "        * Ne contient pas : l'opposé de \"Contient\".\n"
 "        * Match Regex : définissez vos propres expressions régulières."
@@ -14717,7 +14717,7 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be available from the selected journals."
 msgstr ""
-"Le modèle de réconciliation ne sera disponible que depuis les journaux "
+"Le modèle de lettrage ne sera disponible que depuis les journaux "
 "sélectionnés."
 
 #. module: account
@@ -15248,7 +15248,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "This is the accounting dashboard"
-msgstr "Voici le tableau de bord de la comptabilité"
+msgstr "Voici le tableau de bord de comptabilité"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_default_credit_limit
@@ -15317,6 +15317,14 @@ msgstr ""
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "Cette écriture sera comptabilisée à la date comptable : %(date)s"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr "Cette opération créera un trou dans la séquence."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -16865,6 +16873,18 @@ msgstr "Vous ne pouvez pas supprimer un élément lié à une écriture publiée
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"Vous ne pouvez pas supprimer cette écriture, car elle a déjà consommé un "
+"numéro de séquence et n'est pas la dernière de la chaîne. Vous devriez "
+"probablement le rétablir à la place."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -16949,8 +16969,8 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
-"Vous ne pouvez pas avoir plusieurs comptes de type \"Résultat de l'Exercice "
-"Courant\" (Comptes : %s)"
+"Vous ne pouvez pas avoir plusieurs comptes de type \"Bénéfices de l'exercice"
+" en cours\" (Comptes : %s)"
 
 #. module: account
 #. odoo-python

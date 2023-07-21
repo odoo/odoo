@@ -253,6 +253,8 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%s osiągnął nieprawidłowy stan w odniesieniu do powiązanej linii wyciągu.\n"
+"Aby zachować spójność, wpis w dzienniku musi zawsze mieć dokładnie jeden wiersz zawieszenia."
 
 #. module: account
 #. odoo-python
@@ -458,6 +460,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Drogi\n"
+"<t t-if=\"object.partner_id.parent_id\">\n"
+"<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"</t>\n"
+"<br><br>\n"
+"Oto Twoja\n"
+"<t t-if=\"object.name\">\n"
+"nota kredytowa <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"nota kredytowa\n"
+"</t>\n"
+"<t t-if=\"object.invoice_origin\">\n"
+"(z referencją: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"</t>\n"
+"na kwotę <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 750,00 USD</span>\n"
+"od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"<br><br>\n"
+"W razie jakichkolwiek pytań prosimy o kontakt.\n"
+"<t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"<br><br>\n"
+"<t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"</t>\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -504,6 +536,46 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Drogi\n"
+"<t t-if=\"object.partner_id.parent_id\">\n"
+"<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"</t>\n"
+"<br><br>\n"
+"Oto Twoja\n"
+"<t t-if=\"object.name\">\n"
+"faktura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"faktura\n"
+"</t>\n"
+"<t t-if=\"object.invoice_origin\">\n"
+"(z referencją: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"</t>\n"
+"na kwotę <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 750,00 USD</span>\n"
+"od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"<t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"Faktura ta została już opłacona.\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"Prosimy o jak najszybsze uregulowanie płatności.\n"
+"<t t-if=\"object.payment_reference\">\n"
+"<br><br>\n"
+"Prosimy o skorzystanie z następującej komunikacji w celu dokonania płatności: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"</t>\n"
+"</t>\n"
+"<br><br>\n"
+"W razie jakichkolwiek pytań prosimy o kontakt.\n"
+"<t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"<br><br>\n"
+"<t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"</t>\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -525,6 +597,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Drogi <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
+"Dziękujemy za dokonaną płatność.\n"
+"Oto potwierdzenie płatności <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> na kwotę\n"
+"do <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 USD</span> od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"<br><br>\n"
+"W razie jakichkolwiek pytań prosimy o kontakt.\n"
+"<br><br>\n"
+"Pozdrawiam,\n"
+"<t t-if=\"not is_html_empty(user.signature)\">\n"
+"<br><br>\n"
+"<t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"</t>\n"
+"</p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1004,12 +1092,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (CR)</span>"
-msgstr ""
+msgstr "<span> (CR)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (DR)</span>"
-msgstr ""
+msgstr "<span>(DR)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1643,13 +1731,13 @@ msgstr "Statystyki kont"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "Znacznik konta"
+msgstr "Tag konta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__account_tag_ids
 #: model:ir.model.fields,field_description:account.field_product_template__account_tag_ids
 msgid "Account Tags"
-msgstr "Znaczniki konta"
+msgstr "Tagi konta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
@@ -1775,7 +1863,7 @@ msgstr "Raport z rachunku bez linii płatności"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
 msgid "Account tag"
-msgstr "Znacznik konta"
+msgstr "Tag konta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__property_cash_basis_base_account_id
@@ -3933,7 +4021,7 @@ msgid ""
 "associated with this tag in tax report computation."
 msgstr ""
 "Zaznacz to pole, aby zanegować wartość bezwzględną salda linii powiązanych z"
-" tym znacznikiem w obliczeniach raportu podatkowego."
+" tym tagiem w obliczeniach raportu podatkowego."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -4822,6 +4910,8 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
+"Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"'draft' and '_draft' or '' }}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -6205,7 +6295,7 @@ msgstr "Zapisy: %(account)s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr ""
+msgstr "Epd na brudno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
@@ -6451,7 +6541,7 @@ msgstr "Dziennik Finansowy"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
-msgstr "Znaczniki finansowe"
+msgstr "Tagi finansowe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -7801,7 +7891,7 @@ msgstr "Nieprawidłowy rok podatkowy ostatniego dnia"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
-msgstr "Odwrócenie znaczników"
+msgstr "Odwrócenie tagów"
 
 #. module: account
 #. odoo-python
@@ -7862,7 +7952,7 @@ msgstr "Data faktury"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_filter_type_domain
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_filter_type_domain
 msgid "Invoice Filter Type Domain"
-msgstr ""
+msgstr "Domena typu filtra faktur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_has_outstanding
@@ -8022,6 +8112,8 @@ msgid ""
 "Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
 " and '_draft' or '' }}"
 msgstr ""
+"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
+" and '_draft' or '' }}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -8184,7 +8276,7 @@ msgstr "Czy wysłano ruch"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__is_off_balance
 msgid "Is Off Balance"
-msgstr ""
+msgstr "Jest poza bilansem"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__printed
@@ -8950,7 +9042,7 @@ msgstr "Pozycja"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "Linia \"%s\" definiuje siebie jako swojego rodzica."
 
 #. module: account
 #. odoo-python
@@ -8960,6 +9052,8 @@ msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
 msgstr ""
+"Linia \"%s\" definiuje linię \"%s\" jako swoją nadrzędną, ale pojawia się "
+"przed nią w raporcie. Rodzic musi być zawsze pierwszy."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
@@ -9009,7 +9103,7 @@ msgstr "Załaduj więcej limitu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr ""
+msgstr "Komunikat o dacie blokady"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -9373,7 +9467,7 @@ msgstr "Metoda"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__minus_report_expression_ids
 msgid "Minus Report Expressions"
-msgstr ""
+msgstr "Ujemne wyrażenia raportu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_misc
@@ -10232,8 +10326,7 @@ msgstr "Tworzenie opcjonalne"
 #: model:ir.model.fields,help:account.field_account_account__tag_ids
 #: model:ir.model.fields,help:account.field_account_account_template__tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
-msgstr ""
-"Dodatkowe znaczniki, które możesz chcieć przypisać dla własnych raportów"
+msgstr "Dodatkowe tagi, które możesz chcieć przypisać dla własnych raportów"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__lang
@@ -10644,7 +10737,7 @@ msgstr "Mapowanie partnerów dla modeli uzgodnień"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 #, python-format
 msgid "Partners"
-msgstr "Partnerzy"
+msgstr "Kontrahenci"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11102,7 +11195,7 @@ msgstr "W treści przelewu prosimy podać :"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__plus_report_expression_ids
 msgid "Plus Tax Report Expressions"
-msgstr ""
+msgstr "Wyrażenia raportu podatkowego dodatnie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_pos_receivable_account_id
@@ -12633,8 +12726,7 @@ msgstr "Ustaw cenę"
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
-"Zmień stan z aktywnego na nieaktywny aby ukryć znacznik podatku bez usuwania"
-" go."
+"Zmień stan z aktywnego na nieaktywny aby ukryć tag podatku bez usuwania go."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
@@ -13179,7 +13271,7 @@ msgstr "PODATEK"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
 msgid "Tag Name"
-msgstr "Nazwa znacznika"
+msgstr "Nazwa tagu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tag_ids
@@ -13187,7 +13279,7 @@ msgstr "Nazwa znacznika"
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_form
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_tree
 msgid "Tags"
-msgstr "Znaczniki"
+msgstr "Tagi"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_tag_ids
@@ -13195,7 +13287,7 @@ msgid ""
 "Tags assigned to this line by the tax creating it, if any. It determines its"
 " impact on financial reports."
 msgstr ""
-"Znaczniki przypisane do tej linii przez tworzący ją podatek, jeśli takie "
+"Tagi przypisane do tej linii przez tworzący ją podatek, jeśli takie "
 "istnieją. Określają jego wpływ na sprawozdania finansowe."
 
 #. module: account
@@ -13204,7 +13296,7 @@ msgstr ""
 msgid ""
 "Tags to be set on the base and tax journal items created for this product."
 msgstr ""
-"Znaczniki do ustawienia na pozycjach dziennika podstawowego i podatkowego "
+"Tagi do ustawienia na pozycjach dziennika podstawowego i podatkowego "
 "tworzonych dla tego produktu."
 
 #. module: account
@@ -13551,8 +13643,8 @@ msgid ""
 "Tax report expressions whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Wyrażenia raportu podatkowego, których znacznik '+' zostanie przypisany do "
-"linii przesunięcia przez tę linię repartycji"
+"Wyrażenia raportu podatkowego, których tag '+' zostanie przypisany do linii "
+"przesunięcia przez tę linię repartycji"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_expression_ids
@@ -13560,8 +13652,8 @@ msgid ""
 "Tax report expressions whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Wyrażenia raportu podatkowego, których znacznik '-' zostanie przypisany do "
-"linii przenoszenia przez tę linię repartycji"
+"Wyrażenia raportu podatkowego, których tag '-' zostanie przypisany do linii "
+"przenoszenia przez tę linię repartycji"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__early_pay_discount_computation
@@ -13617,7 +13709,7 @@ msgid ""
 " item if they share some tag."
 msgstr ""
 "Podatki kwalifikujące się do zapłaty i do faktury nie mogą być mieszane na "
-"tej samej pozycji dziennika, jeśli mają wspólny znacznik."
+"tej samej pozycji dziennika, jeśli mają wspólny tag."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
@@ -15131,6 +15223,14 @@ msgstr ""
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "Przeniesienie to zostanie zaksięgowane w dniu księgowania: %(date)s"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr "Ta operacja spowoduje powstanie luki w sekwencji."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -16663,6 +16763,17 @@ msgstr "Nie można usunąć elementu powiązanego z zaksięgowanym wpisem."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"Nie można usunąć tego wpisu, ponieważ zużył on już numer sekwencji i nie "
+"jest ostatnim w łańcuchu. Prawdopodobnie powinieneś go przywrócić."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -17144,7 +17255,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_success
 msgid "close"
-msgstr "zamknięcia"
+msgstr "zamknij"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -17432,7 +17543,7 @@ msgstr "{percent:0.2f}% do rozpoznania w dniu {new_date}"
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "{{ (object.name or '').replace('/','-') }}"
-msgstr ""
+msgstr "{{ (object.name or '').replace('/','-') }}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

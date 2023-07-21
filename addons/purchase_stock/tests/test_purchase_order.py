@@ -630,3 +630,12 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         wizard = self.env['stock.inventory.adjustment.name'].create({'quant_ids': quant})
         wizard.action_apply()
         self.assertEqual(quant.quantity, 5)
+
+    def test_po_edit_after_receive(self):
+        self.po = self.env['purchase.order'].create(self.po_vals)
+        self.po.button_confirm()
+        self.po.picking_ids.move_ids.quantity_done = 5
+        self.po.picking_ids.button_validate()
+        self.assertEqual(self.po.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0])
+        self.po.with_context(import_file=True).order_line[0].product_qty = 10
+        self.assertEqual(self.po.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0, 5.0])

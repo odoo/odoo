@@ -9,9 +9,9 @@
 # Ziani Ahmed (Zity), 2022
 # Niyas Raphy, 2022
 # islam abdelmaaboud <islamabdelmaaboud@gmail.com>, 2023
-# Martin Trigaux, 2023
 # Radwan Hallak <rdwan.hlak@gmail.com>, 2023
 # Mohammed Alreshi <alreshim@hotmail.com>, 2023
+# Martin Trigaux, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
@@ -2940,7 +2940,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto validate"
-msgstr ""
+msgstr "التصديق التلقائي "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4405,12 +4405,12 @@ msgstr "قيود مقابلة "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Counterpart buttons"
-msgstr ""
+msgstr "الأزرار المقابلة "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Counterpart rules"
-msgstr ""
+msgstr "القواعد المقابلة "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
@@ -9280,7 +9280,7 @@ msgstr "الشركاء المطابقون "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Matching rules"
-msgstr ""
+msgstr "قواعد المطابقة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -15023,6 +15023,14 @@ msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "سوف يتم ترحيل هذه الحركة في التاريخ المحاسبي: %(date)s "
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
 msgid ""
 "This option permanently removes any track of email after it's been sent, "
@@ -16104,7 +16112,7 @@ msgstr "مع أودو، لن تضطر أبداً إلى تسجيل الفوات�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "With Partner matching"
-msgstr ""
+msgstr "مع مطابقة الشريك "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -16513,6 +16521,17 @@ msgstr "لا يمكنك حذف بند ضريبي، حيث إنه سيؤثر عل
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr "لا يمكنك حذف عنصر مرتبط بقيد مرحّل. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"لا يمكنك حذف هذا القيد، حيث أنه استهلك رقم تسلسل بالفعل وليس الأخير في "
+"السلسلة. من الأفضل التراجع عوضاً عن ذلك. "
 
 #. module: account
 #. odoo-python

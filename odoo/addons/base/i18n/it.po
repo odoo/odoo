@@ -11028,7 +11028,7 @@ msgstr "Accuratezza decimale"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__decimal_places
 msgid "Decimal Places"
-msgstr "Posizioni decimali"
+msgstr "Cifre decimali"
 
 #. module: base
 #: model:ir.model,name:base.model_decimal_precision
@@ -11048,6 +11048,8 @@ msgid ""
 "Decimal places taken into account for operations on amounts in this "
 "currency. It is determined by the rounding factor."
 msgstr ""
+"Cifre decimali prese in considerazione per le operazioni con importi in "
+"questa valuta. Tutto è determinato dal fattore di arrotondamento."
 
 #. module: base
 #. odoo-python
@@ -14932,7 +14934,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'raggruppa per' non valido"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -19249,7 +19256,7 @@ msgstr "Consegna online dei compiti"
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment
 msgid "Online appointments scheduler"
-msgstr ""
+msgstr "Pianificatore appuntamenti online"
 
 #. module: base
 #. odoo-python
@@ -23770,6 +23777,10 @@ msgid ""
 " 1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it "
 "as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
+"Il formato separatore dovrebbe essere [,n] dove 0 < n :partendo dalla cifra "
+"unitaria. -1 terminerà la separazione. Ad es. [3,2,-1] farà che 106500 sia "
+"1,06,500; [1,2,-1] rappresenterà 106,50,0;[3] codificherà 106,500. Le ',' "
+"rappresentano i separatori per le centinaia in ogni caso."
 
 #. module: base
 #. odoo-python
@@ -23781,6 +23792,9 @@ msgid ""
 " 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as"
 " 106,500. Provided as the thousand separator in each case."
 msgstr ""
+"Il formato separatore dovrebbe essere [,n] dove 0 < n :partendo dalla cifra "
+"unitaria. -1 terminerà la separazione. Ad es. [3,2,-1] farà che 106500 sia "
+"1,06,500; [1,2,-1] rappresenterà 106,50,0;[3] codificherà 106,500."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__vat
@@ -24539,6 +24553,8 @@ msgstr "Questa colonna contiene dati modulo e non può essere rimossa!"
 #, python-format
 msgid "This currency is set on a company and therefore cannot be deactivated."
 msgstr ""
+"La presente valuta è stata selezionata per un'azienda e non può essere "
+"disattivata."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__favicon
@@ -25310,6 +25326,13 @@ msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
 "Impossibile trovare wkhtmltopdf nel sistema, il file PDF non può essere "
 "creato."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -26717,6 +26740,15 @@ msgstr ""
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "Impossibile creare etichette ricorsive."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

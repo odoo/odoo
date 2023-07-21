@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from markupsafe import Markup
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.addons.phone_validation.tools import phone_validation
 
 
@@ -195,11 +196,17 @@ class EventRegistration(models.Model):
         )  # CHECKME: broader than just public partner
 
         # mono registration mode: keep partner only if email and phone matches;
-        # otherwise registration > partner. Note that _phone_format has to be
-        # taken into account as it may have side effects on phone formatting
+        # otherwise registration > partner. Note that email format and phone
+        # formatting have to taken into account in comparison
         if len(self) == 1 and valid_partner:
-            if self.email and valid_partner.email and valid_partner.email != self.email:
-                valid_partner = self.env['res.partner']
+            # compare emails: email_normalized or raw
+            if self.email and valid_partner.email:
+                if valid_partner.email_normalized and tools.email_normalize(self.email) != valid_partner.email_normalized:
+                    valid_partner = self.env['res.partner']
+                elif not valid_partner.email_normalized and valid_partner.email != self.email:
+                    valid_partner = self.env['res.partner']
+
+            # compare phone, taking into account formatting
             if valid_partner and self.phone and valid_partner.phone:
                 phone_formatted = phone_validation.phone_format(
                     self.phone,
@@ -220,7 +227,7 @@ class EventRegistration(models.Model):
             if not valid_partner.email:
                 contact_vals['email_from'] = self._find_first_notnull('email')
             if not valid_partner.phone:
-                contact_vals['email_from'] = self._find_first_notnull('phone')
+                contact_vals['phone'] = self._find_first_notnull('phone')
         else:
             # don't force email_from + partner_id because those fields are now synchronized automatically
             contact_vals = {
@@ -249,17 +256,21 @@ class EventRegistration(models.Model):
                 line_suffix=line_suffix
             ) for registration in self
         ]
-        return ("%s<br/>" % prefix if prefix else "") + (
-            "<ol>" if line_counter else "<ul>") + ("".join(reg_lines)) + ("</ol>" if line_counter else "</ul>")
+        description = (prefix if prefix else '') + Markup("<br/>")
+        if line_counter:
+            description += Markup("<ol>") + Markup('').join(reg_lines) + Markup("</ol>")
+        else:
+            description += Markup("<ul>") + Markup('').join(reg_lines) + Markup("</ul>")
+        return description
 
     def _get_lead_description_registration(self, line_suffix=''):
         """ Build the description line specific to a given registration. """
         self.ensure_one()
-        return "<li>%s (%s)%s</li>" % (
+        return Markup("<li>") + "%s (%s)%s" % (
             self.name or self.partner_id.name or self.email,
             " - ".join(self[field] for field in ('email', 'phone') if self[field]),
-            " %s" % line_suffix if line_suffix else "",
-        )
+            f" {line_suffix}" if line_suffix else "",
+        ) + Markup("</li>")
 
     def _get_lead_tracked_values(self):
         """ Tracked values are based on two subset of fields to track in order
@@ -340,8 +351,8 @@ class EventRegistration(models.Model):
 
     def _convert_value(self, value, field_name):
         """ Small tool because convert_to_write is touchy """
-        if value and self._fields[field_name].type in ['many2many', 'one2many']:
+        if isinstance(value, models.BaseModel) and self._fields[field_name].type in ['many2many', 'one2many']:
             return value.ids
-        if value and self._fields[field_name].type == 'many2one':
+        if isinstance(value, models.BaseModel) and self._fields[field_name].type == 'many2one':
             return value.id
         return value

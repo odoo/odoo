@@ -9,14 +9,14 @@
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # PepeImpulso, 2023
 # Antoine Demany, 2023
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # David Ramia, 2023
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Luis D Lafaurie, 2023
-# jabelchi, 2023
+# Josep Anton Belchi, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # kikopeiro <francisco.peiro@factorlibre.com>, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: kikopeiro <francisco.peiro@factorlibre.com>, 2023\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15460,7 +15460,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'group by' no valido"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -22741,7 +22746,7 @@ msgstr "Registro: %s"
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
 msgid "Recruitment"
-msgstr "Proceso de Selección"
+msgstr "Proceso de selección"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_skills
@@ -26743,6 +26748,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -28146,6 +28158,15 @@ msgstr ""
 #, python-format
 msgid "You can not create recursive tags."
 msgstr "No puede crear etiquetas recursivas."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
