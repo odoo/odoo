@@ -253,6 +253,8 @@ class AccountMove(models.Model):
             raise UserError(_('The company needs a set tax identification number or VAT number'))
         if not partner.vat:
             raise UserError(_('The partner needs a set tax identification number or VAT number'))
+        if not partner.country_id:
+            raise UserError(_("The partner needs a set country"))
         if self.move_type == "entry":
             return False
 
