@@ -1385,8 +1385,10 @@ class Field(MetaField('DummyField', (object,), {})):
         try:
             with records.env.protecting(fields, records):
                 records._compute_field_value(self)
-        except Exception:
+        except Exception as e:
             for field in fields:
+                if field.name.startswith('x_'):
+                    e.sentry_ignored = True
                 if field.store:
                     env.add_to_compute(field, records)
             raise
