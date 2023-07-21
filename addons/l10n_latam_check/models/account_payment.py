@@ -273,7 +273,7 @@ class AccountPayment(models.Model):
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         """ Add check name and operation on liquidity line """
         res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
-        check = self if (self.payment_method_line_id.code == 'new_third_party_checks' or self.l10n_latam_manual_checks) \
+        check = self if (self.payment_method_line_id.code == 'new_third_party_checks' or (self.payment_method_line_id.code == 'check_printing' and self.l10n_latam_manual_checks)) \
             else self.l10n_latam_check_id
         if check:
             document_name = (_('Check %s received') if self.payment_type == 'inbound' else _('Check %s delivered')) % (
