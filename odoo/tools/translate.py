@@ -1587,6 +1587,21 @@ def _get_translation_upgrade_queries(cr, field):
 
     # upgrade model_terms translation: one update per field per record
     if callable(field.translate):
+        query = f"""
+            SELECT t.res_id, m."{field.name}", t.value, t.noupdate
+              FROM t
+              JOIN "{Model._table}" m ON t.res_id = m.id
+        """
+        if translation_name == 'ir.ui.view,arch_db':
+            cr.execute("SELECT id from ir_module_module WHERE name = 'website' AND state='installed'")
+            if cr.fetchone():
+                query = f"""
+                    SELECT t.res_id, m."{field.name}", t.value, t.noupdate, l.code
+                      FROM t
+                      JOIN "{Model._table}" m ON t.res_id = m.id
+                      JOIN website w ON m.website_id = w.id
+                      JOIN res_lang l ON w.default_lang_id = l.id
+                """
         cr.execute(f"""
             WITH t0 AS (
                 -- aggregate translations by source term --
@@ -1602,12 +1617,8 @@ def _get_translation_upgrade_queries(cr, field):
              LEFT JOIN ir_model_data imd
                     ON imd.model = %s AND imd.res_id = t0.res_id
               GROUP BY t0.res_id
-            )
-            SELECT t.res_id, m."{field.name}", t.value, t.noupdate
-              FROM t
-              JOIN "{Model._table}" m ON t.res_id = m.id
-        """, [translation_name, Model._name])
-        for id_, new_translations, translations, noupdate in cr.fetchall():
+            )""" + query, [translation_name, Model._name])
+        for id_, new_translations, translations, noupdate, *extra in cr.fetchall():
             if not new_translations:
                 continue
             # new_translations contains translations updated from the latest po files
@@ -1627,6 +1638,8 @@ def _get_translation_upgrade_queries(cr, field):
             }
             if "en_US" not in new_values:
                 new_values["en_US"] = field.translate(lambda v: None, src_value)
+            if extra and extra[0] not in new_values:
+                new_values[extra[0]] = new_values["en_US"]
             query = f'UPDATE "{Model._table}" SET "{field.name}" = %s WHERE id = %s'
             migrate_queries.append(cr.mogrify(query, [Json(new_values), id_]).decode())
 
