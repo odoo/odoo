@@ -889,7 +889,6 @@ class MailThread(models.AbstractModel):
             raise TypeError('message must be an email.message.EmailMessage at this point')
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
-        alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         bounce_alias_static = tools.str2bool(self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias.static", "False"))
         fallback_model = model
 
@@ -915,14 +914,12 @@ class MailThread(models.AbstractModel):
         email_to_localparts = [
             e.split('@', 1)[0].lower()
             for e in (tools.email_split(email_to) or [''])
-            if not alias_domain or e.endswith('@%s' % alias_domain)
         ]
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
         rcpt_tos_localparts = [
             e.split('@')[0].lower()
             for e in tools.email_split(message_dict['recipients'])
-            if not alias_domain or e.endswith('@%s' % alias_domain)
         ]
         rcpt_tos_valid_localparts = [to for to in rcpt_tos_localparts]
 
