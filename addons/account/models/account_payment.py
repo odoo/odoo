@@ -725,6 +725,16 @@ class AccountPayment(models.Model):
         return res
 
     def unlink(self):
+        #prevent deletion of posted payment
+        posted_payments = self.filtered(lambda a:a.state == 'posted')
+        if posted_payments:
+            raise ValidationError("Cannot delete a posted payment.  Set to draft then cancel instead")
+        moves = self.move_id
+        moves_posted_before = moves.filtered(lambda a:a.posted_before)
+        #if payment was posted and set to draft, prevent deletion
+        if moves_posted_before:
+            raise ValidationError("Cannot delete a payment that was posted once.  You can cancel")
+                
         # OVERRIDE to unlink the inherited account.move (move_id field) as well.
         moves = self.with_context(force_delete=True).move_id
         res = super().unlink()
