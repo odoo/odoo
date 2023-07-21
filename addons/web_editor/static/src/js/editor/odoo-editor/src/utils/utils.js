@@ -1873,6 +1873,11 @@ export function splitElement(element, offset) {
         index < offset ? before.appendChild(child) : after.appendChild(child);
         index++;
     }
+    // e.g.: <p>Test/banner</p> + ENTER <=> <p>Test</p><div class="o_editor_banner>...</div><p><br></p>
+    const blockEl = closestBlock(after);
+    if (blockEl) {
+        fillEmpty(blockEl);
+    }
     element.before(before);
     element.after(after);
     element.remove();
