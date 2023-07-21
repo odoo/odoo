@@ -18,6 +18,7 @@ class MrpProduction(models.Model):
         for order in self:
             order.show_valuation = any(m.state == 'done' for m in order.move_finished_ids)
 
+<<<<<<< HEAD
     @api.depends('bom_id', 'product_id')
     def _compute_analytic_distribution(self):
         for record in self:
@@ -43,6 +44,18 @@ class MrpProduction(models.Model):
             if record.product_id:
                 params['product'] = record.product_id.id
             record.with_context({'validate_analytic': True})._validate_distribution(**params)
+||||||| parent of 97b879dbce3 (temp)
+    @api.depends('bom_id')
+    def _compute_analytic_account_id(self):
+        if self.bom_id.analytic_account_id:
+            self.analytic_account_id = self.bom_id.analytic_account_id
+=======
+    @api.depends('bom_id')
+    def _compute_analytic_account_id(self):
+        for order in self:
+            if order.bom_id.analytic_account_id:
+                order.analytic_account_id = order.bom_id.analytic_account_id
+>>>>>>> 97b879dbce3 (temp)
 
     def write(self, vals):
         res = super().write(vals)
