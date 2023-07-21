@@ -8,21 +8,14 @@ from odoo.exceptions import ValidationError
 class HolidaysType(models.Model):
     _inherit = "hr.leave.type"
 
-    def _default_project_id(self):
-        company = self.company_id if self.company_id else self.env.company
-        return company.internal_project_id.id
-
-    def _default_task_id(self):
-        company = self.company_id if self.company_id else self.env.company
-        return company.leave_timesheet_task_id.id
-
     timesheet_generate = fields.Boolean(
         'Generate Timesheet', compute='_compute_timesheet_generate', store=True, readonly=False,
         help="If checked, when validating a time off, timesheet will be generated in the Vacation Project of the company.")
-    timesheet_project_id = fields.Many2one('project.project', string="Project", default=_default_project_id, domain="[('company_id', '=', company_id)]")
+    timesheet_project_id = fields.Many2one('project.project', string="Project", domain="[('company_id', '=', company_id)]",
+        compute="_compute_timesheet_project_id", store=True, readonly=False)
     timesheet_task_id = fields.Many2one(
         'project.task', string="Task", compute='_compute_timesheet_task_id',
-        store=True, readonly=False, default=_default_task_id,
+        store=True, readonly=False,
         domain="[('project_id', '=', timesheet_project_id),"
                 "('project_id', '!=', False),"
                 "('company_id', '=', company_id)]")
@@ -32,11 +25,15 @@ class HolidaysType(models.Model):
         for leave_type in self:
             leave_type.timesheet_generate = leave_type.timesheet_task_id and leave_type.timesheet_project_id
 
+    @api.depends('company_id')
+    def _compute_timesheet_project_id(self):
+        for leave in self:
+            leave.timesheet_project_id = leave.company_id.internal_project_id
+
     @api.depends('timesheet_project_id')
     def _compute_timesheet_task_id(self):
         for leave_type in self:
-            company = leave_type.company_id if leave_type.company_id else self.env.company
-            default_task_id = company.leave_timesheet_task_id
+            default_task_id = leave_type.company_id.leave_timesheet_task_id
 
             if default_task_id and default_task_id.project_id == leave_type.timesheet_project_id:
                 leave_type.timesheet_task_id = default_task_id
@@ -46,7 +43,7 @@ class HolidaysType(models.Model):
     @api.constrains('timesheet_generate', 'timesheet_project_id', 'timesheet_task_id')
     def _check_timesheet_generate(self):
         for holiday_status in self:
-            if holiday_status.timesheet_generate:
+            if holiday_status.timesheet_generate and holiday_status.company_id:
                 if not holiday_status.timesheet_project_id or not holiday_status.timesheet_task_id:
                     raise ValidationError(_("Both the internal project and task are required to "
                     "generate a timesheet for the time off %s. If you don't want a timesheet, you should "
