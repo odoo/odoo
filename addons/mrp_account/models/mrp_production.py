@@ -33,8 +33,9 @@ class MrpProduction(models.Model):
 
     @api.depends('bom_id')
     def _compute_analytic_account_id(self):
-        if self.bom_id.analytic_account_id:
-            self.analytic_account_id = self.bom_id.analytic_account_id
+        for order in self:
+            if order.bom_id.analytic_account_id:
+                order.analytic_account_id = order.bom_id.analytic_account_id
 
     def write(self, vals):
         origin_analytic_account = {production: production.analytic_account_id for production in self}
