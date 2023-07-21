@@ -109,7 +109,7 @@ class AccountBankStatement(models.Model):
         for stmt in self:
             sorted_lines = stmt.line_ids.sorted('internal_index')
             stmt.first_line_index = sorted_lines[:1].internal_index
-            stmt.date = sorted_lines.filtered(lambda l: l.state == 'posted')[-1:].date
+            stmt.date = sorted_lines.filtered(lambda l: l.state == 'posted' and l.date)[-1:].date or stmt.date
 
     @api.depends('create_date')
     def _compute_balance_start(self):
