@@ -855,8 +855,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Personalizzazione e creazione di schede web personali.\n"
-"        Questo modulo aggiunge un nuovo componente nel creatore di siti web, per costruire da zero nuove schede in qualsiasi pagina del sito.\n"
+"        Personalizzazione e creazione di moduli di contatto web personali.\n"
+"        Questo modulo aggiunge un nuovo componente nel creatore di siti web, per costruire da zero nuovi moduli di contatto in qualsiasi pagina del sito.\n"
 "    "
 
 #. module: base
@@ -3960,8 +3960,8 @@ msgid ""
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
 "\n"
-"Generazione di contatti e opportunità nell'applicazione CRM a partire da un scheda di contatto pubblicata nella pagina Contattaci del sito web.\n"
-"La scheda può essere personalizzata grazie a \"Creatore schede\" (disponibile in Odoo Enterprise).\n"
+"Generazione di contatti e opportunità nell'applicazione CRM a partire da un modulo di contatto pubblicato nella pagina Contattaci del sito web.\n"
+"Può essere personalizzato grazie a \"Creatore moduli di contatto\" (disponibile in Odoo Enterprise).\n"
 "\n"
 "Questo modulo include la convalida dei numeri di telefono fisso e mobile dei contatti."
 
@@ -3986,7 +3986,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Generazione di attività nell'applicazione progetti a partire da una scheda pubblicata nel sito web. Per la creazione della scheda, il modulo richiede l'utilizzo di *Creatore schede* (disponibile in Odoo Enterprise).\n"
+"Generazione di attività nell'applicazione progetti a partire da un modulo di contatto pubblicato nel sito web. Per la creazione del  modulo, richiede l'utilizzo di *Creatore moduli di contatto* (disponibile in Odoo Enterprise).\n"
 "    "
 
 #. module: base
@@ -3997,7 +3997,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Generazione di segnalazioni nell'applicazione assistenza clienti a partire da una scheda pubblicata nel sito web. La scheda può essere personalizzata grazie a *Creatore schede* (disponibile in Odoo Enterprise).\n"
+"Generazione di segnalazioni nell'applicazione assistenza clienti a partire da un modulo di contatto pubblicato nel sito web. Può essere personalizzato grazie a *Creatore moduli di contatto* (disponibile in Odoo Enterprise).\n"
 "    "
 
 #. module: base
@@ -26874,6 +26874,10 @@ msgid ""
 " 1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it "
 "as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
+"Il formato separatore dovrebbe essere [,n] dove 0 < n :partendo dalla cifra "
+"unitaria. -1 terminerà la separazione. Ad es. [3,2,-1] farà che 106500 sia "
+"1,06,500; [1,2,-1] rappresenterà 106,50,0;[3] codificherà 106,500. Le ',' "
+"rappresentano i separatori per le centinaia in ogni caso."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -26884,6 +26888,9 @@ msgid ""
 " 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as"
 " 106,500. Provided as the thousand separator in each case."
 msgstr ""
+"Il formato separatore dovrebbe essere [,n] dove 0 < n :partendo dalla cifra "
+"unitaria. -1 terminerà la separazione. Ad es. [3,2,-1] farà che 106500 sia "
+"1,06,500; [1,2,-1] rappresenterà 106,50,0;[3] codificherà 106,500."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__vat
@@ -27551,7 +27558,7 @@ msgid ""
 "modified by hr."
 msgstr ""
 "Modulo che aggiunge lo stato e le notifiche di OdooBot nella scheda utente "
-"modificata da RU. ."
+"modificata da RU."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr_recruitment
