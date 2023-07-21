@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inherit_view_generate_serial" model="ir.ui.view">
+            <field name="name">inherit.view.generate.serial</field>
+            <field name="model">stock.generate.serial</field>
+            <field name="inherit_id" ref="stock.view_generate_serial"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_generate_serial']" position="attributes">
+                    <attribute name="invisible">context.get('from_mass_production')</attribute>
+                </xpath>
+                <xpath expr="//field[@name='location_dest_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_generate_serial']" position="after">
+                    <button name="generate_serial_numbers_production" string="Generate" type="object" class="btn-primary" data-hotkey="q" invisible="not context.get('from_mass_production')"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

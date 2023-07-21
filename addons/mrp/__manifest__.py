@@ -23,6 +23,7 @@
         'wizard/mrp_consumption_warning_views.xml',
         'wizard/stock_assign_serial_numbers.xml',
         'wizard/mrp_production_split.xml',
+        'wizard/stock_generate_serial_views.xml',
         'views/mrp_views_menus.xml',
         'views/stock_move_views.xml',
         'views/mrp_workorder_views.xml',

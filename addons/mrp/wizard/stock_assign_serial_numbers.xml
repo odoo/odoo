@@ -4,56 +4,24 @@
         <field name="name">mrp_assign_serial_numbers</field>
         <field name="model">stock.assign.serial</field>
         <field name="arch" type="xml">
-            <form string="Serial Mass Produce">
-                <group>
-                    <field name="production_id" readonly="True"/>
-                </group>
-                <group>
+            <form string="Mass Produce">
                     <group>
-                        <field name="next_serial_number"/>
+                        <field name="show_apply" invisible="1" />
+                        <field name="production_id" invisible="1"/>
+                        <field name="next_serial_number" invisible="1"/>
                     </group>
-                    <group>
-                        <label for="next_serial_count"/>
-                        <div class="o_row">
-                            <span><field name="next_serial_count"/></span>
-                            <button name="generate_serial_numbers_production" type="object" class="btn btn-secondary" title="Generate Serial Numbers">
-                                <span>Generate</span>
-                            </button>
+                    <span>Write one line per finished product to produce, with serial numbers as follows:</span><br/>
+                    <field name="list_of_component" readonly="1"/>
+                    <field class="form-control my-2" name="lot_numbers" widget="lot_numbers"/>
+                    <footer>
+                        <button name="apply" string="Produce" type="object" class="btn-primary" context="{'make_mo_done': True}" modifiers="{'invisible': [('show_apply', '=', False)]}" />
+                        <button name="apply" string="Prepare MO" type="object" class="btn-primary" context="{'make_mo_confirmed': True}" modifiers="{'invisible': [('show_apply', '=', False)]}" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                        <div>
+                            <button name="action_open_generate_serial_production" string="Generate Serials" type="object" class="float-end btn-link"/>
                         </div>
-                    </group>
-                </group>
-                <group>
-                    <field name="serial_numbers" placeholder="e.g. SN0000001"/>
-                </group>
-                <field name="multiple_lot_components_names" invisible="1"/>
-                <group col="1">
-                    <p class="o_form_label oe_inline text-danger" invisible="not multiple_lot_components_names">
-                        Note that components <field name="multiple_lot_components_names" readonly="True"/> have multiple lot reservations.<br/>
-                        Do you want to confirm anyway ?
-                    </p>
-                </group>
-                <field name="show_apply" invisible="1" />
-                <field name="show_backorders" invisible="1" />
-                <group>
-                    <group>
-                        <field name="produced_qty" readonly="True" force_save="True"/>
-                    </group>
-                    <group>
-                        <field name="expected_qty" readonly="True"/>
-                    </group>
-                    <p col="1" class="o_form_label oe_inline" invisible="not show_backorders">
-                        You have entered less serial numbers than the quantity to produce.<br/>
-                        Create a backorder if you expect to process the remaining quantities later.<br/>
-                        Do not create a backorder if you will not process the remaining products.
-                    </p>
-                </group>
-                <footer>
-                    <button name="apply" string="Apply" type="object" class="btn-primary" invisible="not show_apply"/>
-                    <button name="create_backorder" string="Create Backorder" type="object" class="btn-primary" invisible="not show_backorders"/>
-                    <button name="no_backorder" string="No Backorder" type="object" class="btn-primary" invisible="not show_backorders"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel" />
-                </footer>
-            </form>
+                    </footer>
+                </form>
         </field>
     </record>
 
