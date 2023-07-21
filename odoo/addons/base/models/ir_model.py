@@ -888,7 +888,8 @@ class IrModelFields(models.Model):
         for vals in vals_list:
             if 'model_id' in vals:
                 vals['model'] = IrModel.browse(vals['model_id']).model
-            assert vals.get('model'), f"missing model name for {vals}"
+            if not vals.get('model'):
+                raise UserError(f"Missing model name for {vals}")
             models.add(vals['model'])
 
         # for self._get_ids() in _update_selection()
