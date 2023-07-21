@@ -22,9 +22,8 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
             'requires_allocation': 'no'
         })
 
-        company = self.env.company
-        self.assertEqual(status.timesheet_project_id, company.internal_project_id, 'The default project linked to the status should be the same as the company')
-        self.assertEqual(status.timesheet_task_id, company.leave_timesheet_task_id, 'The default task linked to the status should be the same as the company')
+        self.assertEqual(status.timesheet_project_id, status.company_id.internal_project_id, 'The default project linked to the status should be the same as the company')
+        self.assertEqual(status.timesheet_task_id, status.company_id.leave_timesheet_task_id, 'The default task linked to the status should be the same as the company')
 
     def test_company_create(self):
         main_company = self.env.ref('base.main_company')
