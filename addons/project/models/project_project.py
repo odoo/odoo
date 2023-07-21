@@ -13,6 +13,9 @@ from odoo.exceptions import UserError
 from .project_update import STATUS_COLOR
 from .project_task import CLOSED_STATES
 
+AccessWarningMessage = _(
+                    "The project's limited privacy prevents sharing. Please make it public so collaborators can access it.")
+
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
@@ -225,8 +228,7 @@ class Project(models.Model):
     def _compute_access_warning(self):
         super(Project, self)._compute_access_warning()
         for project in self.filtered(lambda x: x.privacy_visibility != 'portal'):
-            project.access_warning = _(
-                "The project cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it accessible by the recipient(s).")
+            project.access_warning = AccessWarningMessage
 
     @api.depends_context('uid')
     def _compute_allow_rating(self):
@@ -627,6 +629,28 @@ class Project(models.Model):
         }
         action['display_name'] = self.name
         return action
+
+    def action_share_project(self):
+        if any(project.privacy_visibility != 'portal' for project in self):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': AccessWarningMessage,
+                    'type': 'danger',
+                    'sticky': False,
+                },
+            }
+
+        return {
+            'name': _('Share Project'),
+            'view_mode': 'form',
+            'res_model': 'project.share.wizard',
+            'views': [(self.env.ref('project.project_share_wizard_view_form').id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': dict(self.env.context, active_ids=self.ids),
+        }
 
     def toggle_favorite(self):
         favorite_projects = not_fav_projects = self.env['project.project'].sudo()
