@@ -1,0 +1,440 @@
+.main-app {
+    background: linear-gradient(to right bottom, rgb(85, 100, 194), rgb(58, 46, 141));
+}
+
+.main-app .sidebar {
+    width: 80px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: #fff;
+    background: linear-gradient(to right bottom, rgb(85, 100, 194), rgb(58, 46, 141));
+}
+
+@media (max-width: 768px) {
+    .main-app .sidebar {
+        width: 60px;
+    }
+}
+
+.main-app .main-menu {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-app .menu-item {
+    list-style: none;
+    position: relative;
+    width: 85px;
+    height: 65px;
+}
+
+.main-app .menu-txt {
+    opacity: 0;
+    width: 0px;
+    min-width: 0px;
+    overflow: hidden;
+    transition: 300ms linear;
+    transition-delay: 250ms;
+    display: flex;
+    align-items: center;
+    position: relative;
+    top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.main-app .menu-a {
+    padding: 35px 33.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.main-app .menu-icon {
+    display: block;
+    font-size: 1.5rem;
+    color: #fefefe;
+    position: relative;
+    z-index: 100;
+    transition: 400ms;
+}
+
+@media (min-width: 768px) {
+    .main-app .menu-item:hover .menu-txt {
+        opacity: 1;
+        width: 100%;
+        min-width: 40px;
+        padding: 0px 10px;
+        transition-delay: 0s;
+        color: #4c4c4c;
+        font-size: 15px;
+        font-weight: 600;
+        align-self: center;
+    }
+
+    .main-app .menu-item:hover .menu-icon {
+        color: #0f0f0f;
+    }
+}
+
+.main-app .menu-txt-hld {
+    position: absolute;
+    z-index: 99;
+    background: rgba(255, 255, 255, 0);
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 10px;
+    font-size: .94rem;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0);
+    padding: 9.5px 8px;
+    transition: 250ms linear;
+    display: flex;
+    align-items: center;
+    transition-delay: 300ms;
+    left: 22px;
+}
+
+@media (min-width: 768px) {
+    .main-app .menu-item:hover .menu-txt-hld {
+        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.07);
+        background: rgb(255, 255, 255);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition-delay: 0ms;
+        left: 5px;
+    }
+}
+
+.main-app .active .menu-icon {
+    color: #223b6e;
+}
+
+.custom-header .card {
+    margin-left: 20px;
+}
+
+.custom-header .top-container {
+    display: flex;
+    align-items: center;
+}
+
+.custom-header .profile-image {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.custom-header .name {
+    font-size: 15px;
+    font-weight: bold;
+    color: #251F1F;
+    position: relative;
+    top: 8px;
+}
+
+.custom-header .mail {
+    font-size: 14px !important;
+    color: #251F1F;
+    position: relative;
+    top: -15px;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 150px;
+    max-width: 185px;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
+    transition: all 0.3s ease;
+    margin: 2px;
+    background-color: white;
+}
+
+.product-card .title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.product-card .price {
+    color: #888;
+    margin: 5px;
+}
+
+.pos .product-list {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+}
+
+.pos .product-img {
+    width: 85%;
+}
+
+.pos .product-img img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.pos .products-widget .products-widget-control {
+    box-shadow: unset !important;
+    padding: 5px;
+
+}
+
+.pos .rightpane {
+    background: #ededed !important;
+}
+
+.box {
+    position: relative;
+    margin-left: auto;
+    right: 10px;
+}
+
+@media (max-width: 768px) {
+    .box {
+        position: absolute;
+    }
+}
+
+.box .input {
+    padding: 10px;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: 2px solid #251F1F;
+    border-radius: 50px;
+    box-sizing: border-box;
+    font-size: 18px;
+    color: #251F1F;
+    outline: none;
+    transition: .5s;
+}
+
+.box:hover input {
+    width: 300px;
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.box:hover profile-image {
+    display: none;
+}
+
+.box i {
+    position: absolute;
+    top: 50%;
+    right: 1px;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: #251F1F;
+    transition: .2s;
+    background-color: #ededed;
+}
+
+.box:hover i {
+    opacity: 0;
+    z-index: -1;
+}
+
+[badge]:after {
+    background: #a8a8a8;
+    border-radius: 10rem;
+    color: #fff;
+    content: attr(badge);
+    font-size: small;
+    min-width: 18px;
+    padding: 2px;
+    position: absolute;
+    text-align: center;
+    left: 1.7em;
+    bottom: 1.7em;
+    z-index: 999;
+}
+
+@media (min-width: 768px) {
+    .pos .leftpane {
+        max-width: 500px;
+        height: calc(100% - 30px);
+        margin: 15px;
+        box-shadow: 0 4px 8px 0 rgb(0 0 0 / 47%);
+        border: unset;
+    }
+}
+
+.pos .order-container {
+    border-radius: 10px 10px 0px 0px;
+}
+
+.pos *::-webkit-scrollbar {
+    width: 0 !important;
+}
+
+.pos .screen {
+    background: #ededed !important;
+}
+
+.pos .mode-button.selected-mode {
+    background: linear-gradient(to right bottom, rgb(85, 100, 194), rgb(58, 46, 141));
+}
+
+.pos .button.validation {
+    background: linear-gradient(to right bottom, rgb(85, 100, 194), rgb(58, 46, 141));
+}
+
+.pos .button.validation:hover {
+    background: linear-gradient(to right bottom, rgb(61 72 142), rgb(63 54 128)) !important;
+}
+
+.pos .order .orderline.selected {
+    background: rgb(70 71 166 / 33%) !important;
+}
+
+.pos .oe_status {
+    cursor: default;
+}
+
+.pos .mode-button.selected-mode:hover {
+    background: linear-gradient(to right bottom, rgb(74 82 131), rgb(58, 46, 141)) !important;
+}
+
+.pos .category-button {
+    display: inline-flex;
+    margin: 5px !important;
+    width: 160px;
+    height: 60px;
+    background: #fff;
+    border: 1px solid #d7d7d7;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
+}
+
+.pos .category-button .category-img {
+    position: relative;
+    width: 55px;
+    text-align: center;
+    cursor: pointer;
+    object-fit: contain;
+    padding: 5px;
+    height: calc(100% - 10px);
+}
+
+.pos .category-button .category-img img {
+    object-fit: cover;
+    width: 100%;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.pos .category-button .category-name {
+    display: inline-grid;
+    position: relative;
+    width: unset;
+    align-content: center;
+    padding-top: unset;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    color: #251F1F;
+}
+
+.pos .category-list {
+    background: none;
+}
+
+.pos .categories {
+    border-bottom: none;
+}
+
+.pos .category-list-scroller {
+    max-height: 85px;
+}
+
+.pos .breadcrumb-button {
+    color: #251F1F;
+}
+
+.pos .breadcrumb-arrow {
+    width: 10px;
+}
+
+.pos button, .pos a.button {
+    color: #484aa8;
+}
+
+.ticket-screen .controls button.highlight {
+    background: linear-gradient(to right bottom, rgb(85, 100, 194), rgb(58, 46, 141));
+    border-color: #494cab;
+}
+
+.pos .orders .order-row:hover, .pos .orders .order-row.highlight {
+    background-color: #4544a2d9;
+}
+
+.pos .control-button.highlight, .pos .button.highlight {
+    background: linear-gradient(to right bottom, rgb(85, 100, 194), rgb(58, 46, 141)) !important;
+    border-color: #494cab !important;
+}
+
+.pos .popup .button {
+    color: #484aa8;
+    border: 1px solid #484aa8;
+}
+
+.screen .top-content .button {
+    color: #484aa8;
+    border: 1px solid #484aa8;
+}
+
+.pos .partnerlist-screen tr.partner-line:hover {
+    background: linear-gradient(to right bottom, rgb(85, 100, 194), rgb(58, 46, 141)) !important;
+}
+
+.pos textarea:focus {
+    box-shadow: 0px 0px 0px 3px #484aa8;
+}
+
+.pos .category-simple-button:active {
+    color: #484aa8;
+}
+
+.pos .switchpane .btn-switchpane.secondary {
+    color: #484aa8;
+}
+
+.pos .switchpane .btn-switchpane {
+    background-color: #484aa8;
+}
+
+.payment-screen .paymentlines-empty .total {
+    color: #484aa8;
+}
+
+.pos .rightpane-header {
+    flex-direction: unset;
+    border-radius: 5px;
+}
+
+.pos .partner-list tr.partner-line.highlight {
+    background: linear-gradient(to right bottom, rgb(85, 100, 194), rgb(58, 46, 141)) !important;
+}
+
+.menu-item .oe_status i {
+    font-size: 22px;
+}
+
+.pos .pos-topheader {
+    background: linear-gradient(to right bottom, rgb(85, 100, 194), rgb(58, 46, 141)) !important;
+}

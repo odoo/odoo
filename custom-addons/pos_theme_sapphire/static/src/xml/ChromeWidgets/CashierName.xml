@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+     <!-- Current cashier details -->
+    <t t-name="CashierName" t-inherit="point_of_sale.CashierName" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('oe_status')]" position="replace">
+            <img t-att-src="avatar" t-att-alt="username" class="img-fluid profile-image avatar"
+                 width="70"/>
+            <div style="margin-left: 20px">
+                <h5 class="name username"><t t-esc="username"/></h5>
+                <p class="mail">clark@zmail.com</p>
+            </div>
+        </xpath>
+    </t>
+</templates>

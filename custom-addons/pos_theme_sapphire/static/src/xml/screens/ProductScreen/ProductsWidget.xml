@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <!-- Product listing section -->
+    <t t-name="ProductsWidget" t-inherit="point_of_sale.ProductsWidget" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('products-widget')]" position="replace">
+            <div class="products-widget">
+                <div class="product-list-container">
+                    <ProductsWidgetControlPanel mobileSearchBarIsShown="props.mobileSearchBarIsShown" breadcrumbs="breadcrumbs"
+                                            subcategories="subcategories" hasNoCategories="hasNoCategories"/>
+                    <div t-if="productsToDisplay.length != 0" class="product-list">
+                        <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
+                            <ProductItem product="product"/>
+                        </t>
+                    </div>
+                    <div t-else="" class="product-list-empty no-results-message">
+                        <p t-if="searchWord">
+                            No product found for <b>"<t t-esc="searchWord"/>"</b>
+                            in this category.
+                        </p>
+                        <p t-else="">
+                            There are no products in this category.
+                        </p>
+                    </div>
+                    <div class="portal search-database-button no-results-message"
+                         t-att-class="{ oe_hidden:  !shouldShowButton }"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <!-- Point of sale order page header section -->
+    <t t-name="ProductsWidgetControlPanel" t-inherit="point_of_sale.ProductsWidgetControlPanel"
+       t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('products-widget-control')]" position="replace">
+            <div class="products-widget-control">
+                <div class="custom-header">
+                    <div class="container d-flex justify-content-center oe_status" style="margin-top: 10px">
+                        <div class="card">
+                            <div class="top-container">
+                                <CashierName/>
+                                <div class="box px-3">
+                                    <form name="search">
+                                        <input t-ref="search-word-input-product" type="text" class="input" name="txt"
+                                               t-on-keyup="updateSearch"/>
+                                    </form>
+                                    <i class="fa fa-search" t-on-click="_onPressEnterKey"/>
+                                </div>
+                                <div>
+                                    <span class="breadcrumb-button breadcrumb-home"
+                                          t-on-click="() => this.trigger('switch-category', 0)">
+                                        <i class="fa fa-home" role="img" aria-label="Home" title="Home" style="font-size: 30px;"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rightpane-header">
+                    <t t-if="!props.hasNoCategories">
+                        <div class="categories-header">
+                            <div t-if="props.subcategories.length > 0 and !displayCategImages"
+                                 class="category-list simple" style="border-radius: 5px; padding: 10px;">
+                                <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                                    <span class="category-simple-button"
+                                          t-on-click="() => this.trigger('switch-category', category.id)">
+                                        <t t-esc="category.name"/>
+                                    </span>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <t t-if="props.subcategories.length > 0 and displayCategImages">
+                    <div class="categories">
+                        <div class="category-list-scroller">
+                            <div class="category-list">
+                                <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                                    <CategoryButton category="category"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>
