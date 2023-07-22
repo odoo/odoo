@@ -3676,7 +3676,7 @@ msgstr "참여 채널"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Join Video Call"
-msgstr ""
+msgstr "화상 회의 참여"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -6490,6 +6490,8 @@ msgid ""
 "String formatted to represent a key with modifiers following this pattern: "
 "shift.ctrl.alt.key, e.g: truthy.1.true.b"
 msgstr ""
+"다음의 패턴에 따라 수정할 수 있는 키를 표시하도록 형식이 지정된 문자열: shift.ctrl.alt.key, 예: "
+"truthy.1.true.b "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__sub_model_object_field
@@ -6558,17 +6560,17 @@ msgstr "하위 유형"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__suggested_next_type_ids
 msgid "Suggest"
-msgstr ""
+msgstr "제안"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__suggest
 msgid "Suggest Next Activity"
-msgstr ""
+msgstr "다음 활동 제안"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__suggested_next_type_ids
 msgid "Suggest these activities once the current one is marked as done."
-msgstr ""
+msgstr "현재 활동이 완료된 것으로 표시되면 이러한 활동을 제안하십시오."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_summary
@@ -6594,7 +6596,7 @@ msgstr "시스템 알림"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
-msgstr ""
+msgstr "대상 모델"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__vat
@@ -6622,7 +6624,7 @@ msgstr "현재 사용자가 접근할 수 없는 경우 버튼을 숨기는 기�
 msgid ""
 "Technical field to keep track of the model at the start of editing to "
 "support UX related behaviour"
-msgstr ""
+msgstr "편집을 시작할 경우 UX 관련 동작을 지원할 수 있도록 모델을 추적하는 기술 필드"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_field_name
@@ -6679,7 +6681,7 @@ msgstr "템플릿(서식)"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Text file"
-msgstr ""
+msgstr "텍스트 파일"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -6718,12 +6720,12 @@ msgstr "첨부 파일인 %s가 존재하지 않거나 사용자가 접근 권한
 #: code:addons/mail/models/ir_attachment.py:0
 #, python-format
 msgid "The attachment %s does not exist."
-msgstr ""
+msgstr "%s 첨부 파일이 존재하지 않습니다."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
 msgid "The channel UUID must be unique"
-msgstr ""
+msgstr "채널 UUID는 고유해야 합니다."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6732,6 +6734,8 @@ msgid ""
 "The e-mail alias %(matching_alias_name)s is already linked with "
 "%(alias_model_name)s. Choose another alias or change it on the linked model."
 msgstr ""
+"%(matching_alias_name)s 이메일 별칭은 이미 %(alias_model_name)s 항목에 연결되어 있습니다. 다른 "
+"별칭을 선택하거나 연결된 모델에서 변경하시기 바랍니다."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6740,6 +6744,8 @@ msgid ""
 "The e-mail alias %(matching_alias_name)s is already used as "
 "%(alias_duplicate)s alias. Please choose another alias."
 msgstr ""
+"%(matching_alias_name)s 이메일 별칭은 이미 %(alias_duplicate)s 별칭으로 사용 중입니다. 다른 별칭을 "
+"선택하시기 바랍니다."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6749,6 +6755,8 @@ msgid ""
 "%(document_name)s %(model_name)s. Choose another alias or change it on the "
 "other document."
 msgstr ""
+"%(matching_alias_name)s 이메일 별칭은 이미 %(document_name)s %(model_name)s에서 사용 "
+"중입니다. 다른 별칭을 선택하시거나 다른 문서에서 변경하시기 바랍니다,"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -6806,7 +6814,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
 msgid "The queue manager will send the email after the date"
-msgstr ""
+msgstr "대기열 관리자가 해당일 이후에 이메일을 전송합니다."
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -6831,7 +6839,7 @@ msgstr "채팅 메시지에서 대체해야 하는 바로 가기"
 #: code:addons/mail/static/src/models/follower/follower.js:0
 #, python-format
 msgid "The subscription preferences were successfully applied."
-msgstr ""
+msgstr "구독 추가 설정이 성공적으로 적용되었습니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
@@ -6905,6 +6913,8 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"Odoo 데이터베이스 저장 공간 확보를 위하여, 이 옵션을 통해 설정에 있는 기술 메뉴에서 발신된 것을 포함하여 보낸 메일 기록 전체를 "
+"영구적으로 삭제합니다."
 
 #. module: mail
 #. openerp-web
@@ -6917,7 +6927,7 @@ msgstr "이 레코드에는 예외 활동이 있습니다."
 #: code:addons/mail/models/mail_channel_partner.py:0
 #, python-format
 msgid "This user can not be added in this channel"
-msgstr ""
+msgstr "사용자를 이 채널에 추가할 수 없습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -6931,7 +6941,7 @@ msgstr "스레드"
 #: code:addons/mail/static/src/components/thread_preview/thread_preview.xml:0
 #, python-format
 msgid "Thread Image"
-msgstr ""
+msgstr "스레드 이미지"
 
 #. module: mail
 #. openerp-web
@@ -7072,7 +7082,7 @@ msgstr "다음 활동 트리거"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Turn camera on"
-msgstr ""
+msgstr "카메라 켜기"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
@@ -7132,7 +7142,7 @@ msgstr "레코드에 있는 예외 활동의 유형입니다."
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Type the name of a person"
-msgstr ""
+msgstr "해당하는 사람의 이름을 입력하세요."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__uri
@@ -7165,7 +7175,7 @@ msgstr "메시지를 게시할 수 없습니다. 보낸 사람의 이메일 주�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Unblacklist"
-msgstr ""
+msgstr "블랙리스트 해제"
 
 #. module: mail
 #: code:addons/mail/models/mail_blacklist.py:0
@@ -7178,7 +7188,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Undeafen"
-msgstr ""
+msgstr "음소거 해제"
 
 #. module: mail
 #. openerp-web
@@ -7218,7 +7228,7 @@ msgstr "소리 켜기"
 #: code:addons/mail/static/src/components/discuss_sidebar_category_item/discuss_sidebar_category_item.xml:0
 #, python-format
 msgid "Unpin Conversation"
-msgstr ""
+msgstr "대화 핀고정 해제"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_unread
@@ -7329,12 +7339,12 @@ msgstr "템플릿(서식) 사용"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__use_push_to_talk
 msgid "Use the push to talk feature"
-msgstr ""
+msgstr "PTT (push-to-talk:길게 눌러 말하기) 기능 사용"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_value__currency_id
 msgid "Used to display the currency when tracking monetary values"
-msgstr ""
+msgstr "금전적인 가치를 추적할 때 통화를 표시하기 위해 사용됨"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
@@ -7357,7 +7367,7 @@ msgstr "사용자 출석"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__user_setting_id
 msgid "User Setting"
-msgstr ""
+msgstr "사용자 설정"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_guest_action
@@ -7372,7 +7382,7 @@ msgstr "사용자 설정"
 #. module: mail
 #: model:ir.model,name:mail.model_res_users_settings_volumes
 msgid "User Settings Volumes"
-msgstr ""
+msgstr "사용자 볼륨 설정"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__user_notification
@@ -7391,7 +7401,7 @@ msgstr "사용자 필드 이름"
 #: code:addons/mail/static/src/widgets/common.xml:0
 #, python-format
 msgid "User is a bot"
-msgstr ""
+msgstr "봇 사용자입니다."
 
 #. module: mail
 #. openerp-web
@@ -7438,7 +7448,7 @@ msgstr "사용자"
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Users in this channel: %(members)s %(dots)s and you."
-msgstr ""
+msgstr "이 채널의 사용자: %(members)s%(dots)s 및 귀하"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
@@ -7446,6 +7456,8 @@ msgid ""
 "Users will still be able to render templates.\n"
 "However only Mail Template Editors will be able to create new dynamic templates or modify existing ones."
 msgstr ""
+"사용자는 서식 렌더링을 계속 사용할 수 있습니다.\n"
+"다만 메일 서식 편집기에서만 새로운 동적 서식을 생성하거나 기존 서식을 수정할 수 있습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -7501,14 +7513,14 @@ msgstr "화면 유형"
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "View image"
-msgstr ""
+msgstr "이미지 보기"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/discuss_sidebar_category/discuss_sidebar_category.xml:0
 #, python-format
 msgid "View or join channels"
-msgstr ""
+msgstr "채널 보기 또는 가입"
 
 #. module: mail
 #. openerp-web
@@ -7521,7 +7533,7 @@ msgstr "뷰어"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "Voice"
-msgstr ""
+msgstr "소리"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__volume
@@ -7531,12 +7543,12 @@ msgstr "부피"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "Volume per partner"
-msgstr ""
+msgstr "협력사 당 볼륨"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__volume_settings_ids
 msgid "Volumes of other partners"
-msgstr ""
+msgstr "다른 협력사 볼륨"
 
 #. module: mail
 #. openerp-web
@@ -7619,7 +7631,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr ""
+msgstr "YYYY-MM-DD HH:MM:SS"
 
 #. module: mail
 #. openerp-web
@@ -8083,7 +8095,7 @@ msgstr "잘못 구성된 별칭 (알 수 없는 참조 레코드)"
 #: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
 #, python-format
 msgid "live"
-msgstr ""
+msgstr "실시간"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form

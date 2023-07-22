@@ -37,7 +37,7 @@ msgstr "Información de la facturación electrónica"
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr "Advertencia(s) de la facturación electrónica"
+msgstr "Advertencias en la facturación electrónica"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
@@ -70,8 +70,8 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
-"Bloquea la operación actual del documento dependiendo de la severidad del error:\n"
-"* Info: el documento no está bloqueado y todo trabaja como debería.\n"
+"Bloquea la operación actual del documento dependiendo de la gravedad del error:\n"
+"* Información: el documento no está bloqueado y todo funciona como debería.\n"
 "* Advertencia: hay un error que no impide el funcionamiento de la operación actual de facturación electrónica.\n"
 "* Error: hay un error que bloquea la operación actual de facturación electrónica."
 
@@ -158,26 +158,26 @@ msgstr "Formato EDI compatible con los movimientos en este diario"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr "Nivel de bloqueo de Edi"
+msgstr "Nivel de bloqueo de EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
 msgid "Edi Content"
-msgstr "Contenido Edi"
+msgstr "Contenido EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_document_ids
 msgid "Edi Document"
-msgstr "Documento Edi"
+msgstr "Documento EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_count
 msgid "Edi Error Count"
-msgstr "Conteo de errores en el EDI"
+msgstr "Número de errores en el EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
@@ -220,7 +220,7 @@ msgstr "Intercambio electrónico de datos"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr "Documento Electrónico para un account.move"
+msgstr "Documento electrónico para un account.move"
 
 #. module: account_edi
 #: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
@@ -281,7 +281,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"La configuración de la factura es inválida:\n"
+"Configuración de la factura no válida:\n"
 "\n"
 "%s"
 
@@ -391,7 +391,7 @@ msgstr "El campo técnico para mostrar los documentos que procesará el CRON"
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
 msgstr ""
-"El estado agregado de todos los EDIs con el servicio de internet de este "
+"El estado agregado de todos los EDI con el servicio de internet de este "
 "movimiento"
 
 #. module: account_edi
@@ -467,9 +467,8 @@ msgid ""
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
-"No puede editar el siguiente asiento contable porque ya se envió un "
-"documento electrónico %s. En lugar de esto, por favor use el botón de "
-"'Solicitar Cancelación EDI’."
+"No puede editar el siguiente asiento contable %s porque ya se envió un "
+"documento electrónico, use el botón de \"Solicitar cancelación EDI\"."
 
 #. module: account_edi
 #: code:addons/account_edi/models/ir_attachment.py:0
@@ -477,7 +476,8 @@ msgstr ""
 msgid ""
 "You can't unlink an attachment being an EDI document sent to the government."
 msgstr ""
-"Al ser un EDI que se envió al gobierno, no se puede desvincular el adjunto."
+"Al ser un EDI que se envió al gobierno, no se puede desvincular el archivo "
+"adjunto."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

@@ -432,7 +432,7 @@ msgstr "環境"
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "エラー：この配送方法はこのアドレスでは利用できません。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -521,7 +521,7 @@ msgstr "ID"
 msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
-msgstr ""
+msgstr "オーダの合計金額（送料を除く）がこの金額以上の場合、顧客は送料無料の特典を受けることができます。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -580,7 +580,7 @@ msgstr "最終更新日"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "デバッグを容易にするためのログ要求"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -738,7 +738,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr ""
+msgstr "カスタマーポータルからアクセス可能な返品ラベル"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -785,7 +785,7 @@ msgstr "付番"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
 msgid "Service Product"
-msgstr ""
+msgstr "サービスプロダクト"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
@@ -875,18 +875,18 @@ msgstr "郵便"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
-msgstr ""
+msgstr "返品ラベルは、カスタマーポータルから顧客がダウンロードできます。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr ""
+msgstr "返品ラベルは配送時に自動的に作成されます。"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr ""
+msgstr "この配送は、オーダ金額が%.2fを超えたため、無料です。"
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
@@ -1062,6 +1062,10 @@ msgid ""
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
 msgstr ""
+"すでに請求書発行済のオーダの送料を更新することはできません！\n"
+"\n"
+"次の配送明細（商品、請求数量、価格）はすでに処理されています：\n"
+"\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
