@@ -24,14 +24,14 @@
                         <field name="active" invisible="1"/>
                         <field name="forum_id"/>
                         <field name="website_id" groups="website.group_multi_website"/>
-                        <field name="parent_id"/>
+                        <field name="parent_id" attrs="{'invisible': [('parent_id', '=', False)]}"/>
                     </group>
                     <group name="post_details">
                         <field name="tag_ids" widget="many2many_tags"/>
                         <field name="state"/>
-                        <field name="closed_reason_id"/>
-                        <field name="closed_uid"/>
-                        <field name="closed_date"/>
+                        <field name="closed_reason_id" attrs="{'invisible': [('closed_reason_id', '=', False)]}"/>
+                        <field name="closed_uid" attrs="{'invisible': [('closed_uid', '=', False)]}"/>
+                        <field name="closed_date" attrs="{'invisible': [('closed_date', '=', False)]}"/>
                     </group>
                     <group name="creation_details">
                         <field name="create_uid"/>
@@ -40,7 +40,7 @@
                         <field name="write_date"/>
                     </group>
                     <group name="post_statistics">
-                        <field name="is_correct"/>
+                        <field name="is_correct" attrs="{'invisible': [('parent_id', '=', False)]}"/>
                         <field name="views"/>
                         <field name="vote_count"/>
                         <field name="favourite_count"/>
