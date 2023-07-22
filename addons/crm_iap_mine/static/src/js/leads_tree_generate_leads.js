@@ -73,4 +73,11 @@ odoo.define('crm.leads.tree', function (require) {
 
     viewRegistry.add('crm_iap_lead_mining_request_tree', LeadMiningRequestListView);
     viewRegistry.add('crm_iap_lead_mining_request_kanban', LeadMiningRequestKanbanView);
+
+    return {
+        LeadMiningRequestListView : LeadMiningRequestListView,
+        LeadMiningRequestListController : LeadMiningRequestListController,
+        LeadMiningRequestKanbanView : LeadMiningRequestKanbanView,
+        LeadMiningRequestKanbanController : LeadMiningRequestKanbanController,
+    }
 });
