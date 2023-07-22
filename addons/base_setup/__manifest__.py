@@ -17,6 +17,7 @@ Shows you a list of applications features to install from.
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         ],
+    'auto_install': True,
     'installable': True,
 
     'license': 'LGPL-3',
