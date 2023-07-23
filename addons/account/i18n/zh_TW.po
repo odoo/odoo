@@ -8,8 +8,8 @@
 # 226408 台北 <226408@so8d.com>, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Yan-Kuan Wu, 2023
-# Tony Ng, 2023
 # Martin Trigaux, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -213,6 +213,8 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%s 就其相關的結單資料行，已達到無效狀態。\n"
+"為保持一致，該日記賬記項必須始終只有一個暫記資料行。"
 
 #. module: account
 #. odoo-python
@@ -5046,7 +5048,7 @@ msgstr "天(月底後)"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__days_after
 msgid "Days to add after the end of the month"
-msgstr ""
+msgstr "月底後加上的天數"
 
 #. module: account
 #. odoo-python
@@ -8624,7 +8626,7 @@ msgstr "明細"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "資料行「%s」將自己設為其母項。"
 
 #. module: account
 #. odoo-python
@@ -8633,7 +8635,7 @@ msgstr ""
 msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
-msgstr ""
+msgstr "資料行「%s」將另一行「%s」設為其母項，但它在報表上出現的位置較前。母項必須先行。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
@@ -8682,7 +8684,7 @@ msgstr "載入更多限制"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr ""
+msgstr "鎖定日期訊息"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -13608,6 +13610,8 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
+"該日期被設置在 %(lock_type)s 類型鎖定日期 %(lock_date)s 之前。過賬後，日記賬記項會隨即在 %(invoice_date)s"
+" 入賬。"
 
 #. module: account
 #. odoo-python
@@ -14575,7 +14579,7 @@ msgstr "此傳票將自動過帳於以下日期: %(date)s"
 #: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
-msgstr ""
+msgstr "此操作會造成序列間斷。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete

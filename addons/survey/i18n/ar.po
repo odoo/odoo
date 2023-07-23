@@ -648,7 +648,7 @@ msgstr "<span>قائدنا المشهور!</span> "
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q3
 msgid "<span>Our sales people have an advantage, but you can do it !</span>"
-msgstr "<span>لدى مندوبو مبيعاتنا الأفضلية، ولكن بإمكانك النجاح!</span> "
+msgstr "<span>لدى مندوبي مبيعاتنا الأفضلية، ولكن بإمكانك النجاح!</span> "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -873,6 +873,8 @@ msgid ""
 "All conditional display questions need a triggering question.\n"
 "Please disable \"Conditional Display\" or specify a triggering question."
 msgstr ""
+"تحتاج كافة أسئلة العرض المشروط إلى سؤال مشغِّل. \n"
+"يرجى تعطيل خاصية \"العرض المشروط\" أو تحديد سؤال مشغِّل. "
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -885,6 +887,8 @@ msgid ""
 "All questions triggered by another need a triggering answer.\n"
 "Please disable \"Conditional Display\" or specify a triggering answer."
 msgstr ""
+"تحتاج كافة الأسئلة التي يتم تشغيلها بواسطة سؤال آخر إلى إجابة مشغلة. \n"
+"يرجى تعطيل خاصية \"العرض المشروط\" أو تحديد إجابة مشغلة. "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -894,7 +898,7 @@ msgstr "كافة الاستطلاعات "
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
 msgid "Allowed Triggering Questions"
-msgstr ""
+msgstr "الأسئلة التي تشغل غيرها المسموح بها "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
@@ -1414,7 +1418,7 @@ msgstr "العرض المشروط "
 #, python-format
 msgid ""
 "Conditional display is not available when questions are randomly picked."
-msgstr ""
+msgstr "العرض المشروط غير متاح عندما يتم اختيار الأسئلة عشوائياً. "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_3
@@ -1731,12 +1735,12 @@ msgstr "عرض التقدم كـ"
 #: code:addons/survey/static/src/views/widgets/survey_question_trigger/survey_question_trigger.js:0
 #, python-format
 msgid "Displayed if \"%s: %s\""
-msgstr ""
+msgstr "يتم عرضه إذا \"%s: %s\" "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Displayed when the answer entered is not valid."
-msgstr ""
+msgstr "يتم عرضه عندما تكون الإجابة المدخلة غير صالحة. "
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1781,7 +1785,7 @@ msgstr "درج خزانة"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Duplicate Question"
-msgstr ""
+msgstr "نسخ السؤال "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -2431,7 +2435,7 @@ msgstr "في جلسة "
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_placed_before_trigger
 msgid "Is misplaced?"
-msgstr ""
+msgstr "ليس في المكان الصحيح؟ "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -2451,7 +2455,7 @@ msgstr "هل خشب الصنوبر قاسٍ أو لين؟ "
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
 msgid "Is this question placed before its trigger question?"
-msgstr ""
+msgstr "هل تم وضع هذا السؤال قبل السؤال الذي يؤدي إليه؟ "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug4
@@ -2810,7 +2814,7 @@ msgstr "الرسائل"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Min/Max Limits"
-msgstr ""
+msgstr "الحد الأدنى/الأقصى "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -3358,7 +3362,7 @@ msgstr "المشاركين"
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Participate to %(survey_name)s"
-msgstr ""
+msgstr "المشاركة في %(survey_name)s"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
@@ -3441,7 +3445,7 @@ msgstr "اختر قالباً..."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Pick a previous multiple-choice question"
-msgstr ""
+msgstr "اختيار سؤال اختيار من متعدد سابق "
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p1_q1
@@ -4223,7 +4227,7 @@ msgstr "بطاقة عنوان الاستطلاع"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Survey Link"
-msgstr ""
+msgstr "رابط الاستطلاع "
 
 #. module: survey
 #. odoo-python
@@ -4630,7 +4634,7 @@ msgstr "ستُعرض هذه الرسالة عند إكمال الاستطلاع"
 #, python-format
 msgid ""
 "This question is positioned before its trigger (\"%s\") and will be skipped."
-msgstr ""
+msgstr "لقد تم وضع هذا السؤال قبل العامل المشغل له (\"%s\") وسيتم تخطيه. "
 
 #. module: survey
 #. odoo-python
@@ -5387,6 +5391,7 @@ msgstr "dropdown-item d-flex align-items-center justify-content-between"
 msgid ""
 "e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 msgstr ""
+"مثال:  'Rick Sanchez' <rick_sanchez@example.com>، hictor_vugo@example.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5518,4 +5523,4 @@ msgstr "إلى"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "⚠️ This question is positioned before its trigger and will be skipped."
-msgstr ""
+msgstr "⚠️ لقد تم وضع هذا السؤال قبل العامل المشغل له وسيتم تخطيه. "
