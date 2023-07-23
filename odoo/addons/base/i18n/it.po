@@ -4102,7 +4102,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Nasconde il pulsante di presenza quando un dipendente è in ferie.\n"
+"Nasconde il pulsante di presenza quando un dipendente è in permesso.\n"
 "    "
 
 #. module: base
@@ -6946,8 +6946,8 @@ msgid ""
 msgstr ""
 "\n"
 "Questo modulo aggiunge il supporto per la lettura di codici a barre al sistema di gestione degli eventi.\n"
-"Per ogni partecipante viene generato un codice a barre che viene stampato sul badge. Una volta acquisito,\n"
-"la registrazione è confermata.\n"
+"Per ogni partecipante viene generato un codice a barre che viene stampato sul tesserino. Una volta acquisito,\n"
+"la registrazione viene confermata.\n"
 "    "
 
 #. module: base
@@ -13734,7 +13734,7 @@ msgstr "Indirizzo di consegna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_barcode
 msgid "Delivery Barcode Scanning"
-msgstr "Scansione del codice a barre di consegna"
+msgstr "Lettura codice a barre per consegne"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
@@ -17404,7 +17404,7 @@ msgstr "Importa / Esporta"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon
 msgid "Import Amazon orders and sync deliveries"
-msgstr "Importazione ordini Amazon e sincronizzazione consegne"
+msgstr "Importazione ordini Amazon e sincronizzazione delle consegne"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_camt
@@ -29892,6 +29892,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "Impossibile disattivare l'utente usato per effettuare l'accesso."
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -29912,6 +29918,12 @@ msgstr "Impossibile eliminare la lingua impostata come preferita dall'utente."
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "Impossibile unire un contatto con uno da cui deriva."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0

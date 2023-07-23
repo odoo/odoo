@@ -28,6 +28,7 @@
 # Ediz Duman <neps1192@gmail.com>, 2022
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# İmat Yahya Çataklı <yahyacatakli@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"Last-Translator: İmat Yahya Çataklı <yahyacatakli@gmail.com>, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2652,7 +2653,7 @@ msgstr "Banka Hesap Ekstreleri"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Bank Suspense Account"
-msgstr "Banka Askıda Hesabı"
+msgstr "Banka Geçici Hesabı"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -2680,7 +2681,7 @@ msgid ""
 "the final reconciliation allowing finding the right account."
 msgstr ""
 "Banka ekstresi işlemleri, doğru hesabın bulunmasını sağlayan nihai "
-"mutabakata kadar askıya alma hesabına kaydedilecektir."
+"mutabakata kadar geçici hesabına kaydedilecektir."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -6333,11 +6334,10 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Receipts "
 "Account instead of the receivable account."
 msgstr ""
-"Faturalar / geri ödemelerle tetiklenen gelen ödeme girişleri, Ödenmemiş "
-"Makbuzlar Hesabı'nda yayınlanır ve banka mutabakatı widget'ında mavi "
-"çizgiler olarak görüntülenir. Mutabakat sürecinde, ilgili işlemler, alacak "
-"hesabı yerine Ödenmemiş Makbuzlar Hesabı üzerindeki girişlerle mutabık "
-"kılınacaktır."
+"Faturalar / geri ödemelerle tetiklenen gelen ödeme girişleri, Vadesi Geçen "
+"Makbuz Hesabı'nda yayınlanır ve banka uzlaştırma widget'ında mavi çizgi "
+"olarak görüntülenir. Uzlaştırma sürecinde, ilgili işlemler, alacak hesabı "
+"yerine Vadesi Geçen Makbuz Hesabı üzerindeki girişlerle uzlaştırılacaktır."
 
 #. module: account
 #: code:addons/account/wizard/setup_wizards.py:0
@@ -7031,7 +7031,7 @@ msgstr "Yevmiye Adı"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_suspense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
 msgid "Journal Suspense Account"
-msgstr "Yevmiye Askı Hesabı"
+msgstr "Yevmiye Geçici Hesabı"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -8711,11 +8711,11 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Payments "
 "Account instead of the payable account."
 msgstr ""
-"Faturalar / kredi notları tarafından tetiklenen giden ödeme girişleri, "
-"Ödenmemiş Ödemeler Hesabı'nda yayınlanır ve banka mutabakatı widget'ında "
-"mavi çizgiler olarak görüntülenir. Mutabakat süreci sırasında, ilgili "
-"işlemler, ödenebilir hesap yerine Ödenmemiş Ödemeler Hesabı girişleriyle "
-"mutabık kılınacaktır."
+"Faturalar / İade&Fiyat Farkı Faturaları tarafından tetiklenen giden ödeme "
+"girişleri, Vadesi Geçen Ödeme Hesabı'nda yayınlanır ve banka uzlaştırma "
+"widget'ında mavi çizgi olarak görüntülenir. Uzlaştırma süreci sırasında, "
+"ilgili işlemler, borç hesabı yerine Vadesi Geçen Ödeme Hesabı girişleriyle "
+"uzlaştırılacaktır."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -11281,7 +11281,7 @@ msgstr "Tedarikçi Sıralaması"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr "Hesabı Askıya Al"
+msgstr "Geçici Hesap"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -14470,7 +14470,7 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
-"%s yevmiyesinde bir askı hesabı ayarlanmadan yeni bir ekstre satırı "
+"%s yevmiyesinde bir geçici hesap ayarlanmadan yeni bir ekstre satırı "
 "oluşturamazsınız."
 
 #. module: account
