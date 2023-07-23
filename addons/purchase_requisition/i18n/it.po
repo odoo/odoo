@@ -6,8 +6,7 @@
 # Martin Trigaux, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Friederike Fasterling-Nesselbosch, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +25,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
 msgid "'Tender - %s' % (object.name)"
-msgstr ""
+msgstr "\"Gara - %s\" % (object.name)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -247,10 +246,10 @@ msgid ""
 " 'purchase_requisition' module is installed and this option is selected, the"
 " system will create a draft call for tender."
 msgstr ""
-"Creare un ordine di acquisto in bozza: in base alla configurazione del "
-"prodotto, il sistema creerà un ordine di acquisto in bozza. Proporre un "
-"bando di gara: se il modulo \"purchase_requisition\" è installato e questa "
-"opzione è selezionata, il sistema creerà un bando di gara in bozza."
+"Creare ordine di acquisto in bozza: in base alla configurazione del "
+"prodotto, il sistema crea un ordine di acquisto in bozza. Proporre un bando "
+"di gara: se l'opzione è selezionata e il modulo \"purchase_requisition\" è "
+"installato, il sistema crea un bando di gara in bozza."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -410,10 +409,10 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
-"In una gara d'appalto, è possibile registrare i prodotti da acquistare\n"
-"e generare la creazione di RfQ ai fornitori. Una volta che le offerte sono state\n"
-"registrate, puoi rivederle e confrontarle e puoi\n"
-"convalidarne alcune e cancellarne altre."
+"In un bando di gara è possibile registrare i prodotti da acquistare necessari\n"
+"            e generare la creazione delle RdP ai fornitori. Una volta che le gare\n"
+"            sono state registrate, è possibile esaminarle e confrontarle convalidandone\n"
+"            alcune e annullandone altre."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -600,7 +599,7 @@ msgstr "Prodotti da acquistare"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__tenders
 msgid "Propose a call for tenders"
-msgstr "Proponi un bando di gara"
+msgstr "Proporre un bando di gara"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id

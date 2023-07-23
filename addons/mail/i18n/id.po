@@ -609,7 +609,7 @@ msgstr "Jenis Aktivitas"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_type
 msgid "Activity User Type"
-msgstr ""
+msgstr "Tipe User untuk Aktivitas "
 
 #. module: mail
 #. openerp-web
@@ -1066,7 +1066,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Blacklist"
-msgstr ""
+msgstr "Blacklist"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
@@ -2050,7 +2050,7 @@ msgstr "Batas Waktu"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "Jatuh Tempo Pada"
 
 #. module: mail
 #. openerp-web
@@ -2077,7 +2077,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Tipe jatuh tempo"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2945,6 +2945,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Bila alamat email dalam blacklist, kontak tidak akan menerima email massal "
+"lagi, dari daftar apapun"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__is_active
@@ -4282,7 +4284,7 @@ msgstr "Tidak Ada"
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normalized Email"
 
 #. module: mail
 #. openerp-web
@@ -6119,6 +6121,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
+"Email ini diblacklist untuk mass mailing. Klik untuk tidak memblacklist."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -6133,6 +6136,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
+"Field ini digunakan untuk mencari pada alamat email sebagai field email "
+"utama yang dapat memiliki lebih dari hanya alamat email."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__public
@@ -6515,6 +6520,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Gunakan \"User Spesifik' untuk selalu menetapkan user yang sama pada "
+"kegiatan berikutnya. Gunakan 'User Umum dari Record' untuk menentukan nama "
+"field user untuk dipilih pada record."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_active_domain
@@ -6547,7 +6555,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "Nama field user"
 
 #. module: mail
 #. openerp-web
@@ -6609,6 +6617,14 @@ msgstr ""
 "Menggunakan server email Anda sendiri diperlukan untuk mengirim/menerima "
 "email pada versi Komunitas dan Enterprise. Pengguna daring sudah disediakan "
 "server email yang siap dipakai (@mycompany.odoo.com)."
+
+#. module: mail
+#: code:addons/mail/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
 
 #. module: mail
 #. openerp-web

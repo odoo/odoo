@@ -29,7 +29,7 @@
 # Amer Hazaa <eng.amer.it@gmail.com>, 2020
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1874,6 +1874,7 @@ msgstr "تجاهل الرسائل المحددة"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/widgets/discuss/discuss.js:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -2409,13 +2410,13 @@ msgstr "فشل"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s"
-msgstr "فشل معالجة القالب : %s"
+msgstr "فشل تكوين القالب : %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s (%d)"
-msgstr "فشل معالجة القالب : %s (%d)"
+msgstr "فشل تكوين القالب : %s (%d)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -6647,6 +6648,14 @@ msgstr ""
 "تحتاج لاستخدام خادم البريد الإلكتروني الخاصة بك لتتمكن من إرسال واستلام "
 "الرسائل في النسختين المجانية والمدفوعة. مستخدمي النسخة عبر الإنترنت يستفيدون"
 " بالفعل من خادم بريد إلكتروني جاهز للاستعمال (@mycompany.odoo.com)."
+
+#. module: mail
+#: code:addons/mail/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
 
 #. module: mail
 #. openerp-web
