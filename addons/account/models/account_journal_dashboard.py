@@ -610,9 +610,6 @@ class account_journal(models.Model):
             'context': self._get_move_action_context(),
         }
 
-    def create_cash_statement(self):
-        raise UserError(_('Please install Accounting for this feature'))
-
     def action_create_vendor_bill(self):
         """ This function is called by the "Import" button of Vendor Bills,
         visible on dashboard if no bill has been created yet.
