@@ -2024,7 +2024,7 @@ msgid ""
 "collection process."
 msgstr ""
 "La actividad se programará automáticamente en la fecha de vencimiento del "
-"pago, lo que mejorará el proceso de cobro."
+"pago, mejorando el proceso de cobro."
 
 #. module: account
 #. openerp-web
@@ -3027,7 +3027,7 @@ msgstr "Canales de comunicación bancarios"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "Bank Identifier Code"
-msgstr "Código de identificación bancaria (BIC/SWIFT)"
+msgstr "Código de identificación bancaria"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
@@ -3083,7 +3083,7 @@ msgstr "Balance final del estado de cuenta bancario"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Línea de extracto bancario"
+msgstr "Línea de un estado de cuenta bancario"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_line
@@ -3147,9 +3147,9 @@ msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
 msgstr ""
-"Las transacciones de extractos bancarios se contabilizarán en la cuenta "
-"transitoria hasta la conciliación final, así se podrá encontrar la cuenta "
-"correcta."
+"Las transacciones de estados de cuenta bancarios se contabilizarán en la "
+"cuenta transitoria hasta la conciliación final que permita encontrar la "
+"cuenta correcta."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -4131,7 +4131,7 @@ msgstr "Modo de edición"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Compute tax rates based on U.S. ZIP codes"
-msgstr "Calcule las tasas de impuestos según los códigos postales de EE.UU."
+msgstr "Calcular las tasas de impuestos según los códigos postales de EE. UU."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end
@@ -4191,8 +4191,8 @@ msgid ""
 "Confirming this will create automatically a journal entry with the "
 "difference in the profit/loss account set on the cash journal."
 msgstr ""
-"Al confirmar se creará automáticamente un asiento contable con la diferencia"
-" de la cuenta del estado de ganancias anotada en el diario de efectivo."
+"Al confirmar se creará un asiento contable en automático con la diferencia "
+"de la cuenta del estado de ganancias registrada en el diario de efectivo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
@@ -4405,12 +4405,12 @@ msgstr "Crear pago"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Create a Bank Account"
-msgstr "Crear una cuenta de banco"
+msgstr "Crear una cuenta bancaria"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 msgid "Create a credit note"
-msgstr "Crear una Nota de crdito"
+msgstr "Crear una nota de crédito"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -4767,7 +4767,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_currency_form
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Currencies"
-msgstr "Monedas"
+msgstr "Divisas"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
@@ -4983,7 +4983,7 @@ msgstr "Personalizar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Customize the look of your invoices."
-msgstr "Personalice la apariencia de sus facturas"
+msgstr "Personalice la apariencia de sus facturas."
 
 #. module: account
 #. openerp-web
@@ -5159,7 +5159,7 @@ msgstr "Separador decimal "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Secuencia de facturas rectificativas especializadas"
+msgstr "Secuencia de nota de crédito especializada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
@@ -5301,7 +5301,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr "Defina cómo se registrarán los extractos bancarios"
+msgstr "Defina como se registrarán los estados de cuenta bancarios"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__is_carryover_persistent
@@ -5332,8 +5332,8 @@ msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by "
 "cash."
 msgstr ""
-"Defina la acuñación más pequeña de la divisa que se puede usar para pagar en"
-" efectivo."
+"Defina la moneda más pequeña de la divisa que se puede usar para pagar en "
+"efectivo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -6686,7 +6686,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "HALF-UP"
-msgstr "MITAD ARRIBA"
+msgstr "HACIA ARRIBA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -7022,8 +7022,8 @@ msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
 "posted and cannot be modified anymore."
 msgstr ""
-"Si se selecciona, el asiento contable o la factura recibe una cifra de "
-"control tan pronto como se contabiliza y ya no se puede modificar."
+"Si se encuentra seleccionado, el asiento contable o la factura recibe un "
+"hash tan pronto como se contabiliza y ya no se puede modificar."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10167,13 +10167,13 @@ msgstr "Líneas de mapeo de partners"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
 msgid "Partner Name"
-msgstr "Nombre del partner"
+msgstr "Nombre del contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_type
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_type
 msgid "Partner Type"
-msgstr "Tipo de partner"
+msgstr "Tipo de contacto"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
@@ -12130,11 +12130,11 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
-"Envíe un correo electrónico por separado para cada factura.\n"
+"Envíe un correo electrónico por factura.\n"
 "\n"
-"Se aceptará cualquier extensión de archivo.\n"
+"Se aceptará cualquier tipo de extensión de archivo.\n"
 "\n"
-"Odoo solo lee archivos PDF y XML"
+"Odoo solo interpretará archivos PDF y XML"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -12266,15 +12266,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
-"Cambie de \"active\" a \"false\" para ocultar el diario contable sin "
-"eliminarlo."
+"Establezca el activo como falso para ocultar el diario sin eliminarlo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr ""
-"Establezca el activo como false para ocultar el impuesto sin eliminarlo."
+"Establezca el activo como falso para ocultar el impuesto sin eliminarlo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15869,8 +15868,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"Se usa para registrar una pérdida cuando el saldo final de una caja "
-"registradora no es el mismo que el calculado por el sistema"
+"Se utiliza para registrar una pérdida cuando el balance final de una caja "
+"registradora difiere de lo calculado por el sistema"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__profit_account_id
@@ -15878,8 +15877,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
-"Se usa para registrar una ganancia cuando el saldo final de una caja "
-"registradora no es el mismo que el calculado por el sistema"
+"Se utiliza para registrar una ganancia cuando el balance final de una caja "
+"registradora difiere de lo calculado por el sistema"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__user_id
@@ -16425,8 +16424,8 @@ msgid ""
 "invoice when making the payment."
 msgstr ""
 "Puede establecer aquí la comunicación predeterminada que aparecerá en las "
-"facturas del cliente una vez que la valide, para ayudar al cliente a "
-"consultar esa factura en particular al realizar el pago."
+"facturas del cliente, una vez validada, para ayudar al cliente a consultar "
+"esa factura en particular al realizar el pago."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0

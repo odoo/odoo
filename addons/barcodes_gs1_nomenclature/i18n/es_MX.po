@@ -39,7 +39,7 @@ msgstr ""
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
 msgid "Associated Uom"
-msgstr "Uom asociado"
+msgstr "UdM asociada"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
@@ -54,7 +54,7 @@ msgstr "Regla de código de barras"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__use_date
 msgid "Best before Date"
-msgstr "Consumir preferentemente antes de"
+msgstr "Fecha de consumo preferente"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__date
@@ -212,9 +212,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
-"Algo no está bien con el patrón de la regla \"%s\" del código de barras.\n"
-"Si esta regla usa un decimal, revise si no se puede obtener algo más aparte de un dígito como último carácter para el identificador de aplicación.\n"
-"Revise también si los valores emparejados posibles solo pueden ser dígitos, de lo contrario no se puede usar el valor como medición."
+"Ocurre un error con el patrón de la regla \"%s\" del código de barras.\n"
+"Si esta regla usa un decimal, verifique si no puede obtener algo más aparte de un dígito como último carácter para el identificador de aplicación.\n"
+"Compruebe también si los valores emparejados posibles solo pueden ser dígitos, de lo contrario no puede usar el valor como medida."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -231,9 +231,7 @@ msgstr ""
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be parsed by any barcode rules."
-msgstr ""
-"Este código de barras no se puede analizar por ninguna regla de código de "
-"barras."
+msgstr "Ninguna regla de código de barras puede analizar este código."
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web

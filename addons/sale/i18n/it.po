@@ -438,6 +438,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                            <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Cliente</span>\n"
+"                            <span class=\"o_stat_text\">Anteprima</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -637,7 +639,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "Accetta e paga il preventivo"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -778,6 +780,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"L'upselling si effettua quando le quantità di un ordine già consegnate superano\n"
+"            le quantità ordinate e la politica di fatturazione si basa sulle quantità ordinate."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
@@ -830,6 +834,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Ad esempio, se vendi ore prepagate per un servizio Odoo ti consiglia di\n"
+"            vendere ore aggiuntive quando quelle ordinate sono esaurite."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1480,7 +1486,7 @@ msgstr "Anticipi"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr ""
+msgstr "Anticipo"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1740,7 +1746,7 @@ msgstr "Raggruppa per"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Ha cambiato posizione di bilancio"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2744,7 +2750,7 @@ msgstr "Listino prezzi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Articolo listino prezzi"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -3042,7 +3048,7 @@ msgstr "Ricalcola tutti i prezzi in base al listino"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "Ricalcola tutte le tasse in base alla posizione di bilancio"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3980,6 +3986,11 @@ msgid ""
 "- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
+"Non c'è nulla da fatturare!\n"
+"\n"
+"I motivi del comportamento potrebbero essere:\n"
+"-Devi prima consegnare i prodotti per poterli fatturare.\n"
+"-Devi modificare la politica di fatturazione del prodotto. Apri il prodotto, apri la scheda \"Vendite\" e modifica la politica di fatturazione da \"quantità consegnate\" in \"quantità ordinate\". Per i servizi, devi modificare la politica di fatturazione dei servizi in \"Prepagato\"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4095,6 +4106,8 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"Verranno aggiornate tutte le tasse in base all'attuale posizione di bilancio"
+" selezionata."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4302,7 +4315,7 @@ msgstr "Aggiorna prezzi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr ""
+msgstr "Aggiorna tasse"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4335,7 +4348,7 @@ msgstr "Voce griglia per variante"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
-msgstr ""
+msgstr "Mostra ordine"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4429,6 +4442,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Puoi selezionare tutti gli ordini e fatturarli in gruppi,<br>\n"
+"            oppure controllare ciascun ordine e fatturarli uno per volta."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type

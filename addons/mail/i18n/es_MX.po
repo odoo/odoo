@@ -474,8 +474,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Un diccionario Python que será evaluado para proporcionar valores "
-"predeterminados al crear nuevos registros para este seudónimo."
+"Un diccionario de Python que se evaluará con el fin de proporcionar valores "
+"predefinidos cuando se creen nuevos registros para este seudónimo."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
@@ -1947,7 +1947,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Mensaje devuelto personalizado"
+msgstr "Mensaje personalizado en caso de devolución"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__custom_channel_name
@@ -2068,7 +2068,7 @@ msgstr "Etiqueta de retraso"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
 msgid "Delay Type"
-msgstr "Tipo de retraso"
+msgstr "Tipo de atraso"
 
 #. module: mail
 #. openerp-web
@@ -3943,7 +3943,7 @@ msgstr "Abandonar este canal"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
 msgid "List of cc from incoming emails."
-msgstr "Listado de cc en correos electrónicos entrantes."
+msgstr "Lista de cc en correos electrónicos entrantes."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__partner_ids
@@ -6880,7 +6880,8 @@ msgstr ""
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template rendering should be called on a valid record IDs."
-msgstr "La creación de una plantilla tiene que hacerse en un registro válido."
+msgstr ""
+"La creación de una plantilla debe hacerse en un ID de registro válido."
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -7007,7 +7008,8 @@ msgstr "El correo electrónico enviado a"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr "El código html de reemplazo que sustituye el acceso directo"
+msgstr ""
+"El código HTML con caracteres de escape que sustituye el acceso directo"
 
 #. module: mail
 #: code:addons/mail/models/mail_composer_mixin.py:0
@@ -7109,7 +7111,7 @@ msgstr "No hay mensajes en esta conversación."
 msgid "There can only be one rtc session per channel partner"
 msgstr ""
 "Solo puede haber una sesión de comunicación en tiempo real por canal del "
-"partner"
+"contacto"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -7153,8 +7155,8 @@ msgid ""
 "This group is visible by non members. Invisible groups can add members "
 "through the invite button."
 msgstr ""
-"Este grupo es visible para todos. Los grupos no visibles puede añadir "
-"miembros a través del botón invitar."
+"Este grupo es visible para todos. Los grupos que no son visibles pueden "
+"agregar miembros mediante el botón invitar."
 
 #. module: mail
 #. openerp-web
@@ -7393,14 +7395,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"Tipo de acción de servidor. Los valores que están disponibles son:\n"
-"- 'Ejecutar código Python': el bloque de código Python se ejecutará\n"
-"- 'Crear o duplicar un nuevo registro': se creará un nuevo registro con nuevos valores, o se duplicará uno existente en la base de datos\n"
-"- 'Actualizar un registro': se actualizarán los valores de un registro\n"
-"- 'Ejecutar varias acciones': se definirá una acción que activará otras acciones de servidor\n"
-"- 'Enviar un correo electrónico': se enviará automáticamente un correo electrónico (Conversaciones)\n"
-"- 'Añadir seguidores': se añadirá seguidores a un registro (Conversaciones)\n"
-"- 'Crear próxima actividad': se creará una actividad (Conversaciones)"
+"Tipo de acción del servidor. Estos son los valores disponibles:\n"
+"- 'Ejecutar código Python': un bloque de código Python que se ejecutará\n"
+"- 'Crear': crear un registro nuevo con valores nuevos\n"
+"- 'Actualizar registro': actualizar los valores de un registro\n"
+"- 'Ejecutar varias acciones': definir una acción que active muchas otras acciones\n"
+"- 'Enviar correo electrónico': enviar un correo de forma automática (Conversaciones)\n"
+"- 'Agregar seguidores': agregar seguidores a un registro (Conversaciones)\n"
+"- 'Crear siguiente actividad': crear una actividad (Conversaciones)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -7587,9 +7589,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
-"Utiliza 'Usuario específico' para asignar siempre el mismo usuario en la "
-"siguiente actividad. Utiliza 'Usuario genérico en el registro' para "
-"especificar el nombre del campo del usuario para elegir en el registro."
+"Utilice \"Usuario específico\" para asignar siempre al mismo usuario en la "
+"siguiente actividad. Utilice \"Usuario genérico del registro\" para "
+"especificar el nombre del campo del usuario a elegir en el registro."
 
 #. module: mail
 #. openerp-web
@@ -7964,8 +7966,9 @@ msgid ""
 "access to it unless you are invited again. Are you sure you want to "
 "continue?"
 msgstr ""
-"Está a punto de dejar esta conversación grupal y no volverá a tener acceso a"
-" menos que lo vuelvan a invitar. ¿Está seguro de que desea continuar?"
+"Está a punto de abandonar esta conversación grupal y no volverá a tener "
+"acceso a menos que le vuelvan a invitar. ¿Está seguro de que desea "
+"continuar?"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -7998,7 +8001,7 @@ msgstr "No tiene permitido subir archivos adjuntos aquí."
 msgid ""
 "You are the administrator of this channel. Are you sure you want to leave?"
 msgstr ""
-"Es el administrador de este canal. ¿Está seguro de que quiere salirse?"
+"Es el administrador de este canal. ¿Está seguro de que desea abandonarlo?"
 
 #. module: mail
 #. openerp-web
@@ -8109,7 +8112,7 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
-"Puede adjuntar archivos a esta plantilla para que se añadan a todos los "
+"Puede adjuntar archivos a esta plantilla para que se agreguen a todos los "
 "correos electrónicos creados desde la misma."
 
 #. module: mail
@@ -8189,9 +8192,9 @@ msgid ""
 " users it is important to change it immediately for security reasons. I will"
 " keep nagging you about it!"
 msgstr ""
-"Está usando la contraseña predeterminada (admin). Si este sistema está "
-"expuesto a usuarios no confiables, es importante que la cambie "
-"inmediatamente por razones de seguridad. Seguiré advirtiéndole al respecto."
+"Está usando la contraseña predeterminada (admin). Si se expone este sistema "
+"a usuarios no confiables, es importante que la cambie inmediatamente por "
+"razones de seguridad. Seguiré advirtiéndole al respecto."
 
 #. module: mail
 #. openerp-web
@@ -8227,7 +8230,7 @@ msgstr "Reducir (-)"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "addresses linked to registered partners"
-msgstr "direcciones vinculadas a partners registrados"
+msgstr "direcciones vinculadas a contactos registrados"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
@@ -8540,7 +8543,7 @@ msgstr "o"
 #: code:addons/mail/static/src/components/channel_member_list/channel_member_list.xml:0
 #, python-format
 msgid "other members."
-msgstr "otros miembros"
+msgstr "otros miembros."
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
