@@ -76,6 +76,8 @@ class PosSession(models.Model):
         string='Before Closing Difference',
         help="Difference between the theoretical closing balance and the real closing balance.",
         readonly=True)
+
+    # Total Cash In/Out
     cash_real_transaction = fields.Monetary(string='Transaction', readonly=True)
 
     order_ids = fields.One2many('pos.order', 'session_id',  string='Orders')
@@ -108,13 +110,16 @@ class PosSession(models.Model):
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
                 total_cash_payment = 0.0
-                last_session = session.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
+                last_session = session.search([('config_id', '=', session.config_id.id), ('id', '<', session.id)], limit=1)
                 result = self.env['pos.payment']._read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], ['amount'], ['session_id'])
                 if result:
                     total_cash_payment = result[0]['amount']
-                session.cash_register_total_entry_encoding = sum(session.statement_line_ids.mapped('amount')) + (
-                    0.0 if session.state == 'closed' else total_cash_payment
-                )
+
+                if session.state == 'closed':
+                    session.cash_register_total_entry_encoding = session.cash_real_transaction + total_cash_payment
+                else:
+                    session.cash_register_total_entry_encoding = sum(session.statement_line_ids.mapped('amount')) + total_cash_payment
+
                 session.cash_register_balance_end = last_session.cash_register_balance_end_real + session.cash_register_total_entry_encoding
                 session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
             else:
@@ -734,7 +739,7 @@ class PosSession(models.Model):
                         tuple((tax['id'], tax['account_id'], tax['tax_repartition_line_id']) for tax in line['taxes']),
                         line['base_tags'],
                     )
-                    sales[sale_key] = self._update_amounts(sales[sale_key], {'amount': line['amount']}, line['date_order'])
+                    sales[sale_key] = self._update_amounts(sales[sale_key], {'amount': line['amount']}, line['date_order'], round=False)
                     # Combine tax lines
                     for tax in line['taxes']:
                         tax_key = (tax['account_id'] or line['income_account_id'], tax['tax_repartition_line_id'], tax['id'], tuple(tax['tag_ids']))
@@ -1672,7 +1677,42 @@ class PosSession(models.Model):
         else:
             company['country'] = None
 
+        company['fallback_nomenclature_id'] = self._get_pos_fallback_nomenclature()
         return company
+
+    def _get_pos_fallback_nomenclature(self):
+        """
+        Retrieve the fallback barcode nomenclature.
+        If a fallback_nomenclature_id is specified in the config parameters,
+        it retrieves the nomenclature with that ID. Otherwise, it retrieves
+        the first non-GS1 nomenclature if the main nomenclature is GS1.
+        """
+        def convert_to_int(string_value):
+            try:
+                return int(string_value)
+            except (TypeError, ValueError, OverflowError):
+                return None
+
+        fallback_nomenclature_id = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.fallback_nomenclature_id')
+
+        if not self.company_id.nomenclature_id.is_gs1_nomenclature and not fallback_nomenclature_id:
+            return None
+
+        if fallback_nomenclature_id:
+            fallback_nomenclature_id = convert_to_int(fallback_nomenclature_id)
+            if not fallback_nomenclature_id or self.company_id.nomenclature_id.id == fallback_nomenclature_id:
+                return None
+            domain = [('id', '=', fallback_nomenclature_id)]
+        else:
+            domain = [('is_gs1_nomenclature', '=', False)]
+
+        records = self.env['barcode.nomenclature'].search_read(
+            domain=domain,
+            fields=['name'],
+            limit=1
+        )
+
+        return (records[0]['id'], records[0]['name']) if records else None
 
     def _loader_params_decimal_precision(self):
         return {'search_params': {'domain': [], 'fields': ['name', 'digits']}}

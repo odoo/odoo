@@ -12,6 +12,8 @@ class HrPlanWizard(models.TransientModel):
     def _default_plan_id(self):
         # We know that all employees belong to the same company
         employees = self.env['hr.employee'].browse(self.env.context.get('active_ids') if self.env.context.get('active_ids') else [])
+        if not employees:
+            return None
         if len(employees.department_id) > 1:
             return self.env['hr.plan'].search([
                 ('company_id', '=', employees[0].company_id.id),
@@ -26,7 +28,7 @@ class HrPlanWizard(models.TransientModel):
                 ], limit=1)
 
     plan_id = fields.Many2one('hr.plan', default=lambda self: self._default_plan_id(),
-        domain="[('company_id', '=', company_id), '|', ('department_id', '=', department_id), ('department_id', '=', False)]")
+        domain="[('company_id', 'in', [False, company_id]), '|', ('department_id', '=', department_id), ('department_id', '=', False)]")
     department_id = fields.Many2one('hr.department', compute='_compute_department_id')
     employee_ids = fields.Many2many(
         'hr.employee', 'hr_employee_hr_plan_wizard_rel', 'employee_id', 'plan_wizard_id', string='Employee', required=True,
@@ -50,7 +52,7 @@ class HrPlanWizard(models.TransientModel):
     @api.depends('employee_ids')
     def _compute_company_id(self):
         for wizard in self:
-            wizard.company_id = wizard.employee_ids[0].company_id
+            wizard.company_id = wizard.employee_ids and wizard.employee_ids[0].company_id or self.env.company
 
     def _get_warnings(self):
         self.ensure_one()

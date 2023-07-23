@@ -58,6 +58,20 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hyvä <t t-out=\"object.partner_id.name or 'participant' or ''\">osallistuja</t><br><br>\n"
+"        Valitettavasti olet epäonnistunut sertifioinnissa, etkä ole enää kurssin jäsen: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Puutarhanhoidon perusteet</t>.<br><br>\n"
+"        Älä epäröi ilmoittautua uudelleen!\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Ilmoittaudu nyt\n"
+"            </a>\n"
+"        </div>\n"
+"        Kiitos osallistumisestasi.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -568,7 +582,7 @@ msgstr "Testisertifiointi"
 #: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
 #: model_terms:survey.survey,description:website_slides_survey.furniture_certification
 msgid "Test your furniture knowledge!"
-msgstr ""
+msgstr "Testaa huonekalutietämyksesi!"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview

@@ -510,7 +510,15 @@ class Website(models.Model):
             page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
 
         def set_images(images):
+            names = self.env['ir.model.data'].search([
+                ('name', '=ilike', f'configurator\\_{website.id}\\_%'),
+                ('module', '=', 'website'),
+                ('model', '=', 'ir.attachment')
+            ]).mapped('name')
             for name, url in images.items():
+                extn_identifier = 'configurator_%s_%s' % (website.id, name.split('.')[1])
+                if extn_identifier in names:
+                    continue
                 try:
                     response = requests.get(url, timeout=3)
                     response.raise_for_status()
@@ -526,7 +534,7 @@ class Website(models.Model):
                         'public': True,
                     })
                     self.env['ir.model.data'].create({
-                        'name': 'configurator_%s_%s' % (website.id, name.split('.')[1]),
+                        'name': extn_identifier,
                         'module': 'website',
                         'model': 'ir.attachment',
                         'res_id': attachment.id,
@@ -857,6 +865,9 @@ class Website(models.Model):
         ]
         for model, _table, column, _translate in html_fields_attributes:
             Model = self.env[model]
+            if not Model.check_access_rights('read', raise_exception=False):
+                continue
+
             # Generate the exact domain to search for the URL in this field
             domains = []
             for url, website_domain in search_criteria:
@@ -1667,7 +1678,7 @@ class Website(models.Model):
         :param limit: maximum number of records fetched per model to build the word list
         :return: yields words
         """
-        match_pattern = r'[\w-]{%s,}' % min(4, len(search) - 3)
+        match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
         similarity_threshold = 0.3
         lang = self.env.lang or 'en_US'
         for search_detail in search_details:
@@ -1777,7 +1788,7 @@ class Website(models.Model):
         :param limit: maximum number of records fetched per model to build the word list
         :return: yields words
         """
-        match_pattern = r'[\w-]{%s,}' % min(4, len(search) - 3)
+        match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
         first = escape_psql(search[0])
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']

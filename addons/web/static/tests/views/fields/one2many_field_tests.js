@@ -2510,6 +2510,42 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
+    QUnit.test("When viewing one2many records in an embedded kanban, the delete button should say 'Delete' and not 'Remove'", async function (assert) {
+        assert.expect(1);
+        serverData.views = {
+            "turtle,false,form": `
+                <form>
+                    <h3>Data</h3>
+                </form>`,
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <kanban>
+                            <field name="display_name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-att-class="'oe_kanban_global_click'">
+                                        <h3>Record 1</h3>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        // Opening the record to see the footer buttons
+        await click(target.querySelector(".o_kanban_record"));
+
+        assert.strictEqual(target.querySelector('.o_btn_remove').textContent, 'Delete');
+    });
+
     QUnit.test("open a record in a one2many kanban (mode 'readonly')", async function (assert) {
         serverData.views = {
             "turtle,false,form": `

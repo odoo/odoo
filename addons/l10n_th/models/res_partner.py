@@ -12,5 +12,5 @@ class ResPartner(models.Model):
             if not partner.is_company or partner.country_code != 'TH':
                 partner.l10n_th_branch_name = ""
             else:
-                code = self.company_registry
+                code = partner.company_registry
                 partner.l10n_th_branch_name = f"Branch {code}" if code else "Headquarter"

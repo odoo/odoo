@@ -12920,7 +12920,9 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             class TestClientAction extends Component {
                 setup() {
-                    throw new RPCError("Something went wrong");
+                    const e = new RPCError("Something went wrong");
+                    e.data = {};
+                    throw e;
                 }
             }
             TestClientAction.template = xml`<div></div>`;

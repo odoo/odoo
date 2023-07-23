@@ -22,6 +22,7 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Robin Calvin, 2023
 # Lasse Larsson, 2023
 # 
 msgid ""
@@ -801,7 +802,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "Översiktsrapport för Materiallista"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
@@ -879,7 +880,7 @@ msgstr "Produktstruktur"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "Bill of Material Line"
-msgstr ""
+msgstr "Materialförteckningsrad"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
@@ -918,7 +919,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
 msgid "Bills of Materials"
-msgstr ""
+msgstr "Materialförteckningar"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1388,7 +1389,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__cost_share
 #: model:ir.model.fields,field_description:mrp.field_stock_move__cost_share
 msgid "Cost Share (%)"
-msgstr ""
+msgstr "Kostnadsandel (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__costs_hour
@@ -1594,7 +1595,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_description_variants
 msgid "Custom Description"
-msgstr ""
+msgstr "Anpassad beskrivning"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__db_datas
@@ -2073,7 +2074,7 @@ msgstr "Font Awesome-ikon t.ex. fa-tasks"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Force"
-msgstr ""
+msgstr "Tvinga"
 
 #. module: mrp
 #. odoo-javascript
@@ -2104,7 +2105,7 @@ msgstr "Prognostiserad"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__forecasted_issue
 msgid "Forecasted Issue"
-msgstr ""
+msgstr "Prognos Problem"
 
 #. module: mrp
 #. odoo-javascript
@@ -3296,8 +3297,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Antal meddelanden som kräver en åtgärd"
+msgid "Number of messages requiring action"
+msgstr "Antal meddelanden som kräver åtgärd"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error_counter
@@ -3616,7 +3617,7 @@ msgstr "Plan"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Plan Orders"
-msgstr ""
+msgstr "Planera beställningar"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4876,7 +4877,7 @@ msgstr ""
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
-msgstr ""
+msgstr "Följande påfyllningsorder har genererats"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -4988,7 +4989,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__theme_template_id
 msgid "Theme Template"
-msgstr ""
+msgstr "Temats mall"
 
 #. module: mrp
 #. odoo-python
@@ -5120,12 +5121,12 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Time in minutes for the cleaning."
+msgid "Additional time in minutes for the cleaning."
 msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Time in minutes for the setup."
+msgid "Additional time in minutes for the setup."
 msgstr ""
 
 #. module: mrp
@@ -5326,7 +5327,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild"
-msgstr ""
+msgstr "Demontera"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
@@ -5347,7 +5348,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr ""
+msgstr "Demontera ordrar"
 
 #. module: mrp
 #. odoo-python
@@ -5379,7 +5380,7 @@ msgstr "Veckla ut"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Unit Cost"
-msgstr ""
+msgstr "Styckkostnad"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor
@@ -6213,7 +6214,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "bills of materials"
-msgstr ""
+msgstr "materialförteckning"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo

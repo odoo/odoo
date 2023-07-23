@@ -77,7 +77,7 @@ class ProjectTaskType(models.Model):
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
-        default=_get_default_project_ids,
+        default=lambda self: self._get_default_project_ids(),
         help="Projects in which this stage is present. If you follow a similar workflow in several projects,"
             " you can share this stage among them and get consolidated information this way.")
     legend_blocked = fields.Char(
@@ -92,7 +92,7 @@ class ProjectTaskType(models.Model):
         domain=[('model', '=', 'project.task')],
         help="If set, an email will be automatically sent to the customer when the task reaches this stage.")
     fold = fields.Boolean(string='Folded in Kanban',
-        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed.')
+        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed (not applicable to personal stages).')
     rating_template_id = fields.Many2one(
         'mail.template',
         string='Rating Email Template',
@@ -243,23 +243,23 @@ class Project(models.Model):
     def _compute_task_count(self):
         domain = [('project_id', 'in', self.ids), ('is_closed', '=', False)]
         fields = ['project_id', 'display_project_id:count']
-        groupby = ['project_id']
-        task_data = self.env['project.task']._read_group(domain, fields, groupby)
+        groupby = ['project_id', 'active']
         result_wo_subtask = defaultdict(int)
         result_with_subtasks = defaultdict(int)
-        for data in task_data:
-            result_wo_subtask[data['project_id'][0]] += data['display_project_id']
-            result_with_subtasks[data['project_id'][0]] += data['project_id_count']
-        task_all_data = self.env['project.task'].with_context(active_test=False)._read_group(domain, fields, groupby)
-        all_tasks_wo_subtasks = defaultdict(int)
+        task_all_data = self.env['project.task'].with_context(active_test=False)._read_group(domain, fields, groupby, lazy=False)
+        active_project_ids = self.filtered('active').ids
         for data in task_all_data:
-            all_tasks_wo_subtasks[data['project_id'][0]] += data['display_project_id']
+            project_id = data['project_id'][0]
+            if data['active'] or project_id not in active_project_ids:
+                # count active tasks only of all if the project is archived
+                result_wo_subtask[project_id] += data['display_project_id']
+            if data['active'] or not self.env.context.get('active_test', True):
+                # count subtasks only for active tasks
+                result_with_subtasks[project_id] += data['__count']
 
         for project in self:
             project.task_count = result_wo_subtask[project.id]
             project.task_count_with_subtasks = result_with_subtasks[project.id]
-            if not project.active:
-                project.task_count = all_tasks_wo_subtasks[project.id]
 
     def _default_stage_id(self):
         # Since project stages are order by sequence first, this should fetch the one with the lowest sequence number.
@@ -745,10 +745,9 @@ class Project(models.Model):
         action['display_name'] = _("%(name)s's Burndown Chart", name=self.name)
         return action
 
+    # TODO to remove in master
     def action_project_timesheets(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
-        action['display_name'] = _("%(name)s's Timesheets", name=self.name)
-        return action
+        pass
 
     def project_update_all_action(self):
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_update_all_action')
@@ -782,7 +781,7 @@ class Project(models.Model):
     def action_view_all_rating(self):
         """ return the action to see all the rating of the project and activate default filters"""
         action = self.env['ir.actions.act_window']._for_xml_id('project.rating_rating_action_view_project_rating')
-        action['display_name'] = _("%(name)s's Rating", name=self.name),
+        action['display_name'] = _("%(name)s's Rating", name=self.name)
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
         action_context['search_default_rating_last_30_days'] = 1
@@ -799,7 +798,7 @@ class Project(models.Model):
     def action_view_tasks_analysis(self):
         """ return the action to see the tasks analysis report of the project """
         action = self.env['ir.actions.act_window']._for_xml_id('project.action_project_task_user_tree')
-        action['display_name'] = _("%(name)s's Tasks Analysis", name=self.name),
+        action['display_name'] = _("%(name)s's Tasks Analysis", name=self.name)
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context['search_default_project_id'] = self.id
         return dict(action, context=action_context)
@@ -1098,7 +1097,7 @@ class Task(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
-    description = fields.Html(string='Description')
+    description = fields.Html(string='Description', sanitize_attributes=False)
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'High'),
@@ -1429,7 +1428,7 @@ class Task(models.Model):
                 stage = self.env['project.task.type'].sudo().search([('user_id', '=', user_id.id)], limit=1)
                 # In the case no stages have been found, we create the default stages for the user
                 if not stage:
-                    stages = self.env['project.task.type'].sudo().with_context(lang=user_id.partner_id.lang, default_project_id=False).create(
+                    stages = self.env['project.task.type'].sudo().with_context(lang=user_id.partner_id.lang, default_project_ids=False).create(
                         self.with_context(lang=user_id.partner_id.lang)._get_default_personal_stage_create_vals(user_id.id)
                     )
                     stage = stages[0]
@@ -2089,8 +2088,10 @@ class Task(models.Model):
                     recurrence = self.env['project.task.recurrence'].create(rec_values)
                     task.recurrence_id = recurrence.id
 
-        if 'recurring_task' in vals and not vals.get('recurring_task'):
+        if not vals.get('recurring_task', True) and self.recurrence_id:
+            tasks_in_recurrence = self.recurrence_id.task_ids
             self.recurrence_id.unlink()
+            tasks_in_recurrence.write({'recurring_task': False})
 
         tasks = self
         recurrence_update = vals.pop('recurrence_update', 'this')
@@ -2717,21 +2718,37 @@ class ProjectTags(models.Model):
     ]
 
     def _get_project_tags_domain(self, domain, project_id):
-        tag_ids = list(self.with_user(SUPERUSER_ID)._search(
-            ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]))
-        return expression.AND([domain, [('id', 'in', tag_ids)]])
+        # TODO: Remove in master
+        return domain
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'project_id' in self.env.context:
-            domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
+            tag_ids = self._name_search()
+            domain = expression.AND([domain, [('id', 'in', tag_ids)]])
         return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         if 'project_id' in self.env.context:
-            domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
+            tag_ids = self._name_search()
+            domain = expression.AND([domain, [('id', 'in', tag_ids)]])
+            return self.arrange_tag_list_by_id(super().search_read(domain=domain, fields=fields, offset=offset, limit=limit), tag_ids)
         return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
+
+    @api.model
+    def arrange_tag_list_by_id(self, tag_list, id_order):
+        """arrange_tag_list_by_id re-order a list of record values (dict) following a given id sequence
+           complexity: O(n)
+           param:
+                - tag_list: ordered (by id) list of record values, each record being a dict
+                  containing at least an 'id' key
+                - id_order: list of value (int) corresponding to the id of the records to re-arrange
+           result:
+                - Sorted list of record values (dict)
+        """
+        tags_by_id = {tag['id']: tag for tag in tag_list}
+        return [tags_by_id[id] for id in id_order if id in tags_by_id]
 
     @api.model
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):

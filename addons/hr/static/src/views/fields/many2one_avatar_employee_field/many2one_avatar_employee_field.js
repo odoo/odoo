@@ -13,9 +13,21 @@ Many2OneAvatarEmployeeField.extractProps = ({ field, attrs }) => {
 };
 
 Many2OneAvatarEmployeeField.additionalClasses = [...Many2OneAvatarUserField.additionalClasses, "o_field_many2one_avatar_user"];
+Many2OneAvatarEmployeeField.extractProps = ({ attrs, field }) => {
+    return {
+        ...Many2OneAvatarUserField.extractProps({ attrs, field }),
+        relation: (attrs.options && attrs.options.relation) || field.relation,
+    };
+};
 
 registry.category("fields").add("many2one_avatar_employee", Many2OneAvatarEmployeeField);
 
 export class KanbanMany2OneAvatarEmployeeField extends KanbanMany2OneAvatarUserField {}
+KanbanMany2OneAvatarEmployeeField.extractProps = ({ attrs, field }) => {
+    return {
+        ...KanbanMany2OneAvatarUserField.extractProps({ attrs, field }),
+        relation: (attrs.options && attrs.options.relation) || field.relation,
+    };
+};
 
 registry.category("fields").add("kanban.many2one_avatar_employee", KanbanMany2OneAvatarEmployeeField);

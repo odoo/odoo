@@ -6,6 +6,7 @@ from re import findall as regex_findall, split as regex_split
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 
 
 class StockLot(models.Model):
@@ -29,7 +30,7 @@ class StockLot(models.Model):
     product_qty = fields.Float('Quantity', compute='_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
-    company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True)
+    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
     last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
@@ -188,14 +189,31 @@ class StockLot(models.Model):
             })
         return action
 
+    def _get_delivery_ids_by_lot_domain(self):
+        # TODO master: delete (dead code)
+        return [
+            ('lot_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            '|', ('picking_code', '=', 'outgoing'), ('produce_line_ids', '!=', False),
+        ]
+
+    @api.model
+    def _get_outgoing_domain(self):
+        return [
+            '|',
+            ('picking_code', '=', 'outgoing'),
+            ('produce_line_ids', '!=', False),
+        ]
+
     def _find_delivery_ids_by_lot(self, lot_path=None, delivery_by_lot=None):
         if lot_path is None:
             lot_path = set()
         domain = [
             ('lot_id', 'in', self.ids),
             ('state', '=', 'done'),
-            '|', ('picking_code', '=', 'outgoing'), ('produce_line_ids', '!=', False)
         ]
+        domain_restriction = self._get_outgoing_domain()
+        domain = expression.AND([domain, domain_restriction])
         move_lines = self.env['stock.move.line'].search(domain)
         moves_by_lot = {
             lot_id: {'producing_lines': set(), 'barren_lines': set()}

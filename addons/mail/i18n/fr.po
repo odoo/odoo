@@ -11,8 +11,8 @@
 # Eloïse Stilmant <est@odoo.com>, 2022
 # Melanie Bernard <mbe@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -875,7 +875,7 @@ msgstr "<strong>Note originale:</strong>"
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
-"<strong>Sauvegardez</strong> cette page et revenez ici pour configurer la "
+"<strong>Enregistrez</strong> cette page et revenez ici pour configurer la "
 "fonctionnalité."
 
 #. module: mail
@@ -1412,6 +1412,13 @@ msgid ""
 msgstr ""
 "Une exception SSL s'est produite. Vérifiez la configuration SSL/TLS sur le port du serveur.\n"
 "%s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Un jeton d'accès doit être fourni pour chaque pièce jointe."
 
 #. module: mail
 #. odoo-python
@@ -2011,7 +2018,7 @@ msgstr "Peut annuler"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
 msgid "Can Edit Body"
-msgstr "Peut éditer le corps de l'email"
+msgstr "Peut modifier le corps de l'email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
@@ -3357,19 +3364,19 @@ msgstr "Intensité du floutage des contours"
 #: code:addons/mail/static/src/models/message_action_view.js:0
 #, python-format
 msgid "Edit"
-msgstr "Éditer"
+msgstr "Modifier"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr "Éditer les partenaires"
+msgstr "Modifier les partenaires"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/follower_subtype_list/follower_subtype_list.xml:0
 #, python-format
 msgid "Edit Subscription of"
-msgstr "Éditer l'abonnement de"
+msgstr "Modifier l'abonnement de"
 
 #. module: mail
 #. odoo-javascript
@@ -3377,14 +3384,14 @@ msgstr "Éditer l'abonnement de"
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Edit subscription"
-msgstr "Éditer abonnement"
+msgstr "Modifier abonnement"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/many2many_tags_email/many2many_tags_email.js:0
 #, python-format
 msgid "Edit: %s"
-msgstr "Éditer : %s"
+msgstr "Modifier : %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__email
@@ -6700,8 +6707,8 @@ msgstr "Nombre d'erreurs"
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de messages exigeant une action"
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
@@ -8158,7 +8165,7 @@ msgstr "Père Noël"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Save"
-msgstr "Sauvegarder"
+msgstr "Enregistrer"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -9200,6 +9207,22 @@ msgstr ""
 "partenaire n'est pas soumis à la taxe."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+"La pièce jointe %s n'existe pas ou vous n'avez pas les droits d'accès."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "La pièce jointe %s n'existe pas."
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
@@ -10151,6 +10174,16 @@ msgstr ""
 "recevoir des e-mails dans les versions Community et Enterprise. Les "
 "utilisateurs en ligne bénéficient déjà d'un serveur de messagerie "
 "préalablement compatible (@mycompany.odoo.com)."
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"La valeur pour `mail.catchall.domain.allowed` ne peut pas être validée.\n"
+"Cela doit être une liste de domaines séparée par des virgules, par ex. example.com,example.org."
 
 #. module: mail
 #. odoo-javascript
@@ -29666,7 +29699,7 @@ msgstr "saucisse"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "save"
-msgstr "sauvegarder"
+msgstr "enregistrer"
 
 #. module: mail
 #. odoo-javascript

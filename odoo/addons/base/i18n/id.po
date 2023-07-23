@@ -5901,6 +5901,43 @@ msgid ""
 "CVC: `123`\n"
 "3DS Password: `password`\n"
 msgstr ""
+"# AsiaPay\n"
+"\n"
+"## Detail Implementasi\n"
+"\n"
+"### Fitur-fitur yang didukung\n"
+"\n"
+"- Pembayaran dengan redirection flow.\n"
+"- Webhook.\n"
+"- Beberapa metode pembayaran termasuk kartu kredit, metode pembayaran China seperti Alipay, dan \n"
+"  [others](https://www.asiapay.com/payment.html#option).\n"
+"\n"
+"Ditambah lagi, AsiaPay memungkinkan implementasi manual capture, refund, express checkout, dan\n"
+"pemrosesanmulti-currency processing.\n"
+"\n"
+"### API dan gateway\n"
+"\n"
+"Kami memilih untuk berintegrasi dengan Client Post Through Browser gateway yang akan memenuhi kebutuhan-kebutuhan kami,\n"
+"salah satu dari tiga pilihan yang AsiaPay berikan pada Agustus 2022.\n"
+"\n"
+"Seluruh referensi API dan pedoman integrasi dapat ditemukan pada [Integration Guide]\n"
+"(https://www.paydollar.com/pdf/op/enpdintguide.pdf).\n"
+"\n"
+"Versi API yang diimplementasi oleh modul ini adalah v3.67.\n"
+"\n"
+"## Merge detail\n"
+"\n"
+"Versi pertama modul ditentukan di tas\n"
+"[2845428](https://www.odoo.com/web#id=2845428&model=project.task) dan di-merge dengan PR\n"
+"odoo/odoo#98441 in `saas-15.5`.\n"
+"\n"
+"## Instruksi Testing\n"
+"\n"
+"Nomor Kartu: `4335900000140045`\n"
+"Tanggal Kadaluwarsa: `07/2030`\n"
+"Nama: `testing card`\n"
+"CVC: `123`\n"
+"3DS Password: `password`\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_flutterwave
@@ -6103,6 +6140,42 @@ msgid ""
 "See https://razorpay.com/docs/payments/payments/test-card-upi-details/ for the list of test\n"
 "payment details.\n"
 msgstr ""
+"# Razorpay\n"
+"\n"
+"## Detail implementasi\n"
+"\n"
+"### Fitur-fitur yang didukung\n"
+"\n"
+"- Pembayaran dengan redirection flow\n"
+"- Manual capture\n"
+"- Refund parsial\n"
+"- Beberapa metode pembayaran seperti kartu debit/kredit, netabnking, UPI, dan\n"
+"  [others](https://razorpay.com/docs/payments/payment-methods/).\n"
+"- [Webhook](https://razorpay.com/docs/webhooks).\n"
+"\n"
+"Ditambah lagi, Razorpay juga mengimplementasi token tapi membutuhkan informasi dari kartu untuk\n"
+"setiap transaksi.\n"
+"\n"
+"### API dan gateway\n"
+"\n"
+"Kami memilih untuk berintegrasi dengan\n"
+"[Razorpay Hosted Checkout](https://razorpay.com/docs/payments/payment-gateway/web-integration/hosted).\n"
+"Gateway lain tidak dipilih. Lihat dev note di task untuk detail mengenai gateway lain.\n"
+"\n"
+"Version API yang diemplementasi modul ini adalah v1.\n"
+"\n"
+"## Detail Merge\n"
+"\n"
+"Versi pertama modul ditentukan di task\n"
+"[2800823](https://www.odoo.com/web#id=2800823&model=project.task) dan di-merge dengan PR\n"
+"odoo/odoo#92848 in `saas-15.5`.\n"
+"\n"
+"## Instruksi Testing\n"
+"\n"
+"Nomor telepon mitra harus merupakan nomor telepon India yang valid. Contoh: +91123456789\n"
+"\n"
+"Lihat https://razorpay.com/docs/payments/payments/test-card-upi-details/ untuk daftar detail\n"
+"test pembayaran.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
@@ -6839,7 +6912,7 @@ msgstr "<strong>Nama</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone:</strong>"
-msgstr ""
+msgstr "<strong>Telepon:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -7363,7 +7436,7 @@ msgstr "Nomor Rekening"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Account Security"
-msgstr ""
+msgstr "Keamanan Akun"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__acc_holder_name
@@ -8755,28 +8828,28 @@ msgstr "Avatar"
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_1024
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Avatar 1024"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_128
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_128
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_256
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_256
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Avatar 256"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_512
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_512
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Avatar 512"
 
 #. module: base
 #: model:ir.model,name:base.model_avatar_mixin
@@ -9163,7 +9236,7 @@ msgstr "Biner"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Binding Model"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_type
@@ -9175,7 +9248,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_type
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Binding Type"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_view_types
@@ -9187,7 +9260,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_view_types
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_view_types
 msgid "Binding View Types"
-msgstr ""
+msgstr "Binding View Types"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__layout_background__blank
@@ -9217,7 +9290,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__boolean
 msgid "Boolean"
-msgstr ""
+msgstr "Boolean"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth_sale_exhibitor
@@ -9792,7 +9865,7 @@ msgstr "Checksum/SHA1"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__child_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron__child_ids
 msgid "Child Actions"
-msgstr ""
+msgstr "Tindakan Turunan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__child_ids
@@ -9826,6 +9899,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Child server action yang akan dilakukan. Catat bahwa pengembalian terakhir "
+"returned action value akan digunakan sebagai global return value."
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -10197,6 +10272,13 @@ msgstr "Nama Lengkap"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "Hitung"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -10575,7 +10657,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Kupon & Loyalitas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty_delivery
@@ -14898,7 +14980,7 @@ msgstr "Industri"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr ""
+msgstr "Industri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__info
@@ -15133,7 +15215,12 @@ msgid "Invalid 'group by' parameter"
 msgstr ""
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -16049,12 +16136,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_enrich
 msgid "Lead Enrichment"
-msgstr ""
+msgstr "Lead Enrichment"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_mine
 msgid "Lead Generation"
-msgstr ""
+msgstr "Pembuatan Lead"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_iap_reveal
@@ -16069,7 +16156,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr ""
+msgstr "Pelajari Lebih"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -16178,7 +16265,7 @@ msgstr "Baris"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__link_field_id
 msgid "Link Field"
-msgstr ""
+msgstr "Link Field"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_link_tracker
@@ -17273,6 +17360,8 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
+"Model untuk membuat/update record. Isi field ini hanya untuk menentukan "
+"model yang berbeda dari model dasar."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__res_model
@@ -17291,7 +17380,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_actions_server__model_id
 #: model:ir.model.fields,help:base.field_ir_cron__model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Model di mana server action dijalankan."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -20296,6 +20385,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
+"Teks bantuan opsional untuk user dengan keterangan tampilan target, seperti "
+"penggunaan dan tujuannya."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__res_model
@@ -20709,7 +20800,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_S
 msgid "Other Services"
-msgstr ""
+msgstr "Layanan Lain"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -21889,6 +21980,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
 msgstr ""
+"Sediakan field yang digunakan untuk menghubungkan record yang baru saja "
+"dibuat pada record yang digunakan oleh server action."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_proxy_client
@@ -22083,7 +22176,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Pembuat Quotation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
@@ -23513,7 +23606,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
 msgid "Server Actions"
-msgstr ""
+msgstr "Server Action"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__ir_actions_server_id
@@ -24452,13 +24545,13 @@ msgstr "Target"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_id
 msgid "Target Model"
-msgstr ""
+msgstr "Target Model"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_name
 #: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_name
 msgid "Target Model Name"
-msgstr ""
+msgstr "Nama Target Model"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__target
@@ -24877,7 +24970,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "Perusahaan default untuk user ini."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -25719,7 +25812,7 @@ msgstr "Format Waktu"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr ""
+msgstr "Cuti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_holidays
@@ -26195,6 +26288,13 @@ msgstr ""
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr "Tidak dapat menemukan Wkhtmltopdf pada sistem. PDF tidak bisa dibuat."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -26870,7 +26970,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__fields_lines
 #: model:ir.model.fields,field_description:base.field_ir_cron__fields_lines
 msgid "Value Mapping"
-msgstr ""
+msgstr "Value Mapping"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property__value_reference
@@ -27294,6 +27394,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
+"Saat terdapat lebih dari satu action, urutan pelaksanaan berdasarkan "
+"sequence. Nomor yang lebih rendah berarti prioritas lebih tinggi."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__sequence
@@ -27556,6 +27658,15 @@ msgid "You can not create recursive tags."
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login !"
 msgstr "Anda tidak dapat membuat dua pengguna dengan login yang sama !"
@@ -27668,6 +27779,12 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -28071,7 +28188,7 @@ msgstr "misalnya: en_US"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. https://www.odoo.com"
-msgstr ""
+msgstr "contoh https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay

@@ -29,6 +29,30 @@ const checkKanbanGroupBy = [{
     trigger: '.o_cp_searchview .o_facet_remove',
 }];
 
+const checkWebsiteFilter = [{
+    content: "Click on My Website",
+    trigger: "button.dropdown-toggle:contains('My Website')",
+}, {
+    content: "Select My Website 2",
+    trigger: ".dropdown-menu.show > .dropdown-item:contains('My Website 2')",
+}, {
+    content: "Check that the homepage is now the one of My Website 2",
+    trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
+             "~ .o_data_cell[name=website_id]:contains('My Website 2')",
+    run: () => null, // it's a check
+}, {
+    content: "Click on My Website 2",
+    trigger: "button.dropdown-toggle:contains('My Website 2')",
+}, {
+    content: "Go back to My Website",
+    trigger: ".dropdown-menu.show > .dropdown-item:contains('My Website')",
+}, {
+    content: "Check that the homepage is now the one of My Website",
+    trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
+             "~ .o_data_cell[name=website_id]:contains('My Website'):not(:contains('2'))",
+    run: () => null, // it's a check
+}];
+
 const deleteSelectedPage = [
     {
         content: "Click on Action",
@@ -47,7 +71,7 @@ const deleteSelectedPage = [
     },
     {
         content: "Click on OK",
-        trigger: '.modal-content footer button.btn-primary',
+        trigger: '.modal-content footer button.btn-primary:not([disabled])',
     }
 ];
 const homePage = 'tr:contains("Home")';
@@ -65,6 +89,7 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager', {
         trigger: 'a.dropdown-item[data-menu-xmlid="website.menu_website_pages_list"]',
     },
     ...checkKanbanGroupBy,
+    ...checkWebsiteFilter,
     {
         content: "Click on Home Page",
         trigger: `.o_list_renderer ${homePage} td.o_list_record_selector input[type="checkbox"]`,

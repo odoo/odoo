@@ -288,7 +288,7 @@ actual arch.
          """)
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
-    @api.depends_context('read_arch_from_file', 'lang')
+    @api.depends_context('read_arch_from_file', 'lang', 'edit_translations')
     def _compute_arch(self):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -2297,6 +2297,8 @@ class ResetViewArchWizard(models.TransientModel):
                 view.arch_diff = get_diff(
                     (view_arch, get_table_name(view.view_id) if view.reset_mode == 'other_view' else _("Current Arch")),
                     (diff_to, diff_to_name),
+                    custom_style=False,
+                    dark_color_scheme=request and request.httprequest.cookies.get('color_scheme') == 'dark',
                 )
                 view.has_diff = view_arch != diff_to
 

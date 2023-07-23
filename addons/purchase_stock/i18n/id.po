@@ -27,7 +27,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On-Time Delivery"
-msgstr ""
+msgstr "% Pengiriman Tepat Waktu (OTD)"
 
 #. module: purchase_stock
 #. odoo-python
@@ -36,7 +36,7 @@ msgstr ""
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr ""
+msgstr "+ %d hari"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -44,6 +44,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
 "Delivery Data</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">Tidak ada Data"
+" Pengiriman Tepat Waktu</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -65,23 +67,23 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_text\">On-time Rate</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tingkat Tepat Waktu</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Purchases</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Purchase</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_value\">%</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>Incoterm:</strong>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -139,7 +141,7 @@ msgstr "Aturan Pembelian"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "Buy to Resupply"
-msgstr ""
+msgstr "Beli untuk Menyuplai Ulang"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_company
@@ -149,7 +151,7 @@ msgstr "Perusahaan"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the first receipt order."
-msgstr ""
+msgstr "Tanggal selesai untuk pesanan tanda terima pertama."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -166,7 +168,7 @@ msgstr "Kontak"
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Corresponding receipt not found."
-msgstr ""
+msgstr "Tanda terima terkait tidak ditemukan."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
@@ -184,18 +186,20 @@ msgstr "Perbedaan kurs valas"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
 msgid "Custom Description"
-msgstr ""
+msgstr "Keterangan Kustom"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO"
-msgstr ""
+msgstr "Hari yang dibutuhkan untuk mengonfirmasi SPB"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days needed to confirm a PO, define when a PO should be validated"
 msgstr ""
+"Hari yang dibutuhkan untuk mengonfirmasi SPB, definisikan kapan SPB harus "
+"divalidasi"
 
 #. module: purchase_stock
 #. odoo-python
@@ -204,7 +208,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
 #, python-format
 msgid "Days to Purchase"
-msgstr ""
+msgstr "Hari untuk Membeli"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
@@ -219,6 +223,9 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
+"Tergantung pada modul yang diinstal, ini akan memungkinkan Anda untuk "
+"mendefinisikan rute produk: apakah akan dibeli, dimanufaktur, dipulihkan "
+"saat dipesan, dsb."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -244,7 +251,7 @@ msgstr "Pergerakan Alur Bawah"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
 msgid "Dropship Address"
-msgstr ""
+msgstr "Alamat Dropship"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
@@ -260,17 +267,17 @@ msgstr "Tanggal Efektif"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "Effective Date Last Year"
-msgstr ""
+msgstr "Tanggal Efektif Tahun Lalu"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "Pengecualian terjadi pada purchase order:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
-msgstr ""
+msgstr "Pengecualian:"
 
 #. module: purchase_stock
 #. odoo-python
@@ -281,35 +288,38 @@ msgid ""
 " with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
+"Untuk produk %s, gudang dengan tipe operasi (%s) tidak konsisten dengan "
+"lokasi (%s) untuk peraturan pemesanan ulang (%s). Rubah tipe operasi atau "
+"batalkan RFQ."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Forecast Report"
-msgstr ""
+msgstr "Laporan Forecast"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
 msgid "Forecasted Issue"
-msgstr ""
+msgstr "Masalah yang Diforecast"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__full
 msgid "Fully Received"
-msgstr ""
+msgstr "Sepenuhnya Diterima"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Generate the draft vendor bill."
-msgstr ""
+msgstr "Buat draft tagihan vendor"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
-msgstr ""
+msgstr "Pergi kembali ke SPB untuk membuat tagihan vendor."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
@@ -319,7 +329,7 @@ msgstr "ID"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
 msgid "Incoming Shipment count"
-msgstr ""
+msgstr "Jumlah Pengiriman Masuk"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -334,7 +344,7 @@ msgstr "Incoterm"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Lokasi Incoterm"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__incoterm_id
@@ -373,7 +383,7 @@ msgstr "Terakhir diubah pada"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
 msgid "Last Purchase"
-msgstr ""
+msgstr "Pembelian Terakhir"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -388,7 +398,7 @@ msgstr "Seri/Lot"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Tindakan manual mungkin dibutuhkan."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -410,17 +420,17 @@ msgstr "Aturan Stok Persediaan Minimum"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Move forward expected request creation date by"
-msgstr ""
+msgstr "Majukkan tanggal pembuatan permintaan yang diharapkan sebanyak"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr ""
+msgstr "Transfer berikutnya yang terdampak:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "No data yet"
-msgstr ""
+msgstr "Belum ada data"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__pending
@@ -435,11 +445,12 @@ msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
 " %s is zero."
 msgstr ""
+"Odoo tidak dapat membuat entri anglo saxon. Valuasi total %s adalah nol."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
 msgid "On-Time Delivery"
-msgstr ""
+msgstr "Pengiriman Tepat Waktu "
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__on_time_rate
@@ -447,23 +458,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
 msgid "On-Time Delivery Rate"
-msgstr ""
+msgstr "Tingkat Pengiriman Tepat Waktu"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
 msgid "On-Time Quantity"
-msgstr ""
+msgstr "Kuantitas Tepat Waktu"
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "On-time Delivery"
-msgstr ""
+msgstr "Pengiriman Tepat Waktu"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "On-time Rate"
-msgstr ""
+msgstr "Tingkat Tepat Waktu"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
@@ -478,23 +489,25 @@ msgid ""
 "Over the past 12 months; the number of products received on time divided by "
 "the number of ordered products."
 msgstr ""
+"Selama 12 bulan terakhir; jumlah produk yang diterima tepat waktu dibagi "
+"dengan jumlah produk yang dipesan."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
 msgid "PO Lines"
-msgstr ""
+msgstr "Baris SPB"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__partial
 msgid "Partially Received"
-msgstr ""
+msgstr "Setengah Diterima"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Process all the receipt quantities."
-msgstr ""
+msgstr "Proses semua kuantitas tanda terima."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
@@ -516,7 +529,7 @@ msgstr "Kategori Produk"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
 msgid "Product Supplier"
-msgstr ""
+msgstr "Supplier Produk"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_product
@@ -526,13 +539,13 @@ msgstr "Varian Produk"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
 msgid "Propagate cancellation"
-msgstr ""
+msgstr "Sebarkan pembatalan"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__purchase_line_ids
 msgid "Purchase Lines"
-msgstr ""
+msgstr "Baris Purchasing"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -555,24 +568,24 @@ msgstr "Order Pembelian"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
 msgid "Purchase Report"
-msgstr ""
+msgstr "Laporan Purchasing"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Purchase Security Lead Time"
-msgstr ""
+msgstr "Purchase Security Lead Time"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
 msgid "Purchase Visibility Days"
-msgstr ""
+msgstr "Hari-Hari Visibilitas Purchasing"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr ""
+msgstr "Jumlah SPB"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__dest_address_id
@@ -592,7 +605,7 @@ msgstr "Penerimaan"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
 msgid "Receipt Status"
-msgstr ""
+msgstr "Status Tanda Terima"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -604,12 +617,12 @@ msgstr "Terima Produk"
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Receive the ordered products."
-msgstr ""
+msgstr "Terima produk yang dipesan."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr ""
+msgstr "Metode Menerima Kuantitas"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
@@ -626,7 +639,7 @@ msgstr "Minta pemasok Anda untuk mengirim langsung ke pelanggan Anda"
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Requests for quotation"
-msgstr ""
+msgstr "Request for quotation (RFQ)"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -647,22 +660,22 @@ msgstr "Rute"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Schedule request for quotations earlier to avoid delays"
-msgstr ""
+msgstr "Jadwalkan RFQ lebih dulu untuk mencegah penundaan"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
 msgid "Set as Supplier"
-msgstr ""
+msgstr "Tetapkan sebagai Supplier"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__show_set_supplier_button
 msgid "Show Set Supplier Button"
-msgstr ""
+msgstr "Tunjukkan Tombol Tetapkan Supplier"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
 msgid "Show supplier column"
-msgstr ""
+msgstr "Tunjukkan kolom supplier"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
@@ -678,22 +691,22 @@ msgstr "Pergerakan Stock"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Laporan Replenishment Stok"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Peraturan Sto"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Laporan peraturan stok"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_info
 msgid "Stock supplier replenishment information"
-msgstr ""
+msgstr "Stok informasi supplier replenishment"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
@@ -703,7 +716,7 @@ msgstr "Daftar harga Supplier"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
 msgid "Supplierinfo"
-msgstr ""
+msgstr "Supplierinfo"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -715,7 +728,7 @@ msgstr "Kolom teknis yang digunakan untuk menampilkan Alamat Dropship"
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
-msgstr ""
+msgstr "Replenishment order berikut telah dibuat"
 
 #. module: purchase_stock
 #. odoo-python
@@ -725,6 +738,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
 msgstr ""
+"Kuantitas pada SPB Anda mengindikasikan lebih dari yang ditagih. Anda "
+"sebaiknya meminta refund."
 
 #. module: purchase_stock
 #. odoo-python
@@ -735,6 +750,9 @@ msgid ""
 " %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
 " Go on the product form and complete the list of vendors."
 msgstr ""
+"Tidak ada harga vendor yang cocok untuk membuat SPB untuk produk %s (tidak "
+"ada vendor yang didefinisikan, kuantitas minimum tidak teraih, tanggal tidak"
+" valid, ...). Pergi ke formulir produk dan selesaikan daftar vendor."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -764,6 +782,8 @@ msgid ""
 "Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated."
 msgstr ""
+"Tanggal-tanggal tersebut tidak dapat dimodifikasi menurut tanda terima %s "
+"yang sudah divalidasi."
 
 #. module: purchase_stock
 #. odoo-python
@@ -771,6 +791,7 @@ msgstr ""
 #, python-format
 msgid "Those dates have been updated accordingly on the receipt %s."
 msgstr ""
+"Tanggal-tanggal tersebut telah diupdate sesuai dengan tanda terima %s."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
@@ -798,7 +819,7 @@ msgstr ""
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
-msgstr ""
+msgstr "Validasi tanda terima semua produk yang dipesan."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__vendor_id
@@ -810,19 +831,19 @@ msgstr "Pemasok"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_vendor_delay_report
 msgid "Vendor Delay Report"
-msgstr ""
+msgstr "Laporan Penundaan Vendor"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Vendor Lead Time"
-msgstr ""
+msgstr "Lead Time Vendor"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
 msgid "Vendor On-time Delivery analysis"
-msgstr ""
+msgstr "Analisis Pengiriman Tepat Waktu (OTD) Vendor"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
@@ -832,7 +853,7 @@ msgstr "Pemasok"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
 msgid "Visibility Days applied on the purchase routes."
-msgstr ""
+msgstr "Visibility Days diterapkan pada rute purchasing."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
@@ -854,6 +875,9 @@ msgid ""
 "created to fulfill the need.<br/>Note: This rule will be used in combination"
 " with the rules<br/>of the reception route(s)"
 msgstr ""
+"Saat produk dibutuhkan di <b>%s</b>, <br/> RFQ dibuat untuk memenuhi "
+"kebutuhan tersebut.<br/>Catatan: Peraturan ini akan digunakan bersamaan "
+"dengan peraturan<br/>rute penerimaan"
 
 #. module: purchase_stock
 #. odoo-python
@@ -863,6 +887,8 @@ msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
+"Anda tidak dapat mengurangi kuantitas yang dipesan sampai di bawah kuantitas yang diterima.\n"
+"Buat return terlebih dahulu."
 
 #. module: purchase_stock
 #. odoo-python
@@ -884,4 +910,4 @@ msgstr "dari"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
-msgstr ""
+msgstr "dipesan alih-alih"

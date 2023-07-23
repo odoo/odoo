@@ -17,14 +17,14 @@
                                 Invalid or expired promo code.
                             </div>
                         </t>
-                        <t t-if="website_sale_order.get_promo_code_error(delete=False)">
+                        <t t-if="promo_code_error">
                             <div class="alert alert-danger text-start mt16" role="alert">
-                                <t t-esc="website_sale_order.get_promo_code_error()"/>
+                                <t t-esc="promo_code_error"/>
                             </div>
                         </t>
-                        <t t-if="website_sale_order and website_sale_order.get_promo_code_success_message(delete=False)">
+                        <t t-if="website_sale_order and promo_code_success">
                             <div class="alert alert-success text-start mt16" role="alert">
-                                You have successfully applied the following code: <strong t-esc="website_sale_order.get_promo_code_success_message()"/>
+                                You have successfully applied the following code: <strong t-esc="promo_code_success"/>
                             </div>
                         </t>
                         <t t-if="website_sale_order">

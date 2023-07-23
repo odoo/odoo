@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import models, fields, _, SUPERUSER_ID
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import COUNTRY_EAS
 from odoo.exceptions import UserError
 
@@ -36,7 +36,7 @@ class AccountEdiFormat(models.Model):
         if ubl_version is not None:
             if ubl_version.text == '2.0':
                 return self.env['account.edi.xml.ubl_20']
-            if ubl_version.text == '2.1':
+            if ubl_version.text in ('2.1', '2.2', '2.3'):
                 return self.env['account.edi.xml.ubl_21']
         if customization_id is not None:
             if 'xrechnung' in customization_id.text:
@@ -123,7 +123,7 @@ class AccountEdiFormat(models.Model):
         if self.code not in ['facturx_1_0_05', 'efff_1']:
             attachment_create_vals.update({'res_id': invoice.id, 'res_model': 'account.move'})
 
-        attachment = self.env['ir.attachment'].create(attachment_create_vals)
+        attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachment_create_vals)
 
         res = {invoice: {'attachment': attachment}}
         if errors and self.code == 'facturx_1_0_05':

@@ -11094,6 +11094,13 @@ msgid "Compute"
 msgstr "Beräkna"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "Beräkningsmetoden kan inte bero på fältet \"id"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "Computed fields are defined with the fields\n"
@@ -16218,7 +16225,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Ogiltig 'Gruppera efter'-parameter"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -27519,6 +27531,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -28929,6 +28948,15 @@ msgid "You can not create recursive tags."
 msgstr "Du kan inte skapa rekursiva taggar."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login !"
 msgstr "Du kan inte ha två användare med samma inloggningsnamn!"
@@ -29057,6 +29085,12 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "Du kan inte radera en grupp som är kopplad till ett inställningsfält."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""

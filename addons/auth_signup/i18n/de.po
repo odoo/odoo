@@ -3,10 +3,9 @@
 # 	* auth_signup
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Stefan Reisich <nafex@gmx.net>, 2023
-# David Millan, 2023
 # Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,8 +27,8 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
-"Für diesen Benutzer wurde eine Passwortzurücksetzung beantragt. Eine E-Mail "
-"mit dem folgenden Link wurde gesendet:"
+"<strong>Für diesen Benutzer wurde eine Passwortzurücksetzung beantragt. Eine"
+" E-Mail mit dem folgenden Link wurde gesendet:</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -633,14 +632,15 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr "Haben Sie schon einen Benutzer?"
+msgstr "Haben Sie schon ein Konto?"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr "Ein anderer Benutzer ist bereits mit dieser Emailadresse registriert"
+msgstr ""
+"Ein anderer Benutzer ist bereits mit dieser E-Mail-Adresse registriert"
 
 #. module: auth_signup
 #. odoo-python
@@ -660,7 +660,7 @@ msgstr "Zurück zur Anmeldung"
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr ""
-"E-Mail kann nicht verschickt werden: Benutzer %s hat keine E-Mail Adresse"
+"E-Mail kann nicht versendet werden: Benutzer %s hat keine E-Mail-Adresse"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -714,13 +714,14 @@ msgstr "Standard-Zugriffsrechte"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr "Haben Sie noch keinen Benutzer?"
+msgstr "Noch kein Benutzerkonto?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
-msgstr "Passwort zurücksetzen von der Login-Seite erlauben"
+msgstr ""
+"Erlauben Sie es, dass Passwörter über die Anmeldeseite zurückgesetzt werden"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
@@ -730,31 +731,31 @@ msgstr "Kostenlose Anmeldung"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "HTTP-Routing"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Invalid signup token"
-msgstr "Anmeldungs-Token ist ungültig"
+msgstr "Ungültiges Registrierungstoken"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "Kunden können sich einloggen, um ihre Dokumente zu sehen"
+msgstr "Kunden können sich anmelden, um ihre Dokumente zu sehen"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
-msgstr "Noch nie angemeldet"
+msgstr "Nie verbunden"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "No account found for this login"
-msgstr "Kein Konto für diesen Login gefunden"
+msgstr "Kein Konto für diese Anmeldedaten gefunden"
 
 #. module: auth_signup
 #. odoo-python
@@ -781,15 +782,14 @@ msgstr "Passwort zurücksetzen"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr "Passwort zurücksetzen"
+msgstr "Passwortzurücksetzung"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Password reset instructions sent to your email"
-msgstr ""
-"Anweisungen zum Zurücksetzen des Kennworts werden an Ihre E-Mail gesendet"
+msgstr "Anweisungen zum Zurücksetzen des Passworts an Ihre E-Mail gesendet"
 
 #. module: auth_signup
 #. odoo-python
@@ -806,7 +806,7 @@ msgstr "Registrierung erfolgreich."
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
 msgid "Reminder for unregistered users"
-msgstr "Erinnerung für nicht registrierte Benutzer"
+msgstr "Erinnerung für nichtregistrierte Benutzer"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -818,12 +818,12 @@ msgstr "Passwort zurücksetzen"
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset Instructions"
-msgstr "Sende Passwortwiederherstellungs-Anleitung"
+msgstr "Anweisungen zum Zurücksetzen des Passworts versenden"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr "Sende eine Einladungsemail"
+msgstr "Eine Einladungs-E-Mail versenden"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
@@ -861,12 +861,12 @@ msgstr "Einstellungen: Einladung für neue Benutzer"
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
-msgstr "Einstellungen: Erinnerung für unregistrierte Benutzer"
+msgstr "Einstellungen: Erinnerung für nichtregistrierte Benutzer"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.reset_password_email
 msgid "Settings: User Reset Password"
-msgstr "Einstellungen: Zurücksetzen des Benutzerpassworts"
+msgstr "Einstellungen: Zurücksetzung des Benutzerpassworts"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -883,25 +883,25 @@ msgstr "Ablauf der Registrierung"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
-msgstr "Anmelde Token"
+msgstr "Registrierungstoken"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr "Typ Anmeldetoken"
+msgstr "Typ des Registrierungstokens"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
-msgstr "Anmeldungs-Token ist gültig"
+msgstr "Registrierungstoken ist gültig"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
 msgid "Signup URL"
-msgstr "Registrierungs URL"
+msgstr "Registrierungs-URL"
 
 #. module: auth_signup
 #. odoo-python
@@ -909,7 +909,7 @@ msgstr "Registrierungs URL"
 #, python-format
 msgid "Signup is not allowed for uninvited users"
 msgstr ""
-"Die Registrierung ist, für Benutzer die nicht eingeladen sind, nicht "
+"Die Registrierung ist für Benutzer, die nicht eingeladen sind, nicht "
 "erlaubt."
 
 #. module: auth_signup
@@ -924,28 +924,29 @@ msgstr "Registrierungstoken „%s“ ist nicht mehr gültig"
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr "Registrierungstoken „%s“ ist ungültig"
+msgstr "Registrierungstoken „%s“ ist nicht gültig"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
-msgstr "Anmeldung: ungültiger Vorlagenbenutzer"
+msgstr "Registrierung: ungültiger Vorlagenbenutzer"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr "Anmelden: Für neue Benutzer wird kein Login vergeben"
+msgstr "Registrierung: Für neue Benutzer wird kein Login vergeben"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr "Anmeldung: Für neuen Benutzer wird kein Name oder Partner angegeben"
+msgstr ""
+"Registrierung: Für neuen Benutzer wird kein Name oder Partner angegeben"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -955,7 +956,9 @@ msgstr "Status"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr "Vorlagenbenutzer für selbstregistrierte Benutzer"
+msgstr ""
+"Vorlagenbenutzer für neue Benutzer, die über die Registrierung erstellt "
+"werden"
 
 #. module: auth_signup
 #. odoo-python
@@ -972,8 +975,8 @@ msgid ""
 "menu *Action*."
 msgstr ""
 "Um Einladungen im B2B-Modus zu versenden, öffnen Sie einen Kontakt oder "
-"wählen Sie in der Listenansicht mehrere aus und klicken Sie im Dropdown-Menü"
-" * Aktion * auf die Option 'Portal Access Management'."
+"wählen Sie in der Listenansicht mehrere aus und klicken Sie im Drop-down-"
+"Menü *Aktion* auf die Option „Portal-Zugriffsverwaltung“."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -984,7 +987,7 @@ msgstr "Benutzer"
 #: model:ir.actions.server,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder_ir_actions_server
 #: model:ir.cron,cron_name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 msgid "Users: Notify About Unregistered Users"
-msgstr "Benutzer: Benachrichtigung über nicht registrierte Benutzer"
+msgstr "Benutzer: Benachrichtigung über nichtregistrierte Benutzer"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
@@ -1013,7 +1016,7 @@ msgstr "Ihr Name"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr "z.B. John Doe"
+msgstr "z. B. Lieschen Müller"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -1021,5 +1024,5 @@ msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
 msgstr ""
-"{{ object.create_uid.name }} von {{ object.company_id.name }} lädt Sie ein "
+"{{ object.create_uid.name }} von {{ object.company_id.name }} lädt Sie ein, "
 "sich mit Odoo zu verbinden"

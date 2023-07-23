@@ -3,8 +3,8 @@
 # 	* sale_loyalty
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -29,7 +29,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Technisches Feld, das verwendet wird, um mehrere Belohnungszeilen derselben Belohnung miteinander zu verbinden."
+"Technisches Feld, das verwendet wird, um mehrere Prämienzeilen derselben Prämie miteinander zu verbinden."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -57,8 +57,8 @@ msgstr "Ein besserer Gesamtrabatt wird bereits angewendet."
 msgid ""
 "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
 msgstr ""
-"Ein Minimum von %(amount)s%(currency)ssollte erworben werden, um die Prämie "
-"zu erhalten"
+"Ein Minimum von %(amount)s%(currency)s sollte gekauft werden, um die "
+"Belohnung zu erhalten"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -69,7 +69,7 @@ msgstr "Anwenden"
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_reward_wizard_action
 msgid "Available Rewards"
-msgstr "Verfügbare Prämien"
+msgstr "Verfügbare Belohnungen"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -79,7 +79,7 @@ msgstr "Wählen Sie ein Produkt aus:"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Choose your reward:"
-msgstr "Wählen Sie Ihre Prämie:"
+msgstr "Wählen Sie Ihre Belohnung:"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
@@ -109,13 +109,13 @@ msgstr "Gutscheinpunkt"
 #, python-format
 msgid "Coupon not found while trying to add the following reward: %s"
 msgstr ""
-"Beim Versuch, die folgende Prämie hinzuzufügen, wurde kein Coupon gefunden: "
-"%s"
+"Beim Versuch, die folgende Belohnung hinzuzufügen, wurde kein Gutschein "
+"gefunden: %s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Coupons & Loyalty"
-msgstr "Coupons & Treue"
+msgstr "Gutscheine & Treue"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_uid
@@ -159,7 +159,7 @@ msgstr "Anzeigename"
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_coupon_wizard_action
 msgid "Enter Promotion or Coupon Code"
-msgstr "Geben Sie einen Promo- oder Kupon-Code ein"
+msgstr "Aktions- oder Gutscheincode eingeben"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
@@ -186,12 +186,13 @@ msgstr "Geschenkkarten-Code"
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
 msgid "Gift cards & eWallet"
-msgstr "Geschenkkarten & elektronische Geldbeutel"
+msgstr "Geschenkkarten & E-Geldbörse"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
 msgid "How much point this reward cost on the loyalty card."
-msgstr "Wie viele Punkte von der Treuekarte für diese Prämie benötigt werden."
+msgstr ""
+"Wie viele Punkte von der Treuekarte für diese Belohnung benötigt werden."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__id
@@ -212,12 +213,12 @@ msgstr "Anforderung eines ungültigen Produkts."
 #: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
 #, python-format
 msgid "Invalid sales order."
-msgstr "Ungültiger Kundenauftrag."
+msgstr "Ungültiger Verkaufsauftrag."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
 msgid "Is a program reward line"
-msgstr "Ist eine Programm-Prämienposition"
+msgstr "Ist eine Programm-Prämienzeile"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard____last_update
@@ -243,7 +244,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr "Treue-Coupon"
+msgstr "Treuegutscheine"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -279,7 +280,7 @@ msgid ""
 " order."
 msgstr ""
 "Es wurde keine Karte für dieses Treueprogramm gefunden und es werden keine "
-"Punkte für diese Bestellung vergeben."
+"Punkte für diesen Auftrag vergeben."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -299,7 +300,7 @@ msgstr "Keine Prämie für diesen Kunden verfügbar"
 #, python-format
 msgid "One or more rewards on the sale order is invalid. Please check them."
 msgstr ""
-"Eine oder mehrere Prämienfür diese Bestellung sind ungültig. Bitte "
+"Eine oder mehrere Prämien für diesen Verkaufsauftrag sind ungültig. Bitte "
 "überprüfen Sie diese."
 
 #. module: sale_loyalty
@@ -312,7 +313,7 @@ msgstr "Auftrag"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__order_count
 msgid "Order Count"
-msgstr "Anzahl der Aufträge"
+msgstr "Anzahl Aufträge"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id
@@ -332,13 +333,13 @@ msgstr "Punktekosten"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Promotions"
-msgstr "Promos"
+msgstr "Werbeaktionen"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_ids
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_id
 msgid "Reward"
-msgstr "Belohnung"
+msgstr "Prämie"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__reward_amount
@@ -348,7 +349,7 @@ msgstr "Prämienbetrag"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_identifier_code
 msgid "Reward Identifier Code"
-msgstr "Prämie Kenncode"
+msgstr "Prämienkenncode"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
@@ -358,7 +359,7 @@ msgstr "Prämienprodukte"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
 msgid "Sale Loyalty - Apply Coupon Wizard"
-msgstr "Kundentreue - Assistent zur Anwendung von Coupons"
+msgstr "Kundentreue - Assistent zur Anwendung von Gutscheinen"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_reward_wizard
@@ -370,8 +371,8 @@ msgstr "Kundentreue - Assistent zur Auswahl der Prämie"
 msgid ""
 "Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
 msgstr ""
-"Verkaufsauftrags-Couponpunkte - Verfolgt, wie sich ein Verkaufsauftrag auf "
-"einen Coupon auswirkt"
+"Gutscheinpunkte bei Verkaufsauftrag - Verfolgt, wie sich ein Verkaufsauftrag"
+" auf einen Gutschein auswirkt"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -381,12 +382,12 @@ msgstr "Verkauf"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order
 msgid "Sales Order"
-msgstr "Verkaufsauftrag "
+msgstr "Verkaufsauftrag"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Kundenauftragszeile"
+msgstr "Verkaufsauftragszeile"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_product_id
@@ -410,14 +411,15 @@ msgstr "ZEILE TEMPORÄRER RABATT"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon can only be claimed on future orders."
-msgstr "The coupon can only be redeemed for future orders."
+msgstr "Der Gutschein kann nur bei zukünftigen Bestellungen eingelöst werden."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon does not have enough points for the selected reward."
-msgstr "Der Coupon hat nicht genügend Punkte für die ausgewählte Prämie."
+msgstr ""
+"Der Gutschein hat nicht genügend Punkte für die ausgewählte Belohnung."
 
 #. module: sale_loyalty
 #: model:ir.model.constraint,message:sale_loyalty.constraint_sale_order_coupon_points_order_coupon_unique
@@ -469,14 +471,14 @@ msgstr "Dieser Code ist ungültig (%s)."
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon has already been used."
-msgstr "Dieser Coupon wurde bereits eingelöst."
+msgstr "Dieser Gutschein wurde bereits eingelöst."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon is expired."
-msgstr "Dieser Coupon ist abgelaufen."
+msgstr "Dieser Gutschein ist abgelaufen."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -504,14 +506,14 @@ msgstr "Für die Anwendung dieses Programms ist ein Code erforderlich."
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This promo code is already applied."
-msgstr "Dieser Promo-Code wird bereits angewendet."
+msgstr "Dieser Aktionscode wird bereits angewendet."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr ""
-"Aktualisieren Sie die aktuellen Aktionslinien und wählen Sie gegebenenfalls "
-"neue Prämien aus."
+"Aktualisieren Sie die aktuellen Aktionszeilen und wählen Sie gegebenenfalls "
+"neue Belohnungen aus."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -519,7 +521,7 @@ msgstr ""
 #, python-format
 msgid "You don't have the required product quantities on your sales order."
 msgstr ""
-"Sie haben nicht die erforderlichen Produktmengen in Ihrem Kundenauftrag."
+"Sie haben nicht die erforderlichen Produktmengen in Ihrem Verkaufsauftrag."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card

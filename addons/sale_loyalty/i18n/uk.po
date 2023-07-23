@@ -28,7 +28,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Технічне поле, яке використовується для об’єднання кількох ядкыв винагороди з однієї винагороди.\n"
+"        Технічне поле, яке використовується для об’єднання кількох рядків винагороди з однієї винагороди.\n"
 "    "
 
 #. module: sale_loyalty
@@ -36,7 +36,7 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid " - On product with the following taxes: %(taxes)s"
-msgstr ""
+msgstr " - На товарі з наступними податками: %(taxes)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -68,17 +68,17 @@ msgstr "Застосувати"
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_reward_wizard_action
 msgid "Available Rewards"
-msgstr ""
+msgstr "Доступні винагороди"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Choose a product:"
-msgstr ""
+msgstr "Оберіть товар:"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Choose your reward:"
-msgstr ""
+msgstr "Оберіть вашу винагороду:"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
@@ -100,14 +100,14 @@ msgstr "Код купона"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__coupon_point_ids
 msgid "Coupon Point"
-msgstr ""
+msgstr "Бал купону"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "Coupon not found while trying to add the following reward: %s"
-msgstr ""
+msgstr "Купон не знайдено під час спроби додати наступну винагороду: %s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -144,7 +144,7 @@ msgstr "Знижка та програма лояльності"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Discount: %(desc)s%(tax_str)s"
-msgstr ""
+msgstr "Знижка: %(desc)s%(tax_str)s"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
@@ -168,7 +168,7 @@ msgstr "Дата кінця терміну дії:"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Free Product - %(product)s"
-msgstr ""
+msgstr "Безкоштовний товар - %(product)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -188,7 +188,7 @@ msgstr "Подарункові картки та електронний гама
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
 msgid "How much point this reward cost on the loyalty card."
-msgstr ""
+msgstr "Скільки балів коштує ця винагорода на картці постійного клієнта."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__id
@@ -202,14 +202,14 @@ msgstr "ID"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Invalid product to claim."
-msgstr ""
+msgstr "Недійсний товар для заявки."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
 #, python-format
 msgid "Invalid sales order."
-msgstr ""
+msgstr "Недійсне замовлення на продаж."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
@@ -255,12 +255,12 @@ msgstr "Винагорода лояльності"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__applied_coupon_ids
 msgid "Manually Applied Coupons"
-msgstr ""
+msgstr "Купони, що застосовуються вручну"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__code_enabled_rule_ids
 msgid "Manually Triggered Rules"
-msgstr ""
+msgstr "Правила, запущені вручну"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__multi_product_reward
@@ -275,18 +275,20 @@ msgid ""
 "No card found for this loyalty program and no points will be given with this"
 " order."
 msgstr ""
+"Не знайдено жодної картки для цієї програми лояльності, і за це замовлення "
+"не буде нараховано бали."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "No reward selected."
-msgstr ""
+msgstr "Не вибрано винагороди."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "No rewards available for this customer!"
-msgstr ""
+msgstr "Немає доступних винагород для цього клієнта!"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -294,6 +296,8 @@ msgstr ""
 #, python-format
 msgid "One or more rewards on the sale order is invalid. Please check them."
 msgstr ""
+"Одна або кілька винагород у замовленні на продаж недійсні. Будь ласка, "
+"перевірте їх."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__order_id
@@ -351,18 +355,20 @@ msgstr "Товари нагороди"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
 msgid "Sale Loyalty - Apply Coupon Wizard"
-msgstr ""
+msgstr "Програма лояльності продажу - Помічник застосування купону"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_reward_wizard
 msgid "Sale Loyalty - Reward Selection Wizard"
-msgstr ""
+msgstr "Програма лояльності продажу - Помічник вибору винагороди"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order_coupon_points
 msgid ""
 "Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
 msgstr ""
+"Бали купону замовлення на продаж - Відстежує, як замовлення на продаж "
+"впливає на купон"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -382,45 +388,45 @@ msgstr "Рядок замовлення"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_product_id
 msgid "Selected Product"
-msgstr ""
+msgstr "Вибраний товар"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_reward_id
 msgid "Selected Reward"
-msgstr ""
+msgstr "Вибрана винагорода"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "TEMPORARY DISCOUNT LINE"
-msgstr ""
+msgstr "ТИМЧАСОВИЙ РЯДОК ЗНИЖКИ"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon can only be claimed on future orders."
-msgstr ""
+msgstr "Купон можна використовувати лише для майбутніх замовлень."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon does not have enough points for the selected reward."
-msgstr ""
+msgstr "Купон не має достатньо балів для обраної нагороди."
 
 #. module: sale_loyalty
 #: model:ir.model.constraint,message:sale_loyalty.constraint_sale_order_coupon_points_order_coupon_unique
 msgid "The coupon points entry already exists."
-msgstr ""
+msgstr "Запис балів купону вже існує."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The program is not available for this order."
-msgstr ""
+msgstr "Програма недоступна для цього замовлення."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_loyalty_card__order_id
@@ -432,7 +438,7 @@ msgstr "Замовлення на продаж, з якого формуєтьс
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "There is nothing to discount"
-msgstr ""
+msgstr "Немає нічого для знижки."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
@@ -444,7 +450,7 @@ msgstr "Це товари, на які можна претендувати за 
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This code is expired (%s)."
-msgstr ""
+msgstr "Цей код протерміновано (%s)."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -452,61 +458,62 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This code is invalid (%s)."
-msgstr ""
+msgstr "Цей код недійсний (%s)."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon has already been used."
-msgstr ""
+msgstr "Цей купон вже використовується."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon is expired."
-msgstr ""
+msgstr "Цей купон протерміновано."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program is already applied to this order."
-msgstr ""
+msgstr "Цю програму вже застосовано на це замовлення."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program is not available for public users."
-msgstr ""
+msgstr "Ця програма недоступна для публічних користувачів."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program requires a code to be applied."
-msgstr ""
+msgstr "Ця програма вимагає код для застосування."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This promo code is already applied."
-msgstr ""
+msgstr "Цей промокод вже застосовано."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr ""
+"Оновіть поточні рекламні рядки та виберіть нові винагороди, якщо це можливо."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "You don't have the required product quantities on your sales order."
-msgstr ""
+msgstr "У вашому замовленні на продаж немає необхідної кількості товару."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card

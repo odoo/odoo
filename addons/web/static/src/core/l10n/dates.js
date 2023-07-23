@@ -142,7 +142,7 @@ export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(valu
             if (inToken && normalizeFormatTable[character] !== undefined) {
                 character = normalizeFormatTable[character];
             } else {
-                character = "'" + character + "'";  // luxon escape
+                character = "'" + character + "'"; // luxon escape
             }
         }
         output.push(character);
@@ -327,6 +327,11 @@ export function parseDateTime(value, options = {}) {
         locale: options.locale,
         numberingSystem: options.numberingSystem || Settings.defaultNumberingSystem || "latn",
     };
+
+    // Force numbering system to latin if actual numbers are found in the value
+    if (/[0-9]/.test(value)) {
+        parseOpts.numberingSystem = "latn";
+    }
 
     // Base case: try parsing with the given format and options
     let result = DateTime.fromFormat(value, fmt, parseOpts);

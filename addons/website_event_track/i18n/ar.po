@@ -139,6 +139,23 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    عزيزنا <t t-out=\"object.partner_id.name or object.partner_name or ''\">براندن فريمان</t><br>\n"
+"    يسعدنا إخبارك بأن مقترحك <t t-out=\"object.name or ''\">محور هذه الفعالية</t> قد تم قبوله وتأكيده للفعالية<t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</t>.\n"
+"    <br>\n"
+"    ستجد المزيد من التفاصيل هنا:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            عرض الحوار\n"
+"        </a>\n"
+"    </div>\n"
+"    <br><br>\n"
+"    شكراً لك،\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>ميتشل آدمن</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -1609,8 +1626,8 @@ msgstr "عدد الاخطاء"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء "
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter

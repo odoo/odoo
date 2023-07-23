@@ -1118,6 +1118,13 @@ registry.FooterSlideout = publicWidget.Widget.extend({
         this.__pixelEl.style.width = `1px`;
         this.__pixelEl.style.height = `1px`;
         this.__pixelEl.style.marginTop = `-1px`;
+        // On safari, add a background attachment fixed to fix the glitches that
+        // appear when scrolling the page with a footer slide out.
+        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            this.__pixelEl.style.backgroundColor = "transparent";
+            this.__pixelEl.style.backgroundAttachment = "fixed";
+            this.__pixelEl.style.backgroundImage = "url(/website/static/src/img/website_logo.svg)";
+        }
         this.el.appendChild(this.__pixelEl);
 
         return this._super(...arguments);
@@ -1129,6 +1136,42 @@ registry.FooterSlideout = publicWidget.Widget.extend({
         this._super(...arguments);
         this.el.classList.remove('o_footer_effect_enable');
         this.__pixelEl.remove();
+    },
+});
+
+registry.TopMenuCollapse = publicWidget.Widget.extend({
+    selector: "header #top_menu_collapse",
+
+    /**
+     * @override
+     */
+    async start() {
+        this.throttledResize = _.throttle(() => this._onResize(), 25);
+        window.addEventListener("resize", this.throttledResize);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        window.removeEventListener("resize", this.throttledResize);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onResize() {
+        if (this.el.classList.contains("show")) {
+            const togglerEl = this.el.closest("nav").querySelector(".navbar-toggler");
+            if (getComputedStyle(togglerEl).display === "none") {
+                this.$el.collapse("hide");
+            }
+        }
     },
 });
 

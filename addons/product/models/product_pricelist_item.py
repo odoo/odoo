@@ -323,30 +323,27 @@ class PricelistItem(models.Model):
         if self.min_quantity and qty_in_product_uom < self.min_quantity:
             res = False
 
-        elif self.categ_id:
-            # Applied on a specific category
-            cat = product.categ_id
-            while cat:
-                if cat.id == self.categ_id.id:
-                    break
-                cat = cat.parent_id
-            if not cat:
+        elif self.applied_on == "2_product_category":
+            if (
+                product.categ_id != self.categ_id
+                and not product.categ_id.parent_path.startswith(self.categ_id.parent_path)
+            ):
                 res = False
         else:
             # Applied on a specific product template/variant
             if is_product_template:
-                if self.product_tmpl_id and product.id != self.product_tmpl_id.id:
+                if self.applied_on == "1_product" and product.id != self.product_tmpl_id.id:
                     res = False
-                elif self.product_id and not (
+                elif self.applied_on == "0_product_variant" and not (
                     product.product_variant_count == 1
                     and product.product_variant_id.id == self.product_id.id
                 ):
                     # product self acceptable on template if has only one variant
                     res = False
             else:
-                if self.product_tmpl_id and product.product_tmpl_id.id != self.product_tmpl_id.id:
+                if self.applied_on == "1_product" and product.product_tmpl_id.id != self.product_tmpl_id.id:
                     res = False
-                elif self.product_id and product.id != self.product_id.id:
+                elif self.applied_on == "0_product_variant" and product.id != self.product_id.id:
                     res = False
 
         return res

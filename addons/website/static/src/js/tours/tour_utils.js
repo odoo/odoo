@@ -20,7 +20,7 @@ function assertCssVariable(variableName, variableValue, trigger = 'iframe body')
         auto: true,
         run: function () {
             const styleValue = getComputedStyle(this.$anchor[0]).getPropertyValue(variableName);
-            if ((styleValue && styleValue.trim()) !== variableValue.trim()) {
+            if ((styleValue && styleValue.trim().replace(/["']/g, '')) !== variableValue.trim().replace(/["']/g, '')) {
                 throw new Error(`Failed precondition: ${variableName}=${styleValue} (should be ${variableValue})`);
             }
         },
@@ -303,7 +303,10 @@ function prepend_trigger(steps, prepend_text='') {
 }
 
 function getClientActionUrl(path, edition) {
-    let url = `/web#action=website.website_preview&path=${encodeURIComponent(path)}`;
+    let url = `/web#action=website.website_preview`;
+    if (path) {
+        url += `&path=${encodeURIComponent(path)}`;
+    }
     if (edition) {
         url += '&enable_editor=1';
     }

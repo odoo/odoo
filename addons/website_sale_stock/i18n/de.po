@@ -3,7 +3,7 @@
 # 	* website_sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -32,7 +32,7 @@ msgstr ""
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
 msgid "Back in stock Notifications"
-msgstr "Wieder-vorrätoig-Benachrichtigungen"
+msgstr "„Wieder vorrätig“-Benachrichtigungen"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -82,7 +82,7 @@ msgstr "Erhalten Sie eine Benachrichtigung, wenn wieder vorrätig"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
 msgstr ""
-"Wie werden Produkte mit geringem Bestand angezeigt? (vorrätig - reserviert)"
+"Wie werden Produkte mit geringem Bestand angezeigt (vorrätig - reserviert)?"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/controllers/main.py:0
@@ -100,7 +100,7 @@ msgstr "Ungültige E-Mail"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr "Lager-Standardeinstellungen"
+msgstr "Standardeinstellungen für Lager"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -131,7 +131,7 @@ msgstr "Nicht vorrätig"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
-msgstr "Out-of-Stock-Nachricht"
+msgstr "„Nicht vorrätig“-Nachricht"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/product_product.py:0
@@ -143,7 +143,7 @@ msgstr "Produkt"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
-msgstr "Produktvarianten"
+msgstr "Produktvariante"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
@@ -155,17 +155,17 @@ msgstr "Produkt: E-Mails bezüglich Produktverfügbarkeit versenden"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Regards,"
-msgstr "Grüße,"
+msgstr "Freundliche Grüße"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "Verkaufsauftrag "
+msgstr "Verkaufsauftrag"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Kundenauftragszeile"
+msgstr "Verkaufsauftragszeile"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -185,7 +185,7 @@ msgstr "Schwelle anzeigen"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
 msgid "Show availability Qty"
-msgstr "Verfügbare Menge anzeigen"
+msgstr "Mengenverfügbarkeit anzeigen"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0
@@ -194,8 +194,8 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
 " for the inconvenience."
 msgstr ""
-"Manche Produkte sind zur Zeit nicht auf Lager. Ihr Warenkorb wurde "
-"aktualisiert. Bitte entschuldigen Sie etwaige Unannehmlichkeiten."
+"Manche Produkte sind zurzeit nicht auf Lager. Ihr Warenkorb wurde "
+"aktualisiert. Entschuldigen Sie die Unannehmlichkeiten."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -206,7 +206,7 @@ msgstr "Das folgende Produkt ist jetzt verfügbar."
 #: code:addons/website_sale_stock/models/product_product.py:0
 #, python-format
 msgid "The product '%(product_name)s' is now available"
-msgstr "Das Produkt '%(product_name)s' ist jetzt verfügbar"
+msgstr "Das Produkt „%(product_name)s“ ist jetzt verfügbar"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -230,7 +230,7 @@ msgstr "Einheiten"
 #: model:ir.model.fields,field_description:website_sale_stock.field_website__warehouse_id
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Warehouse"
-msgstr "Lager"
+msgstr "Lagerhaus"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -238,7 +238,7 @@ msgstr "Lager"
 #, python-format
 msgid "We'll notify you once the product is back in stock."
 msgstr ""
-"Wir werden Sie benachrichtigen, sobald das Produkt wieder auf Lager ist."
+"Wir werden Sie benachrichtigen, sobald das Produkt wieder vorrätig ist."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -307,11 +307,11 @@ msgstr "auf Lager."
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "only if below"
-msgstr "Nur wenn weniger als"
+msgstr "nur, wenn weniger als"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "youremail@gmail.com"
-msgstr "ihreemail@gmail.com"
+msgstr "youremail@gmail.com"

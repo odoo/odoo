@@ -144,3 +144,32 @@ PosLoyalty.do.clickRewardButton();
 PosLoyalty.check.hasRewardLine('Free Product - Test Product A', '-11.50', '1.00');
 
 Tour.register('PosLoyaltyFreeProductTour2', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickDisplayedProduct('Test Product A');
+ProductScreen.check.selectedOrderlineHas('Test Product A', '1.00', '40.00');
+ProductScreen.do.clickDisplayedProduct('Test Product B');
+ProductScreen.check.selectedOrderlineHas('Test Product B', '1.00', '40.00');
+PosLoyalty.do.clickRewardButton();
+PosLoyalty.check.hasRewardLine('$ 10 per order on specific products', '-10.00', '1.00');
+PosLoyalty.check.orderTotalIs('60.00');
+
+Tour.register('PosLoyaltySpecificDiscountTour', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickDisplayedProduct('Test Product A');
+ProductScreen.do.clickDisplayedProduct('Test Product C');
+PosLoyalty.check.orderTotalIs('130.00');
+PosLoyalty.check.isRewardButtonHighlighted(true);
+PosLoyalty.do.clickRewardButton();
+PosLoyalty.check.orderTotalIs('130.00');
+
+Tour.register('PosLoyaltySpecificDiscountWithFreeProductTour', { test: true, url: '/pos/web' }, getSteps());

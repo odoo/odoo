@@ -488,8 +488,9 @@ class HolidaysAllocation(models.Model):
 
             if days_added_per_level:
                 number_of_days_to_add = allocation.number_of_days + sum(days_added_per_level.values())
+                max_allocation_days = current_level_maximum_leave + (allocation.leaves_taken if allocation.type_request_unit != "hour" else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY))
                 # Let's assume the limit of the last level is the correct one
-                allocation.number_of_days = min(number_of_days_to_add, current_level_maximum_leave + allocation.leaves_taken) if current_level_maximum_leave > 0 else number_of_days_to_add
+                allocation.number_of_days = min(number_of_days_to_add, max_allocation_days) if current_level_maximum_leave > 0 else number_of_days_to_add
 
     @api.model
     def _update_accrual(self):

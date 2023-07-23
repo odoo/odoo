@@ -35,7 +35,7 @@ msgstr "Pode ser refaturado"
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
 msgid "Customer to Reinvoice"
-msgstr "Clientes para Refaturar"
+msgstr "Cliente a refaturar"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -46,7 +46,7 @@ msgstr "Despesa"
 #: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
 msgid "Expense Policy Tooltip"
-msgstr ""
+msgstr "Dica de política de despesas"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_sheet
@@ -56,7 +56,7 @@ msgstr "Relatório de Despesas"
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
 msgid "Expense Split"
-msgstr ""
+msgstr "Despesa dividida"
 
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
@@ -70,6 +70,7 @@ msgstr "Despesas"
 #, python-format
 msgid "Expenses of this category may not be added to a Sales Order."
 msgstr ""
+"Despesas desta categoria não podem ser adicionadas a um pedido de venda."
 
 #. module: sale_expense
 #: code:addons/sale_expense/models/product_template.py:0
@@ -77,6 +78,8 @@ msgstr ""
 msgid ""
 "Expenses will be added to the Sales Order at their actual cost when posted."
 msgstr ""
+"Despesas serão adicionadas ao pedido de venda com o custo real de quando "
+"foram lançadas."
 
 #. module: sale_expense
 #: code:addons/sale_expense/models/product_template.py:0
@@ -85,6 +88,8 @@ msgid ""
 "Expenses will be added to the Sales Order at their sales price (product "
 "price, pricelist, etc.) when posted."
 msgstr ""
+"Despesas serão adicionadas ao pedido de venda com o preço de venda (preço do"
+" produto, lista de preços etc) de quando forem lançadas."
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
@@ -92,6 +97,8 @@ msgid ""
 "If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
+"Se essa categoria tem uma política de despesas, será refaturada nesse pedido"
+" de venda"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -112,7 +119,7 @@ msgstr "Produto"
 #: code:addons/sale_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "Reinvoiced Sales Orders"
-msgstr ""
+msgstr "Pedidos de venda refaturados"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count

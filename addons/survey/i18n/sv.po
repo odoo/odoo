@@ -9,10 +9,10 @@
 # Fredrik Arvas <fredrik.arvas@vertel.se>, 2022
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2022
 # Robin Calvin, 2022
+# Kristoffer Grundström <lovaren@gmail.com>, 2022
 # Bengt Evertsson <zyberfart@gmail.com>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
 # Simon S, 2022
 # Martin Trigaux, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
@@ -508,7 +508,7 @@ msgstr "<span>\"Red\" är inte en kategori, jag vet vad du försöker göra ;)</
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -3010,8 +3010,8 @@ msgstr "Antal fel"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 #: model:ir.model.fields,help:survey.field_survey_user_input__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Antal meddelanden som kräver en åtgärd"
+msgid "Number of messages requiring action"
+msgstr "Antal meddelanden som kräver åtgärd"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
@@ -3231,7 +3231,7 @@ msgstr "Sidor"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__questions_layout
 msgid "Pagination"
-msgstr ""
+msgstr "Sidindelning"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug4
@@ -5160,6 +5160,14 @@ msgstr ""
 
 #. module: survey
 #. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
+
+#. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""

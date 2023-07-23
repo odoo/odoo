@@ -24,6 +24,7 @@ const wysiwygUtils = require('@web_editor/js/common/wysiwyg_utils');
 const weUtils = require('web_editor.utils');
 const { PeerToPeer } = require('@web_editor/js/wysiwyg/PeerToPeer');
 const { Mutex } = require('web.concurrency');
+const snippetsOptions = require('web_editor.snippets.options');
 
 var _t = core._t;
 const QWeb = core.qweb;
@@ -740,6 +741,7 @@ const Wysiwyg = Widget.extend({
         for (const timeout of this.tooltipTimeouts) {
             clearTimeout(timeout);
         }
+        snippetsOptions.clearM2oRpcCache();
         this._super();
     },
     /**
@@ -953,7 +955,6 @@ const Wysiwyg = Widget.extend({
             const {oeModel: resModel, oeId: resId} = editableEl.dataset;
             const proms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
                 const isBackground = !el.matches('img');
-                el.classList.remove('o_modified_image_to_save');
                 // Modifying an image always creates a copy of the original, even if
                 // it was modified previously, as the other modified image may be used
                 // elsewhere if the snippet was duplicated or was saved as a custom one.
@@ -967,6 +968,7 @@ const Wysiwyg = Widget.extend({
                         name: (el.dataset.fileName ? el.dataset.fileName : null),
                     },
                 });
+                el.classList.remove('o_modified_image_to_save');
                 if (isBackground) {
                     const parts = weUtils.backgroundImageCssToParts($(el).css('background-image'));
                     parts.url = `url('${newAttachmentSrc}')`;
@@ -1184,10 +1186,14 @@ const Wysiwyg = Widget.extend({
                     !options.link.textContent.trim() && wysiwygUtils.isImg(this.lastElement)) {
                 // If the link contains a media without text, the link is
                 // editable in the media options instead.
-                this.snippetsMenu._mutex.exec(() => {
+                if (!options.noFocusUrl) {
                     // Wait for the editor panel to be fully updated.
-                    core.bus.trigger('activate_image_link_tool');
-                });
+                    this.snippetsMenu._mutex.exec(() => {
+                        // This is needed to focus the URL input when clicking
+                        // on the "Edit link" of the popover.
+                        core.bus.trigger('activate_image_link_tool');
+                    });
+                }
                 return;
             }
             if (options.forceOpen || !this.linkTools) {
@@ -1685,6 +1691,10 @@ const Wysiwyg = Widget.extend({
                     this.odooEditor.historyStash();
                     colorpicker = new ColorPaletteWidget(this, {
                         excluded: ['transparent_grayscale'],
+                        // TODO remove me in master: editable is just a
+                        // duplicate of $editable, should be reviewed with OWL
+                        // later anyway.
+                        editable: this.odooEditor.editable,
                         $editable: $(this.odooEditor.editable), // Our parent is the root widget, we can't retrieve the editable section from it...
                         selectedColor: selectedColor,
                         selectedTab: weUtils.isColorGradient(selectedColor) ? 'gradients' : 'theme-colors',
@@ -1905,15 +1915,6 @@ const Wysiwyg = Widget.extend({
             selection.addRange(range);
             // Always hide the unlink button on media.
             this.toolbar.$el.find('#unlink').toggleClass('d-none', true);
-            // Show the floatingtoolbar on the topleft of the media.
-            if (this.odooEditor.autohideToolbar && !this.odooEditor.isMobile) {
-                const imagePosition = this.lastMediaClicked.getBoundingClientRect();
-                this.toolbar.$el.css({
-                    visibility: 'visible',
-                    top: imagePosition.top + 10 + 'px',
-                    left: imagePosition.left + 10 + 'px',
-                });
-            }
             // Toggle the 'active' class on the active image tool buttons.
             for (const button of this.toolbar.$el.find('#image-shape div, #fa-spin')) {
                 button.classList.toggle('active', $(e.target).hasClass(button.id));
@@ -2526,7 +2527,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _getInitialHistoryId: function (value) {
-        const matchId = value.match(/data-last-history-steps="([0-9,]+)"/);
+        const matchId = value.match(/data-last-history-steps="(?:[0-9]+,)*([0-9]+)"/);
         return matchId && matchId[1];
     },
     /**
@@ -2580,10 +2581,10 @@ const Wysiwyg = Widget.extend({
             this.odooEditor.historyReset();
             return;
         }
-        this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.setValue(value);
-        this.odooEditor.historyReset();
         this.setupCollaboration(collaborationChannel);
+        this.odooEditor.collaborationSetClientId(this._currentClientId);
+        this.odooEditor.historyReset();
         // Wait until editor is focused to join the peer to peer network.
         this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
         const initialHistoryId = value && this._getInitialHistoryId(value);

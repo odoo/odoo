@@ -105,12 +105,12 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
             self.assertEqual(self.hr_partner.im_status, 'leave_offline')
 
     def test_search_absent_employee(self):
-        present_employees = self.env['hr.employee'].search([('is_absent', '!=', 'True')])
-        absent_employees = self.env['hr.employee'].search([('is_absent', '=', 'True')])
+        present_employees = self.env['hr.employee'].search([('is_absent', '!=', True)])
+        absent_employees = self.env['hr.employee'].search([('is_absent', '=', True)])
         today_date = datetime.utcnow().date()
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
-            ('state', 'not in', ['cancel', 'refuse']),
+            ('state', '=', 'validate'),
             ('date_from', '<=', today_date),
             ('date_to', '>=', today_date),
         ])

@@ -133,7 +133,8 @@
         @param {integer} [options.selectedMessageID]
     -->
     <t t-name="im_livechat.legacy.mail.widget.Thread.Message">
-        <div t-if="!message.isEmpty()" t-att-class="'o_thread_message o_PublicLivechatMessage ' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion ' : ' o_mail_not_discussion ') + (message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '')">
+        <div t-if="!message.isEmpty()" t-att-class="'o_thread_message o_PublicLivechatMessage ' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion ' : ' o_mail_not_discussion ') + (message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '')"
+            t-att-data-message-id="message.getID()">
             <div t-if="options.displayAvatars" class="o_thread_message_sidebar">
                 <t t-if="message.hasAuthor()">
                     <div t-if="displayAuthorMessages[message.getID()]" class="o_thread_message_sidebar_image">

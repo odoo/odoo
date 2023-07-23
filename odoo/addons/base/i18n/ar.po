@@ -584,6 +584,12 @@ msgid ""
 "and configs.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"يتيح هذا التطبيق لأمين الصندوق طباعة تقرير مبيعات X و Z\n"
+"لجلسة محددة أو تفاصيل المبيعات لعدة جلسات\n"
+"وتهيئة الإعدادات.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
@@ -750,6 +756,17 @@ msgid ""
 "        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
 "    "
 msgstr ""
+"\n"
+"        Chart of Accounts (COA) Template for Latvia's Accounting.\n"
+"        This module also includes:\n"
+"        * Tax groups,\n"
+"        * Most common Latvian Taxes,\n"
+"        * Fiscal positions,\n"
+"        * Latvian bank list.\n"
+"\n"
+"        author is Allegro IT (visit for more information https://www.allegro.lv)\n"
+"        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -1268,6 +1285,11 @@ msgid ""
 "    the account.move form view. If this field is set, it is then read when exporting electronic invoicing formats.\n"
 "    "
 msgstr ""
+"\n"
+"    Some Luxembourg public institutions do not have a VAT number but have been assigned an arbitrary number \n"
+"    (see: https://pch.gouvernement.lu/fr/peppol.html). Thus, this module adds the Peppol Identifier field on \n"
+"    the account.move form view. If this field is set, it is then read when exporting electronic invoicing formats.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -4838,6 +4860,9 @@ msgid ""
 "This is the base module to manage the accounting chart for Estonia in Odoo.\n"
 "    "
 msgstr ""
+"\n"
+"This is the base module to manage the accounting chart for Estonia in Odoo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -6014,6 +6039,19 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"\n"
+"دمج Transifex\n"
+"=====================\n"
+"سيضيف هذا التطبيق رابطاً إلى مشروع Transifex في نافذة عرض الترجمة.\n"
+"الغرض من هذا التطبيق هو تسريع عملية الترجمة للتطبيقات الرئيسية.\n"
+"\n"
+"حتى يعمل، يستخدم أودو ملفات تهيئة Transifex `.tx/config` لرصد\n"
+"مصدر المشروع. لن تتم ترجمة التطبيقات المخصصة (التطبيقات غير المنشورة على\n"
+"مشروع Transifex الرئيسي).\n"
+"\n"
+"يجب تفعيل اللغة التي يحاول المستخدم ترجمتها في مشروع\n"
+"Transifex.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp
@@ -9379,7 +9417,7 @@ msgstr "أستراليا "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australia - Accounting"
-msgstr ""
+msgstr "Australia - Accounting"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -10979,6 +11017,13 @@ msgid "Compute"
 msgstr "احتساب "
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "لا يمكن أن تعتمد طريقة الاحتساب على حقل 'المعرف' "
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "Computed fields are defined with the fields\n"
@@ -12005,7 +12050,7 @@ msgstr "DLE 26 110 x 220 مم"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_daily_sales_reports
 msgid "Daily X and Z sales reports of a Point of Sale session"
-msgstr ""
+msgstr "تقارير مبيعات X و Z يومية في جلسة نقطة البيع "
 
 #. module: base
 #. odoo-python
@@ -13258,7 +13303,7 @@ msgstr "استونيا"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ee
 msgid "Estonia - Accounting"
-msgstr ""
+msgstr "Estonia - Accounting"
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -16076,7 +16121,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "معامل 'تجميع حسب' غير صالح"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -16974,7 +17024,7 @@ msgstr "لاتفيا"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lv
 msgid "Latvia - Accounting"
-msgstr ""
+msgstr "Latvia - Accounting"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -17288,7 +17338,7 @@ msgstr "لوكسمبورغ - المحاسبة "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_peppol_id
 msgid "Luxembourg - Peppol Identifier"
-msgstr ""
+msgstr "Luxembourg - Peppol Identifier"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
@@ -18434,7 +18484,7 @@ msgstr "موزامبيق"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mz
 msgid "Mozambique - Accounting"
-msgstr ""
+msgstr "Mozambique - Accounting"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
@@ -22138,7 +22188,7 @@ msgstr "الدفعات - الحساب"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment_invoice_online_payment_patch
 msgid "Payment - Account / Invoice Online Payment Patch"
-msgstr ""
+msgstr "الدفع - الحساب / تصحيح فواتير الدفع عبر الإنترنت "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
@@ -22398,7 +22448,7 @@ msgstr "نقطة البيع - الكوبونات والولاء "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_daily_sales_reports
 msgid "Point of Sale Daily Sales Reports"
-msgstr ""
+msgstr "تقارير المبيعات اليومية لنقطة البيع "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -23225,7 +23275,7 @@ msgstr "ضرائب مستخدمي الطرق "
 #. module: base
 #: model:res.country,vat_label:base.cl
 msgid "RUT"
-msgstr ""
+msgstr "RUT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__raleway
@@ -25988,7 +26038,7 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "The following languages are not activated: %(missing_names)s"
-msgstr ""
+msgstr "اللغات التالية غير مفعلة: %(missing_names)s"
 
 #. module: base
 #. odoo-python
@@ -27100,7 +27150,7 @@ msgstr "الترجمات"
 #, python-format
 msgid ""
 "Translations for model translated fields only accept falsy values and str"
-msgstr ""
+msgstr "الترجمات للحقول المترجمة في النموذج تقبل فقط قيم falsy و str "
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -27328,6 +27378,13 @@ msgstr "تعذّر إيجاد Wkhtmltopdf في نظامك. لا يمكن إنش�
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -27520,7 +27577,7 @@ msgstr "اسم الحقل '%s' غير معروف للحقل المرتبط به 
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Unknown model name '%s' in Related Model"
-msgstr ""
+msgstr "اسم النموذج '%s' غير معروف للنموذج المرتبط به "
 
 #. module: base
 #. odoo-python
@@ -28724,6 +28781,15 @@ msgid "You can not create recursive tags."
 msgstr "لا يمكنك إنشاء علامات تصنيف متداخلة. "
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login !"
 msgstr "لا يمكن لمستخدمين استخدام نفس بيانات الدخول!"
@@ -28850,6 +28916,12 @@ msgstr "لا يمكنك تعطيل المستخدم المُسجل منه دخو
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "لا يمكنك حذف مجموعة مرتبطة بحقل إعدادات. "
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""

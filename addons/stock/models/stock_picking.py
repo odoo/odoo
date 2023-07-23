@@ -32,7 +32,7 @@ class PickingType(models.Model):
     sequence = fields.Integer('Sequence', help="Used to order the 'All Operations' kanban view")
     sequence_id = fields.Many2one(
         'ir.sequence', 'Reference Sequence',
-        check_company=True, copy=False)
+        check_company=True, copy=True)
     sequence_code = fields.Char('Sequence Prefix', required=True)
     default_location_src_id = fields.Many2one(
         'stock.location', 'Default Source Location',
@@ -727,6 +727,8 @@ class Picking(models.Model):
                 "company_id": self.company_id,
             })
             for move in (self.move_ids | self.move_ids_without_package):
+                if not move.product_id:
+                    continue
                 move.description_picking = move.product_id._get_description(move.picking_type_id)
 
         if self.partner_id and self.partner_id.picking_warn:
@@ -949,7 +951,7 @@ class Picking(models.Model):
             for pack in origin_packages:
                 if picking._check_move_lines_map_quant_package(pack):
                     package_level_ids = picking.package_level_ids.filtered(lambda pl: pl.package_id == pack)
-                    move_lines_to_pack = picking.move_line_ids.filtered(lambda ml: ml.package_id == pack and not ml.result_package_id)
+                    move_lines_to_pack = picking.move_line_ids.filtered(lambda ml: ml.package_id == pack and not ml.result_package_id and ml.state not in ('done', 'cancel'))
                     if not package_level_ids:
                         self.env['stock.package_level'].create({
                             'picking_id': picking.id,
@@ -961,9 +963,9 @@ class Picking(models.Model):
                         })
                         # Propagate the result package in the next move for disposable packages only.
                         if pack.package_use == 'disposable':
-                            move_lines_to_pack.write({
-                                'result_package_id': pack.id,
-                            })
+                            move_lines_to_pack.with_context(
+                                bypass_reservation_update=self._get_entire_pack_location_dest(move_lines_to_pack)
+                            ).write({'result_package_id': pack.id})
                     else:
                         move_lines_in_package_level = move_lines_to_pack.filtered(lambda ml: ml.move_id.package_level_id)
                         move_lines_without_package_level = move_lines_to_pack - move_lines_in_package_level

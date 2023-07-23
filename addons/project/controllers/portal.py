@@ -412,7 +412,8 @@ class ProjectCustomerPortal(CustomerPortal):
                     grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks_project_allow_milestone, itemgetter(group))]
 
                     if not grouped_tasks:
-                        grouped_tasks = [tasks_no_milestone]
+                        if tasks_no_milestone:
+                            grouped_tasks = [tasks_no_milestone]
                     else:
                         if grouped_tasks[len(grouped_tasks) - 1][0].milestone_id and tasks_no_milestone:
                             grouped_tasks.append(tasks_no_milestone)
@@ -422,7 +423,7 @@ class ProjectCustomerPortal(CustomerPortal):
                 else:
                     grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
             else:
-                grouped_tasks = [tasks]
+                grouped_tasks = [tasks] if tasks else []
 
             task_states = dict(Task_sudo._fields['kanban_state']._description_selection(request.env))
             if sortby == 'status':

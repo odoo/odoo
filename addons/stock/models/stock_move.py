@@ -486,7 +486,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         def key_virtual_available(move, incoming=False):
             warehouse_id = move.location_dest_id.warehouse_id.id if incoming else move.location_id.warehouse_id.id
-            return warehouse_id, max(move.date, now)
+            return warehouse_id, max(move.date or now, now)
 
         # Prefetch efficiently virtual_available for _is_consuming draft move.
         prefetch_virtual_available = defaultdict(set)
@@ -1625,6 +1625,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                             'lot_id': lot_id.id,
                             'lot_name': lot_id.name,
                             'owner_id': owner_id.id,
+                            'package_id': package_id.id,
                         })
                         move_line_vals_list.append(move_line_vals)
                         missing_reserved_quantity -= qty_added
@@ -1711,7 +1712,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         StockMove.browse(partially_available_moves_ids).write({'state': 'partially_available'})
         StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
         if not self.env.context.get('bypass_entire_pack'):
-            self.mapped('picking_id')._check_entire_pack()
+            self.picking_id._check_entire_pack()
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
 
     def _action_cancel(self):

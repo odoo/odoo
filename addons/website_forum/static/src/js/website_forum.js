@@ -137,6 +137,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 },
                 resizable: true,
                 userGeneratedContent: true,
+                height: 350,
             };
             options.allowCommandLink = hasFullEdit;
             options.allowCommandImage = hasFullEdit;
@@ -186,7 +187,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         let $title = $form.find('input[name=post_name]');
         let $textarea = $form.find('textarea[name=content]');
         // It's not really in the textarea that the user write at first
-        let textareaContent = $form.find('.o_wysiwyg_textarea_wrapper').text().trim();
+        const fillableTextAreaEl = $form[0].querySelector(".o_wysiwyg_textarea_wrapper");
+        const isTextAreaFilled = fillableTextAreaEl &&
+            (fillableTextAreaEl.innerText.trim() || fillableTextAreaEl.querySelector("img"));
 
         if ($title.length && $title[0].required) {
             if ($title.val()) {
@@ -200,7 +203,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // Because the textarea is hidden, we add the red or green border to its container
         if ($textarea[0] && $textarea[0].required) {
             let $textareaContainer = $form.find('.o_wysiwyg_textarea_wrapper');
-            if (!textareaContent.length) {
+            if (!isTextAreaFilled) {
                 $textareaContainer.addClass('border border-danger rounded-top');
                 validForm = false;
             } else {

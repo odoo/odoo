@@ -5,7 +5,7 @@
 
 {
     'name': 'Netherlands - Accounting',
-    'version': '3.0',
+    'version': '3.1',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'Onestein',
     'website': 'http://www.onestein.eu',
@@ -28,6 +28,7 @@
         'data/account_chart_template_data.xml',
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
+        'views/res_config_settings_view.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

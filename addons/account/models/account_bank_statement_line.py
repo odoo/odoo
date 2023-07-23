@@ -693,6 +693,9 @@ class AccountBankStatementLine(models.Model):
                 suspense_lines += line
             else:
                 other_lines += line
+        if not liquidity_lines:
+            liquidity_lines = self.move_id.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_cash')
+            other_lines -= liquidity_lines
         return liquidity_lines, suspense_lines, other_lines
 
     # SYNCHRONIZATION account.bank.statement.line <-> account.move
@@ -740,8 +743,12 @@ class AccountBankStatementLine(models.Model):
                         'amount': liquidity_lines.balance,
                     })
 
-                if len(suspense_lines) == 1:
-
+                if len(suspense_lines) > 1:
+                    raise UserError(_(
+                        "%s reached an invalid state regarding its related statement line.\n"
+                        "To be consistent, the journal entry must always have exactly one suspense line.", st_line.move_id.display_name
+                    ))
+                elif len(suspense_lines) == 1:
                     if journal_currency and suspense_lines.currency_id == journal_currency:
 
                         # The suspense line is expressed in the journal's currency meaning the foreign currency

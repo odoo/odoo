@@ -368,6 +368,7 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <tree string="Journal Entries" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
+                    <field name="company_currency_id" invisible="1"/>
                     <field name="made_sequence_hole" invisible="1"/>
                     <field name="date"/>
                     <field name="name" decoration-danger="made_sequence_hole"/>
@@ -881,6 +882,7 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id"
                                                optional="show"
+                                               widget="many2one_barcode"
                                                domain="
                                                     context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')
                                                     and [('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]

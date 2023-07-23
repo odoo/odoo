@@ -57,6 +57,59 @@ describe('List', () => {
                                 '<ul><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                         });
                     });
+                    it('should turn an empty paragraph of multiple table cells into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleUnorderedList,
+                            contentAfterEdit: unformat(`
+                                <table class="table table-bordered o_selected_table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="o_selected_td">[<ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[]<ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 describe('Remove', () => {
                     it('should turn an empty list into a paragraph', async () => {
@@ -135,6 +188,59 @@ describe('List', () => {
                                 </ul>`),
                         });
                     });
+                    it('should turn an list of multiple table cells into a empty paragraph', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleUnorderedList,
+                            contentAfterEdit: unformat(`
+                                <table class="table table-bordered o_selected_table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="o_selected_td">[<p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[]<p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 describe('Transform', () => {
                     it('should turn an empty ordered list into an unordered list', async () => {
@@ -192,6 +298,59 @@ describe('List', () => {
                                 '<ol><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ol>',
                         });
                     });
+                    it('should turn an empty paragraph of multiple table cells into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleOrderedList,
+                            contentAfterEdit: unformat(`
+                                <table class="table table-bordered o_selected_table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="o_selected_td">[<ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[]<ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 describe('Remove', () => {
                     it('should turn an empty list into a paragraph', async () => {
@@ -229,6 +388,59 @@ describe('List', () => {
                             stepFunction: toggleOrderedList,
                             contentAfter:
                                 '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
+                        });
+                    });
+                    it('should turn an list of multiple table cells into a empty paragraph', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleOrderedList,
+                            contentAfterEdit: unformat(`
+                                <table class="table table-bordered o_selected_table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="o_selected_td">[<p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[]<p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
                         });
                     });
                 });
@@ -399,6 +611,65 @@ describe('List', () => {
                             },
                         });
                     });
+                    it('should turn an empty paragraph of multiple table cells into a checklist', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: editor => {
+                                toggleCheckList(editor);
+                                for (const li of editor.editable.querySelectorAll('li[id^=checkId-]')) {
+                                    li.removeAttribute('id');
+                                }
+                            },
+                            contentAfterEdit: unformat(`
+                                <table class="table table-bordered o_selected_table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="o_selected_td">[<ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[]<ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 describe('Remove', () => {
                     it('should turn an empty list into a paragraph', async () => {
@@ -481,6 +752,59 @@ describe('List', () => {
                                 </ul>`),
                         });
                     });
+                    it('should turn an list of multiple table cells into a empty paragraph', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleCheckList,
+                            contentAfterEdit: unformat(`
+                                <table class="table table-bordered o_selected_table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="o_selected_td">[<p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p></td>
+                                            <td class="o_selected_td"><p><br></p>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[]<p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
             });
         });
@@ -553,6 +877,13 @@ describe('List', () => {
                             contentAfter: '<ul><li>a[b</li><li>cd</li><li>e]f</li><li>gh</li></ul>',
                         });
                     });
+                    it('should not turn a non-editable paragraph into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>[ab</p><p contenteditable="false">cd</p><p>ef]</p>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: '<ul><li>[ab</li></ul><p contenteditable="false">cd</p><ul><li>ef]</li></ul>',
+                        });
+                    });
                 });
                 describe('Remove', () => {
                     it('should turn a list into a paragraph', async () => {
@@ -581,6 +912,15 @@ describe('List', () => {
                             contentBefore: '<p>ab</p><ul><li>cd</li><li>ef[gh]ij</li></ul>',
                             stepFunction: toggleUnorderedList,
                             contentAfter: '<p>ab</p><ul><li>cd</li></ul><p>ef[gh]ij</p>',
+                        });
+                    });
+                    it('should not turn a non-editable list into a paragraph', async () => {
+                        it('should not turn a non-editable list into a paragraph', async () => {
+                            await testEditor(BasicEditor, {
+                                contentBefore: '<ul><li>[ab</li></ul><p contenteditable="false">cd</p><ul><li>ef]</li></ul>',
+                                stepFunction: toggleUnorderedList,
+                                contentAfter: '<p>[ab</p><p contenteditable="false">cd</p><p>ef]</p>',
+                            });
                         });
                     });
                 });
@@ -7445,6 +7785,33 @@ describe('List', () => {
                         </ul>`),
                 });
             });
+            it('should not intent a non-editable list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <p>[before</p>
+                    <ul>
+                        <li>a</li>
+                    </ul>
+                    <ul contenteditable="false">
+                        <li>a</li>
+                    </ul>
+                    <p>after]</p>`),
+                    stepFunction: indentList,
+                    contentAfter: unformat(`
+                    <p>[before</p>
+                    <ul>
+                        <li class="oe-nested">
+                            <ul>
+                                <li>a</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul contenteditable="false">
+                        <li>a</li>
+                    </ul>
+                    <p>after]</p>`),
+                });
+            });
         });
     });
     describe('outdent', () => {
@@ -7745,6 +8112,33 @@ describe('List', () => {
                             <li>h]</li>
                             <li>i</li>
                         </ul>`),
+                });
+            });
+            it('should not outdent a non-editable list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <p>[before</p>
+                    <ul>
+                        <li class="oe-nested">
+                            <ul>
+                                <li>a</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul contenteditable="false">
+                        <li>a</li>
+                    </ul>
+                    <p>after]</p>`),
+                    stepFunction: outdentList,
+                    contentAfter: unformat(`
+                    <p>[before</p>
+                    <ul>
+                        <li>a</li>
+                    </ul>
+                    <ul contenteditable="false">
+                        <li>a</li>
+                    </ul>
+                    <p>after]</p>`),
                 });
             });
         });

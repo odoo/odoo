@@ -87,6 +87,8 @@ class WebsiteRewrite(models.Model):
                     raise ValidationError(_('"URL to" can not be empty.'))
                 elif not rewrite.url_to.startswith('/'):
                     raise ValidationError(_('"URL to" must start with a leading slash.'))
+                if not rewrite.url_from:
+                    raise ValidationError(_('"URL from" can not be empty.'))
                 for param in re.findall('/<.*?>', rewrite.url_from):
                     if param not in rewrite.url_to:
                         raise ValidationError(_('"URL to" must contain parameter %s used in "URL from".') % param)

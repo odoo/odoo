@@ -4,7 +4,7 @@
 from werkzeug import urls
 
 from odoo import api, fields, models, _
-
+from odoo.exceptions import UserError
 
 class RecruitmentSource(models.Model):
     _inherit = 'hr.recruitment.source'
@@ -34,6 +34,9 @@ class Applicant(models.Model):
             name = '%s - %s' % (values['partner_name'], applicant_job) if applicant_job else _("%s's Application", values['partner_name'])
             values.setdefault('name', name)
         if values.get('job_id'):
+            job = self.env['hr.job'].browse(values.get('job_id'))
+            if not job.sudo().website_published:
+                raise UserError(_("You cannot apply for this job."))
             stage = self.env['hr.recruitment.stage'].sudo().search([
                 ('fold', '=', False),
                 '|', ('job_ids', '=', False), ('job_ids', '=', values['job_id']),

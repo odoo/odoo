@@ -7,12 +7,12 @@
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2022
 # grazziano <gra.negocia@gmail.com>, 2022
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
-# Marcos Rodrigues, 2022
 # Felipe Leal Coutinho <felipe@felipelc.com>, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2023
 # Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -491,7 +491,7 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                    If you believe that it is an error, please contact the website administrator."
 msgstr ""
-"<strong>Nenhuma opção de pagamento adequada foi encontrada.</strong><br/>\n"
+"<strong>Não foi possível encontrar uma opção de pagamento adequada.</strong><br/>\n"
 "                                    Se você acredita que isso é um erro, entre em contato com o administrador do site."
 
 #. module: website_sale
@@ -786,7 +786,7 @@ msgstr "Adicionar ao carrinho"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Add to Cart Button"
-msgstr "Adicionar botão de carrinho"
+msgstr "Botão de adicionar ao carrinho"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -1718,8 +1718,7 @@ msgstr ""
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Se não tem acesso, pule esses dados para o e-mail com o Resumo do Usuário "
-"(User´s Digest)"
+"Se não tem acesso, pule esses dados para o e-mail com o resumo do usuário"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2101,6 +2100,15 @@ msgstr "Checkout instantâneo ao invés de adicionar ao carrinho"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "E-mail inválido! Por favor insira um endereço de e-mail válido."
 
@@ -2308,6 +2316,8 @@ msgstr "Imagem principal"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet"
 msgstr ""
+"Gerenciar promoções, cupons, cartões de fidelidade, cartões-presente e "
+"eWallet"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2540,7 +2550,7 @@ msgstr "Um produto pode ter atributos diferentes (tamanho, cor etc.)"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
 msgid "Online Sales"
-msgstr "Vendas Online"
+msgstr "Vendas online"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
@@ -2716,12 +2726,12 @@ msgstr "Provedores de serviços de pagamento"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
 msgid "Payment Tokens"
-msgstr "Tokens de Pagamentos"
+msgstr "Tokens de pagamentos"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
-msgstr "Transações de Pagamento"
+msgstr "Transações de pagamento"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2745,7 +2755,7 @@ msgstr "Telefone"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Pills"
-msgstr "Comprimidos"
+msgstr "Pílulas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -2796,7 +2806,7 @@ msgstr "Mês Anterior"
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Week"
-msgstr "Próxima Semana"
+msgstr "Semana anterior"
 
 #. module: website_sale
 #. odoo-python
@@ -2993,7 +3003,7 @@ msgstr "Etiqueta do produto"
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__product_tag_ids
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_tags
 msgid "Product Tags"
-msgstr "Tags do produto"
+msgstr "Marcadores de produto"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
@@ -3243,12 +3253,12 @@ msgstr "Produtos visualizados recentemente"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email Sent"
-msgstr "Enviar E-mail de Recuperação"
+msgstr "E-mail de recuperação enviado"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
-msgstr "E-mail de Recuperação para Enviar"
+msgstr "E-mail de recuperação a enviar"
 
 #. module: website_sale
 #. odoo-python
@@ -3312,7 +3322,7 @@ msgstr "Rever Pedido"
 #: model:ir.model.fields,field_description:website_sale.field_product_tag__ribbon_id
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 msgid "Ribbon"
-msgstr "Fita"
+msgstr "Faixa"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
@@ -3858,8 +3868,7 @@ msgstr "A URL completa para acessar o documento através do site."
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
 msgstr ""
-"A combinação fornecida não existe, portanto, não pode ser adicionada ao "
-"carrinho."
+"Essa combinação não existe, portanto, não pode ser adicionada ao carrinho."
 
 #. module: website_sale
 #. odoo-python
@@ -3867,8 +3876,7 @@ msgstr ""
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
 msgstr ""
-"O produto fornecido não existe, portanto, não pode ser adicionado ao "
-"carrinho."
+"Este produto não existe, portanto, não pode ser adicionado ao carrinho."
 
 #. module: website_sale
 #. odoo-python
@@ -4255,7 +4263,7 @@ msgstr "Estamos aguardando confirmação do banco ou do provedor de pagamento"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Website"
-msgstr "Website"
+msgstr "Site"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
@@ -4283,7 +4291,7 @@ msgstr "Loja do site"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr "Filtro de Snippet do Site"
+msgstr "Filtro de bloco de código do site"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
@@ -4312,7 +4320,7 @@ msgstr "Palavras-chave do Site"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_title
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_title
 msgid "Website meta title"
-msgstr "Meta título site"
+msgstr "Metatítulo do site"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_og_img
@@ -4434,7 +4442,7 @@ msgid ""
 "Your Dynamic Snippet will be displayed here...\n"
 "                                This message is displayed because youy did not provide both a filter and a template to use."
 msgstr ""
-"Seu snippet dinâmico será exibido aqui...\n"
+"Seu bloco de código dinâmico será exibido aqui...\n"
 "                                Esta mensagem é exibida porque você não forneceu ambos um filtro e um modelo a ser utilizado."
 
 #. module: website_sale
@@ -4491,13 +4499,13 @@ msgstr "ex., abajur, lixeira"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #, python-format
 msgid "eCommerce"
-msgstr "eCommerce"
+msgstr "e-Commerce"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 msgid "eCommerce Categories"
-msgstr "Categorias de Comércio Eletrônico"
+msgstr "Categorias do e-Commerce"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view

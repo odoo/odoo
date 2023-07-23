@@ -196,7 +196,7 @@ class Contract(models.Model):
         for contract in contract_ids:
             next_contract = self.search([
                 ('employee_id', '=', contract.employee_id.id),
-                ('state', 'not in', ['cancel', 'new']),
+                ('state', 'not in', ['cancel', 'draft']),
                 ('date_start', '>', contract.date_start)
             ], order="date_start asc", limit=1)
             if next_contract:

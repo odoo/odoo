@@ -2089,7 +2089,7 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
-"Event Templates combineren configuraties die je vaak gebruikt en zijn\n"
+"Evenementsjablonen combineren configuraties die je vaak gebruikt en zijn\n"
 "                meestal gebaseerd op het soort evenementen dat je organiseert (bijv. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", enz.)."
 
@@ -3009,7 +3009,7 @@ msgstr "Aantal fouten"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Aantal berichten die actie vereisen"
 
 #. module: event
@@ -3636,7 +3636,7 @@ msgstr "Dit evenement is geannuleerd"
 #. module: event
 #: model:event.stage,description:event.event_stage_announced
 msgid "The event has been publicly announced"
-msgstr "Het evenement is publiekelijk bekend gemaakt"
+msgstr "Het evenement is openbaar gemaakt"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
@@ -3687,6 +3687,16 @@ msgid ""
 msgstr ""
 "De stopdatum kan niet vroeger zijn dan de startdatum. Controleer ticket "
 "%(ticket_name)s"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
+"Het sjabloon waarnaar verwezen wordt moet komen van het model "
+"%(model_name)s."
 
 #. module: event
 #. odoo-python

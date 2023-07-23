@@ -758,7 +758,7 @@ class WebsiteSlides(WebsiteProfile):
             return request.redirect(slide.channel_id.website_url)
 
         if slide.can_self_mark_completed and not slide.user_has_completed \
-           and slide.channel_id.channel_type == 'training':
+           and slide.channel_id.channel_type == 'training' and slide.slide_category != 'video':
             self._slide_mark_completed(slide)
         else:
             self._set_viewed_slide(slide)
@@ -1306,7 +1306,7 @@ class WebsiteSlides(WebsiteProfile):
 
         try:
             slide = request.env['slide.slide'].browse(slide_id)
-            if not slide.exists():
+            if not slide.exists() or not slide.sudo().active:
                 raise werkzeug.exceptions.NotFound()
 
             referer_url = request.httprequest.headers.get('Referer', '')

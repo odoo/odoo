@@ -8,6 +8,7 @@
 # Martin Trigaux, 2022
 # Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -355,7 +356,7 @@ msgstr "Todas as etiquetas de produtos"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr "Todas as variantes de produtos que usam essa etiqueta"
+msgstr "Todas as variantes de produtos que usam esse marcador"
 
 #. module: product
 #. odoo-python
@@ -1376,6 +1377,10 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Em Preço Padrão & AVCO: valor do produto (calculado automaticamente em AVCO).\n"
+"Em PEPS \"FIFO\": valor da próxima unidade que sairá do estoque (calculado automaticamente).\n"
+"Usado para avaliar o produto quando o custo de compra não é conhecido (por exemplo, ajuste de estoque).\n"
+"Usado para calcular margens em ordens de venda."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1739,8 +1744,8 @@ msgstr "Número de Erros"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requer uma ação"
+msgid "Number of messages requiring action"
+msgstr "Número de mensagens que requerem ação"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
@@ -1831,7 +1836,7 @@ msgstr "Porcentagem de Preço"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr "Comprimidos"
+msgstr "Pílulas"
 
 #. module: product
 #. odoo-javascript
@@ -2148,7 +2153,7 @@ msgstr "Etiqueta do produto"
 #: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
-msgstr "Tags do produto"
+msgstr "Marcadores de produto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
@@ -2580,7 +2585,7 @@ msgstr "Caixa"
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Lista de Preços para Fornecedor"
+msgstr "Lista de preços do fornecedor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__name

@@ -1376,6 +1376,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Pre každú prílohu musí byť poskytnutý prístupový token."
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -6570,8 +6577,8 @@ msgstr "Počet chýb"
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet správ, ktoré vyžadujú akciu"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
@@ -9005,6 +9012,21 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Príloha %s neexistuje alebo nemáte k nej prístupové práva."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
@@ -9921,6 +9943,14 @@ msgstr ""
 "Použitie vlastného emailového servera je nevyhnutné pre príjem/odosielanie "
 "mailov vo verzii Community a Enterprise. Užívatelia online profitujú z "
 "pripraveného servera (@moja_spolocnost.odoo.com)."
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript

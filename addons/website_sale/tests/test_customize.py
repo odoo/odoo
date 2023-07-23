@@ -401,3 +401,46 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         product_template.product_variant_ids[-1].active = False
 
         self.start_tour("/", 'tour_shop_archived_variant_multi', login="portal")
+
+    def test_09_pills_variant(self):
+        """The goal of this test is to make sure that you can click anywhere on a pill
+        and still trigger a variant change. The radio input be visually hidden.
+
+        Using "portal" to have various users in the tests.
+        """
+
+        attribute_1 = self.env['product.attribute'].create([
+            {
+                'name': 'Size',
+                'create_variant': 'always',
+                'display_type': 'pills',
+            },
+        ])
+
+        attribute_values = self.env['product.attribute.value'].create([
+            {
+                'name': 'Large',
+                'attribute_id': attribute_1.id,
+                'sequence': 1,
+            },
+            {
+                'name': 'Small',
+                'attribute_id': attribute_1.id,
+                'sequence': 2,
+            },
+        ])
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product 2',
+            'is_published': True,
+        })
+
+        self.env['product.template.attribute.line'].create([
+            {
+                'attribute_id': attribute_1.id,
+                'product_tmpl_id': product_template.id,
+                'value_ids': [(6, 0, attribute_values.ids)],
+            },
+        ])
+
+        self.start_tour("/", 'test_09_pills_variant', login="portal")

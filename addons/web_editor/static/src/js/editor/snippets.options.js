@@ -1606,11 +1606,25 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.options.dataAttributes.selectedTab) {
             options.selectedTab = this.options.dataAttributes.selectedTab;
         }
-        const wysiwyg = this.getParent().options.wysiwyg;
+
+        // TODO see comment below: retrieving wysiwyg here is not needed
+        // anymore so this can be removed in master. Meanwhile, this is patched
+        // in an ugly way so that custo work consistently if they use
+        // `ownerDocument` or `editable` from `options`.
+        let optionWidget = this;
+        do {
+            optionWidget = optionWidget.getParent();
+        } while (optionWidget && !optionWidget.options.wysiwyg);
+        const wysiwyg = optionWidget && optionWidget.options.wysiwyg;
         if (wysiwyg) {
+            // TODO remove both of these in master: options.ownerDocument has
+            // just never been used and options.editable is a duplicate of
+            // options.$editable which is retrieved by the ColorPaletteWidget
+            // instance itself in case it is not received anyway.
             options.ownerDocument = wysiwyg.el.ownerDocument;
             options.editable = wysiwyg.$editable[0];
         }
+
         const oldColorPalette = this.colorPalette;
         this.colorPalette = new ColorPaletteWidget(this, options);
         if (oldColorPalette) {
@@ -2535,7 +2549,10 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     },
 });
 
-const m2oRpcCache = {};
+let m2oRpcCache = {};
+const clearM2oRpcCache = () => {
+    m2oRpcCache = {};
+};
 const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     className: (SelectUserValueWidget.prototype.className || '') + ' o_we_many2one',
     events: Object.assign({}, SelectUserValueWidget.prototype.events, {
@@ -2695,7 +2712,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             method: 'name_search',
             kwargs: {
                 name: needle,
-                args: this.options.domain,
+                args: await this._getSearchDomain(),
                 operator: "ilike",
                 limit: this.options.limit + 1,
             },
@@ -2766,6 +2783,14 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         this.waitingForSearch = false;
         this.afterSearch.forEach(cb => cb());
         this.afterSearch = [];
+    },
+    /**
+     * Returns the domain to use for the search.
+     *
+     * @private
+     */
+    async _getSearchDomain() {
+        return this.options.domain;
     },
     /**
      * Returns the display name for a given record.
@@ -3505,7 +3530,6 @@ const SnippetOptionWidget = Widget.extend({
      *
      * @param {string} name - an identifier for a type of update
      * @param {*} data
-     * @returns {Promise}
      */
     notify: function (name, data) {
         if (name === 'target') {
@@ -3779,6 +3803,7 @@ const SnippetOptionWidget = Widget.extend({
                 }
 
                 const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
+                const borderWidthCssProps = weUtils.CSS_SHORTHANDS['border-width'];
                 const cssValues = cssProps.map(cssProp => {
                     let value = styles.getPropertyValue(cssProp).trim();
                     if (cssProp === 'box-shadow') {
@@ -3787,6 +3812,11 @@ const SnippetOptionWidget = Widget.extend({
                         const color = values.find(s => !s.match(/^\d/));
                         values = values.join(' ').replace(color, '').trim();
                         value = `${color} ${values}${inset ? ' inset' : ''}`;
+                    }
+                    if (borderWidthCssProps.includes(cssProp) && value.endsWith('px')) {
+                        // Rounding value up avoids zoom-in issues.
+                        // Zoom-out issues are not an expected use case.
+                        value = `${Math.ceil(parseFloat(value))}px`;
                     }
                     return value;
                 });
@@ -5185,6 +5215,11 @@ registry.layout_column = SnippetOptionWidget.extend({
             // were marked as such as they were allowed to have bare content in
             // the first place.
             return this.$target.is('.s_allow_columns');
+        } else if (params.optionsPossibleValues.selectCount) {
+            // TODO in master: use the option `data-name` that will be added.
+            // Hide the selectCount widget if the `s_nb_column_fixed` class is
+            // on the row.
+            return !this.$target[0].querySelector(":scope > .row.s_nb_column_fixed");
         }
         return this._super(...arguments);
     },
@@ -6368,8 +6403,10 @@ registry.ImageTools = ImageHandlerOption.extend({
     async _loadImageInfo() {
         await this._super(...arguments);
         const img = this._getImg();
-        if (img.dataset.shape && img.dataset.mimetype !== 'image/svg+xml') {
-            img.dataset.originalMimetype = img.dataset.mimetype;
+        if (img.dataset.shape) {
+            if (img.dataset.mimetype !== "image/svg+xml") {
+                img.dataset.originalMimetype = img.dataset.mimetype;
+            }
             if (!this._isImageSupportedForProcessing(img)) {
                 delete img.dataset.shape;
                 delete img.dataset.shapeColors;
@@ -6377,9 +6414,12 @@ registry.ImageTools = ImageHandlerOption.extend({
                 delete img.dataset.originalMimetype;
                 return;
             }
-            // Image data-mimetype should be changed to SVG since loadImageInfo()
-            // will set the original attachment mimetype on it.
-            img.dataset.mimetype = 'image/svg+xml';
+            if (img.dataset.mimetype !== "image/svg+xml") {
+                // Image data-mimetype should be changed to SVG since
+                // loadImageInfo() will set the original attachment mimetype on
+                // it.
+                img.dataset.mimetype = "image/svg+xml";
+            }
         }
     },
     /**
@@ -6471,8 +6511,13 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
      */
     async _loadImageInfo() {
         this.img = new Image();
+        // In the case of a parallax, the background of the snippet is actually
+        // set on a child <span> and should be focused here. This is necessary
+        // because, at this point, the $target has not yet been updated in the
+        // notify() method ("option_update" event), although the event is
+        // properly fired from the parallax.
         const targetEl = this.$target[0].classList.contains("oe_img_bg")
-            ? this.$target[0] : this.$target[0].querySelector(".oe_img_bg");
+            ? this.$target[0] : this.$target[0].querySelector(":scope > .s_parallax_bg.oe_img_bg");
         if (targetEl) {
             Object.entries(targetEl.dataset).filter(([key]) =>
                 isBackgroundImageAttribute(key)).forEach(([key, value]) => {
@@ -6536,6 +6581,7 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
      * @private
      */
     async _onBackgroundChanged(ev, previewMode) {
+        ev.stopPropagation();
         if (!previewMode) {
             this.trigger_up('snippet_edition_request', {exec: async () => {
                 await this._autoOptimizeImage();
@@ -6934,6 +6980,21 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}"></we-colorpicker>`)[0]);
         });
 
+        // Inventory shape URLs per class.
+        const style = window.getComputedStyle(this.$target[0]);
+        const palette = [1, 2, 3, 4, 5].map(n => style.getPropertyValue(`--o-cc${n}-bg`)).join();
+        if (palette !== this._lastShapePalette) {
+            this._lastShapePalette = palette;
+            this._shapeBackgroundImagePerClass = {};
+            for (const styleSheet of this.$target[0].ownerDocument.styleSheets) {
+                for (const rule of [...styleSheet.cssRules]) {
+                    if (rule.selectorText && rule.selectorText.startsWith(".o_we_shape.")) {
+                        this._shapeBackgroundImagePerClass[rule.selectorText] = rule.style.backgroundImage;
+                    }
+                }
+            }
+        }
+
         uiFragment.querySelectorAll('we-select-pager we-button[data-shape]').forEach(btn => {
             const btnContent = document.createElement('div');
             btnContent.classList.add('o_we_shape_btn_content', 'position-relative', 'border-dark');
@@ -6947,7 +7008,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
 
             const {shape} = btn.dataset;
             const shapeEl = btnContent.querySelector('.o_we_shape');
-            shapeEl.classList.add(`o_${shape.replace(/\//g, '_')}`);
+            const shapeClassName = `o_${shape.replace(/\//g, '_')}`;
+            shapeEl.classList.add(shapeClassName);
+            // Match current palette.
+            const shapeBackgroundImage = this._shapeBackgroundImagePerClass[`.o_we_shape.${shapeClassName}`];
+            shapeEl.style.setProperty("background-image", shapeBackgroundImage);
             btn.append(btnContent);
         });
         return uiFragment;
@@ -8190,5 +8255,7 @@ return {
     // Other names for convenience
     Class: SnippetOptionWidget,
     registry: registry,
+
+    clearM2oRpcCache,
 };
 });

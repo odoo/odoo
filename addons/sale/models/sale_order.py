@@ -326,7 +326,9 @@ class SaleOrder(models.Model):
             order = order.with_company(order.company_id)
             if order.terms_type == 'html' and self.env.company.invoice_terms_html:
                 baseurl = html_keep_url(order._get_note_url() + '/terms')
+                context = {'lang': order.partner_id.lang or self.env.user.lang}
                 order.note = _('Terms & Conditions: %s', baseurl)
+                del context
             elif not is_html_empty(self.env.company.invoice_terms):
                 order.note = order.with_context(lang=order.partner_id.lang).env.company.invoice_terms
 
@@ -1272,11 +1274,18 @@ class SaleOrder(models.Model):
         lang_code = render_context.get('lang')
         subtitles = [
             render_context['record'].name,
-            format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
         ]
+
+        if self.amount_total:
+            # Do not show the price in subtitles if zero (e.g. e-commerce orders are created empty)
+            subtitles.append(
+                format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
+            )
+
         if self.validity_date and self.state in ['draft', 'sent']:
             formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
             subtitles.append(_("Expires on %(date)s", date=formatted_date))
+
         render_context['subtitles'] = subtitles
         return render_context
 

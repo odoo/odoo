@@ -54,7 +54,7 @@
                     <field name="last_activity_time" invisible="1"/>
                     <field name="last_activity" invisible="1"/>
                     <header>
-                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user" attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">

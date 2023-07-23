@@ -917,6 +917,83 @@ X[]
                     });
                 });
             });
+            describe('Nested editable zone (inside contenteditable=false element)', () => {
+                it('should not remove the uneditable nesting zone nor the editable nested zone if the last element of the nested zone is empty', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>[]<br></p>
+                                </div>
+                            </div>
+                        `),
+                        stepFunction: deleteForward,
+                        contentAfter: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>[]<br></p>
+                                </div>
+                            </div>
+                        `),
+                    });
+                });
+                it('should not remove the uneditable nesting zone nor the editable nested zone even if there is a paragraph before', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <p>content</p>
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>[]<br></p>
+                                </div>
+                            </div>
+                        `),
+                        stepFunction: deleteForward,
+                        contentAfter: unformat(`
+                            <p>content</p>
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>[]<br></p>
+                                </div>
+                            </div>
+                        `),
+                    });
+                });
+                it('should not remove the uneditable nesting zone nor the editable nested zone if the last element of the nested zone is not empty', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>content[]</p>
+                                </div>
+                            </div>
+                        `),
+                        stepFunction: deleteForward,
+                        contentAfter: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>content[]</p>
+                                </div>
+                            </div>
+                        `),
+                    });
+                });
+                it('should remove the uneditable nesting zone from the outside', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <p>content[]</p>
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>content</p>
+                                </div>
+                            </div>
+                        `),
+                        stepFunction: deleteForward,
+                        contentAfter: unformat(`
+                            <p>content[]</p>
+                        `),
+                    });
+                });
+            });
             describe('POC extra tests', () => {
                 it('should not remove a table without selecting it', async () => {
                     await testEditor(BasicEditor, {
@@ -957,6 +1034,27 @@ X[]
                                 <tr><td>gh</td><td>ij[]</td></tr>
                             </tbody></table>
                             <p>kl</p>`,
+                        ),
+                    });
+                });
+                it('should delete the list item', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(
+                            `<table><tbody>
+                                <tr>
+                                    <td><ul><li>[a</li><li>b</li><li>c]</li></ul></td>
+                                    <td><ul><li>A</li><li>B</li><li>C</li></ul></td>
+                                </tr>
+                            </tbody></table>`,
+                        ),
+                        stepFunction: deleteForward,
+                        contentAfter: unformat(
+                            `<table><tbody>
+                                <tr>
+                                    <td><ul><li>[]<br></li></ul></td>
+                                    <td><ul><li>A</li><li>B</li><li>C</li></ul></td>
+                                </tr>
+                            </tbody></table>`,
                         ),
                     });
                 });
@@ -2297,6 +2395,83 @@ X[]
                     });
                 });
             });
+            describe('Nested editable zone (inside contenteditable=false element)', () => {
+                it('should not remove the uneditable nesting zone nor the editable nested zone if the last element of the nested zone is empty', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>[]<br></p>
+                                </div>
+                            </div>
+                        `),
+                        stepFunction: deleteBackward,
+                        contentAfter: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>[]<br></p>
+                                </div>
+                            </div>
+                        `),
+                    });
+                });
+                it('should not remove the uneditable nesting zone nor the editable nested zone even if there is a paragraph after', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>[]<br></p>
+                                </div>
+                            </div>
+                            <p>content</p>
+                        `),
+                        stepFunction: deleteBackward,
+                        contentAfter: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>[]<br></p>
+                                </div>
+                            </div>
+                            <p>content</p>
+                        `),
+                    });
+                });
+                it('should not remove the uneditable nesting zone nor the editable nested zone if the last element of the nested zone is not empty', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>[]content</p>
+                                </div>
+                            </div>
+                        `),
+                        stepFunction: deleteBackward,
+                        contentAfter: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>[]content</p>
+                                </div>
+                            </div>
+                        `),
+                    });
+                });
+                it('should remove the uneditable nesting zone from the outside', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true">
+                                    <p>content</p>
+                                </div>
+                            </div>
+                            <p>[]content</p>
+                        `),
+                        stepFunction: deleteBackward,
+                        contentAfter: unformat(`
+                            <p>[]content</p>
+                        `),
+                    });
+                });
+            });
             describe('POC extra tests', () => {
                 it('should delete an unique space between letters', async () => {
                     await testEditor(BasicEditor, {
@@ -2921,50 +3096,52 @@ X[]
                     contentAfter: `<p>[]abcd</p>`,
                 });
             });
-        });
-        it('should remove element which is contenteditable=true even if their parent is contenteditable=false', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: unformat(`
-                    <p>before[o</p>
-                    <div contenteditable="false">
-                        <div contenteditable="true"><p>intruder</p></div>
-                    </div>
-                    <p>o]after</p>`),
-                stepFunction: async editor => {
-                    await deleteBackward(editor);
-                },
-                contentAfter: unformat(`
-                    <p>before[]after</p>`),
-            });
-        });
-        it('should extend the range to fully include contenteditable=false that are partially selected at the end of the range', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: unformat(`
-                    <p>before[o</p>
-                    <div contenteditable="false">
-                        <div contenteditable="true"><p>intruder]</p></div>
-                    </div>
-                    <p>after</p>`),
-                stepFunction: async editor => {
-                    await deleteBackward(editor);
-                },
-                contentAfter: unformat(`
-                    <p>before[]</p><p>after</p>`),
-            });
-        });
-        it('should extend the range to fully include contenteditable=false that are partially selected at the start of the range', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: unformat(`
-                    <p>before</p>
-                    <div contenteditable="false">
-                        <div contenteditable="true"><p>[intruder</p></div>
-                    </div>
-                    <p>o]after</p>`),
-                stepFunction: async editor => {
-                    await deleteBackward(editor);
-                },
-                contentAfter: unformat(`
-                    <p>before[]after</p>`),
+            describe('Nested editable zone (inside contenteditable=false element)', () => {
+                it('should extend the range to fully include contenteditable=false that are partially selected at the end of the range', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <p>before[o</p>
+                            <div contenteditable="false">
+                                <div contenteditable="true"><p>intruder]</p></div>
+                            </div>
+                            <p>after</p>`),
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: unformat(`
+                            <p>before[]</p><p>after</p>`),
+                    });
+                });
+                it('should extend the range to fully include contenteditable=false that are partially selected at the start of the range', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <p>before</p>
+                            <div contenteditable="false">
+                                <div contenteditable="true"><p>[intruder</p></div>
+                            </div>
+                            <p>o]after</p>`),
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: unformat(`
+                            <p>before[]after</p>`),
+                    });
+                });
+                it('should remove element which is contenteditable=true even if their parent is contenteditable=false', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <p>before[o</p>
+                            <div contenteditable="false">
+                                <div contenteditable="true"><p>intruder</p></div>
+                            </div>
+                            <p>o]after</p>`),
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: unformat(`
+                            <p>before[]after</p>`),
+                    });
+                });
             });
         });
     });
@@ -4172,6 +4349,22 @@ X[]
                     contentAfter: `<p class="y">a</p>`,
                 }, {
                     renderingClasses: ['x']
+                });
+            });
+            it('should skip the mutations if no changes in state', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p class="x">a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        editor.historyPauseSteps();
+                        p.className = ""; // remove class 'x'
+                        p.className = "x"; // apply class 'x' again
+                        editor.historyUnpauseSteps();
+                        editor.historyRevertCurrentStep(); // back to the initial state
+                    },
+                    contentAfter: `<p class="x">a</p>`,
+                }, {
+                    renderingClasses: ['y']
                 });
             });
         });
@@ -5950,6 +6143,80 @@ X[]
             await testEditor(BasicEditor, {
                 contentBefore: '<div><p>a[]</p></div><div data-oe-protected="true"><p>a</p></div>',
                 contentAfter: '<div><p>a[]</p></div><div data-oe-protected="true"></div>',
+            });
+        });
+        it('should not select a protected table', async () => {
+            // Individually protected cells are not yet supported for simplicity
+            // since there is no need for that currently.
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table data-oe-protected="true"><tbody><tr>
+                        <td>[ab</td>
+                    </tr></tbody></table>
+                    <table><tbody><tr>
+                        <td>cd]</td>
+                    </tr></tbody></table>
+                `),
+                contentAfterEdit: unformat(`
+                    <table data-oe-protected="true"><tbody><tr>
+                        <td>[ab</td>
+                    </tr></tbody></table>
+                    <table class="o_selected_table"><tbody><tr>
+                        <td class="o_selected_td">cd]</td>
+                    </tr></tbody></table>
+                `),
+            });
+        });
+        it('should not fix the selection in a protected input even if it is contenteditable="false"', async () => {
+            await testEditor(BasicEditor, {
+                // Protected, the selection is kept.
+                contentBefore: unformat(`
+                    <p>ab</p>
+                    <div contenteditable="false" data-oe-protected="true">
+                        [<input>]
+                    </div>
+                `),
+                stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
+                contentAfterEdit: unformat(`
+                    <p>ab</p>
+                    <div contenteditable="false" data-oe-protected="true" data-oe-keep-contenteditable="">
+                        [<input>]
+                    </div>
+                `),
+            });
+            // Not protected, the selection is fixed.
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <p>ab</p>
+                    <div contenteditable="false">
+                        [<input>]
+                    </div>
+                `),
+                stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
+                contentAfterEdit: unformat(`
+                    <p>[]ab</p>
+                    <div contenteditable="false" data-oe-keep-contenteditable="">
+                        <input>
+                    </div>
+                `),
+            });
+        });
+        it('should remove the selection in a protected element if it is contenteditable="false"', async () => {
+            await testEditor(BasicEditor, {
+                // Protected, but not an input, the selection is fixed.
+                contentBefore: unformat(`
+                    <p>ab</p>
+                    <div contenteditable="false" data-oe-protected="true">
+                        <div>[]content</div>
+                    </div>
+                `),
+                stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
+                contentAfterEdit: unformat(`
+                    <p>ab</p>
+                    <div contenteditable="false" data-oe-protected="true" data-oe-keep-contenteditable="">
+                        <div>content</div>
+                    </div>
+                `),
             });
         });
     });

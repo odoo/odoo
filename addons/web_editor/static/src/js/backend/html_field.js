@@ -379,10 +379,10 @@ export class HtmlField extends Component {
     }
     async commitChanges({ urgent } = {}) {
         if (this._isDirty() || urgent) {
-            let toInlinePromise;
+            let saveModifiedImagesPromise, toInlinePromise;
             if (this.wysiwyg) {
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
-                await this.wysiwyg.saveModifiedImages();
+                saveModifiedImagesPromise = this.wysiwyg.saveModifiedImages();
                 if (this.props.isInlineStyle) {
                     // Avoid listening to changes made during the _toInline process.
                     toInlinePromise = this._toInline();
@@ -392,6 +392,7 @@ export class HtmlField extends Component {
                 await this.updateValue();
             }
             if (this.wysiwyg) {
+                await saveModifiedImagesPromise;
                 if (this.props.isInlineStyle) {
                     await toInlinePromise;
                 }
@@ -418,6 +419,7 @@ export class HtmlField extends Component {
         if (this.iframePromise && iframeTarget) {
             if (iframeTarget.innerHTML !== this.props.value) {
                 iframeTarget.innerHTML = this.props.value;
+                retargetLinks(iframeTarget);
             }
             return this.iframePromise;
         }
@@ -733,10 +735,10 @@ function stripHistoryIds(value) {
     return value && value.replace(/\sdata-last-history-steps="[^"]*?"/, '') || value;
 }
 
-// Ensure all external links are opened in a new tab.
+// Ensure all links are opened in a new tab.
 const retargetLinks = (container) => {
-    for (const externalLink of container.querySelectorAll(`a:not([href^="${location.origin}"]):not([href^="/"])`)) {
-        externalLink.setAttribute('target', '_blank');
-        externalLink.setAttribute('rel', 'noreferrer');
+    for (const link of container.querySelectorAll('a')) {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noreferrer');
     }
 }

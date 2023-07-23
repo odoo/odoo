@@ -29,14 +29,14 @@ msgstr ""
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "ADD"
-msgstr ""
+msgstr "追加"
 
 #. module: hr_skills
 #. openerp-web
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "CREATE A NEW ENTRY"
-msgstr ""
+msgstr "新しいエントリを作成"
 
 #. module: hr_skills
 #: model:ir.model.fields.selection,name:hr_skills.selection__hr_resume_line__display_type__classic
@@ -53,7 +53,7 @@ msgstr "会社"
 #: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
 #, python-format
 msgid "Create a new entry"
-msgstr ""
+msgstr "新しいエントリを作成"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__create_uid
@@ -197,7 +197,7 @@ msgstr "ID"
 msgid ""
 "If checked, this level will be the default one selected when choosing this "
 "skill."
-msgstr ""
+msgstr "チェックした場合、このスキルの選択時にこのレベルがデフォルトで選択されます。"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill____last_update
@@ -261,7 +261,7 @@ msgstr "名称"
 #: code:addons/hr_skills/models/hr_skill_level.py:0
 #, python-format
 msgid "Only one default level is allowed per skill type."
-msgstr ""
+msgstr "1つのスキルタイプにつき、デフォルトレベルは1つしか設定できません。"
 
 #. module: hr_skills
 #. openerp-web
@@ -287,12 +287,12 @@ msgstr "進捗（%）"
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill_log__level_progress
 #: model:ir.model.fields,help:hr_skills.field_hr_skill_level__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
-msgstr ""
+msgstr "進捗は、知識ゼロ(0%)から完全習得(100%)まで。"
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_skill_level_check_level_progress
 msgid "Progress should be a number between 0 and 100."
-msgstr ""
+msgstr "進捗は0から100の間の数字でなければなりません。"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_public
@@ -318,19 +318,19 @@ msgstr "履歴書明細タイプ"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
 msgid "Resume line of an employee"
-msgstr ""
+msgstr "従業員の履歴書明細"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__resume_line_ids
 msgid "Resume lines"
-msgstr ""
+msgstr "履歴書明細"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
 msgid "Search Logs"
-msgstr ""
+msgstr "検索ログ"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
@@ -407,7 +407,7 @@ msgstr "スキルタイプ"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill
 msgid "Skill level for an employee"
-msgstr ""
+msgstr "従業員のスキルレベル"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__employee_skill_ids
@@ -438,13 +438,13 @@ msgstr "スキル履歴"
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 #, python-format
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
-msgstr ""
+msgstr "スキル %(name)s とスキルレベル %(type)s が一致しません。"
 
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 #, python-format
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
-msgstr ""
+msgstr "スキルレベル %(level)s は、スキルタイプ %(type)s に対して有効ではありません。"
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_resume_line_date_check
@@ -464,7 +464,7 @@ msgstr "同じスキルに2つのレベルを設定することはできませ�
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
 msgid "Two levels for the same skill on the same day is not allowed"
-msgstr ""
+msgstr "同じ日に同じスキルで2つのレベルは認められません。"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__line_type_id
@@ -474,7 +474,7 @@ msgstr "タイプ"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line_type
 msgid "Type of a resume line"
-msgstr ""
+msgstr "履歴書明細タイプ"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_res_users
@@ -489,4 +489,4 @@ msgstr "例: 言語"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "e.g. Odoo Inc."
-msgstr ""
+msgstr "例：Odoo Inc."

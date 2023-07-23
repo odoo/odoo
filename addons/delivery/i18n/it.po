@@ -6,6 +6,7 @@
 # Friederike Fasterling-Nesselbosch, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +108,7 @@ msgstr "<strong>Codice HS</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description:</strong>"
-msgstr ""
+msgstr "<strong>Descrizione spedizione:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -259,7 +260,7 @@ msgstr "Codice Vettore"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr ""
+msgstr "Descrizione vettore"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_name
@@ -669,7 +670,7 @@ msgstr "Registrare le richieste per facilitare la risoluzione errori"
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "Gestisci i codici postali di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -701,7 +702,7 @@ msgstr "Nome"
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "New Providers"
-msgstr ""
+msgstr "Nuovi fornitori"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
@@ -786,6 +787,11 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Codici postali a cui si applica il vettore. Nota che possono essere "
+"utilizzate espressioni regolare per supportare le nazioni con codici postali"
+" con varie lunghezze, ad es. \"$\" può essere aggiunto alla fine di un "
+"prefisso per individuare il codice giusto (ad es. \"100$\" ndividuerà "
+"\"100\" e non \"1000\")"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -984,6 +990,9 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Dettagli del metodo di spedizione da inserire nella parte finale degli "
+"ordini di vendita ed e-mail di conferma. Ad es. istruzioni da seguire per il"
+" cliente."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -1288,7 +1297,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Codici postali"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery

@@ -23,14 +23,14 @@
 # Harcogourmet, 2022
 # Cristian Cruz, 2022
 # marcescu, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # martioodo hola, 2023
 # Jonatan Gk, 2023
 # Guspy12, 2023
 # jabiri7, 2023
 # Martin Trigaux, 2023
 # Ivan Espinola, 2023
-# jabelchi, 2023
+# Josep Anton Belchi, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: jabelchi, 2023\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9040,7 +9040,7 @@ msgstr "Andorra"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_mobile
 msgid "Android & iPhone"
-msgstr ""
+msgstr "Android & iPhone"
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -9736,7 +9736,7 @@ msgstr "Codi de barres - Nomenclatura GS1"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
 msgid "Barcode scanner for warehouses"
-msgstr ""
+msgstr "Lector de codi de barres pels magatzems"
 
 #. module: base
 #. odoo-python
@@ -11020,6 +11020,13 @@ msgstr "Nom complert"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "Calcula"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -15726,7 +15733,7 @@ msgstr "Implementació de camps dispersos."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "Import"
-msgstr "Importa"
+msgstr "Importar"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
@@ -16172,7 +16179,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Paràmetre 'group by' no vàlid"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -18198,14 +18210,14 @@ msgstr "Falta el servidor SMTP"
 #: code:addons/models.py:0
 #, python-format
 msgid "Missing required value for the field '%s'"
-msgstr "Falta el valor obligatori per al camp '%s'"
+msgstr "Falta el valor requerit per al camp '%s'"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
-msgstr "Falta el valor necessari pel camp '%s' (%s)"
+msgstr "Falta el valor requerit per al camp '%s' (%s)"
 
 #. module: base
 #. odoo-python
@@ -25422,7 +25434,7 @@ msgstr "Temes suplementaris"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
 msgid "Support for Android & iOS Apps"
-msgstr ""
+msgstr "Assistència per aplicacions Android & iOS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
@@ -27509,6 +27521,13 @@ msgstr "No puc trobar Wkhtmltopdf en aquest sistema. El PDF no pot ser creat."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -28926,6 +28945,15 @@ msgid "You can not create recursive tags."
 msgstr "No podeu crear etiquetes recursives."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login !"
 msgstr "No podeu tenir dos usuaris amb el mateix identificador d'usuari!"
@@ -29053,6 +29081,12 @@ msgstr "No podeu desactivar l'usuari amb el que esteu identificat."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""

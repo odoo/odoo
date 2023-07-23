@@ -288,8 +288,6 @@ class StockMoveLine(models.Model):
                 vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
             elif vals.get('picking_id'):
                 vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
-            if self.env.context.get('import_file') and vals.get('reserved_uom_qty'):
-                raise UserError(_("It is not allowed to import reserved quantity, you have to use the quantity directly."))
 
         mls = super().create(vals_list)
 
@@ -326,6 +324,9 @@ class StockMoveLine(models.Model):
             move.with_context(avoid_putaway_rules=True).product_uom_qty = move.quantity_done
 
         for ml, vals in zip(mls, vals_list):
+            if self.env.context.get('import_file') and ml.reserved_uom_qty and not ml.move_id._should_bypass_reservation():
+                raise UserError(_("It is not allowed to import reserved quantity, you have to use the quantity directly."))
+
             if ml.state == 'done':
                 if ml.product_id.type == 'product':
                     Quant = self.env['stock.quant']

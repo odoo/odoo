@@ -317,7 +317,10 @@ class LoyaltyProgram(models.Model):
                 })],
                 'communication_plan_ids': [(5, 0, 0), (0, 0, {
                     'trigger': 'create',
-                    'mail_template_id': (self.env.ref('loyalty.mail_template_gift_card', raise_if_not_found=False) or self.env['mail.template']).id,
+                    'mail_template_id': (
+                        self.env.ref('loyalty.mail_template_loyalty_card', raise_if_not_found=False)
+                        or self.env['mail.template']
+                    ).id,
                 })],
             },
         }
@@ -410,51 +413,59 @@ class LoyaltyProgram(models.Model):
         if ctx_menu_type == 'gift_ewallet':
             return {
                 'gift_card': {
-                    'title': _('Gift Card'),
-                    'description': _('Sell Gift Cards, that can be used to purchase products'),
+                    'title': _("Gift Card"),
+                    'description': _("Sell Gift Cards, that can be used to purchase products."),
                     'icon': 'gift_card',
                 },
                 'ewallet': {
-                    'title': _('eWallet'),
-                    'description': _('Fill in your eWallet, and use it to pay future orders'),
+                    'title': _("eWallet"),
+                    'description': _("Fill in your eWallet, and use it to pay future orders."),
                     'icon': 'ewallet',
                 },
             }
         return {
-            'promo_code': {
-                'title': _('Promo Code'),
-                'description': _('Get a code to receive 10% discount on specific products'),
-                'icon': 'promo_code',
-            },
-            'loyalty': {
-                'title': _('Loyalty Cards'),
-                'description': _('Win points with each purchases, and use points to get gifts'),
-                'icon': 'loyalty_cards',
-            },
-            'fidelity': {
-                'title': _('Fidelity Cards'),
-                'description': _('Buy 10 products, and get 10$ discount on the 11th one'),
-                'icon': 'fidelity_cards',
-            },
             'promotion': {
-                'title': _('Promotional Program'),
-                'description': _('Automatic promotion: 10% discount on orders higher than $50'),
+                'title': _("Promotion Program"),
+                'description': _(
+                    "Define promotions to apply automatically on your customers' orders."
+                ),
                 'icon': 'promotional_program',
             },
-            'coupons': {
-                'title': _('Coupons'),
-                'description': _('Send unique coupons that give access to rewards'),
-                'icon': 'coupons',
+            'promo_code': {
+                'title': _("Discount Code"),
+                'description': _(
+                    "Share a discount code with your customers to create a purchase incentive."
+                ),
+                'icon': 'promo_code',
             },
             'buy_x_get_y': {
-                'title': _('2+1 Free'),
-                'description': _('Buy 2 products and get a third one for free'),
+                'title': _("Buy X Get Y"),
+                'description': _(
+                    "Offer Y to your customers if they are buying X; for example, 2+1 free."
+                ),
                 'icon': '2_plus_1',
             },
             'next_order_coupons': {
-                'title': _('Next Order Coupons'),
-                'description': _('Send unique, single-use coupon code for the next purchase'),
+                'title': _("Next Order Coupons"),
+                'description': _(
+                    "Reward your customers for a purchase with a coupon to use on their next order."
+                ),
                 'icon': 'coupons',
+            },
+            'loyalty': {
+                'title': _("Loyalty Cards"),
+                'description': _("Win points with each purchase, and use points to get gifts."),
+                'icon': 'loyalty_cards',
+            },
+            'coupons': {
+                'title': _("Coupons"),
+                'description': _("Generate and share unique coupons with your customers."),
+                'icon': 'coupons',
+            },
+            'fidelity': {
+                'title': _("Fidelity Cards"),
+                'description': _("Buy 10 products, and get 10$ discount on the 11th one."),
+                'icon': 'fidelity_cards',
             },
         }
 
@@ -471,10 +482,12 @@ class LoyaltyProgram(models.Model):
         program = self.create(template_values[template_id])
         action = {}
         if self.env.context.get('menu_type') == 'gift_ewallet':
-            action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_program_discount_loyalty_action')
-        else:
             action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_program_gift_ewallet_action')
-        action['views'] = [[False, 'form']]
+            action['views'] = [[False, 'form']]
+        else:
+            action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_program_discount_loyalty_action')
+            view_id = self.env.ref('loyalty.loyalty_program_view_form').id
+            action['views'] = [[view_id, 'form']]
         action['view_mode'] = 'form'
         action['res_id'] = program.id
         return action

@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# ievaputnina <ievai.putninai@gmail.com>, 2022
 # Arnis Putniņš <arnis@allegro.lv>, 2022
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+# ievaputnina <ievai.putninai@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
-"Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
+"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2023\n"
+"Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -45,6 +45,13 @@ msgstr ""
 #, python-format
 msgid ""
 "<strong>Format used to import the invoice: %s</strong> <p><li> %s </li></p>"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -86,14 +93,6 @@ msgstr ""
 msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and"
 " activate the currency ?"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#, python-format
-msgid "Could not retrieve the %s."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -260,11 +259,23 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
 msgid "Report Action"
+msgstr "Atskaites darbība"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
+msgid "SG BIS Billing 3.0"
 msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
 msgid "SI-UBL 2.0 (NLCIUS)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "Tax '%s' is invalid: %s"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -383,14 +394,6 @@ msgid ""
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#, python-format
-msgid "customer"
-msgstr ""
-
-#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
 msgstr ""
@@ -408,12 +411,4 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#, python-format
-msgid "vendor"
 msgstr ""

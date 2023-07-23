@@ -119,30 +119,41 @@ class StockPicking(models.Model):
 
     def _action_done(self):
         res = super()._action_done()
-        if self.pos_order_id.to_ship and not self.pos_order_id.to_invoice:
-            order_cost = sum(line.total_cost for line in self.pos_order_id.lines)
-            move_vals = {
-                'journal_id': self.pos_order_id.sale_journal.id,
-                'date': self.pos_order_id.date_order,
-                'ref': self.pos_order_id.name,
-                'line_ids': [
-                    (0, 0, {
-                        'name': self.pos_order_id.name,
-                        'account_id': self.product_id.categ_id.property_account_income_categ_id.id,
-                        'debit': order_cost,
-                        'credit': 0.0,
-                    }),
-                    (0, 0, {
-                        'name': self.pos_order_id.name,
-                        'account_id': self.product_id.categ_id.property_account_expense_categ_id.id,
-                        'debit': 0.0,
-                        'credit': order_cost,
+        for rec in self:
+            if rec.picking_type_id.code != 'outgoing':
+                continue
+            if rec.pos_order_id.to_ship and not rec.pos_order_id.to_invoice:
+                cost_per_account = defaultdict(lambda: 0.0)
+                for line in rec.pos_order_id.lines:
+                    if line.product_id.type != 'product' or line.product_id.valuation != 'real_time':
+                        continue
+                    out = line.product_id.categ_id.property_stock_account_output_categ_id
+                    exp = line.product_id._get_product_accounts()['expense']
+                    cost_per_account[(out, exp)] += line.total_cost
+                move_vals = []
+                for (out_acc, exp_acc), cost in cost_per_account.items():
+                    move_vals.append({
+                        'journal_id': rec.pos_order_id.sale_journal.id,
+                        'date': rec.pos_order_id.date_order,
+                        'ref': rec.pos_order_id.name,
+                        'line_ids': [
+                            (0, 0, {
+                                'name': rec.pos_order_id.name,
+                                'account_id': exp_acc.id,
+                                'debit': cost,
+                                'credit': 0.0,
+                            }),
+                            (0, 0, {
+                                'name': rec.pos_order_id.name,
+                                'account_id': out_acc.id,
+                                'debit': 0.0,
+                                'credit': cost,
+                            }),
+                        ],
                     })
-                ]
-            }
-            move = self.env['account.move'].create(move_vals)
-            self.pos_order_id.write({'account_move': move.id})
-            move.action_post()
+                move = self.env['account.move'].create(move_vals)
+                rec.pos_order_id.write({'account_move': move.id})
+                move.action_post()
         return res
 
 class StockPickingType(models.Model):

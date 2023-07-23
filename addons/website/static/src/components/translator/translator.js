@@ -119,9 +119,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             this.websiteContext.translation = false;
         } else {
             this.state.showWysiwyg = true;
-            const url = new URL(this.websiteService.contentWindow.location.href);
-            url.searchParams.delete('edit_translations');
-            this.websiteService.contentWindow.history.replaceState(this.websiteService.contentWindow.history.state, null, url);
+            this.deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
         }
     }
 
@@ -344,5 +342,14 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
 
     _onSave(ev) {
         ev.stopPropagation();
+    }
+
+    deleteQueryParam(param, target = window, adaptBrowserUrl = false) {
+        const url = new URL(target.location.href);
+        url.searchParams.delete(param);
+        target.history.replaceState(target.history.state, null, url);
+        if (adaptBrowserUrl) {
+            this.deleteQueryParam(param);
+        }
     }
 }

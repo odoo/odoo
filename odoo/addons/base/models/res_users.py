@@ -153,6 +153,13 @@ class Groups(models.Model):
     def _check_one_user_type(self):
         self.users._check_one_user_type()
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_settings_group(self):
+        classified = self.env['res.config.settings']._get_classified_fields()
+        for _name, _groups, implied_group in classified['group']:
+            if implied_group.id in self.ids:
+                raise ValidationError(_('You cannot delete a group linked with a settings field.'))
+
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
@@ -649,10 +656,14 @@ class Users(models.Model):
         return res
 
     @api.ondelete(at_uninstall=True)
-    def _unlink_except_superuser(self):
+    def _unlink_except_master_data(self):
+        portal_user_template = self.env.ref('base.template_portal_user_id', False)
+        default_user_template = self.env.ref('base.default_user', False)
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         self.clear_caches()
+        if (portal_user_template and portal_user_template in self) or (default_user_template and default_user_template in self):
+            raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -1426,6 +1437,9 @@ class GroupsView(models.Model):
                         xml_by_category[category_name].append(E.newline())
                     xml_by_category[category_name].append(E.field(name=field_name, **attrs))
                     xml_by_category[category_name].append(E.newline())
+                    # add duplicate invisible field so default values are saved on create
+                    if attrs.get('groups') == 'base.group_no_one':
+                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="1", groups='!base.group_no_one')))
 
                 else:
                     # application separator with boolean fields
@@ -1675,9 +1689,13 @@ class UsersView(models.Model):
                 values1[key] = val
 
         if 'groups_id' not in values and (add or rem):
+            added = self.env['res.groups'].sudo().browse(add)
+            added |= added.mapped('trans_implied_ids')
+            added_ids = added._ids
             # remove group ids in `rem` and add group ids in `add`
+            # do not remove groups that are added by implied
             values1['groups_id'] = list(itertools.chain(
-                zip(repeat(3), rem),
+                zip(repeat(3), [gid for gid in rem if gid not in added_ids]),
                 zip(repeat(4), add)
             ))
 

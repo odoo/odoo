@@ -60,8 +60,15 @@
             'data-main-object': repr(main_object) if main_object else None,
             'data-seo-object': repr(seo_object) if seo_object else None,
         }"/>
+        <!-- The `and '1' or '0'` in `data-can-optimize-seo` property is there
+        only for stable compliance as if omitted, `False` will not display the
+        property in the DOM (it's how `t-att` works), meaning we won't be able
+        to differentiate old database without `-u` and database with the fix.
+        TODO: Remove this part of the condition in master.
+        -->
         <t t-if="not request.env.user._is_public()" t-set="nothing" t-value="html_data.update({
             'data-is-published': 'website_published' in main_object.fields_get() and main_object.website_published,
+            'data-can-optimize-seo': 'website_meta_description' in main_object.fields_get() and '1' or '0',
             'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
             'data-editable-in-backend': editable_in_backend,
         })"/>
@@ -223,7 +230,7 @@
                 <a href="#" title="Go to your Odoo Apps" class="o_frontend_to_backend_apps_btn fa fa-th d-flex align-items-center justify-content-center text-decoration-none" data-bs-toggle="dropdown"/>
                 <div class="dropdown-menu o_frontend_to_backend_apps_menu" role="menu">
                     <a role="menuitem" class="dropdown-item" t-esc="menu['name']"
-                       t-as="menu" t-foreach="env['ir.ui.menu'].load_menus_root()['children']"
+                       t-as="menu" t-foreach="env['ir.ui.menu'].with_context(force_action=True).load_menus_root()['children']"
                        t-attf-href="/web#menu_id=#{menu['id']}&amp;action=#{menu['action'] and menu['action'].split(',')[1] or ''}"/>
                 </div>
                 <a groups="website.group_website_restricted_editor" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">

@@ -19,6 +19,7 @@ import re
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import traceback
@@ -145,7 +146,7 @@ def exec_pg_command_pipe(name, *args):
 # File paths
 #----------------------------------------------------------
 
-def file_path(file_path, filter_ext=('',)):
+def file_path(file_path, filter_ext=('',), env=None):
     """Verify that a file exists under a known `addons_path` directory and return its full path.
 
     Examples::
@@ -156,12 +157,16 @@ def file_path(file_path, filter_ext=('',)):
 
     :param str file_path: absolute file path, or relative path within any `addons_path` directory
     :param list[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
+    :param env: optional environment, required for a file path within a temporary directory
+        created using `file_open_temporary_directory()`
     :return: the absolute path to the file
     :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
     root_path = os.path.abspath(config['root_path'])
     addons_paths = odoo.addons.__path__ + [root_path]
+    if env and hasattr(env.transaction, '__file_open_tmp_paths'):
+        addons_paths += env.transaction.__file_open_tmp_paths
     is_abs = os.path.isabs(file_path)
     normalized_path = os.path.normpath(os.path.normcase(file_path))
 
@@ -183,7 +188,7 @@ def file_path(file_path, filter_ext=('',)):
 
     raise FileNotFoundError("File not found: " + file_path)
 
-def file_open(name, mode="r", filter_ext=None):
+def file_open(name, mode="r", filter_ext=None, env=None):
     """Open a file from within the addons_path directories, as an absolute or relative path.
 
     Examples::
@@ -196,11 +201,13 @@ def file_open(name, mode="r", filter_ext=None):
     :param name: absolute or relative path to a file located inside an addon
     :param mode: file open mode, as for `open()`
     :param list[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
+    :param env: optional environment, required to open a file within a temporary directory
+        created using `file_open_temporary_directory()`
     :return: file object, as returned by `open()`
     :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
-    path = file_path(name, filter_ext=filter_ext)
+    path = file_path(name, filter_ext=filter_ext, env=env)
     if os.path.isfile(path):
         if 'b' not in mode:
             # Force encoding for text mode, as system locale could affect default encoding,
@@ -212,6 +219,36 @@ def file_open(name, mode="r", filter_ext=None):
             return open(path, mode, encoding="utf-8")
         return open(path, mode)
     raise FileNotFoundError("Not a file: " + name)
+
+
+@contextmanager
+def file_open_temporary_directory(env):
+    """Create and return a temporary directory added to the directories `file_open` is allowed to read from.
+
+    `file_open` will be allowed to open files within the temporary directory
+    only for environments of the same transaction than `env`.
+    Meaning, other transactions/requests from other users or even other databases
+    won't be allowed to open files from this directory.
+
+    Examples::
+
+        >>> with odoo.tools.file_open_temporary_directory(self.env) as module_dir:
+        ...    with zipfile.ZipFile('foo.zip', 'r') as z:
+        ...        z.extract('foo/__manifest__.py', module_dir)
+        ...    with odoo.tools.file_open('foo/__manifest__.py', env=self.env) as f:
+        ...        manifest = f.read()
+
+    :param env: environment for which the temporary directory is created.
+    :return: the absolute path to the created temporary directory
+    """
+    assert not hasattr(env.transaction, '__file_open_tmp_paths'), 'Reentrancy is not implemented for this method'
+    with tempfile.TemporaryDirectory() as module_dir:
+        try:
+            env.transaction.__file_open_tmp_paths = (module_dir,)
+            yield module_dir
+        finally:
+            del env.transaction.__file_open_tmp_paths
+
 
 #----------------------------------------------------------
 # iterables
@@ -1619,16 +1656,17 @@ class DotDict(dict):
         return DotDict(val) if type(val) is dict else val
 
 
-def get_diff(data_from, data_to, custom_style=False):
+def get_diff(data_from, data_to, custom_style=False, dark_color_scheme=False):
     """
     Return, in an HTML table, the diff between two texts.
 
     :param tuple data_from: tuple(text, name), name will be used as table header
     :param tuple data_to: tuple(text, name), name will be used as table header
     :param tuple custom_style: string, style css including <style> tag.
+    :param bool dark_color_scheme: true if dark color scheme is used
     :return: a string containing the diff in an HTML table format.
     """
-    def handle_style(html_diff, custom_style):
+    def handle_style(html_diff, custom_style, dark_color_scheme):
         """ The HtmlDiff lib will add some useful classes on the DOM to
         identify elements. Simply append to those classes some BS4 ones.
         For the table to fit the modal width, some custom style is needed.
@@ -1636,21 +1674,33 @@ def get_diff(data_from, data_to, custom_style=False):
         to_append = {
             'diff_header': 'bg-600 text-center align-top px-2',
             'diff_next': 'd-none',
-            'diff_add': 'bg-success',
-            'diff_chg': 'bg-warning',
-            'diff_sub': 'bg-danger',
         }
         for old, new in to_append.items():
             html_diff = html_diff.replace(old, "%s %s" % (old, new))
         html_diff = html_diff.replace('nowrap', '')
+        colors = ('#7f2d2f', '#406a2d', '#51232f', '#3f483b') if dark_color_scheme else (
+            '#ffc1c0', '#abf2bc', '#ffebe9', '#e6ffec')
         html_diff += custom_style or '''
             <style>
-                table.diff { width: 100%; }
-                table.diff th.diff_header { width: 50%; }
+                .modal-dialog.modal-lg:has(table.diff) {
+                    max-width: 1600px;
+                    padding-left: 1.75rem;
+                    padding-right: 1.75rem;
+                }
+                table.diff { width: 100%%; }
+                table.diff th.diff_header { width: 50%%; }
                 table.diff td.diff_header { white-space: nowrap; }
-                table.diff td { word-break: break-all; }
+                table.diff td { word-break: break-all; vertical-align: top; }
+                table.diff .diff_chg, table.diff .diff_sub, table.diff .diff_add {
+                    display: inline-block;
+                    color: inherit;
+                }
+                table.diff .diff_sub, table.diff td:nth-child(3) > .diff_chg { background-color: %s }
+                table.diff .diff_add, table.diff td:nth-child(6) > .diff_chg { background-color: %s }
+                table.diff td:nth-child(3):has(>.diff_chg, .diff_sub) { background-color: %s }
+                table.diff td:nth-child(6):has(>.diff_chg, .diff_add) { background-color: %s }
             </style>
-        '''
+        ''' % colors
         return html_diff
 
     diff = HtmlDiff(tabsize=2).make_table(
@@ -1661,7 +1711,7 @@ def get_diff(data_from, data_to, custom_style=False):
         context=True,  # Show only diff lines, not all the code
         numlines=3,
     )
-    return handle_style(diff, custom_style)
+    return handle_style(diff, custom_style, dark_color_scheme)
 
 
 def hmac(env, scope, message, hash_function=hashlib.sha256):

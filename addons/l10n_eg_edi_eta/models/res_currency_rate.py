@@ -3,6 +3,7 @@
 
 
 from odoo import models, api, _
+from odoo.tools import float_compare
 
 
 class ResCurrencyRate(models.Model):
@@ -11,7 +12,10 @@ class ResCurrencyRate(models.Model):
     @api.onchange('company_rate')
     def _onchange_rate_warning(self):
         # We send the ETA a rate that is 5 decimal accuracy, so to ensure consistency, Odoo should also operate with 5 decimal accuracy rate
-        if self.company_id.account_fiscal_country_id.code == 'EG' and self.inverse_company_rate != round(self.inverse_company_rate, 5):
+        if (
+            self.company_id.account_fiscal_country_id.code == 'EG' and
+            float_compare(self.inverse_company_rate, round(self.inverse_company_rate, 5), precision_digits=10) != 0
+            ):
             return {
                 'warning': {
                     'title': _("Warning for %s", self.currency_id.name),

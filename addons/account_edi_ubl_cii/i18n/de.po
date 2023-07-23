@@ -3,8 +3,8 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -97,8 +97,8 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and"
 " activate the currency ?"
 msgstr ""
-"Die Währung konnte nicht abgerufen werden: %s. Haben Sie die "
-"Multiwährungsoption eingeschaltet und die Währung aktiviert?"
+"Die Währung konnte nicht abgerufen werden: %s. Haben Sie die Option für "
+"mehrere Währungen eingeschaltet und die Währung aktiviert?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -106,7 +106,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the tax: %s %% for line '%s'."
-msgstr "Die Steuer konnte nicht abgerufen werden: %s %% für Zeile '%s'."
+msgstr "Die Steuer konnte nicht abgerufen werden: %s %% für Zeile „%s“."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -139,7 +139,7 @@ msgstr "E-FFF (BE)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_format
 msgid "EDI format"
-msgstr "EDI Format"
+msgstr "EDI-Format"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -158,7 +158,7 @@ msgstr "Jede Rechnungszeile darf nur eine einzige Steuer enthalten."
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
-msgstr "Jede Rechnungszeile darf nur eine einzige Steuer enthalten."
+msgstr "Jede Rechnungszeile muss mindestens eine Steuer enthalten."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_mail_template
@@ -234,8 +234,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid "No gross price nor net price found for line in xml"
-msgstr "Kein Bruttopreis oder Nettopreis für Zeile in xml gefunden"
+msgid ""
+"No gross price, net price nor line subtotal amount found for line in xml"
+msgstr ""
+"Weder Bruttopreis oder Nettopreis noch Zeile für Zwischensumme für Zeile in "
+"xml gefunden"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -273,7 +276,7 @@ msgstr "Mehrwertsteuer, regulärer Satz"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
 msgid "Report Action"
-msgstr "Report Action"
+msgstr "Aktion melden"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
@@ -301,7 +304,7 @@ msgid ""
 "the form: NO179728982MVA."
 msgstr ""
 "Die Mehrwertsteuernummer des Lieferanten scheint nicht gültig zu sein. Sie "
-"sollte diese Form haben: NO179728982MVA."
+"sollte dieses Format haben: NO179728982MVA."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -309,14 +312,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "The currency '%s' is not active."
-msgstr "Die Währung '%s' ist nicht aktiv."
+msgstr "Die Währung „%s“ ist nicht aktiv."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The customer %s must have a KVK or OIN number."
-msgstr "Der Kunde %s muss eine KVK oder OIN Nummer haben."
+msgstr "Der Kunde %s muss eine KVK- oder OIN-Nummer haben."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -340,7 +343,7 @@ msgstr "Das Feld %s ist erforderlich für %s."
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr ""
-"Das Feld \"Bereinigte Kontonummer\" ist für die Empfängerbank erforderlich."
+"Das Feld „Bereinigte Kontonummer“ ist für die Empfängerbank erforderlich."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -351,7 +354,7 @@ msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
 msgstr ""
-"Die Rechnung wurde in eine Gutschrift umgewandelt und die Anzahl rückgängig "
+"Die Rechnung wurde in eine Gutschrift umgewandelt und die Mengen rückgängig "
 "gemacht."
 
 #. module: account_edi_ubl_cii
@@ -362,6 +365,8 @@ msgid ""
 "The journal in which to upload should either be a sale or a purchase "
 "journal."
 msgstr ""
+"Das Journal, in das Sie hochladen, sollte entweder ein Verkaufs- oder ein "
+"Einkaufsjournal sein."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -377,7 +382,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a KVK or OIN number."
-msgstr "Der Lieferant %s muss eine KVK oder OIN Nummer haben."
+msgstr "Der Lieferant %s muss eine KVK- oder OIN-Nummer haben."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -416,7 +421,7 @@ msgid ""
 msgstr ""
 "Sie sollten mindestens eine Steuer pro Rechnungszeile angeben. [BR-"
 "CO-04]-Jede Rechnungszeile (BG-25) muss mit einem Mehrwertsteuer-"
-"Kategoriecode für die Rechnungsposition (BT-151) kategorisiert werden."
+"Kategoriecode für die Rechnungszeile (BT-151) kategorisiert werden."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

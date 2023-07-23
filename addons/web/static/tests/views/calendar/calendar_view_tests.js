@@ -1312,8 +1312,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.strictEqual(
             target.querySelector(".o_cw_popover .list-group-item b.text-capitalize").textContent,
-            "Wednesday, December 14, 2016",
-            "should display date 'Wednesday, December 14, 2016'"
+            "December 14, 2016",
+            "should display date 'December 14, 2016'"
         );
         assert.containsN(
             target,
@@ -2105,6 +2105,28 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.verifySteps(["doAction"]);
     });
 
+    QUnit.test(`create event with default title in context (with quickCreate)`, async (assert) => {
+        assert.expect(1);
+
+        serverData.models.event.records = [];
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="week" all_day="allday" />
+            `,
+            context: {
+                default_name: "Example Title",
+            },
+        });
+
+        await selectAllDayRange(target, "2016-12-14", "2016-12-15");
+        const input = target.querySelector(".o-calendar-quick-create--input");
+        assert.strictEqual(input.value, "Example Title");
+    });
+
     QUnit.test(`create all day event in week mode (no quickCreate)`, async (assert) => {
         assert.expect(1);
 
@@ -2737,6 +2759,23 @@ QUnit.module("Views", ({ beforeEach }) => {
             partnerSection.querySelector(".o_calendar_filter_item[data-value='56']"),
             "o_cw_filter_color_1"
         );
+    });
+
+    QUnit.test("Colors: use available colors when attr is not number", async (assert) => {
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" color="name">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" filter_field="partner_checked"  />
+                </calendar>
+            `,
+        });
+        const colorClass = Array.from(findEvent(target, 1).classList).find(className => className.startsWith("o_calendar_color_"));
+        assert.notOk(isNaN(Number(colorClass.split("_").at(-1))));
+        await clickEvent(target, 1);
+        assert.hasClass(target.querySelector(".o_cw_popover"), colorClass);
     });
 
     QUnit.test(`Add filters and specific color`, async (assert) => {
@@ -3528,7 +3567,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await clickEvent(target, 1);
         assert.strictEqual(
             target.querySelector(".o_cw_popover .list-group-item").textContent,
-            "Wednesday, December 14, 2016 (All day)"
+            "December 14, 2016 (All day)"
         );
     });
 

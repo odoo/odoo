@@ -2,17 +2,28 @@
 
 import { throttleForAnimation } from "./utils/timing";
 
-import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl";
+import {
+    EventBus,
+    onWillDestroy,
+    onWillUnmount,
+    useChildSubEnv,
+    useComponent,
+    useEffect,
+    useExternalListener,
+    useRef,
+} from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 
 /**
- * @typedef {{
- *  popper?: string;
- *  container?: HTMLElement;
- *  margin?: number;
- *  position?: Direction | Position;
- *  onPositioned?: (popperElement: HTMLElement, solution: PositioningSolution) => void;
- * }} Options
+ * @typedef Options
+ * @property {string} [popper="popper"] useRef reference to the popper element
+ * @property {HTMLElement} [container] container element
+ * @property {number} [margin=0]
+ *  margin in pixels between the popper and the reference.
+ * @property {Direction | Position} [position="bottom"]
+ *  position of the popper relative to the reference
+ * @property {(popperElement: HTMLElement, solution: PositioningSolution) => void} [onPositioned]
+ *  callback called everytime the popper has just been positioned
  *
  * @typedef {keyof DirectionsData} DirectionsDataKey
  * @typedef {{
@@ -72,19 +83,32 @@ const DEFAULTS = {
  * to the requested position.
  * The positioning data used to determine each possible position is based on
  * the reference, popper, and container sizes.
- * Particularly, a popper must not overflow the container in any direction,
- * it should actually stay at `margin` distance from the border to look good.
+ * Particularly, a popper must not overflow the container in any direction.
+ * The popper will stay at `margin` distance from its reference. One could also
+ * use the CSS margins of the popper element to achieve the same result.
  *
  * @param {HTMLElement} reference
  * @param {HTMLElement} popper
  * @param {Options} options
- * @returns {PositioningSolution} the best positioning solution
+ * @returns {PositioningSolution} the best positioning solution, relative to
+ *                                the containing block of the popper.
+ *                                => can be applied to popper.style.(top|left)
  */
 function getBestPosition(reference, popper, { container, margin, position }) {
     // Retrieve directions and variants
     const [directionKey, variantKey = "middle"] = position.split("-");
     const directions = DIRECTION_FLIP_ORDER[directionKey];
     const variants = VARIANT_FLIP_ORDER[variantKey];
+
+    // Account for popper actual margins
+    const popperStyle = getComputedStyle(popper);
+    const { marginTop, marginLeft, marginRight, marginBottom } = popperStyle;
+    const popMargins = {
+        top: parseFloat(marginTop),
+        left: parseFloat(marginLeft),
+        right: parseFloat(marginRight),
+        bottom: parseFloat(marginBottom),
+    };
 
     // Boxes
     const popBox = popper.getBoundingClientRect();
@@ -96,19 +120,19 @@ function getBestPosition(reference, popper, { container, margin, position }) {
     // Compute positioning data
     /** @type {DirectionsData} */
     const directionsData = {
-        t: refBox.top - popBox.height - margin,
-        b: refBox.bottom + margin,
-        r: refBox.right + margin,
-        l: refBox.left - popBox.width - margin,
+        t: refBox.top - popMargins.bottom - margin - popBox.height,
+        b: refBox.bottom + popMargins.top + margin,
+        r: refBox.right + popMargins.left + margin,
+        l: refBox.left - popMargins.right - margin - popBox.width,
     };
     /** @type {VariantsData} */
     const variantsData = {
-        vs: refBox.left,
-        vm: refBox.left + refBox.width / 2 + -popBox.width / 2,
-        ve: refBox.right - popBox.width,
-        hs: refBox.top,
-        hm: refBox.top + refBox.height / 2 + -popBox.height / 2,
-        he: refBox.bottom - popBox.height,
+        vs: refBox.left + popMargins.left,
+        vm: refBox.left + refBox.width / 2 - popBox.width / 2,
+        ve: refBox.right - popMargins.right - popBox.width,
+        hs: refBox.top + popMargins.top,
+        hm: refBox.top + refBox.height / 2 - popBox.height / 2,
+        he: refBox.bottom - popMargins.bottom - popBox.height,
     };
 
     function getPositioningData(d = directions[0], v = variants[0], containerRestricted = false) {
@@ -119,8 +143,8 @@ function getBestPosition(reference, popper, { container, margin, position }) {
 
         if (containerRestricted) {
             const [directionSize, variantSize] = vertical
-                ? [popBox.height + margin, popBox.width]
-                : [popBox.width, popBox.height + margin];
+                ? [popBox.height, popBox.width]
+                : [popBox.width, popBox.height];
             let [directionMin, directionMax] = vertical
                 ? [contBox.top, contBox.bottom]
                 : [contBox.left, contBox.right];
@@ -160,7 +184,12 @@ function getBestPosition(reference, popper, { container, margin, position }) {
                   left: directionValue,
               };
         return {
-            ...positioning,
+            // Subtract the offsets of the containing block (relative to the
+            // viewport). It can be done like that because the style top and
+            // left were reset to 0px in `reposition`
+            // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
+            top: positioning.top - popBox.top,
+            left: positioning.left - popBox.left,
             direction: DIRECTIONS[d],
             variant: VARIANTS[v],
         };
@@ -187,9 +216,6 @@ function getBestPosition(reference, popper, { container, margin, position }) {
  * tried in different direction and variant flip orders (depending on the requested position).
  * If no position is found that fits the container, the requested position stays used.
  *
- * When the final position is applied, a corresponding CSS class is also added to the popper.
- * This could be used to further styling.
- *
  * @param {HTMLElement} reference
  * @param {HTMLElement} popper
  * @param {Options} options
@@ -214,6 +240,8 @@ export function reposition(reference, popper, options) {
         options.onPositioned(popper, position);
     }
 }
+
+const POSITION_BUS = Symbol("position-bus");
 
 /**
  * Makes sure that the `popper` element is always
@@ -247,16 +275,24 @@ export function usePosition(reference, options) {
     }
 
     const popperRef = useRef(popper);
-    const getReference = reference instanceof HTMLElement ? () => reference : reference;
+    const getReference = typeof reference === "function" ? reference : () => reference;
     const update = () => {
         const ref = getReference();
         if (popperRef.el && ref) {
             reposition(ref, popperRef.el, options);
         }
     };
-    useEffect(update);
-    const throttledUpdate = throttleForAnimation(update);
-    useExternalListener(document, "scroll", throttledUpdate, { capture: true });
-    useExternalListener(window, "resize", throttledUpdate);
-    onWillUnmount(throttledUpdate.cancel);
+    const component = useComponent();
+    const bus = component.env[POSITION_BUS] || new EventBus();
+    bus.on("update", component, update);
+    onWillDestroy(() => bus.off("update", component));
+    useEffect(() => bus.trigger("update"));
+    if (!(POSITION_BUS in component.env)) {
+        useChildSubEnv({ [POSITION_BUS]: bus });
+        const throttledUpdate = throttleForAnimation(() => bus.trigger("update"));
+        useExternalListener(document, "scroll", throttledUpdate, { capture: true });
+        useExternalListener(document, "load", throttledUpdate, { capture: true });
+        useExternalListener(window, "resize", throttledUpdate);
+        onWillUnmount(throttledUpdate.cancel);
+    }
 }

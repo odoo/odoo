@@ -412,6 +412,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"        Olemme iloisia voidessamme ilmoittaa, että tilauksesi on lähetetty.\n"
+"       <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\"> \n"
+"            Seurantaviitteesi on\n"
+"           <strong> \n"
+"           <t t-if=\"object.carrier_tracking_url\"> \n"
+"               <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
+"               <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
+"                    </t>\n"
+"                </t>\n"
+"               <t t-else=\"\"> \n"
+"                   <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
+"               </t>\n"
+"           </t>\n"
+"           <t t-else=\"\"> \n"
+"               <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
+"           </t>\n"
+"           </strong>\n"
+"       </t>\n"
+"       <br><br>\n"
+"        Lisätietoja saat liitteenä olevasta toimitustilauksesta.<br><br>\n"
+"        Kiitos,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -3990,7 +4023,7 @@ msgstr "Onko määrä muokattavissa"
 msgid ""
 "It is not allowed to import reserved quantity, you have to use the quantity "
 "directly."
-msgstr ""
+msgstr "Varattua määrää ei saa tuoda. Sitä on käytettävä suoraan."
 
 #. module: stock
 #. odoo-python
@@ -5171,8 +5204,8 @@ msgstr "Saapuneiden varastosiirtojen määrä viimeisten 12 kuukauden aikana"
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Toimenpiteitä vaativien viestien määrä"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error_counter
@@ -8626,6 +8659,8 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
+"Tämän tuotteen yritystä ei voi vaihtaa niin kauan kuin sitä on varastossa "
+"toiselle yritykselle kuuluvana."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9085,7 +9120,7 @@ msgstr "Mittayksikön nimi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unit of measure"
-msgstr ""
+msgstr "Mittayksikkö"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9514,7 +9549,7 @@ msgstr "Pakkaustyypin paino"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "Painoyksikkö"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -10082,7 +10117,7 @@ msgstr "Voit palauttaa vain yhden keräyksen kerrallaan."
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You might want to update the locations of this transfer's operations"
-msgstr ""
+msgstr "Sinun kannattaa päivittää tämän siirron toimintojen sijainnit"
 
 #. module: stock
 #. odoo-python

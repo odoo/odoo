@@ -1760,6 +1760,7 @@ class JsonRPCDispatcher(Dispatcher):
     def __init__(self, request):
         super().__init__(request)
         self.jsonrequest = {}
+        self.request_id = None
 
     @classmethod
     def is_compatible_with(cls, request):
@@ -1797,8 +1798,13 @@ class JsonRPCDispatcher(Dispatcher):
         """
         try:
             self.jsonrequest = self.request.get_json_data()
+            self.request_id = self.jsonrequest.get('id')
         except ValueError as exc:
-            raise BadRequest("Invalid JSON data") from exc
+            # must use abort+Response to bypass handle_error
+            werkzeug.exceptions.abort(Response("Invalid JSON data", status=400))
+        except AttributeError as exc:
+            # must use abort+Response to bypass handle_error
+            werkzeug.exceptions.abort(Response("Invalid JSON-RPC data", status=400))
 
         self.request.params = dict(self.jsonrequest.get('params', {}), **args)
         ctx = self.request.params.pop('context', None)
@@ -1839,8 +1845,7 @@ class JsonRPCDispatcher(Dispatcher):
         return self._response(error=error)
 
     def _response(self, result=None, error=None):
-        request_id = self.jsonrequest.get('id')
-        response = {'jsonrpc': '2.0', 'id': request_id}
+        response = {'jsonrpc': '2.0', 'id': self.request_id}
         if error is not None:
             response['error'] = error
         if result is not None:
@@ -1962,6 +1967,10 @@ class Application:
         current_thread.query_count = 0
         current_thread.query_time = 0
         current_thread.perf_t0 = time.time()
+        if hasattr(current_thread, 'dbname'):
+            del current_thread.dbname
+        if hasattr(current_thread, 'uid'):
+            del current_thread.uid
 
         if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # The ProxyFix middleware has a side effect of updating the

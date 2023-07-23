@@ -8,6 +8,7 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Martin Trigaux, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
+# Lasse Larsson, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2022\n"
+"Last-Translator: Lasse Larsson, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,11 +30,13 @@ msgid ""
 "<span attrs=\"{'invisible': [('show_availability', '=', "
 "False)]}\">Units</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('show_availability', '=', "
+"False)]}\">Enheter</span>"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
 msgid "Back in stock Notifications"
-msgstr ""
+msgstr "Åter i lager Meddelanden"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -77,30 +80,31 @@ msgstr "Standard synlighet för anpassade meddelanden."
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Get notified when back in stock"
-msgstr ""
+msgstr "Få ett meddelande när produkten åter finns i lager"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
 msgstr ""
+"Hur man visar produkter med låga kvantiteter (till hands - reserverade)"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/controllers/main.py:0
 #, python-format
 msgid "Invalid Email"
-msgstr ""
+msgstr "Ogiltig E-postadress"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Invalid email"
-msgstr ""
+msgstr "Ogiltig e-postadress"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr ""
+msgstr "Standardinställningar för lager"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -150,7 +154,7 @@ msgstr "Produktvariant"
 #: model:ir.cron,cron_name:website_sale_stock.ir_cron_send_availability_email
 #: model:ir.cron,name:website_sale_stock.ir_cron_send_availability_email
 msgid "Product: send email regarding products availability"
-msgstr ""
+msgstr "Produkt: skicka e-post om produkternas tillgänglighet"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -213,7 +217,7 @@ msgstr "Produkten '%(product_name)s' är nu tillgänglig"
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "This product is out of stock."
-msgstr ""
+msgstr "Denna produkt är slut i lager."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -237,7 +241,7 @@ msgstr "Lager"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "We'll notify you once the product is back in stock."
-msgstr ""
+msgstr "Vi meddelar dig när produkten åter finns i lager."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -248,7 +252,7 @@ msgstr "Webbplats"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website where this order has been placed, for eCommerce orders."
-msgstr ""
+msgstr "Webbplats där denna order har lagts, för e-handelsorder."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -269,7 +273,7 @@ msgstr "Du har redan lagt till alla tillgängliga produkter i din kundvagn."
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You already have %s Units in your cart."
-msgstr ""
+msgstr "Du har redan %s enheter i din kundvagn."
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0
@@ -277,6 +281,8 @@ msgstr ""
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""
+"Du efterfrågar %(desired_qty)s produkter men endast %(new_qty)s är "
+"tillgängliga"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -284,7 +290,7 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You ask for %s Units but only %s are available."
-msgstr ""
+msgstr "Du efterfrågar %s enheter men endast %s är tillgängliga."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -298,7 +304,7 @@ msgstr "i din kundvagn."
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "left in stock."
-msgstr "kvar i lager"
+msgstr "kvar på lager."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -311,4 +317,4 @@ msgstr "bara om under"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "youremail@gmail.com"
-msgstr ""
+msgstr "youremail@gmail.com"
