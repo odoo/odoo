@@ -38,7 +38,7 @@ def sitemap_qs2dom(qs, route, field='name'):
         if len(needles) == 1:
             dom = [(field, 'ilike', needles[0])]
         else:
-            dom = FALSE_DOMAIN
+            dom = list(FALSE_DOMAIN)
     return dom
 
 
