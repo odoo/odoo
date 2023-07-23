@@ -47,6 +47,8 @@
             <search string="Vendor">
                 <field name="partner_id"/>
                 <field name="product_tmpl_id"/>
+                <field name="product_name"/>
+                <field name="product_code"/>
                 <filter string="Active Products" name="active_products" domain="['|', ('product_tmpl_id.active', '=', True),('product_id.active', '=', True)]"/>
                 <separator />
                 <filter string="Active" name="active" domain="['|', ('date_end', '=', False), ('date_end', '&gt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
