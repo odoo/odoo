@@ -110,7 +110,7 @@ msgstr "%(amount)s adeudado al %(date)s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
-msgstr ""
+msgstr "%(partner_name)s llegó al límite de crédito de: %(credit_limit)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2976,7 +2976,7 @@ msgstr "Estado de cuenta bancario"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Línea de estado de cuenta bancario"
+msgstr "Línea de un estado de cuenta bancario"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
@@ -5049,7 +5049,7 @@ msgstr "Separador de decimales"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Secuencia de nota de crédito dedicada"
+msgstr "Secuencia de nota de crédito especializada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
@@ -5226,7 +5226,7 @@ msgstr "Grado de confianza en este deudor"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__delay_type
 msgid "Delay Type"
-msgstr "Tipo de retraso"
+msgstr "Tipo de atraso"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_shipping_id
@@ -5865,7 +5865,7 @@ msgstr "Correo electrónico"
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__email_alias
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email Alias"
-msgstr "Seudónimo de correo electrónico"
+msgstr "Seudónimo de correo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_email
@@ -6530,21 +6530,21 @@ msgstr "Cuenta de impuestos extranjera (%s)"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account advance payment (%s)"
-msgstr ""
+msgstr "Pago avanzado en la cuenta de impuestos extranjera (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account payable (%s)"
-msgstr ""
+msgstr "Cuentas por pagar de impuestos extranjeros (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account receivable (%s)"
-msgstr ""
+msgstr "Cuentas por cobrar de impuestos extranjeros (%s)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__formula
@@ -6790,7 +6790,7 @@ msgstr "Comparación de crecimiento"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "HALF-UP"
-msgstr "MITAD ARRIBA"
+msgstr "HACIA ARRIBA"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -10141,13 +10141,13 @@ msgstr "Líneas de mapeo de partners"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
 msgid "Partner Name"
-msgstr "Nombre del partner"
+msgstr "Nombre del contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_type
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_type
 msgid "Partner Type"
-msgstr "Tipo de partner"
+msgstr "Tipo de contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
@@ -14700,6 +14700,8 @@ msgid ""
 "Total amount due (including sales orders and this document): "
 "%(total_credit)s"
 msgstr ""
+"Monto total pendiente (incluyendo las órdenes de venta y este documento): "
+"%(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -14707,20 +14709,21 @@ msgstr ""
 #, python-format
 msgid "Total amount due (including sales orders): %(total_credit)s"
 msgstr ""
+"Monto total pendiente (incluyendo las órdenes de venta): %(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due (including this document): %(total_credit)s"
-msgstr ""
+msgstr "Monto total pendiente (incluyendo este documento): %(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due: %(total_credit)s"
-msgstr ""
+msgstr "Monto total pendiente: %(total_credit)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
