@@ -320,12 +320,12 @@ msgid ""
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'gift_card')]}\">Gift Cards</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'ewallet')]}\">eWallets</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', 'not in', ('coupons', 'next_order_coupons'))]}\">Coupones</span>\n"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', 'not in', ('coupons', 'next_order_coupons'))]}\">Cupones</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'loyalty')]}\">Tarjetas de lealtad</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', 'not in', ('promotion', 'buy_x_get_y'))]}\">Promociones</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'promo_code')]}\">Descuento</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'gift_card')]}\">Tarjetas de regalo</span>\n"
-"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'ewallet')]}\">Billeteras electrónicas</span>"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'ewallet')]}\">Monederos electrónicos</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1033,7 +1033,7 @@ msgstr "Tarjetas de fidelidad"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fill in your eWallet, to pay future orders"
-msgstr "Llene su cartera electrónica y úsela para pagar órdenes futuras"
+msgstr "Recargue su monedero electrónico y úselo para pagar órdenes futuras"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1121,7 +1121,7 @@ msgstr "Genere tarjetas de regalo"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
-msgstr "Genere billetera digital"
+msgstr "Genere monederos electrónicos"
 
 #. module: loyalty
 #. odoo-python
@@ -1133,7 +1133,7 @@ msgstr "Obtenga 10% de descuento en algunos productos con un código"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
 msgid "Gift &amp; Ewallet"
-msgstr "Regalo y billetera electrónica"
+msgstr "Regalo y monedero electrónico"
 
 #. module: loyalty
 #. odoo-python
@@ -1186,7 +1186,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
 msgid "Gift cards & eWallet"
-msgstr "Tarjetas de regalo y cartera electrónica"
+msgstr "Tarjetas de regalo y monedero electrónico"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__points_granted
@@ -1763,8 +1763,8 @@ msgstr "Dividir por unidad"
 #, python-format
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
 msgstr ""
-"Dividir por unidad no está disponible para programas de lealtad y de "
-"billetera digital."
+"Dividir por unidad no está disponible para los programas de lealtad y de "
+"monedero electrónico."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__currency_symbol
@@ -1832,7 +1832,7 @@ msgstr ""
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
 msgid "Top-up eWallet"
-msgstr "Llenar billetera digital"
+msgstr "Recargar monedero electrónico"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
@@ -1988,24 +1988,24 @@ msgstr "por ejemplo: 10% de descuento en laptops"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__ewallet
 #, python-format
 msgid "eWallet"
-msgstr "billetera digital"
+msgstr "Monedero electrónico"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "eWallet Products"
-msgstr "Productos de billetera electrónica"
+msgstr "Productos de monedero electrónico"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "eWallet value"
-msgstr "Valor de billetera electrónica"
+msgstr "Valor de monedero electrónico"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "eWallets"
-msgstr "Billeteras  electrónicas"
+msgstr "Monederos electrónicos"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2014,14 +2014,14 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, eWallets are proposed during the checkout, to pay orders."
 msgstr ""
-"Las billeteras electrónicas se crean manualmente o automáticamente cuando el cliente ordena un producto de billetera electrónica.\n"
+"Los monederos electrónicos se crean de forma manual o automática cuando el cliente ordena un producto de monedero electrónico.\n"
 "                                    <br/>\n"
-"                                    Después, proponemos las billeteras electrónicas durante el pago de la orden."
+"                                    Después, proponemos los monederos electrónicos durante el pago de la orden."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "item(s) bought"
-msgstr "artículo(s) comprado(s)"
+msgstr "artículos comprados"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban

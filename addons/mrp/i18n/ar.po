@@ -215,7 +215,7 @@ msgstr "<span class=\"o_stat_text\">الطلبات المتأخرة</span> "
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">BoM Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">نظرة عامة على قائمة المواد</span> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -251,7 +251,7 @@ msgstr "<span class=\"o_stat_text\">أداء <br/>العمليات</span> "
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">نظرة عامة</span> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -262,7 +262,7 @@ msgstr "<span class=\"o_stat_text\">الأداء</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">حركات المنتج</span> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -278,7 +278,7 @@ msgstr "<span class=\"o_stat_text\">أمر التصنيع المَصدر</span> 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">إمكانية التتبع</span> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -472,6 +472,8 @@ msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
 "                                Instead, it is used to decompose a BoM into its components when:"
 msgstr ""
+"لا يتم إنشاء قائمة المواد من نوع حزمة مع أمر التصنيع.<br/>\n"
+"                                عوضاً عن ذلك، تُستخدم لتحليل قائمة المواد إلى مكوناتها الأساسية عندما: "
 
 #. module: mrp
 #. odoo-python
@@ -3793,6 +3795,8 @@ msgid ""
 "Produce: Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce: Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"إنتاج : نقل المكونات إلى موقع الإنتاج مباشرة وبدء عملية التصنيع.\n"
+"الانتقاء / الإنتاج : قم بتنزيل المكونات من المخزون إلى موقع الاستلام أولاً، ثم قم بنقله إلى موقع الإنتاج. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5091,7 +5095,7 @@ msgstr "يجب أن تكون الكمية المنتجة موجبة!"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_unbuild_qty_positive
 msgid "The quantity to unbuild must be positive!"
-msgstr ""
+msgstr "يجب أن تكون الكمية التي سيتم تفكيكها موجبة! "
 
 #. module: mrp
 #. odoo-python
@@ -5596,6 +5600,8 @@ msgid ""
 "Unlock to adjust component demand during production, or consumed quantities "
 "once the manufacturing order is done."
 msgstr ""
+"قم بإلغاء القفل لتعديل الحاجة إلى المكونات أثناء الإنتاج، أو الكميات "
+"المستهلكة بمجرد انتهاء أمر التصنيع. "
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_unlocked_by_default

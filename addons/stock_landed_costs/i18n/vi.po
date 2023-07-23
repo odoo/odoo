@@ -111,7 +111,7 @@ msgstr "Số lượng tệp đính kèm"
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_current_cost_price
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_current_cost_price
 msgid "By Current Cost"
-msgstr "Theo giá vốn hiện tại"
+msgstr "Theo chi phí hiện tại"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_quantity
@@ -288,6 +288,11 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"Bằng nhau: Chi phí sẽ được chia đều.\n"
+"Theo số lượng: Chi phí sẽ được chia theo số lượng sản phẩm.\n"
+"Theo chi phí hiện tại: Chi phí sẽ được chia theo chi phí hiện tại của sản phẩm.\n"
+"Theo khối lượng: Chi phí sẽ được chia theo khối lượng hàng hoá.\n"
+"Theo thể tích: Chi phí sẽ được chia theo thể tích hàng hoá."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -435,6 +440,8 @@ msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
 msgstr ""
+"Chi phí nhập kho cho phép bạn cộng các chi phí bổ sung (vận chuyển, bảo "
+"hiểm, thuế hải quan,...) vào giá thành sản phẩm."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -550,7 +557,7 @@ msgstr "Giá trị gốc"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Picking"
-msgstr "Phiếu kho"
+msgstr "Phiếu lấy hàng"
 
 #. module: stock_landed_costs
 #. odoo-python

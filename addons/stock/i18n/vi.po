@@ -2091,10 +2091,10 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Số lượng hiện tại của sản phẩm.\n"
-"Trong ngữ cảnh với một Vị trí kho, số lượng này bao gồm hàng hoá được lưu trữ tại vị trí này, hoặc bất kỳ vị trí con nào.\n"
-"Trong ngữ cảnh với một Kho hàng, số lượng này bao gồm hàng hoá được lưu trữ trong Vị trí kho của Kho hàng này, hoặc bất kỳ vị trí con nào\n"
-"được lưu trữ tại Vị trí kho trong Kho hàng của Xưởng này, hoặc bất kỳ vị trí con nào.\n"
-"Nếu không, số lượng này bao gồm hàng hoá được lưu trữ trong bất kỳ Vị trí kho nào có loại 'nội bộ'. "
+"Trong ngữ cảnh với một Vị trí tồn kho, số lượng này bao gồm hàng hoá được lưu trữ tại vị trí này, hoặc bất kỳ vị trí con nào.\n"
+"Trong ngữ cảnh với một Kho hàng, số lượng này bao gồm hàng hoá được lưu trữ trong Vị trí tồn kho của Kho hàng này, hoặc bất kỳ vị trí con nào\n"
+"được lưu trữ tại Vị trí tồn kho trong Kho hàng của Xưởng này, hoặc bất kỳ vị trí con nào.\n"
+"Nếu không, số lượng này bao gồm hàng hoá được lưu trữ trong bất kỳ Vị trí tồn kho nào có loại 'nội bộ'. "
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__picking_quantity__custom
@@ -2848,12 +2848,12 @@ msgstr "Email xác nhận"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_move_email_validation
 msgid "Email Confirmation picking"
-msgstr "Email xác nhận phiếu kho"
+msgstr "Email xác nhận phiếu lấy hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
-msgstr "Mẫu email xác nhận phiếu kho"
+msgstr "Mẫu email xác nhận phiếu lấy hàng"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
@@ -2904,7 +2904,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr "(Các) ngoại lệ đã xảy ra trong phiếu kho: "
+msgstr "(Các) ngoại lệ đã xảy ra trong phiếu lấy hàng: "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3562,8 +3562,9 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
-"Nếu phiếu kho được mở khóa, bạn có thể chỉnh sửa nhu cầu ban đầu (áp dụng "
-"cho phiếu kho nháp) hoặc số lượng hoàn tất (áp dụng cho phiếu kho hoàn tất)."
+"Nếu phiếu lấy hàng được mở khóa, bạn có thể chỉnh sửa nhu cầu ban đầu (áp "
+"dụng cho phiếu lấy hàng nháp) hoặc số lượng hoàn tất (áp dụng cho phiếu lấy "
+"hàng hoàn tất)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__sn_duplicated
@@ -3603,9 +3604,9 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
-"Nếu chọn ô này, chi tiết phiếu kho sẽ đại diện cho hoạt động tồn kho chi "
-"tiết. Nếu không, chi tiết phiếu kho sẽ đại diện cho toàn bộ hoạt động tồn "
-"kho."
+"Nếu chọn ô này, chi tiết phiếu lấy hàng sẽ đại diện cho hoạt động tồn kho "
+"chi tiết. Nếu không, chi tiết phiếu lấy hàng sẽ đại diện cho toàn bộ hoạt "
+"động tồn kho."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -4086,6 +4087,8 @@ msgid ""
 "It is not allowed to import reserved quantity, you have to use the quantity "
 "directly."
 msgstr ""
+"Không được phép nhập số lượng đã dự trữ, bạn phải trực tiếp sử dụng số "
+"lượng."
 
 #. module: stock
 #. odoo-python
@@ -4848,7 +4851,7 @@ msgid ""
 msgstr ""
 "Những dịch chuyển dược tạo thông qua điểm đặt hàng này sẽ được đưa vào trong"
 " nhóm cung ứng. Nếu không, các dịch chuyển được tạo ra bởi quy tắc tồn kho "
-"sẽ được nhóm lại thành một phiếu kho lớn. "
+"sẽ được nhóm lại thành một phiếu lấy hàng lớn. "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -5843,7 +5846,7 @@ msgstr "Kiểu lấy hàng"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__picking_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr "Phiếu kho"
+msgstr "Phiếu lấy hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -5858,12 +5861,12 @@ msgstr "Hoạt động lấy hàng"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Loại phiếu kho"
+msgstr "Kiểu lấy hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_code_domain
 msgid "Picking Type Code Domain"
-msgstr "Miền mã kiểu lấy hàngq"
+msgstr "Miền mã kiểu lấy hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
@@ -5873,7 +5876,7 @@ msgstr "Bảng kê hàng hoá"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings already processed"
-msgstr "Phiếu kho đã xử lý"
+msgstr "Phiếu lấy hàng đã xử lý"
 
 #. module: stock
 #. odoo-javascript
@@ -6805,7 +6808,7 @@ msgstr "Dịch chuyển tồn kho liên quan"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr "Phần còn lại của phiếu kho đã được xử lý một phần"
+msgstr "Phần còn lại của phiếu lấy hàng đã được xử lý một phần"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_removal
@@ -7057,7 +7060,7 @@ msgstr "Địa điểm trả hàng"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Phiếu trả hàng"
+msgstr "Phiếu lấy hàng trả lại"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
@@ -7704,7 +7707,7 @@ msgstr "Hiển thị hoạt động"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
 msgid "Show Picking Type"
-msgstr "Hiển thị Kiểu lấy hàng"
+msgstr "Hiển thị kiểu lấy hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_show_reception_report
@@ -8459,14 +8462,16 @@ msgstr "Tên viết tắt của kho hàng trong mỗi công ty phải là duy nh
 #: model:ir.model.fields,help:stock.field_res_users__property_stock_customer
 msgid ""
 "The stock location used as destination when sending goods to this contact."
-msgstr "Vị trí kho được dùng làm vị trí đích khi giao hàng tới liên hệ này."
+msgstr ""
+"Vị trí tồn kho được dùng làm vị trí đích khi giao hàng tới liên hệ này."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_supplier
 #: model:ir.model.fields,help:stock.field_res_users__property_stock_supplier
 msgid ""
 "The stock location used as source when receiving goods from this contact."
-msgstr "Vị trí kho được sử dụng làm vị trí nguồn khi nhận hàng từ đối tác này"
+msgstr ""
+"Vị trí tồn kho được sử dụng làm vị trí nguồn khi nhận hàng từ đối tác này"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_id
@@ -8540,9 +8545,9 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"Đây là vị trí đích mặc định khi bạn tạo thủ công một phiếu kho với loại hoạt"
-" động này. Tuy nhiên, có thể thay đổi nó hoặc các tuyến cung ứng có một vị "
-"trí khác. Nếu trống, vị trí khách hàng theo đối tác sẽ được lựa chọn."
+"Đây là vị trí đích mặc định khi bạn tạo thủ công một phiếu lấy hàng với loại"
+" hoạt động này. Tuy nhiên, có thể thay đổi nó hoặc các tuyến cung ứng có một"
+" vị trí khác. Nếu trống, vị trí khách hàng theo đối tác sẽ được lựa chọn."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -8552,9 +8557,10 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
-"Đây là vị trí nguồn mặc định khi bạn tạo thủ công một phiếu kho với loại "
-"hoạt động này. Tuy nhiên, có thể thay đổi nó hoặc các tuyến cung ứng có một "
-"vị trí khác. Nếu trống, vị trí nhà cung cấp theo đối tác sẽ được lựa chọn."
+"Đây là vị trí nguồn mặc định khi bạn tạo thủ công một phiếu lấy hàng với "
+"loại hoạt động này. Tuy nhiên, có thể thay đổi nó hoặc các tuyến cung ứng có"
+" một vị trí khác. Nếu trống, vị trí nhà cung cấp theo đối tác sẽ được lựa "
+"chọn."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -8662,10 +8668,10 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
-"Phiếu kho này có vẻ như được xâu chuỗi với một hoạt động khác. Sau này, nếu "
-"bạn nhận được hàng hoá mà bạn hiện đang trả lại, hãy đảm bảo <b>đảo lại</b> "
-"phiếu trả hàng để tránh các quy tắc logistics được áp dụng lại (điều này sẽ "
-"tạo ra các hoạt động trùng lặp)"
+"Phiếu lấy hàng này có vẻ như được xâu chuỗi với một hoạt động khác. Sau này,"
+" nếu bạn nhận được hàng hoá mà bạn hiện đang trả lại, hãy đảm bảo <b>đảo "
+"lại</b> phiếu trả hàng để tránh các quy tắc logistics được áp dụng lại (điều"
+" này sẽ tạo ra các hoạt động trùng lặp)"
 
 #. module: stock
 #. odoo-python
@@ -9020,7 +9026,7 @@ msgid ""
 "Transfers that are late on scheduled time or one of pickings will be late"
 msgstr ""
 "Các điều chuyển hàng bị trễ so với thời gian theo kế hoạch hoặc một trong "
-"các phiếu kho sẽ bị trễ"
+"các phiếu lấy hàng sẽ bị trễ"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
@@ -9550,7 +9556,7 @@ msgstr "Thông báo cảnh báo"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Warning on the Picking"
-msgstr "Cảnh báo ở phiếu kho"
+msgstr "Cảnh báo ở phiếu lấy hàng"
 
 #. module: stock
 #. odoo-python
@@ -9686,8 +9692,8 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
-"Khi phiếu kho chưa hoàn tất, thì có thể thay đổi nhu cầu ban đầu. Khi phiếu "
-"kho đã hoàn tất, thì có thể thay đổi số lượng đã hoàn tất."
+"Khi phiếu lấy hàng chưa hoàn tất, thì có thể thay đổi nhu cầu ban đầu. Khi "
+"phiếu lấy hàng đã hoàn tất, thì có thể thay đổi số lượng đã hoàn tất."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -9754,7 +9760,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
 msgid "Whether the move was added after the picking's confirmation"
-msgstr "Liệu dịch chuyển đã được thêm vào sau khi xác nhận phiếu kho"
+msgstr "Liệu dịch chuyển đã được thêm vào sau khi xác nhận phiếu lấy hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__width
@@ -9898,8 +9904,8 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
-"Bạn không thể xóa dịch chuyển sản phẩm nếu phiếu kho đã hoàn tất. Bạn chỉ có"
-" thể sửa số lượng đã hoàn tất."
+"Bạn không thể xóa dịch chuyển sản phẩm nếu phiếu lấy hàng đã hoàn tất. Bạn "
+"chỉ có thể sửa số lượng đã hoàn tất."
 
 #. module: stock
 #. odoo-python
@@ -10196,14 +10202,14 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return Done pickings."
-msgstr "Bạn chỉ có thể trả lại hàng có phiếu kho Hoàn tất."
+msgstr "Bạn chỉ có thể trả lại hàng có phiếu lấy hàng Hoàn tất."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return one picking at a time."
-msgstr "Mỗi lần, bạn chỉ có thể trả lại một phiếu kho."
+msgstr "Mỗi lần, bạn chỉ có thể trả lại một phiếu lấy hàng."
 
 #. module: stock
 #. odoo-python
@@ -10262,7 +10268,7 @@ msgstr ""
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
 msgstr ""
-"Bạn vẫn còn các hoạt động cần xử lý cho loại lấy hàng %s trong kho hàng %s"
+"Bạn vẫn còn các hoạt động cần xử lý cho kiểu lấy hàng %s trong kho hàng %s"
 
 #. module: stock
 #. odoo-python
