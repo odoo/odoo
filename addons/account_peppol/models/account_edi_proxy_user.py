@@ -3,7 +3,7 @@
 
 import logging
 
-from odoo import _, fields, models, tools
+from odoo import _, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
@@ -34,7 +34,17 @@ class AccountEdiProxyClientUser(models.Model):
                 and not self.active
                 and not self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
             ):
-                self.company_id.account_peppol_proxy_state = 'not_registered'
+                self.company_id.write({
+                    'account_peppol_proxy_state': 'not_registered',
+                    'is_account_peppol_participant': False,
+                })
+                self.env['ir.config_parameter'].set_param(
+                    f'account_peppol.migration_key_{self.company_id.id}',
+                    False
+                )
+                # commit the above changes before raising below
+                if not tools.config['test_enable'] and not modules.module.current_test:
+                    self.env.cr.commit()
             raise AccountEdiProxyError(e.code, e.message)
         return result
 
