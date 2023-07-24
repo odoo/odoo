@@ -62,22 +62,21 @@ export class Record extends DataPoint {
         if (this.resId) {
             this._values = this._parseServerValues(data);
             this._changes = markRaw({});
-            this._setTextValues(data);
+            Object.assign(this._textValues, this._getTextValues(data));
         } else {
             this._values = markRaw({});
             const allVals = { ...this._getDefaultValues(), ...data };
-            this._changes = this._parseServerValues(allVals);
-            this._setTextValues(allVals);
+            this._initialChanges = markRaw(this._parseServerValues(allVals));
+            this._changes = markRaw({ ...this._initialChanges });
+            Object.assign(this._textValues, this._getTextValues(allVals));
         }
         this.dirty = false;
         this.data = { ...this._values, ...this._changes };
         this._setEvalContext();
-        this._savePoint = markRaw({
-            dirty: false,
-            changes: { ...this._changes },
-            textValues: { ...this._textValues },
-        });
+        this._initialTextValues = { ...this._textValues };
+
         this._invalidFields.clear();
+        this._savePoint = undefined;
     }
 
     // -------------------------------------------------------------------------
@@ -270,9 +269,11 @@ export class Record extends DataPoint {
     // -------------------------------------------------------------------------
 
     _addSavePoint() {
-        this._savePoint.dirty = this.dirty;
-        Object.assign(this._savePoint.textValues, this._textValues);
-        Object.assign(this._savePoint.changes, this._changes);
+        this._savePoint = markRaw({
+            dirty: this.dirty,
+            textValues: { ...this._textValues },
+            changes: { ...this._changes },
+        });
         for (const fieldName in this._changes) {
             if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
                 this._changes[fieldName]._addSavePoint();
@@ -285,7 +286,7 @@ export class Record extends DataPoint {
             this._changes[fieldName] = changes[fieldName];
             this.data[fieldName] = changes[fieldName];
         }
-        this._setTextValues(changes);
+        Object.assign(this._textValues, this._getTextValues(changes));
         this._setEvalContext();
         this._removeInvalidFields(Object.keys(changes));
     }
@@ -313,7 +314,9 @@ export class Record extends DataPoint {
             }
         }
         Object.assign(this.data, this._values, this._changes);
-        this._setTextValues(Object.assign({}, values, this._changes));
+        const textValues = this._getTextValues(values);
+        Object.assign(this._initialTextValues, textValues);
+        Object.assign(this._textValues, textValues, this._getTextValues(this._changes));
         this._setEvalContext();
     }
 
@@ -422,10 +425,17 @@ export class Record extends DataPoint {
                 this._changes[fieldName]._discard();
             }
         }
-        this.dirty = this._savePoint.dirty;
-        this._changes = markRaw({ ...this._savePoint.changes });
+        if (this._savePoint) {
+            this.dirty = this._savePoint.dirty;
+            this._changes = markRaw({ ...this._savePoint.changes });
+            this._textValues = markRaw({ ...this._savePoint.textValues });
+        } else {
+            this.dirty = false;
+            this._changes = markRaw(this.isNew ? { ...this._initialChanges } : {});
+            this._textValues = markRaw({ ...this._initialTextValues });
+        }
         this.data = { ...this._values, ...this._changes };
-        this._textValues = markRaw({ ...this._savePoint.textValues });
+        this._savePoint = undefined;
         this._setEvalContext();
         this._invalidFields.clear();
         this._closeInvalidFieldsNotification();
@@ -514,6 +524,19 @@ export class Record extends DataPoint {
             }
         }
         return defaultValues;
+    }
+
+    _getTextValues(values) {
+        const textValues = {};
+        for (const fieldName in values) {
+            if (!this.activeFields[fieldName]) {
+                continue;
+            }
+            if (["char", "text", "html"].includes(this.fields[fieldName].type)) {
+                textValues[fieldName] = values[fieldName];
+            }
+        }
+        return textValues;
     }
 
     _isInvisible(fieldName) {
@@ -828,17 +851,6 @@ export class Record extends DataPoint {
             });
         }
         this._invalidFields.add(fieldName);
-    }
-
-    _setTextValues(values) {
-        for (const fieldName in values) {
-            if (!this.activeFields[fieldName]) {
-                continue;
-            }
-            if (["char", "text", "html"].includes(this.fields[fieldName].type)) {
-                this._textValues[fieldName] = values[fieldName];
-            }
-        }
     }
 
     _switchMode(mode) {
