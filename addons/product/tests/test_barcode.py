@@ -57,3 +57,18 @@ class TestProductBarcode(TransactionCase):
             assert 'Barcode "3" already assigned to product(s): BC3, BC4' in exc.args[0]
             assert 'Barcode "4" already assigned to product(s): BC5, BC6' in exc.args[0]
             assert 'Barcode "1" already assigned to product(s): BC1' in exc.args[0]
+
+    def test_delete_package_and_use_its_barcode_in_product(self):
+        """ Test that the barcode of the package can be used when the package is removed from the product."""
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'packaging_ids': [(0, 0, {
+                'name': 'packing',
+                'barcode': '1234',
+            })]
+        })
+        package = product.packaging_ids
+        self.assertTrue(package.exists())
+        self.assertEqual(package.barcode, '1234')
+        product.packaging_ids = False
+        product.barcode = '1234'
