@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { createLocalId } from "@mail/utils/common/misc";
 import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -71,6 +72,28 @@ export class DiscussCoreWeb {
             const chat = await this.threadService.getChat({ partnerId });
             if (chat && !this.ui.isSmall) {
                 this.chatWindowService.insert({ thread: chat });
+            }
+        });
+        this.busService.subscribe("mail.record/insert", async (payload) => {
+            if (payload.Thread) {
+                const data = payload.Thread;
+                const thread = this.store.threads[createLocalId(data.model, data.id)];
+                if (data.serverFoldState && thread && data.serverFoldState !== thread.state) {
+                    thread.state = data.serverFoldState;
+                    if (thread.state === "closed") {
+                        const chatWindow = this.store.chatWindows.find(
+                            (chatWindow) => chatWindow.threadLocalId === thread.localId
+                        );
+                        if (chatWindow) {
+                            this.chatWindowService.close(chatWindow);
+                        }
+                    } else {
+                        this.chatWindowService.insert({
+                            thread,
+                            folded: thread.state === "folded",
+                        });
+                    }
+                }
             }
         });
     }

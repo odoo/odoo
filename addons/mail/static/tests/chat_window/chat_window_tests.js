@@ -161,6 +161,24 @@ QUnit.test("chat window: basic rendering", async (assert) => {
     assert.containsOnce($, "[title='Open in Discuss']");
 });
 
+QUnit.test("Fold state of chat window is sync among browser tabs", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    const tab1 = await start({ asTab: true });
+    const tab2 = await start({ asTab: true });
+    await tab1.click(".o_menu_systray i[aria-label='Messages']");
+    await tab1.click(".o-mail-NotificationItem");
+    await tab1.click(".o-mail-ChatWindow-header"); // Fold
+    assert.containsNone(tab1.target, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
+    assert.containsNone(tab2.target, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
+    await tab2.click(".o-mail-ChatWindow-header"); // Unfold
+    assert.containsOnce(tab1.target, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
+    assert.containsOnce(tab2.target, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
+    await tab1.click("[title='Close Chat Window']");
+    assert.containsNone(tab1.target, ".o-mail-ChatWindow");
+    assert.containsNone(tab2.target, ".o-mail-ChatWindow");
+});
+
 QUnit.test(
     "Mobile: opening a chat window should not update channel state on the server",
     async (assert) => {
