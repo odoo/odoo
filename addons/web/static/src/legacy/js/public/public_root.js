@@ -415,10 +415,11 @@ export async function createPublicRoot(RootWidget) {
         translatableAttributes: ["data-tooltip"],
     });
     setLoadXmlDefaultApp(app);
-    await Promise.all([
+    const [root] = await Promise.all([
         app.mount(document.body),
         publicRoot.attachTo(document.body),
     ]);
+    odoo.__WOWL_DEBUG__ = { root };
     return publicRoot;
 }
 

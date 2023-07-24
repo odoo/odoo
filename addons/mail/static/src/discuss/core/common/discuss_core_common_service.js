@@ -166,7 +166,6 @@ export class DiscussCoreCommon {
                     });
                 }
             });
-            this.busService.start();
         });
     }
 
