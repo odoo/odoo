@@ -286,4 +286,13 @@
             <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
         </xpath>
     </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_ar.report_invoice_document'"
+               t-call="l10n_ar.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
 </odoo>
