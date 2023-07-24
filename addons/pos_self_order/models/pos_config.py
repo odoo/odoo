@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from typing import Optional, List, Dict, Callable
+import io
 import uuid
-from werkzeug.urls import url_quote
 import base64
+from PIL import Image
+from typing import Optional, List, Dict
+from werkzeug.urls import url_quote
+from odoo.tools import image_to_base64
 
-
-from odoo import api, fields, models, modules
+from odoo import api, fields, models, modules, _
 from odoo.tools import file_open, split_every
-
-from odoo.addons.pos_self_order.models.product_product import ProductProduct
 
 
 class PosConfig(models.Model):
@@ -25,6 +25,84 @@ class PosConfig(models.Model):
         )
         return base64.b64encode(file_open(image_path, "rb").read())
 
+    def _self_order_kiosk_default_languages(self):
+        return self.env["res.lang"].get_installed()
+
+    status = fields.Selection(
+        [("inactive", "Inactive"), ("active", "Active")],
+        string="Status",
+        compute="_compute_status",
+        store=False,
+    )
+    self_order_kiosk_url = fields.Char(compute="_compute_self_order_kiosk_url")
+    self_order_kiosk = fields.Boolean(
+        string="Kiosk",
+        help="Enable the kiosk mode for the Point of Sale",
+    )
+    self_order_kiosk_takeaway = fields.Boolean(
+        string="Takeaway",
+        help="Allow customers to order for takeaway",
+    )
+    self_order_kiosk_alternative_fp_id = fields.Many2one(
+        'account.fiscal.position',
+        string='Alternative Fiscal Position',
+        help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.',
+    )
+    self_order_kiosk_mode = fields.Selection(
+        [("counter", "Pickup Counter"), ("table", "Service at Table")],
+        string="Kiosk Mode",
+        default="counter",
+        help="Choose the kiosk mode",
+        required=True,
+    )
+    self_order_kiosk_available_language_ids = fields.Many2many(
+        "res.lang",
+        string="Available Languages",
+        help="Languages available for the kiosk mode",
+        default=_self_order_kiosk_default_languages,
+    )
+    self_order_kiosk_default_language = fields.Many2one(
+        "res.lang",
+        string="Default Language",
+        help="Default language for the kiosk mode",
+        default=lambda self: self.env["res.lang"].search(
+            [("code", "=", self.env.lang)], limit=1
+        ),
+    )
+    self_order_kiosk_image_home = fields.Image(
+        string="Self Order Kiosk Image Home",
+        help="Image to display on the self order screen",
+        max_width=1080,
+        max_height=1920,
+        default=_self_order_default_image,
+    )
+    self_order_kiosk_image_eat = fields.Image(
+        string="Self Order Kiosk Image Eat",
+        help="Image to display on the self order screen",
+        max_width=1080,
+        max_height=1920,
+        default=_self_order_default_image,
+    )
+    self_order_kiosk_image_brand = fields.Image(
+        string="Self Order Kiosk Image Brand",
+        help="Image to display on the self order screen",
+        max_width=1200,
+        max_height=250,
+    )
+    self_order_kiosk_image_home_name = fields.Char(
+        string="Self Order Kiosk Image Home Name",
+        help="Name of the image to display on the self order screen",
+        default=_self_order_default_image_name,
+    )
+    self_order_kiosk_image_eat_name = fields.Char(
+        string="Self Order Kiosk Image Eat Name",
+        help="Name of the image to display on the self order screen",
+        default=_self_order_default_image_name,
+    )
+    self_order_kiosk_image_brand_name = fields.Char(
+        string="Self Order Kiosk Image Brand Name",
+        help="Name of the image to display on the self order screen",
+    )
     self_order_view_mode = fields.Boolean(
         string="QR Code Menu",
         help="Allow customers to view the menu on their phones by scanning the QR code on the table",
@@ -68,6 +146,13 @@ class PosConfig(models.Model):
         self.access_token = self._get_access_token()
         self.floor_ids.table_ids._update_identifier()
 
+    @api.onchange("self_order_kiosk")
+    def _self_order_kiosk_change(self):
+        for record in self:
+            if record.self_order_kiosk:
+                record.self_order_view_mode = False
+                record.self_order_table_mode = False
+
     @api.model
     def _init_access_token(self):
         pos_config_ids = self.env["pos.config"].search([])
@@ -100,6 +185,40 @@ class PosConfig(models.Model):
             if not record.module_pos_restaurant:
                 record.self_order_view_mode = False
                 record.self_order_table_mode = False
+
+    def _get_qr_code_data(self):
+        self.ensure_one()
+
+        table_qr_code = []
+        if self.self_order_table_mode:
+            table_qr_code.extend([{
+                    'name': floor.name,
+                    'type': 'table',
+                    'tables': [
+                        {
+                            'identifier': table.identifier,
+                            'id': table.id,
+                            'name': table.name,
+                            'url': self._get_self_order_url(table.id),
+                        }
+                        for table in floor.table_ids.filtered("active")
+                    ]
+                }
+                for floor in self.floor_ids]
+            )
+
+        # Here we use "range" to determine the number of QR codes to generate from
+        # this list, which will then be inserted into a PDF.
+        table_qr_code.extend([{
+            'name': 'Generic',
+            'type': 'default',
+            'tables': [{
+                'id': i,
+                'url': self._get_self_order_url(),
+            } for i in range(0, 11)]
+        }])
+
+        return table_qr_code
 
     def _get_self_order_route(self, table_id: Optional[int] = None) -> str:
         self.ensure_one()
@@ -155,10 +274,7 @@ class PosConfig(models.Model):
             )
         )
 
-    def _get_available_products(self) -> ProductProduct:
-        """
-        This function returns the products that are available in the given PosConfig
-        """
+    def _get_available_products(self):
         self.ensure_one()
         return (
             self.env["product.product"]
@@ -175,47 +291,144 @@ class PosConfig(models.Model):
             )
         )
 
+    def _get_available_categories(self):
+        self.ensure_one()
+        return (
+            self.env["pos.category"]
+            .search(
+                [
+                    *(
+                        self.limit_categories
+                        and self.iface_available_categ_ids
+                        and [("id", "in", self.iface_available_categ_ids.ids)]
+                        or []
+                    ),
+                ],
+                order="sequence",
+            )
+        )
+
     def _get_self_order_data(self) -> Dict:
         self.ensure_one()
         return {
             "pos_config_id": self.id,
+            "iface_start_categ_id": self.iface_start_categ_id.id,
             "company_name": self.company_id.name,
+            "company_color": self.company_id.color,
             "currency_id": self.currency_id.id,
             "show_prices_with_tax_included": self.iface_tax_included == "total",
             "custom_links": self._get_self_order_custom_links(),
             "products": self._get_available_products()._get_self_order_data(self),
-            "pos_category": self.env['pos.category'].search_read(fields=["name", "sequence"], order="sequence"),
+            "combos": self._get_combos_data(),
+            "pos_category": self._get_available_categories().read(["name", "sequence", "has_image"]),
             "has_active_session": self.has_active_session,
         }
 
-    def _get_qr_code_data(self):
+    def _get_combos_data(self):
+        self.ensure_one()
+        combos = self.env["pos.combo"].search([])
+
+        return[{
+            'id': combo.id,
+            'name': combo.name,
+            'combo_line_ids': combo.combo_line_ids.read(['product_id', 'price', 'lst_price', 'combo_id'])
+        } for combo in combos]
+
+    def _get_self_order_mobile_data(self):
+        self.ensure_one()
+        return {
+            **self._get_self_order_data(),
+            "mobile_image_home": self._get_kiosk_image(self.self_order_image),
+        }
+
+    def _get_self_order_kiosk_data(self):
+        self.ensure_one()
+        payment_search_params = self.current_session_id._loader_params_pos_payment_method()
+        payment_methods = self.payment_method_ids.filtered(lambda p: p.use_payment_terminal == 'adyen').read(payment_search_params['search_params']['fields'])
+        default_language = self.self_order_kiosk_default_language.read(["code", "name", "iso_code", "flag_image_url"])
+
+        return {
+            **self._get_self_order_data(),
+            "avaiable_payment_methods": self.payment_method_ids.ids,
+            "pos_payment_methods": payment_methods,
+            "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id else [],
+            "kiosk_mode": self.self_order_kiosk_mode,
+            "kiosk_takeaway": self.self_order_kiosk_takeaway,
+            "kiosk_alternative_fp": self.self_order_kiosk_alternative_fp_id.id,
+            "kiosk_image_home":  self._get_kiosk_image(self.self_order_kiosk_image_home),
+            "kiosk_image_eat": self._get_kiosk_image(self.self_order_kiosk_image_eat),
+            "kiosk_image_brand": self._get_kiosk_image(self.self_order_kiosk_image_brand),
+            "kiosk_default_language": default_language[0] if default_language else [],
+            "kiosk_available_languages": self.self_order_kiosk_available_language_ids.read(["code", "display_name", "iso_code", "flag_image_url"]),
+        }
+
+    def _get_kiosk_image(self, image):
+        image = Image.open(io.BytesIO(base64.b64decode(image))) if image else False
+        return image_to_base64(image, 'PNG').decode('utf-8') if image else False
+
+    def _split_qr_codes_list(self, floors: List[Dict], cols: int) -> List[Dict]:
+        """
+        :floors: the list of floors
+        :cols: the number of qr codes per row
+        """
+        self.ensure_one()
+        return [
+            {
+                "name": floor.get("name"),
+                "rows_of_tables": list(split_every(cols, floor["tables"], list)),
+            }
+            for floor in floors
+        ]
+
+    def _compute_self_order_kiosk_url(self):
+        for record in self:
+            domain = self.get_base_url()
+            record.self_order_kiosk_url = '%s/kiosk/%d?access_token=%s' % (domain, record.id, record.access_token)
+
+    def action_close_kiosk_session(self):
+        current_session_id = self.current_session_id
+
+        if current_session_id:
+            if current_session_id.order_ids:
+                current_session_id.order_ids.filtered(lambda o: o.state not in ['paid', 'invoiced']).unlink()
+
+            self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'status', {
+                'status': 'closed',
+            })
+
+            return current_session_id.action_pos_session_closing_control()
+
+    def _compute_status(self):
+        for record in self:
+            record.status = 'active' if record.has_active_session else 'inactive'
+
+    def action_open_kiosk(self):
         self.ensure_one()
 
-        table_qr_code = []
-        if self.self_order_table_mode:
-            table_qr_code.extend([{
-                    'name': floor.name,
-                    'type': 'table',
-                    'tables': [
-                        {
-                            'identifier': table.identifier,
-                            'id': table.id,
-                            'name': table.name,
-                            'url': self._get_self_order_url(table.id),
-                        }
-                        for table in floor.table_ids.filtered("active")
-                    ]
-                }
-                for floor in self.floor_ids]
-            )
+        return {
+            'name': _('Self Kiosk'),
+            'type': 'ir.actions.act_url',
+            'url': self.self_order_kiosk_url,
+        }
 
-        table_qr_code.extend([{
-            'name': 'Generic',
-            'type': 'default',
-            'tables': [{
-                'id': i,
-                'url': self._get_self_order_url(),
-            } for i in range(0, 11)]
-        }])
+    def action_open_wizard(self):
+        self.ensure_one()
 
-        return table_qr_code
+        if not self.current_session_id:
+            pos_session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
+            pos_session._ensure_access_token()
+            self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'status', {
+                'status': 'open',
+                'pos_session': pos_session.read(['id', 'access_token'])[0],
+            })
+
+        return {
+            'name': _('Self Kiosk'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'pos.config',
+            'res_id': self.id,
+            'target': 'new',
+            'views': [(self.env.ref('pos_self_order.pos_self_order_kiosk_read_only_form_dialog').id, 'form')],
+        }

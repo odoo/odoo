@@ -1,0 +1,48 @@
+/** @odoo-module **/
+import { Reactive } from "@web/core/utils/reactive";
+
+export class Product extends Reactive {
+    constructor(
+        {
+            price_info,
+            has_image,
+            attributes,
+            name,
+            id,
+            description_sale,
+            pos_categ_ids,
+            pos_combo_ids,
+            is_pos_groupable,
+            write_date,
+        },
+        showPriceTaxIncluded
+    ) {
+        super();
+        this.setup(...arguments);
+    }
+
+    setup(product, showPriceTaxIncluded) {
+        // server data
+        this.id = product.id;
+        this.price_info = product.price_info;
+        this.has_image = product.has_image;
+        this.attributes = product.attributes;
+        this.name = product.name;
+        this.description_sale = product.description_sale;
+        this.pos_categ_ids = product.pos_categ_ids;
+        this.pos_combo_ids = product.pos_combo_ids;
+        this.is_pos_groupable = product.is_pos_groupable;
+        this.write_date = product.write_date;
+
+        // data
+        this.showPriceTaxIncluded = showPriceTaxIncluded;
+    }
+
+    get prices() {
+        return this.price_info.display_price;
+    }
+
+    get isCombo() {
+        return this.pos_combo_ids;
+    }
+}

@@ -40,6 +40,7 @@ class ResConfigSettings(models.TransientModel):
     account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False)
     is_default_pricelist_displayed = fields.Boolean(compute="_compute_pos_pricelist_id", compute_sudo=True)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
+    is_kiosk_mode = fields.Boolean(string="Is Kiosk Mode", default=False)
 
     # pos.config fields
     pos_module_pos_discount = fields.Boolean(related='pos_config_id.module_pos_discount', readonly=False)

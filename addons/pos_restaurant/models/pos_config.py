@@ -33,7 +33,7 @@ class PosConfig(models.Model):
             # we ignore last_order_preparation_change when it is set to false.
             # In future, pos_self_order will send the various changes to the order.
             if not line.order_id.last_order_preparation_change:
-                continue
+                line.order_id.last_order_preparation_change = '{}'
 
             last_order_preparation_change = json.loads(line.order_id.last_order_preparation_change)
             prep_change = {}

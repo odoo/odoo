@@ -12,8 +12,10 @@
     ],
     "data": [
         "security/ir.model.access.csv",
-        "views/index.xml",
+        "views/pos_self_order_mobile.index.xml",
+        "views/pos_self_order_kiosk.index.xml",
         "views/qr_code.xml",
+        "views/pos_config_view.xml",
         "views/custom_link_views.xml",
         "data/init_access.xml",
         "views/res_config_settings_views.xml",
@@ -21,7 +23,9 @@
         "data/pos_restaurant_data.xml",
     ],
     "assets": {
-        "pos_self_order.assets_self_order": [
+        # Assets
+        "pos_self_order.assets_common": [
+            "pos_self_order/static/src/kiosk/bootstrap_overridden.scss",
             "web/static/lib/jquery/jquery.js",
             ("include", "web._assets_helpers"),
             ("include", "web._assets_backend_helpers"),
@@ -37,19 +41,37 @@
             "web/static/src/views/fields/formatters.js",
             "web/static/src/libs/fontawesome/css/font-awesome.css",
             "web/static/lib/odoo_ui_icons/*",
-            "pos_self_order/static/src/**/*",
+            'web/static/src/legacy/scss/ui.scss',
             "point_of_sale/static/src/utils.js",
-            # bus service
             'bus/static/src/services/bus_service.js',
             'bus/static/src/bus_parameters_service.js',
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/workers/*',
+            "pos_self_order/static/src/common/**/*",
         ],
-        "pos_self_order.assets_tests": [
+        "pos_self_order.assets_mobile": [
+            ('include', 'pos_self_order.assets_common'),
+            "pos_self_order/static/src/mobile/**/*",
+        ],
+        "pos_self_order.assets_kiosk": [
+            'web/static/lib/bootstrap/js/dist/dom/data.js',
+            'web/static/lib/bootstrap/js/dist/dom/event-handler.js',
+            'web/static/lib/bootstrap/js/dist/dom/manipulator.js',
+            'web/static/lib/bootstrap/js/dist/dom/selector-engine.js',
+            'web/static/lib/bootstrap/js/dist/base-component.js',
+            "web/static/lib/bootstrap/js/dist/carousel.js",
+            ('include', 'pos_self_order.assets_common'),
+            "pos_self_order/static/src/kiosk/**/*",
+        ],
+        # Assets tests
+        "pos_self_order.assets_common_tests": [
             "web/static/lib/jquery/jquery.js",
             "web_tour/static/src/tour_pointer/**/*.xml",
             "web_tour/static/src/tour_pointer/**/*.js",
             "web_tour/static/src/tour_service/**/*",
+        ],
+        "pos_self_order.assets_mobile_tests": [
+            ('include', 'pos_self_order.assets_common_tests'),
             "pos_self_order/static/tests/tours/**/*",
         ],
     },
