@@ -430,7 +430,6 @@ export const messagingService = {
             services.bus_service.addEventListener("notification", (notifEvent) => {
                 messaging.handleNotification(notifEvent.detail);
             });
-            services.bus_service.start();
         });
         return messaging;
     },

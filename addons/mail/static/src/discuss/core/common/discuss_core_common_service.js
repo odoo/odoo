@@ -150,7 +150,6 @@ export class DiscussCoreCommon {
                     seenInfo.lastSeenMessage = { id: last_message_id };
                 }
             });
-            this.busService.start();
         });
     }
 

@@ -6,13 +6,14 @@ import { registry } from "@web/core/registry";
 
 export class MailCoreWeb {
     constructor(env, services) {
-        Object.assign(this, {
-            rpc: services.rpc,
-        });
+        /** @type {ReturnType<typeof import("@bus/services/bus_service").busService.start>} */
+        this.busService = services["bus_service"];
         /** @type {import("@mail/core/common/message_service").MessageService} */
         this.messageService = services["mail.message"];
         /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
+        /** @type {ReturnType<typeof import("@web/core/network/rpc_service").rpcService.start>} */
+        this.rpc = services.rpc;
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
     }
@@ -34,12 +35,13 @@ export class MailCoreWeb {
                     (n1, n2) => n2.lastMessage.id - n1.lastMessage.id
                 );
             });
+            this.busService.start();
         });
     }
 }
 
 export const mailCoreWeb = {
-    dependencies: ["mail.message", "mail.messaging", "mail.store", "rpc"],
+    dependencies: ["bus_service", "mail.message", "mail.messaging", "mail.store", "rpc"],
     start(env, services) {
         const mailCoreWeb = reactive(new MailCoreWeb(env, services));
         mailCoreWeb.setup();
