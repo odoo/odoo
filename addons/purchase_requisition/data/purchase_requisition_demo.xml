@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="base.user_demo" model="res.users">
-            <field eval="[(4, ref('purchase.group_purchase_user'))]" name="groups_id"/>
-        </record>
-
         <!--Blanket Order Agreement-->
         <record id="bo_requisition" model="purchase.requisition">
             <field name="user_id" ref="base.user_admin"/>
