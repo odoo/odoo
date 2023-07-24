@@ -172,7 +172,7 @@ class TestPeppolParticipant(TransactionCase):
             try:
                 settings.button_update_peppol_user_data()
             except UserError:
-                settings.execute()
+                settings = self.env['res.config.settings'].create({})
                 self.assertRecordValues(
                     settings, [{
                         'account_peppol_migration_key': False,

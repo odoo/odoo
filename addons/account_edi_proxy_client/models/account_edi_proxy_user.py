@@ -1,5 +1,6 @@
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
+from odoo.tools import index_exists
 from .account_edi_proxy_auth import OdooEdiProxyAuth
 
 from cryptography.hazmat.backends import default_backend
@@ -64,9 +65,24 @@ class AccountEdiProxyClientUser(models.Model):
 
     _sql_constraints = [
         ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
-        ('unique_edi_identification', 'unique(edi_identification, proxy_type, edi_mode)', 'This edi identification is already assigned to a user'),
-        ('unique_company_proxy', 'unique(company_id, proxy_type, edi_mode)', 'This company has a user already created for this EDI type'),
+        ('unique_active_edi_identification', '', 'This edi identification is already assigned to an active user'),
+        ('unique_active_company_proxy', '', 'This company has an active user already created for this EDI type'),
     ]
+
+    def _auto_init(self):
+        super()._auto_init()
+        if not index_exists(self.env.cr, 'account_edi_proxy_client_user_unique_active_edi_identification'):
+            self.env.cr.execute("""
+                CREATE UNIQUE INDEX account_edi_proxy_client_user_unique_active_edi_identification
+                                 ON account_edi_proxy_client_user(edi_identification, proxy_type, edi_mode)
+                              WHERE (active = True)
+            """)
+        if not index_exists(self.env.cr, 'account_edi_proxy_client_user_unique_active_company_proxy'):
+            self.env.cr.execute("""
+                CREATE UNIQUE INDEX account_edi_proxy_client_user_unique_active_company_proxy
+                                 ON account_edi_proxy_client_user(company_id, proxy_type, edi_mode)
+                              WHERE (active = True)
+            """)
 
     @api.depends('company_id')
     def _compute_proxy_type(self):

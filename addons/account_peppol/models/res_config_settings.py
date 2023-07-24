@@ -27,21 +27,10 @@ class ResConfigSettings(models.TransientModel):
         string="Warning",
         compute="_compute_account_peppol_endpoint_warning",
     )
-    # to be changed in master to be a related field on res_company
-    account_peppol_migration_key = fields.Char(
-        compute="_compute_account_peppol_migration_key",
-        inverse="_inverse_account_peppol_migration_key",
-        readonly=False,
-    )
+    account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)
     account_peppol_phone_number = fields.Char(related='company_id.account_peppol_phone_number', readonly=False)
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
     account_peppol_purchase_journal_id = fields.Many2one(related='company_id.peppol_purchase_journal_id', readonly=False)
-    # to be removed once the module is available
-    account_peppol_attachment_ids = fields.Many2many(
-        comodel_name='ir.attachment',
-        string='Peppol Identification Documents',
-        related='company_id.account_peppol_attachment_ids', readonly=False,
-    )
     account_peppol_verification_code = fields.Char(related='account_peppol_edi_user.peppol_verification_code', readonly=False)
     is_account_peppol_eligible = fields.Boolean(
         string='PEPPOL eligible',
@@ -107,20 +96,6 @@ class ResConfigSettings(models.TransientModel):
             else:
                 config.account_peppol_endpoint_warning = _("The endpoint number might not be correct. "
                                                            "Please check if you entered the right identification number.")
-
-    @api.depends('company_id')
-    def _compute_account_peppol_migration_key(self):
-        for config in self:
-            config.account_peppol_migration_key = self.env['ir.config_parameter'].get_param(
-                f'account_peppol.migration_key_{config.company_id.id}'
-            )
-
-    def _inverse_account_peppol_migration_key(self):
-        for config in self:
-            self.env['ir.config_parameter'].set_param(
-                f'account_peppol.migration_key_{config.company_id.id}',
-                config.account_peppol_migration_key
-            )
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
