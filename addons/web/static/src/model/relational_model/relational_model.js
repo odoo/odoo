@@ -223,6 +223,12 @@ export class RelationalModel extends Model {
         }
     }
 
+    _askChanges() {
+        const proms = [];
+        this.bus.trigger("NEED_LOCAL_CHANGES", { proms });
+        return Promise.all([...proms, this.mutex.getUnlockedDef()]);
+    }
+
     /**
      *
      * @param {Config} config

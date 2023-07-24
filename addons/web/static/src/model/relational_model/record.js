@@ -135,7 +135,7 @@ export class Record extends DataPoint {
 
     async checkValidity() {
         if (!this._urgentSave) {
-            await this._askChanges();
+            await this.model._askChanges();
         }
         return this._checkValidity();
     }
@@ -190,7 +190,7 @@ export class Record extends DataPoint {
     }
 
     async isDirty() {
-        await this._askChanges();
+        await this.model._askChanges();
         return this.dirty;
     }
 
@@ -224,7 +224,7 @@ export class Record extends DataPoint {
     }
 
     async save(options) {
-        await this._askChanges();
+        await this.model._askChanges();
         return this.model.mutex.exec(() => this._save(options));
     }
 
@@ -315,13 +315,6 @@ export class Record extends DataPoint {
         Object.assign(this.data, this._values, this._changes);
         this._setTextValues(Object.assign({}, values, this._changes));
         this._setEvalContext();
-    }
-
-    // FIXME: move to model?
-    _askChanges() {
-        const proms = [];
-        this.model.bus.trigger("NEED_LOCAL_CHANGES", { proms });
-        return Promise.all([...proms, this.model.mutex.getUnlockedDef()]);
     }
 
     _checkValidity({ silent } = {}) {
