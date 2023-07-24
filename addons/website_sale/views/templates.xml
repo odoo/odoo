@@ -237,7 +237,7 @@
             <div class="dropdown-menu" role="menu">
                 <t t-foreach="website_sale_pricelists" t-as="pl">
                     <a role="menuitem" t-att-href="'/shop/change_pricelist/%s' % pl.id" class="dropdown-item">
-                        <span class="switcher_pricelist" t-att-data-pl_id="pl.id" t-esc="pl.name" />
+                        <span class="switcher_pricelist small" t-att-data-pl_id="pl.id" t-esc="pl.name" />
                     </a>
                 </t>
             </div>

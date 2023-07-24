@@ -181,10 +181,10 @@
                             border: 1px solid $gray-500;
                     }
                     .fa:before {
-                        font-size: 1.25rem;
+                        @include font-size(1.25rem);
                     }
                     .oi:before {
-                        font-size: 0.75rem;
+                        @include font-size(0.75rem);
                     }
                 }
             }
@@ -204,7 +204,7 @@
                     .fa:before, .oi:before {
                             color: black;
                             background: white;
-                            font-size: 1.25rem;
+                            @include font-size(1.25rem);
                             border-radius: 50%;
                             padding: 1.25rem;
                             border: 1px solid $gray-500;

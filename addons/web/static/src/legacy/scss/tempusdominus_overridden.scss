@@ -52,13 +52,13 @@ div.dropdown-menu.bootstrap-datetimepicker-widget {
 
     thead tr:nth-child(2) th, td.cw {
         background-color: var(--datepicker__thead-bg);
-        font-size: $font-size-sm;
+        @include font-size($font-size-sm);
         font-weight: $font-weight-bold;
         color: $o-main-text-color;
     }
 
     td {
-        font-size: ($font-size-base + $font-size-sm) * .5;
+        @include font-size(($font-size-base + $font-size-sm) * .5);
 
         &.today:not(.active):before {
             border-bottom-color: $o-brand-primary;
@@ -73,7 +73,7 @@ div.dropdown-menu.bootstrap-datetimepicker-widget {
 
 .bootstrap-datetimepicker-widget {
     .picker-switch {
-        font-size: $font-size-lg;
+        @include font-size($font-size-lg);
     }
 
     .accordion-toggle {

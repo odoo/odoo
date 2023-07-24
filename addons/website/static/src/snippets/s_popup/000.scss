@@ -30,7 +30,7 @@
         cursor: pointer;
         text-align: center;
         z-index: 1;
-        font-size: $popup-close-size;
+        @include font-size($popup-close-size);
     }
 
     &.s_popup_center {
@@ -48,7 +48,7 @@
                 }
             }
             .s_popup_close {
-                font-size: 60px;
+                @include font-size(60px);
                 margin: 10px;
                 background: none;
                 box-shadow: none;
@@ -89,7 +89,7 @@
             left: 0;
             .s_popup_close {
                 box-shadow: none;
-                font-size: 60px;
+                @include font-size(60px);
                 margin: 10px;
                 background: none;
             }

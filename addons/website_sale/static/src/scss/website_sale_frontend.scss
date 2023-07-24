@@ -64,7 +64,7 @@ $o-wsale-wizard-label-completed: $success;
         .progress-wizard-steplabel {
             color: $o-wsale-wizard-label-default;
             margin: 5px 0 5px 5px;
-            font-size: $font-size-base;
+            @include font-size($font-size-base);
             display: inline-block;
 
             @include media-breakpoint-up(md) {
@@ -111,7 +111,7 @@ $o-wsale-wizard-label-completed: $success;
                     color: $o-wsale-wizard-dot-completed;
                     text-align: center;
                     line-height: 1;
-                    font-size: $tmp-check-size;
+                    @include font-size($tmp-check-size);
                     font-family: FontAwesome;
 
                     content: "\f058";

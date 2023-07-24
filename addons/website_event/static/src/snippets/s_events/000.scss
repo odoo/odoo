@@ -5,7 +5,7 @@
     }
 
     .s_events_event_subtitle {
-        font-size: $font-size-base;
+        @include font-size($font-size-base);
     }
 
     &.s_event_event_picture {
@@ -69,12 +69,12 @@
                     text-align: center;
 
                     .s_events_event_month {
-                        font-size: $font-size-sm;
+                        @include font-size($font-size-sm);
                         font-weight: $font-weight-bold;
                         text-transform: uppercase;
                     }
                     .s_events_event_day {
-                        font-size: $font-size-lg;
+                        @include font-size($font-size-lg);
                         font-weight: $font-weight-light;
                     }
                 }
