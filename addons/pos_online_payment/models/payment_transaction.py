@@ -24,11 +24,6 @@ class PaymentTransaction(models.Model):
                 return pos_order.pos_reference
         return super()._compute_reference_prefix(provider_code, separator, **values)
 
-    def _set_authorized(self, state_message=None, **kwargs):
-        """ Override of payment to process POS online payments automatically. """
-        super()._set_authorized(state_message=state_message, **kwargs)
-        self._process_pos_online_payment()
-
     def _reconcile_after_done(self):
         """ Override of payment to process POS online payments automatically. """
         super()._reconcile_after_done()
