@@ -1426,6 +1426,19 @@ export class OdooEditor extends EventTarget {
         }
     }
     /**
+     * Ensure that a callback is called without triggering a rollback.
+     *
+     * If a rollback was set before the callback, do not reset it.
+     */
+    withoutRollback(callback) {
+        const priorRollback = this._toRollback;
+        callback();
+        this.observerFlush();
+        if (!priorRollback) {
+            this._toRollback = false;
+        }
+    }
+    /**
      * Place the selection on the last known selection position from the history
      * steps.
      *

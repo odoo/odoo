@@ -1297,21 +1297,23 @@ export class Wysiwyg extends Component {
                         $nodes.addClass('o_editable_date_field_format_changed');
                     }
                     const html = $node.html();
-                    for (const node of $nodes) {
-                        if (node.classList.contains('o_translation_without_style')) {
-                            // For generated elements such as the navigation
-                            // labels of website's table of content, only the
-                            // text of the referenced translation must be used.
-                            const text = $node.text();
-                            if (node.innerText !== text) {
-                                node.innerText = text;
+                    this.odooEditor.withoutRollback(() => {
+                        for (const node of $nodes) {
+                            if (node.classList.contains('o_translation_without_style')) {
+                                // For generated elements such as the navigation
+                                // labels of website's table of content, only the
+                                // text of the referenced translation must be used.
+                                const text = $node.text();
+                                if (node.innerText !== text) {
+                                    node.innerText = text;
+                                }
+                                continue;
                             }
-                            continue;
+                            if (node.innerHTML !== html) {
+                                node.innerHTML = html;
+                            }
                         }
-                        if (node.innerHTML !== html) {
-                            node.innerHTML = html;
-                        }
-                    }
+                    });
                     this._observeOdooFieldChanges();
                 });
                 observer.observe(field, observerOptions);
