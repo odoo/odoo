@@ -650,15 +650,13 @@ export class Record extends DataPoint {
                     specification: { display_name: {} },
                 };
                 proms.push(
-                    this.model.orm
-                        .call(value.resModel, "web_read", [[id]], kwargs)
-                        .then((records) => {
-                            changes[fieldName] = {
-                                resModel: value.resModel,
-                                resId: id,
-                                displayName: records[0].display_name,
-                            };
-                        })
+                    this.model.orm.webRead(value.resModel, [id], kwargs).then((records) => {
+                        changes[fieldName] = {
+                            resModel: value.resModel,
+                            resId: id,
+                            displayName: records[0].display_name,
+                        };
+                    })
                 );
             } else {
                 changes[fieldName] = value;
@@ -709,7 +707,7 @@ export class Record extends DataPoint {
                     specification: { display_name: {} },
                 };
                 proms.push(
-                    this.model.orm.call(relation, "web_read", [[id]], kwargs).then((records) => {
+                    this.model.orm.webRead(relation, [id], kwargs).then((records) => {
                         changes[fieldName] = [records[0].id, records[0].display_name || ""];
                     })
                 );

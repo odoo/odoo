@@ -537,7 +537,7 @@ export class RelationalModel extends Model {
                 context: { bin_size: true, ...context },
                 specification: fieldSpec,
             };
-            const records = await this.orm.call(resModel, "web_read", [resIds], kwargs);
+            const records = await this.orm.webRead(resModel, resIds, kwargs);
             if (!records.length) {
                 throw new FetchRecordError(resIds);
             }

@@ -148,7 +148,7 @@ export class ORM {
             return Promise.resolve([]);
         }
         return this.call(model, "read", [ids, ["display_name"]], kwargs).then(
-            (data) => data && data.map(({id, display_name}) => [id, display_name])
+            (data) => data && data.map(({ id, display_name }) => [id, display_name])
         );
     }
 
@@ -254,6 +254,19 @@ export class ORM {
             domain,
             fields,
         });
+    }
+
+    /**
+     * @param {string} model
+     * @param {number[]} ids
+     * @param {any} [kwargs={}]
+     * @param {Object} [kwargs.specification]
+     * @param {Object} [kwargs.context]
+     * @returns {Promise<any[]>}
+     */
+    webRead(model, ids, kwargs = {}) {
+        validatePrimitiveList("ids", "number", ids);
+        return this.call(model, "web_read", [ids], kwargs);
     }
 
     /**
