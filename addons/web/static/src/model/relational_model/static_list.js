@@ -295,7 +295,7 @@ export class StaticList extends DataPoint {
 
     async leaveEditMode({ discard, canAbandon, validate } = {}) {
         if (this.editedRecord) {
-            await this.editedRecord._askChanges(false);
+            await this.model._askChanges(false);
         }
         return this.model.mutex.exec(async () => {
             if (this.editedRecord) {
