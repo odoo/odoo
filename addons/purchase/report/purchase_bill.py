@@ -61,4 +61,4 @@ class PurchaseBillUnion(models.Model):
         if name:
             domain = ['|', ('name', operator, name), ('reference', operator, name)]
         purchase_bills_union_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(purchase_bills_union_ids).name_get()
+        return purchase_bills_union_ids
