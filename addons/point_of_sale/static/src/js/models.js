@@ -39,6 +39,9 @@ class PosCollection extends Array {
     add(item) {
         this.push(item);
     }
+    add_at(item, index) {
+        this.splice(index, 0, item);
+    }
     remove(item) {
         const index = this.findIndex(_item => item.cid == _item.cid);
         if (index < 0) return index;
