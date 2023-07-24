@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import api, fields, models, tools
+from odoo.osv import expression
 from odoo.tools import formatLang
 
 class PurchaseBillUnion(models.Model):
@@ -52,3 +53,12 @@ class PurchaseBillUnion(models.Model):
             name += ': ' + formatLang(self.env, amount, monetary=True, currency_obj=doc.currency_id)
             result.append((doc.id, name))
         return result
+
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('name', operator, name), ('reference', operator, name)]
+        purchase_bills_union_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        return purchase_bills_union_ids
