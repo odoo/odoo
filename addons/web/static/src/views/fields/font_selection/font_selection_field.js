@@ -49,7 +49,6 @@ export const fontSelectionField = {
             required: dynamicInfo.required,
         };
     },
-    legacySpecialData: "_fetchSpecialRelation",
 };
 
 registry.category("fields").add("font", fontSelectionField);

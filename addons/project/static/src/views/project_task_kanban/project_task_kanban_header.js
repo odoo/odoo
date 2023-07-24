@@ -21,7 +21,6 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
     }
 
     editGroup() {
-        const { resModel, value } = this.group;
         const groupBy = this.props.list.groupBy;
         if (groupBy.length !== 1 || groupBy[0] !== 'personal_stage_type_ids') {
             super.editGroup();
@@ -32,8 +31,8 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
         });
         this.dialog.add(FormViewDialog, {
             context,
-            resId: value,
-            resModel: resModel,
+            resId: this.group.value,
+            resModel: this.group.groupByField.relation,
             title: this.env._t('Edit Personal Stage'),
             onRecordSaved: async () => {
                 await this.props.list.load();
@@ -45,9 +44,9 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
     async deleteGroup() {
         if (this.group.groupByField.name === 'stage_id') {
             const action = await this.group.model.orm.call(
-                this.group.resModel,
+                this.group.groupByField.relation,
                 'unlink_wizard',
-                [this.group.resId],
+                [this.group.value],
                 { context: this.group.context },
             );
             this.action.doAction(action);

@@ -44,7 +44,7 @@ QUnit.test(
                     <field name="description" onchange_on_keydown="True" keydown_debounce_delay="0"/>
                 </form>`,
             mockRPC(route, params) {
-                if (params.method === "onchange") {
+                if (params.method === "onchange2") {
                     // the onchange will be called twice: at record creation & when keydown is detected
                     // the second call should have our description value completed.
                     assert.ok(true);
@@ -54,7 +54,9 @@ QUnit.test(
                     ) {
                         assert.ok(true);
                     }
-                    return {};
+                    return {
+                        value: {},
+                    };
                 }
             },
         });

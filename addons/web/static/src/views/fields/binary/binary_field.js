@@ -8,7 +8,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
 import { _lt } from "@web/core/l10n/translation";
 
-import { Component, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 export class BinaryField extends Component {
     static template = "web.BinaryField";
     static components = {
@@ -25,20 +25,17 @@ export class BinaryField extends Component {
 
     setup() {
         this.notification = useService("notification");
-        this.state = useState({
-            fileName: this.props.record.data[this.props.fileNameField] || "",
-        });
-        onWillUpdateProps((nextProps) => {
-            this.state.fileName = nextProps.record.data[nextProps.fileNameField] || "";
-        });
     }
 
     get fileName() {
-        return this.state.fileName || this.props.record.data[this.props.name] || "";
+        return (
+            this.props.record.data[this.props.fileNameField] ||
+            this.props.record.data[this.props.name] ||
+            ""
+        );
     }
 
     update({ data, name }) {
-        this.state.fileName = name || "";
         const { fileNameField, record } = this.props;
         const changes = { [this.props.name]: data || false };
         if (fileNameField in record.fields && record.data[fileNameField] !== name) {

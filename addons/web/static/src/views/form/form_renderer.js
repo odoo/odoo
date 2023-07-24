@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { evalDomain } from "@web/core/domain";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
 import { Field } from "@web/views/fields/field";
@@ -12,7 +13,6 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
-import { evalDomain } from "../utils";
 import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";

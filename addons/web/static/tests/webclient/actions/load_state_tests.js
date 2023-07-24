@@ -175,8 +175,8 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("should not crash on invalid state", async function (assert) {
         assert.expect(3);
-        const mockRPC = async function (route, args) {
-            assert.step((args && args.method) || route);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         await loadState(webClient, {
@@ -191,8 +191,8 @@ QUnit.module("ActionManager", (hooks) => {
         class ClientAction extends Component {}
         ClientAction.template = xml`<div class="o_client_action_test">Hello World</div>`;
         actionRegistry.add("HelloWorldTest", ClientAction);
-        const mockRPC = async function (route, args) {
-            assert.step((args && args.method) || route);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         webClient.env.bus.trigger("test:hashchange", {
@@ -210,8 +210,8 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("properly load act window actions", async function (assert) {
         assert.expect(7);
-        const mockRPC = async function (route, args) {
-            assert.step((args && args.method) || route);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         webClient.env.bus.trigger("test:hashchange", {
@@ -225,14 +225,14 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "web_search_read",
+            "unity_web_search_read",
         ]);
     });
 
     QUnit.test("properly load records", async function (assert) {
         assert.expect(6);
-        const mockRPC = async function (route, args) {
-            assert.step((args && args.method) || route);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         webClient.env.bus.trigger("test:hashchange", {
@@ -243,13 +243,13 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.nextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Second record"]);
-        assert.verifySteps(["/web/webclient/load_menus", "get_views", "read"]);
+        assert.verifySteps(["/web/webclient/load_menus", "get_views", "web_read"]);
     });
 
     QUnit.test("properly load records with existing first APP", async function (assert) {
         assert.expect(7);
-        const mockRPC = async function (route, args) {
-            assert.step((args && args.method) || route);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
         };
         // simulate a real scenario with a first app (e.g. Discuss), to ensure that we don't
         // fallback on that first app when only a model and res_id are given in the url
@@ -266,13 +266,13 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Second record"]);
         assert.containsNone(target, ".o_menu_brand");
-        assert.verifySteps(["/web/webclient/load_menus", "get_views", "read"]);
+        assert.verifySteps(["/web/webclient/load_menus", "get_views", "web_read"]);
     });
 
     QUnit.test("properly load default record", async function (assert) {
         assert.expect(6);
-        const mockRPC = async function (route, args) {
-            assert.step((args && args.method) || route);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         webClient.env.bus.trigger("test:hashchange", {
@@ -288,14 +288,14 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "onchange",
+            "onchange2",
         ]);
     });
 
     QUnit.test("load requested view for act window actions", async function (assert) {
         assert.expect(7);
-        const mockRPC = async function (route, args) {
-            assert.step((args && args.method) || route);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         webClient.env.bus.trigger("test:hashchange", {
@@ -310,7 +310,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "web_search_read",
+            "unity_web_search_read",
         ]);
     });
 
@@ -318,8 +318,12 @@ QUnit.module("ActionManager", (hooks) => {
         "lazy load multi record view if mono record one is requested",
         async function (assert) {
             assert.expect(11);
-            const mockRPC = async function (route, args) {
-                assert.step((args && args.method) || route);
+            const mockRPC = async function (route, { method, kwargs }) {
+                if (method === "unity_read") {
+                    assert.step(`unity_read ${kwargs.method}`);
+                } else {
+                    assert.step(method || route);
+                }
             };
             const webClient = await createWebClient({ serverData, mockRPC });
             webClient.env.bus.trigger("test:hashchange", {
@@ -340,8 +344,8 @@ QUnit.module("ActionManager", (hooks) => {
                 "/web/webclient/load_menus",
                 "/web/action/load",
                 "get_views",
-                "read",
-                "web_search_read",
+                "web_read",
+                "unity_web_search_read",
             ]);
         }
     );
@@ -368,8 +372,8 @@ QUnit.module("ActionManager", (hooks) => {
         "lazy loaded multi record view with failing mono record one",
         async function (assert) {
             assert.expect(3);
-            const mockRPC = async function (route, args) {
-                if (args && args.method === "read") {
+            const mockRPC = async function (route, { method, kwargs }) {
+                if (method === "web_read") {
                     return Promise.reject();
                 }
             };
@@ -388,8 +392,8 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("change the viewType of the current action", async function (assert) {
         assert.expect(13);
-        const mockRPC = async function (route, args) {
-            assert.step((args && args.method) || route);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
@@ -421,16 +425,16 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "web_search_read",
-            "web_search_read",
-            "read",
+            "unity_web_search_read",
+            "unity_web_search_read",
+            "web_read",
         ]);
     });
 
     QUnit.test("change the id of the current action", async function (assert) {
         assert.expect(11);
-        const mockRPC = async function (route, args) {
-            assert.step((args && args.method) || route);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         // execute action 3 and open the first record in a form view
@@ -454,9 +458,9 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "web_search_read",
-            "read",
-            "read",
+            "unity_web_search_read",
+            "web_read",
+            "web_read",
         ]);
     });
 
@@ -633,8 +637,8 @@ QUnit.module("ActionManager", (hooks) => {
                 return this._super(k, v);
             },
         });
-        const mockRPC = async (route, args) => {
-            assert.step((args && args.method) || route);
+        const mockRPC = async (route, { method, kwargs }) => {
+            assert.step(method || route);
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 4);
@@ -651,10 +655,10 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "web_search_read",
+            "unity_web_search_read",
             "setItem session current_action",
             "getItem session current_action",
-            "web_search_read",
+            "unity_web_search_read",
             "setItem session current_action",
         ]);
     });
@@ -679,7 +683,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/call_kw/partner/web_search_read",
+            "/web/dataset/call_kw/partner/unity_web_search_read",
         ]);
     });
 
@@ -720,7 +724,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/call_kw/partner/web_search_read",
+            "/web/dataset/call_kw/partner/unity_web_search_read",
         ]);
     });
 
@@ -747,14 +751,14 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/call_kw/partner/read",
+            "/web/dataset/call_kw/partner/web_read",
         ]);
         await loadState(webClient, {
             action: 999,
             view_type: "form",
             id: "",
         });
-        assert.verifySteps(["/web/dataset/call_kw/partner/onchange"]);
+        assert.verifySteps(["/web/dataset/call_kw/partner/onchange2"]);
         assert.containsOnce(target, ".o_form_view .o_form_editable");
         assert.deepEqual(getBreadCrumbTexts(target), ["Partner", "New"]);
     });

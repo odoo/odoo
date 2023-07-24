@@ -33,12 +33,10 @@ export function useAssignUserCommand() {
         if (type === "many2one") {
             component.props.record.update({ [component.props.name]: record });
         } else if (type === "many2many") {
-            component.props.record.update({
-                [component.props.name]: {
-                    operation: "REPLACE_WITH",
-                    resIds: [...getCurrentIds(), record[0]],
-                },
-            });
+            component.props.record.data[component.props.name].replaceWith([
+                ...getCurrentIds(),
+                record[0],
+            ]);
         }
     };
 
@@ -46,12 +44,9 @@ export function useAssignUserCommand() {
         if (type === "many2one") {
             component.props.record.update({ [component.props.name]: [] });
         } else if (type === "many2many") {
-            component.props.record.update({
-                [component.props.name]: {
-                    operation: "REPLACE_WITH",
-                    resIds: getCurrentIds().filter((id) => id !== record[0]),
-                },
-            });
+            component.props.record.data[component.props.name].replaceWith(
+                getCurrentIds().filter((id) => id !== record[0])
+            );
         }
     };
 

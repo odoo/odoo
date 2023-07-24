@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { onMounted, onWillUpdateProps } from "@odoo/owl";
+import { onMounted } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -42,44 +42,48 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             fieldString: this.props.string,
         });
 
-        // Using onWillStart causes an infinite loop, onMounted will handle the initial
-        // check and onWillUpdateProps handles any addition to the field.
-        onMounted(this.checkEmails.bind(this, this.props));
-        onWillUpdateProps(this.checkEmails.bind(this));
+        const update = this.update;
+        this.update = async (object) => {
+            await update(object);
+            await this.checkEmails();
+        };
+
+        onMounted(() => {
+            this.checkEmails();
+        });
     }
 
-    async checkEmails(props) {
-        const invalidRecords = props.record.data[props.name].records.filter(
-            (record) => !record.data.email
-        );
+    async checkEmails() {
+        const list = this.props.record.data[this.props.name];
+        const invalidRecords = list.records.filter((record) => !record.data.email);
         // Remove records with invalid data, open form view to edit those and readd them if they are updated correctly.
         const dialogDefs = [];
         for (const record of invalidRecords) {
             dialogDefs.push(
                 this.openMany2xRecord({
                     resId: record.resId,
-                    context: props.context,
+                    context: this.props.context,
                     title: sprintf(_t("Edit: %s"), record.data.display_name),
                 })
             );
         }
         this.openedDialogs += invalidRecords.length;
-        const invalidRecordIds = invalidRecords.map((rec) => rec.resId);
-        if (invalidRecordIds.length) {
-            this.props.record.data[this.props.name].replaceWith(
-                props.record.data[props.name].currentIds.filter(
-                    (id) => !invalidRecordIds.includes(id)
-                )
-            );
+        await Promise.all(dialogDefs);
+
+        this.openedDialogs -= invalidRecords.length;
+        if (this.openedDialogs || !this.recordsIdsToAdd.length) {
+            return;
         }
-        return Promise.all(dialogDefs).then(() => {
-            this.openedDialogs -= invalidRecords.length;
-            if (this.openedDialogs || !this.recordsIdsToAdd.length) {
-                return;
-            }
-            props.record.data[props.name].add(this.recordsIdsToAdd, { isM2M: true });
-            this.recordsIdsToAdd = [];
-        });
+
+        const invalidRecordIds = invalidRecords.map((rec) => rec.resId);
+        await list.replaceWith(
+            [
+                ...list.currentIds.filter((id) => !invalidRecordIds.includes(id)),
+                ...this.recordsIdsToAdd,
+            ],
+            { reload: true }
+        );
+        this.recordsIdsToAdd = [];
     }
 
     get tags() {

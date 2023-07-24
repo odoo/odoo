@@ -8,7 +8,7 @@ import { markRaw, reactive } from "@odoo/owl";
 import { roundPrecision as round_pr, floatIsZero } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
-import { batched, deduceUrl } from "@point_of_sale/utils";
+import { deduceUrl } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { memoize } from "@web/core/utils/functions";
@@ -20,6 +20,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { renderToString } from "@web/core/utils/render";
+import { batched } from "@web/core/utils/timing";
 
 /* Returns an array containing all elements of the given
  * array corresponding to the rule function {agg} and without duplicates

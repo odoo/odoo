@@ -13,9 +13,13 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
+import { errorService } from "@web/core/errors/error_service";
+import { registry } from "@web/core/registry";
 
 const BINARY_FILE =
     "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
+
+const serviceRegistry = registry.category("services");
 
 let serverData;
 let target;
@@ -478,7 +482,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("isUploading state should be set to false after upload", async function (assert) {
-        assert.expect(1);
+        serviceRegistry.add("error", errorService);
+
         serverData.models.partner.onchanges = {
             document: function (obj) {
                 if (obj.document) {
@@ -502,5 +507,6 @@ QUnit.module("Fields", (hooks) => {
             "Upload your file",
             "displayed value should be upload your file"
         );
+        assert.containsOnce(target, ".o_error_dialog");
     });
 });

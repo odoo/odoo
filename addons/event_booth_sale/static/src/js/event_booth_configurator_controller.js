@@ -18,7 +18,8 @@ class EventBoothConfiguratorController extends formView.Controller {
         this.action = useService("action");
     }
 
-    onRecordSaved(record) {
+    async onRecordSaved(record) {
+        await super.onRecordSaved(...arguments);
         const { event_id, event_booth_category_id, event_booth_ids } = record.data;
         return this.action.doAction({
             type: "ir.actions.act_window_close",
@@ -26,15 +27,7 @@ class EventBoothConfiguratorController extends formView.Controller {
                 eventBoothConfiguration: {
                     event_id,
                     event_booth_category_id,
-                    event_booth_pending_ids: {
-                        operation: "MULTI",
-                        commands: [
-                            {
-                                operation: "REPLACE_WITH",
-                                ids: event_booth_ids.currentIds,
-                            },
-                        ],
-                    },
+                    event_booth_pending_ids: event_booth_ids.currentIds,
                 },
             },
         });

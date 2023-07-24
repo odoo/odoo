@@ -3,6 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { Field } from "@web/views/fields/field";
 import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { Record } from "@web/views/record";
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
@@ -10,6 +11,7 @@ import {
     click,
     editInput,
     getFixture,
+    getNodesTextContent,
     mount,
     nextTick,
     patchWithCleanup,
@@ -121,7 +123,7 @@ QUnit.module("Record Component", (hooks) => {
         );
         assert.verifySteps([
             "/web/dataset/call_kw/partner/fields_get",
-            "/web/dataset/call_kw/partner/read",
+            "/web/dataset/call_kw/partner/web_read",
         ]);
     });
 
@@ -137,7 +139,7 @@ QUnit.module("Record Component", (hooks) => {
         Parent.template = xml`
             <Record resModel="'partner'" resId="state.resId" fieldNames="['foo']" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
-                <button t-on-click="() => this.state.resId++">Next</button>
+                <button class="my-btn" t-on-click="() => this.state.resId++">Next</button>
             </Record>`;
         const env = await makeTestEnv({
             serverData,
@@ -148,12 +150,12 @@ QUnit.module("Record Component", (hooks) => {
         await mount(Parent, target, { env, dev: true });
         assert.verifySteps([
             "/web/dataset/call_kw/partner/fields_get",
-            "/web/dataset/call_kw/partner/read",
+            "/web/dataset/call_kw/partner/web_read",
         ]);
         assert.containsOnce(target, ".o_field_char:contains(yop)");
-        await click(target.querySelector("button"));
+        await click(target.querySelector("button.my-btn"));
         assert.containsOnce(target, ".o_field_char:contains(blip)");
-        assert.verifySteps(["/web/dataset/call_kw/partner/read"]);
+        assert.verifySteps(["/web/dataset/call_kw/partner/web_read"]);
     });
 
     QUnit.test("predefined fields and values", async function (assert) {
@@ -215,7 +217,7 @@ QUnit.module("Record Component", (hooks) => {
 
             onRecordChanged(record, changes) {
                 assert.step("record changed");
-                assert.strictEqual(record.model.constructor.name, "RelationalModel");
+                assert.strictEqual(record.model.constructor.name, "StandaloneRelationalModel");
                 assert.deepEqual(changes, { foo: "753" });
             }
         }
@@ -269,10 +271,10 @@ QUnit.module("Record Component", (hooks) => {
         await click(target, "button.save");
         assert.verifySteps([
             "fields_get",
-            "read",
+            "web_read",
             "onWillSaveRecord",
             "write",
-            "read",
+            "web_read",
             "onRecordSaved",
         ]);
     });
@@ -301,7 +303,7 @@ QUnit.module("Record Component", (hooks) => {
                     },
                 };
                 this.values = {
-                    foo: [1, undefined],
+                    foo: [1, "bar1"],
                 };
             }
 
@@ -326,13 +328,174 @@ QUnit.module("Record Component", (hooks) => {
                 },
             }),
         });
-        assert.verifySteps(["/web/dataset/call_kw/bar/read"]);
+        assert.verifySteps([]);
         assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "bar1");
         await editInput(target, ".o_field_many2one_selection input", "abc");
         assert.verifySteps(["/web/dataset/call_kw/bar/name_search"]);
         await click(target.querySelectorAll(".o-autocomplete--dropdown-item a")[0]);
         assert.verifySteps(["record changed"]);
         assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "abc");
+    });
+
+    QUnit.test("handles many2one fields (2)", async function (assert) {
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
+        serverData.models = {
+            bar: {
+                records: [
+                    { id: 1, display_name: "bar1" },
+                    { id: 3, display_name: "abc" },
+                ],
+            },
+        };
+
+        class Parent extends Component {
+            setup() {
+                this.fields = {
+                    foo: {
+                        name: "foo",
+                        type: "many2one",
+                        relation: "bar",
+                    },
+                };
+                this.values = {
+                    foo: 1,
+                };
+            }
+
+            onRecordChanged(record, changes) {
+                assert.step("record changed");
+                assert.deepEqual(changes, { foo: 3 });
+                assert.deepEqual(record.data, { foo: [3, "abc"] });
+            }
+        }
+        Parent.components = { Record, Many2OneField };
+        Parent.template = xml`
+            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+                <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
+            </Record>
+        `;
+
+        await mount(Parent, target, {
+            env: await makeTestEnv({
+                serverData,
+                mockRPC(route, args) {
+                    assert.step(route);
+                },
+            }),
+        });
+        assert.verifySteps(["/web/dataset/call_kw/bar/web_read"]);
+        assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "bar1");
+    });
+
+    QUnit.test("handles many2one fields (3)", async function (assert) {
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
+        serverData.models = {
+            bar: {
+                records: [
+                    { id: 1, display_name: "bar1" },
+                    { id: 3, display_name: "abc" },
+                ],
+            },
+        };
+
+        class Parent extends Component {
+            setup() {
+                this.fields = {
+                    foo: {
+                        name: "foo",
+                        type: "many2one",
+                        relation: "bar",
+                    },
+                };
+                this.values = {
+                    foo: [1],
+                };
+            }
+
+            onRecordChanged(record, changes) {
+                assert.step("record changed");
+                assert.deepEqual(changes, { foo: 3 });
+                assert.deepEqual(record.data, { foo: [3, "abc"] });
+            }
+        }
+        Parent.components = { Record, Many2OneField };
+        Parent.template = xml`
+            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+                <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
+            </Record>
+        `;
+
+        await mount(Parent, target, {
+            env: await makeTestEnv({
+                serverData,
+                mockRPC(route, args) {
+                    assert.step(route);
+                },
+            }),
+        });
+        assert.verifySteps(["/web/dataset/call_kw/bar/web_read"]);
+        assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "bar1");
+    });
+
+    QUnit.test("handles x2many fields", async function (assert) {
+        serverData.models = {
+            tag: {
+                records: [
+                    { id: 1, display_name: "bug" },
+                    { id: 3, display_name: "ref" },
+                ],
+            },
+        };
+
+        class Parent extends Component {
+            setup() {
+                this.activeFields = {
+                    tags: {
+                        related: {
+                            activeFields: {
+                                display_name: {},
+                            },
+                            fields: {
+                                display_name: { name: "display_name", type: "string" },
+                            },
+                        },
+                    },
+                };
+                this.fields = {
+                    tags: {
+                        name: "Tags",
+                        type: "many2many",
+                        relation: "tag",
+                    },
+                };
+                this.values = {
+                    tags: [1, 3],
+                };
+            }
+        }
+        Parent.components = { Record, Many2ManyTagsField };
+        Parent.template = xml`
+            <Record resModel="'partner'" fieldNames="['tags']" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
+                <Many2ManyTagsField name="'tags'" record="data.record"/>
+            </Record>
+        `;
+
+        await mount(Parent, target, {
+            env: await makeTestEnv({
+                serverData,
+                mockRPC(route, args) {
+                    assert.step(route);
+                },
+            }),
+        });
+        assert.verifySteps(["/web/dataset/call_kw/tag/web_read"]);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_tag")), ["bug", "ref"]);
     });
 
     QUnit.test(
@@ -358,7 +521,7 @@ QUnit.module("Record Component", (hooks) => {
 
                 onRecordChanged(record, changes) {
                     assert.step("record changed");
-                    assert.strictEqual(record.model.constructor.name, "RelationalModel");
+                    assert.strictEqual(record.model.constructor.name, "StandaloneRelationalModel");
                     assert.deepEqual(changes, { foo: "753" });
                     this.values.foo = "357";
                 }
@@ -374,7 +537,7 @@ QUnit.module("Record Component", (hooks) => {
                 env: await makeTestEnv({
                     serverData,
                     mockRPC(route) {
-                        assert.step(route);
+                        throw new Error("should not do any rpc");
                     },
                 }),
             });
@@ -419,13 +582,17 @@ QUnit.module("Record Component", (hooks) => {
         await mount(Parent, target, {
             env: await makeTestEnv({
                 serverData,
-                mockRPC(route, args) {
-                    assert.step(`${args.method} : ${JSON.stringify(args.args)}`);
+                mockRPC(route, { method, args, kwargs }) {
+                    assert.step(
+                        `${method} : ${JSON.stringify(args[0])} - ${JSON.stringify(
+                            kwargs.specification
+                        )}`
+                    );
                 },
             }),
         });
 
-        assert.verifySteps([`read : [[1],["foo"]]`]);
+        assert.verifySteps([`web_read : [1] - {"foo":{}}`]);
         const increment = target.querySelector("#increment");
         const field = target.querySelector("div[name='foo']");
         assert.strictEqual(increment.textContent, "0");
@@ -438,7 +605,7 @@ QUnit.module("Record Component", (hooks) => {
         assert.strictEqual(field.textContent, "yop");
 
         await click(target.querySelector("#next"));
-        assert.verifySteps([`read : [[5],["foo"]]`]);
+        assert.verifySteps([`web_read : [5] - {"foo":{}}`]);
         assert.strictEqual(increment.textContent, "2");
         assert.strictEqual(field.textContent, "blop");
     });

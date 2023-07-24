@@ -91,13 +91,7 @@ export class PropertiesField extends Component {
      * @returns {array}
      */
     get propertiesList() {
-        const propertiesValues = (this.props.record.data[this.props.name] || []).map(property => {
-            if (["date", "datetime"].includes(property.type)) {
-                // Date and Datetime are immutable luxon objects.
-                return property;
-            }
-            return JSON.parse(JSON.stringify(property));
-        });
+        const propertiesValues = this.props.record.data[this.props.name] || [];
         return propertiesValues.filter((definition) => !definition.definition_deleted);
     }
 

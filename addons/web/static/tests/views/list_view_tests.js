@@ -16,7 +16,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { textField } from "@web/views/fields/text/text_field";
 import { ListController } from "@web/views/list/list_controller";
-import { DynamicGroupList, DynamicRecordList } from "@web/views/relational_model";
+import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
 import { getPickerApplyButton, getPickerCell } from "../core/datetime/datetime_test_helpers";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
@@ -65,7 +65,6 @@ import {
 } from "../search/helpers";
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
 import { makeView, makeViewInDialog, setupViewRegistries } from "./helpers";
-import { x2ManyCommands } from "@web/core/orm_service";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -1138,11 +1137,11 @@ QUnit.module("Views", (hooks) => {
 
             assert.verifySteps([
                 "get_views",
-                "web_search_read",
+                "unity_web_search_read",
                 "write",
-                "read",
+                "web_read",
                 "toDo",
-                "web_search_read",
+                "unity_web_search_read",
             ]);
         }
     );
@@ -1438,7 +1437,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("save a record with an invisible required field ", async function (assert) {
+    QUnit.test("save a record with an invisible required field", async function (assert) {
         serverData.models.foo.fields.foo.required = true;
 
         await makeView({
@@ -1458,14 +1457,14 @@ QUnit.module("Views", (hooks) => {
             },
         });
         assert.containsN(target, ".o_data_row", 4);
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         await click($(".o_list_button_add:visible").get(0));
         await editInput(target, "[name='int_field'] input", 1);
         await click(target, ".o_list_view");
         assert.containsN(target, ".o_data_row", 5);
         assert.strictEqual(target.querySelector(".o_data_row [name='int_field']").textContent, "1");
-        assert.verifySteps(["onchange", "create", "read"]);
+        assert.verifySteps(["onchange2", "create", "web_read"]);
     });
 
     QUnit.test("multi_edit: edit a required field with an invalid value", async function (assert) {
@@ -1485,7 +1484,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
         assert.containsN(target, ".o_data_row", 4);
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         const rows = target.querySelectorAll(".o_data_row");
         await click(rows[0], ".o_list_record_selector input");
@@ -1672,7 +1671,7 @@ QUnit.module("Views", (hooks) => {
 
             await click($(".o_list_button_add:visible").get(0));
             assert.verifySteps(
-                ["get_views", "web_search_read", "onchange"],
+                ["get_views", "unity_web_search_read", "onchange2"],
                 "no nameget should be done"
             );
         }
@@ -2281,7 +2280,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="date"/>
                 </tree>`,
             mockRPC(route, args) {
-                if (args.method === "web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     if (searchReads === 0) {
                         assert.strictEqual(
                             args.kwargs.order,
@@ -2552,9 +2551,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
         await click(target.querySelector(".o_data_cell"));
-        assert.verifySteps(["doActionButton type object name a1", "web_search_read"]);
+        assert.verifySteps(["doActionButton type object name a1", "unity_web_search_read"]);
     });
 
     QUnit.test("action/type attributes on tree arch, type='action'", async (assert) => {
@@ -2575,9 +2574,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
         await click(target.querySelector(".o_data_cell"));
-        assert.verifySteps(["doActionButton type action name a1", "web_search_read"]);
+        assert.verifySteps(["doActionButton type action name a1", "unity_web_search_read"]);
     });
 
     QUnit.test("editable list view: readonly fields cannot be edited", async function (assert) {
@@ -4212,7 +4211,7 @@ QUnit.module("Views", (hooks) => {
                             }`
                         );
                     }
-                    if (method === "web_search_read") {
+                    if (method === "unity_web_search_read") {
                         assert.step(
                             `web_search_read.order: ${args.kwargs.order || "default order"}`
                         );
@@ -4262,10 +4261,10 @@ QUnit.module("Views", (hooks) => {
                         assert.step(
                             `web_read_group.orderby: ${args.kwargs.orderby || "default order"}`
                         );
+                    }
+                    if (method === "unity_web_search_read") {
                         assert.step(
-                            `web_read_group.expand_orderby: ${
-                                args.kwargs.expand_orderby || "default order"
-                            }`
+                            `web_search_read.orderby: ${args.kwargs.order || "default order"}`
                         );
                     }
                 },
@@ -4276,7 +4275,8 @@ QUnit.module("Views", (hooks) => {
             );
             assert.verifySteps([
                 "web_read_group.orderby: default order",
-                "web_read_group.expand_orderby: default order",
+                "web_search_read.orderby: default order",
+                "web_search_read.orderby: default order",
             ]);
 
             await click(target.querySelector(".o_column_sortable[data-name='foo']"));
@@ -4286,7 +4286,8 @@ QUnit.module("Views", (hooks) => {
             );
             assert.verifySteps([
                 "web_read_group.orderby: default order",
-                "web_read_group.expand_orderby: foo ASC",
+                "web_search_read.orderby: foo ASC",
+                "web_search_read.orderby: foo ASC",
             ]);
         }
     );
@@ -5556,7 +5557,9 @@ QUnit.module("Views", (hooks) => {
         class CautiousController extends listView.Controller {
             get deleteConfirmationDialogProps() {
                 const props = super.deleteConfirmationDialogProps;
-                props.body = markup(`<span class="text-danger">These are the consequences</span><br/>${props.body}`);
+                props.body = markup(
+                    `<span class="text-danger">These are the consequences</span><br/>${props.body}`
+                );
                 return props;
             }
         }
@@ -5680,6 +5683,9 @@ QUnit.module("Views", (hooks) => {
         serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
         serverData.models.foo.records.push({ id: 6, bar: true, foo: "yyy" });
 
+        patchWithCleanup(session, {
+            active_ids_limit: 4,
+        });
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -5692,9 +5698,6 @@ QUnit.module("Views", (hooks) => {
                 }
             },
             actionMenus: {},
-        });
-        patchWithCleanup(session, {
-            active_ids_limit: 4,
         });
         patchWithCleanup(list.env.services.notification, {
             add: () => {
@@ -5748,7 +5751,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([
             "/web/dataset/call_kw/foo/get_views",
-            "/web/dataset/call_kw/foo/web_search_read",
+            "/web/dataset/call_kw/foo/unity_web_search_read",
         ]);
         await toggleActionMenu(target);
         await toggleMenuItem(target, "Archive");
@@ -5777,7 +5780,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tbody td.o_list_record_selector", 3, "should have 3 records");
         assert.verifySteps([
             "/web/dataset/call_kw/foo/action_archive",
-            "/web/dataset/call_kw/foo/web_search_read",
+            "/web/dataset/call_kw/foo/unity_web_search_read",
         ]);
     });
 
@@ -5835,6 +5838,9 @@ QUnit.module("Views", (hooks) => {
         serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
         serverData.models.foo.records.push({ id: 6, bar: true, foo: "yyy" });
 
+        patchWithCleanup(session, {
+            active_ids_limit: 4,
+        });
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -5849,9 +5855,6 @@ QUnit.module("Views", (hooks) => {
             actionMenus: {},
         });
 
-        patchWithCleanup(session, {
-            active_ids_limit: 4,
-        });
         patchWithCleanup(list.env.services.notification, {
             add: () => {
                 assert.step("notify");
@@ -6110,7 +6113,7 @@ QUnit.module("Views", (hooks) => {
                     <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
                 </search>`,
             mockRPC(route, args) {
-                if (args.method === "web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     assert.strictEqual(args.kwargs.limit, 80, "default limit should be 80 in List");
                 }
             },
@@ -6124,7 +6127,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("pager, ungrouped, with count limit reached", async function (assert) {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
 
         let expectedCountLimit = 4;
         await makeView({
@@ -6134,7 +6137,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     assert.strictEqual(args.kwargs.count_limit, expectedCountLimit);
                 }
             },
@@ -6143,7 +6146,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         await click(target.querySelector(".o_pager_limit"));
         assert.containsN(target, ".o_data_row", 2);
@@ -6153,11 +6156,11 @@ QUnit.module("Views", (hooks) => {
 
         expectedCountLimit = undefined;
         await click(target.querySelector(".o_pager_next"));
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
     });
 
     QUnit.test("pager, ungrouped, with count limit reached, click next", async function (assert) {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
 
         let expectedCountLimit = 4;
         await makeView({
@@ -6167,7 +6170,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     assert.strictEqual(args.kwargs.count_limit, expectedCountLimit);
                 }
             },
@@ -6176,18 +6179,18 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         expectedCountLimit = 5;
         await click(target.querySelector(".o_pager_next"));
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "3-4");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
     });
 
     QUnit.test("pager, ungrouped, with count limit reached, click next (2)", async (assert) => {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
         serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
 
         let expectedCountLimit = 4;
@@ -6198,7 +6201,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     assert.strictEqual(args.kwargs.count_limit, expectedCountLimit);
                 }
             },
@@ -6207,25 +6210,25 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         expectedCountLimit = 5;
         await click(target.querySelector(".o_pager_next"));
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "3-4");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4+");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
 
         expectedCountLimit = 7;
         await click(target.querySelector(".o_pager_next"));
         assert.containsOnce(target, ".o_data_row");
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "5-5");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "5");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
     });
 
     QUnit.test("pager, ungrouped, with count limit reached, click previous", async (assert) => {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
         serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
 
         let expectedCountLimit = 4;
@@ -6236,7 +6239,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     assert.strictEqual(args.kwargs.count_limit, expectedCountLimit);
                 }
             },
@@ -6245,18 +6248,18 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         expectedCountLimit = undefined;
         await click(target.querySelector(".o_pager_previous"));
         assert.containsOnce(target, ".o_data_row");
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "5-5");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "5");
-        assert.verifySteps(["search_count", "web_search_read"]);
+        assert.verifySteps(["search_count", "unity_web_search_read"]);
     });
 
     QUnit.test("pager, ungrouped, with count limit reached, edit pager", async (assert) => {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
         serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
 
         let expectedCountLimit = 4;
@@ -6267,7 +6270,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     assert.strictEqual(args.kwargs.count_limit, expectedCountLimit);
                 }
             },
@@ -6276,7 +6279,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         expectedCountLimit = 5;
         await click(target, ".o_pager_value");
@@ -6284,7 +6287,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 3);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "2-4");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4+");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
 
         expectedCountLimit = 15;
         await click(target, ".o_pager_value");
@@ -6292,11 +6295,11 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 4);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "2-5");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "5");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
     });
 
     QUnit.test("pager, ungrouped, with count equals count limit", async function (assert) {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 4 });
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 4 });
 
         await makeView({
             type: "list",
@@ -6311,11 +6314,11 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
     });
 
     QUnit.test("pager, ungrouped, reload while fetching count", async function (assert) {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
 
         const def = makeDeferred();
         await makeView({
@@ -6334,7 +6337,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         await click(target.querySelector(".o_pager_limit"));
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
@@ -6344,7 +6347,7 @@ QUnit.module("Views", (hooks) => {
         await reloadListView(target);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
 
         def.resolve();
         await nextTick();
@@ -6354,7 +6357,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("pager, ungrouped, next and fetch count simultaneously", async function (assert) {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 5 });
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 5 });
         serverData.models.foo.records.push({ id: 11, foo: "r11", bar: true });
         serverData.models.foo.records.push({ id: 12, foo: "r12", bar: true });
         serverData.models.foo.records.push({ id: 13, foo: "r13", bar: true });
@@ -6367,7 +6370,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
             async mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     await def;
                 }
             },
@@ -6376,7 +6379,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "5+");
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         def = makeDeferred();
         await click(target.querySelector(".o_pager_next")); // this request will be pending
@@ -6384,7 +6387,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "5+");
         // can't fetch count simultaneously as it is temporarily disabled while updating
         assert.hasClass(target.querySelector(".o_pager_limit"), "disabled");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
 
         def.resolve();
         await nextTick();
@@ -6392,7 +6395,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("pager, grouped, with groups count limit reached", async function (assert) {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
         serverData.models.foo.records.push({ id: 398, foo: "ozfijz" }); // to have 4 groups
 
         await makeView({
@@ -6454,7 +6457,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree limit="2" count_limit="3"><field name="foo"/><field name="bar"/></tree>',
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     assert.strictEqual(args.kwargs.count_limit, expectedCountLimit);
                 }
             },
@@ -6463,7 +6466,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         await click(target.querySelector(".o_pager_limit"));
         assert.containsN(target, ".o_data_row", 2);
@@ -6473,13 +6476,13 @@ QUnit.module("Views", (hooks) => {
 
         expectedCountLimit = undefined;
         await click(target.querySelector(".o_pager_next"));
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
     });
 
     QUnit.test(
         "pager, grouped, pager limit should be based on the group's count",
         async function (assert) {
-            patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+            patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
             serverData.models.foo.records = [
                 { id: 121, foo: "blip" },
                 { id: 122, foo: "blip" },
@@ -6508,7 +6511,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "pager, grouped, group pager should update after removing a filter",
         async function (assert) {
-            patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+            patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
             serverData.models.foo.records = [
                 { id: 121, foo: "aaa" },
                 { id: 122, foo: "blip" },
@@ -6552,7 +6555,7 @@ QUnit.module("Views", (hooks) => {
         "grouped, show only limited records when the list view is initially expanded",
         async function (assert) {
             const forcedDefaultLimit = 3;
-            patchWithCleanup(DynamicGroupList, { DEFAULT_LIMIT: forcedDefaultLimit });
+            patchWithCleanup(RelationalModel, { DEFAULT_LIMIT: forcedDefaultLimit });
 
             serverData.models.foo.records = [
                 { id: 121, foo: "blip" },
@@ -6587,7 +6590,7 @@ QUnit.module("Views", (hooks) => {
 
         const offsets = [0, 1, 1];
         const mockRPC = async (route, args) => {
-            if (args.method === "web_search_read") {
+            if (args.method === "unity_web_search_read") {
                 assert.strictEqual(args.kwargs.offset, offsets.shift());
             }
         };
@@ -6668,8 +6671,8 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: '<tree><field name="foo"/><field name="bar"/></tree>',
-            mockRPC(route) {
-                if (route === "/web/dataset/call_kw/foo/web_search_read") {
+            mockRPC(route, args) {
+                if (args.method === "unity_web_search_read") {
                     nbSearchRead++;
                 }
             },
@@ -6719,8 +6722,8 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: '<tree><field name="foo" nolabel="1"/><field name="int_field"/></tree>',
-            mockRPC(route) {
-                if (route === "/web/dataset/call_kw/foo/web_search_read") {
+            mockRPC(route, args) {
+                if (args.method === "unity_web_search_read") {
                     nbSearchRead++;
                 }
             },
@@ -6747,7 +6750,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>',
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/foo/web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     assert.strictEqual(
                         args.kwargs.order,
                         "foo ASC",
@@ -6779,7 +6782,7 @@ QUnit.module("Views", (hooks) => {
                 '<field name="foo"/><field name="bar"/>' +
                 "</tree>",
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/foo/web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     assert.strictEqual(
                         args.kwargs.order,
                         "foo ASC, bar DESC, int_field ASC",
@@ -7000,7 +7003,7 @@ QUnit.module("Views", (hooks) => {
                 assert.step(args.method);
             },
         });
-        assert.verifySteps(["get_views", "web_search_read"], "should have done 1 web_search_read");
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
             "2 records",
             "3 records",
@@ -7787,7 +7790,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
         assert.containsOnce(
             target,
             "thead th:not(.o_list_record_selector)",
@@ -7805,7 +7808,7 @@ QUnit.module("Views", (hooks) => {
             "there should be no button in the header"
         );
         await click(target, ".o_group_header:first-child");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
         assert.containsOnce(target, ".o_group_header button");
 
         await click(target, ".o_group_header:first-child button");
@@ -7838,7 +7841,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("groupby node with a button with modifiers", async function (assert) {
-        assert.expect(15);
+        assert.expect(16);
         await makeView({
             type: "list",
             resModel: "foo",
@@ -7853,24 +7856,25 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             mockRPC(route, args) {
                 assert.step(args.method || route);
-                if (args.method === "read" && args.model === "res_currency") {
-                    assert.deepEqual(args.args, [[1, 2], ["position"]]);
+                if (args.method === "web_read" && args.model === "res_currency") {
+                    assert.deepEqual(args.args, [[1, 2]]);
+                    assert.deepEqual(args.kwargs.specification, { position: {} });
                 }
             },
             groupBy: ["currency_id"],
         });
 
-        assert.verifySteps(["get_views", "web_read_group", "read"]);
+        assert.verifySteps(["get_views", "web_read_group", "web_read"]);
         assert.containsNone(target, ".o_group_header button");
         assert.containsNone(target, ".o_data_row");
 
         await click(target, ".o_group_header:nth-child(2)");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
         assert.containsNone(target, ".o_group_header button");
         assert.containsN(target, ".o_data_row", 1);
 
         await click(target, ".o_group_header:first-child");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["unity_web_search_read"]);
         assert.containsOnce(target, ".o_group_header button");
         assert.containsN(target, ".o_data_row", 4);
     });
@@ -7906,7 +7910,13 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(groupHeaders[0], "button");
             assert.containsNone(groupHeaders[1], "button");
 
-            assert.verifySteps(["get_views", "web_read_group", "read"]);
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "unity_web_search_read",
+                "unity_web_search_read",
+                "web_read",
+            ]);
         }
     );
 
@@ -8011,7 +8021,8 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree editable="bottom" expand="1">
+            arch: `
+                <tree editable="bottom" expand="1">
                     <field name="foo"/>
                     <field name="currency_id"/>
                     <groupby name="currency_id">
@@ -8020,12 +8031,16 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             groupBy: ["currency_id"],
             mockRPC(route, args) {
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     assert.deepEqual(
                         args.args[3],
                         {
-                            foo: "1",
-                            currency_id: "",
+                            currency_id: {
+                                fields: {
+                                    display_name: {},
+                                },
+                            },
+                            foo: {},
                         },
                         "onchange spec should not follow relation of many2one fields"
                     );
@@ -8373,8 +8388,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(
             [
                 "/web/dataset/call_kw/foo/get_views",
-                "/web/dataset/call_kw/foo/web_search_read",
-                "/web/dataset/call_kw/foo/web_search_read",
+                "/web/dataset/call_kw/foo/unity_web_search_read",
+                "/web/dataset/call_kw/foo/unity_web_search_read",
             ],
             "should have reloaded the view (after the action is complete)"
         );
@@ -8541,7 +8556,7 @@ QUnit.module("Views", (hooks) => {
                         );
                     }
                     nbRPCs.readGroup++;
-                } else if (args.method === "web_search_read") {
+                } else if (args.method === "unity_web_search_read") {
                     // called twice (once when opening the group, once when sorting)
                     assert.deepEqual(
                         args.kwargs.domain,
@@ -8997,7 +9012,6 @@ QUnit.module("Views", (hooks) => {
             serverData.models.foo.onchanges = {
                 o2m: function (obj) {
                     obj.o2m = [
-                        [5],
                         [1, 1, { display_name: "Value 1", stage: "open" }],
                         [1, 2, { display_name: "Value 2", stage: "draft" }],
                     ];
@@ -9135,7 +9149,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
         assert.containsN(target, "tr.o_data_row", 4);
 
         // click on 3rd line
@@ -9161,7 +9175,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tr.o_data_row", 5);
         assert.hasClass(target.querySelector("tr.o_data_row:nth-child(5)"), "o_selected_row");
 
-        assert.verifySteps(["onchange"]);
+        assert.verifySteps(["onchange2"]);
     });
 
     QUnit.test("pressing tab on last cell of editable list view", async function (assert) {
@@ -9207,10 +9221,10 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([
             "/web/dataset/call_kw/foo/get_views",
-            "/web/dataset/call_kw/foo/web_search_read",
+            "/web/dataset/call_kw/foo/unity_web_search_read",
             "/web/dataset/call_kw/foo/write",
-            "/web/dataset/call_kw/foo/read",
-            "/web/dataset/call_kw/foo/onchange",
+            "/web/dataset/call_kw/foo/web_read",
+            "/web/dataset/call_kw/foo/onchange2",
         ]);
     });
 
@@ -9226,12 +9240,12 @@ QUnit.module("Views", (hooks) => {
             mockRPC(route, args, performRPC) {
                 assert.step(args.method);
                 const result = performRPC(route, args);
-                if (args.method === "read") {
+                if (args.method === "web_read") {
                     return readPromise.then(function () {
                         return result;
                     });
                 }
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     return onchangeGetPromise.then(function () {
                         return result;
                     });
@@ -9270,7 +9284,13 @@ QUnit.module("Views", (hooks) => {
             "5th row should be selected"
         );
 
-        assert.verifySteps(["get_views", "web_search_read", "write", "read", "onchange"]);
+        assert.verifySteps([
+            "get_views",
+            "unity_web_search_read",
+            "write",
+            "web_read",
+            "onchange2",
+        ]);
     });
 
     QUnit.test("display toolbar", async function (assert) {
@@ -9349,9 +9369,9 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([
             "get_views",
-            "web_search_read",
+            "unity_web_search_read",
             `{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}`,
-            "web_search_read",
+            "unity_web_search_read",
         ]);
     });
 
@@ -9881,7 +9901,7 @@ QUnit.module("Views", (hooks) => {
                 1,
                 "should have the new value visible in dom"
             );
-            assert.verifySteps(["get_views", "web_search_read", "write", "read"]);
+            assert.verifySteps(["get_views", "unity_web_search_read", "write", "web_read"]);
         }
     );
 
@@ -9921,7 +9941,7 @@ QUnit.module("Views", (hooks) => {
                         </group>
                     </form>`,
                 mockRPC(route, args) {
-                    if (args.method === "onchange") {
+                    if (args.method === "onchange2") {
                         assert.step(`onchange:${args.model}`);
                     }
                 },
@@ -10865,7 +10885,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree editable="top"><field name="m2o" required="1"/></tree>',
             mockRPC: async function (route, args, performRPC) {
                 const result = await performRPC(route, args);
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     await prom;
                 }
                 return result;
@@ -10895,17 +10915,8 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: '<tree><field name="reference"/></tree>',
-            mockRPC(route, args) {
-                if (args.method === "read") {
-                    assert.step(args.model);
-                }
-            },
         });
 
-        assert.verifySteps(
-            ["bar", "res_currency"],
-            "should have done 1 read by model in reference values"
-        );
         assert.strictEqual(
             $(target).find("tbody td:not(.o_list_record_selector)").text(),
             "Value 1USDEUREUR",
@@ -10914,7 +10925,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("reference field batched in grouped list", async function (assert) {
-        assert.expect(9);
+        assert.expect(7);
 
         serverData.models.foo.records = [
             // group 1
@@ -10937,21 +10948,14 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["foo"],
             mockRPC(route, args) {
                 assert.step(args.method || route);
-                if (
-                    args.method === "read" &&
-                    args.args[1].length === 1 &&
-                    args.args[1][0] === "display_name"
-                ) {
-                    if (args.model === "bar") {
-                        assert.deepEqual(args.args[0], [1, 2, 3]);
-                    }
-                    if (args.model === "res_currency") {
-                        assert.deepEqual(args.args[0], [1]);
-                    }
-                }
             },
         });
-        assert.verifySteps(["get_views", "web_read_group", "read", "read"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "unity_web_search_read",
+            "unity_web_search_read",
+        ]);
         assert.containsN(target, ".o_group_header", 2);
         const allNames = Array.from(
             target.querySelectorAll(".o_data_cell"),
@@ -10997,7 +11001,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("multi edit reference field batched in grouped list", async function (assert) {
-        assert.expect(19);
+        assert.expect(13);
 
         serverData.models.foo.records = [
             // group 1
@@ -11009,7 +11013,6 @@ QUnit.module("Views", (hooks) => {
             { id: 5, foo: "2", reference: "bar,3" },
         ];
         // Field boolean_toggle just to simplify the test flow
-        let nameGetCount = 0;
         await makeView({
             type: "list",
             resModel: "foo",
@@ -11026,25 +11029,15 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "write") {
                     assert.deepEqual(args.args, [[1, 2, 3], { bar: true }]);
                 }
-                if (
-                    args.method === "read" &&
-                    args.args[1].length === 1 &&
-                    args.args[1][0] === "display_name"
-                ) {
-                    if (nameGetCount === 2) {
-                        assert.strictEqual(args.model, "bar");
-                        assert.deepEqual(args.args[0], [1, 2]);
-                    }
-                    if (nameGetCount === 3) {
-                        assert.strictEqual(args.model, "res_currency");
-                        assert.deepEqual(args.args[0], [1]);
-                    }
-                    nameGetCount++;
-                }
             },
         });
 
-        assert.verifySteps(["get_views", "web_read_group", "read", "read"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "unity_web_search_read",
+            "unity_web_search_read",
+        ]);
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[1]);
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[2]);
@@ -11053,7 +11046,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target, ".modal .modal-footer .btn-primary");
         assert.containsNone(target, ".modal");
-        assert.verifySteps(["write", "read", "read", "read"]);
+        assert.verifySteps(["write", "web_read"]);
         assert.containsN(target, ".o_group_header", 2);
 
         const allNames = Array.from(target.querySelectorAll(".o_data_cell"))
@@ -11122,7 +11115,7 @@ QUnit.module("Views", (hooks) => {
         const changesTable = document.querySelector(".modal-body .o_modal_changes");
         assert.strictEqual(
             changesTable.innerText.replaceAll("\n", "").replaceAll("\t", ""),
-            "Field:Date StartUpdate to:01/16/2017Field:Date EndUpdate to:02/12/2017"
+            "Field:Date StartUpdate to:01/16/201702/12/2017Field:Date EndUpdate to:02/12/2017"
         );
 
         // Valid the confirm dialog
@@ -11191,7 +11184,7 @@ QUnit.module("Views", (hooks) => {
             const changesTable = target.querySelector(".modal-body .o_modal_changes");
             assert.strictEqual(
                 changesTable.innerText.replaceAll("\n", "").replaceAll("\t", ""),
-                "Field:Date StartUpdate to:04/01/2021"
+                "Field:Date StartUpdate to:04/01/202101/26/2017"
             );
 
             // Valid the confirm dialog
@@ -11293,7 +11286,7 @@ QUnit.module("Views", (hooks) => {
             mockRPC(route, args) {
                 if (
                     route === "/web/dataset/call_kw/foo/write" ||
-                    route === "/web/dataset/call_kw/foo/read"
+                    route === "/web/dataset/call_kw/foo/web_read"
                 ) {
                     const context = args.kwargs.context;
                     assert.strictEqual(context.active_field, 2, "context should be correct");
@@ -11399,8 +11392,6 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("editable list view: multi edition", async function (assert) {
-        assert.expect(26);
-
         await makeView({
             type: "list",
             resModel: "foo",
@@ -11418,22 +11409,16 @@ QUnit.module("Views", (hooks) => {
                         [[1, 2], { int_field: 666 }],
                         "should write on multi records"
                     );
-                } else if (args.method === "read") {
+                } else if (args.method === "web_read") {
                     if (args.args[0].length !== 1) {
-                        assert.deepEqual(
-                            args.args,
-                            [
-                                [1, 2],
-                                ["foo", "int_field"],
-                            ],
-                            "should batch the read"
-                        );
+                        assert.deepEqual(args.args, [[1, 2]], "should batch the read");
+                        assert.deepEqual(args.kwargs.specification, { foo: {}, int_field: {} });
                     }
                 }
             },
         });
 
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         // select two records
         const rows = target.querySelectorAll(".o_data_row");
@@ -11449,13 +11434,13 @@ QUnit.module("Views", (hooks) => {
 
         // create a record and edit its value
         await click($(".o_list_button_add:visible").get(0));
-        assert.verifySteps(["onchange"]);
+        assert.verifySteps(["onchange2"]);
 
         await editInput(target, ".o_selected_row [name=int_field] input", 123);
         assert.containsNone(document.body, ".modal");
 
         await clickSave(target);
-        assert.verifySteps(["create", "read"]);
+        assert.verifySteps(["create", "web_read"]);
 
         // edit a field
         await click(rows[0].querySelector("[name=int_field]"));
@@ -11491,7 +11476,7 @@ QUnit.module("Views", (hooks) => {
             ".o_list_record_selector input:checked",
             "no record should be selected anymore"
         );
-        assert.verifySteps(["write", "read"]);
+        assert.verifySteps(["write", "web_read"]);
         assert.strictEqual(
             $(target).find(".o_data_row:eq(0) .o_data_cell").text(),
             "yop666",
@@ -11581,7 +11566,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         // select and edit a single record
         const rows = target.querySelectorAll(".o_data_row");
@@ -11598,8 +11583,7 @@ QUnit.module("Views", (hooks) => {
             ["blip", "9"]
         );
 
-        assert.verifySteps(["write", "read"]);
-
+        assert.verifySteps(["write", "web_read"]);
         // select the second record (the first one is still selected)
         assert.containsNone(target, ".o_list_record_selector input:checked");
         await click(rows[0], ".o_list_record_selector input");
@@ -11620,7 +11604,10 @@ QUnit.module("Views", (hooks) => {
             ["hello", "5"]
         );
 
-        assert.verifySteps(["write", "read"], "should not perform the onchange in multi edition");
+        assert.verifySteps(
+            ["write", "web_read"],
+            "should not perform the onchange in multi edition"
+        );
     });
 
     QUnit.test(
@@ -11780,7 +11767,7 @@ QUnit.module("Views", (hooks) => {
                     if (args.method === "write") {
                         assert.deepEqual(
                             args.args,
-                            [[1, 2, 3, 4], { m2o: 1 }],
+                            [[1, 2, 3, 4], { m2o: 2 }],
                             "should force write value on all selected records"
                         );
                     }
@@ -11797,14 +11784,14 @@ QUnit.module("Views", (hooks) => {
 
             // set m2o to 1 in first record
             await click(target.querySelector(".o_data_row .o_data_cell"));
-            await editInput(target, ".o_data_row [name=m2o] input", "Value 1");
+            await editInput(target, ".o_data_row [name=m2o] input", "Value 2");
             await click(target.querySelector(".o-autocomplete--dropdown-item"));
             assert.containsOnce(target, ".modal");
 
             await click(target, ".modal .modal-footer .btn-primary");
             assert.strictEqual(
                 $(target).find(".o_list_many2one").text(),
-                "Value 1Value 1Value 1Value 1"
+                "Value 2Value 2Value 2Value 2"
             );
         }
     );
@@ -11890,7 +11877,7 @@ QUnit.module("Views", (hooks) => {
                 "gnap",
                 "blip",
             ]);
-            assert.verifySteps(["get_views", "web_search_read", "write", "read"]);
+            assert.verifySteps(["get_views", "unity_web_search_read", "write", "web_read"]);
         }
     );
 
@@ -12017,7 +12004,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.verifySteps(["get_views", "web_search_read"]);
+            assert.verifySteps(["get_views", "unity_web_search_read"]);
             // select two records
             const rows = target.querySelectorAll(".o_data_row");
             await click(rows[0], ".o_list_record_selector input");
@@ -12029,7 +12016,7 @@ QUnit.module("Views", (hooks) => {
                 "Modal should ask to save changes"
             );
             await click(target, ".modal .btn-primary");
-            assert.verifySteps(["write", "read"]);
+            assert.verifySteps(["write", "web_read"]);
         }
     );
 
@@ -12461,7 +12448,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("editable readonly list view: multi edition", async function (assert) {
+    QUnit.test("non editable list view: multi edition", async function (assert) {
         await makeView({
             type: "list",
             arch: `
@@ -12478,23 +12465,17 @@ QUnit.module("Views", (hooks) => {
                         [[1, 2], { int_field: 666 }],
                         "should write on multi records"
                     );
-                } else if (args.method === "read") {
+                } else if (args.method === "web_read") {
                     if (args.args[0].length !== 1) {
-                        assert.deepEqual(
-                            args.args,
-                            [
-                                [1, 2],
-                                ["foo", "int_field"],
-                            ],
-                            "should batch the read"
-                        );
+                        assert.deepEqual(args.args, [[1, 2]], "should batch the read");
+                        assert.deepEqual(args.kwargs.specification, { foo: {}, int_field: {} });
                     }
                 }
             },
             resModel: "foo",
         });
 
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         // select two records
         const rows = target.querySelectorAll(".o_data_row");
@@ -12523,7 +12504,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(target, ".modal .btn-primary");
-        assert.verifySteps(["write", "read"]);
+        assert.verifySteps(["write", "web_read"]);
         assert.strictEqual(
             $(target).find(".o_data_row:eq(0) .o_data_cell").text(),
             "yop666",
@@ -12882,7 +12863,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree limit="2"><field name="foo"/></tree>',
             mockRPC(route, args) {
-                if (args.method === "web_search_read") {
+                if (args.method === "unity_web_search_read") {
                     assert.strictEqual(args.kwargs.limit, 2, "should use the correct limit value");
                 }
             },
@@ -12901,7 +12882,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: async function (route, args) {
-                if (args.method === "web_search_read" && blockSearchRead) {
+                if (args.method === "unity_web_search_read" && blockSearchRead) {
                     await def;
                 }
             },
@@ -12965,7 +12946,7 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 arch: '<tree limit="3"><field name="display_name"/></tree>',
                 mockRPC(route, args) {
-                    if (checkSearchRead && args.method === "web_search_read") {
+                    if (checkSearchRead && args.method === "unity_web_search_read") {
                         assert.strictEqual(args.kwargs.limit, 3, "limit should 3");
                         assert.notOk(
                             args.kwargs.offset,
@@ -13010,7 +12991,7 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 arch: '<tree limit="2"><field name="display_name"/></tree>',
                 mockRPC(route, args) {
-                    if (checkSearchRead && args.method === "web_search_read") {
+                    if (checkSearchRead && args.method === "unity_web_search_read") {
                         assert.strictEqual(args.kwargs.limit, 2, "limit should 2");
                         assert.notOk(
                             args.kwargs.offset,
@@ -13409,7 +13390,9 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([
             "get_views",
-            "web_read_group", // records are fetched alongside groups
+            "web_read_group",
+            "unity_web_search_read",
+            "unity_web_search_read",
         ]);
     });
 
@@ -14115,14 +14098,14 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group",
-            "web_search_read",
-            "web_search_read",
+            "unity_web_search_read",
+            "unity_web_search_read",
             "write",
-            "read",
-            "onchange",
+            "web_read",
+            "onchange2",
             "create",
-            "read",
-            "onchange",
+            "web_read",
+            "onchange2",
         ]);
     });
 
@@ -14164,7 +14147,13 @@ QUnit.module("Views", (hooks) => {
                 secondDataRow.querySelector(".o_selected_row [name=foo] input")
             );
 
-            assert.verifySteps(["get_views", "web_read_group", "web_search_read", "write", "read"]);
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "unity_web_search_read",
+                "write",
+                "web_read",
+            ]);
         }
     );
 
@@ -14205,9 +14194,9 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group",
-            "web_search_read",
-            "web_search_read",
-            "onchange",
+            "unity_web_search_read",
+            "unity_web_search_read",
+            "onchange2",
         ]);
     });
 
@@ -14244,7 +14233,12 @@ QUnit.module("Views", (hooks) => {
 
         assert.hasClass(target.querySelectorAll(".o_data_row")[2], "o_selected_row");
 
-        assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_search_read"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "unity_web_search_read",
+            "unity_web_search_read",
+        ]);
     });
 
     QUnit.test(
@@ -14272,7 +14266,7 @@ QUnit.module("Views", (hooks) => {
             await click(secondGroupHeader);
             assert.containsN(target, ".o_data_row", 4);
             assert.containsNone(target, ".o_selected_row");
-            assert.verifySteps(["web_search_read", "web_search_read"]);
+            assert.verifySteps(["unity_web_search_read", "unity_web_search_read"]);
 
             // Click on first data row
             const dataRows = [...target.querySelectorAll(".o_data_row")];
@@ -15558,7 +15552,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             groupBy: ["priority"],
             mockRPC(route, args) {
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     assert.step(args.kwargs.context.default_priority.toString());
                 }
             },
@@ -15598,7 +15592,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             groupBy: ["m2o"],
             mockRPC(route, args) {
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     assert.step(args.kwargs.context.default_m2o.toString());
                 }
             },
@@ -16985,7 +16979,7 @@ QUnit.module("Views", (hooks) => {
                         <field name="int_field"/>
                     </tree>`,
                 mockRPC(route, { args, method, model }) {
-                    if (model === "foo" && method === "onchange") {
+                    if (model === "foo" && method === "onchange2") {
                         return def;
                     }
                     if (model === "foo" && method === "write") {
@@ -17021,7 +17015,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="int_field"/>
                 </tree>`,
             mockRPC(route, { args, method, model }) {
-                if (model === "foo" && method === "onchange") {
+                if (model === "foo" && method === "onchange2") {
                     return def;
                 }
                 if (model === "foo" && method === "write") {
@@ -17076,7 +17070,7 @@ QUnit.module("Views", (hooks) => {
                         </group>
                     </form>`,
                 mockRPC(route, args) {
-                    if (args.method === "onchange") {
+                    if (args.method === "onchange2") {
                         assert.step(`onchange:${args.model}`);
                     }
                 },
@@ -17447,7 +17441,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.strictEqual(target.querySelector("[name=foo] span").innerText, "1");
-            assert.verifySteps(["get_views", "web_search_read"]);
+            assert.verifySteps(["get_views", "unity_web_search_read"]);
         }
     );
 
@@ -17496,19 +17490,19 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             async mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     await Promise.resolve(def);
                 }
             },
         });
 
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
 
         const value = "14";
         // add a new line
         await click($(".o_list_button_add:visible").get(0));
 
-        assert.verifySteps(["onchange"]);
+        assert.verifySteps(["onchange2"]);
 
         // we want to add a delay to simulate an onchange
         def = makeDeferred();
@@ -17521,7 +17515,7 @@ QUnit.module("Views", (hooks) => {
 
         // check that nothing changed before the onchange finished
         assert.strictEqual(target.querySelector("[name=int_field] input").value, value);
-        assert.verifySteps(["onchange"]);
+        assert.verifySteps(["onchange2"]);
 
         // unlock onchange
         def.resolve();
@@ -17529,7 +17523,7 @@ QUnit.module("Views", (hooks) => {
 
         // check the current line is added with the correct content
         assert.strictEqual(target.querySelector(".o_data_row [name=int_field]").innerText, value);
-        assert.verifySteps(["create", "read"]);
+        assert.verifySteps(["create", "web_read"]);
     });
 
     QUnit.test("create a record with the correct context", async (assert) => {
@@ -18050,13 +18044,8 @@ QUnit.module("Views", (hooks) => {
                 </tree>
             `,
             mockRPC(_, args) {
-                if (
-                    args.method === "read" &&
-                    args.args[1].length === 1 &&
-                    args.args[1][0] === "display_name"
-                ) {
-                    assert.step("readDisplayName");
-                    assert.deepEqual(args.args[0], [3]);
+                if (args.method === "web_read") {
+                    assert.step(`web_read ${args.args[0]}`);
                 }
             },
         });
@@ -18074,13 +18063,14 @@ QUnit.module("Views", (hooks) => {
 
         await click(target, ".modal .o_data_row:nth-child(3) td[name=display_name]");
 
-        assert.verifySteps(["readDisplayName"]);
+        assert.verifySteps(["web_read 3"]);
 
         await clickSave(target);
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_row td[name=m2o]")].map((el) => el.innerText),
             ["Value 3", "Value 2", "Value 1", "Value 1"]
         );
+        assert.verifySteps(["web_read 1"]);
     });
 
     QUnit.test("view's context is passed down as evalContext", async (assert) => {
@@ -18624,7 +18614,7 @@ QUnit.module("Views", (hooks) => {
             name: "property_many2one",
             string: "Property many2one",
             comodel: "res_currency",
-            domain: [],
+            domain: "[]",
         };
         serverData.models.bar.records[0].definitions = [definition];
         for (const record of serverData.models.foo.records) {
@@ -18683,7 +18673,7 @@ QUnit.module("Views", (hooks) => {
             name: "property_many2many",
             string: "Property many2many",
             comodel: "res_currency",
-            domain: [],
+            domain: "[]",
         };
         serverData.models.bar.records[0].definitions = [definition];
         for (const record of serverData.models.foo.records) {
@@ -18872,13 +18862,13 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([
             "/web/dataset/call_kw/foo/get_views",
-            "/web/dataset/call_kw/foo/web_search_read",
+            "/web/dataset/call_kw/foo/unity_web_search_read",
         ]);
 
         await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "only one");
 
-        assert.verifySteps(["/web/dataset/call_kw/foo/web_search_read"]);
+        assert.verifySteps(["/web/dataset/call_kw/foo/unity_web_search_read"]);
     });
 
     QUnit.test("do not reload properties definitions when page change", async (assert) => {
@@ -18911,12 +18901,12 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([
             "/web/dataset/call_kw/foo/get_views",
-            "/web/dataset/call_kw/foo/web_search_read",
+            "/web/dataset/call_kw/foo/unity_web_search_read",
         ]);
 
         await pagerNext(target);
 
-        assert.verifySteps(["/web/dataset/call_kw/foo/web_search_read"]);
+        assert.verifySteps(["/web/dataset/call_kw/foo/unity_web_search_read"]);
     });
 
     QUnit.test("load properties definitions only once when grouped", async (assert) => {
@@ -18954,7 +18944,7 @@ QUnit.module("Views", (hooks) => {
         ]);
 
         await click(target.querySelector(".o_group_header"));
-        assert.verifySteps(["/web/dataset/call_kw/foo/web_search_read"]);
+        assert.verifySteps(["/web/dataset/call_kw/foo/unity_web_search_read"]);
     });
 
     QUnit.test("Invisible Properties", async (assert) => {
@@ -18986,7 +18976,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsNone(target, ".o_optional_columns_dropdown_toggle");
-        assert.verifySteps(["get_views", "web_search_read"]);
+        assert.verifySteps(["get_views", "unity_web_search_read"]);
     });
 
     QUnit.test("header buttons in list view", async function (assert) {
@@ -19050,7 +19040,7 @@ QUnit.module("Views", (hooks) => {
         const webclient = await createWebClient({
             serverData,
             async mockRPC(route, { kwargs, method }) {
-                if (method === "web_search_read") {
+                if (method === "unity_web_search_read") {
                     assert.step("order:" + kwargs.order);
                 }
             },
@@ -19083,7 +19073,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="m2o"/>
                 </tree>`,
             async mockRPC(route, args) {
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     assert.step("onchange");
                     await def;
                     return { value: { m2o: [3, "Value 3"] } };
@@ -19118,32 +19108,40 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("list view: prevent record selection when editable list in edit mode", async function (assert) {
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `
+    QUnit.test(
+        "list view: prevent record selection when editable list in edit mode",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
                 <tree editable="top">
                     <field name="foo" />
                 </tree>`,
-        });
+            });
 
-        //  When we try to select new record in edit mode
-        await click(target.querySelector(".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add"));
-        await click(target.querySelector('.o_data_row .o_list_record_selector'));
-        assert.strictEqual(
-            target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]').checked,
-            false
-        );
+            //  When we try to select new record in edit mode
+            await click(
+                target.querySelector(
+                    ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add"
+                )
+            );
+            await click(target.querySelector(".o_data_row .o_list_record_selector"));
+            assert.strictEqual(
+                target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
+                    .checked,
+                false
+            );
 
-        //  When we try to select all records in edit mode
-        await click(target.querySelector('th.o_list_record_selector.o_list_controller'));
-        assert.strictEqual(
-            target.querySelector('.o_list_controller input[type="checkbox"]').checked,
-            false
-        );
-    });
+            //  When we try to select all records in edit mode
+            await click(target.querySelector("th.o_list_record_selector.o_list_controller"));
+            assert.strictEqual(
+                target.querySelector('.o_list_controller input[type="checkbox"]').checked,
+                false
+            );
+        }
+    );
 
     QUnit.test("context keys not passed down the stack and not to fields", async (assert) => {
         patchWithCleanup(AutoComplete, {
@@ -19192,8 +19190,7 @@ QUnit.module("Views", (hooks) => {
         await doAction(wc, 1);
         assert.verifySteps([
             `foo: get_views: {"lang":"en","uid":7,"tz":"taht","tree_view_ref":"foo_view_ref","search_default_bar":true}`,
-            `foo: web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
-            `bar: read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
+            `foo: unity_web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true,"tree_view_ref":"foo_view_ref"}`,
         ]);
 
         await click(target.querySelectorAll(".o_data_row .o_data_cell")[1]);
@@ -19210,7 +19207,7 @@ QUnit.module("Views", (hooks) => {
         await click(items.find((el) => el.textContent.trim() === "View all"));
         assert.verifySteps([
             `bar: get_views: {"lang":"en","uid":7,"tz":"taht"}`,
-            `bar: web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
+            `bar: unity_web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
         ]);
         assert.containsOnce(target, ".modal");
         assert.strictEqual(
@@ -19296,39 +19293,5 @@ QUnit.module("Views", (hooks) => {
             "ltr",
             "Monetary cells should have ltr direction"
         );
-    });
-
-    QUnit.test("multisave take changes into account when there is only one record selected", async function (assert) {
-        const listView = registry.category("views").get("list");
-
-        class CustomListRenderer extends listView.Renderer {
-            onGlobalClick(ev) {
-                const record = this.props.list.selection[0];
-                record.model.root._multiSave(record, {
-                    m2m: [x2ManyCommands.linkTo(1)],
-                });
-            }
-        }
-
-        registry.category("views").add("custom_list", {
-            ...listView,
-            Renderer: CustomListRenderer,
-        }, { force: true });
-
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            resId: 3,
-            arch: '<tree js_class="custom_list"><field name="foo"/></tree>',
-            mockRPC: (route, { method, args }) => {
-                if (method === "write") {
-                    assert.deepEqual(args[1], { m2m: [[x2ManyCommands.LINK_TO, 1, false]] });
-                }
-            },
-        });
-
-        await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
-        await click(target.querySelectorAll(".o_data_row [name=foo]")[0]);
     });
 });

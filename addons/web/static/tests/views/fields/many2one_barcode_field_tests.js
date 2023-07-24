@@ -134,7 +134,7 @@ QUnit.module("Fields", (hooks) => {
             `,
             async mockRPC(route, args, performRPC) {
                 if (args.method === CREATE && args.model === SALE_ORDER_LINE) {
-                    const selectedId = args.args[0][PRODUCT_FIELD_NAME];
+                    const selectedId = args.args[0][0][PRODUCT_FIELD_NAME];
                     assert.equal(
                         selectedId,
                         selectedRecordTest.id,
@@ -173,7 +173,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             async mockRPC(route, args, performRPC) {
                 if (args.method === CREATE && args.model === SALE_ORDER_LINE) {
-                    const selectedId = args.args[0][PRODUCT_FIELD_NAME];
+                    const selectedId = args.args[0][0][PRODUCT_FIELD_NAME];
                     assert.equal(
                         selectedId,
                         selectedRecordTest.id,

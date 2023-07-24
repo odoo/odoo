@@ -45,7 +45,6 @@ ListConfirmationDialog.props = {
     nbRecords: Number,
     nbValidRecords: Number,
     record: Object,
-    fieldNodes: Object,
 };
 ListConfirmationDialog.defaultProps = {
     title: _lt("Confirmation"),

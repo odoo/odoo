@@ -1,18 +1,53 @@
 /** @odoo-module */
 
-import { KanbanModel } from "@web/views/kanban/kanban_model";
+import { RelationalModel } from "@web/model/relational_model/relational_model";
 
-import { ProjectTaskKanbanDynamicGroupList } from "./project_task_kanban_dynamic_group_list";
-import { Record } from '@web/views/relational_model';
+export class ProjectTaskKanbanDynamicGroupList extends RelationalModel.DynamicGroupList {
+    get context() {
+        const context = { ...super.context };
+        if (this.creatingPersonnalStage) {
+            context.default_user_id = context.uid;
+            delete context.default_project_id;
+        }
+        return context;
+    }
 
-export class ProjectTaskRecord extends Record {
-    async _applyChanges(changes) {
+    get isGroupedByStage() {
+        return !!this.groupByField && this.groupByField.name === "stage_id";
+    }
+
+    get isGroupedByPersonalStages() {
+        return !!this.groupByField && this.groupByField.name === "personal_stage_type_ids";
+    }
+
+    async createGroup(groupName, groupData, isFolded) {
+        if (this.isGroupedByPersonalStages) {
+            return this.model.mutex.exec(async () => {
+                this.creatingPersonnalStage = true;
+                await this._createGroup(groupName, groupData, isFolded);
+                delete this.creatingPersonnalStage;
+            });
+        }
+        return super.createGroup(...arguments);
+    }
+
+    async _unlinkGroups(groups) {
+        if (this.isGroupedByPersonalStages) {
+            const groupResIds = groups.map((g) => g.value);
+            return this.model.orm.call("project.task.type", "remove_personal_stage", groupResIds);
+        }
+        return super._deleteGroups(...arguments);
+    }
+}
+
+export class ProjectTaskRecord extends RelationalModel.Record {
+    async _update(changes, options) {
         const value = changes.personal_stage_type_ids;
         if (Array.isArray(value)) {
             delete changes.personal_stage_type_ids;
             changes.personal_stage_type_id = value;
         }
-        await super._applyChanges(changes);
+        await super._update(changes, options);
     }
 
     get context() {
@@ -26,23 +61,7 @@ export class ProjectTaskRecord extends Record {
     }
 }
 
-export class ProjectTaskKanbanGroup extends KanbanModel.Group {
-    get isPersonalStageGroup() {
-        return !!this.groupByField && this.groupByField.name === 'personal_stage_type_ids';
-    }
-
-    async delete() {
-        if (this.isPersonalStageGroup) {
-            this.deleted = true;
-            return await this.model.orm.call(this.resModel, 'remove_personal_stage', [this.resId]);
-        } else {
-            return await super.delete();
-        }
-    }
-}
-
-export class ProjectTaskKanbanModel extends KanbanModel { }
+export class ProjectTaskKanbanModel extends RelationalModel {}
 
 ProjectTaskKanbanModel.DynamicGroupList = ProjectTaskKanbanDynamicGroupList;
-ProjectTaskKanbanModel.Group = ProjectTaskKanbanGroup;
 ProjectTaskKanbanModel.Record = ProjectTaskRecord;

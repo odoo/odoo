@@ -69,7 +69,7 @@ export function getDefaultConfig() {
     return config;
 }
 
-/** @typedef {import("./relational_model").OrderTerm} OrderTerm */
+/** @typedef {import("./utils").OrderTerm} OrderTerm */
 
 /** @typedef {Object} ViewProps
  *  @property {string} resModel

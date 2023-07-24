@@ -31,7 +31,7 @@ import { onRendered } from "@odoo/owl";
 import { patchWithCleanup } from "../helpers/utils";
 import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { Domain } from "@web/core/domain";
-import { SampleServer } from "@web/views/sample_server";
+import { SampleServer } from "@web/model/sample_server";
 
 const serviceRegistry = registry.category("services");
 

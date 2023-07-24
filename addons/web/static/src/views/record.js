@@ -1,67 +1,141 @@
 /** @odoo-module **/
 
-import { useBus, useService } from "@web/core/utils/hooks";
-import { RelationalModel } from "@web/views/relational_model";
-import { Component, xml, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { pick } from "@web/core/utils/objects";
+import { RelationalModel } from "@web/model/relational_model/relational_model";
+import { getFieldsSpec } from "@web/model/relational_model/utils";
+import { Component, xml, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
 
+class StandaloneRelationalModel extends RelationalModel {
+    load(params = {}) {
+        if (params.values) {
+            const data = params.values;
+            if (params.mode) {
+                this.config.mode = params.mode;
+            }
+            this.root = this._createRoot(this.config, data);
+            return;
+        }
+        return super.load(params);
+    }
+}
+
 class _Record extends Component {
     setup() {
+        this.orm = useService("orm");
         const resModel = this.props.info.resModel;
+        const activeFields = this.getActiveFields();
         const modelParams = {
-            resModel,
-            fields: this.props.fields,
-            viewMode: "form",
-            rootType: "record",
-            activeFields: this.getActiveFields(),
-            onRecordSaved: this.props.info.onRecordSaved || (() => {}),
-            onWillSaveRecord: this.props.info.onWillSaveRecord || (() => {}),
+            config: {
+                resModel,
+                fields: this.props.fields,
+                isMonoRecord: true,
+                activeFields,
+                resId: this.props.info.resId,
+                mode: this.props.info.mode,
+            },
+            hooks: {
+                onRecordSaved: this.props.info.onRecordSaved || (() => {}),
+                onWillSaveRecord: this.props.info.onWillSaveRecord || (() => {}),
+                onRecordChanged: this.props.info.onRecordChanged || (() => {}),
+            },
         };
         const modelServices = Object.fromEntries(
-            RelationalModel.services.map((servName) => {
+            StandaloneRelationalModel.services.map((servName) => {
                 return [servName, useService(servName)];
             })
         );
-        if (resModel) {
-            modelServices.orm = useService("orm");
-        }
+        modelServices.orm = this.orm;
+        this.model = useState(new StandaloneRelationalModel(this.env, modelParams, modelServices));
 
-        this.model = new RelationalModel(this.env, modelParams, modelServices);
-        useBus(this.model.bus, "update", () => this.render(true));
-
-        let loadKey;
-        const load = (props) => {
-            const loadParams = {
-                resId: props.info.resId,
-                mode: props.info.mode,
-                values: props.values,
-            };
-            const nextLoadKey = JSON.stringify(loadParams);
-            if (loadKey === nextLoadKey) {
-                return;
+        const loadWithValues = async (values) => {
+            values = pick(values, ...Object.keys(modelParams.config.activeFields));
+            const proms = [];
+            for (const fieldName in values) {
+                if (["one2many", "many2many"].includes(this.props.fields[fieldName].type)) {
+                    if (values[fieldName].length && typeof values[fieldName][0] === "number") {
+                        const resModel = this.props.fields[fieldName].relation;
+                        const resIds = values[fieldName];
+                        const activeField = modelParams.config.activeFields[fieldName];
+                        if (activeField.related) {
+                            const { activeFields, fields } = activeField.related;
+                            const fieldSpec = getFieldsSpec(activeFields, fields, {});
+                            const kwargs = {
+                                context: activeField.context || {},
+                                specification: fieldSpec,
+                            };
+                            proms.push(
+                                this.orm
+                                    .call(resModel, "web_read", [resIds], kwargs)
+                                    .then((records) => {
+                                        values[fieldName] = records;
+                                    })
+                            );
+                        }
+                    }
+                }
+                if (this.props.fields[fieldName].type === "many2one") {
+                    const loadDisplayName = async (resId) => {
+                        const resModel = this.props.fields[fieldName].relation;
+                        const activeField = modelParams.config.activeFields[fieldName];
+                        const kwargs = {
+                            context: activeField.context || {},
+                            specification: { display_name: {} },
+                        };
+                        const records = await this.orm.call(
+                            resModel,
+                            "web_read",
+                            [[resId]],
+                            kwargs
+                        );
+                        return records[0].display_name;
+                    };
+                    if (typeof values[fieldName] === "number") {
+                        const prom = loadDisplayName(values[fieldName]);
+                        prom.then((displayName) => {
+                            values[fieldName] = {
+                                id: values[fieldName],
+                                display_name: displayName,
+                            };
+                        });
+                        proms.push(prom);
+                    } else if (Array.isArray(values[fieldName])) {
+                        if (values[fieldName][1] === undefined) {
+                            const prom = loadDisplayName(values[fieldName][0]);
+                            prom.then((displayName) => {
+                                values[fieldName] = {
+                                    id: values[fieldName][0],
+                                    display_name: displayName,
+                                };
+                            });
+                            proms.push(prom);
+                        }
+                        values[fieldName] = {
+                            id: values[fieldName][0],
+                            display_name: values[fieldName][1],
+                        };
+                    }
+                }
+                await Promise.all(proms);
             }
-            loadKey = nextLoadKey;
-            return this.model.load(loadParams);
+            return this.model.load({ values });
         };
-        onWillStart(() => load(this.props));
-        onWillUpdateProps((nextProps) => {
-            // don't wait because the keeplast may make willUpdateProps hang forever
-            load(nextProps);
+        onWillStart(() => {
+            if (this.props.values) {
+                return loadWithValues(this.props.values);
+            } else {
+                return this.model.load();
+            }
         });
-
-        if (this.props.info.onRecordChanged) {
-            const load = this.model.load;
-            this.model.load = async (...args) => {
-                const res = await load.call(this.model, ...args);
-                const root = this.model.root;
-                root.onChanges = async () => {
-                    const changes = root.getChanges();
-                    this.props.info.onRecordChanged(root, changes);
-                };
-                return res;
-            };
-        }
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.values) {
+                return loadWithValues(nextProps.values);
+            } else if (nextProps.info.resId !== this.model.root.resId) {
+                return this.model.load({ resId: nextProps.info.resId });
+            }
+        });
     }
 
     getActiveFields() {

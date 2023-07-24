@@ -4,6 +4,25 @@ import { browser } from "@web/core/browser/browser";
 import { onWillUnmount, useComponent } from "@odoo/owl";
 
 /**
+ * Creates a batched version of a callback so that all calls to it in the same
+ * time frame will only call the original callback once.
+ * @param callback the callback to batch
+ * @param synchronize this function decides the granularity of the batch (a microtick by default)
+ * @returns a batched version of the original callback
+ */
+export function batched(callback, synchronize = () => Promise.resolve()) {
+    let scheduled = false;
+    return async (...args) => {
+        if (!scheduled) {
+            scheduled = true;
+            await synchronize();
+            scheduled = false;
+            callback(...args);
+        }
+    };
+}
+
+/**
  * Creates and returns a new debounced version of the passed function (func)
  * which will postpone its execution until after 'delay' milliseconds
  * have elapsed since the last time it was invoked. The debounced function

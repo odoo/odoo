@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
+import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { KanbanArchParser } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanController } from "./kanban_controller";
-import { KanbanModel } from "./kanban_model";
 import { KanbanRenderer } from "./kanban_renderer";
-import { registry } from "@web/core/registry";
 
 export const kanbanView = {
     type: "kanban",
@@ -17,7 +17,7 @@ export const kanbanView = {
 
     ArchParser: KanbanArchParser,
     Controller: KanbanController,
-    Model: KanbanModel,
+    Model: RelationalModel,
     Renderer: KanbanRenderer,
     Compiler: KanbanCompiler,
 

@@ -4,7 +4,6 @@ import { QuestionPageListRenderer } from "./question_page_list_renderer";
 import { registry } from "@web/core/registry";
 import { useOpenX2ManyRecord, useX2ManyCrud, X2ManyFieldDialog } from "@web/views/fields/relational_utils";
 import { patch } from '@web/core/utils/patch';
-import { useService } from "@web/core/utils/hooks";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 
 const { useSubEnv } = owl;
@@ -27,13 +26,34 @@ patch(X2ManyFieldDialog.prototype, 'survey_question_chaining_with_validation', {
     }
 });
 
+
+/**
+ * For convenience, we'll prevent closing the question form dialog and
+ * stay in edit mode to make sure only valid records are saved. Therefore,
+ * in case of error occurring when saving we will replace default error
+ * modal with a notification.
+ */
+
+class SurveySaveError extends Error {}
+function SurveySaveErrorHandler(env, error, originalError) {
+    if (originalError instanceof SurveySaveError) {
+        env.services.notification.add(originalError.message, {
+            title: env._t("Validation Error"),
+            type: "danger",
+        });
+        return true;
+    }
+}
+registry
+    .category("error_handlers")
+    .add("surveySaveErrorHandler", SurveySaveErrorHandler, { sequence: 10 });
+
 class QuestionPageOneToManyField extends X2ManyField {
     setup() {
         super.setup();
         useSubEnv({
             openRecord: (record) => this.openRecord(record),
         });
-        this.notificationService = useService("notification");
 
         // Systematically and automatically save SurveyForm at each question edit/creation
         // enables checking validation parameters consistency and using questions as triggers
@@ -46,23 +66,24 @@ class QuestionPageOneToManyField extends X2ManyField {
 
         const self = this;
         const saveRecord = async (record) => {
-            const saveResponse = await superSaveRecord(record);
+            await superSaveRecord(record);
             try {
-                await self.props.record.save({stayInEdition: true, throwOnError: true});
+                await self.props.record.save();
             } catch (error) {
-                return self.handleSurveySaveError(error, record);
+                // In case of error occurring when saving.
+                // Remove erroneous question row added to the embedded list
+                await this.list.delete(record);
+                throw new SurveySaveError(error.data.message);
             }
-            return saveResponse;
         };
 
         const updateRecord = async (record) => {
-            const updateResponse = await superUpdateRecord(record);
+            await superUpdateRecord(record);
             try {
-                await self.props.record.save({stayInEdition: true, throwOnError: true});
+                await self.props.record.save();
             } catch (error) {
-                return self.handleSurveySaveError(error);
+                throw new SurveySaveError(error.data.message);
             }
-            return updateResponse;
         };
 
         const openRecord = useOpenX2ManyRecord({
@@ -74,7 +95,7 @@ class QuestionPageOneToManyField extends X2ManyField {
             updateRecord,
         });
         this._openRecord = async (params) => {
-            if (!await self.props.record.save({ stayInEdition: true })) {
+            if (!await self.props.record.save()) {
                 // do not open question form as it won't be savable either.
                 return;
             }
@@ -87,35 +108,6 @@ class QuestionPageOneToManyField extends X2ManyField {
             openRecord(params);
         };
         this.canOpenRecord = true;
-    }
-
-    /**
-     * For convenience, we'll prevent closing the question form dialog and
-     * stay in edit mode to make sure only valid records are saved. Therefore,
-     * two things should be cared for in case of error occurring when saving
-     * the question:
-     *   * Remove erroneous question row added to the embedded list
-     *   * Replace default error modal with a notification
-     *
-     *   @param {Error} error Error thrown when saving survey/question.
-     *   @param {Record?} recordToDelete (optional) In case the error is
-     *   thrown when saving a new question, it should be deleted from the
-     *   list.
-     */
-    async handleSurveySaveError(error, recordToDelete) {
-        error.event.preventDefault();
-        if (recordToDelete) {
-            const listRecord = this.list.records.find(r => r.__bm_handle__ === recordToDelete.__bm_handle__);
-            await this.list.delete(listRecord.id);
-        }
-        this.notificationService.add(
-            error.message.data.message, {
-                title: this.env._t("Validation Error"),
-                type: "danger"
-            }
-        );
-        // Prevent closing the question form view
-        throw error;
     }
 }
 QuestionPageOneToManyField.components = {

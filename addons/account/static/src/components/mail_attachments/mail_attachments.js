@@ -64,7 +64,7 @@ export class MailAttachments extends Component {
 
     async onWillUnmount(){
         // Unlink added attachments if the wizard is not saved.
-        if(!this.props.record.data.id){
+        if(!this.props.record.resId){
             this.getValue().forEach((item) => {
                 if(item.manual){
                     this.attachmentIdsToUnlink.add(item.id);

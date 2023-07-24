@@ -72,7 +72,7 @@ export class SlideCategoryListRenderer extends ListRenderer {
             case "enter":
             case "tab":
             case "shift+tab": {
-                this.props.list.unselectRecord(true);
+                this.props.list.leaveEditMode();
                 return true;
             }
         }

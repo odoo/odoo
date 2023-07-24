@@ -9,7 +9,8 @@ import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { useDebounced } from "@web/core/utils/timing";
-import { isNull, isRelational } from "@web/views/utils";
+import { isRelational } from "@web/model/relational_model/utils";
+import { isNull } from "@web/views/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
@@ -161,12 +162,12 @@ export class KanbanHeader extends Component {
     }
 
     editGroup() {
-        const { context, displayName, resModel, value } = this.group;
+        const { context, displayName, groupByField, value } = this.group;
         this.props.dialogClose.push(
             this.dialog.add(FormViewDialog, {
                 context,
                 resId: value,
-                resModel,
+                resModel: groupByField.relation,
                 title: sprintf(this.env._t("Edit: %s"), displayName),
                 onRecordSaved: async () => {
                     await this.props.list.load();

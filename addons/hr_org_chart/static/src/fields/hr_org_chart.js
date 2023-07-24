@@ -55,7 +55,7 @@ export class HrOrgChart extends Component {
     async handleComponentUpdate() {
         this.employee = this.props.record.data;
         // the widget is either dispayed in the context of a hr.employee form or a res.users form
-        this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.employee.id;
+        this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.props.record.resId;
         const manager = this.employee.parent_id || this.employee.employee_parent_id;
         const forceReload = this.lastRecord !== this.props.record || this.lastParent != manager;
         this.lastParent = manager;

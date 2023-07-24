@@ -4,11 +4,10 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 function openProjectUpdateAndReturnToTasks(view, viewClass) {
-    const legacyViewClass = viewClass.replace("o_", "o_legacy_");
     return [{
             trigger: '.o_project_updates_breadcrumb',
             content: 'Open Project Update from view : ' + view,
-            extra_trigger: `.${viewClass}, .${legacyViewClass}`,
+            extra_trigger: `.${viewClass}`,
         }, {
             trigger: ".o-kanban-button-new",
             content: "Create a new update from project task view : " + view,

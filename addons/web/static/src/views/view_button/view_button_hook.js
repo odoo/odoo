@@ -74,9 +74,8 @@ export function useViewButtons(model, ref, options = {}) {
                     buttonContext,
                     onClose: async () => {
                         if (!closeDialog && status(comp) !== "destroyed") {
-                            const reload = options.reload || (() => model.root.load());
+                            const reload = options.reload || (() => model.load());
                             await reload();
-                            comp.render(true); // FIXME WOWL reactivity
                         }
                     },
                 });

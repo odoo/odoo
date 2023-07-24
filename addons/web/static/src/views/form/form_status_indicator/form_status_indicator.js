@@ -36,7 +36,7 @@ export class FormStatusIndicator extends Component {
             return this.props.model.root.isValid ? "dirty" : "invalid";
         } else if (!this.props.model.root.isValid) {
             return "invalid";
-        } else if (this.props.model.root.isDirty || this.state.fieldIsDirty) {
+        } else if (this.props.model.root.dirty || this.state.fieldIsDirty) {
             return "dirty";
         } else {
             return "saved";

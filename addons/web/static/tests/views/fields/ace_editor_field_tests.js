@@ -94,6 +94,7 @@ QUnit.module("Fields", (hooks) => {
 
         await pagerNext(target);
         await nextTick();
+        await nextTick();
 
         assert.ok(target.querySelector(".o_field_code").textContent.includes("blip"));
     });
@@ -121,9 +122,9 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            assert.verifySteps(["get_views: []", 'read: [[1],["foo","display_name"]]']);
+            assert.verifySteps(["get_views: []", "web_read: [[1]]"]);
             await pagerNext(target);
-            assert.verifySteps(['read: [[2],["foo","display_name"]]']);
+            assert.verifySteps(["web_read: [[2]]"]);
         }
     );
 });
