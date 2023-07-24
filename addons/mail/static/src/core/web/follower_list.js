@@ -69,6 +69,7 @@ export class FollowerList extends Component {
             follower,
             onFollowerChanged: () => this.props.onFollowerChanged?.(),
         });
+        document.body.click(); // hack to close dropdown
     }
 
     /**
