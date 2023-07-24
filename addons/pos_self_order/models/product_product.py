@@ -66,9 +66,6 @@ class ProductProduct(models.Model):
     def _get_price_info(
         self, pos_config: PosConfig, price: Optional[float] = None, qty: int = 1
     ) -> Dict[str, float]:
-        """
-        Function that returns a dict with the price info of a given product
-        """
         self.ensure_one()
         # if price == None it means that a price was not passed as a parameter, so we use the product's list price
         # it could happen that a price was passed, but it was 0; in that case we want to use this 0 as the argument,
@@ -77,32 +74,36 @@ class ProductProduct(models.Model):
             price = pos_config.pricelist_id._get_product_price(
                 self, qty, currency=pos_config.currency_id
             )
+
         price_info = pos_config.default_fiscal_position_id.map_tax(self.taxes_id).compute_all(
             price, pos_config.currency_id, qty, product=self
         )
 
+        display_price = price_info["total_included"] if pos_config.iface_tax_included == "total" else price_info["total_excluded"]
+        display_price = self.lst_price if self.combo_ids else display_price
+
         return {
-            "list_price": price_info["total_included"]
-            if pos_config.iface_tax_included == "total"
-            else price_info["total_excluded"],
-            "price_without_tax": price_info["total_excluded"],
-            "price_with_tax": price_info["total_included"],
+            "display_price": display_price,
+            "lst_price": self.lst_price
         }
 
-    def _get_self_order_data(self, pos_config: PosConfig) -> List[Dict]:
-        """
-        returns the list of products with the necessary info for the self order app
-        """
-        return [
-            {
-                "price_info": product._get_price_info(pos_config),
-                "has_image": bool(product.image_1920),
-                "attributes": product._get_attributes(pos_config),
-                "name": product._get_name(),
-                "id": product.id,
-                "description_sale": product.description_sale,
-                "pos_categ_ids": product.pos_categ_ids.mapped("name") or ["Other"],
-                "is_pos_groupable": product.uom_id.is_pos_groupable,
+    def _get_product_for_ui(self, pos_config):
+        self.ensure_one()
+        return {
+                "price_info": self._get_price_info(pos_config),
+                "has_image": bool(self.image_1920),
+                "attributes": self._get_attributes(pos_config),
+                "name": self._get_name(),
+                "id": self.id,
+                "description_sale": self.description_sale,
+                "pos_categ_ids": self.pos_categ_ids.mapped("name") or ["Other"],
+                "pos_combo_ids": self.combo_ids.mapped("id") or False,
+                "is_pos_groupable": self.uom_id.is_pos_groupable,
+                "write_date": self.write_date.timestamp(),
             }
+
+    def _get_self_order_data(self, pos_config: PosConfig) -> List[Dict]:
+        return [
+            product._get_product_for_ui(pos_config)
             for product in self
         ]

@@ -222,6 +222,17 @@ class PosSession(models.Model):
         else:
             sessions = super().create(vals_list)
         sessions.action_pos_session_open()
+
+        for session in sessions:
+            session.env['ir.sequence'].sudo().create({
+                'name': _("PoS Order by Session"),
+                'padding': 4,
+                'code': f'pos.order_{session.id}',
+                'number_next': 1,
+                'number_increment': 1,
+                'company_id': False,
+            })
+
         return sessions
 
     def unlink(self):

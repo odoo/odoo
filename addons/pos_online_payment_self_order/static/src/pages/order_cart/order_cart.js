@@ -1,6 +1,6 @@
 /** @odoo-module */
 import { patch } from "@web/core/utils/patch";
-import { OrderCart } from "@pos_self_order/pages/order_cart/order_cart";
+import { OrderCart } from "@pos_self_order/mobile/pages/order_cart/order_cart";
 import { _t } from "@web/core/l10n/translation";
 
 patch(OrderCart.prototype, {

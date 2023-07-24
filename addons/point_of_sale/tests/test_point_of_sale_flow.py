@@ -1598,10 +1598,11 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         original_payment = self.env['account.move'].search([('ref', '=', current_session.display_name)])
         original_customer_payment_entry = original_payment.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable')
         reverser_customer_payment_entry = reverse_payment.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable')
+
         #check that both use the same account
         self.assertEqual(len(reverser_customer_payment_entry), 2)
-        self.assertEqual(reverser_customer_payment_entry[0].balance, -2.0)
-        self.assertEqual(reverser_customer_payment_entry[1].balance, -4.0)
+        self.assertEqual(reverser_customer_payment_entry.filtered(lambda l: l.partner_id).balance, -4.0)
+        self.assertEqual(reverser_customer_payment_entry.filtered(lambda l: not l.partner_id).balance, -2.0)
         self.assertEqual(original_customer_payment_entry.account_id.id, reverser_customer_payment_entry.account_id.id)
         self.assertEqual(reverser_customer_payment_entry.partner_id, original_customer_payment_entry.partner_id)
 
