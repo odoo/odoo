@@ -236,6 +236,17 @@ QUnit.test("chat window: open / close", async (assert) => {
     assert.verifySteps(["rpc:channel_fold/open"]);
 });
 
+QUnit.test("open chat on very narrow device should work", async (assert) => {
+    const pyEnv = await startServer();
+    patchUiSize({ width: 200 });
+    pyEnv["discuss.channel"].create({});
+    await start();
+    assert.ok(CHAT_WINDOW_WIDTH > 200, "Device is narrower than usual chat window width"); // scenario where this might fail
+    await click("button i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    assert.containsOnce($, ".o-mail-ChatWindow");
+});
+
 QUnit.test(
     "Mobile: closing a chat window should not update channel state on the server",
     async (assert) => {
