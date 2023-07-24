@@ -7,6 +7,7 @@ import { HtmlField } from "@web_editor/js/backend/html_field";
 import { parseHTML } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { onRendered } from "@odoo/owl";
 import { wysiwygData } from "@web_editor/../tests/test_utils";
+import { OdooEditor } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
 
 // Legacy
 import legacyEnv from '@web/legacy/js/common_env';
@@ -432,5 +433,197 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         // Simulate the last urgent save, with the modified image.
         await formController.beforeUnload();
         await nextTick();
+    });
+
+    QUnit.module('Odoo fields synchronisation');
+
+    QUnit.test("Synchronise fields when editing.", async (assert) => {
+        serverData.models.partner.records = [{
+            id: 1,
+            txt: `
+            <div>
+                <div data-oe-model="partner" data-oe-field="txt" data-oe-id="1" data-oe-xpath="/div[1]/div[1]">
+                    <p>a</p>
+                </div>
+                <div data-oe-model="partner" data-oe-field="txt" data-oe-id="1" data-oe-xpath="/div[1]/div[1]">
+                    <p>a</p>
+                </div>
+                <div data-oe-model="partner" data-oe-field="txt" data-oe-id="1" data-oe-xpath="/div[1]/div[1]">
+                    <p>a</p>
+                </div>
+            </div>
+            `,
+        }];
+
+        // Patch to get a promise to get the htmlField component instance when
+        // the wysiwyg is instancied.
+        const htmlFieldPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await this._super(...arguments);
+                await nextTick();
+                htmlFieldPromise.resolve(this);
+            }
+        });
+        let historyStepPromise;
+        const newHistoryStepPromise = () => {
+            historyStepPromise = makeDeferred();
+        };
+        patchWithCleanup(OdooEditor.prototype, {
+            historyStep() {
+                this._super(...arguments);
+                if (historyStepPromise) {
+                    historyStepPromise.resolve();
+                }
+            }
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+
+        // Let the htmlField be mounted and recover the Component instance.
+        const htmlField = await htmlFieldPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+        const node = editor.editable.querySelector('p').childNodes[0];
+        newHistoryStepPromise();
+        node.textContent = 'b';
+        await historyStepPromise;
+
+        assert.equal(editor.editable.children[0].children[0].innerHTML.trim(), '<p>b</p>');
+        assert.equal(editor.editable.children[0].children[1].innerHTML.trim(), '<p>b</p>');
+        assert.equal(editor.editable.children[0].children[2].innerHTML.trim(), '<p>b</p>');
+    });
+    QUnit.test("Synchronise fields when editing containing unremovable.", async (assert) => {
+        serverData.models.partner.records = [{
+            id: 1,
+            txt: `
+            <div>
+                <div data-oe-model="partner" data-oe-field="txt" data-oe-id="1" data-oe-xpath="/div[1]/div[1]">
+                    <p class="oe_unremovable">a</p>
+                </div>
+                <div data-oe-model="partner" data-oe-field="txt" data-oe-id="1" data-oe-xpath="/div[1]/div[1]">
+                    <p class="oe_unremovable">a</p>
+                </div>
+                <div data-oe-model="partner" data-oe-field="txt" data-oe-id="1" data-oe-xpath="/div[1]/div[1]">
+                    <p class="oe_unremovable">a</p>
+                </div>
+            </div>
+            `,
+        }];
+
+        // Patch to get a promise to get the htmlField component instance when
+        // the wysiwyg is instancied.
+        const htmlFieldPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await this._super(...arguments);
+                await nextTick();
+                htmlFieldPromise.resolve(this);
+            }
+        });
+        let historyStepPromise;
+        const newHistoryStepPromise = () => {
+            historyStepPromise = makeDeferred();
+        };
+        patchWithCleanup(OdooEditor.prototype, {
+            historyStep() {
+                this._super(...arguments);
+                if (historyStepPromise) {
+                    historyStepPromise.resolve();
+                }
+            }
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+
+        // Let the htmlField be mounted and recover the Component instance.
+        const htmlField = await htmlFieldPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+        const node = editor.editable.querySelector('p').childNodes[0];
+        newHistoryStepPromise();
+        node.textContent = 'b';
+        await historyStepPromise;
+
+        assert.equal(editor.editable.children[0].children[0].innerHTML.trim(), '<p class="oe_unremovable">b</p>');
+        assert.equal(editor.editable.children[0].children[1].innerHTML.trim(), '<p class="oe_unremovable">b</p>');
+        assert.equal(editor.editable.children[0].children[2].innerHTML.trim(), '<p class="oe_unremovable">b</p>');
+    });
+    QUnit.test("Synchronise fields removing an unremovable within a t-field should rollback", async (assert) => {
+        serverData.models.partner.records = [{
+            id: 1,
+            txt: `
+            <div>
+                <div data-oe-model="partner" data-oe-field="txt" data-oe-id="1" data-oe-xpath="/div[1]/div[1]">
+                    <div class="oe_unremovable"><p class="oe_unremovable">a</p></div>
+                </div>
+                <div data-oe-model="partner" data-oe-field="txt" data-oe-id="1" data-oe-xpath="/div[1]/div[1]">
+                    <div class="oe_unremovable"><p class="oe_unremovable">a</p></div>
+                </div>
+                <div data-oe-model="partner" data-oe-field="txt" data-oe-id="1" data-oe-xpath="/div[1]/div[1]">
+                    <div class="oe_unremovable"><p class="oe_unremovable">a</p></div>
+                </div>
+            </div>
+            `,
+        }];
+
+        // Patch to get a promise to get the htmlField component instance when
+        // the wysiwyg is instancied.
+        const htmlFieldPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await this._super(...arguments);
+                await nextTick();
+                htmlFieldPromise.resolve(this);
+            }
+        });
+        let historyStepPromise;
+        const newHistoryStepPromise = () => {
+            historyStepPromise = makeDeferred();
+        };
+        patchWithCleanup(OdooEditor.prototype, {
+            historyStep() {
+                this._super(...arguments);
+                if (historyStepPromise) {
+                    historyStepPromise.resolve();
+                }
+            }
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+
+        // Let the htmlField be mounted and recover the Component instance.
+        const htmlField = await htmlFieldPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+        const node = editor.editable.querySelector('div.oe_unremovable');
+        newHistoryStepPromise();
+        node.textContent = 'b';
+        await historyStepPromise;
+
+        assert.equal(editor.editable.children[0].children[0].innerHTML.trim(), '<div class="oe_unremovable"><p class="oe_unremovable">a</p></div>');
+        assert.equal(editor.editable.children[0].children[1].innerHTML.trim(), '<div class="oe_unremovable"><p class="oe_unremovable">a</p></div>');
+        assert.equal(editor.editable.children[0].children[2].innerHTML.trim(), '<div class="oe_unremovable"><p class="oe_unremovable">a</p></div>');
     });
 });
