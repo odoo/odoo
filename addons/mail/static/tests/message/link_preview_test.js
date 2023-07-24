@@ -261,6 +261,9 @@ QUnit.test("No crash on receiving link preview of non-known message", async (ass
     env.services.rpc("/mail/link_preview", { message_id: messageId });
     await nextAnimationFrame();
     assert.ok(true);
+    env.services.rpc("/mail/link_preview/delete", { link_preview_id: linkPreviewId });
+    await nextAnimationFrame();
+    assert.ok(true);
 });
 
 QUnit.test(
