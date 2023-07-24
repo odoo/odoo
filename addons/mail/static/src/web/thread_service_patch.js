@@ -33,8 +33,6 @@ patch(ThreadService.prototype, "mail/web", {
     ) {
         thread.isLoadingAttachments =
             thread.isLoadingAttachments || requestList.includes("attachments");
-        thread.areAttachmentsLoaded =
-            !thread.areAttachmentsLoaded && requestList.includes("attachments");
         if (requestList.includes("messages")) {
             this.fetchNewMessages(thread);
         }

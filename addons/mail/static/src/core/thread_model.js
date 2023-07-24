@@ -28,7 +28,7 @@ export class Thread {
     /** @type {string} */
     model;
     /** @type {boolean} */
-    areAttachmentsLoaded = true;
+    areAttachmentsLoaded = false;
     /** @type {import("@mail/attachments/attachment_model").Attachment[]} */
     attachments = [];
     /** @type {integer} */
