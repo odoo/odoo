@@ -6,9 +6,10 @@ from datetime import datetime, timedelta
 from operator import itemgetter
 
 import pytz
-from odoo import models, fields, api, exceptions, _
-from odoo.tools import format_datetime
+
+from odoo import _, api, exceptions, fields, models
 from odoo.osv.expression import AND, OR
+from odoo.tools import format_datetime
 from odoo.tools.float_utils import float_is_zero
 
 
@@ -133,6 +134,18 @@ class HrAttendance(models.Model):
     def _get_overtime_leave_domain(self):
         return []
 
+    def _get_employee_calendar(self, employee=None, date_from=None, date_to=None):
+        # Returns a list of dictionaries for resource calendars and the time frame they apply to
+        if not employee:
+            self.ensure_one()
+            employee = self.employee_id
+
+        return [{
+            'from': date_from,
+            'to': date_to,
+            'calendar': employee.resource_calendar_id or employee.company_id.resource_calendar_id,
+        }]
+
     def _update_overtime(self, employee_attendance_dates=None):
         if employee_attendance_dates is None:
             employee_attendance_dates = self._get_attendances_dates()
@@ -161,6 +174,9 @@ class HrAttendance(models.Model):
             start = pytz.utc.localize(min(attendance_dates, key=itemgetter(0))[0])
             stop = pytz.utc.localize(max(attendance_dates, key=itemgetter(0))[0] + timedelta(hours=24))
 
+            # Gather calendars that apply to the time frame
+            calendars = self._get_employee_calendar(employee=emp, date_from=start, date_to=stop)
+
             # Retrieve expected attendance intervals
             expected_attendances = emp.resource_calendar_id._attendance_intervals_batch(
                 start, stop, emp.resource_id
@@ -171,11 +187,59 @@ class HrAttendance(models.Model):
             )
             expected_attendances -= leave_intervals[False] | leave_intervals[emp.resource_id.id]
 
+            dates = set()
+            calendars_leaves = []
+
+            for calendar in calendars:
+                cal_start = max(start, calendar['from']) if calendar['from'] else start
+                cal_stop = min(stop, calendar['to']) if calendar['to'] else stop
+                expected_attendances = calendar['calendar']._attendance_intervals_batch(
+                    cal_start, cal_stop, emp.resource_id
+                )[emp.resource_id.id]
+
+                for expected_attendance in expected_attendances:
+                    dates.add(expected_attendance[0].date())
+
+                # Pre-fetch leave intervals to avoid recalculation for each date
+                leave_intervals = calendar['calendar']._leave_intervals_batch(cal_start, cal_stop, emp.resource_id, domain=[])
+                calendars_leaves.append((calendar, leave_intervals))
+
             # working_times = {date: [(start, stop)]}
             working_times = defaultdict(lambda: [])
-            for expected_attendance in expected_attendances:
+            for date in set(dates):
+                # Turn into datetime and add timezone for _attendance_intervals_batch function
+                start = pytz.timezone(emp.tz or 'UTC').localize(datetime.combine(date, datetime.min.time()))
+                stop = start + timedelta(hours=24)
+
+                # Find calendar that applies to the date
+                result = [
+                    (cal, leaves) for cal, leaves in calendars_leaves
+                    if cal['from'] <= start and (not cal['to'] or cal['to'] >= start)
+                ]
+
+                if not result:
+                    # Fall back to employee calendar
+                    calendar = {
+                        'from': start,
+                        'to': stop,
+                        'calendar': emp.resource_calendar_id,
+                    }
+                    leave_intervals = emp.resource_calendar_id._leave_intervals_batch(
+                        start, stop, emp.resource_id, domain=[]
+                    )
+                else:
+                    calendar, leave_intervals = result[0]
+
+                # Correct date using _get_employee_calendar
+                corrected_attendances = calendar['calendar']._attendance_intervals_batch(
+                    start, stop, emp.resource_id
+                )[emp.resource_id.id]
+
+                # Substract Global Leaves and Employee's Leaves
+                corrected_attendances -= leave_intervals[False] | leave_intervals[emp.resource_id.id]
+
                 # Exclude resource.calendar.attendance
-                working_times[expected_attendance[0].date()].append(expected_attendance[:2])
+                working_times[date] = [att[:2] for att in corrected_attendances]
 
             overtimes = self.env['hr.attendance.overtime'].sudo().search([
                 ('employee_id', '=', emp.id),
