@@ -322,7 +322,7 @@ class PosSession(models.Model):
                 self.env.cr.rollback()
                 return self._close_session_action(balance)
 
-            self.sudo()._post_statement_difference(cash_difference_before_statements)
+            self.sudo()._post_statement_difference(cash_difference_before_statements, False)
             if self.move_id.line_ids:
                 self.move_id.sudo().with_company(self.company_id)._post()
                 # Set the uninvoiced orders' state to 'done'
@@ -331,12 +331,12 @@ class PosSession(models.Model):
                 self.move_id.sudo().unlink()
             self.sudo().with_company(self.company_id)._reconcile_account_move_lines(data)
         else:
-            self.sudo()._post_statement_difference(self.cash_register_difference)
+            self.sudo()._post_statement_difference(self.cash_register_difference, False)
 
         self.write({'state': 'closed'})
         return True
 
-    def _post_statement_difference(self, amount):
+    def _post_statement_difference(self, amount, is_opening):
         if amount:
             if self.config_id.cash_control:
                 st_line_vals = {
@@ -352,7 +352,7 @@ class PosSession(models.Model):
                         _('Please go on the %s journal and define a Loss Account. This account will be used to record cash difference.',
                           self.cash_journal_id.name))
 
-                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)")
+                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)") + (_(' - opening') if is_opening else _(' - closing'))
                 st_line_vals['counterpart_account_id'] = self.cash_journal_id.loss_account_id.id
             else:
                 # self.cash_register_difference  > 0.0
@@ -361,7 +361,7 @@ class PosSession(models.Model):
                         _('Please go on the %s journal and define a Profit Account. This account will be used to record cash difference.',
                           self.cash_journal_id.name))
 
-                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
+                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)") + (_(' - opening') if is_opening else _(' - closing'))
                 st_line_vals['counterpart_account_id'] = self.cash_journal_id.profit_account_id.id
 
             self.env['account.bank.statement.line'].create(st_line_vals)
@@ -1484,7 +1484,7 @@ class PosSession(models.Model):
         self.opening_notes = notes
         difference = cashbox_value - self.cash_register_balance_start
         self.cash_register_balance_start = cashbox_value
-        self.sudo()._post_statement_difference(difference)
+        self.sudo()._post_statement_difference(difference, True)
         self._post_cash_details_message('Opening', difference, notes)
 
     def _post_cash_details_message(self, state, difference, notes):
