@@ -153,7 +153,7 @@ export class Record extends DataPoint {
             resIds.splice(index, 1);
             const resId = resIds[Math.min(index, resIds.length - 1)] || false;
             if (resId) {
-                await this._load({ resId, resIds });
+                await this.model.load({ resId, resIds });
             } else {
                 this.model._updateConfig(this.config, { resId: false }, { noReload: true });
                 this.dirty = false;
@@ -177,7 +177,7 @@ export class Record extends DataPoint {
             const resId = await this.model.orm.call(this.resModel, "copy", [this.resId], kwargs);
             const resIds = this.resIds.slice();
             resIds.splice(index + 1, 0, resId);
-            await this._load({ resId, resIds, mode: "edit" });
+            await this.model.load({ resId, resIds, mode: "edit" });
         });
     }
 
@@ -201,12 +201,11 @@ export class Record extends DataPoint {
         return this._invalidFields.has(fieldName);
     }
 
-    load(resId = this.resId, context = this.context) {
-        let mode = this.config.mode;
-        if (!resId) {
-            mode = "edit";
+    load() {
+        if (arguments.length > 0) {
+            throw new Error("Record.load() does not accept arguments");
         }
-        return this.model.mutex.exec(() => this._load({ resId, mode, context }));
+        return this.model.mutex.exec(() => this._load());
     }
 
     openInvalidFieldsNotification() {
@@ -540,8 +539,9 @@ export class Record extends DataPoint {
     }
 
     async _load(nextConfig = {}) {
-        // FIXME: do not allow to change resId? maybe add a new method on model to re-generate a
-        // new root for the new resId
+        if ("resId" in nextConfig && this.resId) {
+            throw new Error("Cannot change resId of a record");
+        }
         await this.model._updateConfig(this.config, nextConfig, {
             commit: (values) => {
                 if (this.resId) {
@@ -767,13 +767,18 @@ export class Record extends DataPoint {
                 return onError(e, { discard: () => this._discard() });
             }
             if (!this.isInEdition) {
-                await this._load({ resId });
+                const nextConfig = {};
+                if (creation) {
+                    nextConfig.resId = resId;
+                }
+                await this._load(nextConfig);
             }
             throw e;
         }
         if (!noReload) {
-            const nextConfig = { resId };
+            const nextConfig = {};
             if (creation) {
+                nextConfig.resId = resId;
                 nextConfig.resIds = this.resIds.concat([resId]);
             }
             await this._load(nextConfig);
@@ -857,13 +862,13 @@ export class Record extends DataPoint {
      */
     async _toggleArchive(state) {
         const method = state ? "action_archive" : "action_unarchive";
-        const context = this.context;
-        const resId = this.resId;
-        const action = await this.model.orm.call(this.resModel, method, [[resId]], { context });
+        const action = await this.model.orm.call(this.resModel, method, [[this.resId]], {
+            context: this.context,
+        });
         if (action && Object.keys(action).length) {
-            this.model.action.doAction(action, { onClose: () => this._load({ resId }) });
+            this.model.action.doAction(action, { onClose: () => this._load() });
         } else {
-            return this._load({ resId });
+            return this._load();
         }
     }
 

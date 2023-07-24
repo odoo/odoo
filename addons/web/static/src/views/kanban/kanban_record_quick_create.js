@@ -166,7 +166,7 @@ class KanbanQuickCreateController extends Component {
         if (resId) {
             await this.props.onValidate(resId, mode);
             if (mode === "add") {
-                await this.model.root.load(false);
+                await this.model.load({ resId: false });
             }
         }
         this.state.disabled = false;

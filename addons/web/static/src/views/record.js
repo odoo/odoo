@@ -133,7 +133,7 @@ class _Record extends Component {
             if (nextProps.values) {
                 return loadWithValues(nextProps.values);
             } else if (nextProps.info.resId !== this.model.root.resId) {
-                return this.model.root.load(nextProps.info.resId);
+                return this.model.load({ resId: nextProps.info.resId });
             }
         });
     }

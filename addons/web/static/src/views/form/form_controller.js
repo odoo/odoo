@@ -325,7 +325,7 @@ export class FormController extends Component {
             });
         }
         if (canProceed) {
-            return this.model.root.load(resIds[offset]);
+            return this.model.load({ resId: resIds[offset] });
         }
     }
 
@@ -502,7 +502,7 @@ export class FormController extends Component {
         // FIXME: disable/enable not done in onPagerUpdate
         if (canProceed) {
             const btns = this.disableButtons();
-            await this.model.root.load(false);
+            await this.model.load({ resId: false });
             this.enableButtons(btns);
         }
     }
