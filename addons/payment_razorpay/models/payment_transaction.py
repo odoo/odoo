@@ -213,9 +213,11 @@ class PaymentTransaction(models.Model):
                 else:  # The refund was initiated for an unknown source transaction.
                     pass  # Don't do anything with the refund notification.
         if not tx:
-            raise ValidationError(
+            exc = ValidationError(
                 "Razorpay: " + _("No transaction found matching reference %s.", reference)
             )
+            exc.sentry_ignored = True
+            raise exc
 
         return tx
 
