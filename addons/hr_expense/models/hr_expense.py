@@ -293,9 +293,19 @@ class HrExpense(models.Model):
     @api.depends('product_id', 'attachment_number')
     def _compute_unit_amount(self):
         for expense in self:
+<<<<<<< HEAD
             # Only change unit_amount if the product has no cost defined on it
             if expense.product_id and not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
                 expense.unit_amount = expense.product_id._price_compute('standard_price', currency=expense.currency_id)[expense.product_id.id]
+||||||| parent of a6fcc5798e6 (temp)
+            # Only change unit_amount if the product has no cost defined on it
+            if expense.product_id and not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
+                expense.unit_amount = expense.product_id.price_compute('standard_price', currency=expense.currency_id)[expense.product_id.id]
+=======
+            # Only change unit_amount if the product has cost defined on it
+            if expense.product_id and expense.product_has_cost and not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
+                expense.unit_amount = expense.product_id.price_compute('standard_price', currency=expense.currency_id)[expense.product_id.id]
+>>>>>>> a6fcc5798e6 (temp)
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_ids(self):
