@@ -40,7 +40,7 @@ class ResConfigSettings(models.TransientModel):
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format', readonly=False)
-    external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", readonly=False)
+    external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", readonly=False, domain=lambda self: self._allowed_external_layout())
     show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
     company_count = fields.Integer('Number of Companies', compute="_compute_company_count")
     active_user_count = fields.Integer('Number of Active Users', compute="_compute_active_user_count")
@@ -79,6 +79,16 @@ class ResConfigSettings(models.TransientModel):
             'view_mode': 'form',
             'res_id': template_id.id,
         }
+    @api.model
+    def _allowed_external_layout(self):
+        xml_ids = [
+            'web.external_layout_background',
+            'web.external_layout_boxed',
+            'web.external_layout_clean',
+            'web.external_layout_standard',
+        ]
+        records = [('id', 'in', [self.env.ref(xml_id).id for xml_id in xml_ids])]
+        return records
 
     def edit_external_header(self):
         if not self.external_report_layout_id:
