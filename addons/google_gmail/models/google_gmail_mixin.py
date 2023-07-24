@@ -63,6 +63,8 @@ class GoogleGmailMixin(models.AbstractModel):
         We need him to save the form so the current mail server record exist in DB, and
         we can include the record ID in the URL.
         """
+        if not self:
+            return {}
         self.ensure_one()
 
         if not self.env.user.has_group('base.group_system'):
