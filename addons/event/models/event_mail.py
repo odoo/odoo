@@ -168,7 +168,11 @@ You receive this email because you are:
 
     @api.model
     def run(self, autocommit=False):
-        schedulers = self.search([('done', '=', False), ('scheduled_date', '<=', datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))])
+        schedulers = self.search([
+            ('event_id.active', '=', True),
+            ('done', '=', False),
+            ('scheduled_date', '<=', datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
+        ])
         for scheduler in schedulers:
             try:
                 with self.env.cr.savepoint():
