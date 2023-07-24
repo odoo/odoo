@@ -121,6 +121,7 @@ QUnit.test("click on edit follower", async (assert) => {
     assert.containsOnce($, "button[title='Edit subscription']");
 
     await click("button[title='Edit subscription']");
+    assert.containsNone($, ".o-mail-Follower");
     assert.verifySteps(["fetch_subtypes"]);
     assert.containsOnce($, ".o-mail-FollowerSubtypeDialog");
 });
