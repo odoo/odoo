@@ -1545,11 +1545,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.env.ref('sale.action_quotations_with_onboarding')
 
-    def _get_name_sale_report(self):
-        """ This method can be inherited by localizations who want to localize the sale order report. """
-        self.ensure_one()
-        return 'sale.report_saleorder_document'
-
     def _get_name_portal_content_view(self):
         """ This method can be inherited by localizations who want to localize the online quotation view. """
         self.ensure_one()
