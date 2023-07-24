@@ -412,6 +412,12 @@ class ProcurementGroup(models.Model):
     stock_move_ids = fields.One2many('stock.move', 'group_id', string="Related Stock Moves")
 
     @api.model
+    def _skip_procurement(self, procurement):
+        return procurement.product_id.type not in ("consu", "product") or float_is_zero(
+            procurement.product_qty, precision_rounding=procurement.product_uom.rounding
+        )
+
+    @api.model
     def run(self, procurements, raise_user_error=True):
         """Fulfil `procurements` with the help of stock rules.
 
@@ -441,10 +447,7 @@ class ProcurementGroup(models.Model):
             procurement.values.setdefault('company_id', procurement.location_id.company_id)
             procurement.values.setdefault('priority', '0')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
-            if (
-                procurement.product_id.type not in ('consu', 'product') or
-                float_is_zero(procurement.product_qty, precision_rounding=procurement.product_uom.rounding)
-            ):
+            if self._skip_procurement(procurement):
                 continue
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
