@@ -9,6 +9,7 @@ class PurchaseBillUnion(models.Model):
     _auto = False
     _description = 'Purchases & Bills Union'
     _order = "date desc, name desc"
+    _rec_names_search = ['name', 'reference']
 
     name = fields.Char(string='Reference', readonly=True)
     reference = fields.Char(string='Source', readonly=True)
