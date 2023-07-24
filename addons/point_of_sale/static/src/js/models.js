@@ -1409,7 +1409,7 @@ class Product extends PosModel {
             price += price_extra;
         }
         _.find(pricelist_items, function (rule) {
-            if (rule.min_quantity && quantity < rule.min_quantity) {
+            if (rule.min_quantity && quantity < rule.min_quantity || (rule.min_quantity === 0 && quantity === 0)) {
                 return false;
             }
 
@@ -2102,7 +2102,7 @@ class Orderline extends PosModel {
         return this.compute_fixed_price(this.get_lst_price());
     }
     get_lst_price(){
-        return this.product.get_price(this.pos.default_pricelist, 1, 0)
+        return this.product.get_price(this.pos.default_pricelist, 0, 0)
     }
     set_lst_price(price){
       this.order.assert_editable();
