@@ -957,3 +957,12 @@ class TestComputeOnchange(common.TransactionCase):
             {'name': 'foo', 'count': 1},
             {'name': 'bar', 'count': 1},
         ])
+
+    def test_related_field_onchange(self):
+        Parent = self.env['ir.actions.server']
+        Composite = self.env['ir.cron']
+        base_field = Parent._fields['code']
+        related_field = Composite._fields['code']
+
+        self.assertFalse(Parent._has_onchange(base_field, [base_field]))
+        self.assertFalse(Composite._has_onchange(related_field, [related_field]))

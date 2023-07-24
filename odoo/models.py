@@ -6434,7 +6434,7 @@ class BaseModel(metaclass=MetaModel):
             presence of ``other_fields``.
         """
         return (field.name in self._onchange_methods) or any(
-            dep in other_fields
+            dep in other_fields and dep != field
             for dep in self.pool.get_dependent_fields(field.base_field)
         )
 
