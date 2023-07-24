@@ -74,7 +74,7 @@ $o-wblog-loader-size: 50px;
     // menu. The aim is to be able to write simple articles on the fly,
     // achieving a good design without being forced to use snippets.
     .o_wblog_read_text {
-        font-size: 18px;
+        @include font-size(18px);
         font-weight: 300;
     }
 
@@ -98,7 +98,7 @@ $o-wblog-loader-size: 50px;
         width: 3em;
         height: 3em;
         > i {
-            font-size: 1.3em;
+            @include font-size(1.3em);
         }
     }
 
@@ -245,7 +245,7 @@ $o-wblog-loader-size: 50px;
 
         .o_wblog_normalize_font {
             // normalize fonts
-            font-size: 13px;
+            @include font-size(13px);
             line-height: 1.45;
         }
 

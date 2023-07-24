@@ -575,13 +575,13 @@ font[class*='bg-'] {
     background-color: #f5f5f5;
     border: 1px solid #dddddd;
     color: #666666;
-    font-size: 14px;
+    @include font-size(14px);
     padding: 4px;
 }
 table.table_desc tr td {
     text-align: left;
     padding: 5px;
-    font-size: 13px;
+    @include font-size(13px);
     &:first-child {
         width: 25%;
         font-weight: bold;
@@ -687,7 +687,7 @@ table.table_desc tr td {
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
             background-color: rgba(0,0,0,0);
-            font-size: 2rem;
+            @include font-size(2rem);
             color: #fff;
             text-shadow: $box-shadow-sm;
         }
@@ -715,7 +715,7 @@ table.table_desc tr td {
             width: 2rem;
             height: 6rem;
             line-height: 6rem;
-            font-size: 1.5rem;
+            @include font-size(1.5rem);
         }
         // Indicators
         .carousel-indicators li {
@@ -742,7 +742,7 @@ table.table_desc tr td {
             height: 4rem;
             line-height: 4rem;
             border-radius: 50%;
-            font-size: 1.25rem;
+            @include font-size(1.25rem);
         }
         // Indicators
         .carousel-indicators li {
@@ -774,7 +774,7 @@ table.table_desc tr td {
             width: 2rem;
             height: 2rem;
             line-height: 2rem;
-            font-size: 1.25rem;
+            @include font-size(1.25rem);
         }
         // Indicators
         .carousel-indicators li {
@@ -904,7 +904,7 @@ $-transition-duration: 200ms;
 
     &.o_header_is_scrolled {
         .navbar-brand {
-            font-size: $o-theme-navbar-fixed-logo-height / $line-height-base;
+            @include font-size($o-theme-navbar-fixed-logo-height / $line-height-base);
 
             img {
                 height: $o-theme-navbar-fixed-logo-height;
@@ -1640,7 +1640,7 @@ span.list-inline-item.o_add_language:last-child {
 $ribbon-padding: 100px;
 .o_ribbon {
     margin: 0;
-    font-size: 1rem;
+    @include font-size(1rem);
     font-weight: bold;
     white-space: nowrap;
     text-align: center;

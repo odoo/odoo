@@ -8,7 +8,7 @@
     }
 
     .o_event_foldable_badge_font_small {
-        font-size: .8rem;
+        @include font-size(.8rem);
     }
 
     .o_event_foldable_badge_bottom.o_event_foldable_badge_left {
@@ -33,7 +33,7 @@
             border: solid 1px #939393;
             margin: 0px 8px;
             padding: 10px 3px;
-            font-size: 1.2rem;
+            @include font-size(1.2rem);
             box-shadow: -3px 3px 9px 0px rgba(0,0,0,0.51);
 
             .o_event_foldable_badge_ticket_wrapper_top {

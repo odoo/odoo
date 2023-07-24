@@ -99,7 +99,7 @@ $o-tour-pointer-size-delay-in: $o-tour-pointer-duration-in - $o-tour-pointer-siz
 
         // Force style so that it does not depend on where the tooltip is attached
         line-height: $line-height-base;
-        font-size: $font-size-base;
+        @include font-size($font-size-base);
         font-family: $font-family-sans-serif;
         font-weight: normal;
 
