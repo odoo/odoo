@@ -2,7 +2,10 @@
 
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
 import { getCell, getCellValue } from "@spreadsheet/../tests/utils/getters";
-import { createModelWithDataSource, waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
+import {
+    createModelWithDataSource,
+    waitForDataSourcesLoaded,
+} from "@spreadsheet/../tests/utils/model";
 
 QUnit.module("spreadsheet > Currency");
 
@@ -71,4 +74,29 @@ QUnit.test("Currency rates are loaded once by clock", async (assert) => {
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","SEK")`);
     await waitForDataSourcesLoaded(model);
     assert.verifySteps(["FETCH:2"]);
+});
+
+QUnit.test("Currency rates per date", async (assert) => {
+    const model = await createModelWithDataSource({
+        mockRPC: async function (route, args) {
+            if (args.method === "get_rates_for_spreadsheet") {
+                assert.step("FETCH");
+                const [info1, info2] = args.args[0];
+                assert.step(new Date(info1.date).toLocaleString("en-US", { timeZone: "UTC" }));
+                assert.step(new Date(info2.date).toLocaleString("en-US", { timeZone: "UTC" }));
+                return [
+                    { ...info1, rate: 0.9 },
+                    { ...info2, rate: 0.8 },
+                ];
+            }
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD", "2/10/2023")`);
+    setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","USD", " 2/11/2023")`);
+    await waitForDataSourcesLoaded(model);
+    assert.verifySteps(["FETCH", "2/9/2023, 11:00:00 PM", "2/10/2023, 11:00:00 PM"]);
+    assert.equal(getCell(model, "A1").evaluated.value, 0.9);
+    assert.equal(getCell(model, "A1").evaluated.error, undefined);
+    assert.equal(getCell(model, "A2").evaluated.value, 0.8);
+    assert.equal(getCell(model, "A2").evaluated.error, undefined);
 });
