@@ -8,7 +8,7 @@ $-mini-nav-size: 40px;
 .o_frontend_to_backend_nav {
     @include o-position-absolute(0, auto, auto, 0);
     z-index: $zindex-modal;
-    font-size: $o-font-size-base;
+    @include font-size($o-font-size-base);
 
     &::before {
         content: "";
@@ -40,7 +40,7 @@ $-mini-nav-size: 40px;
     }
 
     .o_frontend_to_backend_apps_menu {
-        font-size: $o-font-size-base;
+        @include font-size($o-font-size-base);
         max-height: 70vh;
         overflow: auto;
     }

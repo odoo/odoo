@@ -16,7 +16,7 @@
         @include o-bg-color(color-contrast(o-color('primary')), o-color('primary'), $with-extras: false);
         box-shadow: $box-shadow-sm;
         cursor: pointer;
-        font-size: $font-size-lg;
+        @include font-size($font-size-lg);
         text-align: center;
     }
 
