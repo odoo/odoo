@@ -11,3 +11,5 @@ Eric Antones eantones@nuobit.com https://github.com/eantones
 List of contributors:
 
 Eric Antones eantones@nuobit.com https://github.com/eantones
+Kilian Niubo kniubo@nuobit.com https://github.com/knvx
+Frank Cespedes fcespedes@nuobit.com https://github.com/frankc013

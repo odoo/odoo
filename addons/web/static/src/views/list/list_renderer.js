@@ -60,7 +60,7 @@ const FIXED_FIELD_COLUMN_WIDTHS = {
 /**
  * @param {HTMLElement} parent
  */
- function containsActiveElement(parent) {
+function containsActiveElement(parent) {
     const { activeElement } = document;
     return parent !== activeElement && parent.contains(activeElement);
 }
@@ -889,8 +889,9 @@ export class ListRenderer extends Component {
 
     getOptionalActiveFields() {
         this.optionalActiveFields = {};
-        const optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
+        let optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
         if (optionalActiveFields) {
+            optionalActiveFields = optionalActiveFields.split(",");
             this.allColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
             });

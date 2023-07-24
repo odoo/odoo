@@ -4986,11 +4986,12 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("custom delete confirmation dialog", async (assert) => {
-
         class CautiousController extends ListController {
             get deleteConfirmationDialogProps() {
                 const props = super.deleteConfirmationDialogProps;
-                props.body = markup(`<span class="text-danger">These are the consequences</span><br/>${props.body}`);
+                props.body = markup(
+                    `<span class="text-danger">These are the consequences</span><br/>${props.body}`
+                );
                 return props;
             }
         }
@@ -5024,7 +5025,12 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(document, "body .modal footer button.btn-secondary");
-        assert.containsN(target, "tbody td.o_list_record_selector", 4, "nothing deleted, 4 records remain");
+        assert.containsN(
+            target,
+            "tbody td.o_list_record_selector",
+            4,
+            "nothing deleted, 4 records remain"
+        );
     });
 
     QUnit.test(
@@ -7573,10 +7579,10 @@ QUnit.module("Views", (hooks) => {
             "the entire content should be selected on initial click"
         );
 
-        Object.assign(
-            target.querySelector("[name=text] textarea"),
-            { selectionStart: 0, selectionEnd: 1 }
-        );
+        Object.assign(target.querySelector("[name=text] textarea"), {
+            selectionStart: 0,
+            selectionEnd: 1,
+        });
 
         await click(target, "[name=text] textarea");
 
@@ -14793,6 +14799,55 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("optional fields is shown only if enabled", async function (assert) {
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Currency Action 1",
+                res_model: "foo",
+                type: "ir.actions.act_window",
+                views: [[1, "list"]],
+            },
+        };
+
+        serverData.views = {
+            "foo,1,list": `
+                    <tree>
+                        <field name="currency_id" optional="show"/>
+                        <field name="company_currency_id" optional="show"/>
+                    </tree>`,
+            "foo,false,search": "<search/>",
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+
+        assert.containsN(
+            target,
+            "th",
+            4,
+            "should have 4 th, 1 for selector, 2 for columns, 1 for optional columns"
+        );
+
+        // disable optional field
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
+        assert.containsN(
+            target,
+            "th",
+            3,
+            "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns"
+        );
+
+        await doAction(webClient, 1);
+        assert.containsN(
+            target,
+            "th",
+            3,
+            "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns ever after listview reload"
+        );
+    });
+
     QUnit.test("selection is kept when optional fields are toggled", async function (assert) {
         await makeView({
             type: "list",
@@ -15035,10 +15090,10 @@ QUnit.module("Views", (hooks) => {
             patchWithCleanup(browser.localStorage, {
                 getItem(key) {
                     assert.step("getItem " + key);
-                    return forceLocalStorage ? '["m2o"]' : this._super(arguments);
+                    return forceLocalStorage ? "m2o" : this._super(arguments);
                 },
                 setItem(key, value) {
-                    assert.step("setItem " + key + " to " + JSON.stringify(value));
+                    assert.step("setItem " + key + " to " + JSON.stringify(String(value)));
                     return this._super(arguments);
                 },
             });
@@ -15096,7 +15151,7 @@ QUnit.module("Views", (hooks) => {
 
             // Only a setItem since the list view maintains its own internal state of toggled
             // optional columns.
-            assert.verifySteps(["setItem " + localStorageKey + ' to ["m2o","reference"]']);
+            assert.verifySteps(["setItem " + localStorageKey + ' to "m2o,reference"']);
 
             // 5 th (1 for checkbox, 3 for columns, 1 for optional columns)
             assert.containsN(target, "th", 5, "should have 5 th");
@@ -17393,7 +17448,7 @@ QUnit.module("Views", (hooks) => {
             fields: {
                 foo: { string: "Foo", type: "one2many", relation: "foo" },
             },
-        },
+        };
         await makeView({
             type: "form",
             resModel: "parent",
@@ -17413,23 +17468,23 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await triggerEvent(document.querySelector('.o_field_x2many_list_row_add a'), null, "click");
+        await triggerEvent(document.querySelector(".o_field_x2many_list_row_add a"), null, "click");
 
         const input = document.activeElement;
-        input.value = 'alu';
-        triggerEvent(document.activeElement, null, "input"),
+        input.value = "alu";
+        triggerEvent(document.activeElement, null, "input");
         await nextTick();
 
-        input.value = 'alue';
-        triggerEvent(document.activeElement, null, "input"),
-        triggerHotkey("Enter"),
+        input.value = "alue";
+        triggerEvent(document.activeElement, null, "input");
+        triggerHotkey("Enter");
         await nextTick();
 
         deferred.resolve();
         await nextTick();
 
         assert.strictEqual(input, document.activeElement);
-        assert.strictEqual(input.value, 'Value 1');
+        assert.strictEqual(input.value, "Value 1");
     });
     QUnit.test("monetary field display for rtl languages", async function (assert){
         patchWithCleanup(localization, {
