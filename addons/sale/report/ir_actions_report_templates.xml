@@ -157,7 +157,7 @@
                         <table class="table table-sm table-borderless">
                             <!-- Tax totals -->
                             <t t-set="tax_totals" t-value="doc.tax_totals"/>
-                            <t t-call="#{doc._get_name_tax_totals_view()}"/>
+                            <t t-call="sale.document_tax_totals"/>
                         </table>
                     </div>
                 </div>
@@ -195,10 +195,7 @@
 <template id="report_saleorder">
     <t t-call="web.html_container">
         <t t-foreach="docs" t-as="doc">
-            <!-- Not a dynamic t-call="#{doc._get_name_sale_report()}" because that breaks studio:
-                 https://github.com/odoo/odoo/pull/60609/files -->
-            <t t-if="doc._get_name_sale_report() == 'sale.report_saleorder_document'"
-               t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+            <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
         </t>
     </t>
 </template>
@@ -208,10 +205,7 @@
         <t t-set="is_pro_forma" t-value="True"/>
         <t t-set="docs" t-value="docs.with_context(proforma=True)"/>
         <t t-foreach="docs" t-as="doc">
-            <!-- Not a dynamic t-call="#{doc._get_name_sale_report()}" because that breaks studio:
-                 https://github.com/odoo/odoo/pull/60609/files -->
-            <t t-if="doc._get_name_sale_report() == 'sale.report_saleorder_document'"
-               t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+            <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
         </t>
     </t>
 </template>
