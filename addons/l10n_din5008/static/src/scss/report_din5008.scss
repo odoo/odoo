@@ -90,6 +90,15 @@
         [name=payment_communication] {  // re-align payment communication (otherwise it's cropped)
             margin-left: 5mm;
         }
+        #right-elements {
+            margin-right: 10mm;
+
+            &.col-12 {
+                @include media-breakpoint-down(md) {
+                    width: calc(100% - 10mm);
+                 }
+            }
+        }
     }
     &.footer {
         padding-left: 5mm;
