@@ -123,6 +123,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/views/fields/file_handler.*',
             'bus/static/src/bus_parameters_service.js',
             ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
+            ('remove', 'bus/static/src/simple_notification_service.js'),
 
             ('include', 'im_livechat.assets_core'),
             'im_livechat/static/src/embed/external/**/*',
