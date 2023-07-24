@@ -144,10 +144,13 @@ export class Messaging {
                 case "mail.link.preview/delete":
                     {
                         const { id, message_id } = notif.payload;
-                        removeFromArrayWithPredicate(
-                            this.store.messages[message_id].linkPreviews,
-                            (linkPreview) => linkPreview.id === id
-                        );
+                        const message = this.store.messages[message_id];
+                        if (message) {
+                            removeFromArrayWithPredicate(
+                                message.linkPreviews,
+                                (linkPreview) => linkPreview.id === id
+                            );
+                        }
                     }
                     break;
                 case "mail.message/inbox": {
