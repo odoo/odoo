@@ -6,7 +6,7 @@ from psycopg2 import IntegrityError, ProgrammingError
 
 import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, config
 from odoo.tests import common
 from odoo import Command
 
@@ -407,6 +407,10 @@ class TestCustomFields(common.TransactionCase):
 
         This is to forbid users to override class attributes.
         """
+        # For a strange reason, drop constraint will remain stuck if executed without initiating base. (even on an existing database)
+        # small assertion to avoid getting stuck on this test in this case.
+        self.assertIn('base', config['init'], 'This test can only be executed while installing base')
+
         field = self.create_field('x_foo')
         # Drop the SQL constraint, to bypass it,
         # as a user could do through a SQL shell or a `cr.execute` in a server action
