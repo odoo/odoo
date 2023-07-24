@@ -3,11 +3,11 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { effect } from "@web/core/utils/reactive";
 import { standardFieldProps } from "../standard_field_props";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { Component, useState } from "@odoo/owl";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 import { useDebounced } from "@web/core/utils/timing";
 
 export class AceField extends Component {
@@ -25,23 +25,10 @@ export class AceField extends Component {
         this.cookies = useService("cookie");
         this.debouncedCommit = useDebounced(this.commitChanges, 5000);
 
-        this.state = useState({
-            onChange: (value) => this.handleChange(value),
-            class: "ace-view-editor",
-            theme: this.theme,
+        this.state = useState({});
+        useRecordObserver((record) => {
+            this.state.value = record.data[this.props.name];
         });
-
-        this.lastSetValue = false;
-        effect(
-            async ({ record, mode, name, readonly }) => {
-                if (this.lastSetValue !== record.data[name]) {
-                    this.state.value = record.data[name];
-                }
-                this.state.mode = mode === "xml" ? "qweb" : mode;
-                this.state.readonly = readonly;
-            },
-            [this.props]
-        );
 
         const { model } = this.props.record;
         useBus(model.bus, "WILL_SAVE_URGENTLY", () => this.commitChanges());
@@ -50,6 +37,9 @@ export class AceField extends Component {
         );
     }
 
+    get mode() {
+        return this.props.mode === "xml" ? "qweb" : this.props.mode;
+    }
     get theme() {
         return this.cookies.current.color_scheme === "dark" ? "monokai" : "";
     }
@@ -64,7 +54,6 @@ export class AceField extends Component {
         if (!this.props.readonly) {
             const value = this.state.value;
             if (this.props.record.data[this.props.name] !== value) {
-                this.lastSetValue = value;
                 await this.props.record.update({ [this.props.name]: value });
             }
         }

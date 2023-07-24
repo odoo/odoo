@@ -248,7 +248,13 @@ export class RelationalModel extends Model {
         const config = Object.assign({}, currentConfig);
 
         config.context = "context" in params ? params.context : config.context;
-        if (!currentConfig.isMonoRecord) {
+        if (currentConfig.isMonoRecord) {
+            config.resId = "resId" in params ? params.resId : config.resId;
+            config.resIds = "resIds" in params ? params.resIds : config.resIds;
+            if (!config.resId && config.mode !== "edit") {
+                config.mode = "edit";
+            }
+        } else {
             config.domain = "domain" in params ? params.domain : config.domain;
             config.comparison = "comparison" in params ? params.comparison : config.comparison;
 

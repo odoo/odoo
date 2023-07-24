@@ -94,6 +94,7 @@ QUnit.module("Fields", (hooks) => {
 
         await pagerNext(target);
         await nextTick();
+        await nextTick();
 
         assert.ok(target.querySelector(".o_field_code").textContent.includes("blip"));
     });
