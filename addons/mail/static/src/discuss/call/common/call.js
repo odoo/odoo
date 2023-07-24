@@ -55,10 +55,6 @@ export class Call extends Component {
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
     }
 
-    get callNotifications() {
-        return [...this.rtc.notifications.values()];
-    }
-
     get isActiveCall() {
         return Boolean(this.props.thread.id === this.rtc.state?.channel?.id);
     }
