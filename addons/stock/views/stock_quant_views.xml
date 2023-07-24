@@ -127,8 +127,7 @@
                        attrs="{'readonly': [('id', '!=', False)]}"/>
                 <field name="lot_id" groups="stock.group_production_lot"
                        attrs="{
-                            'readonly': ['|', ('id', '!=', False), ('tracking', 'not in', ['serial', 'lot'])],
-                            'required': [('tracking', '!=', 'none')]
+                            'readonly': ['|', ('id', '!=', False), ('tracking', 'not in', ['serial', 'lot'])]
                        }"
                        invisible="context.get('hide_lot', False)"
                        context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
