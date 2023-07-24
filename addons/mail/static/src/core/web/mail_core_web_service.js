@@ -8,15 +8,16 @@ import { registry } from "@web/core/registry";
 
 export class MailCoreWeb {
     constructor(env, services) {
-        Object.assign(this, {
-            env,
-            busService: services.bus_service,
-            rpc: services.rpc,
-        });
+        /** @type {import("@web/env").OdooEnv} */
+        this.env = env;
+        /** @type {ReturnType<typeof import("@bus/services/bus_service").busService.start>} */
+        this.busService = services["bus_service"];
         /** @type {import("@mail/core/common/message_service").MessageService} */
         this.messageService = services["mail.message"];
         /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
+        /** @type {ReturnType<typeof import("@web/core/network/rpc_service").rpcService.start>} */
+        this.rpc = services.rpc;
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
     }
@@ -122,6 +123,7 @@ export class MailCoreWeb {
                     this.threadService.fetchMoreMessages(inbox);
                 }
             });
+            this.busService.start();
         });
     }
 }

@@ -23,7 +23,7 @@ export const busService = {
     dependencies: ["bus.parameters", "localization", "multi_tab"],
     async: true,
 
-    async start(env, { multi_tab: multiTab, "bus.parameters": params }) {
+    start(env, { multi_tab: multiTab, "bus.parameters": params }) {
         const bus = new EventBus();
         const notificationBus = new EventBus();
         let worker;
@@ -186,6 +186,9 @@ export const busService = {
             stop: () => {
                 send("leave");
                 isActive = false;
+            },
+            get isActive() {
+                return isActive;
             },
             /**
              * Subscribe to a single notification type.

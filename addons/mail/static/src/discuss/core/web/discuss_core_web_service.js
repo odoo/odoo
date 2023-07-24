@@ -47,6 +47,7 @@ export class DiscussCoreWeb {
                 data.current_user_settings.is_discuss_sidebar_category_channel_open;
             this.store.discuss.chats.isOpen =
                 data.current_user_settings.is_discuss_sidebar_category_chat_open;
+            this.busService.start();
         });
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
