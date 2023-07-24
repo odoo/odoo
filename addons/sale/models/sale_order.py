@@ -613,7 +613,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.amount_to_invoice = order.amount_total
             for invoice in order.invoice_ids.filtered(lambda x: x.state == 'posted'):
-                prices = sum(invoice.line_ids.filtered(lambda x: x.sale_line_ids.order_id.id == order.id).mapped('price_total'))
+                prices = sum(invoice.line_ids.filtered(lambda x: order in x.sale_line_ids.order_id).mapped('price_total'))
                 invoice_amount_currency = invoice.currency_id._convert(
                     prices * -invoice.direction_sign,
                     order.currency_id,
