@@ -575,9 +575,9 @@ export class X2ManyFieldDialog extends Component {
         return btns;
     }
 
-    discard() {
+    async discard() {
         if (this.record.isInEdition) {
-            this.record.discard();
+            await this.record.discard();
         }
         this.props.close();
     }

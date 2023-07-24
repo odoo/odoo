@@ -2104,6 +2104,198 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("save an o2m dialog form view and discard main form view", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+                    <form>
+                        <field name="turtles">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                            <form>
+                                <field name="display_name"/>
+                            </form>
+                        </field>
+                    </form>`,
+        });
+
+        assert.containsOnce(target, ".o_data_row");
+        assert.strictEqual(
+            target.querySelector(".o_data_row [name='display_name']").textContent,
+            "donatello"
+        );
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.strictEqual(
+            target.querySelector(".modal [name='display_name'] input").value,
+            "donatello"
+        );
+
+        await editInput(target, ".modal [name='display_name'] input", "leonardo");
+        await click(target.querySelector(".modal .o_form_button_save"));
+        assert.containsNone(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".o_data_row [name='display_name']").textContent,
+            "leonardo"
+        );
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await click(target.querySelector(".modal .o_form_button_cancel"));
+        assert.strictEqual(
+            target.querySelector(".o_data_row [name='display_name']").textContent,
+            "leonardo"
+        );
+
+        await clickDiscard(target);
+        assert.strictEqual(
+            target.querySelector(".o_data_row [name='display_name']").textContent,
+            "donatello"
+        );
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.strictEqual(
+            target.querySelector(".modal [name='display_name'] input").value,
+            "donatello"
+        );
+    });
+
+    QUnit.test("discard with nested o2m form view dialog", async function (assert) {
+        serverData.models.partner.records[0].p = [2];
+        serverData.models.partner.records[1].p = [4];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="p">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                            <form>
+                                <field name="display_name"/>
+                                <field name="p">
+                                    <tree>
+                                        <field name="display_name"/>
+                                    </tree>
+                                    <form>
+                                        <field name="display_name"/>
+                                    </form>
+                                </field>
+                            </form>
+                        </field>
+                    </form>`,
+        });
+
+        assert.containsOnce(target, ".o_data_row");
+        assert.strictEqual(
+            target.querySelector(".o_data_row [name='display_name']").textContent,
+            "second record"
+        );
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.strictEqual(
+            target.querySelector("#dialog_0 [name='display_name'] input").value,
+            "second record"
+        );
+
+        await click(target.querySelector("#dialog_0 .o_data_row .o_data_cell"));
+        assert.strictEqual(
+            target.querySelector("#dialog_1 [name='display_name'] input").value,
+            "aaa"
+        );
+
+        await editInput(target, "#dialog_1 [name='display_name'] input", "leonardo");
+        await click(target.querySelector("#dialog_1 .o_form_button_save"));
+        assert.containsNone(target, "#dialog_1");
+        assert.strictEqual(
+            target.querySelector("#dialog_0 .o_data_row [name='display_name']").textContent,
+            "leonardo"
+        );
+
+        await click(target.querySelector("#dialog_0 .o_data_row .o_data_cell"));
+        assert.strictEqual(
+            target.querySelector("#dialog_2 [name='display_name'] input").value,
+            "leonardo"
+        );
+        await click(target.querySelector("#dialog_2 .o_form_button_cancel"));
+        await click(target.querySelector("#dialog_0 .o_form_button_cancel"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.strictEqual(
+            target.querySelector(".modal .o_data_row [name='display_name']").textContent,
+            "aaa"
+        );
+    });
+
+    QUnit.test(
+        "discard a form dialog view and then reopen it with a domain based on a text field",
+        async function (assert) {
+            serverData.models.turtle.records[1].turtle_foo = "yop";
+            serverData.views = {
+                "turtle,false,form": `
+                <form>
+                <field name="display_name" attrs="{'invisible': [('turtle_foo', '==', 'yop')]}"/>
+                <field name="turtle_foo"/>
+            </form>`,
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                resId: 1,
+                arch: `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="turtles">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            });
+
+            assert.containsOnce(target, ".o_data_row");
+            assert.strictEqual(
+                target.querySelector(".o_data_row [name='display_name']").textContent,
+                "donatello"
+            );
+
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.containsNone(target, ".modal [name='display_name']");
+            assert.strictEqual(
+                target.querySelector(".modal [name='turtle_foo'] input").value,
+                "yop"
+            );
+
+            await editInput(target, ".modal [name='turtle_foo'] input", "display");
+            assert.strictEqual(
+                target.querySelector(".modal [name='display_name'] input").value,
+                "donatello"
+            );
+            assert.strictEqual(
+                target.querySelector(".modal [name='turtle_foo'] input").value,
+                "display"
+            );
+
+            await click(target.querySelector(".modal .o_form_button_save"));
+            await clickDiscard(target);
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.containsNone(target, ".modal [name='display_name']");
+            assert.strictEqual(
+                target.querySelector(".modal [name='turtle_foo'] input").value,
+                "yop"
+            );
+        }
+    );
+
     QUnit.test(
         "onchange on one2many with x2many in list (many2many_tags) and form view (list)",
         async function (assert) {

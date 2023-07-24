@@ -48,7 +48,7 @@ export class StaticList extends DataPoint {
 
         this._cache = markRaw({});
         this._commands = [];
-        this._savePoint = markRaw({});
+        this._savePoint = undefined;
         this._unknownRecordCommands = {}; // tracks update commands on records we haven't fetched yet
         this._currentIds = [...this.resIds];
         this._needsReordering = false;
@@ -400,6 +400,7 @@ export class StaticList extends DataPoint {
             if (this.orderBy.length) {
                 await this._sort();
             }
+            record._savePoint = undefined;
         });
     }
 
@@ -469,9 +470,11 @@ export class StaticList extends DataPoint {
         for (const id in this._cache) {
             this._cache[id]._addSavePoint();
         }
-        this._savePoint._commands = [...this._commands];
-        this._savePoint._currentIds = [...this._currentIds];
-        this._savePoint.count = this.count;
+        this._savePoint = markRaw({
+            _commands: [...this._commands],
+            _currentIds: [...this._currentIds],
+            count: this.count,
+        });
     }
 
     _applyCommands(commands) {
@@ -733,13 +736,11 @@ export class StaticList extends DataPoint {
         for (const id in this._cache) {
             this._cache[id]._discard();
         }
-        if (this._savePoint._commands) {
+        if (this._savePoint) {
             this._commands = this._savePoint._commands;
             this._currentIds = this._savePoint._currentIds;
             this.count = this._savePoint.count;
-            delete this._savePoint._commands;
-            delete this._savePoint._currentIds;
-            delete this._savePoint.count;
+            this._savePoint = undefined;
         } else {
             this._commands = [];
             this._currentIds = [...this.resIds];
