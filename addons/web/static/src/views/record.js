@@ -67,11 +67,9 @@ class _Record extends Component {
                                 specification: fieldSpec,
                             };
                             proms.push(
-                                this.orm
-                                    .call(resModel, "web_read", [resIds], kwargs)
-                                    .then((records) => {
-                                        values[fieldName] = records;
-                                    })
+                                this.orm.webRead(resModel, resIds, kwargs).then((records) => {
+                                    values[fieldName] = records;
+                                })
                             );
                         }
                     }
@@ -84,12 +82,7 @@ class _Record extends Component {
                             context: activeField.context || {},
                             specification: { display_name: {} },
                         };
-                        const records = await this.orm.call(
-                            resModel,
-                            "web_read",
-                            [[resId]],
-                            kwargs
-                        );
+                        const records = await this.orm.webRead(resModel, [resId], kwargs);
                         return records[0].display_name;
                     };
                     if (typeof values[fieldName] === "number") {
