@@ -49,7 +49,7 @@ class StockLot(models.Model):
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
-    last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
+    last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_last_delivery_partner_id')
     lot_properties = fields.Properties('Properties', definition='product_id.lot_properties_definition', copy=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False,
@@ -122,10 +122,16 @@ class StockLot(models.Model):
         for lot in self:
             lot.delivery_ids = delivery_ids_by_lot[lot.id]
             lot.delivery_count = len(lot.delivery_ids)
-            lot.last_delivery_partner_id = False
-            # If lot is serial, keep track of the latest delivery's partner
-            if lot.product_id.tracking == 'serial' and lot.delivery_count > 0:
-                lot.last_delivery_partner_id = lot.delivery_ids.sorted(key=attrgetter('date_done'), reverse=True)[0].partner_id
+
+    def _compute_last_delivery_partner_id(self):
+        serial_products = self.filtered(lambda l: l.product_id.tracking == 'serial')
+        delivery_ids_by_lot = serial_products._find_delivery_ids_by_lot()
+        (self - serial_products).last_delivery_partner_id = False
+        for lot in serial_products:
+            if lot.product_id.tracking == 'serial' and len(delivery_ids_by_lot[lot.id]) > 0:
+                lot.last_delivery_partner_id = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).sorted(key='date_done', reverse=True)[0].partner_id
+            else:
+                lot.last_delivery_partner_id = False
 
     @api.depends('quant_ids')
     def _compute_single_location(self):
