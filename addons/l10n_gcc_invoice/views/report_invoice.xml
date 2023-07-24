@@ -535,4 +535,13 @@
             </div>
         </t>
     </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_gcc_invoice.arabic_english_invoice'"
+               t-call="l10n_gcc_invoice.arabic_english_invoice"
+               t-lang="lang"/>
+        </xpath>
+    </template>
 </odoo>
