@@ -9,7 +9,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, useState, onWillUpdateProps } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export const fileTypeMagicWordMap = {
@@ -49,6 +49,7 @@ export class ImageField extends Component {
         acceptedFileExtensions: { type: String, optional: true },
         width: { type: Number, optional: true },
         height: { type: Number, optional: true },
+        noReload: { type: Boolean, optional: true },
     };
     static defaultProps = {
         acceptedFileExtensions: "image/*",
@@ -61,15 +62,11 @@ export class ImageField extends Component {
         this.state = useState({
             isValid: true,
         });
+        this.lastURL = undefined;
+    }
 
-        this.rawCacheKey = this.props.record.data.write_date;
-        onWillUpdateProps((nextProps) => {
-            const { record } = this.props;
-            const { record: nextRecord } = nextProps;
-            if (record.resId !== nextRecord.resId || nextRecord.mode === "readonly") {
-                this.rawCacheKey = nextRecord.data.write_date;
-            }
-        });
+    get rawCacheKey() {
+        return this.props.record.data.write_date;
     }
 
     get sizeStyle() {
@@ -101,12 +98,12 @@ export class ImageField extends Component {
     }
 
     getUrl(previewFieldName) {
+        if (this.props.noReload && this.lastURL) {
+            return this.lastURL;
+        }
         if (this.state.isValid && this.props.record.data[this.props.name]) {
             if (isBinarySize(this.props.record.data[this.props.name])) {
-                if (!this.rawCacheKey) {
-                    this.rawCacheKey = this.props.record.data.write_date;
-                }
-                return url("/web/image", {
+                this.lastURL = url("/web/image", {
                     model: this.props.record.resModel,
                     id: this.props.record.resId,
                     field: previewFieldName,
@@ -116,8 +113,11 @@ export class ImageField extends Component {
                 // Use magic-word technique for detecting image type
                 const magic =
                     fileTypeMagicWordMap[this.props.record.data[this.props.name][0]] || "png";
-                return `data:image/${magic};base64,${this.props.record.data[this.props.name]}`;
+                this.lastURL = `data:image/${magic};base64,${
+                    this.props.record.data[this.props.name]
+                }`;
             }
+            return this.lastURL;
         }
         return placeholder;
     }
@@ -127,8 +127,6 @@ export class ImageField extends Component {
     }
     async onFileUploaded(info) {
         this.state.isValid = true;
-        // Invalidate the `rawCacheKey`.
-        this.rawCacheKey = null;
         if (info.type === 'image/webp') {
             // Generate alternate sizes and format for reports.
             const image = document.createElement('img');
@@ -230,6 +228,7 @@ export const imageField = {
         acceptedFileExtensions: options.accepted_file_extensions,
         width: options.size && Boolean(options.size[0]) ? options.size[0] : attrs.width,
         height: options.size && Boolean(options.size[1]) ? options.size[1] : attrs.height,
+        noReload: Boolean(options.no_reload),
     }),
 };
 

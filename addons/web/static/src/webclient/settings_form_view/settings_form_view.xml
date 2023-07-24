@@ -41,7 +41,7 @@
             <attribute name="class" add="order-first w-auto" separator=" "/>
         </xpath>
         <xpath expr="//div[hasclass('o_cp_buttons')]" position="after">
-            <span t-if="model.root.isDirty" class="text-muted ms-2 o_dirty_warning">Unsaved changes</span>
+            <span t-if="model.root.dirty" class="text-muted ms-2 o_dirty_warning">Unsaved changes</span>
         </xpath>
     </t>
 </templates>

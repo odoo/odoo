@@ -749,7 +749,7 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>`,
                 async mockRPC(route, { method }) {
-                    if (method === "onchange") {
+                    if (method === "onchange2") {
                         await def;
                     }
                 },

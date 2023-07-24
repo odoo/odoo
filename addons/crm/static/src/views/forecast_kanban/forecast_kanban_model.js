@@ -1,49 +1,60 @@
 /** @odoo-module **/
 
-import { CrmKanbanModel, CrmKanbanGroup } from "@crm/views/crm_kanban/crm_kanban_model";
+import { CrmKanbanModel } from "@crm/views/crm_kanban/crm_kanban_model";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 export class ForecastKanbanModel extends CrmKanbanModel {
     setup(params, { fillTemporalService }) {
         super.setup(...arguments);
         this.fillTemporalService = fillTemporalService;
-    }
-}
-
-export class ForecastKanbanDynamicGroupList extends ForecastKanbanModel.DynamicGroupList {
-    /**
-     * @override
-     */
-    setup(params, state) {
-        super.setup(...arguments);
-        // Detect a reload vs an initial load, initial load should forceRecompute
-        this.forceNextRecompute = !state.groups;
+        this.forceNextRecompute = !params.state?.groups;
     }
 
-    /**
-     * @override
-     *
-     * Add fill_temporal context keys to the context before loading the groups.
-     */
-    get context() {
-        const context = super.context;
-        if (!this.isForecastGroupBy()) {
-            return context;
+    async _webReadGroup(config, firstGroupByName, orderBy) {
+        if (this.isForecastGroupBy(config)) {
+            config.context = this.fillTemporalPeriod(config).getContext({
+                context: config.context,
+            });
+            config.domain = this.fillTemporalPeriod(config).getDomain({
+                        domain: config.domain,
+                        forceStartBound: false,
+                    });
         }
-        return this.fillTemporalPeriod.getContext({ context });
+        return super._webReadGroup(...arguments);
+    }
+
+    async _loadGroupedList(config) {
+        const res = await super._loadGroupedList(...arguments);
+        if (this.isForecastGroupBy(config)) {
+            const lastGroup = res.groups.filter((grp) => grp.value).slice(-1)[0];
+            if (lastGroup) {
+                this.fillTemporalPeriod(config).setEnd(deserializeDateTime(lastGroup.range.to));
+            }
+        }
+        return res;
+    }
+
+    /**
+     * @returns {Boolean} true if the view is grouped by the forecast_field
+     */
+    isForecastGroupBy(config) {
+        const forecastField = config.context.forecast_field;
+        const name = config.groupBy[0].split(":")[0];
+        return forecastField && forecastField === name;
     }
 
     /**
      * return {FillTemporalPeriod} current fillTemporalPeriod according to group by state
      */
-    get fillTemporalPeriod() {
-        const context = super.context;
-        const minGroups = (context.fill_temporal && context.fill_temporal.min_groups) || undefined;
-        const { name, type, granularity } = this.groupByField;
+    fillTemporalPeriod(config) {
+        const [groupByFieldName, granularity] = config.groupBy[0].split(":");
+        const groupByField = config.fields[groupByFieldName];
+        const minGroups = (config.context.fill_temporal && config.context.fill_temporal.min_groups) || undefined;
+        const { name, type } = groupByField;
         const forceRecompute = this.forceNextRecompute;
         this.forceNextRecompute = false;
-        return this.model.fillTemporalService.getFillTemporalPeriod({
-            modelName: this.resModel,
+        return this.fillTemporalService.getFillTemporalPeriod({
+            modelName: config.resModel,
             field: {
                 name,
                 type,
@@ -53,54 +64,6 @@ export class ForecastKanbanDynamicGroupList extends ForecastKanbanModel.DynamicG
             forceRecompute,
         });
     }
-
-    /**
-     * @returns {Boolean} true if the view is grouped by the forecast_field
-     */
-    isForecastGroupBy() {
-        const forecastField = super.context.forecast_field;
-        const { name } = this.groupByField;
-        return forecastField && forecastField === name;
-    }
-
-    /**
-     * @override
-     *
-     * At every __load/__reload, we have to check the range of the last group received from the
-     * read_group, and update the fillTemporalPeriod from the FillTemporalService accordingly
-     */
-    async load() {
-        if (!this.isForecastGroupBy()) {
-            return super.load(...arguments);
-        }
-        const result = await super.load(...arguments);
-        const lastGroup = this.groups.filter((grp) => grp.value).slice(-1)[0];
-        if (lastGroup) {
-            this.fillTemporalPeriod.setEnd(deserializeDateTime(lastGroup.range[this.groupBy[0]].to));
-        }
-        return result;
-    }
-
-    /**
-     * @override
-     *
-     * Applies the forecast logic to the domain and context if needed before the read_group.
-     */
-    async _loadGroups() {
-        if (!this.isForecastGroupBy()) {
-            return super._loadGroups(...arguments);
-        }
-        const previousDomain = this.domain;
-        this.domain = this.fillTemporalPeriod.getDomain({
-            domain: this.domain,
-            forceStartBound: false,
-        });
-        const result = await super._loadGroups(...arguments);
-        this.domain = previousDomain;
-        return result;
-    }
 }
 
 ForecastKanbanModel.services = [...CrmKanbanModel.services, "fillTemporalService"];
-ForecastKanbanModel.DynamicGroupList = ForecastKanbanDynamicGroupList;
-ForecastKanbanModel.group = CrmKanbanGroup;

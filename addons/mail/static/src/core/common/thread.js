@@ -20,7 +20,7 @@ import {
 } from "@odoo/owl";
 
 import { Transition } from "@web/core/transition";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_THRESHOLD = 2500;
@@ -152,6 +152,12 @@ export class Thread extends Component {
         onWillStart(() => {
             this.lastJumpPresent = this.props.jumpPresent;
             this.threadService.fetchNewMessages(this.props.thread);
+        });
+        useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
+            const { model, id } = this.props.thread;
+            if (detail.resModel === model && detail.resId === id) {
+                this.threadService.fetchNewMessages(this.props.thread);
+            }
         });
         onWillUpdateProps((nextProps) => {
             if (nextProps.thread !== this.props.thread) {

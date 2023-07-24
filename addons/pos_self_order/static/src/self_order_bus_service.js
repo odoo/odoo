@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { effect } from "@web/core/utils/reactive";
-import { batched } from "@point_of_sale/utils";
+import { batched } from "@web/core/utils/timing";
 
 export class SelfOrderBus {
     static serviceDependencies = ["self_order", "orm", "bus_service"];

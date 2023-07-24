@@ -26,10 +26,10 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
         if (edit) {
             // provide attributes of edited line to automatically focus on matching cell in the matrix
             for (let ptnvav of this.props.record.data.product_no_variant_attribute_value_ids.records) {
-                updatedLineAttributes.push(ptnvav.data.id);
+                updatedLineAttributes.push(ptnvav.resId);
             }
             for (let ptav of this.props.record.data.product_template_attribute_value_ids.records) {
-                updatedLineAttributes.push(ptav.data.id);
+                updatedLineAttributes.push(ptav.resId);
             }
             updatedLineAttributes.sort((a, b) => { return a - b; });
         }
@@ -42,7 +42,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
 
         if (!edit) {
             // remove new line used to open the matrix
-            saleOrderRecord.data.order_line.removeRecord(this.props.record);
+            saleOrderRecord.data.order_line.delete(this.props.record);
         }
     },
 

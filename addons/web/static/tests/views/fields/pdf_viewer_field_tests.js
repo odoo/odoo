@@ -84,7 +84,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="document" widget="pdf_viewer"/></form>',
             async mockRPC(_route, { method, args }) {
                 if (method === "create") {
-                    assert.deepEqual(args[0], { document: btoa("test") });
+                    assert.deepEqual(args[0], [{ document: btoa("test") }]);
                 }
             },
         });

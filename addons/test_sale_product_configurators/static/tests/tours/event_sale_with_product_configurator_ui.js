@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     extra_trigger: 'td[name="price_subtotal"]:contains("16.50")',  // wait for the optional product line
 }, {
     trigger: 'div[name="product_template_id"] input',
-    extra_trigger: '[name="product_template_id"] .o_dropdown_button',
+    extra_trigger: '.o_data_row:nth-child(3)',  // wait for the new row to be created
     run: 'text event (',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     extra_trigger: 'td[name="price_subtotal"]:contains("150.00")',  // wait for the adult tickets line
 }, {
     trigger: 'div[name="product_template_id"] input',
-    extra_trigger: '[name="product_template_id"] .o_dropdown_button',
+    extra_trigger: '.o_data_row:nth-child(4)',  // wait for the new row to be created
     run: 'text event (',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',

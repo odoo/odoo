@@ -319,8 +319,8 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                         </sheet>
                     </form>
                 `,
-                mockRPC(route, { method, args: [, , changedField] }) {
-                    if (method === "onchange" && changedField === "display_name") {
+                mockRPC(route, { method, args }) {
+                    if (method === "onchange2" && args[2][0] === "display_name") {
                         return onchangeDef;
                     }
                 },

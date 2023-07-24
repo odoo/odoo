@@ -58,7 +58,7 @@ class Partner(models.Model):
     def get_attendee_detail(self, meeting_ids):
         """ Return a list of dict of the given meetings with the attendees details
             Used by:
-                - base_calendar.js : Many2ManyAttendee
+                - many2many_attendee.js: Many2ManyAttendee
                 - calendar_model.js (calendar.CalendarModel)
         """
         attendees_details = []

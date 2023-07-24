@@ -74,6 +74,7 @@ QUnit.module("Analytic", (hooks) => {
                         amount: { string: "Amount", type: "float" },
                         analytic_distribution: { string: "Analytic", type: "json" },
                         move_id: { string: "Account Move", type: "many2one", relation: "move" },
+                        analytic_precision: { string: "Analytic Precision", type: "integer" },
                     },
                     records: [
                         { id: 1, label: "Developer Time", amount: 100.00, analytic_distribution: {"1": 30.3, "3": 69.7}},
@@ -140,7 +141,7 @@ QUnit.module("Analytic", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC(route, { kwargs, method, model }) {
+            mockRPC(route, { method, model }) {
                 if (method === "get_relevant_plans" && model === "account.analytic.plan") {
                     return Promise.resolve(
                         serverData.models['plan'].records.filter((r) => !r.parent_id && r.applicability !== "unavailable")
@@ -332,6 +333,7 @@ QUnit.module("Analytic", (hooks) => {
 
         // apply the changes to both move lines
         triggerHotkey("Escape");
+        await nextTick();
         await nextTick();
         await click(target.querySelector(".modal-dialog .btn-primary"));
         assert.containsN(target, ".badge", 10, "should contain 2 rows of 5 tags each");

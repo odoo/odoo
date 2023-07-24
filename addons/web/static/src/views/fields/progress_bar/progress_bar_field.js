@@ -6,9 +6,8 @@ import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, onWillUpdateProps, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 const formatters = registry.category("formatters");
-const parsers = registry.category("parsers");
 
 export class ProgressBarField extends Component {
     static template = "web.ProgressBarField";
@@ -28,76 +27,66 @@ export class ProgressBarField extends Component {
         this.root = useRef("numpadDecimal");
         this.maxValueRef = useRef("maxValue");
         this.currentValueRef = useRef("currentValue");
+
+        const { currentValueField, maxValueField, name } = this.props;
+        this.currentValueField = currentValueField ? currentValueField : name;
+        if (maxValueField) {
+            this.maxValueField = maxValueField;
+        }
+
         this.state = useState({
-            currentValue: this.getCurrentValue(this.props),
-            maxValue: this.getMaxValue(this.props),
             isEditing: false,
-        });
-        onWillUpdateProps((nextProps) => {
-            Object.assign(this.state, {
-                currentValue: this.getCurrentValue(nextProps),
-                maxValue: this.getMaxValue(nextProps),
-            });
         });
     }
 
-    get isCurrentValueInteger() {
-        return this.state.currentValue % 1 === 0;
-    }
     get isEditable() {
         return this.props.isEditable && !this.props.readonly;
-    }
-    get isMaxValueInteger() {
-        return this.state.maxValue % 1 === 0;
     }
     get isPercentage() {
         return !this.props.maxValueField || !isNaN(this.props.maxValueField);
     }
 
-    getCurrentValueField(p) {
-        return typeof p.currentValueField === "string" ? p.currentValueField : p.name;
-    }
-    getMaxValueField(p) {
-        return typeof p.maxValueField === "string" ? p.maxValueField : p.name;
+    get currentValue() {
+        return this.props.record.data[this.currentValueField] || 0;
     }
 
-    getCurrentValue(p) {
-        return p.record.data[this.getCurrentValueField(p)] || 0;
-    }
-    getMaxValue(p) {
-        if (p.maxValueField) {
-            return p.record.data[p.maxValueField] || 100;
-        }
-        return 100;
+    get maxValue() {
+        return this.props.record.data[this.maxValueField] || 100;
     }
 
     formatCurrentValue(humanReadable = !this.state.isEditing) {
-        const formatter = formatters.get(this.isCurrentValueInteger ? "integer" : "float");
-        return formatter(this.state.currentValue, { humanReadable });
+        const formatter = formatters.get(Number.isInteger(this.currentValue) ? "integer" : "float");
+        return formatter(this.currentValue, { humanReadable });
     }
     formatMaxValue(humanReadable = !this.state.isEditing) {
-        const formatter = formatters.get(this.isMaxValueInteger ? "integer" : "float");
-        return formatter(this.state.maxValue, { humanReadable });
+        const formatter = formatters.get(Number.isInteger(this.maxValue) ? "integer" : "float");
+        return formatter(this.maxValue, { humanReadable });
     }
 
-    onCurrentValueChange(ev) {
+    onValueChange(value, fieldName) {
         let parsedValue;
         try {
-            parsedValue = parseFloat(ev.target.value);
+            parsedValue = parseFloat(value);
         } catch {
             this.props.record.setInvalidField(this.props.name);
             return;
         }
 
-        if (this.isCurrentValueInteger) {
+        if (this.props.record.fields[fieldName].type === "integer") {
             parsedValue = Math.floor(parsedValue);
         }
-        this.state.currentValue = parsedValue;
-        this.props.record.update({ [this.getCurrentValueField(this.props)]: parsedValue });
+        this.props.record.update({ [fieldName]: parsedValue });
         if (this.props.readonly) {
             this.props.record.save();
         }
     }
+    onCurrentValueChange(ev) {
+        this.onValueChange(ev.target.value, this.currentValueField);
+    }
+    onMaxValueChange(ev) {
+        this.onValueChange(ev.target.value, this.maxValueField);
+    }
+
     onInputBlur() {
         if (
             document.activeElement !== this.maxValueRef.el &&
@@ -108,40 +97,6 @@ export class ProgressBarField extends Component {
     }
     onInputFocus() {
         this.state.isEditing = true;
-    }
-    onMaxValueChange(ev) {
-        let parsedValue;
-        try {
-            parsedValue = parseFloat(ev.target.value);
-        } catch {
-            this.props.record.setInvalidField(this.props.name);
-            return;
-        }
-
-        if (this.isMaxValueInteger) {
-            parsedValue = Math.floor(parsedValue);
-        }
-        this.state.maxValue = parsedValue;
-        this.props.record.update({ [this.getMaxValueField(this.props)]: parsedValue });
-        if (this.props.readonly) {
-            this.props.record.save();
-        }
-    }
-    onCurrentValueInput(ev) {
-        const parser = parsers.get(this.isCurrentValueInteger ? "integer" : "float");
-        try {
-            this.state.currentValue = parser(ev.target.value);
-        } catch {
-            // pass
-        }
-    }
-    onMaxValueInput(ev) {
-        const parser = parsers.get(this.isMaxValueInteger ? "integer" : "float");
-        try {
-            this.state.maxValue = parser(ev.target.value);
-        } catch {
-            // pass
-        }
     }
 }
 

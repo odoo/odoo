@@ -21,7 +21,7 @@ export class ExpenseListController extends ListController {
         this.actionService = useService('action');
         this.rpc = useService("rpc");
         this.user = useService("user");
-        this.isExpenseSheet = this.model.rootParams.resModel === "hr.expense.sheet";
+        this.isExpenseSheet = this.model.config.resModel === "hr.expense.sheet";
 
         onWillStart(async () => {
             this.userIsExpenseTeamApprover = await this.user.hasGroup("hr_expense.group_hr_expense_team_approver");

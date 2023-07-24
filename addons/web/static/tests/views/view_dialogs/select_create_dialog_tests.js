@@ -124,16 +124,13 @@ QUnit.module("ViewDialogs", (hooks) => {
                             fields: ["display_name", "foo", "bar"],
                             groupby: ["bar"],
                             orderby: "",
-                            expand: false,
-                            expand_orderby: null,
-                            expand_limit: null,
                             lazy: true,
                             limit: 80,
                             offset: 0,
                         },
                         "should search with the complete domain (domain + search), and group by 'bar'"
                     );
-                } else if (args.method === "web_search_read") {
+                } else if (args.method === "unity_web_search_read") {
                     if (search === 0) {
                         assert.deepEqual(
                             args.kwargs,
@@ -151,7 +148,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                                     ["display_name", "ilike", "piou"],
                                     ["foo", "ilike", "piou"],
                                 ],
-                                fields: ["display_name", "foo"],
+                                specification: { display_name: {}, foo: {} },
                                 limit: 80,
                                 offset: 0,
                                 order: "",
@@ -170,7 +167,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                                     uid: 7,
                                 }, // not part of the test, may change
                                 domain: [["display_name", "like", "a"]],
-                                fields: ["display_name", "foo"],
+                                specification: { display_name: {}, foo: {} },
                                 limit: 80,
                                 offset: 0,
                                 order: "",
@@ -215,7 +212,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                 `,
         };
         const mockRPC = async (route, args) => {
-            if (args.method === "web_search_read") {
+            if (args.method === "unity_web_search_read") {
                 assert.deepEqual(
                     args.kwargs.domain,
                     [["id", "=", 2]],
@@ -310,11 +307,11 @@ QUnit.module("ViewDialogs", (hooks) => {
                 }
                 if (route === "/web/dataset/call_kw/instrument/create") {
                     assert.deepEqual(
-                        args.args,
+                        args.args[0],
                         [{ badassery: [[6, false, [1]]], name: "ABC" }],
                         "The method create should have been called with the right arguments"
                     );
-                    return Promise.resolve(false);
+                    return Promise.resolve([90]);
                 }
             },
         });

@@ -139,7 +139,7 @@ QUnit.test("leave stats renders correctly", async (assert) => {
 });
 
 QUnit.test("leave stats reload when employee/department changes", async (assert) => {
-    assert.expect(3);
+    assert.expect(2);
     await makeView({
         serverData,
         type: "form",

@@ -169,6 +169,7 @@
             'web/static/src/views/view_hook.js',
             'web/static/src/views/view_service.js',
             'web/static/src/views/view.js',
+            'web/static/src/model/relational_model/utils.js',
             'web/static/src/webclient/actions/action_container.js',
             'web/static/src/webclient/actions/action_dialog.js',
             'web/static/src/webclient/actions/action_hook.js',

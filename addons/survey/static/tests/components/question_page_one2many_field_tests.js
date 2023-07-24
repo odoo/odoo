@@ -1,9 +1,10 @@
 /** @odoo-module */
 
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { click, editInput, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-
-import { makeServerError } from "@web/../tests/helpers/mock_server";
+import { errorService } from "@web/core/errors/error_service";
+import { registry } from "@web/core/registry";
 
 QUnit.module("QuestionPageOneToManyField", (hooks) => {
     let serverData;
@@ -170,6 +171,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
     });
 
     QUnit.test("A validation error from saving parent form notifies and prevents dialog from closing", async (assert) => {
+        registry.category("services").add("error", errorService);
         await makeView({
             type: "form",
             resModel: "survey",
@@ -201,8 +203,11 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
         await editInput(target, ".o_dialog:not(.o_inactive_modal) .modal-body [name='title'] input", "Invalid RecordTitle");
         await click(target.querySelector(".o_dialog:not(.o_inactive_modal) .o_form_button_save"));
         assert.verifySteps(["save parent form"]);
+        await nextTick();
         assert.containsOnce(document.body, ".o_notification");
         assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsOnce(target, ".modal-dialog .o_form_button_save");
+        assert.containsNone(target, ".modal-dialog .o_form_button_save[disabled='1']");
     });
 
     QUnit.test("can create section inline", async (assert) => {

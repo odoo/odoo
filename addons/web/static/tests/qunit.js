@@ -359,6 +359,56 @@ export function setupQUnit() {
         );
     });
 
+    /**
+     * The purpose of this function is to reset the timer nesting level of the execution context
+     * to 0, to prevent situations where a setTimeout with a timeout of 0 may end up being
+     * scheduled after another one that also has a timeout of 0 that was called later.
+     * Example code:
+     * (async () => {
+     *     const timeout = () => new Promise((resolve) => setTimeout(resolve, 0));
+     *     const animationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+     *
+     *     for (let i = 0; i < 4; i++) {
+     *         await timeout();
+     *     }
+     *     timeout().then(() => console.log("after timeout"));
+     *     await animationFrame()
+     *     timeout().then(() => console.log("after animationFrame"));
+     *     // logs "after animationFrame" before "after timeout"
+     * })()
+     *
+     * When the browser runs a task that was the result of a timer (setTimeout or setInterval),
+     * that task has an intrinsic "timer nesting level". If you schedule another task with
+     * a timer from within such a task, the new task has the existing task's timer nesting level,
+     * plus one. When the timer nesting level of a task is greater than 5, the `timeout` parameter
+     * for setTimeout/setInterval will be forced to at least 4 (see step 5 in the timer initialization
+     * steps in the HTML spec: https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#timer-initialisation-steps).
+     *
+     * In the above example, every `await timeout()` besides inside the loop schedules a new task
+     * from within a task that was initiated by a timer, causing the nesting level to be 5 after
+     * the loop. The first timeout after the loop is now forced to 4.
+     *
+     * When we await the animation frame promise, we create a task that is *not* initiated by a timer,
+     * reseting the nesting level to 0, causing the timeout following it to properly be treated as 0,
+     * as such the callback that was registered by it is oftentimes executed before the previous one.
+     *
+     * While we can't prevent this from happening within a given test, we want to at least prevent
+     * the timer nesting level to propagate from one test to the next as this can be a cause of
+     * indeterminism. To avoid slowing down the tests by waiting one frame after every test,
+     * we instead use a MessageChannel to add a task with not nesting level to the event queue immediately.
+     */
+    QUnit.testDone(async () => {
+        return new Promise((resolve) => {
+            const channel = new MessageChannel();
+            channel.port1.onmessage = () => {
+                channel.port1.close();
+                channel.port2.close();
+                resolve();
+            };
+            channel.port2.postMessage("");
+        });
+    });
+
     // Append a "Rerun in debug" link.
     // Only works if the test is not hidden.
     QUnit.testDone(async ({ testId }) => {

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { makeContext } from "@web/core/context";
+import { evalDomain } from "@web/core/domain";
 import { _lt } from "@web/core/l10n/translation";
 import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
@@ -15,7 +16,7 @@ import {
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { computeViewClassName, evalDomain } from "@web/views/utils";
+import { computeViewClassName } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 
 import { Component } from "@odoo/owl";
@@ -31,6 +32,7 @@ export class X2ManyField extends Component {
         widget: { type: String, optional: true },
         crudOptions: { type: Object, optional: true },
         string: { type: String, optional: true },
+        relatedFields: { type: Object, optional: true },
         views: { type: Object, optional: true },
         domain: { type: [Array, Function], optional: true },
         context: { type: Object },
@@ -77,7 +79,7 @@ export class X2ManyField extends Component {
         });
 
         this.addInLine = useAddInlineRecord({
-            addNew: (...args) => this.list.addNew(...args),
+            addNew: (...args) => this.list.addNewRecord(...args),
         });
 
         const openRecord = useOpenX2ManyRecord({
@@ -87,7 +89,7 @@ export class X2ManyField extends Component {
             getList: () => this.list,
             saveRecord,
             updateRecord,
-            withParentId: this.props.widget !== "many2many",
+            isMany2Many: this.isMany2Many,
         });
         this._openRecord = (params) => {
             const activeElement = document.activeElement;
@@ -126,6 +128,7 @@ export class X2ManyField extends Component {
 
     get activeField() {
         return {
+            fields: this.props.relatedFields,
             views: this.props.views,
             viewMode: this.props.viewMode,
             string: this.props.string,
@@ -152,7 +155,7 @@ export class X2ManyField extends Component {
         return {
             field: this.props.name,
             model: this.props.record.resModel,
-            viewMode: this.props.record.viewMode || this.props.record.__viewType,
+            viewMode: "form",
         };
     }
 
@@ -164,8 +167,8 @@ export class X2ManyField extends Component {
             total: list.count,
             onUpdate: async ({ offset, limit }) => {
                 const initialLimit = this.list.limit;
-                const unselected = await list.unselectRecord(true);
-                if (unselected) {
+                const leaved = await list.leaveEditMode();
+                if (leaved) {
                     if (initialLimit === limit && initialLimit === this.list.limit + 1) {
                         // Unselecting the edited record might have abandonned it. If the page
                         // size was reached before that record was created, the limit was temporarily
@@ -195,6 +198,13 @@ export class X2ManyField extends Component {
             const recordsDraggable = !this.props.readonly && archInfo.recordsDraggable;
             props.archInfo = { ...archInfo, recordsDraggable };
             props.readonly = this.props.readonly;
+            // TODO: apply same logic in the list case
+            props.deleteRecord = (record) => {
+                if (this.isMany2Many) {
+                    return this.list.forget(record);
+                }
+                return this.list.delete(record);
+            };
             return props;
         }
 
@@ -256,9 +266,7 @@ export class X2ManyField extends Component {
                 const proms = [];
                 this.list.model.bus.trigger("NEED_LOCAL_CHANGES", { proms });
                 await Promise.all([...proms, this.list.editedRecord._updatePromise]);
-                if (this.list.editedRecord) {
-                    await this.list.editedRecord.switchMode("readonly", { checkValidity: true });
-                }
+                await this.list.leaveEditMode({ canAbandon: false });
             }
             if (!this.list.editedRecord) {
                 return this.addInLine({ context, editable });
@@ -280,7 +288,10 @@ export const x2ManyField = {
     displayName: _lt("Relational table"),
     supportedTypes: ["one2many", "many2many"],
     useSubView: true,
-    extractProps: ({ attrs, viewMode, views, widget, options, string }, dynamicInfo) => {
+    extractProps: (
+        { attrs, relatedFields, viewMode, views, widget, options, string },
+        dynamicInfo
+    ) => {
         const props = {
             addLabel: attrs["add-label"],
             context: dynamicInfo.context,
@@ -291,6 +302,7 @@ export const x2ManyField = {
         if (viewMode) {
             props.views = views;
             props.viewMode = viewMode;
+            props.relatedFields = relatedFields;
         }
         if (widget) {
             props.widget = widget;

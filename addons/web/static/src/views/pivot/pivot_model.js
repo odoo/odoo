@@ -4,7 +4,7 @@ import { Domain } from "@web/core/domain";
 import { cartesian, sections, sortBy, symmetricalDifference } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
-import { Model } from "@web/views/model";
+import { Model } from "@web/model/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
 
 /**

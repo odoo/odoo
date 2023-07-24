@@ -3,11 +3,11 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { formatText } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
-import { Component, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 import { useDebounced } from "@web/core/utils/timing";
 
 export class AceField extends Component {
@@ -23,16 +23,12 @@ export class AceField extends Component {
 
     setup() {
         this.cookies = useService("cookie");
-        this.debouncedCommit = useDebounced(this.commitChanges, 10);
+        this.debouncedCommit = useDebounced(this.commitChanges, 5000);
 
-        this.state = useState({
-            onChange: (value) => this.handleChange(value),
-            class: "ace-view-editor",
-            theme: this.theme,
+        this.state = useState({});
+        useRecordObserver((record) => {
+            this.state.value = record.data[this.props.name];
         });
-
-        this.updateCodeEditor(this.props);
-        onWillUpdateProps(this.updateCodeEditor);
 
         const { model } = this.props.record;
         useBus(model.bus, "WILL_SAVE_URGENTLY", () => this.commitChanges());
@@ -41,26 +37,24 @@ export class AceField extends Component {
         );
     }
 
+    get mode() {
+        return this.props.mode === "xml" ? "qweb" : this.props.mode;
+    }
     get theme() {
         return this.cookies.current.color_scheme === "dark" ? "monokai" : "";
     }
 
     handleChange(newValue) {
+        this.props.record.model.bus.trigger("FIELD_IS_DIRTY", true);
         this.state.value = newValue;
         this.debouncedCommit();
     }
 
-    updateCodeEditor({ record, mode, readonly }) {
-        this.state.value = formatText(record.data[this.props.name]);
-        this.state.mode = mode === "xml" ? "qweb" : mode;
-        this.state.readonly = readonly;
-    }
-
-    commitChanges() {
+    async commitChanges() {
         if (!this.props.readonly) {
             const value = this.state.value;
             if (this.props.record.data[this.props.name] !== value) {
-                return this.props.record.update({ [this.props.name]: value });
+                await this.props.record.update({ [this.props.name]: value });
             }
         }
     }

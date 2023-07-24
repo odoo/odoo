@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { click, getFixture, patchWithCleanup} from "@web/../tests/helpers/utils";
+import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
 
 let serverData;
@@ -97,11 +97,7 @@ QUnit.module("Views", (hooks) => {
             "Should have a folded column with a load more button"
         );
         await click(target, ".o_kanban_load_more button");
-        assert.containsNone(
-            target,
-            ".o_kanban_load_more",
-            "Shouldn't have a load more button"
-        );
+        assert.containsNone(target, ".o_kanban_load_more", "Shouldn't have a load more button");
         assert.containsN(target, ".o_kanban_record", 4, "Should have 4 loaded record");
     });
 });

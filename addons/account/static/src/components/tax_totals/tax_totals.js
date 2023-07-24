@@ -6,7 +6,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
 import { getCurrency } from "@web/core/currency";
 
-const { Component, onPatched, onWillUpdateProps, useRef, useState } = owl;
+const { Component, onPatched, onWillUpdateProps, onWillRender, toRaw, useRef, useState } = owl;
 
 /**
  A line of some TaxTotalsComponent, giving the values of a tax group.
@@ -108,9 +108,7 @@ export class TaxTotalsComponent extends Component {
     setup() {
         this.totals = {};
         this.formatData(this.props);
-        onWillUpdateProps((nextProps) => {
-            this.formatData(nextProps);
-        });
+        onWillRender(() => this.formatData(this.props));
     }
 
     get readonly() {
@@ -143,7 +141,7 @@ export class TaxTotalsComponent extends Component {
     }
 
     formatData(props) {
-        let totals = JSON.parse(JSON.stringify(props.record.data[this.props.name]));
+        let totals = JSON.parse(JSON.stringify(toRaw(props.record.data[this.props.name])));
         const currencyFmtOpts = { currencyId: props.record.data.currency_id && props.record.data.currency_id[0] };
 
         let amount_untaxed = totals.amount_untaxed;

@@ -34,7 +34,13 @@ QUnit.module("Fields", (hooks) => {
                 },
                 'sale.order.line': {
                     fields: {
-                        product_template_id: { 
+                        order_id: {
+                            string: "Order Reference",
+                            type: "many2one",
+                            relation: "sale.order",
+                            relation_field: "order_line",
+                        },
+                        product_template_id: {
                             string: "Product",
                             type: "many2one",
                             relation: "product.template",
@@ -112,8 +118,8 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".modal:contains(Create new product as a new Product)")
         assert.verifySteps([
             "get_views",
-            "onchange",
-            "onchange",
+            "onchange2",
+            "onchange2",
             "name_search",
         ]);
 
