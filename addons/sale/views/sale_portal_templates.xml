@@ -567,9 +567,7 @@
                 </div>
 
                 <div id="total" class="row" name="total" style="page-break-inside: avoid;">
-                    <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
-                        <t t-call="sale.sale_order_portal_content_totals_table"/>
-                    </div>
+                    <t t-call="sale.sale_order_portal_content_totals_table"/>
                 </div>
             </section>
 

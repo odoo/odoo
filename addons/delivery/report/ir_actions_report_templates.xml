@@ -2,12 +2,12 @@
 <odoo>
 
     <template id="delivery_report_saleorder_document" inherit_id="sale.report_saleorder_document">
-        <p name="order_note" position="before">
+        <span name="order_note" position="before">
             <p t-if="doc.carrier_id.carrier_description" id="carrier_description">
                 <strong>Shipping Description:</strong>
                 <span t-out="doc.carrier_id.carrier_description"/>
             </p>
-        </p>
+        </span>
     </template>
 
 </odoo>
