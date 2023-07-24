@@ -1,30 +1,31 @@
 # -*- coding: utf-8 -*-
-
-from datetime import timedelta
+import re
 import uuid
-from odoo import http, fields, Command
+from datetime import timedelta
+from odoo import http, fields
 from odoo.http import request
 from odoo.addons.pos_self_order.controllers.utils import reduce_privilege
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 
 class PosSelfOrderController(http.Controller):
-    @http.route("/pos-self-order/process-new-order", auth="public", type="json", website=True)
-    def process_new_order(self, order, access_token, table_identifier):
+    @http.route("/pos-self-order/process-new-order/<device_type>/", auth="public", type="json", website=True)
+    def process_new_order(self, order, access_token, table_identifier, device_type):
         lines = order.get('lines')
         pos_config, table = self._verify_authorization(access_token, table_identifier)
         pos_session = pos_config.current_session_id
-        sequence_number = self._get_sequence_number(table.id, pos_session.id)
-        unique_id = self._generate_unique_id(pos_session.id, table.id, sequence_number)
 
+        ir_sequence = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
+        sequence_number = re.findall(r'\d+', ir_sequence)[0]
+        order_reference = self._generate_unique_id(pos_session.id, table.id if table else 0, sequence_number, device_type)
         # Create the order without lines and prices computed
         # We need to remap the order because some required fields are not used in the frontend.
         order = {
-            'id': unique_id,
             'data': {
-                'uuid': order.get('uuid'),
-                'name': unique_id,
-                'user_id': request.session.uid,
+                'name': order_reference,
                 'sequence_number': sequence_number,
+                'uuid': order.get('uuid'),
+                'take_away': order.get('take_away'),
+                'user_id': request.session.uid,
                 'access_token': uuid.uuid4().hex,
                 'pos_session_id': pos_session.id,
                 'table_id': table.id if table else False,
@@ -37,6 +38,7 @@ class PosSelfOrderController(http.Controller):
                 'amount_total': 0,
                 'amount_paid': 0,
                 'amount_return': 0,
+                'tracking_number': self._generate_unique_tracking_number(pos_config, order), # FIXME this is not unique
             },
             'to_invoice': False,
             'session_id': pos_session.id,
@@ -46,30 +48,45 @@ class PosSelfOrderController(http.Controller):
         posted_order_id = pos_config.env['pos.order'].create_from_ui([order], draft=True)[0].get('id')
 
         # Process the lines and get their prices computed
-        lines = self._process_lines(lines, pos_config, posted_order_id)
+        lines = self._process_lines(lines, pos_config, posted_order_id, order.get('take_away'))
 
         # Compute the order prices
         amount_total, amount_untaxed = self._get_order_prices(lines)
 
         # Update the order with the computed prices and lines
         order = pos_config.env["pos.order"].browse(posted_order_id)
+
+        classic_lines = []
+        combo_lines = []
+        for line in lines:
+            if line["combo_parent_uuid"]:
+                combo_lines.append(line)
+            else:
+                classic_lines.append(line)
+
+        # combo lines must be created after classic_line, as they need the classic line identifier
+        lines = pos_config.env['pos.order.line'].create(classic_lines)
+        lines += pos_config.env['pos.order.line'].create(combo_lines)
         order.write({
-            'lines': [Command.create(line) for line in lines],
+            'lines': lines,
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })
 
+        order.send_table_count_notification(order.table_id)
         return order._export_for_self_order()
 
     @http.route('/pos-self-order/get-orders-taxes', auth='public', type='json', website=True)
     def get_order_taxes(self, order, access_token):
         pos_config = self._verify_pos_config(access_token)
-        lines = self._process_lines(order.get('lines'), pos_config, 0)
+        lines = self._process_lines(order.get('lines'), pos_config, 0, order.get('take_away'))
         amount_total, amount_untaxed = self._get_order_prices(lines)
 
         return {
             'lines': [{
                 'uuid': line.get('uuid'),
+                'price_unit': line.get('price_unit'),
+                'price_extra': line.get('price_extra'),
                 'price_subtotal': line.get('price_subtotal'),
                 'price_subtotal_incl': line.get('price_subtotal_incl'),
             } for line in lines],
@@ -87,7 +104,6 @@ class PosSelfOrderController(http.Controller):
         pos_order = session.order_ids.filtered_domain([
             ('id', '=', order_id),
             ('access_token', '=', order_access_token),
-            ('table_id', '=', table.id)
         ])
 
         if not pos_order:
@@ -95,17 +111,19 @@ class PosSelfOrderController(http.Controller):
         elif pos_order.state != 'draft':
             raise Unauthorized("Order is not in draft state")
 
-        lines = self._process_lines(order.get('lines'), pos_config, pos_order.id)
+        lines = self._process_lines(order.get('lines'), pos_config, pos_order.id, order.get('take_away'))
         for line in lines:
             if line.get('id'):
-                order_line = pos_order.lines.browse(line.get('id'))
+                # we need to find by uuid because each time we update the order, id of orderlines changed.
+                order_line = pos_order.lines.filtered(lambda l: l.uuid == line.get('uuid'))
 
                 if line.get('qty') < order_line.qty:
                     line.set('qty', order_line.qty)
 
-                order_line.write({
-                    **line,
-                })
+                if order_line:
+                    order_line.write({
+                        **line,
+                    })
             else:
                 pos_order.lines.create(line)
 
@@ -114,7 +132,7 @@ class PosSelfOrderController(http.Controller):
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })
-
+        pos_order.send_table_count_notification(pos_order.table_id)
         return pos_order._export_for_self_order()
 
     @http.route('/pos-self-order/get-orders', auth='public', type='json', website=True)
@@ -129,11 +147,11 @@ class PosSelfOrderController(http.Controller):
         if not orders:
             raise NotFound("Orders not found")
 
-        orders = []
+        orders_for_ui = []
         for order in orders:
-            orders.append(order._export_for_self_order())
+            orders_for_ui.append(order._export_for_self_order())
 
-        return orders
+        return orders_for_ui
 
     @http.route('/pos-self-order/get-tables', auth='public', type='json', website=True)
     def get_tables(self, access_token):
@@ -145,17 +163,99 @@ class PosSelfOrderController(http.Controller):
 
         return tables
 
-    def _process_lines(self, lines, pos_config, pos_order_id):
+
+    @http.route('/kiosk/payment/<int:pos_config_id>/<device_type>', auth='public', type='json', website=True)
+    def pos_self_order_kiosk_payment(self, pos_config_id, order, payment_method_id, access_token, device_type):
+        order_dict = self.process_new_order(order, access_token, None, device_type)
+
+        if not order_dict.get('id'):
+            raise BadRequest("Something went wrong")
+
+        # access_token verified in process_new_order
+        order_sudo = request.env['pos.order'].sudo().browse(order_dict.get('id'))
+        payment_method_sudo = request.env["pos.payment.method"].sudo().browse(payment_method_id)
+        if not order_sudo or not payment_method_sudo or payment_method_sudo not in order_sudo.config_id.payment_method_ids:
+            raise NotFound("Order or payment method not found")
+
+        status = payment_method_sudo.payment_request_from_kiosk(order_sudo)
+
+        if not status:
+            raise BadRequest("Something went wrong")
+
+        return order_sudo._export_for_self_order()
+
+    def _generate_unique_tracking_number(self, pos_config, order_dict):
+        last_tracking_generated = pos_config.env['pos.order'].search([
+            ('tracking_number', '!=', False),
+            ('date_order', '>=', fields.Datetime.now() - timedelta(days=1)),
+        ], order='tracking_number desc', limit=1)
+
+        return int(last_tracking_generated.tracking_number) + 1 if last_tracking_generated else 1
+
+    def _process_lines(self, lines, pos_config, pos_order_id, take_away=False):
+        appended_uuid = []
         newLines = []
         pricelist = pos_config.pricelist_id
+        if take_away and pos_config.self_order_kiosk:
+            config_fiscal_pos = pos_config.self_order_kiosk_alternative_fp_id
+        else:
+            config_fiscal_pos = pos_config.default_fiscal_position_id
 
         for line in lines:
-            product = pos_config.env['product.product'].browse(line.get('product_id'))
+            if line.get('uuid') in appended_uuid:
+                continue
+            product = pos_config.env['product.product'].browse(int(line.get('product_id')))
             # todo take into account the price extra
             price_unit = pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price
-
-            config_fiscal_pos = pos_config.default_fiscal_position_id
             selected_account_tax = config_fiscal_pos.map_tax(product.taxes_id) if config_fiscal_pos else product.taxes_id
+
+            # parent_product_taxe_ids = None
+            children = [l for l in lines if l.get('combo_parent_uuid') == line.get('uuid')]
+            if len(children) > 0:
+                total_price = 0
+                unit_price_by_id = {}
+                for child in children:
+                    product = pos_config.env['product.product'].browse(int(child.get('product_id')))
+                    child_selected_account_tax = config_fiscal_pos.map_tax(product.taxes_id) if config_fiscal_pos else product.taxes_id
+                    tax_results = child_selected_account_tax.compute_all(
+                        pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price,
+                        pos_config.currency_id,
+                        child.get('qty'),
+                        product,
+                    )
+                    unit_price_by_id[child['uuid']] = pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price
+                    total_price += tax_results.get('total_included') if pos_config.iface_tax_included == 'total' else tax_results.get('total_excluded')
+                ratio = (price_unit / total_price)
+                for child in children:
+                    child_line_combo = pos_config.env['pos.combo'].browse(int(child.get('combo_id')))
+                    child_line_combo_line = child_line_combo.combo_line_ids.filtered(lambda l: l.product_id.id == child.get('product_id'))[0]
+                    child_product = pos_config.env["product.product"].browse(int(child.get('product_id')))
+                    child_price_unit = ratio * unit_price_by_id[child['uuid']] + child_line_combo_line.price
+                    child_selected_account_tax = config_fiscal_pos.map_tax(child_product.taxes_id) if config_fiscal_pos else child_product.taxes_id
+                    child_tax_results = child_selected_account_tax.compute_all(
+                        child_price_unit,
+                        pos_config.currency_id,
+                        child.get('qty'),
+                        child_product,
+                    )
+                    newLines.append({
+                        'price_unit': price_unit,
+                        'price_subtotal': child_tax_results.get('total_excluded'),
+                        'price_subtotal_incl': child_tax_results.get('total_included'),
+                        'id': child.get('id'),
+                        'order_id': pos_order_id,
+                        'tax_ids': product.taxes_id,
+                        'uuid': child.get('uuid'),
+                        'product_id': child.get('product_id'),
+                        'qty': child.get('qty'),
+                        'customer_note': child.get('customer_note'),
+                        'selected_attributes': child.get('selected_attributes'),
+                        'full_product_name': child.get('full_product_name'),
+                        'combo_parent_uuid': child.get('combo_parent_uuid'),
+                        'combo_id': child.get('combo_id'),
+                    })
+                    appended_uuid.append(child.get('uuid'))
+                price_unit = 0
 
             tax_results = selected_account_tax.compute_all(
                 price_unit,
@@ -168,7 +268,6 @@ class PosSelfOrderController(http.Controller):
                 'price_unit': price_unit,
                 'price_subtotal': tax_results.get('total_excluded'),
                 'price_subtotal_incl': tax_results.get('total_included'),
-                'price_extra': 0,
                 'id': line.get('id'),
                 'order_id': pos_order_id,
                 'tax_ids': product.taxes_id,
@@ -178,7 +277,10 @@ class PosSelfOrderController(http.Controller):
                 'customer_note': line.get('customer_note'),
                 'selected_attributes': line.get('selected_attributes'),
                 'full_product_name': line.get('full_product_name'),
+                'combo_parent_uuid': line.get('combo_parent_uuid'),
+                'combo_id': line.get('combo_id'),
             })
+            appended_uuid.append(line.get('uuid'))
 
         return newLines
 
@@ -192,20 +294,13 @@ class PosSelfOrderController(http.Controller):
     # Last part the sequence number of the order.
     # INFO: This is allow a maximum of 999 tables and 9999 orders per table, so about ~1M orders per session.
     # Example: 'Self-Order 00001-001-0001'
-    def _generate_unique_id(self, pos_session_id: int, table_id: int, sequence_number: int) -> str:
+    def _generate_unique_id(self, pos_session_id, table_id, sequence_number, device_type):
         first_part = "{:05d}".format(int(pos_session_id))
         second_part = "{:03d}".format(int(table_id))
         third_part = "{:04d}".format(int(sequence_number))
 
-        return f"Self-Order {first_part}-{second_part}-{third_part}"
-
-    def _get_sequence_number(self, table_id, session_id):
-        order_sudo = request.env["pos.order"].sudo().search([(
-            'pos_reference',
-            'like',
-            f"Self-Order {session_id:0>5}-{table_id:0>3}")], order='id desc', limit=1)
-
-        return (order_sudo.sequence_number + 1) or 1
+        device = "Kiosk" if device_type == "kiosk" else "Self-Order"
+        return f"{device} {first_part}-{second_part}-{third_part}"
 
     def _verify_pos_config(self, access_token):
         """
@@ -213,7 +308,7 @@ class PosSelfOrderController(http.Controller):
         The record is has no sudo access and is in the context of the record's company and current pos.session's user.
         """
         pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
-        if not pos_config_sudo or not pos_config_sudo.self_order_table_mode or not pos_config_sudo.has_active_session:
+        if not pos_config_sudo or (not pos_config_sudo.self_order_table_mode and not pos_config_sudo.self_order_kiosk) or not pos_config_sudo.has_active_session:
             raise Unauthorized("Invalid access token")
         company = pos_config_sudo.company_id
         user = pos_config_sudo.current_session_id.user_id
@@ -224,11 +319,12 @@ class PosSelfOrderController(http.Controller):
         Similar to _verify_pos_config but also looks for the restaurant.table of the given identifier.
         The restaurant.table record is also returned with reduced privileges.
         """
+        pos_config = self._verify_pos_config(access_token)
         table_sudo = request.env["restaurant.table"].sudo().search([('identifier', '=', table_identifier)], limit=1)
-        if not table_sudo:
+
+        if not table_sudo and not pos_config.self_order_kiosk:
             raise Unauthorized("Table not found")
 
-        pos_config = self._verify_pos_config(access_token)
         company = pos_config.company_id
         user = pos_config.current_session_id.user_id
         table = reduce_privilege(table_sudo, company, user)

@@ -776,6 +776,7 @@ class PosOrder(models.Model):
                     'balance': -balance,
                 })
 
+        # sort self.payment_ids by is_split_transaction:
         for payment_id in self.payment_ids:
             is_split_transaction = payment_id.payment_method_id.split_transactions
             if is_split_transaction:
@@ -783,7 +784,10 @@ class PosOrder(models.Model):
             else:
                 reversed_move_receivable_account_id = payment_id.payment_method_id.receivable_account_id or self.company_id.account_default_pos_receivable_account_id
 
-            aml_vals_entry_found = [aml_entry for aml_entry in aml_vals_list_per_nature['payment_terms'] if aml_entry['account_id'] == reversed_move_receivable_account_id.id]
+            aml_vals_entry_found = [aml_entry for aml_entry in aml_vals_list_per_nature['payment_terms']
+                                    if aml_entry['account_id'] == reversed_move_receivable_account_id.id
+                                    and not aml_entry['partner_id']]
+
             if aml_vals_entry_found and not is_split_transaction:
                 aml_vals_entry_found[0]['amount_currency'] += self.session_id._amount_converter(payment_id.amount, self.date_order, False)
                 aml_vals_entry_found[0]['balance'] += payment_id.amount

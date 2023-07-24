@@ -8,6 +8,18 @@ from odoo.tools.misc import split_every
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
+    pos_self_order_kiosk = fields.Boolean(related="pos_config_id.self_order_kiosk", readonly=False)
+    pos_self_order_kiosk_mode = fields.Selection(related="pos_config_id.self_order_kiosk_mode", readonly=False)
+    pos_self_order_kiosk_takeaway = fields.Boolean(related="pos_config_id.self_order_kiosk_takeaway", readonly=False)
+    pos_self_order_kiosk_alternative_fp_id = fields.Many2one(related="pos_config_id.self_order_kiosk_alternative_fp_id", readonly=False)
+    pos_self_order_kiosk_image_home = fields.Image(related="pos_config_id.self_order_kiosk_image_home", readonly=False)
+    pos_self_order_kiosk_image_eat = fields.Image(related="pos_config_id.self_order_kiosk_image_eat", readonly=False)
+    pos_self_order_kiosk_image_brand = fields.Image(related="pos_config_id.self_order_kiosk_image_brand", readonly=False)
+    pos_self_order_kiosk_image_home_name = fields.Char(related="pos_config_id.self_order_kiosk_image_home_name", readonly=False)
+    pos_self_order_kiosk_image_eat_name = fields.Char(related="pos_config_id.self_order_kiosk_image_eat_name", readonly=False)
+    pos_self_order_kiosk_image_brand_name = fields.Char(related="pos_config_id.self_order_kiosk_image_brand_name", readonly=False)
+    pos_self_order_kiosk_available_language_ids = fields.Many2many(related="pos_config_id.self_order_kiosk_available_language_ids", readonly=False)
+    pos_self_order_kiosk_default_language = fields.Many2one(related="pos_config_id.self_order_kiosk_default_language", readonly=False)
     pos_self_order_view_mode = fields.Boolean(
         compute="_compute_pos_module_pos_self_order", store=True, readonly=False
     )
@@ -32,6 +44,22 @@ class ResConfigSettings(models.TransientModel):
     pos_self_order_image_name = fields.Char(
         compute="_compute_pos_module_pos_self_order", store=True, readonly=False
     )
+
+    @api.onchange("pos_self_order_kiosk_default_language", "pos_self_order_kiosk_available_language_ids")
+    def _onchange_pos_self_order_kiosk_default_language(self):
+        if self.pos_self_order_kiosk_default_language not in self.pos_self_order_kiosk_available_language_ids:
+            self.pos_self_order_kiosk_available_language_ids = self.pos_self_order_kiosk_available_language_ids + self.pos_self_order_kiosk_default_language
+        if not self.pos_self_order_kiosk_default_language and self.pos_self_order_kiosk_available_language_ids:
+            self.pos_self_order_kiosk_default_language = self.pos_self_order_kiosk_available_language_ids[0]
+
+    @api.onchange("pos_self_order_kiosk")
+    def _self_order_kiosk_change(self):
+        for record in self:
+            record.is_kiosk_mode = record.pos_self_order_kiosk
+
+            if record.pos_config_id.self_order_kiosk:
+                record.pos_config_id.self_order_view_mode = False
+                record.pos_config_id.self_order_table_mode = False
 
     @api.depends("pos_config_id")
     def _compute_pos_module_pos_self_order(self):

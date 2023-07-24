@@ -1,6 +1,6 @@
 /** @odoo-module */
 import { patch } from "@web/core/utils/patch";
-import { SelfOrder } from "@pos_self_order/self_order_service";
+import { SelfOrder } from "@pos_self_order/mobile/self_order_mobile_service";
 import { session } from "@web/session";
 
 patch(SelfOrder.prototype, {
