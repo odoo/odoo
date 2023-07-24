@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.Product" owl="1">
+        <div class="o_kiosk-product-banner">
+            <img
+                class="o_self_order_item_card_image h-75 object-fit-cover"
+                t-attf-src="/menu/get-image/{{ props.product.id }}"
+                alt="Product image"
+                loading="lazy"
+                onerror="this.remove()" />
+                <div class="d-flex flex-column">
+                    <span class="fs-1" t-esc="props.product.name"/>
+                    <span class="fs-2" t-esc="props.product.prices"/>
+                </div>
+        </div>
+    </t>
+</templates>

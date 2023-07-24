@@ -5,32 +5,68 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="pos_restaurant.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <setting id="iface_orderline_notes" position="after">
-                <setting string="QR Code Menu" help="Allow customers to see the menu from their phone">
-                    <field name="pos_self_order_view_mode"/>
-                    <div class="content-group d-flex gap-5" attrs="{'invisible': [('pos_self_order_view_mode','=',False)]}">
-                        <div class="d-flex flex-column align-items-start w-50">
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="pos_self_order.custom_link_action" type="action" string="Configure Buttons"/>
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="generate_qr_codes_page" type="object" string="Generate QR Codes"/>
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="preview_self_order_app" type="object" string="Preview"/>
-                        </div>
-                        <div class="d-flex flex-column align-items-start">
+            <block id="restaurant_section" position="after">
+                <block title="Self-Service" id="self_order_section" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                    <setting string="QR Code Menu" help="Allow customers to see the menu from their phone" attrs="{'invisible': [('pos_self_order_kiosk','=',True)]}">
+                        <field name="pos_self_order_view_mode"/>
+                        <div class="content-group d-flex" attrs="{'invisible': [('pos_self_order_view_mode','=',False)]}">
+                            <div class="d-flex flex-column align-items-start w-50">
+                                <button class="btn-link p-0" icon="oi-arrow-right" name="pos_self_order.custom_link_action" type="action" string="Configure Buttons"/>
+                                <button class="btn-link p-0" icon="oi-arrow-right" name="generate_qr_codes_page" type="object" string="Generate QR Codes"/>
+                                <button class="btn-link p-0" icon="oi-arrow-right" name="preview_self_order_app" type="object" string="Preview"/>
+                            </div>
                             <div class="d-flex flex-column align-items-start">
-                                <field name="pos_self_order_image_name" invisible ="1"/>
-                                <label for="pos_self_order_image" string="Set Background Image"/>
-                                <field name="pos_self_order_image" class="w-75" filename="pos_self_order_image_name"/>
+                                <div class="d-flex flex-column align-items-start">
+                                    <field name="pos_self_order_image_name" invisible ="1"/>
+                                    <label for="pos_self_order_image" string="Set Background Image"/>
+                                    <field name="pos_self_order_image" class="w-75" filename="pos_self_order_image_name"/>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </setting>
-                <setting string="Self Order" help="Allow customers to order from their phones">
-                    <field name="pos_self_order_table_mode"/>
-                    <div class="content-group" attrs="{'invisible': [('pos_self_order_table_mode','=',False)]}">
-                        <label string="Pay after" for="pos_self_order_pay_after" class="me-2"/>
-                        <field name="pos_self_order_pay_after"/>
-                    </div>
-                </setting>
-            </setting>
+                    </setting>
+                    <setting string="Self Order" help="Allow customers to order from their phones" attrs="{'invisible': [('pos_self_order_kiosk','=',True)]}">
+                        <field name="pos_self_order_table_mode"/>
+                        <div class="content-group" attrs="{'invisible': [('pos_self_order_table_mode','=',False)]}">
+                            <label string="Pay after" for="pos_self_order_pay_after" class="me-2"/>
+                            <field name="pos_self_order_pay_after"/>
+                        </div>
+                    </setting>
+                    <setting string="Kiosk Mode" help="Allow customers to order from a kiosk">
+                        <field name="pos_self_order_kiosk"/>
+                        <div class="content-group" attrs="{'invisible': [('pos_self_order_kiosk','=',False)]}">
+                            <label string="Pay after" for="pos_self_order_kiosk_mode" class="me-2"/>
+                            <field name="pos_self_order_kiosk_mode"/>
+                        </div>
+                        <div class="content-group mt-3" attrs="{'invisible': [('pos_self_order_view_mode','=',False)]}">
+                            <div class="d-flex flex-column align-items-start">
+                                <field name="pos_self_order_kiosk_image_home_name" invisible ="1"/>
+                                <label for="pos_self_order_image" string="Home background"/>
+                                <field name="pos_self_order_kiosk_image_home" class="w-100" filename="pos_self_order_kiosk_image_home_name"/>
+                            </div>
+                            <div class="d-flex flex-column align-items-start">
+                                <field name="pos_self_order_kiosk_image_eat_name" invisible ="1"/>
+                                <label for="pos_self_order_image" string="Eat mode"/>
+                                <field name="pos_self_order_kiosk_image_eat" class="w-100" filename="pos_self_order_kiosk_image_eat_name"/>
+                            </div>
+                            <div class="d-flex flex-column align-items-start">
+                                <field name="pos_self_order_kiosk_image_brand_name" invisible ="1"/>
+                                <label for="pos_self_order_image" string="Brand Header"/>
+                                <field name="pos_self_order_kiosk_image_brand" class="w-100" filename="pos_self_order_kiosk_image_brand_name"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Kiosk Mode: Take Away" attrs="{'invisible': [('pos_self_order_kiosk','=',False)]}">
+                        <field name="pos_self_order_kiosk_takeaway"/>
+                        <div class="content-group" attrs="{'invisible': [('pos_self_order_kiosk_takeaway','=',False)]}">
+                            <label string="" for="pos_self_order_kiosk_alternative_fp" class="me-2"/>
+                            <field name="pos_self_order_kiosk_alternative_fp" placeholder="Alternative Fiscal Position"/>
+                            <div>
+                                <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </block>
         </field>
     </record>
 </odoo>

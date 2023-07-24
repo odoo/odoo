@@ -25,6 +25,60 @@ class PosConfig(models.Model):
         )
         return base64.b64encode(file_open(image_path, "rb").read())
 
+    self_order_kiosk = fields.Boolean(
+        string="Kiosk",
+        help="Enable the kiosk mode for the Point of Sale",
+    )
+    self_order_kiosk_takeaway = fields.Boolean(
+        string="Takeaway",
+        help="Allow customers to order for takeaway",
+    )
+    self_order_kiosk_alternative_fp = fields.Many2one(
+        'account.fiscal.position',
+        string='Alternative Fiscal Position',
+        help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.',
+    )
+    self_order_kiosk_mode = fields.Selection(
+        [("counter", "Pickup Counter"), ("table", "Service at Table")],
+        string="Kiosk Mode",
+        default="counter",
+        help="Choose the kiosk mode",
+        required=True,
+    )
+    self_order_kiosk_image_home = fields.Image(
+        string="Self Order Kiosk Image Home",
+        help="Image to display on the self order screen",
+        max_width=1080,
+        max_height=1920,
+        default=_self_order_default_image,
+    )
+    self_order_kiosk_image_eat = fields.Image(
+        string="Self Order Kiosk Image Eat",
+        help="Image to display on the self order screen",
+        max_width=1080,
+        max_height=1920,
+        default=_self_order_default_image,
+    )
+    self_order_kiosk_image_brand = fields.Image(
+        string="Self Order Kiosk Image Brand",
+        help="Image to display on the self order screen",
+        max_width=1200,
+        max_height=60,
+    )
+    self_order_kiosk_image_home_name = fields.Char(
+        string="Self Order Kiosk Image Home Name",
+        help="Name of the image to display on the self order screen",
+        default=_self_order_default_image_name,
+    )
+    self_order_kiosk_image_eat_name = fields.Char(
+        string="Self Order Kiosk Image Eat Name",
+        help="Name of the image to display on the self order screen",
+        default=_self_order_default_image_name,
+    )
+    self_order_kiosk_image_brand_name = fields.Char(
+        string="Self Order Kiosk Image Brand Name",
+        help="Name of the image to display on the self order screen",
+    )
     self_order_view_mode = fields.Boolean(
         string="QR Code Menu",
         help="Allow customers to view the menu on their phones by scanning the QR code on the table",
@@ -67,6 +121,13 @@ class PosConfig(models.Model):
     def _update_access_token(self):
         self.access_token = self._get_access_token()
         self.floor_ids.table_ids._update_identifier()
+
+    @api.onchange("self_order_kiosk")
+    def _self_order_kiosk_change(self):
+        for record in self:
+            if record.self_order_kiosk:
+                record.self_order_view_mode = False
+                record.self_order_table_mode = False
 
     @api.model
     def _init_access_token(self):
@@ -190,6 +251,18 @@ class PosConfig(models.Model):
             "has_active_session": self.has_active_session,
         }
 
+    def _get_self_order_kiosk_data(self):
+        self.ensure_one()
+        return {
+            **self._get_self_order_data(),
+            "kiosk_mode": self.self_order_kiosk_mode,
+            "kiosk_takeaway": self.self_order_kiosk_takeaway,
+            "kiosk_alternative_fp": self.self_order_kiosk_alternative_fp.id,
+            "kiosk_image_home": self.self_order_kiosk_image_home_name,
+            "kiosk_image_eat": self.self_order_kiosk_image_eat_name,
+            "kiosk_image_brand": self.self_order_kiosk_image_brand_name,
+        }
+
     def _generate_data_for_qr_codes_page(self, cols: int = 4) -> Dict[str, List[Dict]]:
         """
         :cols: the number of qr codes per row
@@ -252,3 +325,12 @@ class PosConfig(models.Model):
                 * number,
             }
         ]
+
+    def action_open_kiosk_link_modal(self):
+        if not self.current_session_id:
+            self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/kiosk/%d?access_token=%s' % (self.id, self.access_token),
+            'target': 'self',
+        }

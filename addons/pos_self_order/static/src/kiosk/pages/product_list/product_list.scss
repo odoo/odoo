@@ -1,0 +1,32 @@
+.o_kiosk_product_list {
+    .header-image {
+        height: 180px;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .category-list {
+        height: 200px;
+        overflow-y: hidden;
+
+        .category-item {
+            height: 150px;
+            width: 150px;
+            background-color: white;
+
+            &.active {
+                background-color: #714B67;
+                color: white;
+            }
+        }
+    }
+
+    .product-list {
+        overflow-y: scroll;
+        padding-bottom: 10% !important;
+    }
+
+    .control-buttons {
+        height: 10%;
+    }
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.EatingLocation" owl="1">
+        <div class="o_kiosk_eating_location d-flex flex-column vh-100 align-items-center overflow-hidden">
+            <div class="text-center h-75 d-flex align-items-center justify-content-center flex-column">
+                <h1>Choose your <br/>eating location</h1>
+                <div class="d-flex gap-3 mt-5">
+                    <div t-on-click="() => this.selectLocation('in')" class="d-flex flex-wrap justify-content-center">
+                        <div class="eating_button border border-black rounded" t-on-click="props.onClick">
+                            <div class="h-75 d-flex align-items-center justify-content-center">
+                                <i class="fa fa-cutlery fs-1" aria-hidden="true"></i>
+                            </div>
+                            <div class="h-25 d-flex align-items-center justify-content-center bg-300 fs-4">
+                                Eat In
+                            </div>
+                        </div>
+                    </div>
+                    <div t-on-click="() => this.selectLocation('out')" class="d-flex flex-wrap justify-content-center">
+                        <div class="eating_button border border-black rounded" t-on-click="props.onClick">
+                            <div class="h-75 d-flex align-items-center justify-content-center">
+                                <i class="fa fa-shopping-bag fs-1" aria-hidden="true"></i>
+                            </div>
+                            <div class="h-25 d-flex align-items-center justify-content-center bg-300 fs-4">
+                                Take Out
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="back-btn btn btn-secondary w-100 p-0 m-0 rounded-0 position-absolute bottom-0 fs-2" t-on-click="back">Back</button>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.SelfOrderKioskIndex" owl="1">
+        <Router pos_config_id="selfOrderKiosk.pos_config_id">
+            <t t-set-slot="default" route="`/kiosk/${selfOrderKiosk.pos_config_id}`">
+                <LandingPage />
+            </t>
+            <t t-set-slot="product_list" route="`/kiosk/${selfOrderKiosk.pos_config_id}/products`">
+                <ProductList />
+            </t>
+            <t t-set-slot="location" route="`/kiosk/${selfOrderKiosk.pos_config_id}/location`">
+                <EatingLocation />
+            </t>
+            <t t-set-slot="product" route="`/kiosk/${selfOrderKiosk.pos_config_id}/product/{int:id}`" t-slot-scope="url">
+                <Product product="selfOrderKiosk.productByIds[url.id]" />
+            </t>
+        </Router>
+        <MainComponentsContainer />
+    </t>
+</templates>

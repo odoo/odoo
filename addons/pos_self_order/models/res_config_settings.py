@@ -7,6 +7,16 @@ from odoo.exceptions import UserError
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
+    pos_self_order_kiosk = fields.Boolean(related="pos_config_id.self_order_kiosk", readonly=False)
+    pos_self_order_kiosk_mode = fields.Selection(related="pos_config_id.self_order_kiosk_mode", readonly=False)
+    pos_self_order_kiosk_takeaway = fields.Boolean(related="pos_config_id.self_order_kiosk_takeaway", readonly=False)
+    pos_self_order_kiosk_alternative_fp = fields.Many2one(related="pos_config_id.self_order_kiosk_alternative_fp", readonly=False)
+    pos_self_order_kiosk_image_home = fields.Image(related="pos_config_id.self_order_kiosk_image_home", readonly=False)
+    pos_self_order_kiosk_image_eat = fields.Image(related="pos_config_id.self_order_kiosk_image_eat", readonly=False)
+    pos_self_order_kiosk_image_brand = fields.Image(related="pos_config_id.self_order_kiosk_image_brand", readonly=False)
+    pos_self_order_kiosk_image_home_name = fields.Char(related="pos_config_id.self_order_kiosk_image_home_name", readonly=False)
+    pos_self_order_kiosk_image_eat_name = fields.Char(related="pos_config_id.self_order_kiosk_image_eat_name", readonly=False)
+    pos_self_order_kiosk_image_brand_name = fields.Char(related="pos_config_id.self_order_kiosk_image_brand_name", readonly=False)
     pos_self_order_view_mode = fields.Boolean(
         compute="_compute_pos_module_pos_self_order", store=True, readonly=False
     )

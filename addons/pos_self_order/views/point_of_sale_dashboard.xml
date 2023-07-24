@@ -10,7 +10,7 @@
                 position="inside">
                 <field name="self_order_view_mode" invisible="1" />
                 <div role="menuitem">
-                    <a name="preview_self_order_app" 
+                    <a name="preview_self_order_app"
                         type="object"
                         style="white-space: nowrap;"
                         attrs="{'invisible': [('self_order_view_mode','=',False)]}">
@@ -24,6 +24,25 @@
                     attrs="{'invisible': [('self_order_table_mode','=',False)]}">
                     Self Ordering Enabled
                 </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="after">
+                <field name="self_order_kiosk" invisible="1" />
+                <field name="current_session_id" invisible="1" />
+                <div class="col-6 o_kanban_primary_left d-flex flex-column align-items-start" attrs="{'invisible': [('self_order_kiosk','=',False)]}">
+                    <button t-if="!record.current_session_id.raw_value" class="btn btn-primary pos_open_session_btn" name="action_open_kiosk_link_modal" type="object">
+                        Start Kiosk
+                    </button>
+                    <button t-else="">
+                        CLOSE SESSION
+                    </button>
+                    <button t-if="record.current_session_id.raw_value" class="btn-link" name="action_open_kiosk_link_modal" type="object">
+                        Open Kiosk
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="attributes">
+                <field name="self_order_kiosk" invisible="1" />
+                <attribute name="attrs">{'invisible': [('self_order_kiosk','=',True)]}</attribute>
             </xpath>
         </field>
     </record>

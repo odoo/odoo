@@ -12,7 +12,8 @@
     ],
     "data": [
         "security/ir.model.access.csv",
-        "views/index.xml",
+        "views/pos_self_order_mobile.index.xml",
+        "views/pos_self_order_kiosk.index.xml",
         "views/qr_code.xml",
         "views/custom_link_views.xml",
         "data/init_access.xml",
@@ -21,7 +22,7 @@
         "data/pos_restaurant_data.xml",
     ],
     "assets": {
-        "pos_self_order.assets_self_order": [
+        "pos_self_order.assets_common": [
             "web/static/lib/jquery/jquery.js",
             ("include", "web._assets_helpers"),
             ("include", "web._assets_backend_helpers"),
@@ -45,20 +46,31 @@
             "web/static/src/views/fields/formatters.js",
             "web/static/src/libs/fontawesome/css/font-awesome.css",
             "web/static/lib/odoo_ui_icons/*",
-            "pos_self_order/static/src/**/*",
             "point_of_sale/static/src/utils.js",
-            # bus service
             'bus/static/src/services/bus_service.js',
             'bus/static/src/bus_parameters_service.js',
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/workers/*',
+            "pos_self_order/static/src/common/**/*",
         ],
-        "pos_self_order.assets_tests": [
+        "pos_self_order.assets_common_tests": [
             "web/static/lib/jquery/jquery.js",
             "web_tour/static/src/tour_pointer/**/*.xml",
             "web_tour/static/src/tour_pointer/**/*.js",
             "web_tour/static/src/tour_service/**/*",
             "pos_self_order/static/tests/tours/**/*",
+        ],
+        "pos_self_order.assets_mobile": [
+            ('include', 'pos_self_order.assets_common'),
+            "pos_self_order/static/src/mobile/**/*",
+        ],
+        "pos_self_order.assets_mobile_tests": [
+            ('include', 'pos_self_order.assets_common_tests'),
+            "pos_self_order/static/tests/tours/**/*",
+        ],
+        "pos_self_order.assets_kiosk": [
+            ('include', 'pos_self_order.assets_common'),
+            "pos_self_order/static/src/kiosk/**/*",
         ],
     },
     "license": "LGPL-3",
