@@ -16,8 +16,6 @@ class AccountMoveSend(models.Model):
         help='Send the invoice via PEPPOL',
     )
     enable_peppol = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    # to be removed once the module is fully available
-    peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state')
     # technical field needed for computing a warning text about the peppol configuration
     peppol_warning = fields.Char(
         string="Warning",

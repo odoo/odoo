@@ -13,7 +13,6 @@ _logger = logging.getLogger(__name__)
 class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
 
-    peppol_migration_key = fields.Char(string="Migration Key")
     peppol_verification_code = fields.Char(string='SMS verification code')
     proxy_type = fields.Selection(
         selection_add=[('peppol', 'PEPPOL')],
@@ -37,11 +36,8 @@ class AccountEdiProxyClientUser(models.Model):
                 self.company_id.write({
                     'account_peppol_proxy_state': 'not_registered',
                     'is_account_peppol_participant': False,
+                    'account_peppol_migration_key': False,
                 })
-                self.env['ir.config_parameter'].set_param(
-                    f'account_peppol.migration_key_{self.company_id.id}',
-                    False
-                )
                 # commit the above changes before raising below
                 if not tools.config['test_enable'] and not modules.module.current_test:
                     self.env.cr.commit()

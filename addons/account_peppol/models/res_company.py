@@ -37,16 +37,12 @@ PEPPOL_ENDPOINT_WARNING = {
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    # to be removed once the module is available
-    account_peppol_attachment_ids = fields.Many2many(
-        comodel_name='ir.attachment',
-        string='Peppol Identification Documents',
-    )
     account_peppol_contact_email = fields.Char(
         string='Primary contact email',
         compute='_compute_account_peppol_contact_email', store=True, readonly=False,
         help='Primary contact email for Peppol-related communication',
     )
+    account_peppol_migration_key = fields.Char(string="Migration Key")
     account_peppol_phone_number = fields.Char(
         string='Phone number (for validation)',
         help='You will receive a verification code to this phone number',
