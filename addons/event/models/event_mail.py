@@ -259,6 +259,7 @@ You receive this email because you are:
     @api.model
     def schedule_communications(self, autocommit=False):
         schedulers = self.search([
+            ('event_id.active', '=', True),
             ('mail_done', '=', False),
             ('scheduled_date', '<=', fields.Datetime.now())
         ])
