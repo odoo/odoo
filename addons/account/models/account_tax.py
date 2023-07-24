@@ -716,6 +716,7 @@ class AccountTax(models.Model):
                     'group': groups_map.get(tax),
                     'tag_ids': (repartition_line_tags + subsequent_tags).ids + product_tag_ids,
                     'tax_ids': subsequent_taxes.ids,
+                    'tax_amount': tax.amount_type == 'percent' and tax.amount or False,
                 })
 
                 if not repartition_line.account_id:
@@ -729,6 +730,52 @@ class AccountTax(models.Model):
 
             total_included += factorized_tax_amount
             i += 1
+
+        # FIX tax amount if same group, same rate, same base and same repartition line factor percent
+
+        # Example:
+        # 9% and 9% under 18% group of tax with price included
+
+        # total_excluded = 84.75
+        # total_void = 84.75
+        # taxes_vals = [
+        #     {'id': 2, 'name': 'VAT 9%', 'group': 1, 'base': 84.75, 'amount': 7.63, price_include: True, ..}
+        #     {'id': 3, 'name': 'VAT 9%', 'group': 1, 'base': 84.75, 'amount': 7.62, price_include: True, ..}
+        # ]
+
+        # group same child by tax rate, tax group, base amount and same repartition line factor percent
+        # {
+        #     '1-9.0-84.75-100.0': [
+        #         {'id': 2, 'name': 'VAT 9%', 'group': 1, 'base': 84.75, 'amount': 7.63, price_include: True, ..}
+        #         {'id': 3, 'name': 'VAT 9%', 'group': 1, 'base': 84.75, 'amount': 7.62, price_include: True, ..}
+        #     ],
+        # }
+
+        # then compare the amount of each tax in the same group, tax rate, base amount and repartition line factor percent
+        # if the amount is different, then the difference is adjust against total_excluded and total_void
+
+        # total_excluded = 84.74
+        # total_void = 84.74
+        # taxes_vals = [
+        #     {'id': 2, 'name': 'VAT 9%', 'group': 1, 'base': 84.75, 'amount': 7.63, price_include: True, ..}
+        #     {'id': 3, 'name': 'VAT 9%', 'group': 1, 'base': 84.75, 'amount': 7.63, price_include: True, ..}
+        # ]
+        group_same_childs = {}
+        for tax_vals in taxes_vals:
+            parent_id = (tax_vals['group'] and tax_vals['group'].id) or False
+            tax_repartition_line_factor_percent = self.env['account.tax.repartition.line'].browse(tax_vals['tax_repartition_line_id']).factor_percent
+            if parent_id and tax_vals['tax_amount']:
+                key = "%s-%s-%s-%s"%(parent_id, tax_vals['tax_amount'], tax_vals['base'], tax_repartition_line_factor_percent)
+                group_same_childs.setdefault(key, [])
+                group_same_childs[key].append(tax_vals)
+        for same_childs in group_same_childs.values():
+            first_amount = same_childs[0]['amount']
+            for same_child in same_childs:
+                if same_child['amount'] != first_amount:
+                    amount_diff = first_amount - same_child['amount']
+                    total_excluded -= amount_diff
+                    total_void -= amount_diff
+                    same_child['amount'] += amount_diff
 
         base_taxes_for_tags = taxes
         if not include_caba_tags:

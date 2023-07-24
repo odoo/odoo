@@ -220,12 +220,12 @@ class TestTax(TestTaxCommon):
         res = self.group_tax_percent.with_context({'force_price_include':True}).compute_all(100.0)
         self._check_compute_all_results(
             100,    # 'total_included'
-            83.33,    # 'total_excluded'
+            83.33 + 0.01,    # 'total_excluded' + 0.01 round off
             [
                 # base , amount     | seq | amount | incl | incl_base
                 # ---------------------------------------------------
                 (83.33, 8.33),    # |  1  |    10% |      |
-                (83.33, 8.34),    # |  2  |    10% |      |
+                (83.33, 8.33),    # |  2  |    10% |      |
                 # ---------------------------------------------------
             ],
             res
