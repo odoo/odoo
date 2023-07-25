@@ -17,7 +17,7 @@ class TranslateWebsiteSystray extends Component {
             const searchParams = new URLSearchParams(search);
             searchParams.set('edit_translations', '1');
             this.websiteService.goToWebsite({
-                path: encodeURI(pathname + `?${searchParams.toString() + hash}`),
+                path: pathname + `?${searchParams.toString() + hash}`,
                 translation: true
             });
         } else {
