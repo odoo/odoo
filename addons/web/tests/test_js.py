@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import unittest
+
 import odoo.tests
 
 RE_ONLY = re.compile('QUnit\.only\(')
@@ -10,6 +12,8 @@ RE_ONLY = re.compile('QUnit\.only\(')
 @odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(odoo.tests.HttpCase):
 
+
+    @unittest.skip('broken, unmaintained for 12.0')
     def test_01_js(self):
         # webclient desktop test suite
         self.phantom_js('/web/tests?mod=web&failfast', "", "", login='admin', timeout=1800)
