@@ -68,6 +68,21 @@ odoo.define('pos_sale.tour', function (require) {
     ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickQuotationButton();
     ProductScreen.do.selectFirstOrder();
+    ProductScreen.do.clickOrderline("Product A", "1");
+    ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.isShown();
+
+    Tour.register('PosSettleOrder3', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
     ProductScreen.check.totalAmountIs(40);
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Bank');
