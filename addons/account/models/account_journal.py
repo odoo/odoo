@@ -884,17 +884,6 @@ class AccountJournal(models.Model):
             account_ids.add(line.payment_account_id.id or self.company_id.account_journal_payment_credit_account_id.id)
         return self.env['account.account'].browse(account_ids)
 
-    # TODO move to `account_reports` in master
-    def _get_last_bank_statement(self, domain=None):
-        ''' Retrieve the last bank statement created using this journal.
-        :param domain:  An additional domain to be applied on the account.bank.statement model.
-        :return:        An account.bank.statement record or an empty recordset.
-        '''
-        self.ensure_one()
-        last_statement_domain = (domain or []) + [('journal_id', '=', self.id), ('statement_id', '!=', False)]
-        last_st_line = self.env['account.bank.statement.line'].search(last_statement_domain, order='date desc, id desc', limit=1)
-        return last_st_line.statement_id
-
     def _get_available_payment_method_lines(self, payment_type):
         """
         This getter is here to allow filtering the payment method lines if needed in other modules.
