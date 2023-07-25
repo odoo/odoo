@@ -69,7 +69,7 @@ class StockRule(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, readonly=False, index='btree_not_null')
+    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, index='btree_not_null')
 
     def _auto_init(self):
         """
