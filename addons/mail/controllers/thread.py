@@ -71,7 +71,7 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
     def mail_message_post(self, thread_model, thread_id, post_data, context=None):
-        guest = request.env["mail.guest"]._get_guest_from_request(request)
+        guest = request.env["mail.guest"]._get_guest_from_context()
         guest.env["ir.attachment"].browse(post_data.get("attachment_ids", []))._check_attachments_access(
             post_data.get("attachment_tokens")
         )
@@ -91,7 +91,7 @@ class ThreadController(http.Controller):
                 'last_used': datetime.now(),
                 'ids': canned_response_ids,
             })
-        thread = request.env[thread_model]._get_from_request_or_raise(request, int(thread_id))
+        thread = request.env[thread_model]._get_from_context_or_raise(int(thread_id))
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
         new_partners = []
@@ -110,7 +110,7 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")
     def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None):
-        guest = request.env["mail.guest"]._get_guest_from_request(request)
+        guest = request.env["mail.guest"]._get_guest_from_context()
         guest.env["ir.attachment"].browse(attachment_ids)._check_attachments_access(attachment_tokens)
         message_sudo = guest.env["mail.message"].browse(message_id).sudo().exists()
         if not message_sudo.is_current_user_or_guest_author and not guest.env.user._is_admin():

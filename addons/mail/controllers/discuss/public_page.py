@@ -48,9 +48,7 @@ class PublicPageController(http.Controller):
 
     @http.route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
     def discuss_channel(self, channel_id):
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         return self._response_discuss_public_template(channel_sudo=channel_member_sudo.channel_id)
 
     def _response_discuss_channel_from_token(self, create_token, channel_name=None, default_display_mode=False):
@@ -84,9 +82,7 @@ class PublicPageController(http.Controller):
             "isChannelTokenSecret": is_channel_token_secret,
         }
         add_guest_cookie = False
-        channel_member_sudo = channel_sudo.env["discuss.channel.member"]._get_as_sudo_from_request(
-            request=request, channel_id=channel_sudo.id
-        )
+        channel_member_sudo = channel_sudo.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=channel_sudo.id)
         if channel_member_sudo:
             channel_sudo = channel_member_sudo.channel_id  # ensure guest is in context
         else:
@@ -96,7 +92,7 @@ class PublicPageController(http.Controller):
                 except UserError:
                     raise NotFound()
             else:
-                guest = channel_sudo.env["mail.guest"]._get_guest_from_request(request)
+                guest = channel_sudo.env["mail.guest"]._get_guest_from_context()
                 if guest:
                     channel_sudo = channel_sudo.with_context(guest=guest)
                     try:
@@ -129,7 +125,7 @@ class PublicPageController(http.Controller):
         )
         if add_guest_cookie:
             # Discuss Guest ID: every route in this file will make use of it to authenticate
-            # the guest through `_get_as_sudo_from_request` or `_get_as_sudo_from_request_or_raise`.
+            # the guest through `_get_as_sudo_from_context` or `_get_as_sudo_from_context_or_raise`.
             expiration_date = datetime.now() + timedelta(days=365)
             response.set_cookie(
                 guest._cookie_name,

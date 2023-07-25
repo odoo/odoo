@@ -99,14 +99,14 @@ class ChannelMember(models.Model):
         return super().unlink()
 
     @api.model
-    def _get_as_sudo_from_request_or_raise(self, request, channel_id):
-        channel_member = self._get_as_sudo_from_request(request=request, channel_id=channel_id)
+    def _get_as_sudo_from_context_or_raise(self, channel_id):
+        channel_member = self._get_as_sudo_from_context(channel_id=channel_id)
         if not channel_member:
             raise NotFound()
         return channel_member
 
     @api.model
-    def _get_as_sudo_from_request(self, request, channel_id):
+    def _get_as_sudo_from_context(self, channel_id):
         """ Seeks a channel member matching the provided `channel_id` and the
         current user or guest.
 
@@ -118,9 +118,9 @@ class ChannelMember(models.Model):
             with the 'guest' record in the context.
         :rtype: discuss.channel.member
         """
-        if request.session.uid:
+        if self.env.uid and not self.env.user._is_public():
             return self.env['discuss.channel.member'].sudo().search([('channel_id', '=', channel_id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
-        guest = self.env['mail.guest']._get_guest_from_request(request)
+        guest = self.env['mail.guest']._get_guest_from_context()
         if guest:
             return guest.env['discuss.channel.member'].sudo().search([('channel_id', '=', channel_id), ('guest_id', '=', guest.id)], limit=1)
         return self.env['discuss.channel.member'].sudo()
