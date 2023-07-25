@@ -459,6 +459,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         backorder_wizard.process()
 
         _message_content = _purchase_order.message_ids.mapped("body")[0]
+        self.assertEgal('Received Quantity: 0.00 -&gt; 5.00', _message_content, "Already received quantity isn't correctly taken into consideration")
         self.assertIsNotNone(re.search(r"Received Quantity: 5.00 -&gt; 10.00", _message_content), "Already received quantity isn't correctly taken into consideration")
 
     def test_pol_description(self):
