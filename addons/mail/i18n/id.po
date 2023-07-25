@@ -1158,7 +1158,7 @@ msgstr "Jenis Aktivitas"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_type
 msgid "Activity User Type"
-msgstr ""
+msgstr "Tipe User untuk Aktivitas "
 
 #. module: mail
 #. odoo-javascript
@@ -1806,7 +1806,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Blacklist"
-msgstr ""
+msgstr "Blacklist"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
@@ -2229,6 +2229,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"Pilih metode untuk pengiriman email:\n"
+"Email: kirim email langsung\n"
+"Post sebagai Pesan: post pada dokumen dan beritahu pengikut\n"
+"Post sebagai Note: log note pada dokumen"
 
 #. module: mail
 #. odoo-javascript
@@ -2809,7 +2813,7 @@ msgstr "Batas waktu:"
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Deadline: %s"
-msgstr ""
+msgstr "Deadline: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -3216,7 +3220,7 @@ msgstr "Batas Waktu"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "Jatuh Tempo Pada"
 
 #. module: mail
 #. odoo-javascript
@@ -3244,7 +3248,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Tipe jatuh tempo"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_dup
@@ -4469,6 +4473,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Bila alamat email dalam blacklist, kontak tidak akan menerima email massal "
+"lagi, dari daftar apapun"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__reply_to_force_new
@@ -6458,7 +6464,7 @@ msgstr "Tidak Ada"
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normalized Email"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__state__draft
@@ -6567,8 +6573,8 @@ msgstr "Jumlah kesalahan"
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Jumlah pesan yang butuh tindakan"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
@@ -8267,7 +8273,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "Kirim sebagai"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -8722,7 +8728,7 @@ msgstr "Judul:"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_autofollow
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "Penerima Langganan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__substitution
@@ -9227,6 +9233,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
+"Email ini diblacklist untuk mass mailing. Klik untuk tidak memblacklist."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -9246,6 +9253,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
+"Field ini digunakan untuk mencari pada alamat email sebagai field email "
+"utama yang dapat memiliki lebih dari hanya alamat email."
 
 #. module: mail
 #. odoo-javascript
@@ -9803,6 +9812,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Gunakan \"User Spesifik' untuk selalu menetapkan user yang sama pada "
+"kegiatan berikutnya. Gunakan 'User Umum dari Record' untuk menentukan nama "
+"field user untuk dipilih pada record."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -9884,7 +9896,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "Nama field user"
 
 #. module: mail
 #. odoo-javascript

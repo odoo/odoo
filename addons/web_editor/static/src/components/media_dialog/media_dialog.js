@@ -167,11 +167,13 @@ export class MediaDialog extends Component {
                     if (style) {
                         element.setAttribute('style', style);
                     }
-                    if (this.props.media.dataset.shape) {
-                        element.dataset.shape = this.props.media.dataset.shape;
-                    }
-                    if (this.props.media.dataset.shapeColors) {
-                        element.dataset.shapeColors = this.props.media.dataset.shapeColors;
+                    if (this.state.activeTab === TABS.IMAGES.id) {
+                        if (this.props.media.dataset.shape) {
+                            element.dataset.shape = this.props.media.dataset.shape;
+                        }
+                        if (this.props.media.dataset.shapeColors) {
+                            element.dataset.shapeColors = this.props.media.dataset.shapeColors;
+                        }
                     }
                 }
                 for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {

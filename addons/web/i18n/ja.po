@@ -5,13 +5,13 @@
 # Translators:
 # 森岡広道 <hiromichi.morioka@pro-spire.co.jp>, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
-# Tim Siu Lai <tl@roomsfor.hk>, 2022
 # Noma Yuki, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Junko Augias, 2023
+# Tim Siu Lai <tl@roomsfor.hk>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +92,7 @@ msgstr "%s ファイル"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "%s days ago"
 msgstr "%s 日前"
@@ -322,15 +323,13 @@ msgstr "<span class=\"text-nowrap\">税 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
-"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span id=\"line_tax_ids\">15.00%</span>"
-msgstr "<span id=\"line_tax_ids\">15.00%</span>"
+msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -344,8 +343,8 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span>5.000</span>"
-msgstr "<span>5.000</span>"
+msgid "<span>5.00</span>"
+msgstr "<span>5.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -361,10 +360,8 @@ msgstr "<span>説明</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span>Invoice</span>\n"
-"                           <span>INV/2020/07/0003</span>"
+"                           <span>INV/2023/00003</span>"
 msgstr ""
-"<span>Invoice</span>\n"
-"                           <span>INV/2020/07/0003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -416,13 +413,13 @@ msgstr "<strong>請求日:</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Subtotal</strong>"
-msgstr "<strong>小計</strong>"
+msgid "<strong>Total</strong>"
+msgstr "<strong>合計</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Total</strong>"
-msgstr "<strong>合計</strong>"
+msgid "<strong>Untaxed Amount</strong>"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -844,6 +841,8 @@ msgstr "適用"
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Archive"
@@ -876,15 +875,8 @@ msgstr "本当に選択した全レコードをアーカイブしますか？"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/form/form_controller.js:0
-#, python-format
-msgid "Are you sure that you want to archive all this record?"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
 msgstr "選択したレコードを本当にアーカイブしますか？"
@@ -1312,7 +1304,6 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/dialog.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_column_examples_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -1609,12 +1600,7 @@ msgstr "国"
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
-#: code:addons/web/static/src/views/list/list_controller.xml:0
-#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "Create"
 msgstr "作成"
@@ -1870,6 +1856,7 @@ msgstr "デフォルト値："
 #: code:addons/web/static/src/views/fields/many2many_tags/tags_list.xml:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
@@ -1928,6 +1915,20 @@ msgstr "降順"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
+#, python-format
+msgid "Developer Tools"
+msgstr "開発者ツール"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_renderer.js:0
+#, python-format
+msgid "Different currencies cannot be aggregated"
+msgstr "異なる通貨を合算することはできません"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.xml:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
@@ -1938,7 +1939,6 @@ msgstr "降順"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
@@ -2296,8 +2296,8 @@ msgid "Exporting grouped data to csv is not supported."
 msgstr "グループ化されたデータのcsvへのエクスポートはサポートされていません。"
 
 #. module: web
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/legacy/js/widgets/data_export.js:0
@@ -2697,14 +2697,8 @@ msgstr "画像"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "In"
-msgstr "に"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "In %s days"
 msgstr ""
@@ -2820,6 +2814,11 @@ msgstr "新しいユーザを招待"
 #, python-format
 msgid "Inviting..."
 msgstr "招待する..."
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
+msgid "Is Company Details Empty"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3309,6 +3308,11 @@ msgstr "なし"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/views/basic/basic_model.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.xml:0
+#: code:addons/web/static/src/views/form/form_controller.xml:0
+#: code:addons/web/static/src/views/kanban/kanban_controller.xml:0
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "New"
 msgstr "新規"
@@ -3978,6 +3982,7 @@ msgstr "今しばらくお待ちください。"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
+#: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Please click on the \"save\" button first"
 msgstr "まず「保存」ボタンをクリックして下さい。"
@@ -4029,7 +4034,6 @@ msgstr "エクスポートリストに保存する項目を選んでください
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
 msgid "Please update translations of :"
 msgstr "次の翻訳を更新してください:"
@@ -4046,7 +4050,7 @@ msgstr "コピーボタンで内容コピーの上、サポート担当者に報
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "Please use the following communication for your payment : <b><span>\n"
-"                           INV/2020/07/0003</span></b>"
+"                           INV/2023/00003</span></b>"
 msgstr ""
 
 #. module: web
@@ -4415,7 +4419,7 @@ msgstr "残り日数"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
-#: code:addons/web/static/src/views/fields/relational_utils.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
@@ -5359,7 +5363,7 @@ msgstr "時間帯不一致: この時間帯はお使いのブラウザの時間�
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Today"
 msgstr "今日"
@@ -5383,7 +5387,7 @@ msgstr "メニュー切替"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Tomorrow"
 msgstr "明日"
@@ -5522,8 +5526,8 @@ msgid "Uncaught Promise"
 msgstr "Uncaught Promise"
 
 #. module: web
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
@@ -5946,7 +5950,7 @@ msgstr "はい"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "昨日"
@@ -6177,6 +6181,7 @@ msgstr "以下の子："
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "contains"
 msgstr "が次を含む"
@@ -6190,20 +6195,6 @@ msgstr "日付"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days"
-msgstr "日"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days ago"
-msgstr "日前"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
@@ -6213,6 +6204,7 @@ msgstr "が次を含まない"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "doesn't contain"
@@ -6373,6 +6365,7 @@ msgstr "が次の間である"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is equal to"
 msgstr "が次と一致する"
@@ -6405,6 +6398,7 @@ msgstr "は以下と＝でない："
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not equal to"
 msgstr "が次と一致しない"
@@ -6424,6 +6418,8 @@ msgstr "が次と一致しない"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not set"
 msgstr "が設定されていない"
@@ -6438,6 +6434,8 @@ msgstr "が設定されていない"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0

@@ -176,6 +176,120 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object.event_id and object.event_id.appointment_type_id\"></t>\n"
+"    <t t-set=\"customer\" t-value=\"object.event_id.find_partner_customer()\"></t>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.event_id.partner_id\"></t>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"></t>\n"
+"     <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"\n"
+"    <p>\n"
+"        안녕하세요 <t t-out=\"object.common_name or ''\">Ready Mat</t>님,<br><br>\n"
+"        <t t-if=\"is_online and target_responsible\">\n"
+"            <t t-if=\"customer\">\n"
+"                <t t-out=\"customer.name or ''\">Jesse Brown</t>님과의 약속 날짜가 업데이트되었습니다.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                약속 일정이 업데이트되었습니다.\n"
+"            </t>\n"
+"            <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> 관련 약속 일정이 현재 다음 일시로 예약되었습니다.\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 (11:00:00 To 11:30:00) (Europe/Brussels)</t>\n"
+"        </t>\n"
+"        <t t-elif=\"is_online and target_customer\">\n"
+"            <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> 님과의 약속 날짜가 업데이트되었습니다.\n"
+"            <strong t-out=\"object.event_id.appointment_type_id.name or ''\"></strong> 관련 약속 일정이 다음 일시로 예약되었습니다.\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            미팅 날짜가 업데이트되었습니다.\n"
+"             <strong t-out=\"object.event_id.name or ''\">Follow-up for Project proposal</strong> 미팅을 <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t>님이 다음 일시로 예약하셨습니다.\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
+"        </t>\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            수락</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            거절</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            보기</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"            <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"EEEE\", lang_code=object.env.lang) or \"\"'>화요일</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>일\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>2021년 5월</t>\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                 <t t-if=\"not object.event_id.allday\">\n"
+"                    <div>\n"
+"                        <t t-out='format_time(time=object.event_id.start, tz=object.mail_tz, time_format=\"short\", lang_code=object.env.lang) or \"\"'>11:00 AM</t>\n"
+"                    </div>\n"
+"                    <t t-if=\"object.mail_tz\">\n"
+"                        <div style=\"font-size: 10px; font-weight: normal\">\n"
+"                            (<t t-out=\"object.mail_tz or ''\">Europe/Brussels</t>)\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"></td>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>자세한 내용 보기</strong></p>\n"
+"            <ul>\n"
+"                <t t-if=\"object.event_id.location\">\n"
+"                    <li>위치: <t t-out=\"object.event_id.location or ''\">Bruxelles</t>\n"
+"                        (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.event_id.location }}\">지도 보기</a>)\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"recurrent\">\n"
+"                    <li>일시: <t t-out=\"object.recurrence_id.name or ''\">매주, 3가지 행사</t></li>\n"
+"                </t>\n"
+"                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
+"                    <li>소요 시간: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">30분</t></li>\n"
+"                </t>\n"
+"                <li>참석자\n"
+"                <ul>\n"
+"                    <li t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\">\n"
+"                        <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: {{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                        <t t-if=\"attendee.common_name != object.common_name\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"margin-left:5px\">귀하</span>\n"
+"                        </t>\n"
+"                    </li>\n"
+"                </ul></li>\n"
+"                <t t-if=\"object.event_id.videocall_location\">\n"
+"                    <li>\n"
+"                        참가 방법:\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Odoo Discuss를 통한 참가</t>\n"
+"                        <t t-else=\"\"> 다음을 통해 참가</t><br>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
+"                    <li>행사 설명:\n"
+"                    <t t-out=\"object.event_id.description\">제품 및 서비스의 신규 가격 책정을 위한 내부 회의.</t></li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br>\n"
+"    감사합니다.\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_update
@@ -1241,7 +1355,7 @@ msgstr "간격"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
 msgid "Invalid Email Partner"
-msgstr ""
+msgstr "잘못된 협력사 이메일"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1262,7 +1376,7 @@ msgstr "초대 세부사항"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_invitation
 msgid "Invitation email to new attendees"
-msgstr ""
+msgstr "신규 참석자에게 보내는 이메일 초대장"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1272,7 +1386,7 @@ msgstr "초대장"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "Invitation to {{ object.event_id.name }}"
-msgstr ""
+msgstr "{{ object.event_id.name }} 행사 초대"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1292,13 +1406,13 @@ msgstr "일정 강조 표시 여부"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
 msgid "Is the Organizer Alone"
-msgstr ""
+msgstr "단일 주최자입니다."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Join Video Call"
-msgstr ""
+msgstr "화상 회의 참여"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
@@ -1364,7 +1478,7 @@ msgstr "로고"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
 msgid "Mail Tz"
-msgstr ""
+msgstr "메일 Tz"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
@@ -1411,7 +1525,7 @@ msgstr "회의 유형"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
 msgid "Meeting URL"
-msgstr ""
+msgstr "회의 URL"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
@@ -1442,7 +1556,7 @@ msgstr "메시지"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Microsoft Outlook icon"
-msgstr ""
+msgstr "Microsoft Outlook 아이콘"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
@@ -1517,7 +1631,7 @@ msgstr "아직 피드백이 없습니다"
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "No meetings found. Let's schedule one!"
-msgstr ""
+msgstr "회의가 없습니다. 지금 생성합니다!"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1552,7 +1666,7 @@ msgstr "알림 - 30분 전"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
 msgid "Notifications sent to all attendees to remind of the meeting."
-msgstr ""
+msgstr "모든 참석자들에게 회의에 대해 알림을 전송하였습니다."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1566,8 +1680,8 @@ msgstr "오류 횟수"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "조치가 필요한 메시지 수"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
@@ -1590,7 +1704,7 @@ msgstr "확인"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Only Internal Users"
-msgstr ""
+msgstr "내부 사용자 전용"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
@@ -1629,12 +1743,12 @@ msgstr "아웃룩"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr ""
+msgstr "Outlook 클라이언트 아이디"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr ""
+msgstr "Outlook 클라이언트 비밀번호"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -1649,7 +1763,7 @@ msgstr "사용자의 협력사 관련 데이터"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
 msgid "People to whom this event will be visible."
-msgstr ""
+msgstr "이 행사 내용을 확인할 수 있는 사람"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -1672,7 +1786,7 @@ msgstr "비공개"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Private Event Excluded"
-msgstr ""
+msgstr "비공개 행사 제외"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
@@ -1790,7 +1904,7 @@ msgstr "토요일"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Scheduled by"
-msgstr ""
+msgstr "예약자"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1811,12 +1925,12 @@ msgstr "참가자 선택 ..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr ""
+msgstr "참석자에게 이메일 전송"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Invitations"
-msgstr ""
+msgstr "초대장 전송"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1826,17 +1940,17 @@ msgstr "이메일 전송"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
 msgid "Sent to all attendees if a reminder is set"
-msgstr ""
+msgstr "알림 설정 시 모든 참석자에게 전송"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_changedate
 msgid "Sent to all attendees if the schedule change"
-msgstr ""
+msgstr "일정 변경 시 모든 참석자에게 전송"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show as"
-msgstr ""
+msgstr "다음으로 표시"
 
 #. module: calendar
 #. odoo-javascript
@@ -1908,7 +2022,7 @@ msgstr "일요일"
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #, python-format
 msgid "Synchronize with:"
-msgstr ""
+msgstr "다음과 동기화:"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -1933,7 +2047,7 @@ msgstr "태그"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
-msgstr ""
+msgstr "메일 알림 내용을 렌더링하는데 사용되는 서식입니다."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -2003,7 +2117,7 @@ msgstr "반복횟수는 음의 값이 될 수 없습니다."
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "해당 행사에 참석자가 없습니다."
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -2048,7 +2162,7 @@ msgstr "시간대"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
 msgid "Timezone used for displaying time in the mail template"
-msgstr ""
+msgstr "메일 서식에서 시간 표시에 사용하는 표준 시간대"
 
 #. module: calendar
 #. odoo-python
@@ -2098,7 +2212,7 @@ msgstr "반복 종료일"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_update
 msgid "Used to manually notifiy attendees"
-msgstr ""
+msgstr "참석자에게 수기로 알리는데 사용"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -2108,12 +2222,12 @@ msgstr "사용자"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
 msgid "Videocall Source"
-msgstr ""
+msgstr "화상 회의 소스"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Videocall URL"
-msgstr ""
+msgstr "화상 회의 URL"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
@@ -2155,7 +2269,7 @@ msgstr "참가합니다."
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "You can't update a recurrence without base event."
-msgstr ""
+msgstr "기본 행사가 없는 경우에는 반복하도록 업데이트할 수 없습니다."
 
 #. module: calendar
 #. odoo-python
@@ -2176,7 +2290,7 @@ msgstr "일주일 중 적어도 하루를 선택해야 합니다"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "day %s"
-msgstr ""
+msgstr "%s일 "
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2195,14 +2309,14 @@ msgstr "%s 일정"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on %s"
-msgstr ""
+msgstr "%s에 "
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "%(position)s%(weekday)s에"
 
 #. module: calendar
 #. odoo-python
@@ -2214,14 +2328,14 @@ msgstr "%s까지"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "{{ object.event_id.name }} - Reminder"
-msgstr ""
+msgstr "{{ object.event_id.name }} - 알림"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "{{ object.event_id.name }}: Date updated"
-msgstr ""
+msgstr "{{ object.event_id.name }}: 변경된 날짜"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
-msgstr ""
+msgstr "{{object.name}}: 행사 업데이트"

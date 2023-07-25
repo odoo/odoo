@@ -3567,13 +3567,27 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Количество сообщений, требующих действия"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Количество сообщений с ошибкой отправки"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Number of partners loaded can not be 0"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Number of product loaded can not be 0"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3883,8 +3897,8 @@ msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4040,8 +4054,8 @@ msgid "Pay Order"
 msgstr "Оплатить заказ"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -4184,6 +4198,13 @@ msgstr ""
 #, python-format
 msgid "Payments:"
 msgstr "Платежи:"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Pending Electronic Payments"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__user_id
@@ -6229,7 +6250,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\n"
+"\r\n"
 "                        Please contact your manager to accept the closing difference."
 msgstr ""
 
@@ -6471,6 +6492,15 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "There is already an electronic payment in progress."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is at least one pending electronic payment.\n"
+"Please finish the payment with the terminal or cancel it then remove the payment line."
 msgstr ""
 
 #. module: point_of_sale

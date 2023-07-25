@@ -206,3 +206,16 @@ PosLoyalty.do.clickConfirmButton();
 ProductScreen.check.totalAmountIs('92.00');
 
 Tour.register('PosLoyaltyTour5', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+ProductScreen.do.clickDisplayedProduct('Test Product A');
+PosLoyalty.do.clickRewardButton();
+ProductScreen.check.totalAmountIs('138.50');
+
+Tour.register('PosLoyaltyTour6', { test: true, url: '/pos/web' }, getSteps());

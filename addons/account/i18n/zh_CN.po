@@ -18,6 +18,7 @@
 # Ryan <ouyang.em@gmail.com>, 2023
 # Yazi Tian, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -221,6 +222,8 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%s相关对账明细处于无效状态。\n"
+"为保持一致，日记账分录必须始终有一个暂记行。"
 
 #. module: account
 #. odoo-python
@@ -235,7 +238,7 @@ msgstr "%s.复制"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "(Discount)"
-msgstr ""
+msgstr "（折扣）"
 
 #. module: account
 #. odoo-python
@@ -420,6 +423,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        尊敬的\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        这是您的\n"
+"        <t t-if=\"object.name\">\n"
+"            退货凭证 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            退货凭证\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (参考编号：<t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        金额为<span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        退款方<t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br><br>\n"
+"        如有问题，请随时联系我们。\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -466,6 +500,47 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        尊敬的\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> （<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>），\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>，\n"
+"        </t>\n"
+"        <br><br>\n"
+"        这是您的\n"
+"        <t t-if=\"object.name\">\n"
+"            发票<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            发票\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            （参考编号：<t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        金额为 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        由<t t-out=\"object.company_id.name or ''\">YourCompany</t>开具。\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            发票款项已全部付清。\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            请尽快付款。\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                付款时请使用以下参考号：<span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        如有任何问题，请随时与我们联系。\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -487,6 +562,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        尊敬的<t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
+"        感谢惠顾。\n"
+"        请查收您的付款收据<span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> 金额为\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span>由<t t-out=\"object.company_id.name or ''\">YourCompany</t>开具。\n"
+"        <br><br>\n"
+"        如有任何问题，请随时与我们联系。\n"
+"        <br><br>\n"
+"        谨致问候，\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -2564,7 +2655,7 @@ msgstr "分析分配模型"
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_search
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "分析分布搜索"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -2793,7 +2884,7 @@ msgstr "消息的作者。如果没设置，email_from 可能保存一个不匹�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto validate"
-msgstr ""
+msgstr "自动验证"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4218,12 +4309,12 @@ msgstr "对应分录"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Counterpart buttons"
-msgstr ""
+msgstr "对应按钮"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Counterpart rules"
-msgstr ""
+msgstr "对应规则"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
@@ -8659,7 +8750,7 @@ msgstr "行"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "行\"%s\"将自身定义为父行。"
 
 #. module: account
 #. odoo-python
@@ -8668,7 +8759,7 @@ msgstr ""
 msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
-msgstr ""
+msgstr "行\"%s\"将行\"%s\"定义为父行，而在报告中却先出现。父行必须始终排在前面。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
@@ -8717,7 +8808,7 @@ msgstr "加载更多限制"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr ""
+msgstr "锁定日期信息"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -8994,7 +9085,7 @@ msgstr "匹配的合作伙伴"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Matching rules"
-msgstr ""
+msgstr "匹配规则"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -9619,8 +9710,8 @@ msgstr "错误数"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要作业消息数量"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -13617,7 +13708,7 @@ msgstr "当前总数为 %s，但预期总数为 %s。为了过帐发票/账单�
 msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
-msgstr ""
+msgstr "日期设置在%(lock_type)s锁定日期%(lock_date)s之前。日记账项目将在%(invoice_date)s过账后入账。"
 
 #. module: account
 #. odoo-python
@@ -15132,7 +15223,7 @@ msgstr "上传"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Upload Invoices"
-msgstr ""
+msgstr "上传发票"
 
 #. module: account
 #. odoo-python
@@ -15474,7 +15565,7 @@ msgstr "警告 %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "四舍五入法提示：%s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -15603,7 +15694,7 @@ msgstr "使用Odoo，您不必手动记录账单"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "With Partner matching"
-msgstr ""
+msgstr "有对应合作伙伴"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -16278,7 +16369,7 @@ msgstr "您同时选择了以下文档类型："
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You must specify the Profit Account (company dependent)"
-msgstr ""
+msgstr "您必须指定利润账户（与公司相关）"
 
 #. module: account
 #. odoo-python

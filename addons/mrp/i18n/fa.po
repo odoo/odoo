@@ -8,7 +8,7 @@
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2023
 # Arash Sardari <arashss77@gmail.com>, 2023
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
-# Farid Hariri <fhari1234@gmail.com>, 2023
+# F Hariri <fhari1234@gmail.com>, 2023
 # arya sadeghi <aryasadeghy@gmail.com>, 2023
 # Hamid Darabi, 2023
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
@@ -1294,6 +1294,8 @@ msgstr ""
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
+"                                       Also note that purchase security lead"
+" times will be added when appropriate."
 msgstr ""
 
 #. module: mrp
@@ -1488,8 +1490,8 @@ msgstr "ایجاد عملکرد سفارشات کاری جدید"
 #: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,help:mrp.field_product_template__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
 
 #. module: mrp
@@ -3316,8 +3318,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "تعداد پیام ها که نیاز به عمل"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error_counter
@@ -5166,13 +5168,13 @@ msgstr "ردیابی زمان: %(user)s"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Time in minutes for the cleaning."
-msgstr "زمان برای تمیز کردن در دقیقه"
+msgid "Additional time in minutes for the cleaning."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Time in minutes for the setup."
-msgstr "زمان در دقیقه برای راه اندازی"
+msgid "Additional time in minutes for the setup."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual

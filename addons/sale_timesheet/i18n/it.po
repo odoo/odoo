@@ -221,7 +221,7 @@ msgstr "Fatturabile"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Billable Hours"
-msgstr ""
+msgstr "Ore fatturabili"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billable_percentage
@@ -784,12 +784,13 @@ msgstr "Non fatturabile"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Hours"
-msgstr ""
+msgstr "Ore non fatturabili"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
 msgid "Number of hours spent multiplied by the unit price per hour/day."
 msgstr ""
+"Numero di ore spese moltiplicate per il prezzo unitario per giorno/ora."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__billable_time
@@ -1016,7 +1017,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__so_analytic_account_id
 msgid "Sale Order Analytic Account"
-msgstr ""
+msgstr "Conto analitico ordine di vendita"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -1083,6 +1084,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"Articolo dell'ordine di vendita al quale verrà aggiunto il tempo speso per "
+"fatturarlo al cliente. Elimina gli articoli dell'ordine di vendita che non "
+"possono essere fatturati dal foglio ore."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
@@ -1387,45 +1391,45 @@ msgstr "Fogli ore"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed Manually)"
-msgstr ""
+msgstr "Fogli ore (fatturati manualmente)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed on Milestones)"
-msgstr ""
+msgstr "Fogli ore (fatturati sulle milestone)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed on Timesheets)"
-msgstr ""
+msgstr "Fogli ore (fatturati sui fogli ore)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Fixed Price)"
-msgstr ""
+msgstr "Fogli ore (prezzo fisso)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Non Billable)"
-msgstr ""
+msgstr "Fogli ore (non fatturabili)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
 msgid "Timesheets Analysis"
-msgstr ""
+msgstr "Analisi fogli ore"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr ""
+msgstr "Resoconto analisi fogli ore"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
@@ -1440,7 +1444,7 @@ msgstr "Fogli ore in base al tipo di fatturazione"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Timesheets for the"
-msgstr ""
+msgstr "Fogli ore per il"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1459,12 +1463,12 @@ msgstr "Fogli ore su progetto (una tariffa per OdV/progetto)"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets revenues"
-msgstr ""
+msgstr "Ricavi fogli ore"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__margin
 msgid "Timesheets revenues minus the costs"
-msgstr ""
+msgstr "Ricavi fogli ore meno i costi"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form

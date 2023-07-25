@@ -1,31 +1,40 @@
-odoo.define('point_of_sale.PartnerDetailsEdit', function(require) {
-    'use strict';
+odoo.define("point_of_sale.PartnerDetailsEdit", function (require) {
+    "use strict";
 
-    const { _t } = require('web.core');
-    const { getDataURLFromFile } = require('web.utils');
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+    const { _t } = require("web.core");
+    const { getDataURLFromFile } = require("web.utils");
+    const PosComponent = require("point_of_sale.PosComponent");
+    const Registries = require("point_of_sale.Registries");
 
-    const { onMounted, onWillUnmount } = owl;
+    const { onMounted, useState, onWillUnmount } = owl;
 
     class PartnerDetailsEdit extends PosComponent {
         setup() {
             super.setup();
-            this.intFields = ['country_id', 'state_id', 'property_product_pricelist'];
+            this.intFields = ["country_id", "state_id", "property_product_pricelist"];
             const partner = this.props.partner;
-            this.changes = {
-                'country_id': partner.country_id && partner.country_id[0],
-                'state_id': partner.state_id && partner.state_id[0],
-            };
-            if (!partner.property_product_pricelist)
-                this.changes['property_product_pricelist'] = this.env.pos.default_pricelist.id;
+            this.changes = useState({
+                name: partner.name || "",
+                street: partner.street || "",
+                city: partner.city || "",
+                zip: partner.zip || "",
+                state_id: partner.state_id && partner.state_id[0],
+                country_id: partner.country_id && partner.country_id[0],
+                lang: partner.lang || "",
+                email: partner.email || "",
+                phone: partner.phone || "",
+                mobile: partner.mobile || "",
+                barcode: partner.barcode || "",
+                vat: partner.vat || "",
+                property_product_pricelist: this.getDefaultPricelist(partner),
+            });
 
             onMounted(() => {
-                this.env.bus.on('save-partner', this, this.saveChanges);
+                this.env.bus.on("save-partner", this, this.saveChanges);
             });
 
             onWillUnmount(() => {
-                this.env.bus.off('save-partner', this);
+                this.env.bus.off("save-partner", this);
             });
         }
         get partnerImageUrl() {
@@ -40,37 +49,49 @@ odoo.define('point_of_sale.PartnerDetailsEdit', function(require) {
                 return false;
             }
         }
-        /**
-         * Save to field `changes` all input changes from the form fields.
-         */
-        captureChange(event) {
-            this.changes[event.target.name] = event.target.value;
+        getDefaultPricelist(partner) {
+            if (partner.property_product_pricelist) {
+                return partner.property_product_pricelist[0];
+            }
+            return this.env.pos.default_pricelist ? this.env.pos.default_pricelist.id : false;
         }
+        // NOTE: this functions was kept for compatibility with stable
+        captureChange(event) {}
         saveChanges() {
-            let processedChanges = {};
-            for (let [key, value] of Object.entries(this.changes)) {
+            const processedChanges = {};
+            for (const [key, value] of Object.entries(this.changes)) {
                 if (this.intFields.includes(key)) {
                     processedChanges[key] = parseInt(value) || false;
                 } else {
                     processedChanges[key] = value;
                 }
             }
-            if ((!this.props.partner.name && !processedChanges.name) ||
-                processedChanges.name === '' ){
-                return this.showPopup('ErrorPopup', {
-                  title: _t('A Customer Name Is Required'),
+            if (
+                processedChanges.state_id &&
+                this.env.pos.states.find((state) => state.id === processedChanges.state_id)
+                    .country_id[0] !== processedChanges.country_id
+            ) {
+                processedChanges.state_id = false;
+            }
+
+            if (
+                (!this.props.partner.name && !processedChanges.name) ||
+                processedChanges.name === ""
+            ) {
+                return this.showPopup("ErrorPopup", {
+                    title: _t("A Customer Name Is Required"),
                 });
             }
             processedChanges.id = this.props.partner.id || false;
-            this.trigger('save-changes', { processedChanges });
+            this.trigger("save-changes", { processedChanges });
         }
         async uploadImage(event) {
             const file = event.target.files[0];
             if (!file.type.match(/image.*/)) {
-                await this.showPopup('ErrorPopup', {
-                    title: this.env._t('Unsupported File Format'),
+                await this.showPopup("ErrorPopup", {
+                    title: this.env._t("Unsupported File Format"),
                     body: this.env._t(
-                        'Only web-compatible Image formats such as .png or .jpeg are supported.'
+                        "Only web-compatible Image formats such as .png or .jpeg are supported."
                     ),
                 });
             } else {
@@ -85,8 +106,8 @@ odoo.define('point_of_sale.PartnerDetailsEdit', function(require) {
             }
         }
         _resizeImage(img, maxwidth, maxheight) {
-            var canvas = document.createElement('canvas');
-            var ctx = canvas.getContext('2d');
+            var canvas = document.createElement("canvas");
+            var ctx = canvas.getContext("2d");
             var ratio = 1;
 
             if (img.width > maxwidth) {
@@ -113,12 +134,12 @@ odoo.define('point_of_sale.PartnerDetailsEdit', function(require) {
         _loadImage(url) {
             return new Promise((resolve) => {
                 const img = new Image();
-                img.addEventListener('load', () => resolve(img));
-                img.addEventListener('error', () => {
-                    this.showPopup('ErrorPopup', {
-                        title: this.env._t('Loading Image Error'),
+                img.addEventListener("load", () => resolve(img));
+                img.addEventListener("error", () => {
+                    this.showPopup("ErrorPopup", {
+                        title: this.env._t("Loading Image Error"),
                         body: this.env._t(
-                            'Encountered error when loading image. Please try again.'
+                            "Encountered error when loading image. Please try again."
                         ),
                     });
                     resolve(false);
@@ -127,7 +148,7 @@ odoo.define('point_of_sale.PartnerDetailsEdit', function(require) {
             });
         }
     }
-    PartnerDetailsEdit.template = 'PartnerDetailsEdit';
+    PartnerDetailsEdit.template = "PartnerDetailsEdit";
 
     Registries.Component.add(PartnerDetailsEdit);
 

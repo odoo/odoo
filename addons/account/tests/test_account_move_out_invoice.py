@@ -3590,3 +3590,43 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             self.assertEqual(aml.partner_id, self.partner_a)
         for aml in invoice2.line_ids:
             self.assertEqual(aml.partner_id, self.partner_b)
+
+    def test_invoice_journal_account_check_constraints(self):
+        """
+        Test account-journal constraint check is working as expected in a complex write operation
+        Setup:
+          - journal_a accepts account_a but not account_b
+          - journal_b accepts account_b but not account_a
+        We expect that constraints are checked as usual when creating/writing records, and in particular
+        changing account and journal at the same time should work
+        """
+
+        account_a = self.company_data['default_account_revenue'].copy()
+        journal_a = self.company_data['default_journal_sale'].copy({'default_account_id': account_a.id})
+        account_b = account_a.copy()
+        journal_b = journal_a.copy({'default_account_id': account_b.id})
+        journal_a.account_control_ids = account_a | self.company_data['default_account_tax_sale'] | self.company_data['default_account_receivable']
+        journal_b.account_control_ids = account_b | self.company_data['default_account_tax_sale'] | self.company_data['default_account_receivable']
+
+        # Should not raise
+        invoice = self.env['account.move'].with_context(default_move_type='out_invoice').create({
+            'journal_id': journal_a.id,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'My super product.',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                    'account_id': account_a.id,
+                })
+            ]
+        })
+
+        # Should not raise
+        invoice.write({'journal_id': journal_b.id, 'invoice_line_ids': [Command.update(invoice.invoice_line_ids.id, {'account_id': account_b.id})]})
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            invoice.write({'journal_id': journal_a.id})
+        with self.assertRaises(UserError), self.cr.savepoint():
+            # we want to test the update of both records in the same write operation
+            invoice.write({'invoice_line_ids': [Command.update(invoice.invoice_line_ids.id, {'account_id': account_a.id})]})

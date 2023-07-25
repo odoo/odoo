@@ -734,7 +734,7 @@ async function toInline($editable, cssRules, $iframe) {
         for (const image of images) {
             if (image.style[attributeName] !== 'auto') {
                 const value = image.getAttribute(attributeName) ||
-                    (attributeName === 'height' && image.offsetHeight);
+                    (attributeName === 'height' && image.offsetHeight) ||
                     (attributeName === 'width' ? _getWidth(image) : _getHeight(image));
                 if (value) {
                     image.setAttribute(attributeName, value);
@@ -755,6 +755,14 @@ async function toInline($editable, cssRules, $iframe) {
 
     // Hide replaced cells on Outlook
     editable.querySelectorAll('.mso-hide').forEach(_hideForOutlook);
+
+    // Replace double quotes in font-family styles with simple quotes (and
+    // simply remove these styles from images).
+    editable.querySelectorAll('[style*=font-family]').forEach(n => (
+        n.nodeName === 'IMG'
+            ? n.style.removeProperty('font-family')
+            : n.setAttribute('style', n.getAttribute('style').replaceAll('"', '\''))
+    ));
 
     // Styles were applied inline, we don't need a style element anymore.
     $editable.find('style').remove();
@@ -1128,9 +1136,9 @@ function listGroupToTable(editable) {
 function normalizeColors($editable) {
     const editable = $editable.get(0);
     for (const node of editable.querySelectorAll('[style*="rgb"]')) {
-        const rgbMatch = node.getAttribute('style').match(/rgb?\(([\d\.]*,?\s?){3,4}\)/g);
-        for (const rgb of rgbMatch || []) {
-            node.setAttribute('style', node.getAttribute('style').replace(rgb, rgbToHex(rgb)));
+        const rgbaMatch = node.getAttribute('style').match(/rgba?\(([\d\.]+\s*,?\s*){3,4}\)/g);
+        for (const rgb of rgbaMatch || []) {
+            node.setAttribute('style', node.getAttribute('style').replace(rgb, rgbToHex(rgb, node)));
         }
     }
 }

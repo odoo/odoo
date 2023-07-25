@@ -12,6 +12,7 @@
 # Lucas Sena, 2023
 # Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,7 +131,7 @@ msgstr "3 Principais Metodologias"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "<b>%s</b> is requesting access to this course."
-msgstr "<b>%s</b> está solicitando acesso a este curso"
+msgstr "<b>%s</b> está solicitando acesso a este curso."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -203,7 +204,7 @@ msgstr ""
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px;\">Olá, <t t-out=\"object.partner_id.name or ''\">Breno Oliveira</t>,</p><br>\n"
 "                        <p><b>Parabéns!</b></p>\n"
-"                        <p>Você completou o curso <b t-out=\"object.channel_id.name or ''\">Jardinagem básica</b></p>.\n"
+"                        <p>Você concluiu o curso <b t-out=\"object.channel_id.name or ''\">Jardinagem básica</b></p>.\n"
 "                        <p>Confira outros cursos disponíveis.</p><br>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
@@ -994,7 +995,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
 msgid "A little chat with Harry Potted"
-msgstr "Uma pequena conversa com Harry Potted"
+msgstr "Uma breve conversa com Harry Potted"
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_2_gard2
@@ -1003,18 +1004,18 @@ msgid ""
 "A lot of nice documentation: trees, wood, gardens. A gold mine for "
 "references."
 msgstr ""
-"Muita documentação agradável: árvores, madeira, jardins. Uma mina de ouro "
-"para referências."
+"Muita documentação interessante: árvores, madeira, jardins. Uma mina de ouro"
+" para referências."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_channel_partner_channel_partner_uniq
 msgid "A partner membership to a channel must be unique!"
-msgstr ""
+msgstr "A participação de um usuário no canal deve ser única!"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_slide_partner_uniq
 msgid "A partner membership to a slide must be unique!"
-msgstr ""
+msgstr "A participação de um usuário no slide deve ser única!"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_resource_check_file_type
@@ -1073,7 +1074,7 @@ msgstr "Uma mesa"
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_tag_slide_tag_unique
 msgid "A tag must be unique!"
-msgstr "Uma marcador deve ser único!"
+msgstr "Uma marcador deve ser único."
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_1
@@ -1699,12 +1700,12 @@ msgstr "Membro do Canal"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_channel_template_id
 msgid "Channel Share Template"
-msgstr ""
+msgstr "Modelo de compartilhamento de canal"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.mail_template_channel_shared
 msgid "Channel Shared"
-msgstr ""
+msgstr "Canal compartilhado"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_type
@@ -3129,7 +3130,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__group_sequence
 msgid "Group sequence"
-msgstr "Agrupar sequência"
+msgstr "Sequência do grupo"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__html_content
@@ -3186,15 +3187,14 @@ msgstr "Como adicionar conteúdo novo?"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_3
 msgid "How to Grow and Harvest The Best Strawberries | Basics"
-msgstr "Como fazer crescer e colher os melhores morangos | Fundamentos"
+msgstr "Como cultivar e colher os melhores morangos | Fundamentos"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_6
 msgid ""
 "How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks"
 msgstr ""
-"Como fazer crescer e colher os melhores morangos | Dicas e truques de "
-"jardinagem"
+"Como cultivar e colher os melhores morangos | Dicas e truques de jardinagem"
 
 #. module: website_slides
 #. odoo-javascript
@@ -3238,8 +3238,8 @@ msgstr "Como utilizar o Google Drive?"
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_2
 msgid "How to wall decorating by tree planting in hanging plastic bottles."
 msgstr ""
-"Como fazer a decoração da parede com o plantio de árvores em garrafas de "
-"plástico penduradas."
+"Como fazer decoração de parede plantando árvores em garrafas de plástico "
+"penduradas."
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_howto
@@ -4315,8 +4315,8 @@ msgstr "Número de Erros"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requer uma ação"
+msgid "Number of messages requiring action"
+msgstr "Número de mensagens que requerem ação"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error_counter
@@ -4426,7 +4426,7 @@ msgstr "Parceiro"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_has_new_content
 msgid "Partner Has New Content"
-msgstr "O Parceiro Não Possui Conteúdo"
+msgstr "O usuário tem conteúdo novo"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_pivot
@@ -5270,7 +5270,7 @@ msgstr "Compartilhar no Whatsapp"
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "Sharing is caring!"
-msgstr "Compartilhe com os amigos!"
+msgstr "Compartilhar é importante!"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__sheet
@@ -5318,7 +5318,7 @@ msgstr "Slide"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_partner
 msgid "Slide / Partner decorated m2m"
-msgstr "Slide / Parceiro decorado m2m"
+msgstr "m2m decorado por usuário/slide"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
@@ -6440,23 +6440,21 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "You can not upload password protected file."
-msgstr "Você não pode carregar um arquivo protegido por senha."
+msgstr "Não é possível carregar um arquivo protegido por senha."
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "You cannot add tags to this course."
-msgstr "Você não pode adicionar marcadores a este curso."
+msgstr "Não é possível adicionar marcadores a este curso."
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as completed if you are not among its members."
-msgstr ""
-"Você não pode marcar um slide como concluído se não estiver entre seus "
-"membros."
+msgstr "Você não pode marcar um slide como concluído se não for um membro."
 
 #. module: website_slides
 #. odoo-python
@@ -6472,9 +6470,7 @@ msgstr ""
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as viewed if you are not among its members."
-msgstr ""
-"Você não pode marcar um slide como visualizado se você não estiver entre "
-"seus membros."
+msgstr "Você não pode marcar um slide como visualizado se não for um membro."
 
 #. module: website_slides
 #. odoo-python
@@ -6517,14 +6513,14 @@ msgstr "Você conseguiu!"
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You don't have access to this lesson"
-msgstr "Você não tem acesso à esta aula"
+msgstr "Você não tem acesso a esta aula"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You don't have enough karma to vote"
-msgstr "Você não possui karma suficiente para votar"
+msgstr "Você não tem karma suficiente para votar"
 
 #. module: website_slides
 #. odoo-javascript
@@ -6804,21 +6800,21 @@ msgstr "Cursos Online"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "for 'Private' videos and similar to"
-msgstr ""
+msgstr "para vídeos privados e parecer com"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "for public ones."
-msgstr ""
+msgstr "para vídeos públicos."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "friend1@email.com, friend2@email.com"
-msgstr ""
+msgstr "amigo1@email.com, amigo2@email.com"
 
 #. module: website_slides
 #. odoo-javascript
@@ -6827,21 +6823,21 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://drive.google.com/file/d/ABC/view?usp=sharing"
-msgstr ""
+msgstr "https://drive.google.com/file/d/ABC/view?usp=sharing"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://vimeo.com/558907333/30da9ff3d8"
-msgstr ""
+msgstr "https://vimeo.com/558907333/30da9ff3d8"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://vimeo.com/558907555"
-msgstr ""
+msgstr "https://vimeo.com/558907555"
 
 #. module: website_slides
 #. odoo-javascript
@@ -6859,6 +6855,8 @@ msgid ""
 "mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
+"significa? A configuração privada do Vimeo significa que é um vídeo que só pode ser assistido por usuários que têm o link.\n"
+"                                    O seu vídeo nunca aparecerá nos resultados da pesquisa nem no seu canal."
 
 #. module: website_slides
 #. odoo-javascript
@@ -6901,7 +6899,7 @@ msgstr "para acessar os recursos"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "to be the first to leave a comment."
-msgstr ""
+msgstr "para ser o primeiro a comentar."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -6941,19 +6939,19 @@ msgstr "xp"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "your-friend@domain.com, your-friend2@domain.com"
-msgstr ""
+msgstr "seu-amigo@dominio.com, sua-amiga2@dominio.com"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_shared
 msgid "{{ user.name }} shared a Course"
-msgstr ""
+msgstr "{{ user.name }} compartilhou um curso"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "{{ user.name }} shared a {{ object.slide_category }} with you!"
-msgstr ""
+msgstr "{{ user.name }} compartilhou {{ object.slide_category }} com você!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
-msgstr ""
+msgstr "└<span class=\"ms-1\">Sem categoria</span>"

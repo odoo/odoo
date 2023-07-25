@@ -3071,8 +3071,8 @@ msgstr "Количество ошибок"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 #: model:ir.model.fields,help:survey.field_survey_user_input__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Количество сообщений, требующих действия"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
@@ -5243,6 +5243,14 @@ msgstr ""
 
 #. module: survey
 #. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
+
+#. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""

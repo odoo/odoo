@@ -499,6 +499,8 @@ odoo.define('website.tour.form_editor', function (require) {
         ...addCustomField("char", "text", "''", false),
         ...addCustomField("char", "text", '""', false),
         ...addCustomField("char", "text", "``", false),
+        ...addCustomField("char", "text", "Same name", false),
+        ...addCustomField("char", "text", "Same name", false),
         {
             content: 'Save the page',
             trigger: 'button[data-action=save]',
@@ -509,6 +511,21 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: 'iframe body:not(.editor_enable)',
             // We have to this that way because the input type = hidden.
             extra_trigger: 'iframe form:has(input[name="email_to"][value="test@test.test"])',
+        },
+        {
+            content: "Check that the 'Same name 1' field is visible",
+            trigger: "iframe .s_website_form_field .s_website_form_label_content:contains('Same name 1')",
+            run: () => null,
+        },
+        {
+            content: "Check that there is only one field 'Same name' visible",
+            trigger: "iframe .s_website_form",
+            run: () => {
+                const sameNameEls = document.querySelector("iframe.o_iframe").contentDocument.querySelectorAll(".s_website_form_field input[name='Same name']");
+                if (sameNameEls.length !== 1) {
+                    console.error("One and only one field with the label 'Same name' should be visible");
+                }
+            },
         },
     ]);
 

@@ -465,7 +465,7 @@ class HolidaysRequest(models.Model):
             holiday.manager_id = holiday.employee_id.parent_id.id
             if holiday.holiday_status_id.requires_allocation == 'no':
                 continue
-            if holiday.employee_ids:
+            if not holiday.employee_id or holiday.employee_ids:
                 holiday.holiday_status_id = False
             elif holiday.employee_id.user_id != self.env.user and holiday._origin.employee_id != holiday.employee_id:
                 if holiday.employee_id and not holiday.holiday_status_id.with_context(employee_id=holiday.employee_id.id).has_valid_allocation:
@@ -738,7 +738,8 @@ class HolidaysRequest(models.Model):
         """ Returns a float equals to the timedelta between two dates given as string."""
         employee = self.env['hr.employee'].browse(employee_ids)
         # We force the company in the domain as we are more than likely in a compute_sudo
-        domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+        domain = [('time_type', '=', 'leave'),
+                  ('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
 
         result = employee._get_work_days_data_batch(date_from, date_to, domain=domain)
         for employee_id in result:

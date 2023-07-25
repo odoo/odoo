@@ -7,9 +7,9 @@
 # Duy BQ <duybq86@gmail.com>, 2022
 # Thin Tran <trvathin@gmail.com>, 2022
 # Trần Hà <tranthuha13590@gmail.com>, 2022
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
-# Martin Trigaux, 2023
+# Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Thi Huong Nguyen, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,6 +90,7 @@ msgstr "%s Files"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "%s days ago"
 msgstr "%s ngày trước"
@@ -320,15 +321,13 @@ msgstr "<span class=\"text-nowrap\">Thuế 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
-"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Đồi Pleasant CA 94523<br/>Hoa Kỳ</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span id=\"line_tax_ids\">15.00%</span>"
-msgstr "<span id=\"line_tax_ids\">15.00%</span>"
+msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -342,8 +341,8 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span>5.000</span>"
-msgstr "<span>5.000</span>"
+msgid "<span>5.00</span>"
+msgstr "<span>5.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -359,10 +358,8 @@ msgstr "<span>Mô tả</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span>Invoice</span>\n"
-"                           <span>INV/2020/07/0003</span>"
+"                           <span>INV/2023/00003</span>"
 msgstr ""
-"<span>Hóa đơn</span>\n"
-"                           <span>INV/2020/07/0003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -414,13 +411,13 @@ msgstr "<strong>Ngày hóa đơn:</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Thành tiền</strong>"
+msgid "<strong>Total</strong>"
+msgstr "<strong>Tổng tiền</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Total</strong>"
-msgstr "<strong>Tổng tiền</strong>"
+msgid "<strong>Untaxed Amount</strong>"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -845,6 +842,8 @@ msgstr "Áp dụng"
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Archive"
@@ -877,15 +876,8 @@ msgstr "Bạn có chắc bạn muốn lưu trữ tất cả dữ liệu đã ch�
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/form/form_controller.js:0
-#, python-format
-msgid "Are you sure that you want to archive all this record?"
-msgstr "Bạn có chắc chắn muốn lưu trữ tất cả tập dữ liệu này không?"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
 msgstr "Bạn có chắc muốn lưu trữ dữ liệu này?"
@@ -1320,7 +1312,6 @@ msgstr "Xóa chữ ký"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/dialog.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_column_examples_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -1619,12 +1610,7 @@ msgstr "Quốc gia"
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
-#: code:addons/web/static/src/views/list/list_controller.xml:0
-#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "Create"
 msgstr "Tạo"
@@ -1880,6 +1866,7 @@ msgstr "Mặc định:"
 #: code:addons/web/static/src/views/fields/many2many_tags/tags_list.xml:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
@@ -1938,6 +1925,20 @@ msgstr "Giảm dần"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
+#, python-format
+msgid "Developer Tools"
+msgstr "Developer Tools"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_renderer.js:0
+#, python-format
+msgid "Different currencies cannot be aggregated"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.xml:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
@@ -1948,7 +1949,6 @@ msgstr "Giảm dần"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
@@ -2306,8 +2306,8 @@ msgid "Exporting grouped data to csv is not supported."
 msgstr "Đang xuất nhóm dữ liệu qua csv chưa được hỗ trợ."
 
 #. module: web
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/legacy/js/widgets/data_export.js:0
@@ -2709,14 +2709,8 @@ msgstr "Hình ảnh"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "In"
-msgstr "Trong"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "In %s days"
 msgstr "Trong %s ngày"
@@ -2836,6 +2830,11 @@ msgstr "Mời người dùng"
 #, python-format
 msgid "Inviting..."
 msgstr "Đang mời..."
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
+msgid "Is Company Details Empty"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3325,6 +3324,11 @@ msgstr "KHÔNG CÓ GÌ"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/views/basic/basic_model.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.xml:0
+#: code:addons/web/static/src/views/form/form_controller.xml:0
+#: code:addons/web/static/src/views/kanban/kanban_controller.xml:0
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "New"
 msgstr "Mới"
@@ -4001,6 +4005,7 @@ msgstr "Làm ơn hãy kiên nhẫn."
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
+#: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Please click on the \"save\" button first"
 msgstr "Hãy nhấp vào nút \"lưu\" trước"
@@ -4052,7 +4057,6 @@ msgstr "Hãy chọn các trường để lưu danh mục xuất..."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
 msgid "Please update translations of :"
 msgstr "Vui lòng cập nhật phần dịch thuật của:"
@@ -4071,10 +4075,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "Please use the following communication for your payment : <b><span>\n"
-"                           INV/2020/07/0003</span></b>"
+"                           INV/2023/00003</span></b>"
 msgstr ""
-"Vui lòng dùng thông tin giao dịch sau đây để thực hiện thanh toán của bạn : <b><span>\n"
-"                           INV/2020/07/0003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -4442,7 +4444,7 @@ msgstr "Số ngày còn lại"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
-#: code:addons/web/static/src/views/fields/relational_utils.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
@@ -5398,7 +5400,7 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Today"
 msgstr "Hôm nay"
@@ -5422,7 +5424,7 @@ msgstr "Chuyển đổi menu"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Tomorrow"
 msgstr "Ngày mai"
@@ -5565,8 +5567,8 @@ msgid "Uncaught Promise"
 msgstr "Không thể bắt lỗi dự kiến"
 
 #. module: web
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
@@ -5991,7 +5993,7 @@ msgstr "Có"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "Hôm qua"
@@ -6229,6 +6231,7 @@ msgstr "cấp con của"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "contains"
 msgstr "chứa"
@@ -6242,20 +6245,6 @@ msgstr "ngày"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days"
-msgstr "ngày"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days ago"
-msgstr "ngày trước"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
@@ -6265,6 +6254,7 @@ msgstr "không chứa"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "doesn't contain"
@@ -6425,6 +6415,7 @@ msgstr "trong khoảng"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is equal to"
 msgstr "bằng"
@@ -6457,6 +6448,7 @@ msgstr "không phải ="
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not equal to"
 msgstr "không bằng"
@@ -6476,6 +6468,8 @@ msgstr "không bằng"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not set"
 msgstr "không được thiết lập"
@@ -6490,6 +6484,8 @@ msgstr "không được thiết lập"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0

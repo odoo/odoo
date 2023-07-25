@@ -230,6 +230,11 @@ class LoyaltyReward(models.Model):
             # Keep the name of our discount product up to date
             for reward in self:
                 reward.discount_line_product_id.write({'name': reward.description})
+        if 'active' in vals:
+            if vals['active']:
+                self.reward_product_id.action_unarchive()
+            else:
+                self.reward_product_id.action_archive()
         return res
 
     def unlink(self):

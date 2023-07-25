@@ -3,7 +3,7 @@
 
 import odoo.tests
 
-from odoo import api
+from odoo import api, Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
@@ -346,3 +346,83 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
             self.WebsiteSaleController.address(**self.default_address_values)
             # Name cannot be changed if there are issued invoices
             self.assertNotEqual(self.portal_partner.name, self.default_address_values['name'], "Portal User should not be able to change the name if they have invoices under their name.")
+
+    def test_07_change_fiscal_position(self):
+        """
+            Check that the sale order is updated when you change fiscal position.
+            Change fiscal position by modifying address during checkout process.
+        """
+        partner = self.env['res.partner'].create({'name': 'test'})
+        be_address_POST, nl_address_POST = [
+            {
+                'name': 'Test name', 'email': 'test@email.com', 'street': 'test',
+                'city': 'test', 'zip': '3000', 'country_id': self.env.ref('base.be').id, 'submitted': 1,
+                'partner_id': partner.id,
+                'callback': '/shop/checkout',
+            },
+            {
+                'name': 'Test name', 'email': 'test@email.com', 'street': 'test',
+                'city': 'test', 'zip': '3000', 'country_id': self.env.ref('base.nl').id, 'submitted': 1,
+                'partner_id': partner.id,
+                'callback': '/shop/checkout',
+            },
+        ]
+
+        tax_10_incl, tax_20_excl, tax_15_incl = self.env['account.tax'].create([
+            {'name': 'Tax 10% incl', 'amount': 10, 'price_include': True},
+            {'name': 'Tax 20% excl', 'amount': 20, 'price_include': False},
+            {'name': 'Tax 15% incl', 'amount': 15, 'price_include': True},
+        ])
+        self.env['account.fiscal.position'].create([
+            {
+                'sequence': 1,
+                'name': 'BE',
+                'auto_apply': True,
+                'country_id': self.env.ref('base.be').id,
+                'tax_ids': [Command.create({'tax_src_id': tax_10_incl.id, 'tax_dest_id': tax_20_excl.id})],
+            },
+            {
+                'sequence': 2,
+                'name': 'NL',
+                'auto_apply': True,
+                'country_id': self.env.ref('base.nl').id,
+                'tax_ids': [Command.create({'tax_src_id': tax_10_incl.id, 'tax_dest_id': tax_15_incl.id})],
+            },
+        ])
+
+        product = self.env['product.product'].create({
+            'name': 'Product test',
+            'list_price': 100,
+            'website_published': True,
+            'sale_ok': True,
+            'taxes_id': [tax_10_incl.id]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'website_id': self.website.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'name': 'Product test',
+            })]
+        })
+
+        self.assertEqual(
+            [so.amount_untaxed, so.amount_tax, so.amount_total],
+            [90.91, 9.09, 100.0]
+        )
+
+        env = api.Environment(self.env.cr, self.website.user_id.id, {})
+        with MockRequest(self.env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+
+            self.WebsiteSaleController.address(**be_address_POST)
+            self.assertEqual(
+                [so.amount_untaxed, so.amount_tax, so.amount_total],
+                [90.91, 18.18, 109.09] # (100 : (1 + 10%)) * (1 + 20%) = 109.09
+            )
+
+            self.WebsiteSaleController.address(**nl_address_POST)
+            self.assertEqual(
+                [so.amount_untaxed, so.amount_tax, so.amount_total],
+                [90.91, 13.64, 104.55] # (100 : (1 + 10%)) * (1 + 15%) = 104.55
+            )

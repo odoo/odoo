@@ -1711,8 +1711,8 @@ msgstr "错误数"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要作业消息数量"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
@@ -2664,6 +2664,13 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr "供应商要求的最小采购数量。如果不设定单位，将会使用默认采购单位。"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price

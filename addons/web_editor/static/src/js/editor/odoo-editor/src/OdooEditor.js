@@ -1226,6 +1226,13 @@ export class OdooEditor extends EventTarget {
      * @see historyUndo
      */
     historyRedo() {
+        // Current step is considered an uncommitted draft, so revert it,
+        // otherwise a redo would not be possible.
+        this.historyRevert(this._currentStep);
+        // At this point, _currentStep.mutations contains the current step's
+        // mutations plus the ones that revert it, with net effect zero.
+        this._currentStep.mutations = [];
+
         const pos = this._getNextRedoIndex();
         if (pos > 0) {
             this._historyStepsStates.set(this._historySteps[pos].id, 'consumed');
@@ -1948,7 +1955,7 @@ export class OdooEditor extends EventTarget {
             doJoin &&
             next &&
             !(next.previousSibling && next.previousSibling === joinWith) &&
-            this.editable.contains(next)
+            this.editable.contains(next) && (closestElement(joinWith,'TD') === closestElement(next, 'TD'))
         ) {
             const restore = preserveCursor(this.document);
             this.observerFlush();

@@ -18,11 +18,14 @@ class TestEventCrmFlow(TestEventCrmCommon):
         ]
         cls.registration_values[-1]['email'] = '"John Doe" <invalid@not.example.com>'
 
-    def assert_initial_data(self):
+    def test_assert_initial_data(self):
+        """ Ensure base test values to ease test understanding and maintenance """
         self.assertEqual(len(self.registration_values), 5)
+
+        self.assertEqual(self.event_customer.country_id, self.env.ref('base.be'))
         self.assertEqual(self.event_customer.email_normalized, 'constantin@test.example.com')
-        self.assertEqual(self.event_customer.phone, '0485112233')
         self.assertFalse(self.event_customer.mobile)
+        self.assertEqual(self.event_customer.phone, '0485112233')
 
     @users('user_eventregistrationdesk')
     def test_event_crm_flow_batch_create(self):
@@ -97,43 +100,24 @@ class TestEventCrmFlow(TestEventCrmCommon):
         self.assertNotIn('invalid@not.example.com', lead.description)
 
     @users('user_eventregistrationdesk')
-    def test_event_crm_flow_per_attendee_single(self):
-        self.assert_initial_data()
-
-        # test: partner-based contact information, everything synchonized
-        registration = self.env['event.registration'].create({
-            'partner_id': self.event_customer.id,
-            'event_id': self.event_0.id,
-        })
-        self.assertEqual(registration.email, self.event_customer.email)
-        self.assertEqual(registration.phone, self.event_customer.phone)
-
-        # per-attendee rule
-        self.assertLeadConvertion(self.test_rule_attendee, registration, partner=registration.partner_id)
-
-        # test: no partner and contact information
-        registration = self.env['event.registration'].create({
-            'name': 'My Registration',
-            'partner_id': False,
-            'email': 'super.email@test.example.com',
-            'phone': False,
-            'mobile': '0456332211',
-            'event_id': self.event_0.id,
-        })
-        self.assertEqual(len(self.event_0.registration_ids), 2)
-        self.assertLeadConvertion(self.test_rule_attendee, registration, partner=None)
-
-        # test: no partner and few information
-        registration = self.env['event.registration'].create({
-            'name': False,
-            'partner_id': False,
-            'email': 'giga.email@test.example.com',
-            'phone': False,
-            'mobile': False,
-            'event_id': self.event_0.id,
-        })
-        self.assertEqual(len(self.event_0.registration_ids), 3)
-        self.assertLeadConvertion(self.test_rule_attendee, registration, partner=None)
+    def test_event_crm_flow_per_attendee_single_wo_partner(self):
+        """ Single registration, attendee based, no partner involved, check
+        contact info propagation """
+        for name, email, mobile, phone in [
+            ('My Name', 'super.email@test.example.com', '0456442211', '0456332211'),
+            (False, 'super.email@test.example.com', False, '0456442211'),
+            ('"My Name"', '"My Name" <my.name@test.example.com>', False, False),
+        ]:
+            with self.subTest(name=name, email=email, mobile=mobile, phone=phone):
+                registration = self.env['event.registration'].create({
+                    'name': name,
+                    'partner_id': False,
+                    'email': email,
+                    'mobile': mobile,
+                    'phone': phone,
+                    'event_id': self.event_0.id,
+                })
+                self.assertLeadConvertion(self.test_rule_attendee, registration, partner=None)
 
         # test: partner but with other contact information -> registration prior
         registration = self.env['event.registration'].create({
@@ -143,8 +127,35 @@ class TestEventCrmFlow(TestEventCrmCommon):
             'mobile': '0456112233',
             'event_id': self.event_0.id,
         })
-        self.assertEqual(len(self.event_0.registration_ids), 4)
         self.assertLeadConvertion(self.test_rule_attendee, registration, partner=None)
+
+    @users('user_eventregistrationdesk')
+    def test_event_crm_flow_per_attendee_single_wpartner(self):
+        """ Single registration, attendee based, with partner involved, check
+        contact information, check synchronization and update """
+        self.event_customer2.write({
+            'email': False,
+            'phone': False,
+        })
+        self.test_rule_attendee.write({
+            'event_registration_filter': '[]',  # try various email combinations
+        })
+        for email, phone, base_partner, expected_partner in [
+            (False, False, self.event_customer, self.event_customer),  # should take partner info
+            ('"Other Name" <constantin@test.example.com>', False, self.event_customer, self.event_customer),  # same email normalized
+            ('other.email@test.example.com', False, self.event_customer, self.env['res.partner']),  # not same email -> no partner on lead
+            (False, '+32485112233', self.event_customer, self.event_customer),  # same phone but differently formatted
+            (False, '0485112244', self.event_customer, self.env['res.partner']),  # other phone -> no partner on lead
+            ('other.email@test.example.com', '0485112244', self.event_customer2, self.event_customer2),  # mail / phone update from registration as void on partner
+        ]:
+            with self.subTest(email=email, phone=phone, base_partner=base_partner):
+                registration = self.env['event.registration'].create({
+                    'partner_id': base_partner.id,
+                    'email': email,
+                    'phone': phone,
+                    'event_id': self.event_0.id,
+                })
+                self.assertLeadConvertion(self.test_rule_attendee, registration, partner=expected_partner)
 
     @users('user_eventregistrationdesk')
     def test_event_crm_trigger_done(self):

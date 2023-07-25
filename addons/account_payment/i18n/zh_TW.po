@@ -234,7 +234,7 @@ msgstr "有待處理的退款"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別碼"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -242,6 +242,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"在測試模式中，會以測試的付款介面處理一筆模擬付款。\n"
+"建議在設置付款服務商時，使用此模式測試。"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
@@ -296,14 +298,14 @@ msgstr "允許的最大退款"
 msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
-msgstr ""
+msgstr "請注意，只限允許收取金額的服務商提供的代碼才可用。"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
 msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
-msgstr ""
+msgstr "請注意，服務商若設為只可授權交易（而非收取金額），其提供的代碼便不可用。"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -477,7 +479,7 @@ msgstr "要退還的金額必須為正數且不能高於 %s。"
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "過賬成功交易的日記賬。"
 
 #. module: account_payment
 #. odoo-python
@@ -486,7 +488,7 @@ msgstr ""
 msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
-msgstr ""
+msgstr "參考編號 %(ref)s 的交易，相關付款已過賬： %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -554,6 +556,8 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
 msgstr ""
+"若付款方式連結至已啟用或在測試狀態的服務商，便不可刪除。\n"
+"已連結服務商： %s"
 
 #. module: account_payment
 #. odoo-python
@@ -563,3 +567,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"必須先停用付款服務商，才可刪除其日記賬。\n"
+"已連結服務商： %s"

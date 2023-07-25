@@ -875,7 +875,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Questo modulo bridge consente di gestire l'esternalizzazione con il modulo di Spedizione diretta.\n"
+"        Questo modulo bridge consente di gestire l'esternalizzazione con il modulo di dropshipping.\n"
 "    "
 
 #. module: base
@@ -2866,13 +2866,13 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Gestisci gli ordini di spedizione diretta\n"
+"Gestisci gli ordini di dropshipping\n"
 "===========================\n"
 "\n"
-"Questo modulo aggiunge un tipo di spedizione diretta preconfigurato\n"
-"nonché un percorso di approvvigionamento che consente di configurare la spedizione diretta dei prodotti e degli ordini.\n"
+"Questo modulo aggiunge un tipo di dropshipping preconfigurato\n"
+"nonché un percorso di approvvigionamento che consente di configurare il dropshipping dei prodotti e degli ordini.\n"
 "\n"
-"Con la spedizione diretta, i beni sono trasferiti direttamente \n"
+"Con il dropshipping, i beni sono trasferiti direttamente \n"
 "dal fornitore al cliente senza\n"
 "passare nel magazzino del dettagliante. In questo caso, non\n"
 "è necessario alcun documento di trasferimento interno.\n"
@@ -5415,7 +5415,7 @@ msgstr "Scegliamo Point Relais® per il tuo ecommerce"
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
 msgid " Let's choose a Point Relais® as shipping address "
-msgstr ""
+msgstr "Scegli un Point Relais® come indirizzo di spedizione"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk
@@ -11717,7 +11717,7 @@ msgstr "Dott."
 #: model:ir.module.module,shortdesc:base.module_stock_dropshipping
 #: model:ir.module.module,summary:base.module_stock_dropshipping
 msgid "Drop Shipping"
-msgstr "Spedizione diretta"
+msgstr "Dropshipping"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -11727,7 +11727,7 @@ msgstr "Menù a discesa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_dropshipping
 msgid "Dropship and Subcontracting Management"
-msgstr "Gestione Spedizione diretta e Subappalti"
+msgstr "Gestione dropshipping e subappalti"
 
 #. module: base
 #. odoo-python
@@ -13391,7 +13391,7 @@ msgstr "Geo longitudine"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__layout_background__geometric
 msgid "Geometric"
-msgstr ""
+msgstr "Geometrico"
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -20411,7 +20411,7 @@ msgstr "Punto vendita"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_loyalty
 msgid "Point of Sale - Coupons & Loyalty"
-msgstr ""
+msgstr "Punto vendita-Buoni sconto e fedeltà"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_daily_sales_reports
@@ -25240,6 +25240,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"Tipo di azione server. Sono disponibili i seguenti valori:\n"
+"- \"Esegui codice Pyhon\": un blocco di codice Python che verrà eseguito\n"
+"- \"Crea un nuovo record\": crea un nuovo record con nuovi valori\n"
+"- \"Aggiorna record\": aggiorna i valori di un record\n"
+"- \"Esegui più azioni\": definisci un'azione che attiva diverse altre azioni del server\n"
+"- \"Invia e-mail\": invia un messaggio, una nota o un'e-mail (Discuti)\n"
+"- \"Aggiungi follower\": aggiungi follower ad un record (Discuti)\n"
+"- \"Crea prossima attività\": crea un'attività (Discuti)\n"
+"- \"Invia un messaggio di testo SMS\": invia un SMS, annotali nei documenti (SMS)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -25658,6 +25667,8 @@ msgstr "Usa '1' per si e '0' per no"
 #: model:ir.module.module,summary:base.module_pos_loyalty
 msgid "Use Coupons, Gift Cards and Loyalty programs in Point of Sale"
 msgstr ""
+"Utilizza buoni sconto, carte regalo e programmi fedeltà nell'app Punto "
+"Vendita"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__barcode

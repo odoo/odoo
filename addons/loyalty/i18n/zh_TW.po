@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Tony Ng, 2023
 # 
 msgid ""
@@ -465,13 +465,6 @@ msgid "Automatic"
 msgstr "自動的"
 
 #. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Automatic promotion: 10% discount on orders higher than $50"
-msgstr ""
-
-#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Available On"
@@ -492,14 +485,7 @@ msgstr "條碼"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Buy 10 products, and get 10$ discount on the 11th one"
-msgstr ""
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Buy 2 products and get a third one for free"
+msgid "Buy 10 products, and get 10$ discount on the 11th one."
 msgstr ""
 
 #. module: loyalty
@@ -508,7 +494,10 @@ msgid "Buy 3 large cabinets, get one for free"
 msgstr "購買3個大櫃子，免費獲得一個"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
+#, python-format
 msgid "Buy X Get Y"
 msgstr ""
 
@@ -739,6 +728,13 @@ msgid ""
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Define promotions to apply automatically on your customers' orders."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
 msgid "Description"
 msgstr "說明"
@@ -767,7 +763,10 @@ msgid "Discount Applicability"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
+#, python-format
 msgid "Discount Code"
 msgstr ""
 
@@ -886,7 +885,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Fill in your eWallet, and use it to pay future orders"
+msgid "Fill in your eWallet, and use it to pay future orders."
 msgstr ""
 
 #. module: loyalty
@@ -978,7 +977,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Get a code to receive 10% discount on specific products"
+msgid "Generate and share unique coupons with your customers."
 msgstr ""
 
 #. module: loyalty
@@ -1310,13 +1309,20 @@ msgstr "錯誤數量"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要處理的消息數量"
+msgid "Number of messages requiring action"
+msgstr "需要採取行動的訊息數目"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "有發送錯誤的郵件數量"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Offer Y to your customers if they are buying X; for example, 2+1 free."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__order
@@ -1437,8 +1443,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promo Code"
-msgstr "促銷代碼"
+msgid "Promotion Program"
+msgstr "推廣計劃"
 
 #. module: loyalty
 #. odoo-python
@@ -1457,7 +1463,6 @@ msgstr ""
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Promotional Program"
@@ -1520,6 +1525,15 @@ msgid "Reward Type"
 msgstr "獎勵類型"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Reward your customers for a purchase with a coupon to use on their next "
+"order."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
 msgid "Rewards"
 msgstr "獎勵"
@@ -1543,27 +1557,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Sell Gift Cards, that can be used to purchase products"
+msgid "Sell Gift Cards, that can be used to purchase products."
 msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
 msgid "Send"
 msgstr "發送"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique coupons that give access to rewards"
-msgstr ""
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique, single-use coupon code for the next purchase"
-msgstr ""
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -1585,6 +1585,14 @@ msgstr "序號"
 msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Share a discount code with your customers to create a purchase incentive."
 msgstr ""
 
 #. module: loyalty
@@ -1757,7 +1765,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Win points with each purchases, and use points to get gifts"
+msgid "Win points with each purchase, and use points to get gifts."
 msgstr ""
 
 #. module: loyalty

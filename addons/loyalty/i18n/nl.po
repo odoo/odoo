@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -583,13 +583,6 @@ msgid "Automatic"
 msgstr "Automatisch"
 
 #. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Automatic promotion: 10% discount on orders higher than $50"
-msgstr "Automatische promotie: 10% korting op bestellingen hoger dan $ 50"
-
-#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Available On"
@@ -610,15 +603,8 @@ msgstr "Barcode"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Buy 10 products, and get 10$ discount on the 11th one"
-msgstr "Koop 10 producten en krijg 10$ korting op het 11de product"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Buy 2 products and get a third one for free"
-msgstr "Koop 2 producten en ontvang een derde gratis"
+msgid "Buy 10 products, and get 10$ discount on the 11th one."
+msgstr "Koop 10 producten en krijg 10$ korting op het 11de product."
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.3_cabinets_plus_1_free
@@ -626,7 +612,10 @@ msgid "Buy 3 large cabinets, get one for free"
 msgstr "Koop 3 grote kasten, krijg er 1 gratis"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
+#, python-format
 msgid "Buy X Get Y"
 msgstr "Koop X Krijg Y"
 
@@ -860,6 +849,15 @@ msgstr ""
 "met je klanten voor beloningen."
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Define promotions to apply automatically on your customers' orders."
+msgstr ""
+"Bepaal promoties die automatisch toegepast worden op de bestellingen van je "
+"klanten."
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
 msgid "Description"
 msgstr "Omschrijving"
@@ -888,7 +886,10 @@ msgid "Discount Applicability"
 msgstr "Toepasselijkheid korting"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
+#, python-format
 msgid "Discount Code"
 msgstr "Kortingscode"
 
@@ -1012,9 +1013,9 @@ msgstr "Klantenkaarten"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Fill in your eWallet, and use it to pay future orders"
+msgid "Fill in your eWallet, and use it to pay future orders."
 msgstr ""
-"Vul je eWallet in en gebruik deze om toekomstige bestellingen te betalen"
+"Vul je eWallet en gebruik deze om toekomstige bestellingen te betalen."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1109,8 +1110,8 @@ msgstr "eWallet genereren"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Get a code to receive 10% discount on specific products"
-msgstr "Ontvang een code om 10% korting te krijgen op specifieke producten"
+msgid "Generate and share unique coupons with your customers."
+msgstr "Genereer en deel unieke kortingsbonnen met je klanten."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1446,13 +1447,20 @@ msgstr "Aantal foutenmeldingen"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Aantal berichten waarvoor een actie vereist is"
+msgid "Number of messages requiring action"
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Aantal berichten met bezorgfout"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Offer Y to your customers if they are buying X; for example, 2+1 free."
+msgstr "Bied je klanten Y aan als ze X kopen; bijv. 2+1 gratis."
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__order
@@ -1575,8 +1583,8 @@ msgstr "Programmatrigger"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promo Code"
-msgstr "Promotiecode"
+msgid "Promotion Program"
+msgstr "Promotieprogramma"
 
 #. module: loyalty
 #. odoo-python
@@ -1595,7 +1603,6 @@ msgstr "Promoties"
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Promotional Program"
@@ -1658,6 +1665,17 @@ msgid "Reward Type"
 msgstr "Beloningstype"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Reward your customers for a purchase with a coupon to use on their next "
+"order."
+msgstr ""
+"Beloon je klanten voor een aankoop met een kortingsbon voor hun volgende "
+"bestelling."
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
 msgid "Rewards"
 msgstr "Beloningen"
@@ -1681,30 +1699,14 @@ msgstr "Geselecteerde klanten"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Sell Gift Cards, that can be used to purchase products"
+msgid "Sell Gift Cards, that can be used to purchase products."
 msgstr ""
-"Verkoop cadeaubonnen, die kunnen worden gebruikt om producten te kopen"
+"Verkoop cadeaubonnen, die kunnen worden gebruikt om producten te kopen."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
 msgid "Send"
 msgstr "Verzenden"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique coupons that give access to rewards"
-msgstr "Stuur unieke kortingsbonnen die toegang geven tot beloningen"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique, single-use coupon code for the next purchase"
-msgstr ""
-"Stuur een unieke kortingsboncode voor eenmalig gebruik voor de volgende "
-"aankoop"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -1729,6 +1731,14 @@ msgid ""
 msgstr ""
 "Stel voorwaardelijke regels in voor de bestelling die klanten toegang geven "
 "tot beloningen"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Share a discount code with your customers to create a purchase incentive."
+msgstr "Deel een kortingscode met je klanten om een koopstimulans te creëren."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1914,8 +1924,8 @@ msgstr "Zal e-mail verzenden"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Win points with each purchases, and use points to get gifts"
-msgstr "Win punten bij elke aankoop en gebruik punten om cadeaus te krijgen"
+msgid "Win points with each purchase, and use points to get gifts."
+msgstr "Win punten bij elke aankoop en gebruik punten om cadeaus te krijgen."
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code

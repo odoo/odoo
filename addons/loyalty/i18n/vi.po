@@ -587,13 +587,6 @@ msgid "Automatic"
 msgstr "Tự động"
 
 #. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Automatic promotion: 10% discount on orders higher than $50"
-msgstr "Khuyến mãi tự động: 10% discount cho đơn hang trên $50"
-
-#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Available On"
@@ -614,15 +607,8 @@ msgstr "Mã vạch"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Buy 10 products, and get 10$ discount on the 11th one"
-msgstr "Mua 10 sản phẩm và được giảm giá 10k cho sản phẩm thứ 11"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Buy 2 products and get a third one for free"
-msgstr "Mua 2 sản phẩm và nhận sản phẩm thứ ba miễn phí"
+msgid "Buy 10 products, and get 10$ discount on the 11th one."
+msgstr ""
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.3_cabinets_plus_1_free
@@ -630,7 +616,10 @@ msgid "Buy 3 large cabinets, get one for free"
 msgstr "Tủ lớn, mua 3 tặng 1"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
+#, python-format
 msgid "Buy X Get Y"
 msgstr "Mua X Tặng Y"
 
@@ -864,6 +853,13 @@ msgstr ""
 " khách hàng của bạn để nhận phần thưởng."
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Define promotions to apply automatically on your customers' orders."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
 msgid "Description"
 msgstr "Mô tả"
@@ -892,7 +888,10 @@ msgid "Discount Applicability"
 msgstr "Khả năng áp dụng giảm giá"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
+#, python-format
 msgid "Discount Code"
 msgstr "Mã giảm giá"
 
@@ -1016,10 +1015,8 @@ msgstr "Thẻ khách hàng thân thiết"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Fill in your eWallet, and use it to pay future orders"
+msgid "Fill in your eWallet, and use it to pay future orders."
 msgstr ""
-"Điền vào ví điện tử của bạn và sử dụng nó để thanh toán các đơn hàng trong "
-"tương lai"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1114,8 +1111,8 @@ msgstr "Tạo ví điện tử"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Get a code to receive 10% discount on specific products"
-msgstr "Lấy mã để nhận 10% discount theo các sản phẩm cụ thể"
+msgid "Generate and share unique coupons with your customers."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1451,13 +1448,20 @@ msgstr "Số lỗi"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Số thông báo cần xử lý"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Số lượng tin gửi đi bị lỗi"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Offer Y to your customers if they are buying X; for example, 2+1 free."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__order
@@ -1580,8 +1584,8 @@ msgstr "Kích hoạt chương trình"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promo Code"
-msgstr "Mã khuyến mại"
+msgid "Promotion Program"
+msgstr ""
 
 #. module: loyalty
 #. odoo-python
@@ -1600,7 +1604,6 @@ msgstr "Khuyến mãi"
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Promotional Program"
@@ -1663,6 +1666,15 @@ msgid "Reward Type"
 msgstr "Loại phần thưởng"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Reward your customers for a purchase with a coupon to use on their next "
+"order."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
 msgid "Rewards"
 msgstr "Phần thưởng"
@@ -1686,28 +1698,13 @@ msgstr "Khách hàng được chọn"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Sell Gift Cards, that can be used to purchase products"
-msgstr "Bán Thẻ quà tặng, có thể được sử dụng để mua sản phẩm"
+msgid "Sell Gift Cards, that can be used to purchase products."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
 msgid "Send"
 msgstr "Gửi"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique coupons that give access to rewards"
-msgstr "Gửi phiếu giảm giá không trùng cho phép truy cập vào phần thưởng"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique, single-use coupon code for the next purchase"
-msgstr ""
-"Gửi mã phiếu giảm giá duy nhất, sử dụng một lần cho lần mua hàng tiếp theo"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -1732,6 +1729,14 @@ msgid ""
 msgstr ""
 "Thiết lập các quy tắc có điều kiện cho đơn hàng sẽ cấp quyền truy cập phần "
 "thưởng cho khách hàng"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Share a discount code with your customers to create a purchase incentive."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1916,8 +1921,8 @@ msgstr "Sẽ Gửi Mail"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Win points with each purchases, and use points to get gifts"
-msgstr "Giành điểm với mỗi lần mua hàng và sử dụng điểm để nhận quà tặng"
+msgid "Win points with each purchase, and use points to get gifts."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code

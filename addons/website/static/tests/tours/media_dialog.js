@@ -59,3 +59,38 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     },
     ...wTourUtils.clickOnSave()
 ]);
+
+wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
+    test: true,
+    url: "/",
+    edition: true,
+}, [
+    wTourUtils.dragNDrop({
+        id: "s_text_image",
+        name: "Text - Image",
+    }),
+    {
+        content: "Click on the image",
+        trigger: "iframe .s_text_image img",
+    },
+    wTourUtils.changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
+    wTourUtils.changeOption("ImageTools", "we-button[data-set-img-shape]"),
+    {
+        content: "Open MediaDialog from an image",
+        trigger: "iframe .s_text_image img[data-shape]",
+        run: "dblclick",
+    },
+    {
+        content: "Click on the 'Icons' tab",
+        trigger: '.o_select_media_dialog .o_notebook_headers .nav-item a:contains("Icons")',
+    },
+    {
+        content: "Select an icon",
+        trigger: ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-heart",
+    },
+    {
+        content: "Checks that the icon doesn't have a shape",
+        trigger: "iframe .s_text_image .fa-heart:not([data-shape])",
+        run: () => {}, //it's a check
+    },
+]);

@@ -379,7 +379,7 @@ msgstr "El tamaño del archivo excede el máximo establecido (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Archivo a comprobar y/o importar, binario sin procesar (no base64)"
+msgstr "Archivo a comprobar o importar, binario sin procesar (no base64)"
 
 #. module: base_import
 #. openerp-web
@@ -480,8 +480,8 @@ msgid ""
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
 "Si el modelo usa openchatter, el seguimiento del historial configurará "
-"suscripciones y enviará notificaciones durante la importación, pero hará más"
-" lenta la importación."
+"suscripciones y enviará notificaciones durante la importación, pero la hará "
+"más lenta."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -981,14 +981,15 @@ msgstr "Delimitador de texto:"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
-msgstr "El archivo contiene errores de bloqueo (ver a continuación)"
+msgstr "El archivo contiene errores de bloqueo (consulte a continuación)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains non-blocking warnings (see below)"
-msgstr "El archivo contiene advertencias sin bloqueo (ver a continuación)"
+msgstr ""
+"El archivo contiene advertencias sin bloqueo (consulte a continuación)"
 
 #. module: base_import
 #. openerp-web
@@ -1023,7 +1024,7 @@ msgstr "Separador de miles:"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "To import multiple values, separate them by a comma"
-msgstr "Para importar múltiples archivos, sepárelos con una coma"
+msgstr "Para importar varios archivos, sepárelos con una coma"
 
 #. module: base_import
 #. openerp-web
@@ -1060,8 +1061,8 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Formato no admitido \"{}\", solo es posible importar archivos CSV, OSD, XLS "
-"y XLSX"
+"El formato \"{}\" no es compatible, solo es posible importar archivos CSV, "
+"OSD, XLS y XLSX"
 
 #. module: base_import
 #. openerp-web

@@ -48,6 +48,8 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
         trigger: "#oe_snippets we-title:contains('Image') .o_we_image_weight:contains('kb')",
         run: function () {}, // check
     },
+    wTourUtils.changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
+    wTourUtils.changeOption("ImageTools", "we-button[data-set-img-shape]"),
     {
         content: "replace image",
         trigger: "#oe_snippets we-button[data-replace-media]",
@@ -55,6 +57,11 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "select svg",
         trigger: ".o_select_media_dialog img[title='sample.svg']",
+    },
+    {
+        content: "ensure the svg doesn't have a shape",
+        trigger: "iframe .s_picture figure img:not([data-shape])",
+        run: function () {}, // check
     },
     {
         content: "ensure image size is not displayed",

@@ -2565,8 +2565,8 @@ msgstr "Broj grešaka"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Broj poruka koje zahtevaju akciju"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
@@ -3234,6 +3234,14 @@ msgid ""
 msgstr ""
 "Datum završetka ne može biti ranije od datuma početka. Molimo vas proverite "
 "ulaznicu %(ticket_name)s"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
 
 #. module: event
 #. odoo-python

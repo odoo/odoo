@@ -8,11 +8,11 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2022
 # Sanne Kristensen <sanne@vkdata.dk>, 2022
 # Mads Søndergaard, 2022
-# lhmflexerp <lhm@flexerp.dk>, 2022
+# Lærke Hedegaard Mathiasen <lhm@flexerp.dk>, 2022
 # Lucas Holm, 2023
+# JonathanStein <jstein@image.dk>, 2023
 # Mads Søndergaard, 2023
 # Martin Trigaux, 2023
-# JonathanStein <jstein@image.dk>, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: JonathanStein <jstein@image.dk>, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,6 +93,7 @@ msgstr "%s Filer"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "%s days ago"
 msgstr "%s dage siden"
@@ -317,15 +318,13 @@ msgstr "<span class=\"text-nowrap\">Moms 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
-"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span id=\"line_tax_ids\">15.00%</span>"
-msgstr "<span id=\"line_tax_ids\">15.00%</span>"
+msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -339,8 +338,8 @@ msgstr "<span>DKK <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span>5.000</span>"
-msgstr "<span>5.000</span>"
+msgid "<span>5.00</span>"
+msgstr "<span>5,00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -356,10 +355,8 @@ msgstr "<span>Beskrivelse</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span>Invoice</span>\n"
-"                           <span>INV/2020/07/0003</span>"
+"                           <span>INV/2023/00003</span>"
 msgstr ""
-"<span>Faktura</span>\n"
-"                           <span>INV/2020/07/0003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -411,13 +408,13 @@ msgstr "<strong>Fakturadato:</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Subtotal</strong>"
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Total</strong>"
-msgstr "<strong>Total</strong>"
+msgid "<strong>Untaxed Amount</strong>"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -840,6 +837,8 @@ msgstr "Anvend"
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Archive"
@@ -872,15 +871,8 @@ msgstr "Er du sikker på, at du vil arkivere alle valgte poster?"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/form/form_controller.js:0
-#, python-format
-msgid "Are you sure that you want to archive all this record?"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
 msgstr "Er du sikker på du vil arkivere dette datasæt?"
@@ -1309,7 +1301,6 @@ msgstr "Ryd underskrift"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/dialog.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_column_examples_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -1607,12 +1598,7 @@ msgstr "Land"
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
-#: code:addons/web/static/src/views/list/list_controller.xml:0
-#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "Create"
 msgstr "Opret"
@@ -1868,6 +1854,7 @@ msgstr "Standard:"
 #: code:addons/web/static/src/views/fields/many2many_tags/tags_list.xml:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
@@ -1926,6 +1913,20 @@ msgstr "Faldende"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
+#, python-format
+msgid "Developer Tools"
+msgstr "Udvikler værktøjer"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_renderer.js:0
+#, python-format
+msgid "Different currencies cannot be aggregated"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.xml:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
@@ -1936,7 +1937,6 @@ msgstr "Faldende"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
@@ -2294,8 +2294,8 @@ msgid "Exporting grouped data to csv is not supported."
 msgstr "Eksportere grupperet data til csv er ikke understøttet."
 
 #. module: web
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/legacy/js/widgets/data_export.js:0
@@ -2695,14 +2695,8 @@ msgstr "Billede"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "In"
-msgstr "I"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "In %s days"
 msgstr "Om %s dage"
@@ -2821,6 +2815,11 @@ msgstr "Invitér nye brugere"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
 msgid "Inviting..."
+msgstr ""
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
+msgid "Is Company Details Empty"
 msgstr ""
 
 #. module: web
@@ -3306,6 +3305,11 @@ msgstr "INGEN"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/views/basic/basic_model.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.xml:0
+#: code:addons/web/static/src/views/form/form_controller.xml:0
+#: code:addons/web/static/src/views/kanban/kanban_controller.xml:0
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "New"
 msgstr "Ny"
@@ -3981,6 +3985,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
+#: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Please click on the \"save\" button first"
 msgstr "Klik venligst på \"gem\" knappen først"
@@ -4032,7 +4037,6 @@ msgstr "Vælg felter for at gemme eksport liste..."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
 msgid "Please update translations of :"
 msgstr "Opdatér venligst oversættelserne for:"
@@ -4049,10 +4053,8 @@ msgstr "Brug kopi-knappen til at rapportere fejlen til din support-service."
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "Please use the following communication for your payment : <b><span>\n"
-"                           INV/2020/07/0003</span></b>"
+"                           INV/2023/00003</span></b>"
 msgstr ""
-"Brug venligst følgende kommunikation til din betaling : <b><span>\n"
-"                           INV/2020/07/0003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -4420,7 +4422,7 @@ msgstr "Tilbageværende dage"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
-#: code:addons/web/static/src/views/fields/relational_utils.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
@@ -5371,7 +5373,7 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Today"
 msgstr "I dag"
@@ -5395,7 +5397,7 @@ msgstr "Skift mellem menuer"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Tomorrow"
 msgstr "I morgen"
@@ -5535,8 +5537,8 @@ msgid "Uncaught Promise"
 msgstr ""
 
 #. module: web
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
@@ -5956,7 +5958,7 @@ msgstr "Ja"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "I går"
@@ -6195,6 +6197,7 @@ msgstr "child af"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "contains"
 msgstr "indeholder"
@@ -6208,20 +6211,6 @@ msgstr "dato"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days"
-msgstr "dage"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days ago"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
@@ -6231,6 +6220,7 @@ msgstr "indeholder ikke"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "doesn't contain"
@@ -6391,6 +6381,7 @@ msgstr "er i mellem"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is equal to"
 msgstr "er lig med"
@@ -6423,6 +6414,7 @@ msgstr "er ikke ="
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not equal to"
 msgstr "er ikke lig med"
@@ -6442,6 +6434,8 @@ msgstr "er ikke lig med"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not set"
 msgstr "er ikke angivet"
@@ -6456,6 +6450,8 @@ msgstr "er ikke angivet"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0

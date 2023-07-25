@@ -944,15 +944,18 @@ class SaleOrder(models.Model):
     def action_update_taxes(self):
         self.ensure_one()
 
-        lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
-        lines_to_recompute._compute_tax_id()
-        self.show_update_fpos = False
+        self._recompute_taxes()
 
         if self.partner_id:
             self.message_post(body=_(
                 "Product taxes have been recomputed according to fiscal position %s.",
                 self.fiscal_position_id._get_html_link() if self.fiscal_position_id else "",
             ))
+
+    def _recompute_taxes(self):
+        lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
+        lines_to_recompute._compute_tax_id()
+        self.show_update_fpos = False
 
     def action_update_prices(self):
         self.ensure_one()

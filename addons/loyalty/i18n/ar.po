@@ -584,13 +584,6 @@ msgid "Automatic"
 msgstr "تلقائي"
 
 #. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Automatic promotion: 10% discount on orders higher than $50"
-msgstr "عرض تلقائي: خصم 10% على الطلبات التي تبلغ قيمتها أكثر من 50$ "
-
-#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Available On"
@@ -611,15 +604,8 @@ msgstr "باركود"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Buy 10 products, and get 10$ discount on the 11th one"
-msgstr "اشترِ 10 منتجات واحصل على خصم 10$ على المنتج الـ11 "
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Buy 2 products and get a third one for free"
-msgstr "اشترِ منتجين واحصل على الثالث مجاناً "
+msgid "Buy 10 products, and get 10$ discount on the 11th one."
+msgstr ""
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.3_cabinets_plus_1_free
@@ -627,7 +613,10 @@ msgid "Buy 3 large cabinets, get one for free"
 msgstr "اشترِ 3 خزائن كبيرة، واحصل على الرابعة مجانًا "
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
+#, python-format
 msgid "Buy X Get Y"
 msgstr "اشترِ س، واحصل على ص "
 
@@ -860,6 +849,13 @@ msgstr ""
 "للمكافآت. "
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Define promotions to apply automatically on your customers' orders."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
 msgid "Description"
 msgstr "الوصف"
@@ -888,7 +884,10 @@ msgid "Discount Applicability"
 msgstr "قابلية تطبيق الخصم "
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
+#, python-format
 msgid "Discount Code"
 msgstr "كود الخصم "
 
@@ -1010,8 +1009,8 @@ msgstr "Fidelity Cards"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Fill in your eWallet, and use it to pay future orders"
-msgstr "اشحن محفظتك الإلكترونية واستخدمها لدفع ثمن الطلبات المستقبلية  "
+msgid "Fill in your eWallet, and use it to pay future orders."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1105,8 +1104,8 @@ msgstr "إنشاء المحفظة الإلكترونية "
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Get a code to receive 10% discount on specific products"
-msgstr "احصل على كود لتتلقى خصماً قدره 10% على منتجات محددة  "
+msgid "Generate and share unique coupons with your customers."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1442,13 +1441,20 @@ msgstr "عدد الأخطاء "
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء "
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Offer Y to your customers if they are buying X; for example, 2+1 free."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__order
@@ -1571,8 +1577,8 @@ msgstr "مشغل البرنامج "
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promo Code"
-msgstr "الكود الترويجي"
+msgid "Promotion Program"
+msgstr "البرنامج الترويجي "
 
 #. module: loyalty
 #. odoo-python
@@ -1591,7 +1597,6 @@ msgstr "العروض الترويجية "
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Promotional Program"
@@ -1654,6 +1659,15 @@ msgid "Reward Type"
 msgstr "نوع المكافأة"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Reward your customers for a purchase with a coupon to use on their next "
+"order."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
 msgid "Rewards"
 msgstr "المكافآت"
@@ -1677,27 +1691,13 @@ msgstr "العملاء المختارون "
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Sell Gift Cards, that can be used to purchase products"
-msgstr "قم ببيع بطاقات الهدايا، والتي يمكن استخدامها لشراء المنتجات "
+msgid "Sell Gift Cards, that can be used to purchase products."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
 msgid "Send"
 msgstr "إرسال"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique coupons that give access to rewards"
-msgstr "قم بإرسال كوبونات فريدة تمنحك صلاحية الوصول للمكافآت "
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique, single-use coupon code for the next purchase"
-msgstr "قم بإرسال أكواد فريدة تُستخدَم مرة واحدة لعملية الشراء القادمة "
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -1722,6 +1722,14 @@ msgid ""
 msgstr ""
 "قم بإعداد القواعد الشرطية في الطلب الذي سيمنح العملاء حق الوصول إلى المكافآت"
 " "
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Share a discount code with your customers to create a purchase incentive."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1903,8 +1911,8 @@ msgstr "سيقوم بإرسال بريد إلكتروني "
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Win points with each purchases, and use points to get gifts"
-msgstr "اكسب النقاط مع كل عملية شراء واستخدم النقاط للحصول على الهدايا "
+msgid "Win points with each purchase, and use points to get gifts."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code

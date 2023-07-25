@@ -1666,8 +1666,8 @@ msgstr "Number of errors"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Number of messages which requires an action"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
@@ -2616,6 +2616,13 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
@@ -3125,7 +3132,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 
 #. module: product
@@ -3145,6 +3153,13 @@ msgid ""
 "(%s)\n"
 ", they are used in other pricelist(s):\n"
 "%s"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
 
 #. module: product

@@ -287,7 +287,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
 msgstr ""
-"- Die Reihenfolge des Dokuments wird für alle Dokumente bearbeitbar gemacht."
+"- Die Sequenz des Dokuments wird für alle Dokumente bearbeitbar gemacht."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -1097,7 +1097,7 @@ msgstr "<span>5,00</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount In Currency</span>"
-msgstr "<span>Menge in der Währung</span>"
+msgstr "<span>Betrag in Währung</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1411,7 +1411,7 @@ msgstr ""
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
 msgstr ""
-"Eine Zahlung muss immer zu einem Bank- oder Kassenbuch zugeordnet sein."
+"Eine Zahlung muss immer einem Bank- oder Kassenjournal zugeordnet sein."
 
 #. module: account
 #. odoo-python
@@ -3170,7 +3170,7 @@ msgid ""
 "Partner bank account number."
 msgstr ""
 "Bankkontonummer, auf die die Rechnung überwiesen wird. Es ist ein "
-"Firmenkonto, wenn es sich um eine Kundenrechnung oder eine "
+"Unternehmenskonto, wenn es sich um eine Kundenrechnung oder eine "
 "Lieferantengutschrift handelt, ansonsten die Kontonummer eines Kontakts."
 
 #. module: account
@@ -3824,7 +3824,7 @@ msgstr "Bargeldrundungsmethode"
 #: model:ir.ui.menu,name:account.menu_action_rounding_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr "Bargeldrundung"
+msgstr "Bargeldrundungen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -3978,7 +3978,7 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
-"Kreuzen Sie diese Box an, wenn dieses Konto einen Ausgleich von gebuchten "
+"Kreuzen Sie diese Box an, wenn dieses Konto einen Abgleich von gebuchten "
 "Rechnungen & Zahlungen ermöglicht."
 
 #. module: account
@@ -8581,7 +8581,7 @@ msgstr "Buchungszeilen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "Journalbuchungen ohne Abstimmungsreferenz"
+msgstr "Buchungszeilen ohne Abstimmungsreferenz"
 
 #. module: account
 #. odoo-python
@@ -10056,8 +10056,8 @@ msgstr "Anzahl der Fehler"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+msgid "Number of messages requiring action"
+msgstr "Anzahl der Meldungen, die eine Aktion erfordern"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -10071,7 +10071,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #: model:ir.model.fields,help:account.field_res_company__message_has_error_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+msgstr "Anzahl der Nachrichten mit Zustellungsfehler"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__past_months_limit
@@ -10109,7 +10109,7 @@ msgid ""
 "                the related sale or purchase invoices."
 msgstr ""
 "Odoo ermöglicht es Ihnen, eine Kontoauszugszeile direkt mit \n"
-"den zugehörigen Kunden- oder Einkaufsrechnungen abzustimmen."
+"den zugehörigen Verkaufs- oder Einkaufsrechnungen abzustimmen."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -10359,7 +10359,7 @@ msgstr "Optional erstellen"
 #: model:ir.model.fields,help:account.field_account_account_template__tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
 msgstr ""
-"Optionale Stichworte, die Sie vielleicht für Berichtszwecke hinterlegen "
+"Optionale Stichwörter, die Sie vielleicht für Berichtszwecke hinterlegen "
 "möchten."
 
 #. module: account
@@ -10370,7 +10370,7 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
-"Optionale Übersetzung (ISO-Code) zur Auswahl beim E-Mailversand. Falls es "
+"Optionale Übersetzung (ISO-Code) zur Auswahl beim E-Mail-Versand. Falls es "
 "keinen Eintrag gibt, wird die englische Version verwendet. Es sollte sich "
 "normalerweise um einen Platzhalterausdruck handeln, der die passende Sprache"
 " enthält, z. B. {{ object.partner_id.lang }}."
@@ -10678,7 +10678,7 @@ msgstr "Teilweise abgestimmt"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__refund
 msgid "Partial Refund"
-msgstr "Teilrückerstattung"
+msgstr "Teilerstattung"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__partial
@@ -11590,13 +11590,13 @@ msgstr "Schellbearbeitungsmodus"
 #: model:ir.model.fields,field_description:account.field_account_move__quick_encoding_vals
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_encoding_vals
 msgid "Quick Encoding Vals"
-msgstr "Werte für Schnellkodierung"
+msgstr "Werte für Schnellcodierung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__quick_edit_mode
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
-msgstr "Schnelle Codierung"
+msgstr "Schnellcodierung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -13967,8 +13967,8 @@ msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
 "incompatible with its category : %s."
 msgstr ""
-"Die Maßeinheit „%s“, dei Sie für das Produkt „%s“ gewählt haben, ist nicht "
-"kompatibel mit seiner Kategorie: %s."
+"Die Maßeinheit (ME) „%s“, die Sie für das Produkt „%s“ gewählt haben, ist "
+"nicht kompatibel mit seiner Kategorie: %s."
 
 #. module: account
 #. odoo-python
@@ -13994,8 +13994,8 @@ msgid ""
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
 "Das Konto wird bereits in einem Journal für „Verkauf“ oder „Einkauf“ "
-"verwendet. Das bedeutet, dass die Kontoart des Kontos weder „Debitoren“ noch"
-" „Kreditoren“ sein kann."
+"verwendet. Das bedeutet, dass der Kontotyp weder „Debitoren“ noch "
+"„Kreditoren“ sein kann."
 
 #. module: account
 #. odoo-python
@@ -14208,7 +14208,7 @@ msgstr "Währung bei Erfassung des Kontoauszugs"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The current highest number is"
-msgstr "Die höchste Zahl ist aktuell "
+msgstr "Die aktuell höchste Zahl ist"
 
 #. module: account
 #. odoo-python
@@ -15072,7 +15072,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_month
 msgid "This Month"
-msgstr "Dieser Monat"
+msgstr "Diesen Monat"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_quarter
@@ -15379,7 +15379,7 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
-"Dieses Produkt wird bereits in gebuchten Journaleposten verwendet.\n"
+"Dieses Produkt wird bereits in gebuchten Journalposten verwendet.\n"
 "Wenn Sie die Maßeinheit ändern möchten, archivieren Sie bitte dieses Produkt und legen Sie ein neues Produkt an."
 
 #. module: account
@@ -15700,7 +15700,7 @@ msgstr "Typ"
 #: model:ir.model.fields,field_description:account.field_account_move__type_name
 #: model:ir.model.fields,field_description:account.field_account_payment__type_name
 msgid "Type Name"
-msgstr "Artname"
+msgstr "Name des Typs"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -15994,7 +15994,7 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
-"Verwenden Sie die Option \"<i>Per Post versenden</i>\", um Rechnungen "
+"Verwenden Sie die Option „<i>Per Post versenden</i>“, um Rechnungen "
 "automatisch zu versenden. Für den Preis einer Briefmarke übernehmen wir die "
 "gesamte manuelle Arbeit: Ihre Rechnung wird im richtigen Land gedruckt, in "
 "einen Umschlag gesteckt und per Post verschickt. Verwenden Sie diese "
@@ -16410,8 +16410,8 @@ msgstr "Ob dieses Journal im Dashboard angezeigt werden soll oder nicht"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "Will be used to name the Journal related to this bank account"
 msgstr ""
-"Wird zur Benennung der Zeitschrift im Zusammenhang mit diesem Bankkonto "
-"verwendet"
+"Wird zur Benennung des Journals, das mit diesem diesem Bankkonto verknüpft "
+"ist, verwendet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
@@ -17148,7 +17148,7 @@ msgstr "Sie können kein veraltetes Konto verwenden."
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr ""
-"Sie können keine Steuern auf Zeilen mit einem  außerbilanziellen Konto "
+"Sie können keine Steuern auf Zeilen mit einem außerbilanziellen Konto "
 "verwenden"
 
 #. module: account

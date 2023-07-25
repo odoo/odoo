@@ -82,6 +82,13 @@ class AddonsHook(object):
                 DeprecationWarning, stacklevel=2)
             return self
 
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname.startswith('openerp.addons.') and fullname.count('.') == 2:
+            warnings.warn(
+                '"openerp.addons" is a deprecated alias to "odoo.addons".',
+                DeprecationWarning, stacklevel=2)
+            return importlib.util.spec_from_loader(fullname, self)
+
     def load_module(self, name):
         assert name not in sys.modules
 
@@ -106,6 +113,15 @@ class OdooHook(object):
                 'openerp is a deprecated alias to odoo.',
                 DeprecationWarning, stacklevel=2)
             return self
+
+    def find_spec(self, fullname, path=None, target=None):
+        # openerp.addons.<identifier> should already be matched by AddonsHook,
+        # only framework and subdirectories of modules should match
+        if re.match(r'^openerp\b', fullname):
+            warnings.warn(
+                'openerp is a deprecated alias to odoo.',
+                DeprecationWarning, stacklevel=2)
+            return importlib.util.spec_from_loader(fullname, self)
 
     def load_module(self, name):
         assert name not in sys.modules
@@ -136,6 +152,14 @@ class UpgradeHook(object):
             # the tests, and the common files (utility functions) still needs to import from the
             # legacy name.
             return self
+
+    def find_spec(self, fullname, path=None, target=None):
+        if re.match(r"^odoo.addons.base.maintenance.migrations\b", fullname):
+            # We can't trigger a DeprecationWarning in this case.
+            # In order to be cross-versions, the multi-versions upgrade scripts (0.0.0 scripts),
+            # the tests, and the common files (utility functions) still needs to import from the
+            # legacy name.
+            return importlib.util.spec_from_loader(fullname, self)
 
     def load_module(self, name):
         assert name not in sys.modules

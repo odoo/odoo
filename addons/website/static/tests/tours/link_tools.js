@@ -78,9 +78,13 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     // 4. Add link on image.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
+    wTourUtils.dragNDrop({
+        id: 's_three_columns',
+        name: 'Columns',
+    }),
     {
-        content: "Click on image.",
-        trigger: 'iframe .s_text_image img',
+        content: "Click on the first image.",
+        trigger: 'iframe .s_three_columns .row > :nth-child(1) img',
     },
     {
         content: "Activate link.",
@@ -93,11 +97,16 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Deselect image.",
-        trigger: 'iframe .s_text_image p',
+        trigger: 'iframe .s_three_columns .row > :nth-child(2) img',
     },
     {
         content: "Re-select image.",
-        trigger: 'iframe .s_text_image img',
+        trigger: 'iframe .s_three_columns .row > :nth-child(1) img',
+    },
+    {
+        content: "Check that the second image is not within a link.",
+        trigger: 'iframe .s_three_columns .row > :nth-child(2) div > img',
+        run: () => {}, // It's a check.
     },
     {
         content: "Check that link tools appear.",
@@ -111,7 +120,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that image is not within a link anymore.",
-        trigger: 'iframe .s_text_image div > img',
+        trigger: 'iframe .s_three_columns .row > :nth-child(1) div > img',
         run: () => {}, // It's a check.
     },
 ]);

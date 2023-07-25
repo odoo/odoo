@@ -8,7 +8,7 @@
 # Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # digitalliuzg8888, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -504,13 +504,6 @@ msgid "Automatic"
 msgstr "自动的"
 
 #. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Automatic promotion: 10% discount on orders higher than $50"
-msgstr "自动促销：订单超过50$可以有10%的折扣"
-
-#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Available On"
@@ -531,15 +524,8 @@ msgstr "条码"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Buy 10 products, and get 10$ discount on the 11th one"
-msgstr "购买10个产品，第11个可以得到10$折扣"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Buy 2 products and get a third one for free"
-msgstr "购买2个产品，可以免费得到第3个"
+msgid "Buy 10 products, and get 10$ discount on the 11th one."
+msgstr ""
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.3_cabinets_plus_1_free
@@ -547,7 +533,10 @@ msgid "Buy 3 large cabinets, get one for free"
 msgstr "购买三个柜子，赠一个"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
+#, python-format
 msgid "Buy X Get Y"
 msgstr "购买X得到Y"
 
@@ -778,6 +767,13 @@ msgid ""
 msgstr "根据条件规则定义折扣代码，然后与您的客户共享以获得奖励。"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Define promotions to apply automatically on your customers' orders."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
 msgid "Description"
 msgstr "说明"
@@ -806,7 +802,10 @@ msgid "Discount Applicability"
 msgstr "折扣适应性"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
+#, python-format
 msgid "Discount Code"
 msgstr "折扣代码"
 
@@ -925,8 +924,8 @@ msgstr "富达卡"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Fill in your eWallet, and use it to pay future orders"
-msgstr "填写您的电子钱包，并使用它来支付未来的订单"
+msgid "Fill in your eWallet, and use it to pay future orders."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1017,8 +1016,8 @@ msgstr "生成电子钱包"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Get a code to receive 10% discount on specific products"
-msgstr "获取代码以获得特定产品的10%折扣"
+msgid "Generate and share unique coupons with your customers."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1351,13 +1350,20 @@ msgstr "错误数"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要作业消息数量"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "发送错误的消息数量"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Offer Y to your customers if they are buying X; for example, 2+1 free."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__order
@@ -1478,8 +1484,8 @@ msgstr "方案触发器"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promo Code"
-msgstr "促销码"
+msgid "Promotion Program"
+msgstr "促销方案"
 
 #. module: loyalty
 #. odoo-python
@@ -1498,7 +1504,6 @@ msgstr "促销"
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Promotional Program"
@@ -1561,6 +1566,15 @@ msgid "Reward Type"
 msgstr "奖励类型"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Reward your customers for a purchase with a coupon to use on their next "
+"order."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
 msgid "Rewards"
 msgstr "奖励"
@@ -1584,27 +1598,13 @@ msgstr "选定的客户"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Sell Gift Cards, that can be used to purchase products"
-msgstr "销售礼品卡，可用于采购产品"
+msgid "Sell Gift Cards, that can be used to purchase products."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
 msgid "Send"
 msgstr "发送"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique coupons that give access to rewards"
-msgstr "发送独特的优惠券，以获得奖励"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique, single-use coupon code for the next purchase"
-msgstr "发送唯一的、一次性的优惠券代码，供下次采购使用"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -1627,6 +1627,14 @@ msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
 msgstr "在订单上设置条件规则，以便为客户提供奖励访问权限"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Share a discount code with your customers to create a purchase incentive."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1798,8 +1806,8 @@ msgstr "将发送邮件"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Win points with each purchases, and use points to get gifts"
-msgstr "每次购买赢取积分，并使用积分获得礼物"
+msgid "Win points with each purchase, and use points to get gifts."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code

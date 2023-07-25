@@ -10,8 +10,8 @@
 # Martin Trigaux, 2022
 # Éder Brito <britoederr@gmail.com>, 2023
 # Layna Nascimento, 2023
-# adrianojprado <adrianojprado@gmail.com>, 2023
 # Kevilyn Rosa, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Kevilyn Rosa, 2023\n"
+"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2343,12 +2343,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Define o método padrão usado para sugerir o local exato (prateleira) de onde retirar os produtos, qual lote etc. para esse local. Esse método pode ser aplicado no nível da categoria do produto, e um fallback é feito nos locais principais se nenhum for definido aqui.\n"
+"Define o método padrão usado para sugerir o local exato (prateleira) de onde retirar os produtos, qual lote etc. para esse local. Esse método pode ser aplicado no nível da categoria do produto, e um fallback é feito nos locais superiores se nenhum for definido aqui.\n"
 "\n"
 "PEPS: os produtos/lotes que foram estocados primeiro serão retirados primeiro.\n"
 "UEPS: os produtos/lotes que foram estocados por último serão retirados primeiro.\n"
 "Local do armário: os produtos/lotes mais próximos do local de destino serão retirados primeiro.\n"
-"FEFO: os produtos/lotes com a data de remoção mais próxima serão retirados primeiro (a disponibilidade desse método depende da configuração \"Expiration Dates\" (datas de vencimento))."
+"FEFO: os produtos/lotes com a data de vencimento mais próxima serão retirados primeiro (a disponibilidade desse método depende da configuração \"Datas de Vencimento\")."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -5218,8 +5218,8 @@ msgstr "Number of incoming stock moves in the past 12 months"
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requer uma ação"
+msgid "Number of messages requiring action"
+msgstr "Número de mensagens que requerem ação"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error_counter
@@ -7543,12 +7543,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Set a specific removal strategy that will be used regardless of the source location for this product category.\n"
+"Defina uma estratégia de remoção específica que será usada independentemente do local de origem dessa categoria de produto.\n"
 "\n"
-"FIFO: products/lots that were stocked first will be moved out first.\n"
-"LIFO: products/lots that were stocked last will be moved out first.\n"
-"Closet location: products/lots closest to the target location will be moved out first.\n"
-"PVPS: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
+"PEPS \"FIFO\": produtos/lotes que foram estocados primeiro serão retirados primeiro.\n"
+"UEPS \"LIFO\": produtos/lotes que foram estocados por último serão retirados primeiro.\n"
+"Proximidade: os produtos/lotes mais próximos do local de destino serão removidos primeiro.\n"
+"PVPS \"FEFO\": os produtos/lotes com a data de vencimento mais próxima serão retirados primeiro (a disponibilidade desse método depende da configuração \"Datas de vencimento\")."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

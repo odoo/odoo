@@ -18,8 +18,8 @@
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
 # Paweł Wodyński <pw@myodoo.pl>, 2022
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
-# Tomasz Leppich <t.leppich@gmail.com>, 2022
 # Natalia Gros <nag@odoo.com>, 2022
+# Tomasz Leppich <t.leppich@gmail.com>, 2022
 # Dawid Prus, 2022
 # Piotr Strębski <strebski@gmail.com>, 2022
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2022
@@ -455,7 +455,7 @@ msgstr "Czynności"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "Activities To Generate"
-msgstr "Aktywności do wygenerowania"
+msgstr "Czynności do wygenerowania"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
@@ -465,27 +465,27 @@ msgstr "Czynność"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Dekoracja wyjątku aktywności"
+msgstr "Dekoracja wyjątku czynności"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan
 msgid "Activity Planning"
-msgstr "Planowanie aktywności"
+msgstr "Planowanie czynności"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
 msgid "Activity State"
-msgstr "Stan aktywności"
+msgstr "Stan czynności"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__activity_type_id
 msgid "Activity Type"
-msgstr "Typ aktywności"
+msgstr "Typ czynności"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Ikona typu aktywności"
+msgstr "Ikona typu czynności"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
@@ -507,7 +507,7 @@ msgstr "Dodaj nowy plan"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
 msgid "Add a new plan activity"
-msgstr "Dodaj nowe działanie planu"
+msgstr "Dodaj nową czynność planu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -810,7 +810,7 @@ msgstr "Poziom certyfikatu "
 #. module: hr
 #: model:ir.actions.act_window,name:hr.res_users_action_my
 msgid "Change my Preferences"
-msgstr "Zmień moje Preferencje"
+msgstr "Zmień moje preferencje"
 
 #. module: hr
 #. odoo-javascript
@@ -1660,7 +1660,7 @@ msgstr "Praca domowa"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
 msgid "Hr Icon Display"
-msgstr "Wyświetlanie ikon godziny"
+msgstr "Wyświetlanie ikon HR"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1828,7 +1828,7 @@ msgstr "Stanowisko pracy"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_view_hr_job
 msgid "Job Positions"
-msgstr "Stanowisko"
+msgstr "Stanowiska"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1937,14 +1937,14 @@ msgstr "Czynności zaległe"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Launch Plan"
-msgstr "Plan Wprowadzenia"
+msgstr "Plan wprowadzenia"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "Launch Plans"
-msgstr "Plany uruchomienia"
+msgstr "Plany wprowadzania"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2008,7 +2008,7 @@ msgstr "Menedżer"
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Manager of employee %s is not set."
-msgstr "Manager pracownika %s nie jest ustawiony."
+msgstr "Menedżer pracownika %s nie jest ustawiony."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -2255,8 +2255,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Liczba wiadomości wymagających akcji"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
@@ -2674,7 +2674,7 @@ msgstr "Powiązany kontakt"
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Related Contacts"
-msgstr "Powiązany kontakt"
+msgstr "Powiązane kontakty"
 
 #. module: hr
 #. odoo-python
@@ -3172,7 +3172,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
 msgid "To define"
-msgstr "Aby zdefiniować"
+msgstr "Do zdefiniowania"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -3392,7 +3392,7 @@ msgstr "Miejsce pracy"
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
-msgstr "Lokalizacje pracy"
+msgstr "Miejsca pracy"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
@@ -3417,7 +3417,7 @@ msgstr "Pozwolenie na pracę"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
 msgid "Work Permit Expiration Date"
-msgstr "Data wygaśnięcia zezwolenia na pracę"
+msgstr "Data wygaśnięcia pozwolenia na pracę"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
@@ -3519,7 +3519,7 @@ msgstr "np. Menedżer sprzedaży"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan
 msgid "plan"
-msgstr "Plan"
+msgstr "plan"
 
 #. module: hr
 #. odoo-python

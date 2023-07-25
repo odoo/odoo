@@ -351,12 +351,13 @@ class Applicant(models.Model):
         for applicant in self:
             applicant.user_id = applicant.job_id.user_id.id or self.env.uid
 
-    @api.depends('partner_id', 'partner_id.email', 'partner_id.mobile', 'partner_id.phone')
+    @api.depends('partner_id')
     def _compute_partner_phone_email(self):
         for applicant in self:
-            applicant.partner_phone = applicant.partner_id.phone
-            applicant.partner_mobile = applicant.partner_id.mobile
-            applicant.email_from = applicant.partner_id.email
+            if applicant.partner_id:
+                applicant.partner_phone = applicant.partner_id.phone
+                applicant.partner_mobile = applicant.partner_id.mobile
+                applicant.email_from = applicant.partner_id.email
 
     def _inverse_partner_email(self):
         for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):

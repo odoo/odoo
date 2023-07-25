@@ -847,6 +847,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"在測試模式中，會以測試的付款介面處理一筆模擬付款。\n"
+"建議在設置付款服務商時，使用此模式測試。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -2012,6 +2014,13 @@ msgstr ""
 #: model:payment.provider,name:payment.payment_provider_transfer
 msgid "Wire Transfer"
 msgstr "電匯"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "You cannot delete the payment provider %s; archive it instead."
+msgstr ""
 
 #. module: payment
 #. odoo-python

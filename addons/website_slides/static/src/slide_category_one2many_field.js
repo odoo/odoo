@@ -14,4 +14,5 @@ SlideCategoryOneToManyField.defaultProps = {
     editable: "bottom",
 };
 
+SlideCategoryOneToManyField.additionalClasses = ["o_field_one2many"];
 registry.category("fields").add("slide_category_one2many", SlideCategoryOneToManyField);

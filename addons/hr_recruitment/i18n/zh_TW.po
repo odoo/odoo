@@ -3,9 +3,9 @@
 # 	* hr_recruitment
 # 
 # Translators:
-# Tony Ng, 2023
 # Martin Trigaux, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,6 +111,13 @@ msgid ""
 "                            </span>\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
+"                            <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                            </span>\n"
+"                            <span class=\"text-danger\">\n"
+"                                所有申請都將會失去其聘用日期及聘用狀態。\n"
+"                            </span>\n"
+"                        </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -513,6 +520,33 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                你好！<br><br>\n"
+"                感謝你對我們的職位有興趣，以及抽空申請。<br>\n"
+"                祝願你前程似錦、一切順利！\n"
+"                <br><br>\n"
+"                順祝  安康<br>\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        -- <br>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br>\n"
+"                        電郵： <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br>\n"
+"                        電話： <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        -- <br>\n"
+"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br>\n"
+"                        人力資源團隊<br>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
@@ -792,7 +826,7 @@ msgstr "應用數量"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_status
 msgid "Application Status"
-msgstr ""
+msgstr "申請狀態"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2089,8 +2123,8 @@ msgstr "錯誤數量"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要處理的消息數量"
+msgid "Number of messages requiring action"
+msgstr "需要採取行動的訊息數目"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error_counter

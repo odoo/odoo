@@ -224,6 +224,8 @@ class ExportXlsxWriter:
                 cell_value = pycompat.to_text(cell_value)
             except UnicodeDecodeError:
                 raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column])
+        elif isinstance(cell_value, (list, tuple)):
+            cell_value = pycompat.to_text(cell_value)
 
         if isinstance(cell_value, str):
             if len(cell_value) > self.worksheet.xls_strmax:
@@ -585,8 +587,6 @@ class ExcelExport(ExportFormat, http.Controller):
         with ExportXlsxWriter(fields, len(rows)) as xlsx_writer:
             for row_index, row in enumerate(rows):
                 for cell_index, cell_value in enumerate(row):
-                    if isinstance(cell_value, (list, tuple)):
-                        cell_value = pycompat.to_text(cell_value)
                     xlsx_writer.write_cell(row_index + 1, cell_index, cell_value)
 
         return xlsx_writer.value

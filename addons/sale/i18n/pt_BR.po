@@ -359,7 +359,7 @@ msgstr ""
 "                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\">\n"
 "                        \n"
 "                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tTaking care of Trees Course</td>\n"
-"                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
+"                        1<td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
 "                        <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
 "                        <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
 "                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
@@ -515,14 +515,14 @@ msgstr ""
 "        <br><br>\n"
 "        Sua\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            fatura Pro forma para <t t-out=\"doc_name or ''\">cotação</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (com referencia: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
 "            no valor de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> esta disponível.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"            <t t-out=\"doc_name or ''\">cotação</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (com referencia: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
@@ -737,7 +737,7 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Montante</span>\n"
+"Valor\n"
 "                            <span groups=\"account.group_show_line_subtotals_tax_included\">Preço Total</span>"
 
 #. module: sale
@@ -1816,7 +1816,7 @@ msgstr "Baixar Valor do Pagamento"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr "Montante de Pagamento Baixado (Fixo)"
+msgstr "Valor de Pagamento Baixado (Fixo)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
@@ -2258,8 +2258,8 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"Montante faturado para o mês corrente. Esse é o montante que o canal de "
-"vendas faturou esse mês. Isso é usado para computar o grau de progressão de "
+"Valor faturado para o mês corrente. Esse é o valor que o canal de vendas "
+"faturou esse mês. Isso é usado para computar o grau de progressão de "
 "recebimento corrente e alvo na vista kanban."
 
 #. module: sale
@@ -2777,8 +2777,8 @@ msgstr "Número de Erros"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requer uma ação"
+msgid "Number of messages requiring action"
+msgstr "Número de mensagens que requerem ação"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter

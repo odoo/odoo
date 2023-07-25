@@ -6,6 +6,7 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Aimée Mendoza Sánchez, 2023
+# Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -1319,7 +1320,7 @@ msgstr "Nombre en pantalla"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"No tiene acceso, saltar esta información para el correo electrónico de "
+"No tiene acceso, omita esta información para el correo electrónico de "
 "resumen del usuario"
 
 #. module: hr_recruitment
@@ -1412,8 +1413,8 @@ msgstr "CC del correo electrónico"
 #, python-format
 msgid "Email of the applicant is not set, email won't be sent."
 msgstr ""
-"El correo electrónico del candidato no está establecido, no se enviará un "
-"correo electrónico."
+"No se estableció un correo electrónico para este candidato, por lo que no se"
+" le podrá enviar ningún correo."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__name
@@ -1854,7 +1855,7 @@ msgstr "Kanban válido"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues_value
 msgid "Kpi Hr Recruitment New Colleagues Value"
-msgstr "Valor de KPI de reclutamiento de nuevos colegas de RR. HH."
+msgstr "Valor de KPI de reclutamiento de nuevos compañeros de RR. HH."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__lang
@@ -2226,7 +2227,7 @@ msgstr "Número de errores"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Número de mensajes que requieren una acción"
 
 #. module: hr_recruitment
@@ -2510,18 +2511,18 @@ msgstr "Rechazar"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #, python-format
 msgid "Refuse Reason"
-msgstr "Razón de rechazo"
+msgstr "Motivo de rechazo"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
 msgid "Refuse Reason of Applicant"
-msgstr "Razón del rechazo del candidato"
+msgstr "Motivo del rechazo del candidato"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
 msgid "Refuse Reasons"
-msgstr "Razones de rechazo"
+msgstr "Motivos de rechazo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__refused
@@ -2617,12 +2618,12 @@ msgstr "Salario esperado por el candidato, con ventajas adicionales"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Salary Proposed by the Organisation"
-msgstr "Salario propuesto por la organización"
+msgstr "Salario propuesto por la empresa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr "Salario propuesto por la organización, con ventajas adicionales"
+msgstr "Salario propuesto por la empresa, con ventajas adicionales"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2767,8 +2768,7 @@ msgstr "Spam"
 msgid ""
 "Specific jobs that uses this stage. Other jobs will not use this stage."
 msgstr ""
-"Empleos específicos que utilizan esta etapa. Otros empleos no utilizarán "
-"esta etapa."
+"Empleos específicos que utilizan esta etapa, otros empleos no la utilizarán."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -2796,7 +2796,7 @@ msgstr "Nombre de la etapa"
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_stage_changed
 msgid "Stage changed"
-msgstr "Etapa cambiada"
+msgstr "Se cambió la etapa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__last_stage_id

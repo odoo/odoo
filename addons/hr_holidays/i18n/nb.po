@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Henning Fyllingsnes, 2023\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
@@ -2173,6 +2173,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "Incorrect state for new allocation"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_is_follower
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_is_follower
 msgid "Is Follower"
@@ -2798,8 +2805,8 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Antall meldinger som krever handling"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error_counter

@@ -61,7 +61,7 @@ registerModel({
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed = true;
                 this.messaging.publicLivechatGlobal.chatbot.saveSession();
             }
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').hide();
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').hide();
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field')
                 .removeClass('d-none')
@@ -82,17 +82,18 @@ registerModel({
             if (this.messaging.publicLivechatGlobal.chatbot.welcomeMessageTimeout) {
                 clearTimeout(this.messaging.publicLivechatGlobal.chatbot.welcomeMessageTimeout);
             }
+            if (this.messaging.publicLivechatGlobal.publicLivechat.uuid) {
+                const postedMessage = await this.messaging.rpc({
+                    route: '/chatbot/restart',
+                    params: {
+                        channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+                        chatbot_script_id: this.messaging.publicLivechatGlobal.chatbot.scriptId,
+                    },
+                });
 
-            const postedMessage = await this.messaging.rpc({
-                route: '/chatbot/restart',
-                params: {
-                    channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-                    chatbot_script_id: this.messaging.publicLivechatGlobal.chatbot.scriptId,
-                },
-            });
-
-            if (postedMessage) {
-                this.messaging.publicLivechatGlobal.chatbot.addMessage(postedMessage);
+                if (postedMessage) {
+                    this.messaging.publicLivechatGlobal.chatbot.addMessage(postedMessage);
+                }
             }
 
             this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: clear() });

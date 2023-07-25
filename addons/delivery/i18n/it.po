@@ -260,7 +260,7 @@ msgstr "Codice Vettore"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr ""
+msgstr "Descrizione vettore"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_name
@@ -702,7 +702,7 @@ msgstr "Nome"
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "New Providers"
-msgstr ""
+msgstr "Nuovi fornitori"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
@@ -787,6 +787,11 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Codici postali a cui si applica il vettore. Nota che possono essere "
+"utilizzate espressioni regolare per supportare le nazioni con codici postali"
+" con varie lunghezze, ad es. \"$\" può essere aggiunto alla fine di un "
+"prefisso per individuare il codice giusto (ad es. \"100$\" ndividuerà "
+"\"100\" e non \"1000\")"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -985,6 +990,9 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Dettagli del metodo di spedizione da inserire nella parte finale degli "
+"ordini di vendita ed e-mail di conferma. Ad es. istruzioni da seguire per il"
+" cliente."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -1289,7 +1297,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Codici postali"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery

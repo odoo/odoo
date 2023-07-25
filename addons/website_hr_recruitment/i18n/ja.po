@@ -98,7 +98,7 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"s_website_form_label_content\">LinkedIn Profile</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">LinkedIn プロフィール</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -157,6 +157,8 @@ msgid ""
 "<span class=\"text-muted\" style=\"margin-left: 200px; font-size: "
 "0.8rem\">The resume is optional if you have a Linkedin profile</span>"
 msgstr ""
+"<span class=\"text-muted\" style=\"margin-left: 200px; font-size: "
+"0.8rem\">Linkedinのプロフィールをお持ちの場合、履歴書は任意です。</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -709,6 +711,13 @@ msgid ""
 msgstr ""
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "You cannot apply for this job."
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 #: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been posted successfully."
@@ -750,3 +759,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "未公開"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "Optional if you provided a Linkedin profile"
+msgstr "Linkedinのプロフィールを提供した場合は任意"

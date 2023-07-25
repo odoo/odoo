@@ -939,3 +939,48 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour('/pos/web?config_id=%d' % self.main_pos_config.id, 'PosLoyaltySpecificDiscountWithFreeProductTour', login='accountman')
+    def test_point_per_money_spent(self):
+        """Test the point per $ spent feature"""
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program Test',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'money',
+                'reward_point_amount': 0.1,
+                'minimum_amount': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 1,
+                'discount_mode': 'per_point',
+            })],
+        })
+
+        self.product_a = self.env["product.product"].create({
+            "name": "Test Product A",
+            "type": "product",
+            "list_price": 265,
+            "available_in_pos": True,
+            "taxes_id": False,
+        })
+
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.env['loyalty.card'].create({
+            'partner_id': partner_aaa.id,
+            'program_id': self.loyalty_program.id,
+            'points': 100,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyTour6",
+            login="accountman",
+        )

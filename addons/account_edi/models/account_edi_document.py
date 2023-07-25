@@ -155,7 +155,11 @@ class AccountEdiDocument(models.Model):
                         'blocking_level': False,
                     })
 
-                    if move.state == 'posted':
+                    if move.state == 'posted' and all(
+                        doc.state == 'cancelled'
+                        or not doc.edi_format_id._needs_web_services()
+                        for doc in move.edi_document_ids
+                    ):
                         # The user requested a cancellation of the EDI and it has been approved. Then, the invoice
                         # can be safely cancelled.
                         move_ids_to_cancel.add(move.id)

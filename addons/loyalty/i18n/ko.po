@@ -582,13 +582,6 @@ msgid "Automatic"
 msgstr "자동"
 
 #. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Automatic promotion: 10% discount on orders higher than $50"
-msgstr "프로모션이 자동으로 적용되어 $50 이상 주문 시 10% 할인됩니다"
-
-#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Available On"
@@ -609,15 +602,8 @@ msgstr "바코드"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Buy 10 products, and get 10$ discount on the 11th one"
-msgstr "10개 상품 구매 시 11번째 상품에는 $10 할인 혜택을 적용합니다"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Buy 2 products and get a third one for free"
-msgstr "상품을 2개 구입하면 세번째 상품은 무료로 증정합니다"
+msgid "Buy 10 products, and get 10$ discount on the 11th one."
+msgstr ""
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.3_cabinets_plus_1_free
@@ -625,7 +611,10 @@ msgid "Buy 3 large cabinets, get one for free"
 msgstr "대형 캐비닛 3개를 구입하시면 하나를 더 드립니다."
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
+#, python-format
 msgid "Buy X Get Y"
 msgstr "X개 구매 시 Y개 무료 증정"
 
@@ -856,6 +845,13 @@ msgid ""
 msgstr "조건부 규칙에 할인 코드를 설정한 후 고객에게 리워드 지급 시 공유해주십시오."
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Define promotions to apply automatically on your customers' orders."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
 msgid "Description"
 msgstr "설명"
@@ -884,7 +880,10 @@ msgid "Discount Applicability"
 msgstr "할인 적용"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
+#, python-format
 msgid "Discount Code"
 msgstr "할인 코드"
 
@@ -1004,8 +1003,8 @@ msgstr "스탬프 카드"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Fill in your eWallet, and use it to pay future orders"
-msgstr "e월렛을 충전해두시면 나중에 결제 시 사용하실 수 있습니다."
+msgid "Fill in your eWallet, and use it to pay future orders."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1098,8 +1097,8 @@ msgstr "전자 지갑 생성"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Get a code to receive 10% discount on specific products"
-msgstr "행사 상품에 10% 할인 혜택을 받을 수 있는 코드를 전송합니다"
+msgid "Generate and share unique coupons with your customers."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1433,13 +1432,20 @@ msgstr "오류 횟수"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "조치가 필요한 메시지 수"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "전송 오류 메시지 수"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Offer Y to your customers if they are buying X; for example, 2+1 free."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__order
@@ -1560,8 +1566,8 @@ msgstr "프로그램 작동"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promo Code"
-msgstr "프로모션 코드"
+msgid "Promotion Program"
+msgstr "프로모션 프로그램"
 
 #. module: loyalty
 #. odoo-python
@@ -1580,7 +1586,6 @@ msgstr "프로모션"
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Promotional Program"
@@ -1643,6 +1648,15 @@ msgid "Reward Type"
 msgstr "보상 유형"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Reward your customers for a purchase with a coupon to use on their next "
+"order."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
 msgid "Rewards"
 msgstr "보상"
@@ -1666,27 +1680,13 @@ msgstr "선택한 고객"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Sell Gift Cards, that can be used to purchase products"
-msgstr "상품을 구매 시 사용할 수 있도록 기프트 카드를 판매해보세요"
+msgid "Sell Gift Cards, that can be used to purchase products."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
 msgid "Send"
 msgstr "보내기"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique coupons that give access to rewards"
-msgstr "다양한 혜택을 담은 쿠폰을 발행합니다"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique, single-use coupon code for the next purchase"
-msgstr "다음에 구매할 때 사용할 수 있는 일회성 고유 쿠폰 코드를 전송합니다"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -1709,6 +1709,14 @@ msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
 msgstr "고객이 리워드를 받을 수 있는 주문에 대해 조건부 규칙을 설정합니다."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid ""
+"Share a discount code with your customers to create a purchase incentive."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1882,8 +1890,8 @@ msgstr "메일을 전송해드리겠습니다."
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Win points with each purchases, and use points to get gifts"
-msgstr "구매할 때마다 포인트가 적립되며, 적립 포인트로 선물을 받을 수 있습니다"
+msgid "Win points with each purchase, and use points to get gifts."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code

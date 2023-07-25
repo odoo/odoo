@@ -68,17 +68,17 @@ msgstr "Applica"
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_reward_wizard_action
 msgid "Available Rewards"
-msgstr ""
+msgstr "Ricompense disponibili"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Choose a product:"
-msgstr ""
+msgstr "Scegli un prodotto:"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Choose your reward:"
-msgstr ""
+msgstr "Scegli la tua ricompensa:"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
@@ -100,7 +100,7 @@ msgstr "Codice buono sconto"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__coupon_point_ids
 msgid "Coupon Point"
-msgstr ""
+msgstr "Punti buono sconto"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -144,7 +144,7 @@ msgstr "Sconti e fedeltà"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Discount: %(desc)s%(tax_str)s"
-msgstr ""
+msgstr "Sconto: %(desc)s%(tax_str)s"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
@@ -202,14 +202,14 @@ msgstr "ID"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Invalid product to claim."
-msgstr ""
+msgstr "Prodotto non valido per la richiesta."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
 #, python-format
 msgid "Invalid sales order."
-msgstr ""
+msgstr "Ordine di vendita non valido."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
@@ -255,12 +255,12 @@ msgstr "Premio fedeltà"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__applied_coupon_ids
 msgid "Manually Applied Coupons"
-msgstr ""
+msgstr "Buoni sconto applicati manualmente"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__code_enabled_rule_ids
 msgid "Manually Triggered Rules"
-msgstr ""
+msgstr "Regole attivate manualmente"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__multi_product_reward
@@ -281,12 +281,12 @@ msgstr ""
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "No reward selected."
-msgstr ""
+msgstr "Nessuna ricompensa selezionata."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "No rewards available for this customer!"
-msgstr ""
+msgstr "Nessuna ricompensa disponibile!"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -382,19 +382,19 @@ msgstr "Riga ordine di vendita"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_product_id
 msgid "Selected Product"
-msgstr ""
+msgstr "Prodotto selezionata"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_reward_id
 msgid "Selected Reward"
-msgstr ""
+msgstr "Ricompensa selezionata"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "TEMPORARY DISCOUNT LINE"
-msgstr ""
+msgstr "RIGA SCONTO TEMPORANEO"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -402,6 +402,7 @@ msgstr ""
 #, python-format
 msgid "The coupon can only be claimed on future orders."
 msgstr ""
+"Il buono sconto può essere utilizzato esclusivamente su ordini successivi."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -409,6 +410,8 @@ msgstr ""
 #, python-format
 msgid "The coupon does not have enough points for the selected reward."
 msgstr ""
+"Il buono sconto non presenta punti a sufficenza per la ricompensa "
+"selezionata."
 
 #. module: sale_loyalty
 #: model:ir.model.constraint,message:sale_loyalty.constraint_sale_order_coupon_points_order_coupon_unique
@@ -420,7 +423,7 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The program is not available for this order."
-msgstr ""
+msgstr "Il programma non è disponibile per quest'ordine."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_loyalty_card__order_id
@@ -432,7 +435,7 @@ msgstr "Ordine di vendita da cui viene generato il buono sconto"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "There is nothing to discount"
-msgstr ""
+msgstr "Non c'è nulla da scontare"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
@@ -445,7 +448,7 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This code is expired (%s)."
-msgstr ""
+msgstr "Il codice è scaduto (%s)."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -453,49 +456,49 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This code is invalid (%s)."
-msgstr ""
+msgstr "Il codice non è valido (%s)."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon has already been used."
-msgstr ""
+msgstr "Il buono sconto è già stato utilizzato."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon is expired."
-msgstr ""
+msgstr "Il buono sconto è scaduto."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program is already applied to this order."
-msgstr ""
+msgstr "Il programma è stato già applicato all'ordine."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program is not available for public users."
-msgstr ""
+msgstr "Il programma non è disponibile per utenti pubblici."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program requires a code to be applied."
-msgstr ""
+msgstr "Il programma richiede un codice da applicare."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This promo code is already applied."
-msgstr ""
+msgstr "Il codice promozionale è già stato applicato."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
@@ -509,6 +512,7 @@ msgstr ""
 #, python-format
 msgid "You don't have the required product quantities on your sales order."
 msgstr ""
+"Nell'ordine di vendita non sono presenti le quantità di prodotto richieste."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card

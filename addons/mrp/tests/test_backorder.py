@@ -274,6 +274,54 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(p2_bo_mls.lot_id, lot1)
         self.assertEqual(p2_bo_mls.reserved_qty, 2)
 
+    def test_uom_backorder(self):
+        """
+            test backorder component UoM different from the bom's UoM
+        """
+        product_finished = self.env['product.product'].create({
+            'name': 'Young Tom',
+            'type': 'product',
+        })
+        product_component = self.env['product.product'].create({
+            'name': 'Botox',
+            'type': 'product',
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_finished
+        mo_form.bom_id = self.env['mrp.bom'].create({
+            'product_id': product_finished.id,
+            'product_tmpl_id': product_finished.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'consumption': 'flexible',
+            'bom_line_ids': [(0, 0, {
+                'product_id': product_component.id,
+                'product_qty': 1,
+                'product_uom_id':self.env.ref('uom.product_uom_gram').id,
+            }),]
+        })
+        mo_form.product_qty = 1000
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        self.env['stock.quant']._update_available_quantity(product_component, self.stock_location, 1000)
+        mo.action_assign()
+
+        production_form = Form(mo)
+        production_form.qty_producing = 300
+        mo = production_form.save()
+
+        action = mo.button_mark_done()
+        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_form.save().action_backorder()
+        # 300 Grams consumed and 700 reserved
+        self.assertAlmostEqual(self.env['stock.quant']._gather(product_component, self.stock_location).reserved_quantity, 0.7)
+
+
     def test_tracking_backorder_series_serial_1(self):
         """ Create a MO of 4 tracked products (serial) with pbm_sam.
         all component is tracked by serial

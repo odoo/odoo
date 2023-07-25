@@ -427,3 +427,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_30_website_text_animations(self):
         self.start_tour("/", 'text_animations', login='admin')
+
+    def test_website_media_dialog_image_shape(self):
+        self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
