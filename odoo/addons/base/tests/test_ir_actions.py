@@ -6,8 +6,8 @@ from psycopg2 import IntegrityError, ProgrammingError
 
 import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.tools import mute_logger, config
-from odoo.tests import common
+from odoo.tools import mute_logger
+from odoo.tests import common, tagged
 from odoo import Command
 
 
@@ -340,7 +340,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertEqual(self.test_partner.date, date.today())
 
 
-class TestCustomFields(common.TransactionCase):
+class TestCommonCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
     COMODEL = 'res.users'
 
@@ -377,6 +377,8 @@ class TestCustomFields(common.TransactionCase):
             'arch': '<tree string="X"><field name="%s"/></tree>' % name,
         })
 
+
+class TestCustomFields(TestCommonCustomFields):
     def test_create_custom(self):
         """ custom field names must be start with 'x_' """
         with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
@@ -398,30 +400,6 @@ class TestCustomFields(common.TransactionCase):
         field = self.create_field('x_foo')
         with self.assertRaises(ValidationError):
             field.name = 'x_foo bar'
-
-    def test_add_field_valid(self):
-        """ custom field names must start with 'x_', even when bypassing the constraints
-
-        If a user bypasses all constraints to add a custom field not starting by `x_`,
-        it must not be loaded in the registry.
-
-        This is to forbid users to override class attributes.
-        """
-        # For a strange reason, drop constraint will remain stuck if executed without initiating base. (even on an existing database)
-        # small assertion to avoid getting stuck on this test in this case.
-        self.assertIn('base', config['init'], 'This test can only be executed while installing base')
-
-        field = self.create_field('x_foo')
-        # Drop the SQL constraint, to bypass it,
-        # as a user could do through a SQL shell or a `cr.execute` in a server action
-        self.env.cr.execute("ALTER TABLE ir_model_fields DROP CONSTRAINT ir_model_fields_name_manual_field")
-        self.env.cr.execute("UPDATE ir_model_fields SET name = 'foo' WHERE id = %s", [field.id])
-        with self.assertLogs('odoo.addons.base.models.ir_model') as log_catcher:
-            # Trick to reload the registry. The above rename done through SQL didn't reload the registry. This will.
-            field.write({'field_description': 'foo'})
-            self.assertIn(
-                f'The field `{field.name}` is not defined in the `{field.model}` Python class', log_catcher.output[0]
-            )
 
     def test_create_unique(self):
         """ one cannot create two fields with the same name on a given model """
@@ -648,3 +626,26 @@ class TestCustomFields(common.TransactionCase):
         self.assertEqual(rec1.x_sel, False)
         self.assertEqual(rec2.x_sel, 'quux')
         self.assertEqual(rec3.x_sel, 'baz')
+
+
+@tagged('post_install', '-at_install')
+class TestCustomFieldsPostInstall(TestCommonCustomFields):
+    def test_add_field_valid(self):
+        """ custom field names must start with 'x_', even when bypassing the constraints
+
+        If a user bypasses all constraints to add a custom field not starting by `x_`,
+        it must not be loaded in the registry.
+
+        This is to forbid users to override class attributes.
+        """
+        field = self.create_field('x_foo')
+        # Drop the SQL constraint, to bypass it,
+        # as a user could do through a SQL shell or a `cr.execute` in a server action
+        self.env.cr.execute("ALTER TABLE ir_model_fields DROP CONSTRAINT ir_model_fields_name_manual_field")
+        self.env.cr.execute("UPDATE ir_model_fields SET name = 'foo' WHERE id = %s", [field.id])
+        with self.assertLogs('odoo.addons.base.models.ir_model') as log_catcher:
+            # Trick to reload the registry. The above rename done through SQL didn't reload the registry. This will.
+            field.write({'field_description': 'foo'})
+            self.assertIn(
+                f'The field `{field.name}` is not defined in the `{field.model}` Python class', log_catcher.output[0]
+            )
