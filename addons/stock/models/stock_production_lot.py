@@ -72,6 +72,21 @@ class ProductionLot(models.Model):
                 return self.env['stock.production.lot'].generate_lot_names(last_serial.name, 2)[1]
         return False
 
+    @api.model
+    def _get_new_serial(self, company, product):
+        if product.tracking == 'lot':
+            name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+            exist_lot = self.env['stock.production.lot'].search([
+                ('product_id', '=', product.id),
+                ('company_id', '=', company.id),
+                ('name', '=', name),
+            ], limit=1)
+            if exist_lot:
+                return self.env['stock.production.lot']._get_next_serial(company, product)
+            return name
+
+        return self.env['stock.production.lot']._get_next_serial(company, product) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
+
     @api.constrains('name', 'product_id', 'company_id')
     def _check_unique_lot(self):
         domain = [('product_id', 'in', self.product_id.ids),
