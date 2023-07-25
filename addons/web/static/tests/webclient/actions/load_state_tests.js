@@ -4,8 +4,6 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
 import testUtils from "web.test_utils";
-import core from "web.core";
-import AbstractAction from "web.AbstractAction";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
 import {
@@ -499,132 +497,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["push_state"], "should push the state of it changes afterwards");
     });
 
-    QUnit.test("should not push a loaded state of a legacy client action", async function (assert) {
-        assert.expect(6);
-        const ClientAction = AbstractAction.extend({
-            init: function (parent, action, options) {
-                this._super.apply(this, arguments);
-                this.controllerID = options.controllerID;
-            },
-            start: function () {
-                const $button = $("<button id='client_action_button'>").text("Click Me!");
-                $button.on("click", () => {
-                    this.trigger_up("push_state", {
-                        controllerID: this.controllerID,
-                        state: { someValue: "X" },
-                    });
-                });
-                this.$el.append($button);
-                return this._super.apply(this, arguments);
-            },
-        });
-        const pushState = browser.history.pushState;
-        patchWithCleanup(browser, {
-            history: Object.assign({}, browser.history, {
-                pushState() {
-                    pushState(...arguments);
-                    assert.step("push_state");
-                },
-            }),
-        });
-        core.action_registry.add("ClientAction", ClientAction);
-        const webClient = await createWebClient({ serverData });
-        let currentHash = webClient.env.services.router.current.hash;
-        assert.deepEqual(currentHash, {});
-        await loadState(webClient, { action: 9 });
-        currentHash = webClient.env.services.router.current.hash;
-        assert.deepEqual(currentHash, {
-            action: 9,
-        });
-        assert.verifySteps([], "should not push the loaded state");
-        await testUtils.dom.click($(target).find("#client_action_button"));
-        await legacyExtraNextTick();
-        assert.verifySteps(["push_state"], "should push the state of it changes afterwards");
-        currentHash = webClient.env.services.router.current.hash;
-        assert.deepEqual(currentHash, {
-            action: 9,
-            someValue: "X",
-        });
-        delete core.action_registry.map.ClientAction;
-    });
-
-    QUnit.test("change a param of an ir.actions.client in the url", async function (assert) {
-        assert.expect(12);
-        const ClientAction = AbstractAction.extend({
-            hasControlPanel: true,
-            init: function (parent, action) {
-                this._super.apply(this, arguments);
-                const context = action.context;
-                this.a = (context.params && context.params.a) || "default value";
-            },
-            start: function () {
-                assert.step("start");
-                this.$(".o_content").text(this.a);
-                this.$el.addClass("o_client_action");
-                this.trigger_up("push_state", {
-                    controllerID: this.controllerID,
-                    state: { a: this.a },
-                });
-                return this._super.apply(this, arguments);
-            },
-        });
-        const pushState = browser.history.pushState;
-        patchWithCleanup(browser, {
-            history: Object.assign({}, browser.history, {
-                pushState() {
-                    pushState(...arguments);
-                    assert.step("push_state");
-                },
-            }),
-        });
-        core.action_registry.add("ClientAction", ClientAction);
-        const webClient = await createWebClient({ serverData });
-        let currentHash = webClient.env.services.router.current.hash;
-        assert.deepEqual(currentHash, {});
-        // execute the client action
-        await doAction(webClient, 9);
-        assert.verifySteps(["start", "push_state"]);
-        currentHash = webClient.env.services.router.current.hash;
-        assert.deepEqual(currentHash, {
-            action: 9,
-            a: "default value",
-        });
-        assert.strictEqual(
-            $(target).find(".o_client_action .o_content").text(),
-            "default value",
-            "should have rendered the client action"
-        );
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            1,
-            "there should be one controller in the breadcrumbs"
-        );
-        // update param 'a' in the url
-        await loadState(webClient, {
-            action: 9,
-            a: "new value",
-        });
-        assert.verifySteps(["start"]); // No push state since the hash hasn't changed
-        currentHash = webClient.env.services.router.current.hash;
-        assert.deepEqual(currentHash, {
-            action: 9,
-            a: "new value",
-        });
-        assert.strictEqual(
-            $(target).find(".o_client_action .o_content").text(),
-            "new value",
-            "should have rerendered the client action with the correct param"
-        );
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            1,
-            "there should still be one controller in the breadcrumbs"
-        );
-        delete core.action_registry.map.ClientAction;
-    });
-
     QUnit.test("load a window action without id (in a multi-record view)", async function (assert) {
         assert.expect(14);
         patchWithCleanup(browser.sessionStorage, {
@@ -761,52 +633,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["/web/dataset/call_kw/partner/onchange2"]);
         assert.containsOnce(target, ".o_form_view .o_form_editable");
         assert.deepEqual(getBreadCrumbTexts(target), ["Partner", "New"]);
-    });
-
-    QUnit.test("hashchange does not trigger canberemoved right away", async function (assert) {
-        assert.expect(9);
-        const ClientAction = AbstractAction.extend({
-            start() {
-                this.$el.text("Hello World");
-                this.$el.addClass("o_client_action_test");
-            },
-            canBeRemoved() {
-                assert.step("canBeRemoved");
-                return this._super.apply(this, arguments);
-            },
-        });
-        const ClientAction2 = AbstractAction.extend({
-            start() {
-                this.$el.text("Hello World");
-                this.$el.addClass("o_client_action_test_2");
-            },
-            canBeRemoved() {
-                assert.step("canBeRemoved_2");
-                return this._super.apply(this, arguments);
-            },
-        });
-        const pushState = browser.history.pushState;
-        patchWithCleanup(browser, {
-            history: Object.assign({}, browser.history, {
-                pushState() {
-                    pushState(...arguments);
-                    assert.step("hashSet");
-                },
-            }),
-        });
-        core.action_registry.add("ClientAction", ClientAction);
-        core.action_registry.add("ClientAction2", ClientAction2);
-        const webClient = await createWebClient({ serverData });
-        assert.verifySteps([]);
-        await doAction(webClient, 9);
-        assert.verifySteps(["hashSet"]);
-        assert.containsOnce(target, ".o_client_action_test");
-        assert.verifySteps([]);
-        await doAction(webClient, "ClientAction2");
-        assert.containsOnce(target, ".o_client_action_test_2");
-        assert.verifySteps(["canBeRemoved", "hashSet"]);
-        delete core.action_registry.map.ClientAction;
-        delete core.action_registry.map.ClientAction2;
     });
 
     QUnit.test("state with integer active_ids should not crash", async function (assert) {

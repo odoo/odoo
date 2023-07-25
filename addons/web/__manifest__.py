@@ -200,7 +200,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/py.js/lib/py_extras.js',
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
 
-            'web/static/src/legacy/scss/domain_selector.scss',
             'web/static/src/legacy/scss/model_field_selector.scss',
             'web/static/src/legacy/scss/dropdown.scss',
             'web/static/src/legacy/scss/tooltip.scss',
@@ -217,9 +216,7 @@ This module provides the core of the Odoo Web Client.
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',
 
-            'web/static/src/legacy/action_adapters.js',
             'web/static/src/legacy/legacy_service_provider.js',
-            'web/static/src/legacy/legacy_client_actions.js',
             'web/static/src/legacy/legacy_dialog.js',
             'web/static/src/legacy/legacy_load_views.js',
             'web/static/src/legacy/legacy_promise_error_handler.js',
@@ -229,24 +226,14 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/pseudo_web_client.js',
             'web/static/src/legacy/web_client.js',
-            'web/static/src/legacy/js/chrome/*',
-            'web/static/src/legacy/js/components/*',
-            'web/static/src/legacy/js/control_panel/*',
             'web/static/src/legacy/js/core/domain.js',
-            'web/static/src/legacy/js/core/mvc.js',
             'web/static/src/legacy/js/core/py_utils.js',
             'web/static/src/legacy/js/core/context.js',
             'web/static/src/legacy/js/core/misc.js',
             'web/static/src/legacy/js/fields/*',
             'web/static/src/legacy/js/services/data_manager.js',
             'web/static/src/legacy/js/services/session.js',
-            'web/static/src/legacy/js/tools/tools.js',
-            'web/static/src/legacy/js/widgets/colorpicker_dialog.js',
             'web/static/src/legacy/js/widgets/date_picker.js',
-            'web/static/src/legacy/js/widgets/domain_selector_dialog.js',
-            'web/static/src/legacy/js/widgets/domain_selector.js',
-            'web/static/src/legacy/js/widgets/model_field_selector.js',
-            'web/static/src/legacy/js/widgets/model_field_selector_popover.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/owl_compatibility.js',
 
@@ -653,7 +640,6 @@ This module provides the core of the Odoo Web Client.
             # Legacy
             'web/static/lib/tempusdominus/tempusdominus.js',
             'web/static/tests/legacy/**/*.js',
-            ('remove', 'web/static/tests/legacy/**/*_mobile_tests.js'),
             ('remove', 'web/static/tests/legacy/helpers/**/*.js'),
             ('remove', 'web/static/tests/legacy/legacy_setup.js'),
 
@@ -661,7 +647,6 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.qunit_mobile_suite_tests': [
             'web/static/tests/mobile/**/*.js',
-            'web/static/tests/legacy/components/dropdown_menu_mobile_tests.js',
         ],
 
         # Used during the transition of the web architecture

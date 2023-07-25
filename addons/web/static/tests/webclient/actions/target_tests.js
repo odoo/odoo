@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
 import testUtils from "web.test_utils";
-import core from "web.core";
-import AbstractAction from "web.AbstractAction";
 import { registry } from "@web/core/registry";
 import { click, getFixture, patchWithCleanup, makeDeferred, nextTick } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
@@ -165,32 +163,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(document.body, ".modal");
     });
 
-    QUnit.test('on_attach_callback is called for actions in target="new"', async function (assert) {
-        assert.expect(3);
-        const ClientAction = AbstractAction.extend({
-            on_attach_callback: function () {
-                assert.step("on_attach_callback");
-                assert.containsOnce(
-                    document.body,
-                    ".modal .o_test",
-                    "should have rendered the client action in a dialog"
-                );
-            },
-            start: function () {
-                this.$el.addClass("o_test");
-            },
-        });
-        core.action_registry.add("test", ClientAction);
-        const webClient = await createWebClient({ serverData });
-        await doAction(webClient, {
-            tag: "test",
-            target: "new",
-            type: "ir.actions.client",
-        });
-        assert.verifySteps(["on_attach_callback"]);
-        delete core.action_registry.map.test;
-    });
-
     QUnit.test(
         'footer buttons are updated when having another action in target "new"',
         async function (assert) {
@@ -214,32 +186,6 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsNone(target, '.o_technical_modal .modal-body button[special="save"]');
             assert.containsOnce(target, '.o_technical_modal .modal-footer button[special="save"]');
             assert.containsOnce(target, ".o_technical_modal .modal-footer button:not(.d-none)");
-        }
-    );
-
-    QUnit.test(
-        'buttons of client action in target="new" and transition to MVC action',
-        async function (assert) {
-            const ClientAction = AbstractAction.extend({
-                renderButtons($target) {
-                    const button = document.createElement("button");
-                    button.setAttribute("class", "o_stagger_lee");
-                    $target[0].appendChild(button);
-                },
-            });
-            core.action_registry.add("test", ClientAction);
-            const webClient = await createWebClient({ serverData });
-            await doAction(webClient, {
-                tag: "test",
-                target: "new",
-                type: "ir.actions.client",
-            });
-            assert.containsOnce(target, ".modal footer button.o_stagger_lee");
-            assert.containsNone(target, '.modal footer button[special="save"]');
-            await doAction(webClient, 25);
-            assert.containsNone(target, ".modal footer button.o_stagger_lee");
-            assert.containsOnce(target, '.modal footer button[special="save"]');
-            delete core.action_registry.map.test;
         }
     );
 

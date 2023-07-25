@@ -3,18 +3,9 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import AbstractAction from "web.AbstractAction";
-import core from "web.core";
 import { makeTestEnv } from "../../helpers/mock_env";
 import testUtils from "web.test_utils";
-import {
-    click,
-    getFixture,
-    hushConsole,
-    legacyExtraNextTick,
-    nextTick,
-    patchWithCleanup,
-} from "../../helpers/utils";
+import { click, getFixture, hushConsole, nextTick, patchWithCleanup } from "../../helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -27,7 +18,6 @@ import { onWillStart } from "@odoo/owl";
 
 let serverData;
 let target;
-// legacy stuff
 const actionRegistry = registry.category("actions");
 const actionHandlersRegistry = registry.category("action_handlers");
 
@@ -247,42 +237,6 @@ QUnit.module("ActionManager", (hooks) => {
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, { action: 8, id: 4, model: "pony", view_type: "form" });
     });
-
-    QUnit.test(
-        "on_reverse_breadcrumb handler is correctly called (legacy)",
-        async function (assert) {
-            // This test can be removed as soon as we no longer support legacy actions as the new
-            // ActionManager doesn't support this option. Indeed, it is used to reload the previous
-            // action when coming back, but we won't need such an artefact to that with Wowl, as the
-            // controller will be re-instantiated with an (exported) state given in props.
-            assert.expect(5);
-            const ClientAction = AbstractAction.extend({
-                events: {
-                    "click button": "_onClick",
-                },
-                start() {
-                    this.$el.html('<button class="my_button">Execute another action</button>');
-                },
-                _onClick() {
-                    this.do_action(4, {
-                        on_reverse_breadcrumb: () => assert.step("on_reverse_breadcrumb"),
-                    });
-                },
-            });
-            core.action_registry.add("ClientAction", ClientAction);
-            const webClient = await createWebClient({ serverData });
-            await doAction(webClient, "ClientAction");
-            assert.containsOnce(target, ".my_button");
-            await click(target.querySelector(".my_button"));
-            await legacyExtraNextTick();
-            assert.containsOnce(target, ".o_kanban_view");
-            await click(target, ".o_control_panel .breadcrumb a");
-            await legacyExtraNextTick();
-            assert.containsOnce(target, ".my_button");
-            assert.verifySteps(["on_reverse_breadcrumb"]);
-            delete core.action_registry.map.ClientAction;
-        }
-    );
 
     QUnit.test('handles "history_back" event', async function (assert) {
         assert.expect(4);

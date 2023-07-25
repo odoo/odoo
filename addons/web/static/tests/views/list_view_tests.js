@@ -20,6 +20,7 @@ import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
 import { getPickerApplyButton, getPickerCell } from "../core/datetime/datetime_test_helpers";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     addRow,
     click,
@@ -17947,6 +17948,10 @@ QUnit.module("Views", (hooks) => {
         "edit a record then select another record with a throw error when saving",
         async function (assert) {
             serviceRegistry.add("error", errorService);
+            // need to preventDefault to remove error from console (so python test pass)
+            const handler = (ev) => ev.preventDefault();
+            window.addEventListener("unhandledrejection", handler);
+            registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
 
             await makeView({
                 type: "list",

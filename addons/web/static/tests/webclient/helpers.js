@@ -20,9 +20,7 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { WebClient } from "@web/webclient/webclient";
 import AbstractService from "web.AbstractService";
-import ActionMenus from "web.ActionMenus";
 import basicFields from "web.basic_fields";
-import Registry from "web.Registry";
 import core from "web.core";
 import makeTestEnvironment from "web.test_env";
 import { registerCleanup } from "../helpers/cleanup";
@@ -46,14 +44,13 @@ import session from "web.session";
 import LegacyMockServer from "web.MockServer";
 import Widget from "web.Widget";
 import { uiService } from "@web/core/ui/ui_service";
-import { ClientActionAdapter } from "@web/legacy/action_adapters";
 import { commandService } from "@web/core/commands/command_service";
 import { ConnectionAbortedError } from "@web/core/network/rpc_service";
 import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favorite_item";
 import { standaloneAdapter } from "web.OwlCompatibility";
 import { overlayService } from "@web/core/overlay/overlay_service";
 
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { fieldService } from "@web/core/field_service";
 import { nameService } from "@web/core/name_service";
 
@@ -157,11 +154,6 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
         legacyParams.dataManager
     );
 
-    // clear the ActionMenus registry to prevent external code from doing unknown rpcs
-    const actionMenusRegistry = ActionMenus.registry;
-    ActionMenus.registry = new Registry();
-    registerCleanup(() => (ActionMenus.registry = actionMenusRegistry));
-
     let localSession;
     if (legacyParams && legacyParams.getTZOffset) {
         patchWithCleanup(session, {
@@ -254,22 +246,6 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
 export async function createWebClient(params) {
     setupWebClientRegistries();
 
-    // With the compatibility layer, the action manager keeps legacy alive if they
-    // are still acessible from the breacrumbs. They are manually destroyed as soon
-    // as they are no longer referenced in the stack. This works fine in production,
-    // because the webclient is never destroyed. However, at the end of each test,
-    // we destroy the webclient and expect every legacy that has been instantiated
-    // to be destroyed. We thus need to manually destroy them here.
-    const controllers = [];
-    patchWithCleanup(ClientActionAdapter.prototype, {
-        setup() {
-            this._super();
-            onMounted(() => {
-                controllers.push(this.widget);
-            });
-        },
-    });
-
     const legacyParams = params.legacyParams;
     params.serverData = params.serverData || {};
     const models = params.serverData.models;
@@ -298,11 +274,6 @@ export async function createWebClient(params) {
     target.classList.add("o_web_client"); // necessary for the stylesheet
     registerCleanup(() => {
         target.classList.remove("o_web_client");
-        for (const controller of controllers) {
-            if (!controller.isDestroyed()) {
-                controller.destroy();
-            }
-        }
     });
     // Wait for visual changes caused by a potential loadState
     await nextTick();

@@ -20,13 +20,15 @@
     import testUtilsMock from "web.test_utils_mock";
     import testUtilsModal from "web.test_utils_modal";
     import testUtilsPivot from "web.test_utils_pivot";
-    import tools from "web.tools";
 
 
     function deprecated(fn, type) {
-        const msg = `Helper 'testUtils.${fn.name}' is deprecated. ` +
-            `Please use 'testUtils.${type}.${fn.name}' instead.`;
-        return tools.deprecated(fn, msg);
+        return function () {
+            const msg = `Helper 'testUtils.${fn.name}' is deprecated. ` +
+                `Please use 'testUtils.${type}.${fn.name}' instead.`;
+            console.warn(msg);
+            return fn.apply(this, arguments);
+        };
     }
 
     /**
