@@ -1292,16 +1292,24 @@ class MassMailing(models.Model):
 
         conversion_info = []  # list of tuples (image: base64 image, node: lxml node, old_url: string or None))
         with requests.Session() as session:
-            for node in [n for n in root.iter('img', lxml.etree.Comment) if n.tag == 'img' or mso_re.match(n.text)]:
+            for node in root.iter(lxml.etree.Element, lxml.etree.Comment):
                 if node.tag == 'img':
                     # Convert base64 images in img tags to attachments.
                     match = image_re.match(node.attrib.get('src', ''))
                     if match:
                         image = match.group(2).encode()  # base64 image as bytes
                         conversion_info.append((image, node, None))
-                else:
-                    # Convert base64 images in mso comments to attachments.
-                    for match in re.findall(r'<img[^>]*src="(data:image/[A-Za-z]+;base64,[^"]*)"', node.text):
+                elif 'base64' in (node.attrib.get('style') or ''):
+                    # Convert base64 images in inline styles to attachments.
+                    for match in re.findall(r'data:image/[A-Za-z]+;base64,.+?(?=&\#34;|\"|\'|&quot;|\))', node.attrib.get('style')):
+                        image = re.sub(r'data:image/[A-Za-z]+;base64,', '', match).encode()  # base64 image as bytes
+                        conversion_info.append((image, node, match))
+                elif mso_re.match(node.text or ''):
+                    # Convert base64 images (in img tags or inline styles) in mso comments to attachments.
+                    base64_in_element_regex = re.compile(r"""
+                        (?:(?!^)|<)[^<>]*?(data:image/[A-Za-z]+;base64,[^<]+?)(?=&\#34;|\"|'|&quot;|\))(?=[^<]+>)
+                    """, re.VERBOSE)
+                    for match in re.findall(base64_in_element_regex, node.text):
                         image = re.sub(r'data:image/[A-Za-z]+;base64,', '', match).encode()  # base64 image as bytes
                         conversion_info.append((image, node, match))
                     # Crop VML images.
@@ -1333,6 +1341,8 @@ class MassMailing(models.Model):
             did_modify_body = True
             if node.tag == 'img':
                 node.attrib['src'] = new_url
+            elif 'base64' in (node.attrib.get('style') or ''):
+                node.attrib['style'] = node.attrib['style'].replace(old_url, new_url)
             else:
                 node.text = node.text.replace(old_url, new_url)
 
