@@ -11,7 +11,7 @@
                     >
                         <t t-if="props.record.resId">
                             <button
-                                class="btn btn-secondary btn-sm lh-1"
+                                class="btn btn-secondary btn-sm lh-1 o_download_file_button"
                                 data-tooltip="Download"
                                 aria-label="Download"
                                 t-on-click="onFileDownload"
@@ -59,6 +59,31 @@
                 <t t-if="state.fileName" t-esc="state.fileName" />
             </a>
         </t>
+    </t>
+
+    <t t-name="web.ListBinaryField" t-inherit="web.BinaryField" owl="1">
+        <xpath expr="//label[hasclass('o_select_file_button')]" position="replace">
+            <label class="o_select_file_button btn btn-sm btn-link p-0">
+                <FileUploader
+                    acceptedFileExtensions="props.acceptedFileExtensions"
+                    onUploaded.bind="update"
+                >
+                    <t t-set-slot="toggler">
+                        <i class="fa fa-upload fa-fw"/> Upload your file
+                    </t>
+                </FileUploader>
+            </label>
+        </xpath>
+        <xpath expr="//button[hasclass('o_download_file_button')]" position="attributes">
+            <attribute name="class">btn btn-sm btn-link fa fa-download o_download_file_button</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o_select_file_button')]" position="attributes">
+            <attribute name="class">btn btn-sm btn-link fa fa-pencil o_select_file_button</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o_clear_file_button')]" position="attributes">
+            <attribute name="class">btn btn-sm btn-link fa fa-trash o_clear_file_button</attribute>
+        </xpath>
+
     </t>
 
 </templates>
