@@ -133,7 +133,6 @@ export class KanbanController extends Component {
             const root = this.model.root;
             const { count, hasLimitedCount, isGrouped, limit, offset } = root;
             if (!isGrouped) {
-                console.log(root);
                 return {
                     offset: offset,
                     limit: limit,

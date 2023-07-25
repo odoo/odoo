@@ -9,11 +9,9 @@
      * testUtils file.
      */
 
-    import ActionMenus from "web.ActionMenus";
     import concurrency from "web.concurrency";
     import { useListener } from "@web/core/utils/hooks";
     import dom from "web.dom";
-    import Registry from "web.Registry";
     import testUtilsMock from "web.test_utils_mock";
     import Widget from "web.Widget";
     import { destroy, getFixture, mount, useChild } from "@web/../tests/helpers/utils";
@@ -245,12 +243,6 @@
             }
         }
 
-        // Override the ActionMenus registry unless told otherwise.
-        let actionMenusRegistry = ActionMenus.registry;
-        if (params.actionMenusRegistry !== true) {
-            ActionMenus.registry = new Registry();
-        }
-
         const viewController = await view.getController(widget);
         // override the view's 'destroy' so that it calls 'destroy' on the widget
         // instead, as the widget is the parent of the view and the mockServer.
@@ -261,9 +253,6 @@
             delete viewController.destroy;
             widget.destroy();
             webClient.remove();
-            if (params.actionMenusRegistry !== true) {
-                ActionMenus.registry = actionMenusRegistry;
-            }
         };
 
         // render the viewController in a fragment as they must be able to render correctly
