@@ -5,10 +5,9 @@
  */
 
 import commonEnv from 'web.commonEnv';
-import dataManager from 'web.data_manager';
 import { blockUI, unblockUI } from "web.framework";
 
-const env = Object.assign(commonEnv, { dataManager });
+const env = commonEnv;
 env.services = Object.assign(env.services, { blockUI, unblockUI });
 
 export default env;

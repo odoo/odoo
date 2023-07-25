@@ -12,7 +12,6 @@ import {
     makeLegacySessionService,
 } from "@web/legacy/utils";
 import { makeLegacyActionManagerService } from "@web/legacy/backend_utils";
-import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { effectService } from "@web/core/effects/effect_service";
@@ -112,48 +111,6 @@ export function setupWebClientRegistries() {
  */
 export async function addLegacyMockEnvironment(env, legacyParams = {}) {
     // setup a legacy env
-    const dataManager = Object.assign(
-        {
-            load_action: (actionID, context) => {
-                return env.services.rpc("/web/action/load", {
-                    action_id: actionID,
-                    additional_context: context,
-                });
-            },
-            load_views: async (params, options) => {
-                let result = await env.services.rpc(`/web/dataset/call_kw/${params.model}`, {
-                    args: [],
-                    kwargs: {
-                        context: params.context,
-                        options: options,
-                        views: params.views_descr,
-                    },
-                    method: "get_views",
-                    model: params.model,
-                });
-                const { models, views: _views } = result;
-                result = generateLegacyLoadViewsResult(params.model, _views, models);
-                const views = result.fields_views;
-                for (const [, viewType] of params.views_descr) {
-                    const fvg = views[viewType];
-                    fvg.viewFields = fvg.fields;
-                    fvg.fields = result.fields;
-                }
-                if (params.favoriteFilters && "search" in views) {
-                    views.search.favoriteFilters = params.favoriteFilters;
-                }
-                return views;
-            },
-            load_filters: (params) => {
-                if (QUnit.config.debug) {
-                    console.log("[mock] load_filters", params);
-                }
-                return Promise.resolve([]);
-            },
-        },
-        legacyParams.dataManager
-    );
-
     let localSession;
     if (legacyParams && legacyParams.getTZOffset) {
         patchWithCleanup(session, {
@@ -162,7 +119,7 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
         localSession = { getTZOffset: legacyParams.getTZOffset };
     }
 
-    const baseEnv = { dataManager, bus: core.bus, session: localSession };
+    const baseEnv = { bus: core.bus, session: localSession };
     const legacyEnv = makeTestEnvironment(Object.assign(baseEnv, legacyParams.env));
 
     if (legacyParams.serviceRegistry) {
