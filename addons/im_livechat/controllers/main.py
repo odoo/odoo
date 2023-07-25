@@ -42,7 +42,7 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/emoji_bundle', type='http', auth='public', cors='*')
     def get_emoji_bundle(self):
-        bundle = 'mail.assets_emoji'
+        bundle = 'web.assets_emoji'
         asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
         stream = request.env['ir.binary']._get_stream_from(asset.js())
         return stream.get_response()
