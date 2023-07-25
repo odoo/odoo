@@ -616,7 +616,7 @@ class AccountMove(models.Model):
 
     @api.depends('move_type')
     def _compute_journal_id(self):
-        for record in self:
+        for record in self.filtered(lambda r: r.journal_id.type not in r._get_valid_journal_types()):
             record.journal_id = record._search_default_journal()
         self._conditional_add_to_compute('company_id', lambda m: (
             not m.company_id
@@ -627,6 +627,15 @@ class AccountMove(models.Model):
             or m.journal_id.currency_id and m.currency_id != m.journal_id.currency_id
         ))
 
+    def _get_valid_journal_types(self):
+        if self.is_sale_document(include_receipts=True):
+            return ['sale']
+        elif self.is_purchase_document(include_receipts=True):
+            return ['purchase']
+        elif self.payment_id or self.env.context.get('is_payment'):
+            return ['bank', 'cash']
+        return ['general']
+
     def _search_default_journal(self):
         if self.payment_id and self.payment_id.journal_id:
             return self.payment_id.journal_id
@@ -635,15 +644,7 @@ class AccountMove(models.Model):
         if self.statement_line_ids.statement_id.journal_id:
             return self.statement_line_ids.statement_id.journal_id[:1]
 
-        if self.is_sale_document(include_receipts=True):
-            journal_types = ['sale']
-        elif self.is_purchase_document(include_receipts=True):
-            journal_types = ['purchase']
-        elif self.payment_id or self.env.context.get('is_payment'):
-            journal_types = ['bank', 'cash']
-        else:
-            journal_types = ['general']
-
+        journal_types = self._get_valid_journal_types()
         company_id = (self.company_id or self.env.company).id
         domain = [('company_id', '=', company_id), ('type', 'in', journal_types)]
 
