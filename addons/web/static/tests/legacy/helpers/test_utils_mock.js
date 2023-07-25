@@ -42,7 +42,6 @@ const DebouncedField = basic_fields.DebouncedField;
  * @param {Bus} [params.bus]
  * @param {Object} [params.env]
  * @param {Bus} [params.env.bus]
- * @param {Object} [params.env.dataManager]
  * @param {Object} [params.env.services]
  * @param {Object} [params.services]
  * @param {Object} [params.session]
@@ -62,40 +61,6 @@ async function _getMockedOwlEnv(params, mockServer) {
             fetch: (resource, init) => mockServer.performFetch(resource, init),
         }, params.env.browser),
         bus: params.bus || params.env.bus || new Bus(),
-        dataManager: Object.assign({
-            load_action: (actionID, context) => {
-                return mockServer.performRpc('/web/action/load', {
-                    action_id: actionID,
-                    additional_context: context,
-                });
-            },
-            load_views: (params, options) => {
-                return mockServer.performRpc('/web/dataset/call_kw/' + params.model, {
-                    args: [],
-                    kwargs: {
-                        context: params.context,
-                        options: options,
-                        views: params.views_descr,
-                    },
-                    method: 'get_views',
-                    model: params.model,
-                }).then(function (views) {
-                    views = Object.values(views).map((viewParams) => {
-                        return getView(mockServer, viewParams);
-                    });
-                    if (favoriteFilters && 'search' in views) {
-                        views.search.favoriteFilters = favoriteFilters;
-                    }
-                    return views;
-                });
-            },
-            load_filters: params => {
-                if (debug) {
-                    console.log('[mock] load_filters', params);
-                }
-                return Promise.resolve([]);
-            },
-        }, params.env.dataManager),
         services: Object.assign(services, params.env.services),
         session: params.env.session || params.session || {},
     });
@@ -495,30 +460,9 @@ async function addMockEnvironment(widget, params) {
             ev.data.callback(result);
         }
     });
-    intercept(widget, 'load_action', async ev => {
-        const action = await env.dataManager.load_action(ev.data.actionID, ev.data.context);
-        ev.data.on_success(action);
-    });
-    intercept(widget, "load_views", async ev => {
-        const params = {
-            model: ev.data.modelName,
-            context: ev.data.context,
-            views_descr: ev.data.views,
-        };
-        const views = await env.dataManager.load_views(params, ev.data.options);
-        if ('search' in views && params.favoriteFilters) {
-            views.search.favoriteFilters = params.favoriteFilters;
-        }
-        ev.data.on_success(views);
-    });
     intercept(widget, "get_session", ev => {
         ev.data.callback(session);
     });
-    intercept(widget, "load_filters", async ev => {
-        const filters = await env.dataManager.load_filters(ev.data);
-        ev.data.on_success(filters);
-    });
-
     // make sure all other Odoo events bubbling up are intercepted
     Object.keys(params.intercepts || {}).forEach(function (name) {
         intercept(widget, name, params.intercepts[name]);

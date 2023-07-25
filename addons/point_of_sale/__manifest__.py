@@ -157,7 +157,6 @@
             ('remove', 'web/static/src/legacy/js/libs/**/*'),
             ('remove', 'web/static/src/legacy/js/public/**/*'),
             'web/static/src/legacy/backend_utils.js',
-            'web/static/src/legacy/legacy_load_views.js',
             'web/static/src/legacy/legacy_service_provider.js',
             'web/static/src/legacy/utils.js',
             'web/static/src/search/**/*',

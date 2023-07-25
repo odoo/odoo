@@ -2976,19 +2976,6 @@ export class Wysiwyg extends Component {
             if (payload.callback) {
                 payload.callback(this.env.session);
             }
-        } else if (evType === 'load_views') {
-            const params = {
-                model: payload.modelName,
-                context: payload.context,
-                views_descr: payload.views,
-            };
-            this.env.dataManager
-                .load_views(params, payload.options || {})
-                .then(payload.on_success);
-        } else if (evType === 'load_filters') {
-            return this.env.dataManager
-                .load_filters(payload)
-                .then(payload.on_success);
         }
     }
     _callService(payload) {
