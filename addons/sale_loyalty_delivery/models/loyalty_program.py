@@ -3,6 +3,7 @@
 
 from odoo import _, api, models
 
+
 class LoyaltyProgram(models.Model):
     _inherit = 'loyalty.program'
 

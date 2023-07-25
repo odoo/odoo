@@ -10,7 +10,7 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestLoyaltyDeliveryCost, cls).setUpClass()
+        super().setUpClass()
         cls.SaleOrder = cls.env['sale.order']
         cls.partner_1 = cls.env['res.partner'].create({'name': 'My Test Customer'})
         cls.pricelist = cls.env['product.pricelist'].create({
@@ -70,7 +70,6 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         delivery_wizard.save().button_confirm()
 
         self.assertEqual(order.order_line.filtered('is_delivery').price_total, 0)
-
 
     def test_free_delivery_cost_with_ewallet(self):
         """
@@ -153,7 +152,6 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             order.order_line.filtered('is_delivery').price_unit,
             self.product_delivery.list_price
         )
-
 
     def _apply_promo_code(self, order, code, no_reward_fail=True):
         status = order._try_apply_code(code)

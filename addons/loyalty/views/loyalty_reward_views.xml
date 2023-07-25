@@ -13,7 +13,7 @@
                 <field name="all_discount_product_ids" invisible="1"/>
                 <sheet>
                     <group>
-                        <group string="Reward" id="reward_type_group">
+                        <group string="Reward" name="reward_type_group">
                             <field name="reward_type" widget="selection" attrs="{'readonly' : [('program_type', '=', 'buy_x_get_y')]}"/>
                             <label for="discount" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
                             <div class="d-flex flex-row" attrs="{'invisible': [('reward_type', '!=', 'discount')]}">
@@ -94,12 +94,12 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click_edit mx-0 d-flex flex-row">
-                            <div class="o_loyalty_kanban_card_left mw-75 flex-grow-1" id="reward_info">
+                            <div class="o_loyalty_kanban_card_left mw-75 flex-grow-1" name="reward_info">
                                 <t t-if="record.reward_type.raw_value === 'discount'">
 
                                     <t t-if="record.discount">
                                         <a><field name="discount"/><field name="discount_mode"/> discount <t t-if="record.discount_max_amount.raw_value > 0">( Max <field name="discount_max_amount"/> )</t></a>
-                                    </t> 
+                                    </t>
 
                                     <t t-if="record.discount_applicability.raw_value === 'specific'">
                                         <br/>
@@ -115,7 +115,7 @@
                                         </t>
                                         <t t-if="record.discount_product_tag_id.raw_value">
                                             <div class="d-flex"><i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="discount_product_tag_id" class="d-inline"/></div>
-                                        </t>  
+                                        </t>
                                         <t t-if="record.discount_product_domain.raw_value &amp;&amp; record.discount_product_domain.raw_value !== '[]'" groups="base.group_no_one">
                                             <div class="d-flex"><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="discount_product_domain" class="d-inline"/></div>
                                         </t>
@@ -132,7 +132,7 @@
                                     </t>
                                 </t>
 
-                                <t t-if="record.reward_type.raw_value === 'product'">
+                                <t t-elif="record.reward_type.raw_value === 'product'">
                                     <a>Free product</a>
                                     <br/>
                                     <br/>
@@ -141,7 +141,7 @@
                                     </t>
                                     <t t-if="record.reward_product_tag_id.raw_value">
                                         <div class="d-flex"><i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="reward_product_tag_id" class="d-inline"/></div>
-                                    </t> 
+                                    </t>
                                 </t>
                             </div>
 
