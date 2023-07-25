@@ -324,9 +324,6 @@ class StockMoveLine(models.Model):
             move.with_context(avoid_putaway_rules=True).product_uom_qty = move.quantity_done
 
         for ml, vals in zip(mls, vals_list):
-            if self.env.context.get('import_file') and ml.reserved_uom_qty and not ml.move_id._should_bypass_reservation():
-                raise UserError(_("It is not allowed to import reserved quantity, you have to use the quantity directly."))
-
             if ml.state == 'done':
                 if ml.product_id.type == 'product' and not self.env.context.get('bypass_reservation_update'):
                     Quant = self.env['stock.quant']
