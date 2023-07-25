@@ -614,6 +614,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/ace/mode-xml.js',
             'web/static/lib/ace/mode-js.js',
             'web/static/lib/ace/mode-qweb.js',
+            'web/static/lib/ace/theme-monokai.js',
             'web/static/lib/nearest/jquery.nearest.js',
             'web/static/lib/stacktracejs/stacktrace.js',
             'web/static/lib/Chart/Chart.js',
