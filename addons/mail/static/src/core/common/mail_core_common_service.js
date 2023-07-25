@@ -13,6 +13,8 @@ export class MailCoreCommon {
             env,
             busService: services.bus_service,
         });
+        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
+        this.attachmentService = services["mail.attachment"];
         /** @type {import("@mail/core/common/message_service").MessageService} */
         this.messageService = services["mail.message"];
         /** @type {import("@mail/core/common/messaging_service").Messaging} */
@@ -29,6 +31,16 @@ export class MailCoreCommon {
 
     setup() {
         this.messagingService.isReady.then(() => {
+            this.busService.subscribe("ir.attachment/delete", (payload) => {
+                const { id: attachmentId, message: messageData } = payload;
+                if (messageData) {
+                    this.messageService.insert({ ...messageData });
+                }
+                const attachment = this.store.attachments[attachmentId];
+                if (attachment) {
+                    this.attachmentService.remove(attachment);
+                }
+            });
             this.busService.subscribe("mail.link.preview/delete", (payload) => {
                 const { id, message_id } = payload;
                 const message = this.store.messages[message_id];
@@ -125,6 +137,7 @@ export class MailCoreCommon {
 export const mailCoreCommon = {
     dependencies: [
         "bus_service",
+        "mail.attachment",
         "mail.message",
         "mail.messaging",
         "mail.persona",
