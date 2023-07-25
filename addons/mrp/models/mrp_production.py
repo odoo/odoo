@@ -1234,6 +1234,7 @@ class MrpProduction(models.Model):
 
     def _prepare_stock_lot_values(self):
         self.ensure_one()
+<<<<<<< HEAD
         if self.product_id.tracking == 'lot':
             name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
             exist_lot = self.env['stock.lot'].search([
@@ -1246,6 +1247,25 @@ class MrpProduction(models.Model):
         else:
             name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
         return {
+||||||| parent of 33cf1471634 (temp)
+        if self.product_id.tracking == 'lot':
+            name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+            exist_lot = self.env['stock.lot'].search([
+                ('product_id', '=', self.product_id.id),
+                ('company_id', '=', self.company_id.id),
+                ('name', '=', name),
+            ], limit=1)
+            if exist_lot:
+                name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
+        else:
+            name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
+        self.lot_producing_id = self.env['stock.lot'].create({
+=======
+        if self.product_id.tracking == 'none':
+            return
+        name = self.env['stock.lot']._get_new_serial(self.company_id, self.product_id)
+        self.lot_producing_id = self.env['stock.lot'].create({
+>>>>>>> 33cf1471634 (temp)
             'product_id': self.product_id.id,
             'company_id': self.company_id.id,
             'name': name,
