@@ -133,7 +133,7 @@ class ResConfigSettings(models.TransientModel):
         # the client side is rolled back and the edi user is deleted on the client side
         # but remains on the proxy side.
         # it is important to keep these two in sync, so commit before activating.
-        if not tools.config['test_enable'] and not modules.module.current_test:
+        if not modules.loading.running_test:
             self.env.cr.commit()
 
         company_details = {

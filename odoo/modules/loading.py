@@ -62,7 +62,7 @@ def load_data(env, idref, mode, kind, package):
     filename = None
     try:
         if kind in ('demo', 'test'):
-            threading.current_thread().testing = True
+            threading.current_thread().demo_loading = True
         for filename in _get_files_of_kind(kind):
             _logger.info("loading %s/%s", package.name, filename)
             noupdate = False
@@ -71,7 +71,7 @@ def load_data(env, idref, mode, kind, package):
             tools.convert_file(env, package.name, filename, idref, mode, noupdate, kind)
     finally:
         if kind in ('demo', 'test'):
-            threading.current_thread().testing = False
+            threading.current_thread().demo_loading = False
 
     return bool(filename)
 
@@ -280,7 +280,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
                     registry.setup_models(env.cr)
                 # Python tests
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
-                test_results = loader.run_suite(suite, module_name)
+                test_results = loader.run_suite(suite)
                 report.update(test_results)
                 test_time = time.time() - tests_t0
                 test_queries = odoo.sql_db.sql_counter - tests_q0
@@ -630,3 +630,5 @@ def reset_modules_state(db_name):
             "UPDATE ir_module_module SET state='uninstalled' WHERE state='to install'"
         )
         _logger.warning("Transient module states were reset")
+
+running_test = False

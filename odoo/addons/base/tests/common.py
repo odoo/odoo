@@ -320,7 +320,7 @@ class MockSmtplibCase:
 
         with patch('smtplib.SMTP_SSL', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
              patch('smtplib.SMTP', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
-             patch.object(type(IrMailServer), '_is_test_mode', lambda self: False), \
+             patch.object(type(IrMailServer), '_disable_mail', lambda self: False), \
              patch.object(type(IrMailServer), 'connect', wraps=IrMailServer, side_effect=connect_origin) as connect_mocked, \
              patch.object(type(IrMailServer), '_find_mail_server', side_effect=find_mail_server_origin) as find_mail_server_mocked:
             self.connect_mocked = connect_mocked

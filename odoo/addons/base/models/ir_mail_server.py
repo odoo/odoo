@@ -21,7 +21,7 @@ from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
 from OpenSSL.SSL import Error as SSLError
 from urllib3.contrib.pyopenssl import PyOpenSSLContext
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, modules
 from odoo.exceptions import UserError
 from odoo.tools import ustr, pycompat, formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize
 
@@ -312,7 +312,7 @@ class IrMailServer(models.Model):
            longer raised.
         """
         # Do not actually connect while running in test mode
-        if self._is_test_mode():
+        if self._disable_mail():
             return
 
         mail_server = smtp_encryption = None
@@ -684,8 +684,9 @@ class IrMailServer(models.Model):
         smtp_from, smtp_to_list, message = self._prepare_email_message(message, smtp)
 
         # Do not actually send emails in testing mode!
-        if self._is_test_mode():
-            _test_logger.info("skip sending email in test mode")
+        disable_mode = self._disable_mail()
+        if disable_mode:
+            _test_logger.info("skip sending email in %s mode", disable_mode)
             return message['Message-Id']
 
         try:
@@ -816,10 +817,13 @@ class IrMailServer(models.Model):
             self.smtp_port = 25
         return result
 
-    def _is_test_mode(self):
+    def _disable_mail(self):
         """Return True if we are running the tests, so we do not send real emails.
 
         Can be overridden in tests after mocking the SMTP lib to test in depth the
         outgoing mail server.
         """
-        return getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
+        if modules.loading.running_test:
+            return 'test'
+        if hasattr(threading.current_thread(), 'demo_loading') and threading.current_thread().demo_loading:
+            return 'demo'

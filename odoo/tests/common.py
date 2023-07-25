@@ -77,7 +77,6 @@ except ImportError:
 
 _logger = logging.getLogger(__name__)
 
-
 # backward compatibility: Form was defined in this file
 def __getattr__(name):
     # pylint: disable=import-outside-toplevel
@@ -750,6 +749,7 @@ class TransactionCase(BaseCase):
                 with cls.registry.cursor() as cr:
                     cls.registry.setup_models(cr)
             cls.registry.registry_invalidated = False
+            cls.registry.registry_sequence = cls.registry_start_sequence
             cls.registry.clear_all_caches()
             cls.registry.cache_invalidated.clear()
 

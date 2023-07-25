@@ -447,6 +447,3 @@ def adapt_version(version):
                          f" `{serie}.x.y` or `{serie}.x.y.z`.")
 
     return version
-
-
-current_test = None

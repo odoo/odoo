@@ -2,10 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import threading
 
-
-from odoo import api, fields, models
+from odoo import api, fields, models, modules
 
 _logger = logging.getLogger(__name__)
 
@@ -55,7 +53,7 @@ class ResUsersDeletion(models.Model):
         todo_requests = delete_requests - done_requests
         batch_requests = todo_requests[:batch_size]
 
-        auto_commit = not getattr(threading.current_thread(), "testing", False)
+        auto_commit = not modules.loading.running_test
 
         for delete_request in batch_requests:
             user = delete_request.user_id

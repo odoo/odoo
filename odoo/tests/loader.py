@@ -2,6 +2,7 @@ import importlib
 import importlib.util
 import inspect
 import itertools
+import logging
 import sys
 import threading
 import unittest
@@ -11,6 +12,9 @@ from .. import tools
 from .tag_selector import TagsSelector
 from .suite import OdooSuite
 from .result import OdooTestResult
+
+
+_logger = logging.getLogger(__name__)
 
 
 def get_test_modules(module):
@@ -70,18 +74,25 @@ def make_suite(module_names, position='at_install'):
     return OdooSuite(sorted(tests, key=lambda t: t.test_sequence))
 
 
-def run_suite(suite, module_name=None):
-    # avoid dependency hell
-    from ..modules import module
-    module.current_test = module_name
-    threading.current_thread().testing = True
-
+def run_suite(suite):
     results = OdooTestResult()
-    suite(results)
-
-    threading.current_thread().testing = False
-    module.current_test = None
-    return results
+    if not tools.config['test_enable']:
+        _logger.error('Cannot start test whithout test_enable')
+        return results
+    if not tools.config['db_name'] or ',' in tools.config['db_name']:
+        _logger.error('Cannot start test without a database')
+        return results
+    # avoid dependency hell
+    from ..modules import loading
+    if loading.running_test:
+        _logger.error('Running a suite inside a suite is not supported')
+        return results
+    try:
+        loading.running_test = True
+        suite(results)
+        return results
+    finally:
+        loading.running_test = False
 
 
 def unwrap_suite(test):

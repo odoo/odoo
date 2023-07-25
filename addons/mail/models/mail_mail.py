@@ -7,14 +7,13 @@ import datetime
 import logging
 import psycopg2
 import smtplib
-import threading
 import re
 import pytz
 
 from collections import defaultdict
 from dateutil.parser import parse
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, modules
 from odoo import tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 
@@ -229,7 +228,7 @@ class MailMail(models.Model):
         res = None
         try:
             # auto-commit except in testing mode
-            auto_commit = not getattr(threading.current_thread(), 'testing', False)
+            auto_commit = not modules.loading.running_test
             res = self.browse(ids).send(auto_commit=auto_commit)
         except Exception:
             _logger.exception("Failed processing mail queue")

@@ -3,13 +3,12 @@
 
 import logging
 import random
-import threading
 
 from collections import namedtuple
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, modules
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
 from odoo.exceptions import MissingError, ValidationError
@@ -272,7 +271,7 @@ You receive this email because you are:
                 self.env.invalidate_all()
                 self._warn_template_error(scheduler, e)
             else:
-                if autocommit and not getattr(threading.current_thread(), 'testing', False):
+                if autocommit and not modules.loading.running_test:
                     self.env.cr.commit()
         return True
 

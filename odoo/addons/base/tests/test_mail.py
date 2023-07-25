@@ -7,8 +7,8 @@ from unittest.mock import patch
 import email.policy
 import email.message
 import re
-import threading
 
+from odoo import modules
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 from odoo.tests import tagged
@@ -546,7 +546,7 @@ class TestEmailMessage(TransactionCase):
         return self.env['ir.mail_server'].build_email(**kwargs)
 
     def send_email(self, msg):
-        with patch.object(threading.current_thread(), 'testing', False):
+        with patch.object(type(self.env['ir.mail_server']), '_disable_mail', lambda self: False):
             self.env['ir.mail_server'].send_email(msg, smtp_session=self._fake_smtp)
         return self._fake_smtp.messages.pop()
 

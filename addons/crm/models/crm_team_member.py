@@ -3,13 +3,11 @@
 
 import datetime
 import logging
-import math
-import threading
 import random
 
 from ast import literal_eval
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models, _, modules
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -154,7 +152,7 @@ class TeamMember(models.Model):
         leads_done_ids = set()
         counter = 0
         # auto-commit except in testing mode
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.loading.running_test
         commit_bundle_size = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
         while population and any(weights):
             counter += 1

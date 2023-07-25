@@ -4,12 +4,11 @@
 import datetime
 import logging
 import random
-import threading
 
 from ast import literal_eval
 from markupsafe import Markup
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models, _, modules
 from odoo.osv import expression
 from odoo.tools import float_compare, float_round
 from odoo.tools.safe_eval import safe_eval
@@ -448,7 +447,7 @@ class Team(models.Model):
 
         BUNDLE_HOURS_DELAY = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.delay', default=0))
         BUNDLE_COMMIT_SIZE = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.loading.running_test
 
         # leads
         max_create_dt = self.env.cr.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
