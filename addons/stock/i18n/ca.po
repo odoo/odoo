@@ -15,9 +15,13 @@
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Harcogourmet, 2022
 # Jonatan Gk, 2022
-# jabelchi, 2022
 # marcescu, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# jabiri7, 2022
+# Djamel Touati <DjamelEddinetouati@gmail.com>, 2023
+# Ivan Espinola, 2023
+# jabelchi, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# martioodo hola, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,8 +29,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: martioodo hola, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -150,7 +154,7 @@ msgstr ""
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Albarà d'entrega - %s - %s' % (object.partner_id.name or '', object.name)"
+"'Albarà d\\'entrega - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -160,24 +164,24 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr "\"Location - %s'% object. name"
+msgstr "'Ubicació - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
 msgid "'Lot-Serial - %s' % object.name"
-msgstr "'Let-Serial - %s' % object. nom"
+msgstr "'Lot-Núm.Sèrie - %s' % object. nom"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
 msgid "'Operation-type - %s' % object.name"
-msgstr "'Operació tipus - %s' % object. nom"
+msgstr "'Tipus d'operació - %s' % object. nom"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Albarà d'operacions - %s - %s' % (object.partner_id.name or '', "
+"'Albarà d\\'operacions - %s - %s' % (object.partner_id.name or '', "
 "object.name)"
 
 #. module: stock
@@ -887,7 +891,7 @@ msgstr "Auto"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate Orders"
-msgstr "Ordres d' automatització"
+msgstr "Automatitza comandes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -2464,7 +2468,7 @@ msgstr "Previsió"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable_config
 msgid "Forecast Description"
-msgstr "Descripció de l' assentamentNoun, the type of an item"
+msgstr "Descripció de la previsió"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__virtual_available
@@ -2587,7 +2591,7 @@ msgstr "Lliure per a usar l' import "
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "From"
-msgstr "De"
+msgstr "Des de"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__owner_id
@@ -3128,6 +3132,14 @@ msgid "Invalid domain right operand %s"
 msgstr "Domini invàlid per l'operant dret %s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Configuració de regla no vàlida, la següent regla causa un bucle infinit: %s"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Inventoried Quantity"
 msgstr "Quantitat inventorada"
@@ -3295,6 +3307,14 @@ msgstr "És tard o arribarà tard depenent de la data límit i programada"
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Es pot editar la quantitat"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -4106,7 +4126,7 @@ msgstr "No disponible"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Not Snoozed"
-msgstr "No s' ha \" Snexed \""
+msgstr "No ajornat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4313,7 +4333,7 @@ msgstr "Ordre"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Order Once"
-msgstr "Una vegada l' ordre"
+msgstr "Ordena un cop"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -4712,12 +4732,12 @@ msgstr "Operacions detallades pre-completes"
 #: code:addons/stock/static/src/xml/popover_widget.xml:0
 #, python-format
 msgid "Preceding operations"
-msgstr "Operacions pre- preceditesNoun, name of the user action"
+msgstr "Operacions precedents"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id
 msgid "Preferred Route"
-msgstr "Camí preferida"
+msgstr "Ruta preferida"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -5146,6 +5166,16 @@ msgstr "Quantitat"
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+"Els Quants s'eliminen automàticament quan sigui apropiat. Si els heu de "
+"suprimir manualment, demaneu a un gestor d'estoc que ho faci."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr "La creació de Quant està restringida, no podeu fer aquesta operació."
 
@@ -5524,7 +5554,7 @@ msgstr "Aprovisionament"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Report"
-msgstr "Informe de respostes"
+msgstr "Informe de reabastiment"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -6166,12 +6196,12 @@ msgstr "Signat"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 #, python-format
 msgid "Snooze"
-msgstr "Migdiada "
+msgstr "Ajorna "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__snoozed_until
 msgid "Snooze Date"
-msgstr "Data esbiaixada"
+msgstr "Ajornat fins"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_orderpoint_snooze
@@ -6186,7 +6216,7 @@ msgstr "Snexed for"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__snoozed_until
 msgid "Snoozed"
-msgstr "Snexed"
+msgstr "Ajornat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -6981,6 +7011,26 @@ msgstr ""
 "Una millor solució podria ser arxivar el producte i crear-ne un de nou."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"L'empresa d'aquest producte no es pot canviar mentre hi hagi quantitats que "
+"pertanyin a una altra empresa."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"El producte d'aquesta empresa no es pot canviar mentre hi hagi moviments "
+"d'estoc que pertanyin a una altra empresa."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -7042,7 +7092,7 @@ msgstr "Consell: velocitat de les operacions d' inventari amb codis de barres"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "To"
-msgstr "Per"
+msgstr "Fins a"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
@@ -7059,7 +7109,7 @@ msgstr "Per fer"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
 msgid "To Order"
-msgstr "A l' ordre"
+msgstr "Quantitat a demanar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_line__to_immediate
@@ -7359,7 +7409,7 @@ msgstr "Unitats de mesura"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unity of measure"
+msgid "Unit of measure"
 msgstr "Unitat de mesura"
 
 #. module: stock
@@ -7928,6 +7978,12 @@ msgstr ""
 "la reserva de moviment d'estoc. "
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "No podeu canviar el tipus de producte que ja s'utilitzava."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8118,6 +8174,14 @@ msgstr ""
 "No pots cancel·lar la reserva d'un moviment d'estoc establert com  a 'Fet'."
 
 #. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"No podeu canviar un moviment d'estoc cancel·lat, creeu una línia nova com "
+"alternativa."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
@@ -8154,8 +8218,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on "
 "<i>apply</i> Odoo will process all the quantities."
 msgstr ""
-"Encara no heu registrat <i>done </i> quantitats, clicant a <i>apply </i> "
-"Odoo processarà totes les quantitats."
+"Encara no heu enregistrat quantitats <i>fetes</i>, clicant a <i>APLICAR </i>"
+" Odoo processarà totes les quantitats."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -8273,8 +8337,8 @@ msgid ""
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
 "Aquí trobareu propostes intel·ligents de replenament basades en projeccions d'inventari.\n"
-"            Seleccioneu la quantitat de comprar o fabricar i llançar ordres en un clic.\n"
-"            Per a estalviar temps en el futur, establiu les regles com a \"automatats.\""
+"            Seleccioneu la quantitat a comprar o fabricar i llanceu ordres amb un clic.\n"
+"            Per a estalviar temps en el futur, establiu les regles com a \"auto\""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule

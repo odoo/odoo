@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, OrderedSet
+from odoo.tools import float_compare, float_is_zero, OrderedSet
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -40,8 +40,13 @@ class StockMove(models.Model):
         # If the move is a return, use the original move's price unit.
         if self.origin_returned_move_id and self.origin_returned_move_id.sudo().stock_valuation_layer_ids:
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
+            # dropshipping create additional positive svl to make sure there is no impact on the stock valuation
+            # We need to remove them from the computation of the price unit.
+            if self.origin_returned_move_id._is_dropshipped() or self.origin_returned_move_id._is_dropshipped_returned():
+                layers = layers.filtered(lambda l: float_compare(l.value, 0, precision_rounding=l.product_id.uom_id.rounding) <= 0)
+            layers |= layers.stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
-            return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
+            return sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
         return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
 
     @api.model
@@ -80,7 +85,7 @@ class StockMove(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        if self._get_in_move_lines():
+        if self._get_in_move_lines() and not self._is_dropshipped_returned():
             return True
         return False
 
@@ -108,7 +113,7 @@ class StockMove(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        if self._get_out_move_lines():
+        if self._get_out_move_lines() and not self._is_dropshipped():
             return True
         return False
 
@@ -214,23 +219,26 @@ class StockMove(models.Model):
 
             common_vals = dict(move._prepare_common_svl_vals(), remaining_qty=0)
 
-            # create the in
-            in_vals = {
-                'unit_cost': unit_cost,
-                'value': unit_cost * quantity,
-                'quantity': quantity,
-            }
-            in_vals.update(common_vals)
-            svl_vals_list.append(in_vals)
+            # create the in if it does not come from a valued location (eg subcontract -> customer)
+            if not move.location_id._should_be_valued():
+                in_vals = {
+                    'unit_cost': unit_cost,
+                    'value': unit_cost * quantity,
+                    'quantity': quantity,
+                }
+                in_vals.update(common_vals)
+                svl_vals_list.append(in_vals)
 
-            # create the out
-            out_vals = {
-                'unit_cost': unit_cost,
-                'value': unit_cost * quantity * -1,
-                'quantity': quantity * -1,
-            }
-            out_vals.update(common_vals)
-            svl_vals_list.append(out_vals)
+            # create the out if it does not go to a valued location (eg customer -> subcontract)
+            if not move.location_dest_id._should_be_valued():
+                out_vals = {
+                    'unit_cost': unit_cost,
+                    'value': unit_cost * quantity * -1,
+                    'quantity': quantity * -1,
+                }
+                out_vals.update(common_vals)
+                svl_vals_list.append(out_vals)
+
         return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
 
     def _create_dropshipped_returned_svl(self, forced_quantity=None):
@@ -256,6 +264,9 @@ class StockMove(models.Model):
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
 
+        # '_action_done' might have deleted some exploded stock moves
+        valued_moves = {value_type: moves.exists() for value_type, moves in valued_moves.items()}
+
         # '_action_done' might have created an extra move to be valued
         for move in res - self:
             for valued_type in self._get_valued_types():
@@ -272,11 +283,11 @@ class StockMove(models.Model):
 
 
         for svl in stock_valuation_layers:
-            if not svl.product_id.valuation == 'real_time':
+            if not svl.with_company(svl.company_id).product_id.valuation == 'real_time':
                 continue
             if svl.currency_id.is_zero(svl.value):
                 continue
-            svl.stock_move_id._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+            svl.stock_move_id.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
 
         stock_valuation_layers._check_company()
 

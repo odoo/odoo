@@ -76,6 +76,9 @@ PaymentForm.include({
         var stripe = this.stripe;
         var card = this.stripe_card_element;
         if (card._invalid) {
+            // if we don't enable the button again, at this point the button is displaying the 'loading' animation
+            // and since we break the workflow here it gives the impression that something is happening, but it isn't
+            self.enableButton(button);
             return;
         }
         this._createPaymentMethod(stripe, formData, card, addPmEvent).then(function(result) {
@@ -129,7 +132,9 @@ PaymentForm.include({
         var stripe = Stripe(formData.stripe_publishable_key);
         var element = stripe.elements();
         var card = element.create('card', {hidePostalCode: true});
-        card.mount('#card-element');
+        // use more specific css selector so that '#card-element' is found inside the selected stripe card, otherwise
+        // this won't happen, and the card will be mounted to the first element found.
+        card.mount(`#o_payment_add_token_acq_${acquirerID} #card-element`);
         card.on('ready', function(ev) {
             card.focus();
         });

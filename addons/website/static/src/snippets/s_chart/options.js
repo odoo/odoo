@@ -69,9 +69,6 @@ options.registry.InnerChart = options.Class.extend({
 
         await this._super(...arguments);
 
-        // prevent the columns from becoming too small.
-        this.tableEl.classList.toggle('o_we_matrix_five_col', this.tableEl.querySelectorAll('tr:first-child th').length > 5);
-
         this.backSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Color") : _t("Dataset Color");
         this.borderSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Border") : _t("Dataset Border");
 

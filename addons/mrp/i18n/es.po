@@ -11,19 +11,21 @@
 # Martin Trigaux, 2020
 # Jorge Luis Alfonso <jlalfonso21@gmail.com>, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # jabelchi, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Daniela Cervantes <dace@odoo.com>, 2021
 # Nelson Ramírez <info@konos.cl>, 2021
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2021
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
-# sakodoo <sak@odoo.com>, 2021
+# SAKodoo <sak@odoo.com>, 2021
 # Alejandro Concepción <alconor23@hotmail.com>, 2021
 # Xabi Spacebiker <xabispacebiker@gmail.com>, 2021
 # marcescu, 2022
+# Víctor Martínez <victor.martinez@tecnativa.com>, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,8 +33,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: marcescu, 2022\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -114,7 +116,7 @@ msgstr "# of LdM donde son usados"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
-msgstr "%s Órdenes de Fabricación hijas"
+msgstr "%s Órdenes de producción hijas"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -210,12 +212,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Backorders</span>"
-msgstr "<span class=\"o_stat_text\">Órdenes parciales</span>"
+msgstr "<span class=\"o_stat_text\">Parciales</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr "<span class=\"o_stat_text\">Órdenes de Fabricación hijas</span>"
+msgstr "<span class=\"o_stat_text\">OP hijas</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -257,7 +259,7 @@ msgstr "<span class=\"o_stat_text\">Desechos </span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Source MO</span>"
-msgstr "<span class=\"o_stat_text\">Orden de fabricación fuente</span>"
+msgstr "<span class=\"o_stat_text\">OPs fuente</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -343,7 +345,7 @@ msgstr "<strong>¿Es una razón de Bloqueo? </strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>No. Of Minutes</strong>"
-msgstr "<strong>No. de minutos</strong>"
+msgstr "<strong>Nº de minutos</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -391,7 +393,7 @@ msgstr "<strong>Centro de trabajo</strong>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 msgid "<strong>Workcenter: </strong>"
-msgstr "<strong>Centro de Trabajo: </strong>"
+msgstr "<strong>Centro de trabajo: </strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
@@ -545,19 +547,19 @@ msgstr "Permitido"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__allowed_mo_ids
 msgid "Allowed Mo"
-msgstr ""
+msgstr "Orden de fabricación permitida"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__allowed_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_move__allowed_operation_ids
 msgid "Allowed Operation"
-msgstr ""
+msgstr "Operación permitida"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_product_ids
 msgid "Allowed Product"
-msgstr ""
+msgstr "Producto permitido"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -1084,7 +1086,7 @@ msgstr "Componente"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
 msgid "Component Availability"
-msgstr ""
+msgstr "Disponibilidad del componente"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1675,6 +1677,8 @@ msgstr "Excepción(es):"
 msgid ""
 "Existing Serial number (%s). Please correct the serial numbers encoded."
 msgstr ""
+"Número de serie existente (%s). Por favor, corrija los números de serie "
+"codificados."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -2388,7 +2392,7 @@ msgstr "Bloquear"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_locked_by_default
 msgid "Lock Quantities To Consume"
-msgstr ""
+msgstr "Bloquear cantidades por consumir"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2402,7 +2406,7 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_locked_by_default
 msgid "Locked by default"
-msgstr ""
+msgstr "Bloqueado por defecto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_id
@@ -2865,6 +2869,17 @@ msgstr ""
 "trabajo para prevenir esto."
 
 #. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
+"Fíjese que el/los producto/s: '%s' está/n aún enlazado/s a listas de "
+"materiales activas, lo que significa que el producto aún podría usarse en "
+"ellas."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction_counter
@@ -3222,7 +3237,7 @@ msgstr "Lámina de plástico"
 #: code:addons/mrp/models/stock_move.py:0
 #, python-format
 msgid "Please delete the Manufacture Order first."
-msgstr ""
+msgstr "Por favor, elimine la orden de fabricación primero."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_ply
@@ -3264,6 +3279,8 @@ msgid ""
 "Prevent manufacturing users from modifying quantities to consume, unless a "
 "manager has unlocked the document"
 msgstr ""
+"Previene que los usuarios de fabricación modifiquen las cantidades a "
+"consumir, a menos que el gerente haya desbloqueado el documento"
 
 #. module: mrp
 #. openerp-web
@@ -3697,7 +3714,7 @@ msgstr "Usuario responsable"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Review Consumption"
-msgstr ""
+msgstr "Revisar consumo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
@@ -3861,6 +3878,12 @@ msgstr "Secuencia de producción"
 #, python-format
 msgid "Sequence stock after manufacturing"
 msgstr "Secuencia de almacén después de producción"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Serial number (%s) has already been produced."
+msgstr "Ya se produjo con anterioridad el número de serie (%s)."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
@@ -4341,6 +4364,16 @@ msgstr ""
 "%(component)s "
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
+"El número de serie seleccionado no corresponde con el que se utilizó en la "
+"orden de fabricación, seleccione otro."
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4539,7 +4572,7 @@ msgstr "A Procesar"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_operations_finished
 msgid "To Produce"
-msgstr "Fabricar"
+msgstr "Por producir"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view

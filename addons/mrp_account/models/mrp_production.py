@@ -78,6 +78,8 @@ class MrpProduction(models.Model):
     def button_mark_done(self):
         res = super(MrpProduction, self).button_mark_done()
         for order in self:
+            if order.state != 'done':
+                continue
             order._costs_generate()
         return res
 

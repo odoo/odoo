@@ -371,6 +371,9 @@
                     of
                     <span class="topage"/>
                 </div>
+                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+                    <span t-field="o.name"/>
+                </div>
             </div>
         </div>
     </template>
@@ -412,6 +415,9 @@
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'">
                     Page: <span class="page"/> / <span class="topage"/>
+                </div>
+                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+                    <span t-field="o.name"/>
                 </div>
             </div>
         </div>
@@ -510,6 +516,9 @@
 
                 <div t-if="report_type == 'pdf'" class="text-muted">
                     Page: <span class="page"/> / <span class="topage"/>
+                </div>
+                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+                    <span t-field="o.name"/>
                 </div>
             </div>
         </div>

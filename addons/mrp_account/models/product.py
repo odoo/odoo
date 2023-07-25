@@ -56,7 +56,7 @@ class ProductProduct(models.Model):
                 for move in moves_list:
                     value += move.product_qty * move.product_id._compute_average_price(qty_invoiced * move.product_qty, qty_to_invoice * move.product_qty, move)
                 continue
-            line_qty = bom_line.product_uom_id._compute_quantity(bom_line.product_qty, bom_line.product_id.uom_id)
+            line_qty = bom_line.product_uom_id._compute_quantity(bom_lines[bom_line]['qty'], bom_line.product_id.uom_id)
             moves = self.env['stock.move'].concat(*moves_list)
             value += line_qty * bom_line.product_id._compute_average_price(qty_invoiced * line_qty, qty_to_invoice * line_qty, moves)
         return value
@@ -72,7 +72,7 @@ class ProductProduct(models.Model):
             duration_expected = (
                 opt.workcenter_id.time_start +
                 opt.workcenter_id.time_stop +
-                opt.time_cycle)
+                opt.time_cycle * 100 / opt.workcenter_id.time_efficiency)
             total += (duration_expected / 60) * opt.workcenter_id.costs_hour
         for line in bom.bom_line_ids:
             if line._skip_bom_line(self):

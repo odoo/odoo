@@ -26,20 +26,22 @@
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2020
 # Tommi Rintala <tommi.rintala@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2020
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2020
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
 # Mikko Salmela <salmemik@gmail.com>, 2020
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Pekka Ikonen, 2021
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Joakim Weckman, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Konsta Aavaranta, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -47,8 +49,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -245,12 +247,13 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
-"<?xml version=“1.0”?>\n"
-"<div style=“margin: 0px; padding: 0px;”>\n"
-"    <p style=“margin: 0px; padding: 0px; font-size: 13px;”>\n"
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hyvä ${object.partner_id.name}<br/><br/>\n"
 "        Kiitos maksustasi.\n"
-"        Tässä on maksukuittisi <strong>${(object.name or ‘’).replace(‘/‘,’-‘)}</strong> summalle <strong>${format_amount(object.amount, object.currency_id)}</strong> yrityksestä ${object.company_id.name}.\n"
+"        Tässä on kuittisi <strong>${(object.name or '').replace('/','-')}</strong> summalle\n"
+"         <strong>${format_amount(object.amount, object.currency_id)}</strong> yritykseltä ${object.company_id.name}.\n"
 "        <br/><br/>\n"
 "        Älä epäröi ottaa meihin yhteyttä, jos sinulla on kysyttävää.\n"
 "        <br/><br/>\n"
@@ -429,8 +432,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
 "'/')]}\">Draft</span>"
 msgstr ""
-"<span attrs=“{‘invisible’: [‘|’, (‘state’, ‘!=‘, ‘draft’), (‘name’, ‘!=‘, "
-"‘/‘)]}”>Luonnos</span>"
+"<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
+"'/')]}\">Luonnos</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -453,8 +456,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Bill</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Bills</span>"
 msgstr ""
-"<span attrs=“{‘invisible’: [(‘reconciled_bills_count’,’&gt;’, 1)]}”>Ostolasku</span>\n"
-"                                <span attrs=“{‘invisible’: [(‘reconciled_bills_count’,’&lt;=‘, 1)]}”>Ostolaskut</span>"
+"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Ostolasku</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Ostolaskut</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -462,8 +465,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_invoices_count','&gt;', 1)]}\">Invoice</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}\">Invoices</span>"
 msgstr ""
-"<span attrs=“{‘invisible’: [(‘reconciled_invoices_count’,’&gt;’, 1)]}”>IMyyntilasku</span>\n"
-"                                <span attrs=“{‘invisible’: [(‘reconciled_invoices_count’,’&lt;=‘, 1)]}”>Myyntilaskut</span>"
+"<span attrs=\"{'invisible': [('reconciled_invoices_count','&gt;', 1)]}\">Myyntilasku</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}\">Myyntilaskut</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -471,8 +474,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">Statement</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">Statements</span>"
 msgstr ""
-"<span attrs=“{‘invisible’: [(‘reconciled_statements_count’,’&gt;’, 1)]}”>Tiliote</span>\n"
-"                                <span attrs=“{‘invisible’: [(‘reconciled_statements_count’,’&lt;=‘, 1)]}”>Tiliotteet</span>"
+"<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">Tiliote</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">Tiliotteet</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -545,8 +548,8 @@ msgid ""
 "('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> or "
 "</span>"
 msgstr ""
-"<span class=“o_form_label mx-3 oe_edit_only” attrs=“{‘invisible’: [‘|’, "
-"(‘state’, ‘!=‘, ‘draft’), (‘invoice_payment_term_id’, ‘!=‘, False)]}”> tai "
+"<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': ['|', "
+"('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> tai "
 "</span>"
 
 #. module: account
@@ -849,6 +852,11 @@ msgstr "<strong>Yritys:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr "<strong>Hyvityslaskun päivämäärä</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Asiakasnumero:</strong>"
 
@@ -861,6 +869,11 @@ msgstr "<strong>Asiakas: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>Asiakas</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Pvm:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -916,6 +929,11 @@ msgstr "<strong> Maksutapa: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Tuote</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>Vastaanottopvm:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1031,6 +1049,12 @@ msgid ""
 "                related to the day-to-day business."
 msgstr ""
 "Päiväkirjaan merkitään päivittäiseen liiketoimintaan liittyvät tapahtumat."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr "Tämän siirron rivi käyttää vanhentunutta tiliä, et voi kirjata sitä."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -2821,7 +2845,7 @@ msgstr "Laskutus"
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
-msgstr ""
+msgstr "Talouden pääkäyttäjä"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -6656,6 +6680,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"Laskujen ja hyvityslaskujen jaottelussa on oltava vähintään yksi "
+"verojaottelurivi."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -7806,7 +7832,7 @@ msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the"
 " name of the full reconcile if it exists."
 msgstr ""
-"Tämän rivin kohdistusnumero, ‘P’, jos se täsmäytetään vain osittain, tai "
+"Tämän rivin kohdistusnumero, 'P', jos se täsmäytetään vain osittain, tai "
 "täydellisen täsmäytyksen nimi, jos sellainen on olemassa."
 
 #. module: account
@@ -9822,6 +9848,7 @@ msgstr "Täsmäytetyt osat"
 #, python-format
 msgid "Record cannot be deleted. Partner used in Accounting"
 msgstr ""
+"Tietuetta ei voida poistaa, koska sitä käytetään Kirjanpito-moduulissa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10887,7 +10914,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
-msgstr ""
+msgstr "Näytä kirjanpidon ominaisuudet - Vain luku"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
@@ -11630,7 +11657,7 @@ msgid ""
 "Tax report lines whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Veroraporttirivit, joiden ‘+’ -tunniste määritetään tapahtumariveille tällä "
+"Veroraporttirivit, joiden '+' -tunniste määritetään tapahtumariveille tällä "
 "jakorivillä"
 
 #. module: account
@@ -11639,7 +11666,7 @@ msgid ""
 "Tax report lines whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Veroraporttirivit, joiden ‘-’ -tunniste määritetään tapahtumariveille tällä "
+"Veroraporttirivit, joiden '-' -tunniste määritetään tapahtumariveille tällä "
 "jakorivillä"
 
 #. module: account
@@ -12239,7 +12266,7 @@ msgstr ""
 msgid ""
 "The amount in foreign currency must be set if the amount is not equal to "
 "zero."
-msgstr ""
+msgstr "Vieraan valuutan määrä pitää asettaa, jos se ei ole nolla."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -13370,6 +13397,16 @@ msgstr ""
 "sijaan"
 
 #. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+"Tätä tuotetta on jo käytetty kirjatuilla päiväkirjavienneillä.\n"
+"Jos haluat muuttaa sen mittayksikköä, arkistoi tämä tuota ja luo uusi tuote."
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
@@ -13722,6 +13759,12 @@ msgstr "Maksamattomat laskut"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "Kirjaamatta"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr "Kirjaamattomat viennit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -14542,6 +14585,13 @@ msgstr ""
 "kohteita"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Ota yhteyttä kirjanpitäjääsi tulostaaksesi Hash-integraation tuloksen."
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -14598,11 +14648,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"Et voi muokata seuraavia kenttiä, koska päiväkirjalla on aktivoitu "
-"päiväkirjavientien lukitus: %s."
+"Et voi muokata seuraavia kenttiä: %s.\n"
+"Seuraavat viennit on jo lukittu:\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15049,6 +15101,16 @@ msgid "the parent company"
 msgstr "emoyhtiö"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+"Tuotteelle \"%s\" valitsemasi mittayksikkö (UoM) \"%s\" ei ole yhteensopiva "
+"sen luokan kanssa : %s."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "to"
@@ -15076,3 +15138,21 @@ msgid ""
 "An analytic default requires an analytic account or an analytic tag used for"
 " analytic distribution."
 msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "Verot ovat päivitetty!"
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"Tarkista verot. Ne saattavat olla vanhentuneita. Niitä ei ole päivitetty. Ne"
+" eivät vastaa täysin lokalisointimoduulin alkuperäisen version "
+"veroja.<br/>Haluat ehkä arkistoida tai mukauttaa ne.<br/><ul>"

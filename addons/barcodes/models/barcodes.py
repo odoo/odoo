@@ -25,48 +25,27 @@ class BarcodeNomenclature(models.Model):
 
     # returns the checksum of the ean13, or -1 if the ean has not the correct length, ean must be a string
     def ean_checksum(self, ean):
-        code = list(ean)
-        if len(code) != 13:
+        if len(ean) != 13:
             return -1
-
-        oddsum = evensum = total = 0
-        code = code[:-1] # Remove checksum
-        for i in range(len(code)):
-            if i % 2 == 0:
-                evensum += int(code[i])
-            else:
-                oddsum += int(code[i])
-        total = oddsum * 3 + evensum
-        return int((10 - total % 10) % 10)
+        return self.env['ir.actions.report'].get_barcode_check_digit(ean)
 
     # returns the checksum of the ean8, or -1 if the ean has not the correct length, ean must be a string
     def ean8_checksum(self,ean):
-        code = list(ean)
-        if len(code) != 8:
+        if len(ean) != 8:
             return -1
-
-        sum1  = int(ean[1]) + int(ean[3]) + int(ean[5])
-        sum2  = int(ean[0]) + int(ean[2]) + int(ean[4]) + int(ean[6])
-        total = sum1 + 3 * sum2
-        return int((10 - total % 10) % 10)
+        return self.env['ir.actions.report'].get_barcode_check_digit(ean)
 
     # returns true if the barcode is a valid EAN barcode
     def check_ean(self, ean):
-       return re.match("^\d+$", ean) and self.ean_checksum(ean) == int(ean[-1])
+        if len(ean) == 13:
+            return self.env['ir.actions.report'].check_barcode_encoding(ean, 'ean13')
+        elif len(ean) == 8:
+            return self.env['ir.actions.report'].check_barcode_encoding(ean, 'ean8')
+        return False
 
     # returns true if the barcode string is encoded with the provided encoding.
     def check_encoding(self, barcode, encoding):
-        if encoding == 'ean13':
-            return len(barcode) == 13 and re.match("^\d+$", barcode) and self.ean_checksum(barcode) == int(barcode[-1]) 
-        elif encoding == 'ean8':
-            return len(barcode) == 8 and re.match("^\d+$", barcode) and self.ean8_checksum(barcode) == int(barcode[-1])
-        elif encoding == 'upca':
-            return len(barcode) == 12 and re.match("^\d+$", barcode) and self.ean_checksum("0"+barcode) == int(barcode[-1])
-        elif encoding == 'any':
-            return True
-        else:
-            return False
-
+        return self.env['ir.actions.report'].check_barcode_encoding(barcode, encoding)
 
     # Returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
     def sanitize_ean(self, ean):

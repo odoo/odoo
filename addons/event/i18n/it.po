@@ -12,8 +12,9 @@
 # Simone Bernini <simone@aperturelabs.it>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,13 +22,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
@@ -59,7 +60,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 msgstr ""
-"( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" "
+"( <i class=\"fa fa-clock-o\" aria-label=\"Periodo\" role=\"img\" "
 "title=\"Periodo\"/> Dal"
 
 #. module: event
@@ -149,7 +150,7 @@ msgid ""
 "                                            <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
 "<br/>\n"
-"                                            <span class=\"text-muted\">Trasmette in rete le sessioni attraverso l'integrazione con YouTube</span>"
+"                                            <span class=\"text-muted\">Trasmette in rete le tracce attraverso l'integrazione con YouTube</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -158,7 +159,7 @@ msgid ""
 "                                            <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
 "<br/>\n"
-"                                            <span class=\"text-muted\">Condivisione quiz ai partecipanti al termine di una sessione</span>"
+"                                            <span class=\"text-muted\">Condivisione quiz ai partecipanti al termine di una traccia</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -215,8 +216,8 @@ msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
-"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"Conferma registrazione\"/>"
+"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Pulsante conferma\""
+" title=\"Conferma registrazione\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -224,7 +225,7 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Pulsante conferma\" "
 "title=\"Conferma registrazione\"/>"
 
 #. module: event
@@ -247,7 +248,7 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Icona freccia\" "
 "title=\"Freccia\"/>"
 
 #. module: event
@@ -261,8 +262,8 @@ msgid ""
 "<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
 "button\" title=\"Confirm Attendance\"/>"
 msgstr ""
-"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
-"button\" title=\"Conferma presenza\"/>"
+"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Pulsante "
+"partecipazione\" title=\"Conferma presenza\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -270,8 +271,8 @@ msgid ""
 "<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Confirm Attendance\"/>"
 msgstr ""
-"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
-"title=\"Conferma presenza\"/>"
+"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Pulsante "
+"partecipazione\" title=\"Conferma presenza\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -562,13 +563,13 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        Buongiorno ${object.name or ''},<br/>\n"
-"                        siamo felici di confermare la tua registrazione per l'evento\n"
+"                        siamo lieti di confermare la registrazione per l'evento\n"
 "                        % if is_online:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
-"                        .\n"
+"                        - Partecipante: ${object.name}.\n"
 "                    </div>\n"
 "                    <div>\n"
 "                        <br/>\n"
@@ -993,13 +994,13 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        Buongiorno ${object.name},<br/>\n"
-"                        siamo entusiasti di ricordarti che l'evento\n"
+"                        siamo felici di ricordarti che l'evento\n"
 "                        % if is_online:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
-"                        inizia <strong>${object.get_date_range_str()}</strong>.\n"
+"                        è in partenza <strong>${object.get_date_range_str()}</strong>.\n"
 "                    </div>\n"
 "                    <div>\n"
 "                        <br/>\n"
@@ -1012,7 +1013,7 @@ msgstr ""
 "                        <br/><br/>\n"
 "                    </div>\n"
 "                    <div>\n"
-"                        Confermiamo la registrazione con la speranza di incontrarci,<br/>\n"
+"                        Nella speranza di incontrarti confermiamo la tua registrazione,<br/>\n"
 "                        <span style=\"color: #454748;\">\n"
 "                        -- <br/>\n"
 "                        % if event_organizer:\n"
@@ -1227,7 +1228,7 @@ msgid ""
 " proposal form, etc."
 msgstr ""
 "Aggiunge un menù di navigazione alle pagine web dell'evento con programma, "
-"sessioni, modulo di proposta sessioni ecc."
+"tracce, modulo di proposta tracce ecc."
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -2139,19 +2140,19 @@ msgstr "Minimizzata nel kanban"
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_follower_ids
 msgid "Followers"
-msgstr "Chi sta seguendo"
+msgstr "Seguito da"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_channel_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Chi sta seguendo (canali)"
+msgstr "Seguito da (canali)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_partner_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Chi sta seguendo (partner)"
+msgstr "Seguito da (partner)"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_type_icon
@@ -2623,7 +2624,7 @@ msgstr "Allegato principale"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr "Gestione e pubblicazione di un programma con sessioni"
+msgstr "Gestione e pubblicazione di un programma con tracce"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -2963,7 +2964,7 @@ msgstr "Acquisti, gestione vendite e acquisti, contabilità finanziaria."
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr "Quiz per le sessioni"
+msgstr "Quiz per le tracce"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -3089,7 +3090,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
-msgstr "Rendicontazione"
+msgstr "Rendiconto"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
@@ -3123,7 +3124,7 @@ msgstr "Lettura tesserino per conferma partecipanti"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr "Programma e sessioni"
+msgstr "Programma e tracce"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -3552,7 +3553,7 @@ msgstr "Registrazioni totali per l'evento"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
-msgstr "Sessioni e programma"
+msgstr "Tracce e programma"
 
 #. module: event
 #: model:event.type,name:event.event_type_1
@@ -3794,7 +3795,7 @@ msgstr "Registrazione per ${object.event_id.name}"
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
+msgstr "tesserino_per_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form

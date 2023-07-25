@@ -83,8 +83,8 @@ class PickingType(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'sequence_id' not in vals or not vals['sequence_id']:
-            if vals['warehouse_id']:
+        if not vals.get('sequence_id') and vals.get('sequence_code'):
+            if vals.get('warehouse_id'):
                 wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
                 vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
                     'name': wh.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
@@ -162,7 +162,12 @@ class PickingType(models.Model):
         args = args or []
         domain = []
         if name:
-            domain = ['|', ('name', operator, name), ('warehouse_id.name', operator, name)]
+            # Try to reverse the `name_get` structure
+            parts = name.split(': ')
+            if len(parts) == 2:
+                domain = [('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
+            else:
+                domain = ['|', ('name', operator, name), ('warehouse_id.name', operator, name)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.onchange('code')
@@ -766,6 +771,7 @@ class Picking(models.Model):
     def action_cancel(self):
         self.mapped('move_lines')._action_cancel()
         self.write({'is_locked': True})
+        self.filtered(lambda x: not x.move_lines).state = 'cancel'
         return True
 
     def _action_done(self):
@@ -862,7 +868,7 @@ class Picking(models.Model):
             for pack in origin_packages:
                 if picking._check_move_lines_map_quant_package(pack):
                     package_level_ids = picking.package_level_ids.filtered(lambda pl: pl.package_id == pack)
-                    move_lines_to_pack = picking.move_line_ids.filtered(lambda ml: ml.package_id == pack and not ml.result_package_id)
+                    move_lines_to_pack = picking.move_line_ids.filtered(lambda ml: ml.package_id == pack and not ml.result_package_id and ml.state not in ('done', 'cancel'))
                     if not package_level_ids:
                         self.env['stock.package_level'].create({
                             'picking_id': picking.id,
@@ -1427,3 +1433,6 @@ class Picking(models.Model):
             body=message,
         )
         return True
+
+    def _get_report_lang(self):
+        return self.move_lines and self.move_lines[0].partner_id.lang or self.partner_id.lang or self.env.lang

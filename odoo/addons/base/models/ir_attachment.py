@@ -232,10 +232,15 @@ class IrAttachment(models.Model):
                 self._file_delete(fname)
 
     def _get_datas_related_values(self, data, mimetype):
+        checksum = self._compute_checksum(data)
+        try:
+            index_content = self._index(data, mimetype, checksum=checksum)
+        except TypeError:
+            index_content = self._index(data, mimetype)
         values = {
             'file_size': len(data),
-            'checksum': self._compute_checksum(data),
-            'index_content': self._index(data, mimetype),
+            'checksum': checksum,
+            'index_content': index_content,
             'store_fname': False,
             'db_datas': data,
         }
@@ -289,7 +294,7 @@ class IrAttachment(models.Model):
 
     def _postprocess_contents(self, values):
         ICP = self.env['ir.config_parameter'].sudo().get_param
-        supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,gif,bmp,tif').split(',')
+        supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,bmp,tiff').split(',')
 
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         _type, _subtype = mimetype.split('/')
@@ -306,16 +311,15 @@ class IrAttachment(models.Model):
                         img = ImageProcess(False, verify_resolution=False)
                         img.image = Image.open(io.BytesIO(values['raw']))
                         img.original_format = (img.image.format or '').upper()
-                        fn_quality = img.image_quality
                     else:  # datas
                         img = ImageProcess(values['datas'], verify_resolution=False)
-                        fn_quality = img.image_base64
 
                     w, h = img.image.size
                     nw, nh = map(int, max_resolution.split('x'))
                     if w > nw or h > nh:
-                        img.resize(nw, nh)
+                        img = img.resize(nw, nh)
                         quality = int(ICP('base.image_autoresize_quality', 80))
+                        fn_quality = img.image_quality if is_raw else img.image_base64
                         values[is_raw and 'raw' or 'datas'] = fn_quality(quality=quality)
                 except UserError as e:
                     # Catch error during test where we provide fake image
@@ -339,7 +343,7 @@ class IrAttachment(models.Model):
         return values
 
     @api.model
-    def _index(self, bin_data, file_type):
+    def _index(self, bin_data, file_type, checksum=None):
         """ compute the index content of the given binary data.
             This is a python implementation of the unix command 'strings'.
             :param bin_data : datas in binary form
@@ -425,10 +429,10 @@ class IrAttachment(models.Model):
             self.env['ir.attachment'].flush(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
             self._cr.execute('SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
             for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
-                if not self.env.is_system() and res_field:
-                    raise AccessError(_("Sorry, you are not allowed to access this document."))
                 if public and mode == 'read':
                     continue
+                if not self.env.is_system() and (res_field or (not res_id and create_uid != self.env.uid)):
+                    raise AccessError(_("Sorry, you are not allowed to access this document."))
                 if not (res_model and res_id):
                     continue
                 model_ids[res_model].add(res_id)
@@ -610,7 +614,7 @@ class IrAttachment(models.Model):
                 ))
 
             # 'check()' only uses res_model and res_id from values, and make an exists.
-            # We can group the values by model, res_id to make only one query when 
+            # We can group the values by model, res_id to make only one query when
             # creating multiple attachments on a single record.
             record_tuple = (values.get('res_model'), values.get('res_id'))
             record_tuple_set.add(record_tuple)

@@ -15,7 +15,7 @@
 
     <record id="account_tax_report_line_chtax_200" model="account.tax.report.line">
         <field name="name">200 Chiffre d'affaires</field>
-        <field name="formula">tax_ch_302a + tax_ch_312a + tax_ch_342a + tax_ch_289</field>
+        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a + tax_ch_289</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
@@ -81,7 +81,7 @@
         <field name="name">299 Chiffre d'affaires imposable (ch.200 moins ch.289)</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
-        <field name="formula">tax_ch_302a + tax_ch_312a + tax_ch_342a</field>
+        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a</field>
     </record>
 
     <record id="account_tax_report_line_calc_impot" model="account.tax.report.line">
@@ -99,7 +99,7 @@
     </record>
 
     <record id="account_tax_report_line_chtax_302a" model="account.tax.report.line">
-        <field name="name">302a Chiffre d'affaires imposable a 7.7% (TS)</field>
+        <field name="name">302a Chiffre d'affaires imposable a 7.7% (TS) jusqu'au 31.12.2023</field>
         <field name="tag_name">302a</field>
         <field name="code">tax_ch_302a</field>
         <field name="report_id" ref="tax_report"/>
@@ -107,8 +107,17 @@
         <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
     </record>
 
+    <record id="account_tax_report_line_chtax_303a" model="account.tax.report.line">
+        <field name="name">303a Chiffre d'affaires imposable a 8.1% (TS) dès le 01.01.2024</field>
+        <field name="tag_name">303a</field>
+        <field name="code">tax_ch_303a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
+    </record>
+
     <record id="account_tax_report_line_chtax_312a" model="account.tax.report.line">
-        <field name="name">312a Chiffre d'affaires imposable a 2.5% (TR)</field>
+        <field name="name">312a Chiffre d'affaires imposable a 2.5% (TR) jusqu'au 31.12.2023</field>
         <field name="tag_name">312a</field>
         <field name="code">tax_ch_312a</field>
         <field name="report_id" ref="tax_report"/>
@@ -116,10 +125,28 @@
         <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
     </record>
 
+    <record id="account_tax_report_line_chtax_313a" model="account.tax.report.line">
+        <field name="name">313a Chiffre d'affaires imposable a 2.6% (TR) dès le 01.01.2024</field>
+        <field name="tag_name">313a</field>
+        <field name="code">tax_ch_313a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
+    </record>
+
     <record id="account_tax_report_line_chtax_342a" model="account.tax.report.line">
-        <field name="name">342a Chiffre d'affaires imposable a 3.7% (TS)</field>
+        <field name="name">342a Chiffre d'affaires imposable a 3.7% (TS) jusqu'au 31.12.2023</field>
         <field name="tag_name">342a</field>
         <field name="code">tax_ch_342a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_343a" model="account.tax.report.line">
+        <field name="name">343a Chiffre d'affaires imposable a 3.8% (TS) dès le 01.01.2024</field>
+        <field name="tag_name">343a</field>
+        <field name="code">tax_ch_343a</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
@@ -141,8 +168,16 @@
     </record>
 
     <record id="account_tax_report_line_chtax_382a" model="account.tax.report.line">
-        <field name="name">382a Impots sur les acquisitions</field>
+        <field name="name">382a Impots sur les acquisitions jusqu'au 31.12.2023</field>
         <field name="tag_name">382a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot_base"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_383a" model="account.tax.report.line">
+        <field name="name">383a Impots sur les acquisitions dès le 01.01.2024</field>
+        <field name="tag_name">383a</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_calc_impot_base"/>
@@ -157,24 +192,48 @@
     </record>
 
     <record id="account_tax_report_line_chtax_302b" model="account.tax.report.line">
-        <field name="name">302b TVA due a 7.7% (TS)</field>
+        <field name="name">302b TVA due a 7.7% (TS) jusqu'au 31.12.2023</field>
         <field name="tag_name">302b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
     </record>
 
+    <record id="account_tax_report_line_chtax_303b" model="account.tax.report.line">
+        <field name="name">303b TVA due a 8.1% (TS) dès le 01.01.2024</field>
+        <field name="tag_name">303b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+    </record>
+
     <record id="account_tax_report_line_chtax_312b" model="account.tax.report.line">
-        <field name="name">312b TVA due a 2.5% (TR)</field>
+        <field name="name">312b TVA due a 2.5% (TR) jusqu'au 31.12.2023</field>
         <field name="tag_name">312b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
     </record>
 
+    <record id="account_tax_report_line_chtax_313b" model="account.tax.report.line">
+        <field name="name">313b TVA due a 2.6% (TR) dès le 01.01.2024</field>
+        <field name="tag_name">313b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+    </record>
+
     <record id="account_tax_report_line_chtax_342b" model="account.tax.report.line">
-        <field name="name">342b TVA due a 3.7% (TS)</field>
+        <field name="name">342b TVA due a 3.7% (TS) jusqu'au 31.12.2023</field>
         <field name="tag_name">342b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_343b" model="account.tax.report.line">
+        <field name="name">343b TVA due a 3.8% (TS) dès le 01.01.2024</field>
+        <field name="tag_name">343b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
@@ -189,8 +248,16 @@
     </record>
 
     <record id="account_tax_report_line_chtax_382b" model="account.tax.report.line">
-        <field name="name">382b Impots sur les acquisitions </field>
+        <field name="name">382b Impots sur les acquisitions jusqu'au 31.12.2023</field>
         <field name="tag_name">382b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_383b" model="account.tax.report.line">
+        <field name="name">383b Impots sur les acquisitions dès le 01.01.2024</field>
+        <field name="tag_name">383b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="5"/>
         <field name="parent_id" ref="account_tax_report_line_chtax_399"/>

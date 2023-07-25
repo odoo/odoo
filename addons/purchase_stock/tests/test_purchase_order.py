@@ -41,6 +41,19 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 })],
         }
 
+    def test_update_price_unit(self):
+        self.po_vals["order_line"] = [self.po_vals["order_line"][0]]
+        # we only need one purchase line for this test
+        po = self.env['purchase.order'].create(self.po_vals)
+        pol = po.order_line[0]
+        po.button_confirm()
+        self.assertEqual(len(pol.move_ids), 1)
+        self.assertEqual(pol.move_ids[0].price_unit, 500)
+        pol.price_unit = 1
+        self.assertEqual(pol.price_unit, 1)
+        # line below shouldn't fail
+        self.assertEqual(pol.move_ids[0].price_unit, 1)
+
     def test_00_purchase_order_flow(self):
         # Ensure product_id_2 doesn't have res_partner_1 as supplier
         if self.partner_a in self.product_id_2.seller_ids.mapped('name'):

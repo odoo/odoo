@@ -148,6 +148,7 @@ class AccountEdiFormat(models.Model):
                 'net_price_subtotal': taxes_res['total_excluded'],
                 'price_discount_unit': (gross_price_subtotal - line.price_subtotal) / line.quantity if line.quantity else 0.0,
                 'unece_uom_code': line.product_id.product_tmpl_id.uom_id._get_unece_code(),
+                'gross_price_total_unit': line._prepare_edi_vals_to_export()['gross_price_total_unit']
             }
 
             for tax_res in taxes_res['taxes']:
@@ -324,13 +325,14 @@ class AccountEdiFormat(models.Model):
 
                         # Product.
                         name = _find_value('.//ram:SpecifiedTradeProduct/ram:Name', element)
-                        if name:
-                            invoice_line_form.name = name
                         invoice_line_form.product_id = self_ctx._retrieve_product(
                             default_code=_find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', element),
                             name=_find_value('.//ram:SpecifiedTradeProduct/ram:Name', element),
                             barcode=_find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', element)
                         )
+                        # force original line description instead of the one copied from product's Sales Description
+                        if name:
+                            invoice_line_form.name = name
 
                         # Quantity.
                         line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)

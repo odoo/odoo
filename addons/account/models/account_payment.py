@@ -168,7 +168,7 @@ class AccountPayment(models.Model):
                     self.journal_id.payment_credit_account_id,
             ):
                 liquidity_lines += line
-            elif line.account_id.internal_type in ('receivable', 'payable') or line.partner_id == line.company_id.partner_id:
+            elif line.account_id.internal_type in ('receivable', 'payable') or line.account_id == line.company_id.transfer_account_id:
                 counterpart_lines += line
             else:
                 writeoff_lines += line
@@ -472,9 +472,11 @@ class AccountPayment(models.Model):
             self.reconciled_statements_count = 0
             return
 
-        self.env['account.move'].flush()
-        self.env['account.move.line'].flush()
-        self.env['account.partial.reconcile'].flush()
+        self.env['account.journal'].flush(fnames=['payment_debit_account_id', 'payment_credit_account_id'])
+        self.env['account.payment'].flush(fnames=['move_id'])
+        self.env['account.move'].flush(fnames=['move_type', 'payment_id', 'statement_line_id', 'journal_id'])
+        self.env['account.move.line'].flush(fnames=['move_id', 'account_id', 'statement_line_id'])
+        self.env['account.partial.reconcile'].flush(fnames=['debit_move_id', 'credit_move_id'])
 
         self._cr.execute('''
             SELECT

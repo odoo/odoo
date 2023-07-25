@@ -43,9 +43,10 @@ var LinkDialog = Dialog.extend({
 
         this.data = linkInfo || {};
         this.isButton = this.data.isButton;
+        const isButtonLink = this.isButton || (this.data.range && this.data.range.isOnAnchor() && this.data.className.includes("btn-link"));
         // Using explicit type 'link' to preserve style when the target is <button class="...btn-link"/>.
         this.colorsData = [
-            {type: this.isButton ? 'link' : '', label: _t("Link"), btnPreview: 'link'},
+            {type: isButtonLink ? 'link' : '', label: _t("Link"), btnPreview: 'link'},
             {type: 'primary', label: _t("Primary"), btnPreview: 'primary'},
             {type: 'secondary', label: _t("Secondary"), btnPreview: 'secondary'},
             // Note: by compatibility the dialog should be able to remove old

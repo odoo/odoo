@@ -17,6 +17,7 @@ import re
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import traceback
@@ -35,7 +36,6 @@ import babel
 import babel.dates
 import passlib.utils
 import pytz
-import werkzeug.utils
 from lxml import etree
 
 import odoo
@@ -140,7 +140,7 @@ def exec_pg_command_pipe(name, *args):
 #file_path_root = os.getcwd()
 #file_path_addons = os.path.join(file_path_root, 'addons')
 
-def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None):
+def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None, env=None):
     """Open a file from the OpenERP root, using a subdir folder.
 
     Example::
@@ -153,11 +153,15 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None):
     @param subdir subdirectory
     @param pathinfo if True returns tuple (fileobject, filepath)
     @param filter_ext: optional list of supported extensions (without leading dot)
+    @param env: optional environment, required for a file path within a temporary directory
+        created using `file_open_temporary_directory()`
 
     @return fileobject if pathinfo is False else (fileobject, filepath)
     """
     adps = odoo.addons.__path__
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
+    if env and hasattr(env.all, '__file_open_tmp_paths'):
+        adps = adps + list(env.all.__file_open_tmp_paths)
 
     basename = name
 
@@ -174,7 +178,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None):
         else:
             # It is outside the OpenERP root: skip zipfile lookup.
             base, name = os.path.split(name)
-        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename, filter_ext=filter_ext)
+        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename, filter_ext=filter_ext,
+                         env=env)
 
     if name.replace(os.sep, '/').startswith('addons/'):
         subdir = 'addons'
@@ -192,18 +197,20 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None):
         for adp in adps:
             try:
                 return _fileopen(name2, mode=mode, basedir=adp,
-                                 pathinfo=pathinfo, basename=basename, filter_ext=filter_ext)
+                                 pathinfo=pathinfo, basename=basename, filter_ext=filter_ext, env=env)
             except IOError:
                 pass
 
     # Second, try to locate in root_path
-    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename, filter_ext=filter_ext)
+    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename, filter_ext=filter_ext, env=env)
 
 
-def _fileopen(path, mode, basedir, pathinfo, basename=None, filter_ext=None):
+def _fileopen(path, mode, basedir, pathinfo, basename=None, filter_ext=None, env=None):
     name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
 
     paths = odoo.addons.__path__ + [config['root_path']]
+    if env and hasattr(env.all, '__file_open_tmp_paths'):
+        paths += env.all.__file_open_tmp_paths
     for addons_path in paths:
         addons_path = os.path.normpath(os.path.normcase(addons_path)) + os.sep
         if name.startswith(addons_path):
@@ -258,6 +265,35 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None, filter_ext=None):
     if name.endswith('.rml'):
         raise IOError('Report %r does not exist or has been deleted' % basename)
     raise IOError('File not found: %s' % basename)
+
+
+@contextmanager
+def file_open_temporary_directory(env):
+    """Create and return a temporary directory added to the directories `file_open` is allowed to read from.
+
+    `file_open` will be allowed to open files within the temporary directory
+    only for environments of the same transaction than `env`.
+    Meaning, other transactions/requests from other users or even other databases
+    won't be allowed to open files from this directory.
+
+    Examples::
+
+        >>> with odoo.tools.file_open_temporary_directory(self.env) as module_dir:
+        ...    with zipfile.ZipFile('foo.zip', 'r') as z:
+        ...        z.extract('foo/__manifest__.py', module_dir)
+        ...    with odoo.tools.file_open('foo/__manifest__.py', env=self.env) as f:
+        ...        manifest = f.read()
+
+    :param env: environment for which the temporary directory is created.
+    :return: the absolute path to the created temporary directory
+    """
+    assert not hasattr(env.all, '__file_open_tmp_paths'), 'Reentrancy is not implemented for this method'
+    with tempfile.TemporaryDirectory() as module_dir:
+        try:
+            env.all.__file_open_tmp_paths = (module_dir,)
+            yield module_dir
+        finally:
+            del env.all.__file_open_tmp_paths
 
 
 #----------------------------------------------------------
@@ -1011,18 +1047,30 @@ class Collector(Mapping):
         for ``defaultdict(list)``.
     """
     __slots__ = ['_map']
+
     def __init__(self):
         self._map = {}
+
     def add(self, key, val):
         vals = self._map.setdefault(key, [])
         if val not in vals:
             vals.append(val)
+
     def __getitem__(self, key):
         return self._map.get(key, ())
+
     def __iter__(self):
         return iter(self._map)
+
     def __len__(self):
         return len(self._map)
+
+    def discard_keys_and_values(self, excludes):
+        self._map = {
+            key: [val for val in vals if val not in excludes]
+            for key, vals in self._map.items()
+            if key not in excludes
+        }
 
 
 class StackMap(MutableMapping):
@@ -1227,13 +1275,27 @@ def ignore(*exc):
     except exc:
         pass
 
-# Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
-if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0'):
-    def html_escape(text):
-        return werkzeug.utils.escape(text, quote=True)
-else:
-    def html_escape(text):
-        return werkzeug.utils.escape(text)
+def html_escape(text):
+    """ Vendored from werkzeug.utils.escape which is deprecated in 2.0
+    Replace special characters "&", "<", ">" and (") to HTML-safe sequences.
+
+    There is a special handling for `None` which escapes to an empty string.
+
+    :param s: the string to escape.
+    """
+    if  text is None:
+        return ""
+    elif hasattr(text, "__html__"):
+        return str(text.__html__())
+    elif not isinstance(text, str):
+        text = str(text)
+    text = (
+        text.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
+    return text
 
 def get_lang(env, lang_code=False):
     """
@@ -1543,19 +1605,29 @@ def get_diff(data_from, data_to, custom_style=False):
         to_append = {
             'diff_header': 'bg-600 text-center align-top px-2',
             'diff_next': 'd-none',
-            'diff_add': 'bg-success',
-            'diff_chg': 'bg-warning',
-            'diff_sub': 'bg-danger',
         }
         for old, new in to_append.items():
             html_diff = html_diff.replace(old, "%s %s" % (old, new))
         html_diff = html_diff.replace('nowrap', '')
         html_diff += custom_style or '''
             <style>
+                .modal-dialog.modal-lg:has(table.diff) {
+                    max-width: 1600px;
+                    padding-left: 1.75rem;
+                    padding-right: 1.75rem;
+                }
                 table.diff { width: 100%; }
                 table.diff th.diff_header { width: 50%; }
                 table.diff td.diff_header { white-space: nowrap; }
-                table.diff td { word-break: break-all; }
+                table.diff td { word-break: break-all; vertical-align: top; }
+                table.diff .diff_chg, table.diff .diff_sub, table.diff .diff_add {
+                    display: inline-block;
+                    color: inherit;
+                }
+                table.diff .diff_sub, table.diff td:nth-child(3) > .diff_chg { background-color: #ffc1c0; }
+                table.diff .diff_add, table.diff td:nth-child(6) > .diff_chg { background-color: #abf2bc; }
+                table.diff td:nth-child(3):has(>.diff_chg, .diff_sub) { background-color: #ffebe9; }
+                table.diff td:nth-child(6):has(>.diff_chg, .diff_add) { background-color: #e6ffec; }
             </style>
         '''
         return html_diff

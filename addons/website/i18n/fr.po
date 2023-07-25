@@ -20,6 +20,7 @@
 # Mélanie Botty <bom@odoo.com>, 2020
 # Jérémy Kersten <jke@openerp.com>, 2020
 # omaodoo <oma@odoo.com>, 2020
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2020
 # Jean-Marc Dupont <jmd@6it.fr>, 2020
 # Vincent Hammadache <vhammadache@gmail.com>, 2020
@@ -33,7 +34,6 @@
 # Xavier Belmere <Info@cartmeleon.com>, 2020
 # f5f0a0dac17dde787a1d812a6989680e, 2020
 # a270031086f2a0d3514bc0cb507b48f6, 2020
-# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # e2f <projects@e2f.com>, 2020
@@ -66,13 +66,15 @@
 # Nathan Grognet <ngr@odoo.com>, 2021
 # Clément Watthez <cwa@odoo.com>, 2021
 # Martin Trigaux, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Vallen Delobel <edv@odoo.com>, 2021
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2021
 # Eric Vernichon <eric@vernichon.fr>, 2022
 # Jonathan Castillo <jcs@odoo.com>, 2022
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -80,8 +82,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-07 14:40+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -104,6 +106,12 @@ msgstr "\" alerte avec un"
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
+msgid "\"URL from\" can not be empty."
+msgstr "\"URL de\" ne peut pas être vide."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "\"URL vers\" ne peut pas être vide."
 
@@ -112,6 +120,8 @@ msgstr "\"URL vers\" ne peut pas être vide."
 #, python-format
 msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
 msgstr ""
+"\"URL vers\" ne peut pas contenir le paramètre %s qui n'est pas utilisé dans"
+" \"URL de\"."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -123,7 +133,7 @@ msgstr "\"URL vers\" est invalide : %s"
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
-msgstr ""
+msgstr "\"URL vers\" doit contenir le paramètre %s utilisé dans \"URL de\"."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -216,6 +226,8 @@ msgid ""
 "* provided that your analytics is anonymized, which is not the\n"
 "            case by default with Google Analytics."
 msgstr ""
+"* à condition que vos analyses soient anonymisées;, ce qui n'est pas le cas\n"
+"            par défaut avec Google Analytics."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -525,7 +537,7 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Select</b> a %s."
-msgstr ""
+msgstr "<b>Sélectionnez</b> un %s."
 
 #. module: website
 #. openerp-web
@@ -553,14 +565,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
 "<br/><br/>\n"
-"                    Exemple de règle :<br/>\n"
-"                    <code class=\"ml-4\">Refuser : /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Autoriser : *</code>"
+"                    Exemple de règle :<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -899,7 +907,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-pencil mr-2\"/>Edit"
-msgstr "<span class=\"fa fa-pencil mr-2\"/>Editer"
+msgstr "Modifier "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -1092,6 +1100,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_chart
 msgid "A Chart Title"
 msgstr "Un titre de graphique"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"A Google Map error occurred. Make sure to read the key configuration popup "
+"carefully."
+msgstr ""
+"Une erreur de Google Map s'est produite. Veillez à lire attentivement le "
+"pop-up de configuration des clés."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -1874,7 +1893,7 @@ msgstr "CTA"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__cache_key_expr
 msgid "Cache Key Expr"
-msgstr ""
+msgstr "Expression clé cache"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__cache_time
@@ -2584,7 +2603,7 @@ msgstr "Personnalisé"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__custom_code_head
 msgid "Custom <head> code"
-msgstr ""
+msgstr "Code <head> personnalisé"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
@@ -2606,21 +2625,21 @@ msgstr "URL personnalisée"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__custom_code_footer
 msgid "Custom end of <body> code"
-msgstr ""
+msgstr "Code fin de <body> personnalisé"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Custom end of body code"
-msgstr ""
+msgstr "Code fin de corps personnalisé"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Custom head code"
-msgstr ""
+msgstr "Code d'en-tête personnalisé"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__auth_signup_uninvited
@@ -2646,7 +2665,7 @@ msgstr "Personnaliser"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__customize_show
 msgid "Customize Show"
-msgstr ""
+msgstr "Personnaliser l'affichage"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -2693,7 +2712,7 @@ msgstr "Données"
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Data Border"
-msgstr ""
+msgstr "Données Marge"
 
 #. module: website
 #. openerp-web
@@ -2707,14 +2726,14 @@ msgstr "Couleur des données"
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Dataset Border"
-msgstr ""
+msgstr "Ensemble de données Marge"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Dataset Color"
-msgstr ""
+msgstr "Ensemble de données Couleur"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
@@ -2823,8 +2842,8 @@ msgid ""
 "Deleting a font requires a reload of the page. This will save all your "
 "changes and reload the page, are you sure you want to proceed?"
 msgstr ""
-"Supprimer une police nécessite de recharger la page. Ceci sauvera tous vos "
-"changements et rechargera la page, êtes vous sûr de vouloir continuer?"
+"Supprimer une police nécessite de recharger la page. Ceci sauvegardera tous "
+"vos changements et rechargera la page, êtes vous sûr de vouloir continuer?"
 
 #. module: website
 #. openerp-web
@@ -2992,7 +3011,7 @@ msgstr "Afficher en ligne"
 #: model:ir.model.fields,field_description:website.field_website_track__display_name
 #: model:ir.model.fields,field_description:website.field_website_visitor__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_cookies_bar
@@ -3184,7 +3203,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.publish_management
 #, python-format
 msgid "Edit"
-msgstr "Editer"
+msgstr "Modifier"
 
 #. module: website
 #. openerp-web
@@ -3210,7 +3229,7 @@ msgstr "Modifier le message"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Edit Styles"
-msgstr "Editer les Styles"
+msgstr "Modifier les Styles"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -3226,7 +3245,7 @@ msgstr "Modifier le code de la page (avancé)"
 #: model_terms:ir.ui.view,arch_db:website.publish_management
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Edit in backend"
-msgstr "Editer dans le système"
+msgstr "Modifier dans le système"
 
 #. module: website
 #. openerp-web
@@ -3254,7 +3273,7 @@ msgstr ""
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Edit the menu"
-msgstr "Editer le menu"
+msgstr "Modifier le menu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -3293,7 +3312,7 @@ msgstr "Assistance par email"
 #: code:addons/website/models/website_snippet_filter.py:0
 #, python-format
 msgid "Empty field name in %r"
-msgstr ""
+msgstr "Nom de champ vide dans %r"
 
 #. module: website
 #. openerp-web
@@ -3301,6 +3320,13 @@ msgstr ""
 #, python-format
 msgid "Enable billing on your Google Project"
 msgstr "Activer la facturation sur votre projet Google"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Enable the right google map APIs in your google account"
+msgstr "Activez les bonnes API de Google Map dans votre compte Google"
 
 #. module: website
 #. openerp-web
@@ -3394,6 +3420,8 @@ msgid ""
 "Expression (tuple) to evaluate the cached key. \n"
 "E.g.: \"(request.params.get(\"currency\"), )\""
 msgstr ""
+"Expression (tuple) pour évaluer la clé mise en cache. \n"
+"Par ex.: \"(request.params.get(\"currency\"), )\""
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__extension
@@ -3623,22 +3651,22 @@ msgstr "Suivez le trafic de votre site web sur Odoo."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font"
-msgstr "Fonte"
+msgstr "Police"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font Size"
-msgstr "Taille des caractères"
+msgstr "Taille de la police"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font family"
-msgstr "Famille de fontes"
+msgstr "Famille de polices"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font size"
-msgstr "Taille des caractères"
+msgstr "Taille de la police"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__footer_visible
@@ -3650,7 +3678,7 @@ msgstr "Footer visible"
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "For session cookies, authentification and analytics*,"
-msgstr ""
+msgstr "Pour les cookies de session, l'authentification et l'analyse*,"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3815,7 +3843,7 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Good job! It's time to <b>Save</b> your work."
-msgstr "Bon travail! Il est temps de <b>Sauver</b>votre travail."
+msgstr "Bon travail! Il est temps de <b>Sauvegarder</b>votre travail."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
@@ -3894,6 +3922,23 @@ msgstr "Clé d'API Google Maps"
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
 msgid "Google Search Console"
 msgstr "Console Google Search"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+"Google a abandonné ses API \"Universal Analytics\" et \"Google Sign-In\". "
+"Cela signifie que seuls les comptes et les clés créés avant 2020 pourront "
+"intégrer leur tableau de bord Analytics dans Odoo (ou tout autre site Web). "
+"Cela ne sera possible que jusqu'à la mi-2023. Après cela, ces services ne "
+"fonctionneront plus du tout."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -4566,6 +4611,10 @@ msgid ""
 "numbers and improves them. She is determined to drive success and delivers "
 "her professional acumen to bring the company to the next level."
 msgstr ""
+"Grâce à son expérience internationale, Iris nous aide à comprendre les "
+"chiffres et à les améliorer. Elle est déterminée à réussir et met ses "
+"compétences professionnelles au service de l'entreprise pour la faire "
+"progresser."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
@@ -5103,6 +5152,32 @@ msgid "Main actions"
 msgstr "Actions principales"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure billing is enabled"
+msgstr "Veillez à activer la facturation"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Make sure to wait if errors keep being shown: sometimes enabling an API "
+"allows to use it immediately but Google keeps triggering errors for a while"
+msgstr ""
+"Veillez à attendre si des erreurs continuent de s'afficher : parfois, "
+"l'activation d'une API permet de l'utiliser activement, mais Google continue"
+" de déclencher des erreurs pendant un certain temps."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure your settings are properly configured:"
+msgstr "Veillez à correctement configurer vos paramètres :"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
 msgstr "Gérer les pages"
@@ -5123,6 +5198,20 @@ msgid "Manage this page"
 msgstr "Gérer cette page"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps JavaScript API"
+msgstr "API JavaScript Maps"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps Static API"
+msgstr "API statiques Maps"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
 msgid "Marker style"
 msgstr "Style de marqueur"
@@ -5135,7 +5224,7 @@ msgstr "La marché"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Masonry"
-msgstr "Maçonnerie"
+msgstr "Masonry"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -5233,6 +5322,13 @@ msgid "Middle"
 msgstr "Moyen"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Min-Height"
+msgstr "Hauteur minimale"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Minimalist"
@@ -5251,6 +5347,13 @@ msgstr "Minutes"
 #, python-format
 msgid "Mobile"
 msgstr "Mobile"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Mobile Alignment"
+msgstr "Alignement mobile"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
@@ -5420,6 +5523,18 @@ msgstr "Page de désactivation de la Network Advertising Initiative"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "New"
 msgstr "Nouveau"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
+"Les nouveaux comptes et clés Google Analytics utilisent désormais Google "
+"Analytics 4 qui, pour l'instant, ne peut pas être intégré dans des sites web"
+" externes."
 
 #. module: website
 #. openerp-web
@@ -5951,6 +6066,13 @@ msgid "Pills"
 msgstr "Pilules"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Places API"
+msgstr "Places API"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Plain"
 msgstr "Complet"
@@ -6450,26 +6572,26 @@ msgstr "Satellite"
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 #, python-format
 msgid "Save"
-msgstr "Sauver"
+msgstr "Sauvegarder"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Save & Reload"
-msgstr "Sauver et recharger"
+msgstr "Sauvegarder et recharger"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Save & copy"
-msgstr "Sauver et copier"
+msgstr "Sauvegarder et copier"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Save the block to use it elsewhere"
-msgstr "Sauver l'élément pour l'utiliser ailleurs"
+msgstr "Sauvegarder l'élément pour l'utiliser ailleurs"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -6683,6 +6805,13 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Serve font from Google servers"
+msgstr "Police servie par les serveurs de Google"
+
+#. module: website
 #: model:ir.model,name:website.model_ir_actions_server
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__action_server_id
 msgid "Server Action"
@@ -6824,7 +6953,7 @@ msgstr "Glisser vers la bas"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Slide Hover"
-msgstr ""
+msgstr "Survoler Dia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -6844,7 +6973,7 @@ msgstr "Glisser vers le haut"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Slideout Effect"
-msgstr ""
+msgstr "Effet coulissant"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -6872,7 +7001,7 @@ msgstr "Petit"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Small Header"
-msgstr ""
+msgstr "Petit en-tête"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -6974,7 +7103,7 @@ msgstr "Standard"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
 msgid "Start Button"
-msgstr ""
+msgstr "Bouton de start"
 
 #. module: website
 #. openerp-web
@@ -7030,7 +7159,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Stretch to Equal Height"
-msgstr ""
+msgstr "Étirer à hauteur égale"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -7084,7 +7213,7 @@ msgstr "Changer de theme"
 #: code:addons/website/static/src/xml/theme_preview.xml:0
 #, python-format
 msgid "TIP: Follow the"
-msgstr ""
+msgstr "ASTUCE : Suivez les"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -7167,7 +7296,7 @@ msgstr "Conditions d'utilisation"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
 msgid "Terrain"
-msgstr ""
+msgstr "Terrain"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
@@ -7197,7 +7326,7 @@ msgstr "Surlignage du texte"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Text Inline"
-msgstr ""
+msgstr "Texte inline"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -7257,7 +7386,7 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "The following message will become visible"
-msgstr ""
+msgstr "Le message suivant deviendra visible"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_url
@@ -7481,6 +7610,27 @@ msgstr ""
 "Utile pour réinitialiser une vue brisée."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"This font already exists, you can only add it as a local font to replace the"
+" server version."
+msgstr ""
+"Cette police existe déjà, vous pouvez seulement l'ajouter en tant que police"
+" local pour remplacer la version du serveur."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "This font is hosted and served to your visitors by Google servers"
+msgstr ""
+"Cette police est hébergée et servie à vos visiteurs par les serveurs de "
+"Google"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "This is a \""
@@ -7492,6 +7642,9 @@ msgid ""
 "This is a simple hero unit, a simple jumbotron-style component for calling "
 "extra attention to featured content or information."
 msgstr ""
+"Il s'agit d'une simple unité de héros, un simple composant de style "
+"jumbotron pour attirer une attention supplémentaire sur le contenu ou les "
+"informations vedettes."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -7502,7 +7655,7 @@ msgstr "Cette page"
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "This operator is not supported"
-msgstr ""
+msgstr "Cet opérateur n'est pas pris en charge"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -7532,6 +7685,20 @@ msgid ""
 "This value will be escaped to be compliant with all major browsers and used "
 "in url. Keep it empty to use the default name of the record."
 msgstr ""
+"Cette valeur sera ignorée pour être compatible avec tous les principaux "
+"navigateurs et utilisée dans l'url. Laissez-le vide pour utiliser le nom par"
+" défaut de l'enregistrement."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
+"Ces comptes doivent maintenant consulter directement leur tableau de bord "
+"Analytics sur la plate-forme Google."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -7548,7 +7715,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__cache_time
 msgid "Time to cache the page. (0 = no cache)"
-msgstr ""
+msgstr "Temps de mise en cache de la page. (0 = pas de cache)"
 
 #. module: website
 #. openerp-web
@@ -7618,6 +7785,11 @@ msgid ""
 "will recommend you the best keywords to target. Then adapt your title and "
 "description accordingly to boost your traffic."
 msgstr ""
+"Pour attirer plus de visiteurs, vous devez cibler des mots-clés qui sont "
+"souvent recherchés dans Google. Avec l'outil de référencement intégré, une "
+"fois que vous avez défini quelques mots-clés, Odoo vous recommandera les "
+"meilleurs et donc ceux à cibler. Adaptez ensuite votre titre et votre "
+"description en conséquence pour booster votre trafic."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -7736,6 +7908,13 @@ msgstr "Transition"
 #, python-format
 msgid "Translate Attribute"
 msgstr "Attributs de traduction"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
+#, python-format
+msgid "Translate Selection Option"
+msgstr "Option de sélection de la traduction"
 
 #. module: website
 #. openerp-web
@@ -7986,6 +8165,9 @@ msgid ""
 "or right-aligned image alongside textual content. Duplicate the element to "
 "create a list that fits your needs."
 msgstr ""
+"Utilisez ce snippet pour créer différents types de composants qui montre une"
+" image alignée à gauche ou à droite à côté d'un contenu textuel. Dupliquez "
+"l'élément pour créer une liste qui correspond à vos besoins."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -8153,7 +8335,7 @@ msgstr "Mode héritage de vue"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
 msgid "View item"
-msgstr ""
+msgstr "Afficher l'article"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.website_visitor_view_action
@@ -8185,13 +8367,13 @@ msgstr "Visibilité"
 #: model:ir.model.fields,field_description:website.field_website_page__visibility_password
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Visibility Password"
-msgstr ""
+msgstr "Visibilité du mot de passe"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__visibility_password_display
 #: model:ir.model.fields,field_description:website.field_website_page__visibility_password_display
 msgid "Visibility Password Display"
-msgstr ""
+msgstr "Affichage de la visibilité du mot de passe"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__group_ids
@@ -8244,7 +8426,7 @@ msgstr "Visiteur"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Visitor Information"
-msgstr ""
+msgstr "Informations pour les visiteurs"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_graph
@@ -8446,7 +8628,7 @@ msgstr "Domaine du site web"
 #. module: website
 #: model:ir.actions.act_url,name:website.action_website_edit
 msgid "Website Edit Mode"
-msgstr ""
+msgstr "Mode éditeur du site web"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__favicon
@@ -8520,7 +8702,7 @@ msgstr "Préférences du site web"
 #. module: website
 #: model:ir.model,name:website.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "Filtre des snippets du site web"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.onboarding_website_theme_step
@@ -8678,7 +8860,7 @@ msgstr "Que voulez-vous faire?"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "What should happen at the end?"
-msgstr ""
+msgstr "Que doit-il se passer à la fin ?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -8755,6 +8937,8 @@ msgid ""
 "You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies.\n"
 "                            Each browser is a little different, so look at your browser's Help menu to learn the correct way to modify your cookies."
 msgstr ""
+"Vous pouvez choisir que votre ordinateur vous avertisse chaque fois qu'un cookie est envoyé, ou vous pouvez choisir de désactiver tous les cookies.\n"
+"Chaque navigateur est un peu différent, alors consultez le menu d'aide de votre navigateur pour savoir comment modifier correctement vos cookies."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -8883,6 +9067,8 @@ msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
 "because you did not provided both a filter and a template to use.<br/>"
 msgstr ""
+"Votre snippet dynamique sera affiché ici... Ce message est affiché parce que"
+" vous n'avez pas défini le filtre et le modèle à utiliser.<br/>"
 
 #. module: website
 #. openerp-web
@@ -9011,17 +9197,17 @@ msgstr "btn-secondary"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "celebration, launch"
-msgstr ""
+msgstr "célébration, lancement"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "chart, table, diagram, pie"
-msgstr ""
+msgstr "graphique, tableau, diagramme, diagramme circulaire"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "cite"
-msgstr ""
+msgstr "citer"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -9073,7 +9259,7 @@ msgstr "Tableau de bord eCommerce"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "evolution, growth"
-msgstr ""
+msgstr "évolution, croissance"
 
 #. module: website
 #. openerp-web
@@ -9197,7 +9383,7 @@ msgstr "lien"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "masonry, grid"
-msgstr ""
+msgstr "masonry, grille"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -9207,7 +9393,7 @@ msgstr "menu, tarification"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.company_description_google_map
 msgid "not properly configured"
-msgstr ""
+msgstr "pas configuré correctement"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -9225,20 +9411,24 @@ msgid ""
 "            verified with a legal advisor that you absolutely need cookie\n"
 "            consent in your country."
 msgstr ""
+"de\n"
+"vos visiteurs. Nous vous recommandons de les éviter, sauf si vous avez \n"
+"vérifié auprès d'un conseiller juridique que vous avez absolument besoin du consentement \n"
+"aux cookies dans votre pays."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "once the countdown ends."
-msgstr ""
+msgstr "une fois le compte à rebours terminé."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "only"
-msgstr ""
+msgstr "seulement"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -9264,7 +9454,7 @@ msgstr "téléphone"
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "placeholder"
-msgstr ""
+msgstr "espace réservé"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -9287,6 +9477,8 @@ msgid ""
 "session_id (Odoo)<br/>\n"
 "                                            fileToken (Odoo)"
 msgstr ""
+"session_id (Odoo)<br/>\n"
+"                                            fileToken (Odoo)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -9302,7 +9494,7 @@ msgstr "témoignages"
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "text link"
-msgstr ""
+msgstr "lien texte"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__inherit_id__theme_ir_ui_view
@@ -9321,12 +9513,12 @@ msgstr "cette page"
 #: code:addons/website/static/src/xml/theme_preview.xml:0
 #, python-format
 msgid "to build the perfect page in 5 steps."
-msgstr ""
+msgstr "pour créer la page parfaite en 5 étapes."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "valuation, rank"
-msgstr ""
+msgstr "évaluation, rang"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_id
@@ -9378,7 +9570,7 @@ msgstr "⌙ Couleurs"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "⌙ Delay"
-msgstr ""
+msgstr "⌙ Retard"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9393,7 +9585,7 @@ msgstr "⌙ Hauteur"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Height (Scrolled)"
-msgstr ""
+msgstr "⌙ Hauteur (défilement)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -9408,7 +9600,7 @@ msgstr "⌙ Intensité"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Label"
-msgstr ""
+msgstr "⌙ Étiquette"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9418,12 +9610,12 @@ msgstr "⌙ Large"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "⌙ Normal devices"
-msgstr ""
+msgstr "⌙ Appareils normaux"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Off-Canvas Logo"
-msgstr ""
+msgstr "⌙ Logo hors canvas"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
@@ -9448,17 +9640,17 @@ msgstr "⌙ Petit"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "⌙ Small devices"
-msgstr ""
+msgstr "⌙ Petits appareils"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Spacing"
-msgstr ""
+msgstr "⌙ Espacement"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "⌙ Spread"
-msgstr ""
+msgstr "⌙ Diffusion"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -9474,3 +9666,10 @@ msgstr "⌙ Vidéo"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Width"
 msgstr "⌙ Largeur"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "└ Height"
+msgstr "└ Hauteur"

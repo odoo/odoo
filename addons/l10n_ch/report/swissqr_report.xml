@@ -55,7 +55,9 @@
                                 <span t-field="o.partner_bank_id.acc_number"/><br/>
                                 <span t-esc="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
                                 <span t-field="o.company_id.street"/><br/>
-                                <span t-field="o.company_id.country_id.code"/>
+                                <t t-if="o.company_id.country_id.code != 'CH'">
+                                    <span t-field="o.company_id.country_id.code"/>
+                                </t>
                                 <span t-field="o.company_id.zip"/>
                                 <span t-field="o.company_id.city"/><br/>
                                 <br/>
@@ -86,7 +88,9 @@
                                 <span t-field="o.partner_id.commercial_partner_id.name"/><br/>
                                 <span t-field="o.partner_id.street"/>
                                 <span t-field="o.partner_id.street2"/><br/>
-                                <span t-field="o.partner_id.country_id.code"/>
+                                <t t-if="o.partner_id.country_id.code != 'CH'">
+                                    <span t-field="o.partner_id.country_id.code"/>
+                                </t>
                                 <span t-field="o.partner_id.zip"/>
                                 <span t-field="o.partner_id.city"/>
                             </div>
@@ -165,7 +169,9 @@
                                 <span t-field="o.partner_bank_id.acc_number"/><br/>
                                 <span t-esc="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
                                 <span t-field="o.company_id.street"/><br/>
-                                <span t-field="o.company_id.country_id.code"/>
+                                <t t-if="o.company_id.country_id.code != 'CH'">
+                                    <span t-field="o.company_id.country_id.code"/>
+                                </t>
                                 <span t-field="o.company_id.zip"/>
                                 <span t-field="o.company_id.city"/><br/>
                                 <br/>
@@ -207,7 +213,9 @@
                                 <span t-field="o.partner_id.commercial_partner_id.name"/><br/>
                                 <span t-field="o.partner_id.street"> </span>
                                 <span t-field="o.partner_id.street2"/><br/>
-                                <span t-field="o.partner_id.country_id.code"/>
+                                <t t-if="o.partner_id.country_id.code != 'CH'">
+                                    <span t-field="o.partner_id.country_id.code"/>
+                                </t>
                                 <span t-field="o.partner_id.zip"/>
                                 <span t-field="o.partner_id.city"/><br/>
                                 <br/>

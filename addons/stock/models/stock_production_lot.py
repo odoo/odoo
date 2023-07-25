@@ -26,7 +26,7 @@ class ProductionLot(models.Model):
     product_qty = fields.Float('Quantity', compute='_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
-    company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True)
+    company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True, default=lambda self: self.env.company.id)
 
     @api.constrains('name', 'product_id', 'company_id')
     def _check_unique_lot(self):

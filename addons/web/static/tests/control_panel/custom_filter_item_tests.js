@@ -474,18 +474,18 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             assert.strictEqual(idInput.value, "0");
 
             // Float parsing
-            await testUtils.fields.editInput(floatInput, "4.2");
+            await testUtils.fields.editAndTrigger(floatInput, "4.2", ["input", "change"]);
             assert.strictEqual(floatInput.value, "4.2");
-            await testUtils.fields.editInput(floatInput, "DefinitelyValidFloat");
+            await testUtils.fields.editAndTrigger(floatInput, "DefinitelyValidFloat", ["input", "change"]);
             // String input in a number input gives "", which is parsed as 0
             assert.strictEqual(floatInput.value, "0.0");
 
             // Number parsing
-            await testUtils.fields.editInput(idInput, "4");
+            await testUtils.fields.editAndTrigger(idInput, "4", ["input", "change"]);
             assert.strictEqual(idInput.value, "4");
-            await testUtils.fields.editInput(idInput, "4.2");
+            await testUtils.fields.editAndTrigger(idInput, "4.2", ["input", "change"]);
             assert.strictEqual(idInput.value, "4");
-            await testUtils.fields.editInput(idInput, "DefinitelyValidID");
+            await testUtils.fields.editAndTrigger(idInput, "DefinitelyValidID", ["input", "change"]);
             // String input in a number input gives "", which is parsed as 0
             assert.strictEqual(idInput.value, "0");
 
@@ -524,11 +524,11 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             // Float parsing
             await testUtils.fields.editInput(floatInput, '4,');
             assert.strictEqual(floatInput.value, "4,");
-            await testUtils.fields.editInput(floatInput, '4,2');
+            await testUtils.fields.editAndTrigger(floatInput, '4,2',["input", "change"]);
             assert.strictEqual(floatInput.value, "4,2");
-            await testUtils.fields.editInput(floatInput, '4,2,');
+            await testUtils.fields.editAndTrigger(floatInput, '4,2,',["input", "change"]);
             assert.strictEqual(floatInput.value, "4,2");
-            await testUtils.fields.editInput(floatInput, "DefinitelyValidFloat");
+            await testUtils.fields.editAndTrigger(floatInput, "DefinitelyValidFloat", ["input", "change"]);
             // The input here is a string, resulting in a parsing error instead of 0
             assert.strictEqual(floatInput.value, "4,2");
 
@@ -597,7 +597,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await testUtils.fields.editInput(getCondition(2, '.o_generator_menu_value .o_input'), "I will be deleted anyway");
 
             await testUtils.fields.editSelect(getCondition(3, '.o_generator_menu_field'), 'float_field');
-            await testUtils.fields.editInput(getCondition(3, '.o_generator_menu_value .o_input'), 7.2);
+            await testUtils.fields.editAndTrigger(getCondition(3, '.o_generator_menu_value .o_input'), 7.2, ["input", "change"]);
 
             await testUtils.fields.editSelect(getCondition(4, '.o_generator_menu_field'), 'id');
             await testUtils.fields.editInput(getCondition(4, '.o_generator_menu_value .o_input'), 9);
@@ -605,6 +605,42 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await testUtils.dom.click(getCondition(2, '.o_generator_menu_delete'));
 
             await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        });
+
+        QUnit.test('float input can be empty', async function (assert) {
+            assert.expect(2);
+
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: {
+                    searchModel: new ActionModel(),
+                    _t: Object.assign(s => s, { database: { parameters: { decimal_point: "," } }}),
+                },
+                translateParameters: {
+                    decimal_point: ",",
+                    thousands_sep: "",
+                    grouping: [3, 0],
+                },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.dom.click('button.o_add_condition');
+
+            const [floatSelect] = cfi.el.querySelectorAll('.o_generator_menu_field');
+            await testUtils.fields.editSelect(floatSelect, 'float_field');
+
+            const [floatInput] = cfi.el.querySelectorAll('.o_generator_menu_value .o_input');
+
+            // We introduce a previous value in case we don't have a default value
+            await testUtils.fields.editInput(floatInput, '3,14');
+            assert.strictEqual(floatInput.value, '3,14');
+            // Input value can be completely cleared
+            await testUtils.fields.editInput(floatInput, '');
+            assert.strictEqual(floatInput.value, '');
 
             cfi.destroy();
         });

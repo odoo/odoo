@@ -7,7 +7,7 @@
 # Dedi Santoso <dedisantoso@yahoo.com>, 2020
 # Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2020
 # firman firman <firman.olxbpn@gmail.com>, 2020
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2020
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2020
 # Bonny Useful <bonny.useful@gmail.com>, 2020
 # Deddy Ddr <deddy.ddr@gmail.com>, 2020
 # Febrasari Almania <febrasari.almania@gmail.com>, 2020
@@ -17,6 +17,7 @@
 # Ryanto The <ry.the77@gmail.com>, 2020
 # whenwesober, 2021
 # Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2021
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,8 +25,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2021\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -149,7 +150,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "<strong>Price:</strong>"
-msgstr ""
+msgstr "<strong>Harga:</strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -199,6 +200,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Produk yang bisa disimpan adalah produk yang mana Anda mengelola stoknya. Aplikasi Inventaris harus diinstal.\n"
+"Produk yang bisa dipakai adalah produk yang stoknya tidak akan dikelola.\n"
+"Layanan adalah produk non-material yang Anda sediakan."
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -367,7 +371,7 @@ msgstr "Nama Atribut"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_template_attribute_value_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
 msgid "Attribute Value"
-msgstr ""
+msgstr "Nilai Atribut"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
@@ -440,7 +444,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "Apakah Gambar 1024 dapat di-zoom"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
@@ -625,7 +629,7 @@ msgstr "Menciptakan produk baru"
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr ""
+msgstr "Buat varian produk baru"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -840,7 +844,7 @@ msgstr "Display Type"
 #: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Drawer"
-msgstr ""
+msgstr "Laci"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
@@ -1143,7 +1147,7 @@ msgstr ""
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr ""
+msgstr "Impor Templat untuk Produk"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -1156,10 +1160,14 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Di Harga Standard & AVCO: nilai dari produk (secara otomatis dihitung pada AVCO).\n"
+"        Di FIFO: nilai dari unit berikutnya yang akan keluar dari stok (secara otomatis dihitung).\n"
+"        Digunakan untuk menilai produk saat harga pembelian tidak diketahui (misalnya penyesuaiaan inventaris).\n"
+"        Digunakan untuk menghitung margin pada sale order."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1705,7 +1713,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Peraturan Daftar Harga"
 
 #. module: product
 #. openerp-web
@@ -1774,7 +1782,7 @@ msgstr "Atribut produk"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Atribut Produk Custom Value"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
@@ -1820,7 +1828,7 @@ msgstr "Kategori Produk"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_configurator
 msgid "Product Configurator"
-msgstr ""
+msgstr "Konfigurator Produk"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_label
@@ -1878,7 +1886,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "Garis Atribut Templat Produ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
@@ -2177,11 +2185,9 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Tentukan jumlah tetap untuk menambah atau mengurangi (jika negatif) jumlah "
-"yang dihitung dengan diskon."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2335,6 +2341,12 @@ msgid "The product template is archived so no combination is possible."
 msgstr "Templat produk diarsipkan sehingga tidak ada kombinasi yang mungkin."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2377,6 +2389,15 @@ msgstr "Tidak ada kemungkinan kombinasi yang tersisa."
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 msgid "This comes from the product form."
 msgstr "Ini berasal dari detail produk."
+
+#. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2903,6 +2924,14 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
@@ -2918,6 +2947,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Anda harus mendefinisikan produk untuk semua yang Anda jual atau beli,\n"
+"                baik itu produk yang bisa disimpan, produk konsumsi atau layanan."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action

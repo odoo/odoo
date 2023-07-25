@@ -16,10 +16,10 @@
 # Martin Trigaux, 2020
 # baaska sh <sh.baaskash@gmail.com>, 2020
 # Батмөнх Ганбат <batmunkh2522@gmail.com>, 2020
-# Bayarkhuu Bataa, 2021
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
 # hish, 2022
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
+# Bayarkhuu Bataa, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,8 +27,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: hish, 2022\n"
-"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
+"Last-Translator: Bayarkhuu Bataa, 2023\n"
+"Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -6849,6 +6849,8 @@ msgid ""
 "- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: "
 "%(values)s) belongs to another company."
 msgstr ""
+"- %(record)r бүртгэл нь %(company)r дээр байгаа бол %(field)r (%(fname)s: "
+"%(values)s) талбар нь өөр компани дээр байна."
 
 #. module: base
 #: code:addons/model.py:0
@@ -6865,6 +6867,8 @@ msgid ""
 "- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- Бүртгэлийн компани %(company)r байгаа бол %(field)r (%(fname)s: "
+"%(values)s) талбар нь өөр компани дээр байна."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7098,7 +7102,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">×</span>"
-msgstr ""
+msgstr "<span aria-label=\"Хаах\">×</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -7719,12 +7723,12 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
-msgstr ""
+msgstr "Хувийн хаяг ашиглах"
 
 #. module: base
 #: model:res.groups,name:base.group_allow_export
 msgid "Access to export feature"
-msgstr ""
+msgstr "Экспортлох боломжыг нээх"
 
 #. module: base
 #: code:addons/api.py:0 code:addons/api.py:0
@@ -7795,7 +7799,7 @@ msgstr "Дансны дугаар давтагдах ёсгүй"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Account Security"
-msgstr ""
+msgstr "Нууцлалын тохиргоо"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
@@ -10680,6 +10684,12 @@ msgid "Compute"
 msgstr "Тооцоолох"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
 msgid "Compute scores and assign leads automatically"
 msgstr ""
@@ -11859,7 +11869,7 @@ msgstr "Бутархай тоон оронгийн нарийвчлал"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__decimal_places
 msgid "Decimal Places"
-msgstr ""
+msgstr "Бутархай орны тоо"
 
 #. module: base
 #: model:ir.model,name:base.model_decimal_precision
@@ -12652,7 +12662,7 @@ msgid ""
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
 "Нууцлалын хязгаарлалтын улмаас '%(document_kind)s' (%(document_model)s) "
-"баримтыг та засах зөвшөөрөлгүй байна.."
+"баримтыг та засах зөвшөөрөлгүй байна."
 
 #. module: base
 #: code:addons/base/models/res_company.py:0
@@ -14012,7 +14022,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 msgid "Forgot password?"
-msgstr ""
+msgstr "Нууц үгээ мартсан уу?"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__form
@@ -15606,7 +15616,7 @@ msgstr "Идэвхигүй Хэрэглэгчид"
 #: code:addons/models.py:0
 #, python-format
 msgid "Incompatible companies on records:"
-msgstr ""
+msgstr "Бүртгэлийн компаниуд үл тохирч байна:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
@@ -16425,7 +16435,7 @@ msgstr "LGPL Хувилбар 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
+msgid "Lithuania - Accounting Reports"
 msgstr ""
 
 #. module: base
@@ -19036,7 +19046,7 @@ msgstr "Odoo Байгууллага хувилбарын зөвшөөрөл v1.0
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__to_buy
 msgid "Odoo Enterprise Module"
-msgstr ""
+msgstr "Odoo лицензтэй хувилбарын модуль"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail
@@ -19449,7 +19459,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_payment_odoo_by_adyen
 msgid "Odoo Payments by Adyen"
-msgstr ""
+msgstr "Odoo төлбөр by Adyen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_odoo_by_adyen
@@ -20775,7 +20785,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr ""
+msgstr "Ижил татварын ID бүхий харилцагч"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
@@ -22926,7 +22936,7 @@ msgstr "Хамгаалалт"
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 #, python-format
 msgid "Security Control"
-msgstr ""
+msgstr "Аюулгүй байдлын хяналт"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -24197,7 +24207,7 @@ msgstr "Даалгаварууын лог"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "Татварын ID"
+msgstr "Татварын ID (регистр)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -24464,8 +24474,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "`base` модулийн суулгацыг арилгах боломжгүй"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -25041,6 +25051,8 @@ msgid ""
 "This is necessary for security-related changes. The authorization will last "
 "for a few minutes."
 msgstr ""
+"Энэ нь нууцлал хамгаалалттай холбоотой өөрчлөлт хийхэд шаардагддаг. Энэ "
+"баталгаажуулалт нь хэдэн минут ажиллах болно."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__attachment
@@ -27208,6 +27220,8 @@ msgid ""
 "You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Та '%(document_kind)s' (%(document_model)s) баримтыг та засах зөвшөөрөлгүй "
+"байна."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -28023,3 +28037,9 @@ msgstr "тийм"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Аландийн Арлууд"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
+msgstr ""

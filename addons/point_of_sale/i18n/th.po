@@ -15,8 +15,9 @@
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2021
 # monchai7 <montchye@gmail.com>, 2021
 # kittipot anuwet <pipemsn1@gmail.com>, 2021
-# Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2022
+# Amin Cheloh <amincheloh@gmail.com>, 2022
+# Wichanon Jamwutthipreecha, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,8 +25,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-09 16:49+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -3397,6 +3398,8 @@ msgid "Picking POS"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -4026,7 +4029,7 @@ msgstr "หัวใบเสร็จ"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pos_reference
 #, python-format
 msgid "Receipt Number"
-msgstr ""
+msgstr "หมายเลขใบเสร็จ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4294,7 +4297,7 @@ msgstr "ค้นหาลูกค้า"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidgetControlPanel.xml:0
 #, python-format
 msgid "Search Products..."
-msgstr ""
+msgstr "ค้นหาสินค้า..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
@@ -5438,6 +5441,17 @@ msgid "Type of the exception activity on record."
 msgstr "พิมพ์กิจกรรมข้อยกเว้นบนบันทึก"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"คำสั่งนี้ยังไม่ได้ซิงค์กับเซิร์ฟเวอร์ "
+"ตรวจสอบให้แน่ใจว่ามีการซิงค์แล้วลองอีกครั้ง"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -5611,6 +5625,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
 msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "คำสั่งที่ยังไม่ได้ซิงค์"
 
 #. module: point_of_sale
 #. openerp-web

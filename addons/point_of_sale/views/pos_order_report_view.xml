@@ -33,7 +33,7 @@
                     <field name="date"/>
                     <separator/>
                     <filter string="Invoiced" name="invoiced" domain="[('state','=',('invoiced'))]"/>
-                    <filter string="Not Invoiced" name="not_invoiced" domain="[('state','=',('paid'))]"/>
+                    <filter string="Not Invoiced" name="not_invoiced" domain="[('state','in',['paid', 'done'])]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>
                     <field name="config_id"/>

@@ -7,11 +7,13 @@
 # 경민기 <moonend@gmail.com>, 2020
 # Seongseok Shin <shinss61@hotmail.com>, 2020
 # Martin Trigaux, 2020
-# SeongHyeon Cho <jaymz9634@gmail.com>, 2020
+# 조성현 (jaymz9634) <jaymz9634@gmail.com>, 2020
 # Mark Lee <odoos@soti.33mail.com>, 2020
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2022
 # Link Up링크업 <linkup.way@gmail.com>, 2022
+# Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-09 16:49+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Link Up링크업 <linkup.way@gmail.com>, 2022\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -62,7 +64,7 @@ msgstr "$ 8.50"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "%(pos_name)s (not used)"
-msgstr ""
+msgstr "%(pos_name)s (사용하지 않음)"
 
 #. module: point_of_sale
 #. openerp-web
@@ -125,7 +127,7 @@ msgstr "<p>%s님,<br/>이것은 %s에 대한 전자 티켓입니다. </p>"
 msgid ""
 "<p>Ready to have a look at the <b>POS Interface</b>? Let's start our first "
 "session.</p>"
-msgstr ""
+msgstr "<p><b>POS 인터페이스</b>를 살펴보실 준비가 되셨나요? 첫번째 세션을 시작합니다.</p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -292,7 +294,7 @@ msgstr "세션은 일반적으로 하루 동안 POS를 통해 판매하는 기�
 msgid ""
 "A session is currently opened for this PoS. Some settings can only be "
 "changed after the session is closed."
-msgstr ""
+msgstr "현재 이 POS에 열려 있는 세션이 있습니다. 일부 설정 항목의 경우 세션을 종료한 경우에만 변경할 수 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sequence_number
@@ -317,7 +319,7 @@ msgstr "고객 팁 수락 또는 변경 사항을 팁으로 변환"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Six payment terminal"
-msgstr ""
+msgstr "Six 결제용 단말기로 결제 수락"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -451,7 +453,7 @@ msgstr "관리자"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_control
 msgid "Advanced Cash Control"
-msgstr ""
+msgstr "선급금 관리"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -591,6 +593,8 @@ msgid ""
 "At the session closing: A picking is created for the entire session when it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
+"세션 종료 시: 세션 종료 시 전체 세션에 대해 픽업 항목을 생성합니다.\n"
+"실시간  진행 시: 주문이 서버로 전송되면 자체 픽업 항목을 생성합니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
@@ -661,7 +665,7 @@ msgstr "뒤로"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/MobileOrderManagementScreen.xml:0
 #, python-format
 msgid "Back to list"
-msgstr ""
+msgstr "목록으로 돌아가기"
 
 #. module: point_of_sale
 #. openerp-web
@@ -738,7 +742,7 @@ msgstr "기준 금액"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Before Closing Difference"
-msgstr ""
+msgstr "차액 마감 전"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -750,7 +754,7 @@ msgstr "청구서 및 영수증"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Buffer:"
-msgstr ""
+msgstr "버퍼:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -817,7 +821,7 @@ msgstr "현금 결제 방법 없이 변경을 반환할 수 없습니다."
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__cardholder_name
 #, python-format
 msgid "Cardholder Name"
-msgstr ""
+msgstr "신용카드 영문 이름"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -997,7 +1001,7 @@ msgstr "열고 닫을 때 현금 상자의 금액을 확인하십시오."
 msgid ""
 "Check the internet connection then try to sync again by clicking on the red "
 "wifi button (upper right of the screen)."
-msgstr ""
+msgstr "인터넷 연결을 확인하신 후 빨간색 와이파이 버튼 (화면 우측 상단)을 클릭하여 동기화를 다시 시도합니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__child_id
@@ -1068,7 +1072,7 @@ msgstr "마감"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Close Session & Post Entries"
-msgstr ""
+msgstr "세션 종료 및 입력 내용 발행"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -1133,7 +1137,7 @@ msgstr "PoS 주문의 분개장 기입 항목  환경 설정"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 msgid "Configure at least one Point of Sale."
-msgstr ""
+msgstr "POS를 하나 이상 구성합니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
@@ -1160,7 +1164,7 @@ msgstr "IoT Box없이 장치를 PoS에 연결하십시오."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices using an IoT Box"
-msgstr ""
+msgstr "IoT 박스를 이용하여 장치를 연결합니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1256,12 +1260,12 @@ msgstr "작성"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
 msgid "Create a new POS order"
-msgstr ""
+msgstr "새로운 POS 주문 생성"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 msgid "Create a new PoS"
-msgstr ""
+msgstr "새로운 POS 생성"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -1546,7 +1550,7 @@ msgstr "차액"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Difference at closing PoS session"
-msgstr ""
+msgstr "POS 세션 종료 시의 차액"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -1738,21 +1742,21 @@ msgstr "미결제 주문 내려받기"
 #: code:addons/point_of_sale/static/src/xml/Popups/ErrorTracebackPopup.xml:0
 #, python-format
 msgid "Download error traceback"
-msgstr ""
+msgstr "오류 추적 다운로드"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderManagementControlPanel.xml:0
 #, python-format
 msgid "E.g. customer: Steward, date: 2020-05-09"
-msgstr ""
+msgstr "예: 고객명: 홍길동, 일자: 2020-05-09"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientLine.xml:0
 #, python-format
 msgid "EDIT"
-msgstr ""
+msgstr "편집"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1783,7 +1787,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Email sent."
-msgstr ""
+msgstr "이메일을 전송하였습니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1815,6 +1819,8 @@ msgid ""
 "Enable barcode scanning with a remotely connected barcode scanner and card "
 "swiping with a Vantiv card reader."
 msgstr ""
+"원격으로 연결되어 있는 바코드 스캐너로 바코드 스캔 기능을 활성화하고 Vantiv 카드 리더기로는 카드 인식 기능을 활성화시킬 수 "
+"있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
@@ -1832,7 +1838,7 @@ msgstr "POS에서 청구서 생성이 가능합니다."
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js:0
 #, python-format
 msgid "Encountered error when loading image. Please try again."
-msgstr ""
+msgstr "이미지를 불러오는 중에 오류가 발생했습니다. 다시 시도해주십시오."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__end_date
@@ -1867,7 +1873,7 @@ msgstr "오류! 재귀적 분류를 작성할 수 없습니다."
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Existing orderlines"
-msgstr ""
+msgstr "기존 주문 내역"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_expected
@@ -1896,13 +1902,13 @@ msgstr "추가 정보"
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.fabric_attribute
 msgid "Fabric"
-msgstr ""
+msgstr "구조"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__failed_pickings
 msgid "Failed Pickings"
-msgstr ""
+msgstr "픽업 실패"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1933,7 +1939,7 @@ msgstr "재정 포지션"
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
-msgstr ""
+msgstr "회계 데이터 모듈 오류"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -1982,7 +1988,7 @@ msgstr "강제 완료"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__full_product_name
 msgid "Full Product Name"
-msgstr ""
+msgstr "상세 품목명"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2043,7 +2049,7 @@ msgstr "하드웨어 상태"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__has_active_session
 msgid "Has Active Session"
-msgstr ""
+msgstr "활성화된 세션 있음"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_control
@@ -2200,7 +2206,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Incorrect rounding"
-msgstr ""
+msgstr "잘못된 반올림입니다"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_start_categ_id
@@ -2243,14 +2249,14 @@ msgstr "내부 메모"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Invalid action"
-msgstr ""
+msgstr "잘못된 작업입니다"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Invalid email."
-msgstr ""
+msgstr "잘못된 이메일입니다"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2269,7 +2275,7 @@ msgstr "재고"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Inventory Management"
-msgstr ""
+msgstr "재고 관리"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2345,12 +2351,12 @@ msgstr "전체 회계가 설치 유무"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_tipped
 msgid "Is this already tipped?"
-msgstr ""
+msgstr "팁이 이미 지불되었나요?"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__is_change
 msgid "Is this payment change?"
-msgstr ""
+msgstr "결제 변경인가요?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_tax.py:0
@@ -2508,7 +2514,7 @@ msgstr "최근 갱신 날짜"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_leather
 msgid "Leather"
-msgstr ""
+msgstr "가죽"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2545,7 +2551,7 @@ msgstr "불러오는 중"
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js:0
 #, python-format
 msgid "Loading Image Error"
-msgstr ""
+msgstr "이미지를 불러오는 중 오류 발생"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
@@ -2690,13 +2696,13 @@ msgstr "이름"
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderFetcher.js:0
 #, python-format
 msgid "Network Error"
-msgstr ""
+msgstr "네트워크 에러"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__draft
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__draft
 msgid "New"
-msgstr "새로운"
+msgstr "신규"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2738,7 +2744,7 @@ msgstr "다음 활동 유형"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderManagementControlPanel.xml:0
 #, python-format
 msgid "Next Order List"
-msgstr ""
+msgstr "다음 주문 목록"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2821,7 +2827,7 @@ msgstr "메모"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CashBoxOpening.xml:0
 #, python-format
 msgid "Notes:"
-msgstr ""
+msgstr "참고:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction_counter
@@ -2899,7 +2905,7 @@ msgstr "현금에만 반올림 적용"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Only on cash methods"
-msgstr ""
+msgstr "현금 방식만 가능"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -2913,7 +2919,7 @@ msgstr "PoS 앱에 대한 관리자 액세스 권한이 있는 사용자만 주�
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js:0
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported."
-msgstr ""
+msgstr ".png 나 .jpe"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2950,7 +2956,7 @@ msgstr "세션 열기"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opened By"
-msgstr ""
+msgstr "개설자"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3079,7 +3085,7 @@ msgstr "주문 순서 번호"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderDetails.xml:0
 #, python-format
 msgid "Order is empty"
-msgstr ""
+msgstr "주문 내역이 없습니다"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3242,7 +3248,7 @@ msgstr "지급 방법"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr ""
+msgstr "결제 영수증 정보"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
@@ -3342,7 +3348,7 @@ msgstr "전화번호"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Pick which product categories are available"
-msgstr ""
+msgstr "사용 가능한 품목 카테고리 선택"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -3363,6 +3369,8 @@ msgid "Picking POS"
 msgstr "POS 선별"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -3379,7 +3387,7 @@ msgstr "사진"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
 msgid "Plastic"
-msgstr ""
+msgstr "플라스틱"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3606,7 +3614,7 @@ msgstr "점포판매시스템 기간"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.qunit_suite
 msgid "Point of Sale Tests"
-msgstr ""
+msgstr "POS 테스트"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_user_id
@@ -3648,7 +3656,7 @@ msgstr "점포판매시스템 제품 분류"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr ""
+msgstr "POS 세션"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
@@ -3702,7 +3710,7 @@ msgstr "전기됨"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderManagementControlPanel.xml:0
 #, python-format
 msgid "Previous Order List"
-msgstr ""
+msgstr "이전 주문 목록"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3806,7 +3814,7 @@ msgstr "프린터"
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Printing is not supported on some browsers"
-msgstr ""
+msgstr "일부 브라우저에서는 인쇄 기능이 지원되지 않습니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3817,6 +3825,8 @@ msgid ""
 "protocol is available. It is possible to print your tickets by making use of"
 " an IoT Box."
 msgstr ""
+"기본 인쇄 프로토콜을 사용할 수 없기 때문에 일부 브라우저에서는 인쇄 기능이 지원되지 않습니다. IoT 박스를 이용하시면 티켓을 인쇄하실"
+" 수 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_procurement_group
@@ -4031,7 +4041,7 @@ msgstr "잔여"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Remaining unsynced orders"
-msgstr ""
+msgstr "동기화되지 않은 나머지 주문"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4155,14 +4165,14 @@ msgstr "반올림 방법"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "결제 내역의 반올림 오류"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/debug_manager.xml:0
 #, python-format
 msgid "Run Point of Sale JS Tests"
-msgstr ""
+msgstr "POS JS 테스트 실행"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -4175,7 +4185,7 @@ msgstr "SMS 전송 에러"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "SN"
-msgstr ""
+msgstr "일련번호"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
@@ -4258,7 +4268,7 @@ msgstr "고객 검색"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidgetControlPanel.xml:0
 #, python-format
 msgid "Search Products..."
-msgstr ""
+msgstr "품목 검색"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
@@ -4291,7 +4301,7 @@ msgstr "회계 위치 선택"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderDetails.xml:0
 #, python-format
 msgid "Select an order"
-msgstr ""
+msgstr "주문 선택"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4310,7 +4320,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js:0
 #, python-format
 msgid "Select the pricelist"
-msgstr ""
+msgstr "가격표를 선택하세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__selectable_categ_ids
@@ -4346,7 +4356,7 @@ msgstr "이메일로 전송"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr ""
+msgstr "이메일 전송에 실패했습니다. 다시 시도해주세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -4484,7 +4494,7 @@ msgstr "상점별 가격, 계절별 할인 등 설정"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Set the new quantity"
-msgstr ""
+msgstr "새로운 수량 설정"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration
@@ -4523,12 +4533,12 @@ msgstr "직원 로그인 화면 표시"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Six"
-msgstr ""
+msgstr "식스"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_six
 msgid "Six Payment Terminal"
-msgstr ""
+msgstr "Six 결제 단말기"
 
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.size_attribute
@@ -4573,7 +4583,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "일부 일련번호/로트번호가 누락되었습니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4612,7 +4622,7 @@ msgstr "분할 거래"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
 msgid "Start Category"
-msgstr ""
+msgstr "카테고리 시작"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
@@ -4664,7 +4674,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
-msgstr ""
+msgstr "마감 시 재고 내용을 업데이트해야 합니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4843,7 +4853,7 @@ msgstr "전화 :"
 msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
-msgstr ""
+msgstr "POS에서는 \"반올림 내역 추가\" 만 반올림 방식으로 지원하고 있습니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4852,7 +4862,7 @@ msgstr ""
 msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
-msgstr ""
+msgstr "거래를 승인하려면 결제 항목의 금액을 반올림 처리해야 합니다."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4866,7 +4876,7 @@ msgstr "기본 가격 목록이 사용 가능한 가격 목록에 포함되어 �
 #, python-format
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
-msgstr ""
+msgstr "주문을 받는 중 재무 데이터 모듈에 오류가 발생했습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -5035,7 +5045,7 @@ msgstr "거래는 Adyen에서 처리합니다. 관련 결제 수단에서 Adyen 
 msgid ""
 "The transactions are processed by Six. Set the IP address of the terminal on"
 " the related payment method."
-msgstr ""
+msgstr "Six에서 거래를 처리합니다. 해당 결제 방법으로 단말기의 IP 주소를 설정합니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
@@ -5072,7 +5082,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "There are unsynced orders. Do you want to sync these orders?"
-msgstr ""
+msgstr "동기화되지 않은 주문이 있습니다. 해당 주문을 동기화하시겠습니까?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5194,7 +5204,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/OrderWidget.xml:0
 #, python-format
 msgid "This order is empty"
-msgstr ""
+msgstr "주문 내역이 없습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
@@ -5248,7 +5258,7 @@ msgstr "팁"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
 msgid "Tip Amount"
-msgstr ""
+msgstr "팁 금액"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
@@ -5414,6 +5424,15 @@ msgid "Type of the exception activity on record."
 msgstr "레코드에 있는 예외 활동의 유형입니다."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr "이 주문은 아직 서버와 동기화되지 않았습니다. 동기화 여부를 확인 한 후 다시 시도하십시오."
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -5430,7 +5449,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Unable to download invoice."
-msgstr ""
+msgstr "청구서를 다운로드할 수 없습니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5452,7 +5471,7 @@ msgstr ""
 msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
-msgstr ""
+msgstr "세션이 열려 있는 동안에는 %s 수정이 불가능하므로 이 POS 구성을 수정할 수 없습니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5466,7 +5485,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Unable to sync order"
-msgstr ""
+msgstr "주문을 동기화할 수 없습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_unit
@@ -5544,7 +5563,7 @@ msgstr "단위"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr ""
+msgstr "재고 수량 업데이트"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal
@@ -5564,7 +5583,7 @@ msgstr "가격표를 사용하십시오."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use barcodes to scan products, customer cards, etc."
-msgstr ""
+msgstr "바코드를 사용하여 제품이나 고객 카드 등을 스캔하십시오."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5590,6 +5609,13 @@ msgstr "사용자 꼬리표"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
 msgstr "Uuid"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "동기화되지 않은 주문"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5727,7 +5753,7 @@ msgstr "현금 반올림 환경 설정을 사용중인 pos 세션이 이미 열�
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "You are not allowed to change this quantity"
-msgstr ""
+msgstr "수량을 변경할 권한이 없습니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5736,7 +5762,7 @@ msgstr ""
 msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
-msgstr ""
+msgstr "판매하려는 품목 중 일련번호/로트번호가 설정되지 않은 품목이 있습니다. 계속 진행하시겠습니까?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5753,12 +5779,14 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
+"청구서를 발행하지 않으면 POS를 종료할 수 없습니다.\n"
+"청구서: %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr ""
+msgstr "주문서가 미결 상태인 경우 POS를 종료할 수 없습니다."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5777,7 +5805,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
-msgstr ""
+msgstr "세션이 열려 있는 동안에는 POS 카테고리를 삭제할 수 없습니다."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:0
@@ -5823,7 +5851,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "You have to round your payments lines. is not rounded."
-msgstr ""
+msgstr "결제 내역을 반올림해야 합니다. 반올림되지 않았습니다."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -5860,13 +5888,13 @@ msgstr "POS 인터페이스를 통해 판매하는 모든 제품에 대한 제�
 #, python-format
 msgid ""
 "You must have at least one payment method configured to launch a session."
-msgstr ""
+msgstr "세션을 시작하려면 결제 방법이 하나 이상은 구성되어 있어야 합니다."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You need a loss and profit account on your cash journal."
-msgstr ""
+msgstr "현금 전표에 손익 계정이 있어야 합니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5887,7 +5915,7 @@ msgstr "세션에 점포판매시스템을 할당해야 합니다."
 msgid ""
 "Your PoS Session is open since %(date)s, we advise you to close it and to "
 "create a new one."
-msgstr ""
+msgstr "POS 세션이 %(date)s 이후 열려 있는 상태입니다. 종료 후 새로운 세션을 생성하시기 바랍니다."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5955,7 +5983,7 @@ msgstr "연관된 주문"
 #: code:addons/point_of_sale/static/src/xml/Misc/MobileOrderWidget.xml:0
 #, python-format
 msgid "items"
-msgstr ""
+msgstr "항목"
 
 #. module: point_of_sale
 #: model:mail.activity.type,summary:point_of_sale.mail_activity_old_session

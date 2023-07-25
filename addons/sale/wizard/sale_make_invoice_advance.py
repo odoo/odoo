@@ -97,7 +97,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'tax_ids': [(6, 0, so_line.tax_id.ids)],
                 'sale_line_ids': [(6, 0, [so_line.id])],
                 'analytic_tag_ids': [(6, 0, so_line.analytic_tag_ids.ids)],
-                'analytic_account_id': order.analytic_account_id.id or False,
+                'analytic_account_id': order.analytic_account_id.id if not so_line.display_type and order.analytic_account_id.id else False,
             })],
         }
 

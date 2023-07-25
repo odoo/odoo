@@ -12,10 +12,12 @@
 # Pauline Thiry <pth@odoo.com>, 2020
 # Florian <fll@odoo.com>, 2020
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2020
+# fr trans <e2ffr05@hotmail.com>, 2020
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2020
 # f5f0a0dac17dde787a1d812a6989680e, 2020
 # Jonathan Castillo <jcs@odoo.com>, 2020
 # jwy_odoo <jwy@odoo.com>, 2020
+# Celia Tydgat <cty@odoo.com>, 2020
 # bb76cd9ac0cb7e20167a14728edb858b, 2020
 # 31c77b784710e4a287a92d851a40e039, 2020
 # Moka Tourisme <hello@mokatourisme.fr>, 2020
@@ -30,11 +32,9 @@
 # Olivier ANDRE <frsw194@gmail.com>, 2020
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2020
 # gdp Odoo <gdp@odoo.com>, 2020
-# Celia Tydgat <cty@odoo.com>, 2020
 # Vincent Luba <vincent@biz-4-africa.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
-# fr trans <e2ffr05@hotmail.com>, 2020
 # Florian Hatat, 2020
 # Fabri Yohann <psn@fabri.pw>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
@@ -50,33 +50,35 @@
 # edc <edc@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Nancy Bolognesi <nb@microcom.ca>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Christophe Ricevuto <cri@nalios.be>, 2021
 # Benjamin Stienon <tsb@odoo.com>, 2021
 # Pierre Delacroix <pde@odoo.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Alexis de Lattre <alexis@via.ecp.fr>, 2021
 # Jérôme JEK <jek@odoo.com>, 2021
 # Rémi CAZENAVE, 2021
-# Camille Dantinne <cmd@odoo.com>, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
+# Camille Dantinne <cmd@odoo.com>, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
@@ -678,7 +680,7 @@ msgstr "<span class=\"o_form_label\">Email de confirmation</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payments</span>"
-msgstr "Acomptes"
+msgstr "<span class=\"o_form_label\">Acomptes</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -925,12 +927,12 @@ msgstr "Acceptez &amp; Payez le devis"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr "Accepter et signer"
+msgstr "Accepter & Signer"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Sign Quotation"
-msgstr "Acceptez &amp; Signez le devis"
+msgstr "Accepter &amp; Signer le devis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -975,7 +977,7 @@ msgstr "Activités"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Activité exception décoration"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -1740,7 +1742,7 @@ msgstr "Montant de la réduction"
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
@@ -1851,7 +1853,7 @@ msgstr "Connecteur Easypost"
 #: code:addons/sale/static/src/js/product_configurator_widget.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr "Editer la configuration"
+msgstr "Modifier la configuration"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__digital_signature
@@ -3860,7 +3862,7 @@ msgstr "Signer &amp; Payer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr "Signer &amp; payer le devis"
+msgstr "Signer &amp; Payer le devis"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -4232,15 +4234,15 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
-"Rien à facturer !\n"
+"Il n'y a rien à facturer !\n"
 "\n"
-"Quelques raisons possibles :\n"
-"- Vous devez livrer vos articles avant de les facturer : Cliquez sur l'icone représentant un \"camion\" (en haut à droite de votre écran) et suivez les instructions.\n"
-"- Vous devez changer la politique de facturation de votre article : Ouvrir l'article, ouvrez l'onglet \"Ventes\" et changez la politique de facturation de \"Quantités livrées\" à \"Quantités commandées\".\n"
+"Les motifs de ce comportement pourraient être :\n"
+"- Vous devez livrer vos produits avant de les facturer.\n"
+"- Vous devez modifier la politique de facturation de votre produit : Ouvrez le produit, allez à l'onglet \"Ventes\" et changez la politique de facturation de \"quantités livrées\" en \"quantités commandées\".\n"
 "        "
 
 #. module: sale
@@ -4677,6 +4679,17 @@ msgstr ""
 "Vous pouvez définir le type de communication qui apparaitra sur les bons de "
 "commande. La communication sera donnée au client quand il choisira la "
 "méthode de paiement."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"Vous ne pouvez pas modifier le type de produit car il est déjà utilisé dans "
+"les commandes client."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

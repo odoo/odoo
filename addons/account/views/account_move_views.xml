@@ -186,7 +186,7 @@
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                    <field name="analytic_tag_ids" optional="hide" readonly="1" groups="analytic.group_analytic_tags"/>
+                    <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" readonly="1" groups="analytic.group_analytic_tags"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
                     <field name="balance" sum="Total Balance" readonly="1" optional="hide"/>
@@ -706,20 +706,27 @@
                                 <label for="journal_id"
                                        groups="account.group_account_readonly"
                                        invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"/>
-                                <div name="journal_div" class="d-flex" invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
+                                <div name="journal_div"
+                                     class="d-flex"
+                                     invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"
+                                     groups="account.group_account_readonly">
                                     <field name="journal_id"
-                                        groups="account.group_account_readonly"
-                                        options="{'no_create': True}"
-                                        attrs="{'readonly': [('posted_before', '=', True)]}"/>
+                                           options="{'no_create': True}"
+                                           attrs="{'readonly': [('posted_before', '=', True)]}"/>
                                     <span class="oe_inline o_form_label mx-3 oe_read_only"
                                         groups="base.group_multi_currency"> in </span>
                                     <!-- Bigger margin on the left because in edit mode the external link button covers the text -->
                                     <span class="oe_inline o_form_label mr-3 ml-5 oe_edit_only"
-                                        groups="base.group_multi_currency"> in </span>
+                                          groups="base.group_multi_currency"> in </span>
                                     <field name="currency_id"
-                                        groups="base.group_multi_currency"
-                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                           groups="base.group_multi_currency"
+                                           attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </div>
+
+                                <field name="currency_id"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                       groups="!account.group_account_readonly,base.group_multi_currency"/>
+
                             </group>
                         </group>
                         <notebook>
@@ -929,7 +936,7 @@
                                     <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 </group>
-                                <field name="narration" placeholder="Terms and Conditions" class="oe_inline" nolabel="1"/>
+                                <field name="narration" placeholder="Terms and Conditions" class="oe_inline text-break" nolabel="1"/>
 
                                 <field name="invoice_outstanding_credits_debits_widget"
                                     class="oe_invoice_outstanding_credits_debits"
@@ -996,7 +1003,7 @@
                                                sum="Total Credit"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
                                         <field name="tax_fiscal_country_id" invisible="1"/>
-                                        <field name="tax_tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', tax_fiscal_country_id), ('applicability', '=', 'taxes')]"/>
+                                        <field name="tax_tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', tax_fiscal_country_id), ('applicability', '=', 'taxes')]" options="{'no_create': True}"/>
 
                                         <!-- Buttons -->
                                         <button name="action_automatic_entry"
@@ -1109,7 +1116,7 @@
                                     </group>
                                 </group>
                                 <!-- Internal note -->
-                                <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                                <field name="narration" placeholder="Add an internal note..." nolabel="1" class="text-break" height="50"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -1221,7 +1228,7 @@
         <record id="action_move_line_select" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
-            <field name="context">{'search_default_account_id': [active_id]}</field>
+            <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
         </record>
 
         <record id="action_automatic_entry" model="ir.actions.server">

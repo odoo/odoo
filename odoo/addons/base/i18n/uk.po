@@ -12,7 +12,7 @@
 # Bohdan Lisnenko, 2020
 # ТАрас <tratatuta@i.ua>, 2020
 # Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,8 +20,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -4062,7 +4062,7 @@ msgid ""
 "Enable management of UTM trackers: campaign, medium, source.\n"
 msgstr ""
 "\n"
-"Увімкніть керування трекерами UTM: кампанія, носій, джерело.\n"
+"Увімкніть керування трекерами UTM: кампанія, канал, джерело.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -13514,6 +13514,12 @@ msgid "Compute"
 msgstr "Розрахувати"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "Метод-обчислення не може залежати від поля 'id'"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
 msgid "Compute scores and assign leads automatically"
 msgstr "Обчислюйте бали і призначайте автоматично"
@@ -18997,6 +19003,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Недійсний параметр \"групувати за\""
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Недійсний формат JSON в полі типового значення."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -19455,8 +19467,8 @@ msgstr "LGPL Версія 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Бухгалтерські звіти"
+msgid "Lithuania - Accounting Reports"
+msgstr "Литва - Бухгалтреські звіти"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -28659,7 +28671,7 @@ msgstr "TaxCloud допомагає бізнесу дотримуватися п
 #: model:ir.ui.menu,name:base.menu_custom
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical"
-msgstr "Технічний"
+msgstr "Технічні налаштування"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -28909,8 +28921,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Модуль `base` неможливо видалити"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Ці модуля не можна видалити: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -31876,6 +31888,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "Ви не можете вимкнути користувача, через якого ви увійшли в систему."
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -31897,6 +31915,12 @@ msgstr "Ви не можете видалити мову, якою корист�
 msgid "You cannot merge a contact with one of his parent."
 msgstr ""
 "Ви не можете об'єднати контакт з одним із його батьківським контактом."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
@@ -32585,3 +32609,9 @@ msgstr "так"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Аландські острови"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
+msgstr "Ця валюта встановлюється для компанії, тому має бути активною."

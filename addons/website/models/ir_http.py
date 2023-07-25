@@ -36,7 +36,7 @@ def sitemap_qs2dom(qs, route, field='name'):
         if len(needles) == 1:
             dom = [(field, 'ilike', needles[0])]
         else:
-            dom = FALSE_DOMAIN
+            dom = list(FALSE_DOMAIN)
     return dom
 
 
@@ -247,13 +247,22 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_page(cls):
         req_page = request.httprequest.path
-        page_domain = [('url', '=', req_page)] + request.website.website_domain()
 
-        published_domain = page_domain
+        def _search_page(comparator='='):
+            page_domain = [('url', comparator, req_page)] + request.website.website_domain()
+            return request.env['website.page'].sudo().search(page_domain, order='website_id asc', limit=1)
+
         # specific page first
-        page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
+        page = _search_page()
 
-        # redirect withtout trailing /
+        # case insensitive search
+        if not page:
+            page = _search_page('=ilike')
+            if page:
+                logger.info("Page %r not found, redirecting to existing page %r", req_page, page.url)
+                return request.redirect(page.url)
+
+        # redirect without trailing /
         if not page and req_page != "/" and req_page.endswith("/"):
             return request.redirect(req_page[:-1])
 
@@ -413,6 +422,7 @@ class Http(models.AbstractModel):
         session_info = super(Http, self).get_frontend_session_info()
         session_info.update({
             'is_website_user': request.env.user.id == request.website.user_id.id,
+            'lang_url_code': request.lang._get_cached('url_code'),
         })
         if request.env.user.has_group('website.group_website_publisher'):
             session_info.update({

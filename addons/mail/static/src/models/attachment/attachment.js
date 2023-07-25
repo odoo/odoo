@@ -172,7 +172,7 @@ function factory(dependencies) {
                 return `/web/image/${this.id}?unique=1&amp;signature=${this.checksum}&amp;model=ir.attachment`;
             }
             if (this.fileType === 'application/pdf') {
-                return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.id}?model%3Dir.attachment`;
+                return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.id}?model%3Dir.attachment#pagemode=none`;
             }
             if (this.fileType && this.fileType.includes('text')) {
                 return `/web/content/${this.id}?model%3Dir.attachment`;

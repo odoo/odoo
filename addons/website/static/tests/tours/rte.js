@@ -121,6 +121,10 @@ tour.register('rte_translator', {
     trigger: '.modal-footer .btn-primary',
     extra_trigger: '.modal input:propValue(test Parseltongue placeholder)',
 }, {
+    content: "check: input marked as translated",
+    trigger: '#wrap input[placeholder="test Parseltongue placeholder"].oe_translated',
+    run: () => {},
+}, {
     content: "save translation",
     trigger: 'button[data-action=save]',
 }, {

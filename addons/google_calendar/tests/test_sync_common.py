@@ -7,6 +7,7 @@ from unittest.mock import MagicMock, patch
 
 from odoo.tests.common import SavepointCase
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.models.google_sync import GoogleSync
 from odoo.addons.google_account.models.google_service import TIMEOUT
@@ -61,3 +62,19 @@ class TestSyncGoogle(SavepointCase):
         self.assertGoogleEventNotPatched()
         self.assertGoogleEventNotInserted()
         self.assertGoogleEventNotDeleted()
+
+    def assertGoogleEventSendUpdates(self, expected_value):
+        GoogleService._do_request.assert_called_once()
+        args, _ = GoogleService._do_request.call_args
+        val = "?sendUpdates=%s" % expected_value
+        self.assertTrue(val in args[0], "The URL should contain %s" % val)
+
+    def call_post_commit_hooks(self):
+        """
+        manually calls postcommit hooks defined with the decorator @after_commit
+        """
+
+        funcs = self.env.cr.postcommit._funcs
+        while funcs:
+            func = funcs.popleft()
+            func()

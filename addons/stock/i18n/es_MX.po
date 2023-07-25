@@ -3,11 +3,12 @@
 # 	* stock
 # 
 # Translators:
-# Lucia Pacheco <lpo@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Jose Carmona <jrcarmona@gmail.com>, 2021
 # Iron Graterol, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Lucia Pacheco, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -218,7 +219,7 @@ msgid ""
 "            Manual actions may be needed."
 msgstr ""
 ".\n"
-"            Acciones manuales pueden ser necesarias."
+"            Puede que se necesiten acciones manuales."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__day
@@ -629,7 +630,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona existencias. La aplicación de Inventario debe estar instalada.\n"
+"Un producto almacenable es un producto para el que gestiona existencias. La aplicación Inventario debe estar instalada.\n"
 "Un producto consumible es un producto para el que no se gestionan las existencias.\n"
 "Un servicio es un producto no material."
 
@@ -1426,9 +1427,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"La conversión entre las unidades de medidas sólo pueden ocurrir si "
-"pertenecen a la misma categoría. La conversión se basará en los cambios "
-"establecidos."
+"La conversión entre las unidades de medidas solo puede ocurrir si pertenecen"
+" a la misma categoría. La conversión se basará en las proporciones "
+"establecidas."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2297,7 +2298,7 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
-"Disfrute de una experiencia de ritmo rápido con la aplicación de Código de "
+"Disfrute de una experiencia de ritmo rápido con la aplicación Código de "
 "barras de Odoo. Es increíblemente rápida y funciona incluso sin una conexión"
 " a internet estable. Es compatible con todos los flujos: ajustes de "
 "inventario, recolección por lotes, movimientos de lotes o paletas, controles"
@@ -3180,6 +3181,15 @@ msgid "Invalid domain right operand %s"
 msgstr "Dominio inválido para el operando derecho %s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"La configuración de la regla no es válida, la siguiente regla causa un bucle"
+" infinito: %s"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Inventoried Quantity"
 msgstr "Cantidad inventariada"
@@ -3348,6 +3358,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "¿Se puede editar la cantidad hecha?"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+"No se permite importar la cantidad reservada, tiene que utilizar la cantidad"
+" directamente."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5208,6 +5228,17 @@ msgstr "Quant"
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+"Los quants se eliminan de forma automática cuando se considera adecuado "
+"hacerlo. Si debe eliminarlos de manera manual, solicite a un gerente de "
+"existencias que lo haga."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr "La creación de Quant está restringida, no puede hacer esta operación."
 
@@ -6561,7 +6592,7 @@ msgstr "Obtener de las existencias"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__mts_else_mto
 msgid "Take From Stock, if unavailable, Trigger Another Rule"
-msgstr "Tomar de las existencias, si no está disponible, active otra regla"
+msgstr "Tomar de las existencias, si no hay disponibles, activar otra regla"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__procure_method
@@ -7058,6 +7089,26 @@ msgstr ""
 "uno nuevo."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"La empresa de este producto no se puede cambiar mientras tenga cantidades "
+"que pertenecen a otra empresa."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"No puede cambiar la empresa de este producto si hay movimientos de "
+"existencias que pertenecen a otra empresa."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -7435,7 +7486,7 @@ msgstr "Unidades de medida"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unity of measure"
+msgid "Unit of measure"
 msgstr "Unidad de medida"
 
 #. module: stock
@@ -7663,7 +7714,7 @@ msgstr "Esperando traslados"
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
 msgid "Want to speed up your inventory counts? Try our Barcode app"
 msgstr ""
-"¿Quiere acelerar el recuento de su inventario? Pruebe nuestra aplicación de "
+"¿Quiere acelerar el recuento de su inventario? Pruebe nuestra aplicación "
 "Código de barras"
 
 #. module: stock
@@ -8012,6 +8063,12 @@ msgstr ""
 "cancelar el movimiento de existencias."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "No puede cambiar el tipo de un producto que ya se utilizó."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8207,6 +8264,14 @@ msgstr ""
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr "No puede cancelar un movimiento de existencias que está como 'hecho'."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"No puede cambiar un movimiento de existencias cancelado, cree una nueva "
+"línea en su lugar."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

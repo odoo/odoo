@@ -1,11 +1,14 @@
+
+import inspect
 import logging
 import time
 import unittest
 
 from .. import sql_db
 
-
 _logger = logging.getLogger(__name__)
+
+
 class OdooTestResult(unittest.result.TestResult):
     """
     This class in inspired from TextTestResult (https://github.com/python/cpython/blob/master/Lib/unittest/runner.py)
@@ -42,7 +45,7 @@ class OdooTestResult(unittest.result.TestResult):
         the other parameters.
         """
         test = test or self
-        if isinstance(test, unittest.case._SubTest) and test.test_case:
+        while isinstance(test, unittest.case._SubTest) and test.test_case:
             test = test.test_case
         logger = logging.getLogger(test.__module__)
         try:
@@ -118,14 +121,38 @@ class OdooTestResult(unittest.result.TestResult):
         if not isinstance(test, unittest.TestCase):
             _logger.warning('%r is not a TestCase' % test)
             return
+
         _, _, error_traceback = error
 
+        # move upwards the subtest hierarchy to find the real test
+        while isinstance(test, unittest.case._SubTest) and test.test_case:
+            test = test.test_case
+
+        method_tb = None
+        file_tb = None
+        filename = inspect.getfile(type(test))
+
+        # Note: since _ErrorCatcher was introduced, we could always take the
+        # last frame, keeping the check on the test method for safety.
+        # Fallbacking on file for cleanup file shoud always be correct to a
+        # minimal working version would be
+        #
+        #   infos_tb = error_traceback
+        #   while infos_tb.tb_next()
+        #       infos_tb = infos_tb.tb_next()
+        #
         while error_traceback:
             code = error_traceback.tb_frame.f_code
-            if code.co_name == test._testMethodName:
-                lineno = error_traceback.tb_lineno
-                filename = code.co_filename
-                method = test._testMethodName
-                infos = (filename, lineno, method, None)
-                return infos
+            if code.co_name in (test._testMethodName, 'setUp', 'tearDown'):
+                method_tb = error_traceback
+            if code.co_filename == filename:
+                file_tb = error_traceback
             error_traceback = error_traceback.tb_next
+
+        infos_tb = method_tb or file_tb
+        if infos_tb:
+            code = infos_tb.tb_frame.f_code
+            lineno = infos_tb.tb_lineno
+            filename = code.co_filename
+            method = test._testMethodName
+            return (filename, lineno, method, None)

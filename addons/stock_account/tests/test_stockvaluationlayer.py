@@ -543,6 +543,33 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 0)
         self.assertEqual(self.product1.standard_price, 1.01)
 
+    def test_rounding_svl_3(self):
+        self._make_in_move(self.product1, 1000, unit_cost=0.17)
+        self._make_in_move(self.product1, 800, unit_cost=0.23)
+
+        self.assertEqual(self.product1.standard_price, 0.20)
+
+        self._make_out_move(self.product1, 1000, create_picking=True)
+        self._make_out_move(self.product1, 800, create_picking=True)
+
+        self.assertEqual(self.product1.value_svl, 0)
+
+    def test_rounding_svl_4(self):
+        """
+        The first 2 In moves result in a rounded standard_price at 3.4943, which is rounded at 3.49.
+        This test ensures that no rounding error is generated with small out quantities.
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 2, unit_cost=4.63)
+        self._make_in_move(self.product1, 5, unit_cost=3.04)
+        self.assertEqual(self.product1.standard_price, 3.49)
+
+        for _ in range(70):
+            self._make_out_move(self.product1, 0.1)
+
+        self.assertEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.value_svl, 0)
+
     def test_return_delivery_2(self):
         self.product1.write({"standard_price": 1})
         move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
@@ -552,6 +579,18 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 20)
         self.assertEqual(self.product1.quantity_svl, 10)
         self.assertEqual(self.product1.standard_price, 2)
+
+    def test_return_delivery_rounding(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        self.product1.write({"standard_price": 1})
+        self._make_in_move(self.product1, 1, unit_cost=13.13)
+        self._make_in_move(self.product1, 1, unit_cost=12.20)
+        move3 = self._make_out_move(self.product1, 2, create_picking=True)
+        move4 = self._make_return(move3, 2)
+
+        self.assertAlmostEqual(abs(move3.stock_valuation_layer_ids[0].value), abs(move4.stock_valuation_layer_ids[0].value))
+        self.assertAlmostEqual(self.product1.value_svl, 25.33)
+        self.assertEqual(self.product1.quantity_svl, 2)
 
 
 class TestStockValuationFIFO(TestStockValuationCommon):
@@ -757,7 +796,6 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         finally:
             self.env.user.company_id = old_company
 
-
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
     def test_standard_to_fifo_1(self):
         """ The accounting impact of this cost method change is neutral.
@@ -870,7 +908,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 190)
         self.assertEqual(self.product1.quantity_svl, 19)
 
-
+@tagged('post_install', '-at_install')
 class TestStockValuationChangeValuation(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):

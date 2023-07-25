@@ -101,7 +101,17 @@ class MailController(http.Controller):
         else:
             record_action = record_sudo.get_access_action()
             if record_action['type'] == 'ir.actions.act_url' and record_action.get('target_type') != 'public':
-                return cls._redirect_to_messaging()
+                url_params = {
+                    'model': model,
+                    'id': res_id,
+                    'active_id': res_id,
+                    'action': record_action.get('id'),
+                }
+                view_id = record_sudo.get_formview_id()
+                if view_id:
+                    url_params['view_id'] = view_id
+                url = '/web/login?redirect=#%s' % url_encode(url_params)
+                return werkzeug.utils.redirect(url)
 
         record_action.pop('target_type', None)
         # the record has an URL redirection: use it directly
@@ -220,7 +230,10 @@ class MailController(http.Controller):
         # ==============================================================================================
 
         if res_id and isinstance(res_id, str):
-            res_id = int(res_id)
+            try:
+                res_id = int(res_id)
+            except ValueError:
+                res_id = False
         return self._redirect_to_record(model, res_id, access_token, **kwargs)
 
     @http.route('/mail/assign', type='http', auth='user', methods=['GET'])

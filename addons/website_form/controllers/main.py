@@ -205,7 +205,10 @@ class WebsiteForm(http.Controller):
         model_name = model.sudo().model
         if model_name == 'mail.mail':
             values.update({'reply_to': values.get('email_from')})
-        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(mail_create_nosubscribe=True).create(values)
+        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(
+            mail_create_nosubscribe=True,
+            commit_assetsbundle=False,
+        ).create(values)
 
         if custom or meta:
             _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
@@ -251,7 +254,11 @@ class WebsiteForm(http.Controller):
             }
             attachment_id = request.env['ir.attachment'].sudo().create(attachment_value)
             if attachment_id and not custom_field:
-                record.sudo()[file.field_name] = [(4, attachment_id.id)]
+                record_sudo = record.sudo()
+                value = [(4, attachment_id.id)]
+                if record_sudo._fields[file.field_name].type == 'many2one':
+                    value = attachment_id.id
+                record_sudo[file.field_name] = value
             else:
                 orphan_attachment_ids.append(attachment_id.id)
 

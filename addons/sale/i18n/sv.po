@@ -22,18 +22,19 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Martin Trigaux, 2021
-# Robin Calvin, 2022
 # Simon S, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
+# Robin Calvin, 2023
+# Lasse Larsson, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"Last-Translator: Lasse Larsson, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -311,9 +312,9 @@ msgstr ""
 "            har bekräftats.<br/>\n"
 "            Tack för ert förtroende!\n"
 "        % elif transaction and transaction.state == 'pending' :\n"
-"            is pending. It will be confirmed when the payment is received.\n"
+"            väntar på bekräftelse. Den kommer att bli bekräftad när betalningen är mottagen.\n"
 "            % if object.reference:\n"
-"                Your payment reference is <strong>${object.reference}</strong>.\n"
+"                Din betalningsreferens är <strong>${object.reference}</strong>.\n"
 "            % endif\n"
 "        % endif\n"
 "        <br/><br/>\n"
@@ -324,14 +325,14 @@ msgstr ""
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
-"                <td style=\"width: 150px;\"><strong>Products</strong></td>\n"
+"                <td style=\"width: 150px;\"><strong>Produkter</strong></td>\n"
 "                <td/>\n"
-"                <td width=\"15%\" align=\"center\"><strong>Quantity</strong></td>\n"
+"                <td width=\"15%\" align=\"center\"><strong>Antal</strong></td>\n"
 "                <td width=\"20%\" align=\"right\"><strong>\n"
 "                % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):\n"
-"                    VAT Excl.\n"
+"                    Exkl. moms\n"
 "                % else\n"
-"                    VAT Incl.\n"
+"                    Inkl. moms.\n"
 "                % endif\n"
 "                </strong></td>\n"
 "            </tr>\n"
@@ -374,12 +375,12 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Delivery:</strong></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Fraktkostnad:</strong></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_delivery, object.currency_id)}</td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>SubTotal:</strong></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Delsumma:</strong></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -389,7 +390,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>SubTotal:</strong></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Delsumma:</strong></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -399,12 +400,12 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>Taxes:</strong></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Skatter:</strong></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\">${format_amount(object.amount_tax, object.currency_id)}</td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Total:</strong></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Totalt:</strong></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_total, object.currency_id)}</td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -414,7 +415,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td style=\"padding-top: 10px;\">\n"
-"                    <strong>Bill to:</strong>\n"
+"                    <strong>Fakturera till:</strong>\n"
 "                    ${object.partner_invoice_id.street or ''}\n"
 "                    ${object.partner_invoice_id.city or ''}\n"
 "                    ${object.partner_invoice_id.state_id.name or ''}\n"
@@ -424,7 +425,7 @@ msgstr ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <strong>Payment Method:</strong>\n"
+"                    <strong>Betalningsmetod:</strong>\n"
 "                    % if transaction.payment_token_id:\n"
 "                        ${transaction.payment_token_id.name}\n"
 "                    % else:\n"
@@ -442,7 +443,7 @@ msgstr ""
 "            <tr>\n"
 "                <td>\n"
 "                    <br/>\n"
-"                    <strong>Ship to:</strong>\n"
+"                    <strong>Skicka till:</strong>\n"
 "                    ${object.partner_shipping_id.street or ''}\n"
 "                    ${object.partner_shipping_id.city or ''}\n"
 "                    ${object.partner_shipping_id.state_id.name or ''}\n"
@@ -455,10 +456,10 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <strong>Shipping Method:</strong>\n"
+"                    <strong>Leveransmetod:</strong>\n"
 "                    ${object.carrier_id.name}\n"
 "                    % if object.carrier_id.fixed_price == 0.0:\n"
-"                        (Free)\n"
+"                        (Gratis)\n"
 "                    % else:\n"
 "                        (${format_amount(object.carrier_id.fixed_price, object.currency_id)})\n"
 "                    % endif\n"
@@ -500,6 +501,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'offert' if object.state in ('draft', 'sent') else 'beställning'\n"
+"        Hej,\n"
+"        <br/><br/>\n"
+"        Din\n"
+"        % if ctx.get('proforma'):\n"
+"            provisoriska faktura för ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (med referens: ${object.origin} )\n"
+"            % endif\n"
+"            som uppgår till <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> är tillgänglig.\n"
+"        % else:\n"
+"            ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (med referens: ${object.origin} )\n"
+"            % endif\n"
+"            som uppgår till <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> är redo för granskning.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Tveka inte att kontakta oss om du har några frågor.\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -876,6 +902,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Enligt produktkonfigurationen kan den levererade mängden automatiskt beräknas av mekanismen :\n"
+" - Manuell: mängden ställs in manuellt på raden\n"
+" - Analytisk Från utgifter: mängden är summan av postade utgifter\n"
+" - Tidsrapport: mängden är summan av timmar registrerade på uppgifter kopplade till denna försäljningsrad\n"
+" - Lagerflyttningar: mängden kommer från bekräftade plockningar\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -991,7 +1022,7 @@ msgstr "Objektkonto"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analytisk Från Utgifter"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -1052,7 +1083,7 @@ msgstr "Attribut"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Auktoriserade Transaktioner"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
@@ -1147,6 +1178,8 @@ msgid ""
 "Check this box if you send quotations to your customers rather than "
 "confirming orders straight away."
 msgstr ""
+"Kryssa i den här rutan om du skickar offerter till dina kunder istället för "
+"att bekräfta beställningar direkt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -1348,6 +1381,8 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Skapelsedatum för utkast/skickade beställningar,\n"
+"Bekräftelsedatum för bekräftade beställningar."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
@@ -1588,6 +1623,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Leveransdatum du kan lova kunden, beräknat från den minsta ledtiden för "
+"orderlinjerna i fallet med serviceprodukter. Vid leverans kommer orderns "
+"leveranspolicy att tas i beaktande för att använda antingen den minsta eller"
+" största ledtiden för orderlinjerna."
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
@@ -1598,7 +1637,7 @@ msgstr "Deposition"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr ""
+msgstr "Depositionsprodukt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -1734,6 +1773,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"Förskottsbetalningar görs när fakturor skapas från en försäljningsorder. De "
+"kopieras inte när en försäljningsorder dupliceras."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1807,6 +1848,9 @@ msgid ""
 " a validated expense can be re-invoice to a customer at its cost or sales "
 "price."
 msgstr ""
+"Utgifter och leverantörsfakturor kan faktureras om till en kund. Med detta "
+"alternativ kan en godkänd utgift faktureras om till en kund till dess "
+"kostnad eller försäljningspris."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -1894,6 +1938,9 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Från denna rapport kan du få en översikt över det belopp som fakturerats "
+"till din kund. Sökverktyget kan också användas för att anpassa dina "
+"fakturorapporter och således anpassa denna analys till dina behov."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2023,6 +2070,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Om försäljningen är låst kan du inte längre ändra den. Du kommer dock "
+"fortfarande att kunna fakturera eller leverera."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2038,6 +2087,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
+"Om du ändrar prislistan kommer endast nyligen tillagda rader att påverkas."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2138,6 +2188,9 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Fakturera inkomst för den nuvarande månaden. Detta är det belopp "
+"försäljningskanalen har fakturerat denna månad. Det används för att beräkna "
+"progressionsförhållandet mellan nuvarande och målincome på kanban-vyn."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
@@ -2194,6 +2247,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Fakturor kommer att skapas som utkast  så att du kan granska\n"
+"                        dem innan validering."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -2252,6 +2307,8 @@ msgstr "Är utgången"
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
+"Är sant om försäljningsordern kommer från en utgift eller en "
+"leverantörsfaktura"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2260,12 +2317,14 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Det är förbjudet att ändra följande fält i en låst order:\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "Det är inte tillåtet att bekräfta en order i följande tillstånd: %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -2420,6 +2479,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Ställ in kvantiteter manuellt på order: Fakturera baserat på den manuellt inmatade kvantiteten, utan att skapa ett analytiskt konto.\n"
+"Tidrapporter på kontrakt: Fakturera baserat på de loggade timmarna på den relaterade tidrapporten.\n"
+"Skapa en uppgift och spåra timmar: Skapa en uppgift vid validering av försäljningsordern och spåra arbetstimmar."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
@@ -2690,7 +2752,7 @@ msgstr "Endast orderutkast kan markeras som skickade."
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
-msgstr ""
+msgstr "Endast ett anpassat värde är tillåtet per attributvärde per orderrad."
 
 #. module: sale
 #. openerp-web
@@ -2699,6 +2761,7 @@ msgstr ""
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
+"Öppna Försäljningsappen för att skicka din första offert med några klick."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2785,6 +2848,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Beställd kvantitet: Fakturera kvantiteter beställda av kunden.\n"
+"Levererad kvantitet: Fakturera kvantiteter levererade till kunden."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -3357,7 +3422,7 @@ msgstr "Ordervarningar"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Vald betalningsmetod vid registrering för försäljning"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -3648,6 +3713,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Att skicka ett mejl är användbart om du behöver dela specifik information "
+"eller innehåll om en produkt (instruktioner, regler, länkar, media, etc.). "
+"Skapa och ställ in mejlmallen från produktdetaljformuläret (i "
+"Försäljningsfliken)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3776,7 +3845,7 @@ msgstr "Källdokument"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
-msgstr ""
+msgstr "Specifik E-post"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3790,22 +3859,22 @@ msgstr "Etapp"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr ""
+msgstr "Börja med att kontrollera din företagsdata."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr ""
+msgstr "Status för onboarding-steg för orderbekräftelse"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "Status för onboarding-steg för provkostnadsförslag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "Status för försäljningens onboardingspanel"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -3857,7 +3926,7 @@ msgstr "Etiketter"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Tax Total"
-msgstr ""
+msgstr "Skatte-totalt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
@@ -3886,7 +3955,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Tekniskt område för UX-ändamål."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3919,6 +3988,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"Försäljningsordern %s kopplad till det analytiska kontot %s är avbruten. Du "
+"kan inte registrera en kostnad på en avbruten försäljningsorder."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3928,6 +3999,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"Försäljningsordern %s kopplad till det analytiska kontot %s är för "
+"närvarande låst. Du kan inte registrera en kostnad på en låst "
+"försäljningsorder. Skapa en ny SO kopplad till detta analytiska konto."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3936,6 +4010,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"Försäljningsordern %s kopplad till det analytiska kontot %s måste valideras "
+"innan kostnader registreras."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__analytic_account_id
@@ -3953,7 +4029,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "Det fasta beloppet som ska faktureras i förväg, exklusive skatter."
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -3963,6 +4039,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Följande produkter kan inte begränsas till företaget %s eftersom de redan har använts i offerter eller försäljningsorder i ett annat företag:\n"
+"%s\n"
+"Du kan arkivera dessa produkter och återskapa dem med din företagsbegränsning istället, eller lämna dem som delad produkt."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3978,6 +4057,8 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"Marginalen beräknas som summan av produkternas försäljningspriser minus "
+"kostnaden som anges i deras detaljformulär."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3997,17 +4078,18 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "Den beställda mängden har uppdaterats."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "Betalningskommunikationen för denna försäljningsorder."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
 msgstr ""
+"Procentandelen av beloppet som ska faktureras i förväg, exklusive skatter."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4016,6 +4098,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
+"Produkten som används för att fakturera en handpenning bör vara av typen "
+"'Tjänst'. Använd en annan produkt eller uppdatera denna produkt."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4037,12 +4121,12 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr ""
+msgstr "Värdet för handpenningen måste vara positivt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
-msgstr ""
+msgstr "För närvarande finns det inga beställningar för ditt konto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4056,15 +4140,10 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
-"Det finns inget att fakturera!\n"
-"\n"
-"Orsak(er) till detta kan vara:\n"
-"- Du bör leverera dina produkter innan du fakturerar dem: Klicka på \"lastbilsikonen\" (övre högra delen av skärmen) och följ instruktionerna.\n"
-"- Du bör ändra faktureringspolicyn för din produkt: Öppna produkten, gå in på fliken \"Försäljning\" och ändra \"levererat antal\" till \"beställda kvantiteter\". "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4082,6 +4161,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Det här är ett namn som hjälper dig att hålla koll på dina olika "
+"kampanjinsatser, t.ex. Fall_Drive, Christmas_Special"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
@@ -4089,12 +4170,16 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Detta är det leveransdatum som utlovats till kunden. Om det är angivet "
+"kommer leveransordern att schemaläggas utifrån detta datum istället för "
+"produktens ledtider."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__medium_id
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
+"Detta är leveransmetoden, t.ex. 'Postkort', 'E-post' eller 'Bannerannons'"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__source_id
@@ -4103,6 +4188,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Detta är källan till länken, t.ex. Sökmotor, en annan domän eller namnet på "
+"e-postlistan"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4128,6 +4215,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Den här rapporten utför analys av dina offerter. Analysen kontrollerar dina "
+"försäljningsintäkter och sorterar dem efter olika gruppkrav (säljare, "
+"partner, produkt osv.). Använd den här rapporten för att utföra analys av "
+"försäljning som ännu inte har fakturerats. Om du vill analysera din "
+"omsättning bör du använda rapporten för Fakturaanalys i "
+"redovisningsprogrammet."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -4138,6 +4231,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Den här rapporten utför en analys av dina försäljningsorder. Analysen "
+"kontrollerar dina försäljningsintäkter och sorterar dem efter olika "
+"grupperingskriterier (säljare, partner, produkt osv.). Använd den här "
+"rapporten för att utföra en analys av försäljningen som ännu inte har "
+"fakturerats. Om du vill analysera din omsättning bör du använda rapporten "
+"för fakturaanalys i redovisningsapplikationen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4163,7 +4262,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "Att försöka sälja något extra"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4172,6 +4271,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"För att skicka inbjudningar i B2B-läge, öppna en kontakt eller markera flera"
+" i listvyn och klicka på alternativet 'Portalåtkomsthantering' i "
+"rullgardinsmenyn *Åtgärd*."
 
 #. module: sale
 #. openerp-web
@@ -4181,6 +4283,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"För att påskynda orderbekräftelsen kan vi aktivera elektroniska signaturer "
+"eller betalningar."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4201,7 +4305,7 @@ msgstr "Totalt"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr ""
+msgstr "Total skatt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4229,7 +4333,7 @@ msgstr "Transaktioner"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
 msgid "Type Name"
-msgstr ""
+msgstr "Skriv namn"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
@@ -4239,12 +4343,12 @@ msgstr "Typ av undantagsaktivitet i posten"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "UPS Connector"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "USPS Connector"
 
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
@@ -4261,7 +4365,7 @@ msgstr "Enhetspris"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
-msgstr ""
+msgstr "Enhetspris:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom
@@ -4373,12 +4477,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "View Quotation"
-msgstr ""
+msgstr "Visa offert"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Annullera transaktion"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
@@ -4430,7 +4534,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
-msgstr ""
+msgstr "Skriv ett företagsnamn för att skapa ett eller se förslag."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4439,6 +4543,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Du kan inte radera en skickad offert eller en bekräftad försäljningsorder.Du"
+" måste först avbryta den."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4447,6 +4553,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"Du kan inte ta bort en orderpost när försäljningsordern har bekräftats.\n"
+"Du bör istället sätta kvantiteten till 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4462,6 +4570,20 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Du kan ställa in här vilken typ av kommunikation som ska visas på "
+"försäljningsorder. Kommunikationen kommer att ges till kunden när de väljer "
+"betalningsmetod."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"Du kan inte ändra produkttypen eftersom den redan används i "
+"försäljningsbeställningar."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4470,6 +4592,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Du kan inte ändra typen av en försäljningsorder-rad. Istället bör du ta bort"
+" den nuvarande raden och skapa en ny rad av rätt typ."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -4510,11 +4634,13 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Ditt erbjudande innehåller produkter från företaget %(product_company)s medan ditt erbjudande tillhör företaget %(quote_company)s. \n"
+" Var god ändra företaget för ditt erbjudande eller ta bort produkterna från andra företag (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "bpost-anslutning"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4531,7 +4657,7 @@ msgstr "dagar"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "sale order"
-msgstr ""
+msgstr "försäljningsorder"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_by_group

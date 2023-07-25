@@ -234,10 +234,6 @@
                 'xml_id': 'product.product_product_4c',
                 'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_2') + obj().env.ref('product.product_4_attribute_2_value_1')),
                 'noupdate': True,
-            }, {
-                'xml_id': 'product.product_product_4d',
-                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_2') + obj().env.ref('product.product_4_attribute_2_value_2')),
-                'noupdate': True,
             },]"/>
         </function>
 
@@ -259,13 +255,6 @@
             <field name="standard_price">500.0</field>
             <field name="image_1920" type="base64" file="product/static/img/table03.png"/>
         </record>
-        <record id="product_product_4d" model="product.product">
-            <field name="default_code">DESK0004</field>
-            <field name="weight">0.01</field>
-            <field name="standard_price">500.0</field>
-            <field name="image_1920" type="base64" file="product/static/img/table01.png"/>
-        </record>
-
         <record id="product_product_5" model="product.product">
             <field name="name">Corner Desk Right Sit</field>
             <field name="categ_id" ref="product_category_5"/>

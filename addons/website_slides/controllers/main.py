@@ -134,7 +134,7 @@ class WebsiteSlides(WebsiteProfile):
                     'id': answer.id,
                     'text_value': answer.text_value,
                     'is_correct': answer.is_correct if slide_completed or request.website.is_publisher() else None,
-                    'comment': answer.comment if request.website.is_publisher else None
+                    'comment': answer.comment if request.website.is_publisher() else None
                 } for answer in question.sudo().answer_ids],
             } for question in slide.question_ids]
         }
@@ -484,12 +484,13 @@ class WebsiteSlides(WebsiteProfile):
             'enable_slide_upload': 'enable_slide_upload' in kw,
         }
         if not request.env.user._is_public():
+            subtype_comment_id = request.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
             last_message = request.env['mail.message'].search([
                 ('model', '=', channel._name),
                 ('res_id', '=', channel.id),
                 ('author_id', '=', request.env.user.partner_id.id),
                 ('message_type', '=', 'comment'),
-                ('is_internal', '=', False)
+                ('subtype_id', '=', subtype_comment_id)
             ], order='write_date DESC', limit=1)
             if last_message:
                 last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
@@ -1124,6 +1125,8 @@ class WebsiteSlides(WebsiteProfile):
         # try accessing slide, and display to corresponding template
         try:
             slide = request.env['slide.slide'].browse(slide_id)
+            if not slide.active:
+                raise werkzeug.exceptions.NotFound()
             if is_embedded:
                 request.env['slide.embed'].sudo()._add_embed_url(slide.id, referrer_url)
             values = self._get_slide_detail(slide)

@@ -102,6 +102,11 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
             message: "XmlHttpRequestError abort",
             event: $.Event('abort')
         });
+
+        if (!shadow) {
+            core.bus.trigger('rpc_response');
+        }
+
         if (xhr.abort) {
             xhr.abort();
         }

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_import
 #. openerp-web
@@ -123,13 +124,15 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr "La columna %s contiene valores incorrectos (valores: %s)"
+msgstr "La columna %s contiene valores que no son correctos (valor: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "La columna %s contiene valores incorrectos. Error en la linea %d: %s"
+msgstr ""
+"La columna %s contiene valores que no son correctos. Error en la línea %d: "
+"%s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -151,7 +154,7 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
-"No se pudo recuperar el URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"No se pudo recuperar la URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 
 #. module: base_import
@@ -372,7 +375,7 @@ msgstr "El tamaño del archivo excede el máximo establecido (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Archivo a comprobar y/o importar, binario en bruto (no base64)"
+msgstr "Archivo a comprobar o importar, binario sin procesar (no base64)"
 
 #. module: base_import
 #. openerp-web
@@ -453,8 +456,8 @@ msgid ""
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
 "Si el modelo usa openchatter, el seguimiento del historial configurará "
-"suscripciones y enviará notificaciones durante la importación, pero hará más"
-" lenta la importación."
+"suscripciones y enviará notificaciones durante la importación, pero la hará "
+"más lenta."
 
 #. module: base_import
 #. openerp-web
@@ -500,9 +503,9 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
-"La importación expiró. Por favor, intenta de nuevo. Si el problema persiste,"
-" puede ser que el archivo sea demasiado grande para la configuración del "
-"sistema, intenta dividirlo (importa menos registros por archivo)."
+"La importación expiró, vuelva a intentarlo. Si el problema persiste, puede "
+"ser que el archivo sea demasiado grande para la configuración del sistema, "
+"intente dividirlo (importe menos registros por archivo)."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -670,7 +673,7 @@ msgstr "Fila%d%s"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr "Ver posibles valores"
+msgstr "Ver los valores posibles"
 
 #. module: base_import
 #. openerp-web
@@ -878,7 +881,9 @@ msgstr ""
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "Formato no admitido \"{}\", importar solo archivos CSV, OSD, XLS y XLSX"
+msgstr ""
+"El formato \"{}\" no es compatible, solo es posible importar archivos CSV, "
+"OSD, XLS y XLSX"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -925,7 +930,7 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
-"No puedes importar imágenes a través del URL, consúltalo con tu "
+"No puede importar imágenes a través de la URL, consúltelo con su "
 "administrador o soporte técnico."
 
 #. module: base_import

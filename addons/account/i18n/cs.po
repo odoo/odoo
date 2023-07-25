@@ -7,18 +7,20 @@
 # Ondřej Skuhravý <ondra.sk@volny.cz>, 2020
 # Ondřej Janovský <ondrej.janovsky@alarex.cz>, 2020
 # Martin N <nedbalm@gmail.com>, 2020
-# Chris <krystof.reklamy13@gmail.com>, 2020
+# Chris, 2020
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
 # Ladislav Tomm <tomm@helemik.cz>, 2020
 # milda dvorak <milda.dvorak@optimal4.cz>, 2020
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
-# Michal Veselý <michal@veselyberanek.net>, 2021
 # David Kliment <daklime@gmail.com>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
-# trendspotter <jirka.p@volny.cz>, 2021
+# Jiří Podhorecký, 2021
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
+# Michal Veselý <michal@veselyberanek.net>, 2022
+# Petr Hemza, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,8 +28,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -823,6 +825,11 @@ msgstr "<strong>Společnost:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr "<strong>Datum dobropisu:</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Identifikace zákazníka:</strong>"
 
@@ -835,6 +842,11 @@ msgstr "<strong>Zákazník: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>Zákazník</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Datum:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -890,6 +902,11 @@ msgstr "<strong>Platební podmínka:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Produkt</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>Datum přijetí:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1007,6 +1024,12 @@ msgid ""
 msgstr ""
 "Deník se používá k zaznamenávání transakcí všech účetních údajů\n"
 " vztahujících se k každodenní činnosti."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr "Řádek tohoto přesunu používá zastaralý účet, nemůžete jej odeslat."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -1752,6 +1775,8 @@ msgid ""
 "cancelling {percent:f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"Pro tuto fakturu byly vytvořeny opravné položky:<ul><li>%(link1)s zavření "
+"{percent:f}%% z {amount}</li><li>%(link0)s odložení o {new_date}</li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -1781,7 +1806,7 @@ msgstr "Úprava záznamu ze dne {date} ({percent:f}% uznáno na {new_date})"
 #, python-format
 msgid ""
 "Adjusting Entry {link}: {percent:f}% of {amount} recognized from {date}"
-msgstr ""
+msgstr "Úprava položky {link}: {percent:f}% z {amount} uznané z {date}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
@@ -2996,6 +3021,7 @@ msgid ""
 "Cannot create an invoice of type %(move_type)s with a journal having "
 "%(journal_type)s as type."
 msgstr ""
+"Nelze vytvořit fakturu typu %(move_type)s s deníkem typu %(journal_type)s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3004,6 +3030,8 @@ msgid ""
 "Cannot create unbalanced journal entry. Ids: %s\n"
 "Differences debit - credit: %s"
 msgstr ""
+"Nelze vytvořit nevyvážený zápis do deníku. Id: %s\n"
+"Rozdíly debit - credit: %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -6620,6 +6648,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"Přerozdělení faktury a dobropisu by mělo mít alespoň jeden řádek "
+"přerozdělení daně."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6864,7 +6894,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(now)s'."
-msgstr ""
+msgstr "Dříve bylo '%(previous)s' a teď je '%(now)s'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8059,6 +8089,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
+"Ve společnosti nebyl nalezen žádný deník %(company_name)s pro žádný z těchto"
+" typů: %(journal_types)s"
 
 #. module: account
 #: code:addons/account/models/ir_actions_report.py:0
@@ -9782,6 +9814,12 @@ msgstr "Modely párování"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
 msgstr "Části párování"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr "Záznam nemohl být smazán. Partner je použit v účetnictví"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12044,6 +12082,8 @@ msgid ""
 "The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
 "You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
 msgstr ""
+"%(date_field)s (%(date)s) se neshodují s %(sequence_field)s (%(sequence)s).\n"
+"Než budete pokračovat se změnou data, možná budete chtít smazat pole %(sequence_field)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
@@ -12125,6 +12165,9 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
+"Tento účet je nakonfigurován v deníku(-cích) %(journal_names)s (id "
+"%(journal_ids)s) jako účet debetní nebo platební karty. To znamená, že typ "
+"tohoto účtu by měl být kompatibilní."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12362,6 +12405,8 @@ msgid ""
 "The ending balance is incorrect !\n"
 "The expected balance (%(real_balance)s) is different from the computed one (%(computed_balance)s)."
 msgstr ""
+"Konečný zůstatek je nesprávný !\n"
+"Očekávaný zůstatek (%(real_balance)s) se liší od vypočteného (%(computed_balance)s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -12433,6 +12478,7 @@ msgstr ""
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
 msgstr ""
+"Následující regulérní výraz není platný k vytvoření mapování partnera: %s"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12459,6 +12505,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
+"Nastavení zahraniční měny v deníku '%(journal)s' a účtu '%(account)s' musí "
+"být stejné."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -12519,6 +12567,12 @@ msgid ""
 "- optional journal items, all sharing the same account.\n"
 "\n"
 msgstr ""
+"Záznam deníku %s dosáhl neplatného stavu vzhledem k platbě.\n"
+"Aby byl záznam v deníku konzistentní, musí vždy obsahovat:\n"
+"- jednu položku deníku zahrnující účet neuhrazené platby/příjmů.\n"
+"- jednu položku deníku zahrnující účet pohledávky/závazku.\n"
+"- volitelné položky deníku, všechny sdílející stejný účet.\n"
+"\n"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12527,6 +12581,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same currency."
 msgstr ""
+"Vnitřní účetní doklad %s dosáhl neplatného stavu vzhledem k jeho platbě.\n"
+"V zájmu konzistence musí položky deníku sdílet stejnou měnu."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12730,6 +12786,8 @@ msgid ""
 "The recipient bank account link to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
+"Odkaz na bankovní účet příjemce s touto fakturou je archivován.\n"
+"Nemůžete tedy potvrdit fakturu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -12890,7 +12948,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
-msgstr ""
+msgstr "Formát sekvence se změnil."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -12909,6 +12967,8 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Sekvence nebude nikdy restartována.\n"
+"Zvyšující se číslo v tomto případě je '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12918,6 +12978,9 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Sekvence se restartuje každý 1. den v měsíci.\n"
+"Zjištěný rok zde je '%(year)s' a měsíc je '%(month)s'.\n"
+"Zvyšující se číslo je v tomto případě '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12927,6 +12990,9 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Sekvence se restartuje každý 1. den v roce.\n"
+"Zjištěný rok zde je '%(year)s'.\n"
+"Zvyšující se číslo je v tomto případě '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -13326,6 +13392,16 @@ msgstr ""
 "zákazníků"
 
 #. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+"Tento produkt se již používá v zaslaných deníkových záznamech.\n"
+"Pokud chcete změnit jeho měrnou jednotku, archivujte tento produkt a vytvořte nový."
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
@@ -13680,6 +13756,12 @@ msgid "Unposted"
 msgstr "Nezaúčtované"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr "Nezaúčtované položky"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "Nezaúčtované vnitřní účetní doklady"
@@ -13961,6 +14043,13 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
+"Hodnota pro řádek s výškou odpisu\n"
+"    * Procento: Procento zůstatku, mezi 0 a 100.\n"
+"    * Fixní: Pevná hodnota odpisu. Suma se započítá jako debet, pokud je záporná, jako kredit, pokud je kladná.\n"
+"    * Ze štítku: Není potřeba oddělovač regulárního výrazu, stačí pouze regulérní výraz. Například pokud chcete získat sumu z\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Můžete zadat\n"
+"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__supplier
@@ -14224,6 +14313,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"Nemůžete archivovat deník obsahující koncepty deníkových záznamů.\n"
+"\n"
+"Chcete-li pokračovat:\n"
+"1/ klikněte na tlačítko vpravo nahoře 'Zápisy do deníku' z tohoto formuláře deníku\n"
+"2/ poté filtrujte položky 'Koncept'\n"
+"3/ vyberte je všechny a zveřejněte nebo smažte je prostřednictvím nabídky akcí"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -14481,6 +14576,13 @@ msgstr ""
 "již existují"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Chcete-li vytisknout výsledek Hash integrity, kontaktujte svého účetního."
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -14537,11 +14639,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"Následující pole nemůžete upravit z důvodu aktivace režimu omezení v deníku:"
-" %s."
+"Nemůžete upravovat následující pole: %s.\n"
+"Následující záznamy obsahují již hash:\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14765,7 +14869,7 @@ msgstr "V deníku pokladny musíte definovat „Interní převodový účet“."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
-msgstr ""
+msgstr "Záznam %s (id %s) je už zveřejnený."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14987,6 +15091,16 @@ msgid "the parent company"
 msgstr "mateřská společnost"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+"Jednotka měření (MJ) '%s', kterou jste vybrali pro produkt '%s', není "
+"kompatibilní s jeho kategorií: %s."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "to"
@@ -15006,3 +15120,31 @@ msgstr "s pdf faktury jako přílohy."
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Počítat"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""
+"Analytická výchozí hodnota vyžaduje analytický účet nebo analytickou značku "
+"použitou v analytické distribuci."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "Vaše daně byly aktualizovány !"
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"Zkontrolujte prosím tyto daně. Mohou být zastaralé. Neaktualizovali jsme je."
+" Ve skutečnosti přesně neodpovídají daním původní verze lokalizačního "
+"modulu.<br/>Možná je budete chtít archivovat nebo upravit.<br/><ul>"

@@ -16,7 +16,7 @@ from odoo.tools.misc import formatLang, get_lang, format_amount
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Purchase Order"
     _order = 'priority desc, id desc'
 
@@ -923,7 +923,7 @@ class PurchaseOrderLine(models.Model):
             else:
                 line.qty_to_invoice = 0
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'product_id.type')
     def _compute_qty_received_method(self):
         for line in self:
             if line.product_id and line.product_id.type in ['consu', 'service']:
@@ -1010,7 +1010,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id', 'date_order')
     def _compute_account_analytic_id(self):
         for rec in self:
-            if not rec.account_analytic_id:
+            if not rec.display_type:
                 default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
                     product_id=rec.product_id.id,
                     partner_id=rec.order_id.partner_id.id,
@@ -1018,12 +1018,13 @@ class PurchaseOrderLine(models.Model):
                     date=rec.date_order,
                     company_id=rec.company_id.id,
                 )
-                rec.account_analytic_id = default_analytic_account.analytic_id
+                if default_analytic_account:
+                    rec.account_analytic_id = default_analytic_account.analytic_id
 
     @api.depends('product_id', 'date_order')
     def _compute_analytic_tag_ids(self):
         for rec in self:
-            if not rec.analytic_tag_ids:
+            if not rec.display_type:
                 default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
                     product_id=rec.product_id.id,
                     partner_id=rec.order_id.partner_id.id,
@@ -1031,11 +1032,12 @@ class PurchaseOrderLine(models.Model):
                     date=rec.date_order,
                     company_id=rec.company_id.id,
                 )
-                rec.analytic_tag_ids = default_analytic_account.analytic_tag_ids
+                if default_analytic_account:
+                    rec.analytic_tag_ids = default_analytic_account.analytic_tag_ids
 
-    @api.onchange('product_id')
+    @api.onchange('product_id', 'company_id')
     def onchange_product_id(self):
-        if not self.product_id:
+        if not self.product_id or not self.company_id:
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
@@ -1080,9 +1082,9 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.onchange('product_qty', 'product_uom')
+    @api.onchange('product_qty', 'product_uom', 'company_id')
     def _onchange_quantity(self):
-        if not self.product_id:
+        if not self.product_id or self.invoice_lines or not self.company_id:
             return
         params = {'order_id': self.order_id}
         seller = self.product_id._select_seller(

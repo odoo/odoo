@@ -888,6 +888,10 @@ class MailThread(models.AbstractModel):
         if not isinstance(message, EmailMessage):
             raise TypeError('message must be an email.message.EmailMessage at this point')
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
+        catchall_domain_lowered = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain", "").strip().lower()
+        catchall_domains_allowed = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain.allowed")
+        if catchall_domain_lowered and catchall_domains_allowed:
+            catchall_domains_allowed = catchall_domains_allowed.split(',') + [catchall_domain_lowered]
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
         bounce_alias_static = tools.str2bool(self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias.static", "False"))
         fallback_model = model
@@ -917,10 +921,11 @@ class MailThread(models.AbstractModel):
         ]
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos_localparts = [
-            e.split('@')[0].lower()
-            for e in tools.email_split(message_dict['recipients'])
-        ]
+        rcpt_tos_localparts = []
+        for recipient in tools.email_split(message_dict['recipients']):
+            to_local, to_domain = recipient.split('@', maxsplit=1)
+            if not catchall_domains_allowed or to_domain.lower() in catchall_domains_allowed:
+                rcpt_tos_localparts.append(to_local.lower())
         rcpt_tos_valid_localparts = [to for to in rcpt_tos_localparts]
 
         # 0. Handle bounce: verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
@@ -1275,6 +1280,9 @@ class MailThread(models.AbstractModel):
             mixed = False
             html = u''
             for part in message.walk():
+                if part.get_content_type() == 'binary/octet-stream':
+                    _logger.warning("Message containing an unexpected Content-Type 'binary/octet-stream', assuming 'application/octet-stream'")
+                    part.replace_header('Content-Type', 'application/octet-stream')
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
                 if part.get_content_type() == 'multipart/mixed':
@@ -1283,27 +1291,33 @@ class MailThread(models.AbstractModel):
                     continue  # skip container
 
                 filename = part.get_filename()  # I may not properly handle all charsets
+                if part.get_content_type() == 'text/xml' and not part.get_param('charset'):
+                    # for text/xml with omitted charset, the charset is assumed to be ASCII by the `email` module
+                    # although the payload might be in UTF8
+                    part.set_charset('utf-8')
                 encoding = part.get_content_charset()  # None if attachment
 
+                content = part.get_content()
+                info = {'encoding': encoding}
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
-                    inner_cid = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, part.get_content(), {'cid': inner_cid}))
+                    info['cid'] = part.get('content-id').strip('><')
+                    attachments.append(self._Attachment(filename, content, info))
                     continue
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_content(), {}))
+                    attachments.append(self._Attachment(filename or 'attachment', content, info))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
-                    body = tools.append_content_to_html(body, tools.ustr(part.get_content(),
+                    body = tools.append_content_to_html(body, tools.ustr(content,
                                                                          encoding, errors='replace'), preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     # mutlipart/alternative have one text and a html part, keep only the second
                     # mixed allows several html parts, append html content
                     append_content = not alternative or (html and mixed)
-                    html = tools.ustr(part.get_content(), encoding, errors='replace')
+                    html = tools.ustr(content, encoding, errors='replace')
                     if not append_content:
                         body = html
                     else:
@@ -1312,7 +1326,7 @@ class MailThread(models.AbstractModel):
                     body = tools.html_sanitize(body, sanitize_tags=False, strip_classes=True)
                 # 4) Anything else -> attachment
                 else:
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_content(), {}))
+                    attachments.append(self._Attachment(filename or 'attachment', content, info))
 
         return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
 
@@ -1354,7 +1368,7 @@ class MailThread(models.AbstractModel):
         if email_part:
             if email_part.get_content_type() == 'text/rfc822-headers':
                 # Convert the message body into a message itself
-                email_payload = message_from_string(email_part.get_payload(), policy=policy.SMTP)
+                email_payload = message_from_string(email_part.get_content(), policy=policy.SMTP)
             else:
                 email_payload = email_part.get_payload()[0]
             bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email_payload, 'Message-Id'))
@@ -1732,13 +1746,18 @@ class MailThread(models.AbstractModel):
                 cid = False
                 if len(attachment) == 2:
                     name, content = attachment
+                    info = {}
                 elif len(attachment) == 3:
                     name, content, info = attachment
                     cid = info and info.get('cid')
                 else:
                     continue
                 if isinstance(content, str):
-                    content = content.encode('utf-8')
+                    encoding = info and info.get('encoding')
+                    try:
+                        content = content.encode(encoding or "utf-8")
+                    except UnicodeEncodeError:
+                        content = content.encode("utf-8")
                 elif isinstance(content, EmailMessage):
                     content = content.as_bytes()
                 elif content is None:
@@ -2120,10 +2139,12 @@ class MailThread(models.AbstractModel):
             create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
             create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
             create_values_list.append(create_values)
-        if 'default_child_ids' in self._context:
-            ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
-            self = self.with_context(ctx)
-        return self.env['mail.message'].create(create_values_list)
+
+        # remove context, notably for default keys, as this thread method is not
+        # meant to propagate default values for messages, only for master records
+        return self.env['mail.message'].with_context(
+            clean_context(self.env.context)
+        ).create(create_values_list)
 
     # ------------------------------------------------------
     # NOTIFICATION API

@@ -201,7 +201,7 @@ class CustomerPortal(CustomerPortal):
         elif groupby == 'stage':
             grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter('stage_id'))]
         else:
-            grouped_tasks = [tasks]
+            grouped_tasks = [tasks] if tasks else []
 
         values.update({
             'date': date_begin,

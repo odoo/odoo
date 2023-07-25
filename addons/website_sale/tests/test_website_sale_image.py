@@ -3,13 +3,14 @@
 import base64
 import io
 
+from odoo.addons.website_sale.tests.common import TestWebsiteSaleCommon
 from PIL import Image
 
 import odoo.tests
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestWebsiteSaleImage(odoo.tests.HttpCase):
+class TestWebsiteSaleImage(odoo.tests.HttpCase, TestWebsiteSaleCommon):
 
     # registry_test_mode = False  # uncomment to save the product to test in browser
 

@@ -6,8 +6,7 @@
 # Martin Trigaux, 2020
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Paolo Valier, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,13 +14,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_profile
 #: model:mail.template,subject:website_profile.validation_email
@@ -294,9 +293,9 @@ msgstr ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Ciao ${object.name},<br/><br/>\n"
+"                            Buongiorno ${object.name},<br/><br/>\n"
 "                            Per accedere al sito web di \"${object.company_id.name}\" sei invitato a confermare l'e-mail.\n"
-"                            Per procedere, fai clic sul seguente pulsante:\n"
+"                            Per procedere, fai clic sul seguente collegamento:\n"
 "                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                                <a href=\"${ctx.get('token_url')}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                    Conferma account\n"
@@ -400,12 +399,12 @@ msgstr "Può pubblicare"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Clear"
-msgstr "Rimuovi"
+msgstr "Cancella"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Click here to send a verification email."
-msgstr "Clicca qui per inviare un'e-mail di verifica."
+msgstr "Fai clic qui per inviare un'e-mail di verifica."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -442,7 +441,7 @@ msgstr "Riconoscimento gamification"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Home"
-msgstr "Home"
+msgstr "Pagina iniziale"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -491,7 +490,7 @@ msgstr "Karma minimo per vedere altri profili utente"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Mobile sub-nav"
-msgstr "Mobile sub-nav"
+msgstr "sottonav. dispositivo mobile"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -501,7 +500,7 @@ msgstr "Maggiori informazioni"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Nav"
-msgstr ""
+msgstr "Nav."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -530,7 +529,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Rank badge"
-msgstr ""
+msgstr "Livello di riconoscimento"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main

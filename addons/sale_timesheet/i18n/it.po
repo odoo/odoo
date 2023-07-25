@@ -7,7 +7,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Paolo Valier, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,13 +15,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account_move.py:0
@@ -78,7 +78,7 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Icona freccia\" "
 "title=\"Freccia\"/>"
 
 #. module: sale_timesheet
@@ -94,10 +94,10 @@ msgstr ""
 "<i class=\"ml-2 fa fa-exclamation-triangle text-danger small\" role=\"img\" "
 "title=\"Alcuni dipendenti che stanno registrando tempi sul progetto non sono"
 " collegati ad alcuna voce dell'ordine di vendita. Significa che il loro "
-"tempo verrà valutato come non fatturabile.\" aria-label=\"Some of the "
-"employees who are recording time on this project are not linked to any Sales"
-" Order Item. This means that their time will be considered as non-"
-"billable.\"/>"
+"tempo verrà valutato come non fatturabile.\" aria-label=\"Alcuni dipendenti "
+"che stanno registrando tempi sul progetto non sono collegati ad alcuna voce "
+"dell'ordine di vendita. Significa che il loro tempo verrà valutato come non "
+"fatturabile.\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -888,8 +888,8 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Impostazione manuale quantità ordine: fattura basata sulle quantità inserite manualmente, senza la creazione di un conto analitico.\n"
-"Fogli ore sul contratto: fattura basata sulle ore registrate nel relativo foglio ore. \n"
-"Creazione lavoro e registrazione ore: crea un lavoro alla conferma dell'ordine di vendita e registra le ore lavorative. "
+"Fogli ore su contratto: fattura basata sulle ore registrate nel relativo foglio ore.\n"
+"Creazione lavoro e registrazione ore: crea un lavoro alla conferma dell'ordine di vendita registrando le ore lavorative."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__margin

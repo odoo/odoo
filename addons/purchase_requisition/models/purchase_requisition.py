@@ -174,8 +174,8 @@ class PurchaseRequisitionLine(models.Model):
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env.company)
-    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
+    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', store=True, compute='_compute_account_analytic_id', readonly=False)
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', store=True, compute='_compute_analytic_tag_ids', readonly=False)
     schedule_date = fields.Date(string='Scheduled Date')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
 
@@ -238,6 +238,30 @@ class PurchaseRequisitionLine(models.Model):
                 line_found.add(line.product_id)
             else:
                 line.qty_ordered = 0
+
+    @api.depends('product_id', 'schedule_date')
+    def _compute_account_analytic_id(self):
+        for line in self:
+            default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
+                product_id=line.product_id.id,
+                partner_id=line.requisition_id.vendor_id.id,
+                user_id=line.env.uid,
+                date=line.schedule_date,
+                company_id=line.company_id.id,
+            )
+            line.account_analytic_id = default_analytic_account.analytic_id
+
+    @api.depends('product_id', 'schedule_date')
+    def _compute_analytic_tag_ids(self):
+        for line in self:
+            default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
+                product_id=line.product_id.id,
+                partner_id=line.requisition_id.vendor_id.id,
+                user_id=line.env.uid,
+                date=line.schedule_date,
+                company_id=line.company_id.id,
+            )
+            line.analytic_tag_ids = default_analytic_account.analytic_tag_ids
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

@@ -165,6 +165,11 @@ class User(models.Model):
                 result['toolbar']['action'] = [act for act in result['toolbar']['action'] if act['id'] != change_password_action.id]
         return result
 
+    def _get_employee_fields_to_sync(self):
+        """Get values to sync to the related employee when the User is changed.
+        """
+        return ['name', 'email', 'image_1920', 'tz']
+
     def write(self, vals):
         """
         Synchronize user and its related employee
@@ -184,8 +189,9 @@ class User(models.Model):
         result = super(User, self).write(vals)
 
         employee_values = {}
-        for fname in [f for f in ['name', 'email', 'image_1920', 'tz'] if f in vals]:
+        for fname in [f for f in self._get_employee_fields_to_sync() if f in vals]:
             employee_values[fname] = vals[fname]
+
         if employee_values:
             if 'email' in employee_values:
                 employee_values['work_email'] = employee_values.pop('email')

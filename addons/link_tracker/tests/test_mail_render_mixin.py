@@ -5,6 +5,11 @@ from odoo.tests import common
 
 
 class TestMailRenderMixin(common.TransactionCase):
+    def setUp(self):
+        super().setUp()
+        r = self.patch_requests()
+        r.side_effect=NotImplementedError
+
     def test_shorten_links(self):
         test_links = [
             '<a href="https://gitlab.com" title="title" fake="fake">test_label</a>',

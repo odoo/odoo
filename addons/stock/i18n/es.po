@@ -6,7 +6,7 @@
 # Ana Margarita Gutiérrez Rodríguez <ana.gutierrez@jarsa.com.mx>, 2020
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2020
 # Nicolás Broggi <rnbroggi@gmail.com>, 2020
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2020
+# 3fea9b0a501d83c62ec74234fbc72e10_a827c46 <dce1956db1a05bce2aec6cc4ef975d99_318347>, 2020
 # Jon Perez <jop@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2020
@@ -15,11 +15,11 @@
 # Priscilla (prs) Odoo <prs@odoo.com>, 2021
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2021
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
 # Jose Carmona <jrcarmona@gmail.com>, 2021
 # marcescu, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,8 +27,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1501,7 +1501,7 @@ msgstr "Cantidades contadas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_qty
 msgid "Counted Quantity"
-msgstr "Cantidade contada"
+msgstr "Cantidad contada"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -1845,7 +1845,7 @@ msgid ""
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
 "Defina una regla de existencias mínimas para que Odoo cree solicitudes de "
-"cotizaciones u órdenes de fabricación de forma automática para reabastecer "
+"presupuesto u órdenes de fabricación de forma automática para reabastecer "
 "sus existencias."
 
 #. module: stock
@@ -2404,7 +2404,7 @@ msgstr "Entrega esperada"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Expected Receipt"
-msgstr "Recibo esperado"
+msgstr "Recepción esperada"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
@@ -3182,6 +3182,15 @@ msgid "Invalid domain right operand %s"
 msgstr "Dominio inválido para el operante derecho %s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Configuración inválida de reglas. La siguiente regla provoca un bucle "
+"infinito: %s"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Inventoried Quantity"
 msgstr "Cantidad inventariada"
@@ -3350,6 +3359,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Es la cantidad realizada editable"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5209,6 +5226,17 @@ msgstr "Quant"
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+"Los quants son auto-eliminados cuando resulta apropiado. Si debe eliminarlos"
+" manualmente, consulte por favor con un responsable de inventario para "
+"hacerlo."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
 "La creación de Quant está restringida, no puedes hacer esta operación."
@@ -7057,6 +7085,24 @@ msgstr ""
 "uno nuevo."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"La compañía de este producto no puede ser cambiada mientras haya cantidades "
+"del mismo pertenecientes a otra compañía."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -7146,7 +7192,7 @@ msgstr "A Procesar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "To Reorder"
-msgstr "Para reordenar"
+msgstr "Para reponer"
 
 #. module: stock
 #. openerp-web
@@ -7435,7 +7481,7 @@ msgstr "Unidades de medida"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unity of measure"
+msgid "Unit of measure"
 msgstr "Unidad de medida"
 
 #. module: stock
@@ -8010,6 +8056,12 @@ msgstr ""
 "movimiento de stock."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "No puede cambiar el tipo de un producto que ya estuvo en uso."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8207,6 +8259,14 @@ msgstr ""
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "No puede cancelar un movimiento de existencias que está como 'Realizado'."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"No puede cambiar una línea de movimiento de existencias cancelada. Cree una "
+"nueva línea en su lugar."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

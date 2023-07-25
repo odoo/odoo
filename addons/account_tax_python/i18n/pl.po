@@ -8,6 +8,7 @@
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2020
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2020
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2020
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2020\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -37,6 +38,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Grupa podatków: Podatek jest zbiorem podatków cząstkowych.\n"
+"- Stały: Kwota podatku pozostaje taka sama niezależnie od ceny.\n"
+"- Procent ceny: Kwota podatku jest % ceny:\n"
+"np. 100 * (1 + 10%) = 110 (bez ceny)\n"
+"np. 110 / (1 + 10%) = 100 (cena wliczona)\n"
+"- Procent ceny wliczony w cenę: Kwota podatku jest podziałem ceny:\n"
+"np. 180 / (1 - 10%) = 200 (bez ceny wliczonej)\n"
+"np. 200 * (1 - 10%) = 180 (cena wliczona)"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -161,3 +171,16 @@ msgstr "Obliczenie podatku"
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
 msgstr "Szablony podatków"
+
+#. module: account_tax_python
+#: code:addons/account_tax_python/models/account_tax.py:0
+#: code:addons/account_tax_python/models/account_tax.py:0
+#, python-format
+msgid ""
+"You entered invalid code %r in %r taxes\n"
+"\n"
+"Error : %s"
+msgstr ""
+"Wprowadzono nieprawidłowy kod %r w %r podatkach\n"
+"\n"
+"Błąd : %s"

@@ -22,7 +22,12 @@ return PaymentProcessing.include({
         return stripe.handleCardPayment(tx.stripe_payment_intent_secret)
         .then(function(result) {
             if (result.error) {
-                return Promise.reject({"message": {"data": { "message": result.error.message}}});
+                return rpc.query({
+                    route: '/payment/stripe/s2s/process_payment_error',
+                    params: _.extend({}, {reference: tx.reference,
+                        stripe_payment_intent_secret: tx.stripe_payment_intent_secret,
+                        error: result.error.message})
+                }).then(()=> Promise.reject({"message": {"data": { "message": result.error.message}}}));
             }
             return rpc.query({
                 route: '/payment/stripe/s2s/process_payment_intent',

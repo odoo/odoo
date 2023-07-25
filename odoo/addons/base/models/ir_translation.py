@@ -44,8 +44,8 @@ class IrTranslationImport(object):
         # Note that Postgres will NOT inherit the constraints or indexes
         # of ir_translation, so this copy will be much faster.
         query = """ CREATE TEMP TABLE %s (
-                        imd_model VARCHAR(64),
-                        imd_name VARCHAR(128),
+                        imd_model VARCHAR,
+                        imd_name VARCHAR,
                         noupdate BOOLEAN
                     ) INHERITS (%s) """ % (self._table, self._model_table)
         self._cr.execute(query)

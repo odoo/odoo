@@ -202,6 +202,8 @@ class StockMoveLine(models.Model):
         # If this picking is already done we should generate an
         # associated done move.
         for move_line in mls:
+            if self.env.context.get('import_file') and move_line.product_uom_qty and not move_line._should_bypass_reservation(move_line.location_id):
+                raise UserError(_("It is not allowed to import reserved quantity, you have to use the quantity directly."))
             if move_line.move_id or not move_line.picking_id:
                 continue
             if move_line.picking_id.state != 'done':
@@ -214,16 +216,20 @@ class StockMoveLine(models.Model):
             else:
                 create_move(move_line)
 
+        moves_to_update = mls.filtered(
+            lambda ml:
+            ml.move_id and
+            ml.qty_done and (
+                ml.move_id.state == 'done' or (
+                    ml.move_id.picking_id and
+                    ml.move_id.picking_id.immediate_transfer
+                ))
+        ).move_id
+        for move in moves_to_update:
+            move.product_uom_qty = move.quantity_done
+
         for ml, vals in zip(mls, vals_list):
-            if ml.move_id and \
-                    ml.move_id.picking_id and \
-                    ml.move_id.picking_id.immediate_transfer and \
-                    ml.move_id.state != 'done' and \
-                    'qty_done' in vals:
-                ml.move_id.product_uom_qty = ml.move_id.quantity_done
             if ml.state == 'done':
-                if 'qty_done' in vals:
-                    ml.move_id.product_uom_qty = ml.move_id.quantity_done
                 if ml.product_id.type == 'product':
                     Quant = self.env['stock.quant']
                     quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
@@ -274,7 +280,9 @@ class StockMoveLine(models.Model):
                     # TODO: make package levels less of a pain and fix this
                     package_level = ml.package_level_id
                     ml.package_level_id = False
-                    package_level.unlink()
+                    # Only need to unlink the package level if it's empty. Otherwise will unlink it to still valid move lines.
+                    if not package_level.move_line_ids:
+                        package_level.unlink()
 
         # When we try to write on a reserved move line any fields from `triggers` or directly
         # `product_uom_qty` (the actual reserved quantity), we need to make sure the associated
@@ -311,6 +319,8 @@ class StockMoveLine(models.Model):
                         new_product_uom_qty = ml.product_id.uom_id._compute_quantity(reserved_qty, ml.product_uom_id, rounding_method='HALF-UP')
                         moves_to_recompute_state |= ml.move_id
                         ml.with_context(bypass_reservation_update=True).product_uom_qty = new_product_uom_qty
+                        # we don't want to override the new reserved quantity
+                        vals.pop('product_uom_qty', None)
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         if updates or 'qty_done' in vals:
@@ -520,6 +530,14 @@ class StockMoveLine(models.Model):
             lines |= picking_id.move_line_ids.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
+    def _get_value_production_lot(self):
+        self.ensure_one()
+        return {
+            'company_id': self.company_id.id,
+            'name': self.lot_name,
+            'product_id': self.product_id.id
+        }
+
     def _create_and_assign_production_lot(self):
         """ Creates and assign new production lots for move lines."""
         lot_vals = []
@@ -532,11 +550,7 @@ class StockMoveLine(models.Model):
             key_to_mls[key] |= ml
             if ml.tracking != 'lot' or key not in key_to_index:
                 key_to_index[key] = len(lot_vals)
-                lot_vals.append({
-                    'company_id': ml.company_id.id,
-                    'name': ml.lot_name,
-                    'product_id': ml.product_id.id
-                })
+                lot_vals.append(ml._get_value_production_lot())
 
         lots = self.env['stock.production.lot'].create(lot_vals)
         for key, mls in key_to_mls.items():
@@ -590,6 +604,7 @@ class StockMoveLine(models.Model):
             product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True
         )
         if quantity > available_quantity:
+            quantity = quantity - available_quantity
             # We now have to find the move lines that reserved our now unavailable quantity. We
             # take care to exclude ourselves and the move lines were work had already been done.
             outdated_move_lines_domain = [

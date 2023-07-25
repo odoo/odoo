@@ -58,7 +58,7 @@ class SaleOrder(models.Model):
             'search_default_billable_timesheet': True
         }  # erase default filters
         if self.timesheet_count > 0:
-            action['domain'] = [('so_line', 'in', self.order_line.ids)]
+            action['domain'] = [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)]
         else:
             action = {'type': 'ir.actions.act_window_close'}
         return action

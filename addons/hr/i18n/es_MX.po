@@ -4,7 +4,9 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,13 +14,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-17 10:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
@@ -402,7 +404,7 @@ msgid ""
 "                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
-"Como empleado de nuestra empresa, <b>colaborará con cada departamento para crear e implementar \n"
+"Como empleado de nuestra empresa, <b>colaborará con cada departamento para crear y desplegar \n"
 "                                productos revolucionarios.</b> Venga a trabajar en una empresa en crecimiento que ofrece grandes beneficios con oportunidades para\n"
 "                                avanzar y aprender junto con líderes consumados. Buscamos un miembro del personal experimentado y excepcional.\n"
 "                                <br><br>\n"
@@ -607,7 +609,7 @@ msgstr "Empresas"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr "Empresas"
+msgstr "Empresa"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -617,7 +619,7 @@ msgstr "Logo de la empresa"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
 msgid "Company Working Hours"
-msgstr "Horas laborales de la empresa"
+msgstr "Horas laborables de la empresa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_id
@@ -1176,7 +1178,7 @@ msgstr "Experiencia en Google Adwords"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
 msgid "Graduate"
-msgstr "Licenciado"
+msgstr "Egresado"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1335,8 +1337,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Si el campo activo está establecido en Falso, le permite ocultar el registro"
-" del recurso sin eliminarlo."
+"Si se desmarca el campo activo, permite ocultar el registro del recurso sin "
+"eliminarlo."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1503,14 +1505,14 @@ msgstr "Última actualización el"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Late Activities"
-msgstr "Actividades tardías"
+msgstr "Actividades atrasadas"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.plan_wizard_action
 #: model_terms:ir.ui.view,arch_db:hr.plan_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Launch Plan"
-msgstr "Lanzar plan"
+msgstr "Iniciar plan"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1829,7 +1831,7 @@ msgstr ""
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer"
-msgstr "Empleado RRHH"
+msgstr "Encargado"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -1887,7 +1889,7 @@ msgstr "Departamento padre"
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,help:hr.field_hr_employee_public__user_partner_id
 msgid "Partner-related data of the user"
-msgstr "Datos de usuario relacionados al partner"
+msgstr "Datos relacionados al contacto del usuario"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2661,7 +2663,7 @@ msgstr "Dirección laboral"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_email
 #: model:ir.model.fields,field_description:hr.field_res_users__work_email
 msgid "Work Email"
-msgstr "Correo electrónico laboral"
+msgstr "Correo de trabajo"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -2684,7 +2686,7 @@ msgstr "Ubicación de trabajo"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Work Mobile"
-msgstr "Teléfono celular laboral"
+msgstr "Teléfono de trabajo"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2714,7 +2716,7 @@ msgstr "Teléfono laboral"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
 msgid "Working Hours"
-msgstr "Horas laborales"
+msgstr "Horas laborables"
 
 #. module: hr
 #: code:addons/hr/models/res_users.py:0
@@ -2724,7 +2726,7 @@ msgid ""
 " to update other information."
 msgstr ""
 "Solamente tiene permitido actualizar sus preferencias. Contacte con el "
-"personal de RRHH para actualizar otra información."
+"encargado de RR. HH. para actualizar otra información."
 
 #. module: hr
 #. openerp-web

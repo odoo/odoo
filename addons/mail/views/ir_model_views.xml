@@ -33,7 +33,7 @@
         <field name="inherit_id" ref="base.view_model_fields_form"/>
         <field name="arch" type="xml">
             <field name="copied" position="after">
-                <field name="tracking" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                <field name="tracking" attrs="{'invisible': [('ttype', '=', 'binary')], 'readonly': [('state','!=', 'manual')]}"/>
             </field>
         </field>
     </record>

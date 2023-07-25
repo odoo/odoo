@@ -83,3 +83,9 @@ class MrpRoutingWorkcenter(models.Model):
             return False
         self.ensure_one()
         return tuple(self[key] for key in  ('name', 'company_id', 'workcenter_id', 'time_mode', 'time_cycle_manual'))
+
+    def write(self, values):
+        if 'bom_id' in values:
+            filtered_lines = self.bom_id.bom_line_ids.filtered(lambda line: line.operation_id == self)
+            filtered_lines.operation_id = False
+        return super().write(values)

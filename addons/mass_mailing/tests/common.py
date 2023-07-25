@@ -32,8 +32,8 @@ class MassMailCase(MailCase, MockLinkTracker):
             )
 
     def assertMailTraces(self, recipients_info, mailing, records,
-                         check_mail=True, sent_unlink=False, author=None,
-                         mail_links_info=None):
+                         check_mail=True, sent_unlink=False,
+                         author=None, mail_links_info=None):
         """ Check content of traces. Traces are fetched based on a given mailing
         and records. Their content is compared to recipients_info structure that
         holds expected information. Links content may be checked, notably to
@@ -48,6 +48,7 @@ class MassMailCase(MailCase, MockLinkTracker):
             'record: linked record,
             # MAIL.MAIL
             'content': optional content that should be present in mail.mail body_html;
+            'email_to_recipients': optional, see '_assertMailMail';
             'failure_type': optional failure reason;
             }, { ... }]
 
@@ -79,6 +80,12 @@ class MassMailCase(MailCase, MockLinkTracker):
             ('mass_mailing_id', 'in', mailing.ids),
             ('res_id', 'in', records.ids)
         ])
+        debug_info = '\n'.join(
+            (
+                f'Trace: to {t.email} - state {t.state}'
+                for t in traces
+            )
+        )
 
         # ensure trace coherency
         self.assertTrue(all(s.model == records._name for s in traces))
@@ -90,6 +97,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         for recipient_info, link_info, record in zip(recipients_info, mail_links_info, records):
             partner = recipient_info.get('partner', self.env['res.partner'])
             email = recipient_info.get('email')
+            email_to_recipients = recipient_info.get('email_to_recipients')
             state = recipient_info.get('state', 'sent')
             record = record or recipient_info.get('record')
             content = recipient_info.get('content')
@@ -97,33 +105,57 @@ class MassMailCase(MailCase, MockLinkTracker):
                 email = partner.email_normalized
 
             recipient_trace = traces.filtered(
-                lambda t: t.email == email and t.state == state and (t.res_id == record.id if record else True)
+                lambda t: (t.email == email or (not email and not t.email)) and \
+                          t.state == state and \
+                          (t.res_id == record.id if record else True)
             )
             self.assertTrue(
                 len(recipient_trace) == 1,
-                'MailTrace: email %s (recipient %s, state: %s, record: %s): found %s records (1 expected)' % (email, partner, state, record, len(recipient_trace))
+                'MailTrace: email %s (recipient %s, state: %s, record: %s): found %s records (1 expected)\n%s' % (
+                    email, partner, state, record,
+                    len(recipient_trace), debug_info)
             )
             self.assertTrue(bool(recipient_trace.mail_mail_id_int))
+            if 'failure_type' in recipient_info or state in ('ignored', 'exception', 'canceled', 'bounced'):
+                self.assertEqual(recipient_trace.failure_type, recipient_info['failure_type'])
 
             if check_mail:
                 if author is None:
                     author = self.env.user.partner_id
 
                 fields_values = {'mailing_id': mailing}
-                if 'failure_type' in recipient_info:
-                    fields_values['failure_type'] = recipient_info['failure_type']
+                if 'failure_reason' in recipient_info:
+                    fields_values['failure_reason'] = recipient_info['failure_reason']
 
                 # specific for partner: email_formatted is used
                 if partner:
                     if state == 'sent' and sent_unlink:
                         self.assertSentEmail(author, [partner])
                     else:
-                        self.assertMailMail(partner, state_mapping[state], author=author, content=content, fields_values=fields_values)
+                        self.assertMailMail(
+                            partner, state_mapping[state],
+                            author=author,
+                            content=content,
+                            email_to_recipients=email_to_recipients,
+                            fields_values=fields_values,
+                        )
                 # specific if email is False -> could have troubles finding it if several falsy traces
                 elif not email and state in ('ignored', 'canceled', 'bounced'):
-                    self.assertMailMailWId(recipient_trace.mail_mail_id_int, state_mapping[state], content=content, fields_values=fields_values)
+                    self.assertMailMailWId(
+                        recipient_trace.mail_mail_id_int, state_mapping[state],
+                        author=author,
+                        content=content,
+                        email_to_recipients=email_to_recipients,
+                        fields_values=fields_values,
+                    )
                 else:
-                    self.assertMailMailWEmails([email], state_mapping[state], author=author, content=content, fields_values=fields_values)
+                    self.assertMailMailWEmails(
+                        [email], state_mapping[state],
+                        author=author,
+                        content=content,
+                        email_to_recipients=email_to_recipients,
+                        fields_values=fields_values,
+                    )
 
             if link_info:
                 trace_mail = self._find_mail_mail_wrecord(record)

@@ -5,6 +5,8 @@
 <div t-name="website_sale.productsSearchBar.autocomplete"
     class="dropdown-menu show w-100">
     <t t-if="!products.length">
+        <!-- TODO adapt in master, this is patched in JS so that text-muted -->
+        <!-- is not on the same element as dropdown-item-text -->
         <span class="dropdown-item-text text-muted">No results found. Please try another search.</span>
     </t>
     <a t-foreach="products" t-as="product"

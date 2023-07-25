@@ -27,7 +27,7 @@ msgstr ""
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
 "Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
-"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -2212,9 +2212,9 @@ msgstr "ציין תבנית אם כלל זה חל רק על תבנית מוצר 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
-msgstr "ציין את הסכום הקבוע להוסיף או לחסר (אם שלילי) לסכום המחושב עם ההנחה."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2369,6 +2369,12 @@ msgstr "המחיר לרכישת מוצר"
 #, python-format
 msgid "The product template is archived so no combination is possible."
 msgstr "תבנית המוצר נשמרה בארכיון כך ששום שילוב אינו אפשרי."
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
@@ -2959,6 +2965,16 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr "אינך יכול להעביר את התכונה %s ממוצר %s למוצר %s."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
+"אינך יכול להשבית כלל מחירון, אנא מחק אותו או שמור את המחירון שלו בארכיון "
+"במקום זאת."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

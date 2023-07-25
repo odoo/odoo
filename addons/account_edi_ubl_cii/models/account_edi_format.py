@@ -33,18 +33,19 @@ class AccountEdiFormat(models.Model):
         customization_id = tree.find('{*}CustomizationID')
         if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
             return self.env['account.edi.xml.cii']
-        if customization_id is not None:
-            if 'xrechnung' in customization_id.text:
-                return self.env['account.edi.xml.ubl_de']
-            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0':
-                return self.env['account.edi.xml.ubl_bis3']
-            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
-                return self.env['account.edi.xml.ubl_nl']
         if ubl_version is not None:
             if ubl_version.text == '2.0':
                 return self.env['account.edi.xml.ubl_20']
-            if ubl_version.text == '2.1':
+            if ubl_version.text in ('2.1', '2.2', '2.3'):
                 return self.env['account.edi.xml.ubl_21']
+        if customization_id is not None:
+            if 'xrechnung' in customization_id.text:
+                return self.env['account.edi.xml.ubl_de']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
+                return self.env['account.edi.xml.ubl_nl']
+            # Allow to parse any format derived from the european semantic norm EN16931
+            if 'urn:cen.eu:en16931:2017' in customization_id.text:
+                return self.env['account.edi.xml.ubl_bis3']
         return
 
     def _get_xml_builder(self, company):
@@ -102,7 +103,7 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
 
         if self.code not in FORMAT_CODES:
-            return super()._post_invoice_edi(invoices)
+            return super()._post_invoice_edi(invoices, test_mode=test_mode)
 
         res = {}
         for invoice in invoices:
@@ -118,9 +119,9 @@ class AccountEdiFormat(models.Model):
                 'raw': xml_content,
                 'mimetype': 'application/xml',
             }
-            # we don't want the Factur-X and E-FFF xml to appear in the attachment of the invoice when confirming it
-            # E-FFF will appear after the pdf is generated, Factur-X will never appear (it's contained in the PDF)
-            if self.code not in ['facturx_1_0_05', 'efff_1']:
+            # we don't want the Factur-X, E-FFF and NLCIUS xml to appear in the attachment of the invoice when confirming it
+            # E-FFF and NLCIUS will appear after the pdf is generated, Factur-X will never appear (it's contained in the PDF)
+            if self.code not in ['facturx_1_0_05', 'efff_1', 'nlcius_1']:
                 attachment_create_vals.update({'res_id': invoice.id, 'res_model': 'account.move'})
 
             attachment = self.env['ir.attachment'].create(attachment_create_vals)
@@ -171,11 +172,7 @@ class AccountEdiFormat(models.Model):
         # EXTENDS account_edi
         self.ensure_one()
 
-        if not journal:
-            # infer the journal
-            journal = self.env['account.journal'].search([
-                ('company_id', '=', self.env.company.id), ('type', '=', 'purchase')
-            ], limit=1)
+        journal = journal or self.env['account.move']._get_default_journal()
 
         if not self._is_ubl_cii_available(journal.company_id):
             return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)

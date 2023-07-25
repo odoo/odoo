@@ -428,7 +428,7 @@ exports.PosModel = Backbone.Model.extend({
         model:  'product.product',
         fields: ['display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
                  'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
-                 'product_tmpl_id','tracking', 'write_date', 'available_in_pos', 'attribute_line_ids'],
+                 'product_tmpl_id','tracking', 'write_date', 'available_in_pos', 'attribute_line_ids', 'active'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: function(self){
             var domain = ['&', '&', ['sale_ok','=',true],['available_in_pos','=',true],'|',['company_id','=',self.config.company_id[0]],['company_id','=',false]];
@@ -614,7 +614,7 @@ exports.PosModel = Backbone.Model.extend({
                     reject();
                 };
                 self.company_logo.crossOrigin = "anonymous";
-                self.company_logo.src = '/web/binary/company_logo' + '?dbname=' + self.session.db + '&company=' + self.company.id + '&_' + Math.random();
+                self.company_logo.src = `/web/image?model=res.company&id=${self.company.id}&field=logo`;
             });
         },
     }, {
@@ -777,8 +777,9 @@ exports.PosModel = Backbone.Model.extend({
      * Second load all orders belonging to the same config but from other sessions,
      * Only if tho order has orderlines.
      */
-    load_orders: function(){
+    load_orders: async function(){
         var jsons = this.db.get_unpaid_orders();
+        await this._loadMissingProducts(jsons);
         var orders = [];
 
         for (var i = 0; i < jsons.length; i++) {
@@ -810,7 +811,27 @@ exports.PosModel = Backbone.Model.extend({
             this.get('orders').add(orders);
         }
     },
-
+    async _loadMissingProducts(orders) {
+        const missingProductIds = new Set([]);
+        for (const order of orders) {
+            for (const line of order.lines) {
+                const productId = line[2].product_id;
+                if (missingProductIds.has(productId)) continue;
+                if (!this.db.get_product_by_id(productId)) {
+                    missingProductIds.add(productId);
+                }
+            }
+        }
+        const productModel = _.find(this.models, function(model){return model.model === 'product.product';});
+        const fields = productModel.fields;
+        const products = await this.rpc({
+            model: 'product.product',
+            method: 'read',
+            args: [[...missingProductIds], fields],
+            context: Object.assign(this.session.user_context, { display_default_code: false }),
+        });
+        productModel.loaded(this, products);
+    },
     set_start_order: function(){
         var orders = this.get('orders').models;
 
@@ -1524,7 +1545,7 @@ exports.PosModel = Backbone.Model.extend({
         return taxes;
     },
 
-    get_taxes_after_fp: function(taxes_ids){
+    get_taxes_after_fp: function(taxes_ids, order = false){
         var self = this;
         var taxes =  this.taxes;
         var product_taxes = [];
@@ -1532,7 +1553,7 @@ exports.PosModel = Backbone.Model.extend({
             var tax = _.detect(taxes, function(t){
                 return t.id === el;
             });
-            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax));
+            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax, order));
         });
         product_taxes = _.uniq(product_taxes, function(tax) { return tax.id; });
         return product_taxes;
@@ -1905,7 +1926,7 @@ exports.Orderline = Backbone.Model.extend({
         var pack_lot_lines = json.pack_lot_ids;
         for (var i = 0; i < pack_lot_lines.length; i++) {
             var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = new exports.Packlotline({}, {'json': _.extend(packlotline, {'order_line':this})});
+            var pack_lot_line = new exports.Packlotline({}, {'json': _.extend({...packlotline}, {'order_line':this})});
             this.pack_lot_lines.add(pack_lot_line);
         }
     },
@@ -2245,7 +2266,7 @@ exports.Orderline = Backbone.Model.extend({
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
     },
     get_taxes_after_fp: function(taxes_ids){
-        return this.pos.get_taxes_after_fp(taxes_ids);
+        return this.pos.get_taxes_after_fp(taxes_ids, this.order);
     },
     get_display_price_one: function(){
         var rounding = this.pos.currency.rounding;
@@ -2267,6 +2288,16 @@ exports.Orderline = Backbone.Model.extend({
         } else {
             return this.get_base_price();
         }
+    },
+    get_taxed_lst_unit_price: function(){
+        var lst_price = this.compute_fixed_price(this.get_lst_price());
+        if (this.pos.config.iface_tax_included === 'total') {
+            var product =  this.get_product();
+            var taxes_ids = product.taxes_id;
+            var product_taxes = this.get_taxes_after_fp(taxes_ids);
+            return this.compute_all(product_taxes, lst_price, 1, this.pos.currency.rounding).total_included;
+        }
+        return lst_price;
     },
     get_price_without_tax: function(){
         return this.get_all_prices().priceWithoutTax;
@@ -2392,7 +2423,7 @@ exports.Orderline = Backbone.Model.extend({
         return this.compute_fixed_price(this.get_lst_price());
     },
     get_lst_price: function(){
-        return this.product.lst_price;
+        return this.product.get_price(this.pos.default_pricelist, 1, 0)
     },
     set_lst_price: function(price){
       this.order.assert_editable();
@@ -2687,6 +2718,7 @@ exports.Order = Backbone.Model.extend({
     },
     save_to_db: function(){
         if (!this.temporary && !this.locked) {
+            this.assert_editable();
             this.pos.db.save_unpaid_order(this);
         }
     },

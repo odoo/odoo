@@ -53,8 +53,8 @@ class SaleReport(models.Model):
             partner.country_id AS country_id,
             partner.industry_id AS industry_id,
             partner.commercial_partner_id AS commercial_partner_id,
-            (sum(t.weight) * l.qty / u.factor) AS weight,
-            (sum(t.volume) * l.qty / u.factor) AS volume,
+            (sum(p.weight) * l.qty / u.factor) AS weight,
+            (sum(p.volume) * l.qty / u.factor) AS volume,
             l.discount as discount,
             sum((l.price_unit * l.discount * l.qty / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) as discount_amount,
             NULL as order_id
@@ -107,7 +107,8 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         res = super()._query(with_clause, fields, groupby, from_clause)
+        sale_fields = self._select_additional_fields(fields)
         current = '(SELECT %s FROM %s GROUP BY %s)' % \
-                  (self._select_pos(fields), self._from_pos(), self._group_by_pos())
+                  (self._select_pos(sale_fields), self._from_pos(), self._group_by_pos())
 
         return '%s UNION ALL %s' % (res, current)

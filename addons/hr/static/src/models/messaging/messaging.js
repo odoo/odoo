@@ -27,7 +27,7 @@ registerInstancePatchModel('mail.messaging', 'hr/static/src/models/messaging/mes
     async openProfile({ id, model }) {
         if (model === 'hr.employee' || model === 'hr.employee.public') {
             const employee = this.env.models['hr.employee'].insert({ id });
-            return employee.openProfile();
+            return employee.openProfile(model);
         }
         return this._super(...arguments);
     },

@@ -87,7 +87,7 @@ class Survey(http.Controller):
             if request.env.user._is_public() and answer_sudo.partner_id and not answer_token:
                 # answers from public user should not have any partner_id; this indicates probably a cookie issue
                 return 'answer_wrong_user'
-            if not request.env.user._is_public() and answer_sudo.partner_id != request.env.user.partner_id:
+            if not request.env.user._is_public() and answer_sudo.partner_id and answer_sudo.partner_id != request.env.user.partner_id:
                 # partner mismatch, probably a cookie issue
                 return 'answer_wrong_user'
 
@@ -361,7 +361,9 @@ class Survey(http.Controller):
                     'page_number': page_ids.index(survey_data['page'].id) + (1 if survey_sudo.progression_mode == 'number' else 0)
                 })
             elif survey_sudo.questions_layout == 'page_per_question':
-                page_ids = survey_sudo.question_ids.ids
+                page_ids = (answer_sudo.predefined_question_ids.ids
+                            if not answer_sudo.is_session_answer
+                            else survey_sudo.question_ids.ids)
                 survey_progress = request.env.ref('survey.survey_progression')._render({
                     'survey': survey_sudo,
                     'page_ids': page_ids,

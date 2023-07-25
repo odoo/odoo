@@ -37,8 +37,7 @@ image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
 
 class MassMailing(models.Model):
-    """ MassMailing models a wave of emails for a mass mailign campaign.
-    A mass mailing is an occurence of sending emails. """
+    """ Mass Mailing models the sending of emails to a list of recipients for a mass mailing campaign."""
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.render.mixin']

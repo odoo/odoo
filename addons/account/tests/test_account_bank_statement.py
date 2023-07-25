@@ -294,6 +294,44 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             'is_reconciled': True,
         }])
 
+    def test_bank_statement_with_difference(self):
+        """ Test that a bank statement with difference could be posted but not validated. """
+        bank_statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_1.id,
+            'balance_start': 10.0,
+            'balance_end_real': 100.0,
+            'balance_end': 10.0,
+            'line_ids': [(0, 0, {
+                'date': fields.Date.to_date('2019-01-01'),
+                'payment_ref': 'transaction_abc',
+                'amount': 10,
+                'partner_id': self.partner_a.id,
+            })]
+        })
+        bank_statement.button_post()
+        # Check if the bank statement is well posted (No check on the balance as the balance could be edited after).
+        self.assertEqual(bank_statement.state, 'posted')
+
+        # Check that the bank statement couldn't be validated with balance_end != balance_end_real
+        with self.assertRaises(UserError):
+            bank_statement.button_validate()
+
+        # Check if we can validate the bank statement if balance_end == balance_end_real
+        bank_statement.balance_end_real = bank_statement.balance_end
+        for line in bank_statement.line_ids:
+            line.reconcile([{
+                'name': line.payment_ref,
+                'partner_id': line.partner_id.id,
+                'currency_id': self.currency_1.id,
+                'account_id': bank_statement.journal_id.suspense_account_id.id,
+                'debit': 10.0,
+                'credit': 0.0,
+                'amount_currency': 10.0,
+            }])
+        bank_statement.button_validate()
+        self.assertEqual(bank_statement.state, 'confirm')
 
 @tagged('post_install', '-at_install')
 class TestAccountBankStatementLine(TestAccountBankStatementCommon):
@@ -702,12 +740,6 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         }
 
         # ==== Test constraints at creation ====
-
-        # Foreign currency must not be the same as the journal one.
-        assertStatementLineConstraint(statement_vals, {
-            **statement_line_vals,
-            'foreign_currency_id': self.currency_1.id,
-        })
 
         # Can't have a stand alone amount in foreign currency without foreign currency set.
         assertStatementLineConstraint(statement_vals, {
@@ -1384,6 +1416,51 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 {'name': 'whatever', 'account_id': random_acc_1.id, 'balance': -100.0},
             ])
 
+    def test_reconciliation_statement_line_foreign_currency(self):
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_1.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_2.id,
+                    'amount': -80.0,
+                    'amount_currency': -120.0,
+                }),
+            ],
+        })
+        statement.button_post()
+        statement_line = statement.line_ids
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_2.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'name': 'counterpart line, same amount',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'quantity': 1,
+                    'price_unit': 120.0,
+                }),
+            ],
+        })
+        invoice.action_post()
+        invoice_line = invoice.line_ids.filtered(lambda line: line.account_internal_type == 'payable')
+
+        statement_line.reconcile([{'id': invoice_line.id}])
+
+        self.assertRecordValues(statement_line.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'amount_currency': -80.0, 'currency_id': self.currency_1.id,   'balance': -80.0,   'reconciled': False},
+            {'amount_currency': 120.0, 'currency_id': self.currency_2.id,   'balance': 80.0,    'reconciled': True},
+        ])
+
     def test_reconciliation_statement_line_with_generated_payments(self):
         self.statement.button_post()
 
@@ -1700,4 +1777,27 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         self.assertRecordValues(statement.line_ids, [{
             'partner_id': False,
+        }])
+
+    def test_create_statement_line_with_inconsistent_currencies(self):
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_1.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': "Happy new year",
+                    'amount': 200.0,
+                    'amount_currency': 200.0,
+                    'foreign_currency_id': self.env.company.currency_id.id,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids, [{
+            'currency_id': self.env.company.currency_id.id,
+            'foreign_currency_id': False,
+            'amount': 200.0,
+            'amount_currency': 0.0,
         }])

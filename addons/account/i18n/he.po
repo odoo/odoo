@@ -24,9 +24,13 @@
 # MichaelHadar, 2022
 # hed shefer <hed@laylinetech.com>, 2022
 # Jonathan Spier, 2022
+# Netta Waizer, 2022
+# Roy Sayag, 2022
 # Sagi Ahiel, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
-# Netta Waizer, 2022
+# yizhaq agronov <yizhaq@gmail.com>, 2022
+# NoaFarkash, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -34,8 +38,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Netta Waizer, 2022\n"
-"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -758,6 +762,11 @@ msgstr "<strong>חברה:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr "<strong>תאריך הערת אשראי</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>קוד לקוח:</strong>"
 
@@ -770,6 +779,11 @@ msgstr "<strong>לקוח:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>לקוח</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>תאריך:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -825,6 +839,11 @@ msgstr "<strong>אמצעי תשלום: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>מוצר</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>תאריך קבלת משלוח</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -891,6 +910,10 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
+"קופת מזומן מאפשר לנהל הכנסות מזומן ביומנים\n"
+"                האפשרות הזו מאפשרת דרך קלה לעקוב אחרי תשלומים במזומן\n"
+"                על בסיס יומיומי. מזינים את המטבעות שיש בקופת המזומנים, ואז\n"
+"                מעדכנים כשנכנס מזומן או יוצא מזומן מקופת המזומנים."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -937,6 +960,12 @@ msgid ""
 msgstr ""
 "יומן משמש לרישום עסקאות של כל הנתונים החשבונאיים\n"
 "                הקשורים לעסקים היום יומיים."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr "שורה בתנועה זו משתמשת בחשבון שאינו בשימוש, אז אין אפשרות לעדכן."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -1349,6 +1378,8 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
+"חשבון לשימוש העברת מסים על שימוש במזומן. זה יכיל את סכום המס כל עוד החשבונית"
+" המקורית לא הותאמה. עם ההתאמה, הסכום יימחק מחשבון זה ויועבר לחשבון מס רגיל."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2040,6 +2071,11 @@ msgid ""
 "                Sheet and the Profit and Loss report use the category\n"
 "                (profit/loss or balance sheet)."
 msgstr ""
+"סוג חשבון מגדיר איך החשבון משמש\n"
+"                עבור כל יומן. שיטת ההעברה של סוג חשבון מגדירה\n"
+"                את התהליך לסגירת דוח שנתי. דוחות כמו מאזן\n"
+"                בוחן ודוח רווח-הפסד משתמשים בקטגוריה\n"
+"                (רווח/הפסד או מאזן בוחן)."
 
 #. module: account
 #: code:addons/account/models/account_analytic_default.py:0
@@ -4991,7 +5027,7 @@ msgstr "שלח דוא\"ל כברירת מחדל"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__end_bank_stmt_ids
 msgid "End Bank Stmt"
-msgstr ""
+msgstr "סוף דפי בנק"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__date_stop
@@ -11474,13 +11510,13 @@ msgstr "שדה טכני המציין אם התשלום הושווה עם שור�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__is_reconciled
 msgid "Technical field indicating if the payment is already reconciled."
-msgstr ""
+msgstr "שדה טכני המציין אם התשלום עבר התאמה."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_reconciled
 msgid ""
 "Technical field indicating if the statement line is already reconciled."
-msgstr ""
+msgstr "שדה טכני המציין אם התשלום עבר התאמה."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__show_decimal_separator
@@ -11494,7 +11530,7 @@ msgstr ""
 msgid ""
 "Technical field to display a warning message in case starting balance is "
 "different than previous ending balance"
-msgstr ""
+msgstr "שדה טכני להציג אזהרה אם יתרת הפתיחה שונה מיתרת הסיום הקודמת"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -11560,7 +11596,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__user_id
 #: model:ir.model.fields,help:account.field_account_payment__user_id
 msgid "Technical field used to fit the generic behavior in mail templates."
-msgstr ""
+msgstr "שדה טכני לקביעת ההתנהגות הרגילה בתבניות מייל."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -11693,7 +11729,7 @@ msgstr "תבנית"
 #. module: account
 #: model:ir.model,name:account.model_account_group_template
 msgid "Template for Account Groups"
-msgstr ""
+msgstr "תבנית לקבוצות חשבונות"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -11738,7 +11774,7 @@ msgstr "תנאים והגבלות"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr ""
+msgstr "זה התאריך של הרשומה הראשונה."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -11768,6 +11804,8 @@ msgid ""
 "accounts: liquidity type is for cash or bank accounts, payable/receivable is"
 " for vendor/customer accounts."
 msgstr ""
+"הסוג \"פהימי\" משמש לתכונות זמינות בסוגי חשבונות שונים: סוג תזרימי זה בשביל "
+"חשבונות מזומן או בנק, סוג לתשלום/תקבול משמש לחשבונות ספק/לקוח."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11830,6 +11868,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
+"החשבון הזה כבר בשימש עבור יומן פעולות 'קניה' או 'רכש'. כלומר סוג החשבון לא "
+"יכול להיות 'לתשלום' או 'לתקבול'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11852,7 +11892,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
 #: model:ir.model.fields,help:account.field_res_partner_bank__journal_id
 msgid "The accounting journal corresponding to this bank account."
-msgstr ""
+msgstr "היומן החשבונאי המשוייך לחשבון הבנק הזה."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_exchange_journal_id
@@ -11890,7 +11930,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a number"
-msgstr ""
+msgstr "הסכום אינו מספר"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -11930,18 +11970,18 @@ msgstr "חשבון הבנק של יומן בנק חייב להיות שייך ל
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr ""
+msgstr "דפי הבנק לשימוש עבור התאמות בנק"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
 msgid "The chart template for the company (if any)"
-msgstr ""
+msgstr "תבנית התרשים עבור הארגון (אם יש)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The chosen QR-code type is not eligible for this invoice."
-msgstr ""
+msgstr "קוד ה-QR שנבחר לא מתאים לחשבונית הזו."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -11975,7 +12015,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_line__tax_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_tax_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr ""
+msgstr "המדינה המוגדרת לצורך להפקת דוחות מסים עבור ארגון זה."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -12005,7 +12045,7 @@ msgstr "המטבע המשמש להזנת תדפיס הבנק"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The current highest number is"
-msgstr ""
+msgstr "המספר הגבוה ביותר כיום הוא"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__state
@@ -12037,6 +12077,8 @@ msgid ""
 "The ending balance is incorrect !\n"
 "The expected balance (%(real_balance)s) is different from the computed one (%(computed_balance)s)."
 msgstr ""
+"יתרת הסגירה אינה נכונה !\n"
+"המאזן הצפוי (%(real_balance)s) לא תואם את המאזן המחושב(%(computed_balance)s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -12081,7 +12123,7 @@ msgstr "הפקודות הבאות יווצרו"
 msgid ""
 "The following error prevented '%s' QR-code to be generated though it was "
 "detected as eligible: "
-msgstr ""
+msgstr "השגיאה הבאה '%s' מנעה יצירת קוד QR, למרות שיש הרשאה לעשות זאת:"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -12111,7 +12153,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr ""
+msgstr "המטבע הזר צריך להיות שונה מזה של היומן: %s"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12120,6 +12162,7 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
+"המטבע הזר המוגדרן ליומן '%(journal)s' ולחשבון '%(account)s' צריך להיות זהה."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -12145,7 +12188,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The invoice is not a draft, it was not updated from the attachment."
-msgstr ""
+msgstr "החשבונית אינה טיוטה, היא לא עודכנה מהקובץ המצורף."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12154,6 +12197,9 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
+"פקודת היומן %s הגיעה למצב למצב לא תקין כתוצאה מהפעולה.\n"
+"בכדי לאפשר את הפעולה, פקודת היומן חייבת תמיד להכיל חשבון בנק/מזומן אחד.\n"
+"בסדר?"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12221,7 +12267,7 @@ msgstr ""
 msgid ""
 "The journal of a statement line must always be the same as the bank "
 "statement one."
-msgstr ""
+msgstr "הפעולה ביומן צריכה תמיד להיות זהה לשורה בדף הבנק."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -12312,7 +12358,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__report_id
 msgid "The parent tax report of this line"
-msgstr ""
+msgstr "דוח המסים הקשור לשורה זו."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -12338,12 +12384,12 @@ msgstr "סכום התשלום לא יכול להיות שלילי."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,help:account.field_account_move__payment_reference
 msgid "The payment reference to set on journal items."
-msgstr ""
+msgstr "הגדרת התשלום שיקושר בפריטי יומן."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
 msgid "The payment that created this entry"
-msgstr ""
+msgstr "התשלום שיצר את הרשומה הזו."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
@@ -12351,7 +12397,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 #: model:ir.model.fields,help:account.field_account_payment_register__source_currency_id
 msgid "The payment's currency."
-msgstr ""
+msgstr "מטבע התשלום."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12386,6 +12432,10 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
+"מודל ההתאמות יפעל רק לעסקאות מהסוגים הבאים:\n"
+"        * סכום שהתקבל: רק ייושם כשמתקבל סכום.\n"
+"        * סכום שולם: רק ייושם כשמשלמים סכום.\n"
+"        * סכום ששולם/התקבל: ייושם בשני המקרים."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
@@ -12412,6 +12462,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"מודל ההתאמה יפעל רק כשתהיה תגית:\n"
+"        * מכיל: על התגיד להכיל ביטוי זה (לא משנה אם באותיות קטנות/גדולות)\n"
+"        * לא כולל: ההיפך מ\"מכיל\".\n"
+"        * תואם ביטוי רגיל: הגדירו נוסחא משלכם."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
@@ -12422,6 +12476,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"מודל ההתאמה יפעל רק כשההערה:\n"
+"* מכילה: על התגיד להכיל ביטוי זה (לא משנה אם באותיות קטנות/גדולות)\n"
+"* לא כולל: ההיפך מ\"מכיל\".\n"
+"* תואם ביטוי רגיל: הגדירו נוסחא משלכם."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_transaction_type
@@ -12432,6 +12490,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"מודל ההתאמה יפעל רק כשסוג העסקה:\n"
+"* מכיל: על התגיד להכיל ביטוי זה (לא משנה אם באותיות קטנות/גדולות)\n"
+"* לא כולל: ההיפך מ\"מכיל\".\n"
+"* תואם ביטוי רגיל: הגדירו נוסחא משלכם."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -12444,7 +12506,7 @@ msgstr "מודל ההתאמה יהיה זמין רק מהיומנים שנבחר
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The regex is not valid"
-msgstr ""
+msgstr "הביטוי לא תקין"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -12485,13 +12547,13 @@ msgstr ""
 msgid ""
 "The sequence field is used to define order in which the tax lines are "
 "applied."
-msgstr ""
+msgstr "שדה הרצף מגדיר את הסדר בו שורות המס מיושמות."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
-msgstr ""
+msgstr "פורמט הרצף השתנה."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -12508,6 +12570,8 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"רצף המספרים לעולם לא יתאפס.\n"
+"במקרה זה רצף המספרים יהיה '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12517,6 +12581,9 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"בתחילת כל חודש הרצף יתחיל מ-1.\n"
+"השנה שזיהינו כאן היא '%(year)s' והחודש הוא '%(month)s'.\n"
+"כלומר רצף המספרים במקרה זה יהיה '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12526,6 +12593,9 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"רצף המספרים יתחיל מחדש מדי שנה.\n"
+"השנה שזיהינו כאן היא '%(year)s'.\n"
+"המספר שזוהה כאן הוא '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -12534,24 +12604,26 @@ msgid ""
 "The sequences of this journal are different for Invoices and Refunds but you"
 " selected some of both types."
 msgstr ""
+"רצף פקודות היומן הזה שונה עבור חשבוניות ועבור זיכויים, אבל בחרת כמה כמה "
+"פעולות מאלו ומאלו."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid ""
 "The starting balance <b>doesn't match</b> with the ending balance of the "
 "previous bank statement."
-msgstr ""
+msgstr "יתרת ההתחלה <b>אינה תואמת</b> את יתרת הסגירה של דף הבנק הקודם."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The statement line has already been reconciled."
-msgstr ""
+msgstr "שורה זו כבר הותאמה."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
-msgstr ""
+msgstr "השורה בדפי הבנק שיצרה פקודת יומן זו."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_total_amount_param
@@ -12617,7 +12689,7 @@ msgstr ""
 msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
-msgstr ""
+msgstr "ברירת המחדל לסוג זה של פקודות יומן לא יכולה להיות מסומנת 'לתשלום'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -12647,6 +12719,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
+"בתקופה שבחרת לסגור עדיין יש שורות פתוחות שטרם הותאמו עם דפי הבנק. יש להתאים "
+"שורות אלו או למחוק אותן."
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -12703,7 +12777,7 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
+msgstr "דוח המסים הקשור לשורה זו."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
@@ -12752,11 +12826,12 @@ msgid ""
 "This entry transfers the following amounts to "
 "<strong>%(destination)s</strong> <ul>"
 msgstr ""
+"רשומה זו מעבירה את הסכומים הבאים ל <strong>%(destination)s</strong> <ul>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr ""
+msgstr "זה שדה שמתעלמים ממנו בהתאמות דפי בנק."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__date_maturity
@@ -12790,7 +12865,7 @@ msgstr "יומן זה מכיל כבר פקודות יומן, לכן אינך י�
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
-msgstr ""
+msgstr "היומן הזה לא במצב מוקפד."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -12816,7 +12891,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
-msgstr ""
+msgstr "תנועה זו תפורסם בתאריך החשבון: %(date)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -12861,10 +12936,18 @@ msgid ""
 msgstr "תנאי תשלום זה ישמש במקום ברירת המחדל עבור הזמנות וחשבוניות לקוח"
 
 #. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
-msgstr ""
+msgstr "מודל ההתאמות לא יצר רשומות בינתיים"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -12881,6 +12964,8 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
+"עם אלו אפשר במהירות ליצור פקודות יומן כשעושים התאמות של\n"
+"                דפי בנק או חשבון"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12894,6 +12979,7 @@ msgstr "אפשרויות אלה ייבחרו כברירת מחדל בעת לחי
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
 msgstr ""
+"טיפ: אין צורך להדפיס, להכניס למעטפה, לבייל ולשלוח בדואר את החשבוניות שלך."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -12944,12 +13030,12 @@ msgstr "סה\"כ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Total Balance"
-msgstr ""
+msgstr "יתרה מצטברת"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Total Base Amount"
-msgstr ""
+msgstr "ס\"הכ סכום בסיס"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12993,7 +13079,7 @@ msgstr "סה\"כ נחתמו"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
 msgid "Total amount impacted by the automatic entry."
-msgstr ""
+msgstr "סכום כולל שהושפע מפעולות מהפעולה האוטומטית."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -13028,7 +13114,7 @@ msgstr "סוג עסקה"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_transaction_type_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_transaction_type_param
 msgid "Transaction Type Parameter"
-msgstr ""
+msgstr "משתנה סוג עסקה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -13055,7 +13141,7 @@ msgstr "תאריך העברה"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer counterpart"
-msgstr ""
+msgstr "העברה מקבילה"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -13086,7 +13172,7 @@ msgstr "העברות"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Try a sample vendor bill"
-msgstr ""
+msgstr "לנסות דוגמא לחשבונית ספק"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
@@ -13123,6 +13209,8 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
+"סוג קוד ה-QR שיווצר לתשלום החשבונית הזו, כשתודפס. אם ריק, ייבחר סוג הקוד "
+"הפנוי והתקין הראשון."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_exception_decoration
@@ -13191,7 +13279,7 @@ msgstr "יחידת מידה"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Unmark as Sent"
-msgstr ""
+msgstr "הורדת סימון כנשלח"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -13205,6 +13293,12 @@ msgid "Unposted"
 msgstr "לא נרשם"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "פקודות יומן שלא נרשמו"
@@ -13212,7 +13306,7 @@ msgstr "פקודות יומן שלא נרשמו"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr ""
+msgstr "פקודות יומן שלא נרשמו"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_unread
@@ -13244,7 +13338,7 @@ msgstr "בטל התאמה"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 msgid "Unreconcile Transactions"
-msgstr ""
+msgstr "עסקה לא מותאמת"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13263,7 +13357,7 @@ msgstr "סכום ללא מע\"מ"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed_signed
 msgid "Untaxed Amount Signed"
-msgstr ""
+msgstr "נחתם על סכום ללא מע\"מ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal
@@ -13291,7 +13385,7 @@ msgstr "העלה"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Upload your own bill"
-msgstr ""
+msgstr "העלה חשבון משלך"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -13301,7 +13395,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
 msgid "Use Cash Basis"
-msgstr ""
+msgstr "שימוש בבסיס מזומן"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa_direct_debit
@@ -13450,7 +13544,7 @@ msgstr "אשר את שורת דף הבנק אוטומטית (התאמה על פ�
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Validate."
-msgstr ""
+msgstr "אימות."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__confirm
@@ -13540,7 +13634,7 @@ msgstr "תשלומי ספק"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Vendor Reimbursement"
-msgstr ""
+msgstr "זיכוי ספק"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -13610,6 +13704,8 @@ msgid ""
 "We process bills automatically so that you only have to validate them. "
 "Choose how you want to test our artificial intelligence engine:"
 msgstr ""
+"אנחנו מעבדים חשבוניות אוטומטית כדי שרק תצטרכו לאשר אותם. בחרו איך אתם רוצים "
+"לנסות את מנוע הבינ נמלאכותית שלנו."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__website_message_ids
@@ -13684,19 +13780,19 @@ msgstr "עם מס"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write a company name to <b>create one</b> or <b>see suggestions</b>."
-msgstr ""
+msgstr "כתיבת שם ארגון <b>תיצור אותו</b> או <b>ראו הצעות</b>."
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr ""
+msgstr "תכתוב כאן <b> את כתובת המייל שלך </b> כדי לבדוק את הזרימה."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "סכום שגוי ברשומת אשראי או חיוב !"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13753,43 +13849,43 @@ msgstr ""
 msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
-msgstr ""
+msgstr "אפשר רק לשנות את התאריך/חשבון לפריטים שטרם הותאמו."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
-msgstr ""
+msgstr "אפשר רק לשנות את התאריך/חשבון לפריטי יומן שכבר נרשמו."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "You can only create statement line in open bank statements."
-msgstr ""
+msgstr "אפשר ליצור שורת בנק רק בדפי בנק פתוחים."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr ""
+msgstr "ניתן להתאים רק פקודות יומן שנרשמו"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr ""
+msgstr "אפשר רק לרשום תשלומים עבור תנועות יומן רשומות."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "You can only resequence items from the same journal"
-msgstr ""
+msgstr "אפשר לשנות את הרצף של פריטים רק אם באותו יומן"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr ""
+msgstr "אפשר להפוך רק תנועות שכבר נרשמו."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -13875,7 +13971,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can't create payments for entries belonging to different companies."
-msgstr ""
+msgstr "אי אפשר ליצור תשלומים ששייכים לארגונים שונים."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13899,7 +13995,7 @@ msgstr ""
 msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign"
 " currency."
-msgstr ""
+msgstr "אינך יכול לספק סכום במטבע חוץ מבלי לציין מטבע חוץ."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -13907,7 +14003,7 @@ msgstr ""
 msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
-msgstr ""
+msgstr "לא ניתן לרשום תשלום מכיוון שלא נותר מה לשלם על פריטי היומן הנבחרים."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -13934,6 +14030,8 @@ msgid ""
 "You can't set a different company on your analytic tags since there are some"
 " journal items linked to it."
 msgstr ""
+"אינך יכול להגדיר חברה אחרת בתגים האנליטיים שלך מכיוון שיש כמה פריטי יומן "
+"המקושרים אליה."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13957,6 +14055,12 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr "אינך יכול לשנות את מטבע החברה מכיוון שמספר פקודות יומן כבר קיימות"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -13985,7 +14089,7 @@ msgstr "אינך יכול למחוק פקודת יומן שכבר נרשמה."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
-msgstr ""
+msgstr "אי אפשר למחוק פריט המשוייך לרשומה קיימת."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -13994,6 +14098,8 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
+"אי אפשר להסיר הגדרה זו בכלל שחלק מהמסים הם על בסיס מזומן. שנו את הגדרות "
+"המסים לפני כיבוי הגדרה זו."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14002,15 +14108,18 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
+"אי אפשר לעשות את השינוי הזה ברשומת יומן שהותאמה. אפשר לשנות כמה שדות שאין "
+"להן משמעות חוקית, או לבטל את ההתאמה. רשומת יומן (מס' מזהה):%s(%s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
-msgstr "אינך יכול לערוך את השדות הבאים עקב הפעלת מצב הגבלה על יומן: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14018,14 +14127,14 @@ msgstr "אינך יכול לערוך את השדות הבאים עקב הפעל�
 msgid ""
 "You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
-msgstr ""
+msgstr "אי אפשר לערוך תנועה ביומן החשבון אם כבר הוגדר מספר ברצף."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
-msgstr ""
+msgstr "לא ניתן לערוך את היומן של מעבר חשבון אם הוא פורסם פעם אחת."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -14051,7 +14160,7 @@ msgstr ""
 msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
-msgstr ""
+msgstr "אי אפשר לשנות רשומות ביומן זה כי הוגדר במצב מוקפד."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14090,7 +14199,7 @@ msgstr "אינך יכול לבצע פעולה זו בחשבון שמכיל פק�
 #: code:addons/account/wizard/pos_box.py:0
 #, python-format
 msgid "You cannot put/take money in/out for a bank statement which is closed."
-msgstr ""
+msgstr "אתה לא יכול להכניס/לקחת כסף עבור דף חשבון בנק סגור."
 
 #. module: account
 #: code:addons/account/models/res_currency.py:0
@@ -14099,6 +14208,8 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr ""
+"לא ניתן לצמצם את מספר המקומות העשרוניים של מטבע שכבר נעשה בו שימוש לביצוע "
+"רישומים חשבונאיים."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14112,19 +14223,19 @@ msgstr "אינך יכול להסיר את חשבון הבנק מהיומן לא�
 msgid ""
 "You cannot remove/deactivate the account %s which is set on a customer or "
 "vendor."
-msgstr ""
+msgstr "אינך יכול להסיר\\לבטל את החשבון %s המוגדר על לקוח או ספק."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr ""
+msgstr "אי אפשר להחזיר רשומת מס מזומן למצב טיוטה כשהיומן מנוהל כמזומן."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
-msgstr ""
+msgstr "אי אפשר להחזיר רשומת המרת מט\"ח למצב טיוטה."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -14165,6 +14276,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
 msgstr ""
+"אי אפשר להשתמש בחשבון זה (%s) ביומן, בדקו את השדה \"יומנים מורשים\" הקשורים "
+"לחשבון."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14173,6 +14286,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the section "
 "'Control-Access' under tab 'Advanced Settings' on the related journal."
 msgstr ""
+"אי אפשר להשתמש בחשבון זה (%s) ביומן, בדקו את השדה \"הרשאות גישה\" בלשונית "
+"\"הגדרות מתקדמות\" ביומן הרלוונטי."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14180,7 +14295,7 @@ msgstr ""
 msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
-msgstr ""
+msgstr "אי אפשר להשתמש באשף זה על תנועות יומן השייכות לארגונים אחרים."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14190,12 +14305,14 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
+"אי אפשר ליצור חשבונית עם סכום שלילי. כדאי ליצור זיכוי במקום. השתמשו בתפריט "
+"הפעולות לשנות לזיכוי או החזר."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "אין לך הרשאה מספקת ליצירת חשבונית."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14208,13 +14325,13 @@ msgstr "יש לך"
 msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
-msgstr ""
+msgstr "עליך להגדיר 'חשבון להעברה פנימית' ביומן קופת המזומן"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
-msgstr ""
+msgstr "הרשומה %s(מס %s) כבר נרשמה."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14230,6 +14347,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"כדאי להגדיר \"יומן הכנסות/הוצאות המרות מט\"ח\" בהגדרות הארגון, כדי לנהל "
+"אוטומטית רישום של המרות מט\"ח."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14239,6 +14358,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"כדאי להגדיר חשבון \"הכנסות המרת מט\"ח\" בהגדרות הארגון, כדי לנהל אוטומטית "
+"רישום של המרות מט\"ח."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14248,6 +14369,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"כדאי להגדיר חשבון \"הוצאות המרת מט\"ח\" בהגדרות הארגון, כדי לנהל אוטומטית "
+"רישום של המרות מט\"ח."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -14272,14 +14395,14 @@ msgstr "מיקוד מקסימום"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
-msgstr ""
+msgstr "[לא הוגדר]"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/grouped_view_widget.xml:0
 #, python-format
 msgid "are not shown in the preview"
-msgstr ""
+msgstr "לא מוצגות בתצוגה מקדימה"
 
 #. module: account
 #. openerp-web
@@ -14302,7 +14425,7 @@ msgstr "קוד"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__after_invoice_month
 msgid "days after the end of the invoice month"
-msgstr ""
+msgstr "ימים לאחר סוף החודש של החשבונית"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_after_invoice_date
@@ -14322,7 +14445,7 @@ msgstr "למשל: בנק אוף אמריקה"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g GEBABEBB"
-msgstr ""
+msgstr "לדוג' GEBABEBB"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -14337,7 +14460,7 @@ msgstr "למשל: GAAP, IFRS, ..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Give a phone call, check with others , ..."
-msgstr ""
+msgstr "לדוגמא: להתקשר, לבדוק אם אחרים, ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14399,12 +14522,12 @@ msgstr "שולם"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
 msgid "technical field for widget tax-group-custom-field"
-msgstr ""
+msgstr "שדה טכני לחישוב יישומון tax-group-custom-field"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
-msgstr ""
+msgstr "שדה טכני לחישוב יתרת פתיחה נכונה"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14414,11 +14537,21 @@ msgid ""
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
 msgstr ""
+"ליומן הנבחר מסוג שאינו מתאים לסוג החשבוניות. פעולות מכירהצריכות ללכת ליומני "
+"'מכירה', ופעולות רכש ליומני 'רכש'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "חברת אם"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
@@ -14434,7 +14567,7 @@ msgstr "לבדיקה"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
-msgstr ""
+msgstr "בצירוף חשבונית ב-PDF"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -14447,4 +14580,19 @@ msgstr "→ כמות"
 msgid ""
 "An analytic default requires an analytic account or an analytic tag used for"
 " analytic distribution."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
 msgstr ""

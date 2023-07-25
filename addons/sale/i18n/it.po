@@ -12,16 +12,17 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -55,8 +56,8 @@ msgid ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${(object.get_portal_last_transaction().state == "
-"'pending') and 'Ordine in sospeso' or 'Ordine'} (Rif. ${object.name or 'n/d'"
+"${(object.get_portal_last_transaction().state == 'pending') and 'Ordine in "
+"sospeso' or 'Ordine'} ${object.company_id.name} (rif. ${object.name or 'n/d'"
 " })"
 
 #. module: sale
@@ -66,9 +67,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
 "${object.name or 'n/a' })"
 msgstr ""
-"${object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Pro forma'"
-" or 'Preventivo') or 'Ordine'} ${object.company_id.name} (Rif. ${object.name"
-" or 'n/d' })"
+"${object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma' "
+"or 'Preventivo') or 'Ordine'} ${object.company_id.name} (rif. ${object.name "
+"or 'n/d' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -84,7 +85,7 @@ msgstr "&amp;nbsp;<span>su</span>&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr "\"PRO FORMA - %s\" % (object.name)"
+msgstr "\"PROFORMA - %s\" % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -492,12 +493,12 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        % set doc_name = 'il preventivo' if object.state in ('draft', 'sent') else 'l\\'ordine'\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
 "        Buongiorno,\n"
 "        <br/><br/>\n"
 "        \n"
 "        % if ctx.get('proforma'):\n"
-"            il documento fattura pro forma per ${doc_name} <strong>${object.name}</strong>\n"
+"            il documento fattura proforma per ${doc_name} <strong>${object.name}</strong>\n"
 "            % if object.origin:\n"
 "                (con riferimento: ${object.origin} )\n"
 "            % endif\n"
@@ -540,7 +541,7 @@ msgstr "<i class=\"fa fa-download\"/> Scarica"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Done"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Completato\" "
 "title=\"Completato\"/>Completato"
 
 #. module: sale
@@ -569,7 +570,7 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Ordini di vendita\" "
 "title=\"Ordini di vendita\"/>"
 
 #. module: sale
@@ -609,8 +610,8 @@ msgid ""
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"I valori impostati qui sono "
-"specifici per azienda.\" aria-label=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"specifici per azienda.\" aria-label=\"I valori impostati qui sono specifici "
+"per azienda.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -697,7 +698,7 @@ msgstr "<span>Per un importo pari a:</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr "<span>Fattura pro forma n° </span>"
+msgstr "<span>Fattura proforma n° </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -973,12 +974,12 @@ msgstr "Indirizzi negli ordini di vendita"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Consente di inviare una fattura pro-forma ai clienti."
+msgstr "Consente di inviare una fattura proforma ai clienti."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Consente di inviare una fattura pro forma."
+msgstr "Consente di inviare una fattura proforma."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -1446,7 +1447,7 @@ msgstr "Nazione cliente"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr "Ente del cliente"
+msgstr "Entità cliente"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
@@ -1905,17 +1906,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
 msgid "Followers"
-msgstr "Chi sta seguendo"
+msgstr "Seguito da"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Chi sta seguendo (canali)"
+msgstr "Seguito da (canali)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Chi sta seguendo (partner)"
+msgstr "Seguito da (partner)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
@@ -1925,7 +1926,7 @@ msgstr "Icona Font Awesome es. fa-tasks"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr "Valori vietati nella riga dell'ordine di vendita"
+msgstr "Valori vietati su una riga ordine di vendita non rendicontabile"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
@@ -2095,7 +2096,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr "Importazione ordini Amazon e sincronizzazione consegne"
+msgstr "Importazione ordini Amazon e sincronizzazione delle consegne"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -2548,7 +2549,9 @@ msgstr "Metodo per aggiornare le q.tà consegnate"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr "Campi obbligatori mancanti nelle righe dell'ordine di vendita."
+msgstr ""
+"Campi obbligatori mancanti su una riga rendicontabile dell'ordine di "
+"vendita."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2903,7 +2906,7 @@ msgstr "Token di identità PDT"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "Fattura PRO FORMA"
+msgstr "Fattura PROFORMA"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
@@ -3059,12 +3062,12 @@ msgstr "Stampa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "Fattura pro forma"
+msgstr "Fattura proforma"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "Fatture pro forma"
+msgstr "Fatture proforma"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -3148,7 +3151,7 @@ msgstr "Prodotti"
 #. module: sale
 #: model:ir.model,name:sale.model_report_sale_report_saleproforma
 msgid "Proforma Report"
-msgstr "Resoconto pro forma"
+msgstr "Resoconto proforma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -3341,7 +3344,7 @@ msgstr "Respingimento del preventivo"
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr "Rendicontazione"
+msgstr "Rendiconto"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
@@ -3704,7 +3707,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Invia fattura PRO FORMA"
+msgstr "Invia fattura PROFORMA"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4174,15 +4177,15 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
 "Non c'è nulla da fatturare.\n"
 "\n"
-"Le ragioni possono essere:\n"
-"- prima di essere fatturati, i prodotti devono essere consegnati. Fare clic sull'icona del \"furgoncino\" (in alto a destra sullo schermo) e seguire le istruzioni.\n"
-"- deve essere modificata la politica di fatturazione. Aprire il prodotto, andare sulla scheda \"Vendita\" e modificare la politica di fatturazione da \"Quantità consegnate\" a \"Quantità ordinate\".\n"
+"Le ragioni di questo comportamento possono essere:\n"
+"- prima di essere fatturati, i prodotti devono essere consegnati.\n"
+"- deve essere modificata la politica di fatturazione del prodotto. Aprire il prodotto, andare sulla scheda \"Vendita\" e modificare la politica di fatturazione da \"Quantità consegnate\" a \"Quantità ordinate\".\n"
 "        "
 
 #. module: sale
@@ -4626,6 +4629,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"Impossibile modificare la tipologia di prodotto, è già utilizzata negli "
+"ordini di vendita."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

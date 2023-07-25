@@ -175,6 +175,15 @@ class ProductProduct(models.Model):
             else:
                 record.image_variant_1920 = record.image_1920
 
+    @api.depends("create_date", "write_date", "product_tmpl_id.create_date", "product_tmpl_id.write_date")
+    def compute_concurrency_field_with_access(self):
+        # Intentionally not calling super() to involve all fields explicitly
+        for record in self:
+            record[self.CONCURRENCY_CHECK_FIELD] = max(filter(None, (
+                record.product_tmpl_id.write_date or record.product_tmpl_id.create_date,
+                record.write_date or record.create_date or fields.Datetime.now(),
+            )))
+
     def _compute_image_1024(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
@@ -415,7 +424,12 @@ class ProductProduct(models.Model):
         For convenience the template is copied instead and its first variant is
         returned.
         """
-        return self.product_tmpl_id.copy(default=default).product_variant_id
+        # copy variant is disabled in https://github.com/odoo/odoo/pull/38303
+        # this returns the first possible combination of variant to make it
+        # works for now, need to be fixed to return product_variant_id if it's
+        # possible in the future
+        template = self.product_tmpl_id.copy(default=default)
+        return template.product_variant_id or template._create_first_product_variant()
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
@@ -656,8 +670,9 @@ class ProductProduct(models.Model):
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency
             if currency:
+                company = company or self.env.company
                 prices[product.id] = product.currency_id._convert(
-                    prices[product.id], currency, product.company_id, fields.Date.today())
+                    prices[product.id], currency, company, fields.Date.today())
 
         return prices
 

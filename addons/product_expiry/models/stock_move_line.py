@@ -17,7 +17,7 @@ class StockMoveLine(models.Model):
     @api.depends('product_id', 'picking_type_use_create_lots', 'lot_id.expiration_date')
     def _compute_expiration_date(self):
         for move_line in self:
-            if not move_line.expiration_date and move_line.lot_id.expiration_date:
+            if move_line.lot_id.expiration_date:
                 move_line.expiration_date = move_line.lot_id.expiration_date
             elif move_line.picking_type_use_create_lots:
                 if move_line.product_id.use_expiration_date:
@@ -48,3 +48,14 @@ class StockMoveLine(models.Model):
     def _assign_production_lot(self, lot):
         super()._assign_production_lot(lot)
         self.lot_id._update_date_values(self[0].expiration_date)
+
+    def _get_value_production_lot(self):
+        res = super()._get_value_production_lot()
+        if self.expiration_date:
+            res.update({
+                'expiration_date': self.expiration_date,
+                'use_date': self.product_id.use_time and self.expiration_date - datetime.timedelta(days=(self.product_id.expiration_time - self.product_id.use_time)),
+                'removal_date': self.product_id.removal_time and self.expiration_date - datetime.timedelta(days=(self.product_id.expiration_time - self.product_id.removal_time)),
+                'alert_date': self.product_id.alert_time and self.expiration_date - datetime.timedelta(days=(self.product_id.expiration_time - self.product_id.alert_time))
+            })
+        return res

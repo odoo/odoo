@@ -99,6 +99,7 @@ class ImDispatch(object):
     def __init__(self):
         self.channels = {}
         self.started = False
+        self.Event = None
 
     def poll(self, dbname, channels, last, options=None, timeout=TIMEOUT):
         if options is None:
@@ -181,7 +182,7 @@ class ImDispatch(object):
     def start(self):
         if odoo.evented:
             # gevent mode
-            import gevent
+            import gevent.event  # pylint: disable=import-outside-toplevel
             self.Event = gevent.event.Event
             gevent.spawn(self.run)
         else:
@@ -193,7 +194,7 @@ class ImDispatch(object):
         self.started = True
         return self
 
-dispatch = None
-if not odoo.multi_process or odoo.evented:
-    # We only use the event dispatcher in threaded and gevent mode
-    dispatch = ImDispatch()
+# Partially undo a2ed3d3d5bdb6025a1ba14ad557a115a86413e65
+# IMDispatch has a lazy start, so we could initialize it anyway
+# And this avoids the Bus unavailable error messages
+dispatch = ImDispatch()

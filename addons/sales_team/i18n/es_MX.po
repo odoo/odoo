@@ -4,7 +4,8 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco, 2022
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -222,8 +223,8 @@ msgstr "Miembros favoritos"
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
-"Equipos favoritos que se mostrarán en el tablero y a los que se podrá "
-"acceder fácilmente."
+"Equipos favoritos que se mostrarán en el tablero y a los que podrá acceder "
+"con facilidad."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -231,8 +232,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
-"Seguir a este equipo de ventas para rastrear automáticamente los eventos "
-"asociados a los usuarios de este equipo."
+"Seguir a este equipo de ventas para rastrear de forma automática los eventos"
+" asociados a los usuarios de este equipo."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -273,8 +274,7 @@ msgstr ""
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan un error de "
-"entrega."
+"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
@@ -283,8 +283,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
-"Si esta opción está activada, se utilizará este equipo para las ventas y "
-"tareas relacionadas con este partner."
+"Si se establece, este equipo de ventas se utilizará para las ventas y "
+"asignaciones relacionadas con este contacto."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -292,8 +292,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
-"Si el campo activo se define como falso se podrá ocultar el equipo de ventas"
-" sin eliminarlo."
+"Si el campo activo se define como falso, podrá ocultar el equipo de ventas "
+"sin eliminarlo."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -503,8 +503,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
-"Utilice la función de equipos de ventas para organizar su departamento de ventas.\n"
-"Cada equipo trabajará con un flujo de trabajo independiente."
+"Utilice los equipos de ventas para organizar sus departamentos de ventas.\n"
+"                Cada equipo trabajará con un flujo independiente."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
@@ -519,7 +519,7 @@ msgstr "Usuario: Todos los documentos"
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr "Usuario: Solo mostrar documentos propios"
+msgstr "Usuario: Solo documentos propios"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -542,12 +542,12 @@ msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
 msgstr ""
-"el usuario tendrá acceso a todos los registros en la aplicación de ventas."
+"el usuario tendrá acceso a todos los registros en la aplicación Ventas."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr "el usuario tendrá acceso a sus propios datos en la aplicación ventas."
+msgstr "el usuario tendrá acceso a sus propios datos en la aplicación Ventas."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager

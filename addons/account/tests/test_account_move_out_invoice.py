@@ -6,6 +6,7 @@ from odoo import fields
 from odoo.exceptions import UserError
 
 from collections import defaultdict
+from freezegun import freeze_time
 from unittest.mock import patch
 from datetime import timedelta
 
@@ -1618,6 +1619,43 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_tax': 209.96,
             'amount_total': 1409.95,
         })
+
+    def test_cash_rounding_with_rounding_method_set_to_global(self):
+        """
+        Test that cash roundings are computed correctly when
+        tax calculation rounding method is set to `round_globally`.
+        """
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+
+        cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'add_invoice_line',
+            'rounding': 0.05,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': self.company_data['default_account_expense'].copy().id,
+            'rounding_method': 'HALF-UP',
+        })
+
+        tax7_7 = self.env['account.tax'].create({
+            'name': "tax7_7",
+            'amount_type': 'percent',
+            'amount': 7.7,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_cash_rounding_id': cash_rounding.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'test product',
+                    'price_unit': 295.0,
+                    'tax_ids': [(6, 0, tax7_7.ids)],
+                }),
+            ],
+        })
+        self.assertEqual(invoice.amount_total, 317.70)
 
     def test_out_invoice_line_onchange_currency_1(self):
         move_form = Form(self.invoice.with_context(dudu=True))
@@ -3392,3 +3430,164 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    @freeze_time('2019-01-01')
+    def test_out_invoice_duplicate_currency_rate(self):
+        ''' Test the correct update of currency rate on invoice duplication'''
+        move_form = Form(self.invoice)
+        move_form.date = '2016-01-01'
+        move_form.currency_id = self.currency_data['currency']
+        move_form.save()
+
+        self.invoice.action_post()
+
+        # === Duplicate invoice. The currency conversion's rate should change to match today rate ===
+
+        copy = self.invoice.copy()
+        copy.action_post()
+
+        self.assertRecordValues(
+            copy.line_ids.filtered(lambda l: not l.exclude_from_invoice_tab),
+            [
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -1000.0,
+                    'debit': 0.0,
+                    'credit': 500.0,
+                },
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -200.0,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                },
+            ],
+        )
+
+    def test_out_invoice_depreciated_account(self):
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'currency_id': self.currency_data['currency'].id,
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'My super product.',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                    'account_id': self.product_a.property_account_income_id.id,
+                })
+            ],
+        })
+        self.product_a.property_account_income_id.deprecated = True
+        with self.assertRaises(UserError), self.cr.savepoint():
+            move.action_post()
+
+    @freeze_time('2019-01-01')
+    def test_date_reversal_exchange_move(self):
+        """
+        Test the date of the reversal of an exchange move created when unreconciling a payment made in the past, when no lock date is set.
+        It should be the last day of the month of the exchange move date if sequence is incremented by month,
+        and the last day of the year of the exchange move date if sequence is incremented by year.
+        """
+        for format_incrementor, expected_date in (('month', '2017-01-31'), ('year', '2017-12-31')):
+            with self.subTest(format_incrementor=format_incrementor, expected_date=expected_date):
+                invoice = self.init_invoice(move_type='out_invoice', partner=self.partner_a, invoice_date='2016-01-20', post=True, amounts=[750.0], currency=self.currency_data['currency'])
+
+                new_exchange_journal = self.env['account.journal'].create({
+                    'name': f'Exchange Journal for {invoice.name}',
+                    'code': f'EXCH{invoice.name}',
+                    'type': 'general',
+                    'company_id': self.env.company.id,
+                })
+
+                # Need a first move in the new journal to initiate the sequence with a right incrementor, depending on the wanted format
+                self.env['account.move'].create({
+                    'journal_id': new_exchange_journal.id,
+                    'name': 'EXCH/2019/00001' if format_incrementor == 'year' else 'EXCH/2019/01/0001',
+                    'line_ids': [
+                        (0, 0, {
+                            'account_id': self.company_data['default_account_receivable'].id,
+                            'debit': 125.0,
+                            'credit': 0.0,
+                        }),
+                        (0, 0, {
+                            'account_id': self.company_data['default_account_revenue'].id,
+                            'debit': 0.0,
+                            'credit': 125.0,
+                        })
+                    ]
+                })
+
+                self.env.company.currency_exchange_journal_id = new_exchange_journal
+
+                self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+                    'payment_date': '2017-01-20',
+                })._create_payments()
+
+                line_receivable = invoice.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+
+                exchange_move = line_receivable.full_reconcile_id.exchange_move_id
+
+                # Date of the exchange move should be the date of the payment
+                self.assertEqual(exchange_move.date, fields.Date.to_date('2017-01-20'))
+
+                line_receivable.remove_move_reconcile()
+
+                exchange_move_reversal = exchange_move.reversal_move_id
+
+                # Date of the reversal of the exchange move should be the last day of the month/year of the payment depending on the sequence format
+                self.assertEqual(exchange_move_reversal.date, fields.Date.to_date(expected_date))
+
+    @freeze_time('2023-05-01')
+    def test_caba_with_different_lock_dates(self):
+        """
+        Test the date of the CABA move when reconciling a payment with an invoice
+        with date before fiscalyear_period but after period_lock_date when
+        having accountant rights.
+        """
+        self.env.company.tax_exigibility = True
+
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'reconcile': True,
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+        })
+
+        self.env['account.move'].search([('state', '=', 'draft')]).unlink()
+
+        self.env.company.fiscalyear_lock_date = fields.Date.from_string('2023-01-01')
+        self.env.company.period_lock_date = fields.Date.from_string('2023-02-01')
+
+        if not self.env.user.user_has_groups('account.group_account_manager'):
+            self.env.user.groups_id = [(4, [self.env.ref('account.group_account_manager').id], 0)]
+
+        invoice = self.init_invoice(move_type='out_invoice', products=self.product_a, invoice_date='2023-01-02', taxes=tax)
+
+        payment = self.env['account.payment'].create({
+            'partner_id': self.partner_a.id,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'date': '2023-01-30',
+            'amount': invoice.amount_total,
+        })
+
+        (invoice + payment.move_id).action_post()
+
+        (invoice + payment.move_id).line_ids\
+            .filtered(lambda x: x.account_internal_type in ('receivable', 'payable'))\
+            .reconcile()
+
+        caba_move = self.env['account.move'].search([('tax_cash_basis_move_id', '=', invoice.id)])
+
+        self.assertRecordValues(caba_move, [{
+            'date': fields.Date.from_string('2023-01-30'),
+        }])

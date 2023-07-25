@@ -236,7 +236,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_forecast = False
                 continue
             orderpoint_context = orderpoint._get_product_context()
-            product_context = frozendict({**self.env.context, **orderpoint_context})
+            product_context = frozendict({**orderpoint_context})
             orderpoints_contexts[product_context] |= orderpoint
         for orderpoint_context, orderpoints_by_context in orderpoints_contexts.items():
             products_qty = orderpoints_by_context.product_id.with_context(orderpoint_context)._product_available()
@@ -344,7 +344,7 @@ class StockWarehouseOrderpoint(models.Model):
                 warehouse=warehouse.id,
                 to_date=fields.datetime.now() + relativedelta.relativedelta(days=days)
             ).read(['virtual_available'])
-            for qty in qties:
+            for (product, qty) in zip(products, qties):
                 if float_compare(qty['virtual_available'], 0, precision_rounding=product.uom_id.rounding) >= 0:
                     key_to_remove.append((qty['id'], warehouse.id))
                 else:
@@ -378,7 +378,7 @@ class StockWarehouseOrderpoint(models.Model):
         to_refill = {k: v for k, v in to_refill.items() if float_compare(
             v, 0.0, precision_digits=rounding) < 0.0}
 
-        lot_stock_id_by_warehouse = self.env['stock.warehouse'].search_read([
+        lot_stock_id_by_warehouse = self.env['stock.warehouse'].with_context(active_test=False).search_read([
             ('id', 'in', [g[1] for g in to_refill.keys()])
         ], ['lot_stock_id'])
         lot_stock_id_by_warehouse = {w['id']: w['lot_stock_id'][0] for w in lot_stock_id_by_warehouse}
@@ -429,7 +429,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _get_replenishment_order_notification(self):
         self.ensure_one()
         domain = [('orderpoint_id', 'in', self.ids)]
-        if self.env.context.get('written_date'):
+        if self.env.context.get('written_after'):
             domain = expression.AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
         move = self.env['stock.move'].search(domain, limit=1)
         if move.picking_id:
@@ -472,64 +472,69 @@ class StockWarehouseOrderpoint(models.Model):
         self = self.with_company(company_id)
         orderpoints_noprefetch = self.read(['id'])
         orderpoints_noprefetch = [orderpoint['id'] for orderpoint in orderpoints_noprefetch]
-
         for orderpoints_batch in split_every(1000, orderpoints_noprefetch):
             if use_new_cursor:
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
-            orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch)
-            orderpoints_exceptions = []
-            while orderpoints_batch:
-                procurements = []
-                for orderpoint in orderpoints_batch:
-                    if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
-                        date = datetime.combine(orderpoint.lead_days_date, time.min)
-                        values = orderpoint._prepare_procurement_values(date=date)
-                        procurements.append(self.env['procurement.group'].Procurement(
-                            orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
-                            orderpoint.location_id, orderpoint.name, orderpoint.name,
-                            orderpoint.company_id, values))
+            try:
+                orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch)
+                orderpoints_exceptions = []
+                while orderpoints_batch:
+                    procurements = []
+                    for orderpoint in orderpoints_batch:
+                        origins = orderpoint.env.context.get('origins', {}).get(orderpoint.id, False)
+                        if origins:
+                            origin = '%s - %s' % (orderpoint.display_name, ','.join(origins))
+                        else:
+                            origin = orderpoint.name
+                        if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
+                            date = datetime.combine(orderpoint.lead_days_date, time.min)
+                            values = orderpoint._prepare_procurement_values(date=date)
+                            procurements.append(self.env['procurement.group'].Procurement(
+                                orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
+                                orderpoint.location_id, orderpoint.name, origin,
+                                orderpoint.company_id, values))
 
-                try:
-                    with self.env.cr.savepoint():
-                        self.env['procurement.group'].with_context(from_orderpoint=True).run(procurements, raise_user_error=raise_user_error)
-                except ProcurementException as errors:
-                    for procurement, error_msg in errors.procurement_exceptions:
-                        orderpoints_exceptions += [(procurement.values.get('orderpoint_id'), error_msg)]
-                    failed_orderpoints = self.env['stock.warehouse.orderpoint'].concat(*[o[0] for o in orderpoints_exceptions])
-                    if not failed_orderpoints:
-                        _logger.error('Unable to process orderpoints')
-                        break
-                    orderpoints_batch -= failed_orderpoints
+                    try:
+                        with self.env.cr.savepoint():
+                            self.env['procurement.group'].with_context(from_orderpoint=True).run(procurements, raise_user_error=raise_user_error)
+                    except ProcurementException as errors:
+                        for procurement, error_msg in errors.procurement_exceptions:
+                            orderpoints_exceptions += [(procurement.values.get('orderpoint_id'), error_msg)]
+                        failed_orderpoints = self.env['stock.warehouse.orderpoint'].concat(*[o[0] for o in orderpoints_exceptions])
+                        if not failed_orderpoints:
+                            _logger.error('Unable to process orderpoints')
+                            break
+                        orderpoints_batch -= failed_orderpoints
 
-                except OperationalError:
-                    if use_new_cursor:
-                        cr.rollback()
-                        continue
+                    except OperationalError:
+                        if use_new_cursor:
+                            cr.rollback()
+                            continue
+                        else:
+                            raise
                     else:
-                        raise
-                else:
-                    orderpoints_batch._post_process_scheduler()
-                    break
+                        orderpoints_batch._post_process_scheduler()
+                        break
 
-            # Log an activity on product template for failed orderpoints.
-            for orderpoint, error_msg in orderpoints_exceptions:
-                existing_activity = self.env['mail.activity'].search([
-                    ('res_id', '=', orderpoint.product_id.product_tmpl_id.id),
-                    ('res_model_id', '=', self.env.ref('product.model_product_template').id),
-                    ('note', '=', error_msg)])
-                if not existing_activity:
-                    orderpoint.product_id.product_tmpl_id.activity_schedule(
-                        'mail.mail_activity_data_warning',
-                        note=error_msg,
-                        user_id=orderpoint.product_id.responsible_id.id or SUPERUSER_ID,
-                    )
-
-            if use_new_cursor:
-                try:
-                    cr.commit()
-                finally:
-                    cr.close()
+                # Log an activity on product template for failed orderpoints.
+                for orderpoint, error_msg in orderpoints_exceptions:
+                    existing_activity = self.env['mail.activity'].search([
+                        ('res_id', '=', orderpoint.product_id.product_tmpl_id.id),
+                        ('res_model_id', '=', self.env.ref('product.model_product_template').id),
+                        ('note', '=', error_msg)])
+                    if not existing_activity:
+                        orderpoint.product_id.product_tmpl_id.activity_schedule(
+                            'mail.mail_activity_data_warning',
+                            note=error_msg,
+                            user_id=orderpoint.product_id.responsible_id.id or SUPERUSER_ID,
+                        )
+            finally:
+                if use_new_cursor:
+                    try:
+                        cr.commit()
+                    finally:
+                        cr.close()
 
         return {}
 

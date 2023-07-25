@@ -286,6 +286,7 @@ class TestTranslation(TransactionCase):
 
     def test_103_duplicate_record_fr(self):
         category = self.customers.with_context({'lang': 'fr_FR'}).copy({'name': 'Clients (copie)'})
+        self.assertEqual(category.env.context.get('lang'), 'fr_FR')
 
         category_no = category.with_context({})
         self.assertEqual(category_no.name, 'Clients (copie)', "Duplication should set untranslated value")

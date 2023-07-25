@@ -282,6 +282,7 @@ class WebsiteSale(http.Controller):
 
         values = {
             'search': search,
+            'order': post.get('order', ''),
             'category': category,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
@@ -575,6 +576,31 @@ class WebsiteSale(http.Controller):
         error = dict()
         error_message = []
 
+        if data.get('partner_id'):
+            partner_su = request.env['res.partner'].sudo().browse(int(data['partner_id'])).exists()
+            name_change = partner_su and 'name' in data and data['name'] != partner_su.name
+            email_change = partner_su and 'email' in data and data['email'] != partner_su.email
+
+            # Prevent changing the partner name if invoices have been issued.
+            if name_change and not partner_su.can_edit_vat():
+                error['name'] = 'error'
+                error_message.append(_(
+                    "Changing your name is not allowed once invoices have been issued for your"
+                    " account. Please contact us directly for this operation."
+                ))
+
+            # Prevent change the partner name or email if it is an internal user.
+            if (name_change or email_change) and not all(partner_su.user_ids.mapped('share')):
+                error.update({
+                    'name': 'error' if name_change else None,
+                    'email': 'error' if email_change else None,
+                })
+                error_message.append(_(
+                    "If you are ordering for an external person, please place your order via the"
+                    " backend. If you wish to change your name or email address, please do so in"
+                    " the account settings or contact your administrator."
+                ))
+
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]
 
@@ -631,12 +657,21 @@ class WebsiteSale(http.Controller):
         return partner_id
 
     def values_preprocess(self, order, mode, values):
-        # Convert the values for many2one fields to integer since they are used as IDs
+        new_values = dict()
         partner_fields = request.env['res.partner']._fields
-        return {
-            k: (bool(v) and int(v)) if k in partner_fields and partner_fields[k].type == 'many2one' else v
-            for k, v in values.items()
-        }
+
+        for k, v in values.items():
+            # Convert the values for many2one fields to integer since they are used as IDs
+            if k in partner_fields and partner_fields[k].type == 'many2one':
+                new_values[k] = bool(v) and int(v)
+            # Store empty fields as `False` instead of empty strings `''` for consistency with other applications like
+            # Contacts.
+            elif v == '':
+                new_values[k] = False
+            else:
+                new_values[k] = v
+
+        return new_values
 
     def values_postprocess(self, order, mode, values, errors, error_msg):
         new_values = {}
@@ -710,7 +745,7 @@ class WebsiteSale(http.Controller):
                 return request.redirect('/shop/checkout')
 
         # IF POSTED
-        if 'submitted' in kw:
+        if 'submitted' in kw and request.httprequest.method == "POST":
             pre_values = self.values_preprocess(order, mode, kw)
             errors, error_msg = self.checkout_form_validate(mode, kw, pre_values)
             post, errors, error_msg = self.values_postprocess(order, mode, pre_values, errors, error_msg)
@@ -734,7 +769,7 @@ class WebsiteSale(http.Controller):
                             (not order.only_services and (mode[0] == 'edit' and '/shop/checkout' or '/shop/address'))
                     # We need to update the pricelist(by the one selected by the customer), because onchange_partner reset it
                     # We only need to update the pricelist when it is not redirected to /confirm_order
-                    if kw.get('callback', '') != '/shop/confirm_order':
+                    if kw.get('callback', False) != '/shop/confirm_order':
                         request.website.sale_get_order(update_pricelist=True)
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
@@ -879,6 +914,12 @@ class WebsiteSale(http.Controller):
             return_url= '/shop/payment/validate',
             bootstrap_formatting= True
         )
+        if order.partner_id.company_id and order.partner_id.company_id.id != order.company_id.id:
+            values['errors'].append(
+                (_('Sorry, we are unable to find a Payment Method'),
+                 _('No payment method is available for your current order. '
+                   'Please contact us for more information.')))
+            return values
 
         domain = expression.AND([
             ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order.company_id.id)],
@@ -1035,6 +1076,12 @@ class WebsiteSale(http.Controller):
         """
         if sale_order_id is None:
             order = request.website.sale_get_order()
+            if not order and 'sale_last_order_id' in request.session:
+                # Retrieve the last known order from the session if the session key `sale_order_id`
+                # was prematurely cleared. This is done to prevent the user from updating their cart
+                # after payment in case they don't return from payment through this route.
+                last_order_id = request.session['sale_last_order_id']
+                order = request.env['sale.order'].sudo().browse(last_order_id).exists()
         else:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             assert order.id == request.session.get('sale_last_order_id')

@@ -55,7 +55,7 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     Chrome.do.backToFloor();
     FloorScreen.check.orderCountSyncedInTableIs('T5', '1');
     Chrome.do.clickTicketButton();
-    TicketScreen.check.nthRowContains('4', 'Tipping');
+    TicketScreen.check.nthRowContains('3', 'Tipping');
 
     // Tip 20% on order1
     TicketScreen.do.selectOrder('-0001');

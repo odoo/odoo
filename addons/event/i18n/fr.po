@@ -8,7 +8,6 @@
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2020
 # thomas quertinmont <tqu@odoo.com>, 2020
 # Florian <fll@odoo.com>, 2020
-# Moka Tourisme <hello@mokatourisme.fr>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Nathan Grognet <ngr@odoo.com>, 2020
@@ -34,13 +33,15 @@
 # Luc N, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
 # nle_odoo, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Vallen Delobel <edv@odoo.com>, 2021
 # Camille Dantinne <cmd@odoo.com>, 2021
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2021
 # Alice Van Goethem <vga@odoo.com>, 2022
 # Rémi CAZENAVE, 2022
+# Moka Tourisme <hello@mokatourisme.fr>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -48,8 +49,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -200,6 +201,18 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Cher(e) ${object.name},<br/>\n"
+"    Merci pour votre demande.<br/>\n"
+"    Voici votre badge pour l'événement ${object.event_id.name}.<br/>\n"
+"    N'hésitez pas à nous contacter si vous avez des questions.\n"
+"    <br/><br/>\n"
+"    Merci,\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1213,7 +1226,7 @@ msgstr "Activité"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Activité exception décoration"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
@@ -1289,6 +1302,8 @@ msgid ""
 "And this time, we go fully ONLINE! Meet us in our live streams from the comfort of your house.<br>\n"
 "        Special discount codes will be handed out during the various streams, make sure to be there on time."
 msgstr ""
+"Et cette fois-ci, cela se passe entièrement EN LIGNE ! Rejoignez-nous nos live streams depuis le confort de votre maison.<br>\n"
+"        Des codes de réductions spéciaux seront distribués pendant les différents streams, veillez à être à l'heure."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -1772,7 +1787,7 @@ msgstr "Salles de discussion"
 #: model:ir.model.fields,field_description:event.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:event.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -1992,12 +2007,12 @@ msgstr "Modèle d'événement"
 #: model:ir.model,name:event.model_event_type_ticket
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
 msgid "Event Template Ticket"
-msgstr ""
+msgstr "Modèle de ticket d'événement"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr ""
+msgstr "Modèle de tickets d'événement"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
@@ -2224,7 +2239,7 @@ msgstr "Fraîchement créé"
 #. module: event
 #: model:event.stage,description:event.event_stage_done
 msgid "Fully ended"
-msgstr ""
+msgstr "Complètment terminé"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2357,6 +2372,8 @@ msgstr "Si actif, certains messages ont une erreur de livraison."
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
 msgstr ""
+"Si la billetterie est utilisée, contient la première date de début de vente "
+"des billets."
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -2569,7 +2586,7 @@ msgstr "Diffusion en direct"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_live
 msgid "Live Mode"
-msgstr ""
+msgstr "Mode Live"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -2893,6 +2910,9 @@ msgid ""
 "OpenWood brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"OpenWood apporte honnêteté et sérieux à l'industrie du bois, tout en "
+"conseillant leurs clients à propos des arbres, des fleurs et des "
+"champignons."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -2905,6 +2925,8 @@ msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
 msgstr ""
+"Notre nouvelle collection sera révélée enligne ! Interagissez avec nous lors"
+" de nos live streams !"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_blocked
@@ -2913,6 +2935,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection."
 msgstr ""
+"Remplacer la valeur par défaut affichée pour l'état 'bloqué' dans la "
+"sélection kanban."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_done
@@ -2921,6 +2945,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection."
 msgstr ""
+"Remplacer la valeur par défaut affichée pour l'état 'terminé' dans la "
+"sélection kanban."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
@@ -2929,6 +2955,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection."
 msgstr ""
+"Remplacer la valeur par défaut affichée pour l'état 'normal' dans la "
+"sélection kanban."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2969,7 +2997,7 @@ msgstr "Achats, Ventes; Gestion des achats, comptabilité financière."
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr ""
+msgstr "Quiz à propos des sessions"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -3221,6 +3249,9 @@ msgid ""
 "Shangai Pterocarpus Furniture brings honesty and seriousness to wood "
 "industry while helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Shangai Pterocarpus Furniture apporte honnêteté et sérieux à industrie du "
+"bois tout en aidant les clients à gérer les arbres, les fleurs et les "
+"champignons."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3406,6 +3437,8 @@ msgid ""
 "The finest OpenWood furnitures are coming to your house in a brand new "
 "collection"
 msgstr ""
+"Les meilleurs meubles OpenWood pour votre maison dans une toute nouvelle "
+"collection"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_booked
@@ -3415,7 +3448,7 @@ msgstr "Cette place a été réservée"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first !"
-msgstr ""
+msgstr "La sécurité de nos participants et nos aéronautes avant tout !"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -3463,6 +3496,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories !"
 msgstr ""
+"C'est l'endroit idéal pour passer une chouette journée en famille. Nous "
+"garantissons que vous partirez avec tout plein de magnifiques souvenirs ! "
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3470,12 +3505,14 @@ msgid ""
 "This is the perfect place for spending a nice time with your friends while "
 "listening to some of the most iconic rock songs of all times!"
 msgstr ""
+"C'est l'endroit idéal pour passer un chouette moment avec vos amis tout en "
+"écoutant les chansons rock les plus iconiques de tous les temps !"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "This operator is not supported"
-msgstr ""
+msgstr "Cet opérateur n'est pas pris en charge"
 
 #. module: event
 #. openerp-web
@@ -3485,6 +3522,8 @@ msgid ""
 "This pipeline can be customized on the fly to fit your organizational needs."
 " For example, let's create a new stage."
 msgstr ""
+"Ce pipeline peut être personnalisé à la volée pour répondre aux besoins de "
+"votre organisation. Par exemple, créons une nouvelle étape."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3510,6 +3549,8 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
+"Les types de tickets vous permettent de distinguer vos participants. "
+"<b>Créons-en</b> un nouveau."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_ticket
@@ -3563,6 +3604,8 @@ msgid ""
 "Tree Dealers brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Tree Dealers apporte honnêteté et sérieux à l'industrie du bois tout en "
+"aidant les clients à gérer les arbres, les fleurs et les champignons."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
@@ -3642,6 +3685,8 @@ msgstr "A venir/En cours"
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Upgrade Sponsors into Exhibitors with virtual conference booths"
 msgstr ""
+"Transformez des sponsors en exposants grâce à des stands de conférence "
+"virtuels."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_timezone
@@ -3653,7 +3698,7 @@ msgstr "Utiliser le fuseau horaire par défaut"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
-msgstr ""
+msgstr "Utilisez le <b>fil d'Ariane</b> pour revenir à l'aperçu Kanban."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
@@ -3771,6 +3816,8 @@ msgid ""
 "You can define here labels that will be displayed for the state instead\n"
 "                            of the default labels in the kanban view."
 msgstr ""
+"Vous pouvez définir ici les labels qui seront affichés pour les états à la place\n"
+"                        des labels par défaut dans la vue kanban."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge

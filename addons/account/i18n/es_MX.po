@@ -4,8 +4,11 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Martin Trigaux, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Lucia Pacheco, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -214,7 +217,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado ${object.partner_id.name}<br/><br/>\n"
+"        Apreciable ${object.partner_id.name}<br/><br/>\n"
 "        Gracias por el pago.\n"
 "        Aquí está su recibo <strong>${(object.name or '').replace('/','-')}</strong> por el monto\n"
 "        de <strong>${format_amount(object.amount, object.currency_id)}</strong> de ${object.company_id.name}.\n"
@@ -278,7 +281,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado\n"
+"        Apreciable\n"
 "        % if object.partner_id.parent_id:\n"
 "            ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
 "        % else:\n"
@@ -530,8 +533,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
-"<span class=\"o_form_label\">Se validarán y publicarán todos los asientos de"
-" diario seleccionados. No se pueden modificar después.</span>"
+"<span class=\"o_form_label\">Se validarán y publicarán todos los asientos "
+"contables seleccionados. No se pueden modificar después.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -765,8 +768,8 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>Se generó este asiento a través de la aplicación de Facturación antes "
-"de instalar Contabilidad. Se importó el balance por separado.</span>"
+"<span>Se generó este asiento a través de la aplicación Facturación antes de "
+"instalar Contabilidad. Se importó el balance por separado.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -814,6 +817,11 @@ msgstr "<strong>Empresa:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr "<strong>Fecha de nota de crédito:</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Código de cliente:</strong>"
 
@@ -826,6 +834,11 @@ msgstr "<strong>Cliente: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>Cliente</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Fecha:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -881,6 +894,11 @@ msgstr "<strong>Método de pago: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Producto</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>Fecha de recepción:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -989,7 +1007,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Un asiento de diario está compuesto por varios apuntes de diario, siendo\n"
+"Un asiento contable está compuesto por varios apuntes contables, siendo\n"
 "                cada uno de ellos una transacción de débito o crédito."
 
 #. module: account
@@ -1000,6 +1018,14 @@ msgid ""
 msgstr ""
 "Un diario se utiliza para registrar las transacciones de todos los datos contables\n"
 "                relacionados con el día a día de la empresa."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"Una línea de este movimiento utiliza una cuenta obsoleta, no puede "
+"publicarla."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -2168,7 +2194,7 @@ msgid ""
 "unique previous posted journal entry."
 msgstr ""
 "Se produjo un error al calcular la inalterabilidad. Es imposible obtener el "
-"asiento de diario publicado anteriormente."
+"asiento contable publicado anteriormente."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2292,12 +2318,12 @@ msgstr "Aplicación"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__tax_adjustments_wizard__adjustment_type__credit
 msgid "Applied on credit journal item"
-msgstr "Aplicado en un apunte de diario de crédito"
+msgstr "Aplicado en un apunte contable de crédito"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__tax_adjustments_wizard__adjustment_type__debit
 msgid "Applied on debit journal item"
-msgstr "Aplicado en un apunte de diario de débito"
+msgstr "Aplicado en un apunte contable de débito"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
@@ -2519,7 +2545,7 @@ msgstr "Balance"
 #: code:addons/account/static/src/js/account_selection.js:0
 #, python-format
 msgid "Balance Sheet"
-msgstr "Hoja de balance"
+msgstr "Balance general"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
@@ -2648,7 +2674,7 @@ msgstr "Balance final del estado de cuenta bancario"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Línea de estado de cuenta bancario"
+msgstr "Línea de un estado de cuenta bancario"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_line
@@ -2954,7 +2980,7 @@ msgstr "Importar CSV"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "CUST"
-msgstr "CUST"
+msgstr "CLIENTE"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
@@ -3025,7 +3051,7 @@ msgid ""
 "Cannot create unbalanced journal entry. Ids: %s\n"
 "Differences debit - credit: %s"
 msgstr ""
-"No se puede crear un asiento de diario no balanceado. Ids: %s\n"
+"No se puede crear un asiento contable no balanceado. Ids: %s\n"
 "Diferencias débito - crédito: %s"
 
 #. module: account
@@ -3312,7 +3338,7 @@ msgid ""
 "journal items."
 msgstr ""
 "Seleccione esta casilla si la cuenta permite emparejar facturas y pagos con "
-"apuntes de diario."
+"apuntes contables."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -3347,7 +3373,7 @@ msgstr ""
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
-"Selecciona esta opción si desea que el usuario concilie asientos en esta "
+"Seleccione esta opción si desea que el usuario concilie asientos en esta "
 "cuenta."
 
 #. module: account
@@ -3358,7 +3384,7 @@ msgstr "Cheques"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__children_line_ids
 msgid "Children Lines"
-msgstr "Líneas hijas"
+msgstr "Líneas secundarias"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__children_tax_ids
@@ -3366,7 +3392,7 @@ msgstr "Líneas hijas"
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Children Taxes"
-msgstr "Impuestos hijos"
+msgstr "Subimpuestos"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -3487,7 +3513,7 @@ msgstr "Empresas"
 #: model:ir.model.fields,field_description:account.field_res_partner__ref_company_ids
 #: model:ir.model.fields,field_description:account.field_res_users__ref_company_ids
 msgid "Companies that refers to partner"
-msgstr "Empresas que se refieren al partner"
+msgstr "Empresas que se refieren al contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_id
@@ -3587,7 +3613,7 @@ msgstr "Modo de redacción"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Compute tax rates based on U.S. ZIP codes"
-msgstr "Calcule las tasas de impuestos según los códigos postales de EE.UU."
+msgstr "Calcular las tasas de impuestos según los códigos postales de EE. UU."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end
@@ -3652,8 +3678,8 @@ msgid ""
 "Confirming this will create automatically a journal entry with the "
 "difference in the profit/loss account set on the cash journal."
 msgstr ""
-"Al confirmar se creará automáticamente un asiento contable con la diferencia"
-" de la cuenta de ganancias/pérdidas anotada en el diario de efectivo."
+"Al confirmar se creará un asiento contable en automático con la diferencia "
+"de la cuenta del estado de ganancias registrada en el diario de efectivo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
@@ -3714,9 +3740,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"La conversión entre las unidades de medidas solo pueden ocurrir si "
-"pertenecen a la misma categoría. La conversión se basará en los cambios "
-"establecidos."
+"La conversión entre las unidades de medidas solo puede ocurrir si pertenecen"
+" a la misma categoría. La conversión se basará en las proporciones "
+"establecidas."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -3781,7 +3807,7 @@ msgstr "País para el que está disponible este reporte."
 #: model:ir.model.fields,help:account.field_account_account_tag__country_id
 msgid "Country for which this tag is available, when applied on taxes."
 msgstr ""
-"País para el que está disponible esta etiqueta, cuando se aplica en los "
+"País para el que está disponible esta etiqueta cuando se aplica en los "
 "impuestos."
 
 #. module: account
@@ -3804,7 +3830,7 @@ msgstr "Crear asientos automáticos"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Create Automatic Entries for selected Journal Items"
-msgstr "Crear asientos automáticos para apuntes de diario seleccionados"
+msgstr "Crear asientos automáticos para apuntes contables seleccionados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
@@ -3855,7 +3881,7 @@ msgstr "Crear un nuevo registro de efectivo"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
 msgid "Create a new customer in your address book"
-msgstr "Crear un nuevo cliente en su directorio"
+msgstr "Crear un nuevo cliente en su libreta de direcciones"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
@@ -3890,7 +3916,7 @@ msgstr "Crear un nuevo producto que se pueda vender"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
 msgid "Create a new supplier in your address book"
-msgstr "Crear un nuevo proveedor en su directorio"
+msgstr "Crear un nuevo proveedor en su libreta de direcciones"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_form
@@ -3927,7 +3953,7 @@ msgstr "Crear primera factura"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Create invoice/bill"
-msgstr "Crear factura/recibo"
+msgstr "Crear factura"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -4142,7 +4168,7 @@ msgstr "Cuenta de crédito"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Abonar registros del diario que coincidan con este."
+msgstr "Abonar apuntes contables que coincidan con este."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -4218,12 +4244,12 @@ msgstr "Siempre debe proporcionar una divisa para generar un código QR"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_currency_id
 msgid "Currency of the credit journal item."
-msgstr "Divisa del apunte del diario de crédito."
+msgstr "Divisa del apunte contable de crédito."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_currency_id
 msgid "Currency of the debit journal item."
-msgstr "Divisa del apunte del diario de débito."
+msgstr "Divisa del apunte contable de débito."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -4342,7 +4368,7 @@ msgstr "Personalizar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Customize the look of your invoices."
-msgstr "Personalice la apariencia de sus facturas"
+msgstr "Personalice la apariencia de sus facturas."
 
 #. module: account
 #. openerp-web
@@ -4371,12 +4397,12 @@ msgstr "ENTREGADO EN EL LUGAR"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
 msgid "DELIVERED AT PLACE UNLOADED"
-msgstr "ENTREGADO EN LUGAR DE DESCARGA"
+msgstr "ENTREGADO EN EL LUGAR DE DESCARGA"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr "ENTREGADO ARANCEL PAGADO"
+msgstr "ENTREGADO CON DERECHOS PAGADOS"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
@@ -4432,7 +4458,7 @@ msgid ""
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
 "Fecha (inclusiva) a la que se vuelven a secuenciar los números. Si no se "
-"establece, se vuelven a secuenciar todos los asientos de diario hasta el "
+"establece, se volverán a secuenciar todos los asientos contables hasta el "
 "final del periodo."
 
 #. module: account
@@ -4506,8 +4532,7 @@ msgstr "Cuenta de débito"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr ""
-"Registros de diario de débito que coinciden con este registro de diario."
+msgstr "Apuntes contables de débito que coinciden con este apunte contable."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
@@ -4523,7 +4548,7 @@ msgstr "Separador de decimales"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Secuencia de notas de crédito dedicada"
+msgstr "Secuencia de nota de crédito especializada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
@@ -4636,7 +4661,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
-"Defina la acuñación más pequeña de la divisa utilizada para pagar en "
+"Defina la moneda más pequeña de la divisa que se utiliza para pagar en "
 "efectivo"
 
 #. module: account
@@ -4659,8 +4684,8 @@ msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by "
 "cash."
 msgstr ""
-"Defina la acuñación más pequeña de la moneda que se puede usar para pagar en"
-" efectivo."
+"Defina la moneda más pequeña de la divisa que se puede usar para pagar en "
+"efectivo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -4711,7 +4736,7 @@ msgstr "Descripción"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__note
 msgid "Description on the Invoice"
-msgstr "Descripción de la factura"
+msgstr "Descripción en la factura"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4724,7 +4749,7 @@ msgstr "Cuenta destino"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__auto_apply
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__auto_apply
 msgid "Detect Automatically"
-msgstr "Detectar automáticamente"
+msgstr "Detectar de forma automática"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_template__type_tax_use
@@ -4787,7 +4812,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Disc.%"
-msgstr "Desc.%"
+msgstr "% de descuento"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
@@ -4910,7 +4935,7 @@ msgstr "Mostrar código QR SEPA"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__display_type
 msgid "Display Type"
-msgstr "Tipo de pantalla"
+msgstr "Mostrar tipo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__description
@@ -4948,7 +4973,7 @@ msgstr "Distribución cuando el impuesto se utiliza en una factura"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"No tiene acceso, saltar esta información para el correo electrónico de "
+"No tiene acceso, omita esta información para el correo electrónico de "
 "resumen del usuario"
 
 #. module: account
@@ -5149,7 +5174,7 @@ msgid ""
 "found and replaces the author_id field in the chatter."
 msgstr ""
 "Dirección de correo del remitente. Este campo se establece cuando no se "
-"encuentra ningún partner coincidente y reemplaza el campo author_id en el "
+"encuentra ningún contacto coincidente y reemplaza el campo author_id en el "
 "chatter."
 
 #. module: account
@@ -5220,9 +5245,9 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
-"Los asientos en el futuro están configurados para que se publiquen "
-"automáticamente de forma predeterminada. Seleccione esta casilla para "
-"publicarlos ahora."
+"Los asientos en el futuro están configurados para que se publiquen en "
+"automático de forma predeterminada. Seleccione esta casilla para publicarlos"
+" ahora."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5280,7 +5305,7 @@ msgstr "Diferencia de cambio"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__currency_exchange_journal_id
 msgid "Exchange Gain or Loss Journal"
-msgstr "Diario de ganancias y pérdidas por cambio de divisa"
+msgstr "Estado de resultados por cambio de divisa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__exchange_move_id
@@ -5344,17 +5369,17 @@ msgstr "Referencia externa"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr "GRATIS JUNTO CON EL ENVÍO"
+msgstr "LIBRE AL COSTADO DEL BUQUE"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr "TRANSPORTISTA GRATIS"
+msgstr "FRANCO PORTEADOR"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr "GRATIS A BORDO"
+msgstr "LIBRE A BORDO"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
@@ -5603,7 +5628,7 @@ msgstr "Seguidores (canales)"
 #: model:ir.model.fields,field_description:account.field_account_move__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_type_icon
@@ -5885,7 +5910,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "HALF-UP"
-msgstr "MITAD-ARRIBA"
+msgstr "HACIA ARRIBA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -6441,7 +6466,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr "Indica que este apunte de diario es una línea de impuesto"
+msgstr "Indica que este apunte contable es una línea de impuesto"
 
 #. module: account
 #. openerp-web
@@ -6922,8 +6947,8 @@ msgid ""
 "It seems that the taxes have been modified since the creation of the journal"
 " entry. You should create the credit note manually instead."
 msgstr ""
-"Parece que los impuestos se han modificado desde la creación del asiento de "
-"diario. En su lugar, debe crear la nota de crédito manualmente."
+"Parece que los impuestos se han modificado desde la creación del asiento "
+"contable. En su lugar, debe crear la nota de crédito manualmente."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7018,7 +7043,7 @@ msgstr "Asiento de diario"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__entry
 msgid "Journal Entry Date"
-msgstr "Fecha de asiento en el diario"
+msgstr "Fecha de asiento contable"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
@@ -7106,7 +7131,8 @@ msgstr "Apuntes contables en los que el emparejamiento no está configurado"
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
 msgid "Journal used by default for moving the period of an entry"
 msgstr ""
-"Diario utilizado de forma predeterminada para mover el periodo de un asiento"
+"Diario que se utiliza de forma predeterminada para mover el periodo de un "
+"asiento"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
@@ -8186,7 +8212,7 @@ msgstr "Activos no-circulantes"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_liabilities
 msgid "Non-current Liabilities"
-msgstr "Pasivos no-circulantes"
+msgstr "Pasivos no circulantes"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__type_tax_use__none
@@ -8589,7 +8615,7 @@ msgstr "Diario de apertura"
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_move_id
 #, python-format
 msgid "Opening Journal Entry"
-msgstr "Asiento de diario de apertura"
+msgstr "Asiento contable de apertura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
@@ -8958,7 +8984,7 @@ msgstr "Libro mayor de partner"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr "Mapeo de partners "
+msgstr "Mapeo de contactos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
@@ -8968,13 +8994,13 @@ msgstr "Líneas de mapeo de partners"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
 msgid "Partner Name"
-msgstr "Nombre del partner"
+msgstr "Nombre del contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_type
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_type
 msgid "Partner Type"
-msgstr "Tipo de partner"
+msgstr "Tipo de contacto"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
@@ -9435,7 +9461,7 @@ msgstr "Publicado antes"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Asientos de diario publicados"
+msgstr "Asientos contables registrados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9449,7 +9475,7 @@ msgid ""
 "Posted journal entry must have an unique sequence number per company.\n"
 "Problematic numbers: %s\n"
 msgstr ""
-"El asiento de diario publicado debe tener un número de secuencia único por empresa.\n"
+"El asiento contable publicado debe tener un número de secuencia único por empresa.\n"
 "Números problemáticos: %s\n"
 
 #. module: account
@@ -9608,7 +9634,7 @@ msgstr "Productos"
 #: code:addons/account/static/src/js/account_selection.js:0
 #, python-format
 msgid "Profit & Loss"
-msgstr "Ganancias y pérdidas"
+msgstr "Estado de resultados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__profit_account_id
@@ -9992,7 +10018,7 @@ msgstr "Modelo de documento relacionado"
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr "Haga de nuevo la secuencia de asientos de diario."
+msgstr "Haga de nuevo la secuencia de asientos contables."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__date
@@ -10247,7 +10273,7 @@ msgstr "Revertir asiento"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr "Revertir asiento de diario"
+msgstr "Revertir asiento contable"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10494,7 +10520,7 @@ msgstr "Buscar factura"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr "Buscar apuntes de diario"
+msgstr "Buscar apuntes contables"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -10736,8 +10762,8 @@ msgstr "Envíe facturas y seguimientos de pagos por correo"
 msgid ""
 "Send invoices to your customers in no time with the <b>Invoicing app</b>."
 msgstr ""
-"Envíe facturas a sus clientes en poco tiempo con la <b>aplicación de "
-"Facturación</b> ."
+"Envíe facturas a sus clientes en poco tiempo con la aplicación "
+"<b>Facturación</b>."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -11070,7 +11096,7 @@ msgid ""
 "Some journal items already exist in this journal but with accounts from "
 "different types than the allowed ones."
 msgstr ""
-"Algunos apuntes del diario ya existen en este diario pero con cuentas de "
+"Algunos apuntes contables ya existen en este diario pero con cuentas de "
 "tipos diferentes a los permitidos."
 
 #. module: account
@@ -11080,7 +11106,7 @@ msgid ""
 "Some journal items already exist in this journal but with other accounts "
 "than the allowed ones."
 msgstr ""
-"Algunos apuntes del diario ya existen en este diario pero con otras cuentas "
+"Algunos apuntes contables ya existen en este diario pero con otras cuentas "
 "distintas a las permitidas."
 
 #. module: account
@@ -11090,7 +11116,7 @@ msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
 msgstr ""
-"Algunos apuntes del diario ya existen con esta cuenta pero en otros diarios "
+"Algunos apuntes contables ya existen con esta cuenta pero en otros diarios "
 "distintos a los permitidos."
 
 #. module: account
@@ -12000,7 +12026,7 @@ msgid ""
 msgstr ""
 "Campo técnico utilizado para llevar un seguimiento de la conciliación base "
 "de efectivo de impuestos. Esto es necesario cuando se cancela el origen: se "
-"publicará el asiento de diario inverso para cancelar esa parte también."
+"publicará el asiento contable inverso para cancelar esa parte también."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__recompute_tax_line
@@ -12038,9 +12064,9 @@ msgid ""
 "items are directly exigible, but with the feature cash_basis on taxes, some "
 "will become exigible only when the payment is recorded."
 msgstr ""
-"Campo técnico utilizado para marcar una línea fiscal como exigible en el "
-"reporte de IVA o no (solo se muestran los apuntes de diario exigibles). De "
-"forma predeterminada, todos los artículos de diario nuevos son exigibles "
+"Campo técnico que se utiliza para marcar una línea fiscal como exigible en "
+"el reporte de IVA o no (solo se muestran los apuntes contables exigibles). "
+"De forma predeterminada, todos los apuntes contables nuevos son exigibles "
 "directamente, pero con la característica de caja en impuestos, algunos serán"
 " exigibles solo cuando se registre el pago."
 
@@ -12218,7 +12244,7 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"EL código ISO del país en dos caracteres.\n"
+"El código ISO del país en dos caracteres.\n"
 "Puede utilizar este campo para una búsqueda rápida."
 
 #. module: account
@@ -12228,7 +12254,7 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Advisor can change it."
 msgstr ""
-"La secuencia de asientos de diario no se ajusta al formato actual. Solo el "
+"La secuencia de asientos contable no se ajusta al formato actual. Solo el "
 "asesor puede cambiarlo."
 
 #. module: account
@@ -12276,7 +12302,7 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
-"La cuenta seleccionada en su asiento de diario obliga a proporcionar una "
+"La cuenta seleccionada en su asiento contable obliga a proporcionar una "
 "divisa secundaria. Debe eliminar la divisa secundaria en la cuenta."
 
 #. module: account
@@ -12485,8 +12511,8 @@ msgid ""
 " There is nothing left to process."
 msgstr ""
 "El estado actual de su estado de cuenta bancario: - Nuevo: totalmente "
-"editable con borradores de asientos de diario.- Procesando: ya no se puede "
-"editar con asientos de diario publicados, listo para la conciliación.- "
+"editable con borradores de asientos contables.- Procesando: ya no se puede "
+"editar con asientos contables publicados, listo para la conciliación.- "
 "Validado: todas las líneas están conciliadas. No queda nada por procesar."
 
 #. module: account
@@ -12558,7 +12584,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr "Se generarán los siguientes asientos de diario"
+msgstr "Se generarán los siguientes asientos contables"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
@@ -12657,8 +12683,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
-"El asiento de diario %s alcanzó un estado no válido con respecto a su línea de declaración relacionada.\n"
-"Para ser coherente, el asiento del diario debe tener siempre exactamente un apunte del diario que involucre la cuenta bancaria o de efectivo."
+"El asiento contable %s alcanzó un estado no válido con respecto a su línea de declaración relacionada.\n"
+"Para ser coherente, el asiento contable debe tener siempre exactamente un apunte contable que involucre la cuenta bancaria o de efectivo."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12667,8 +12693,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, all the write-off journal items must share the same account."
 msgstr ""
-"El asiento de diario %s alcanzó un estado no válido en relación con su pago.\n"
-"Para ser coherente, todos los apuntes de diario cancelados deben compartir la misma cuenta."
+"El asiento contable %s alcanzó un estado no válido en relación con su pago.\n"
+"Para ser coherente, todos los apuntes contables cancelados deben compartir la misma cuenta."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12681,11 +12707,11 @@ msgid ""
 "- optional journal items, all sharing the same account.\n"
 "\n"
 msgstr ""
-"El asiento de diario %s alcanzó un estado no válido en relación con su pago.\n"
-"Para ser coherente, el asiento de diario debe contener siempre:\n"
-"- un apunte de diario que involucre la cuenta de pagos / recibos pendiente.\n"
-"- un apunte de diario que implique una cuenta por cobrar / por pagar.\n"
-"- apuntes opcionales del diario, todos compartiendo la misma cuenta.\n"
+"El asiento contable %s alcanzó un estado no válido en relación con su pago.\n"
+"Para ser coherente, el asiento contable debe contener siempre:\n"
+"- un apunte contable que involucre la cuenta de pagos / recibos pendiente.\n"
+"- un apunte contable que implique una cuenta por cobrar / por pagar.\n"
+"- apuntes contables opcionales, todos comparten la misma cuenta.\n"
 "\n"
 
 #. module: account
@@ -12695,8 +12721,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same currency."
 msgstr ""
-"El asiento de diario %s alcanzó un estado no válido en relación con su pago.\n"
-"Para ser coherente, los apuntes de diario deben compartir la misma divisa."
+"El asiento contable %s alcanzó un estado no válido en relación con su pago.\n"
+"Para ser coherente, los apuntes contables deben compartir la misma divisa."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12705,8 +12731,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same partner."
 msgstr ""
-"El asiento de diario %s alcanzó un estado no válido en relación con su pago.\n"
-"Para ser coherente, los apuntes de diario deben compartir el mismo partner."
+"El asiento contable %s alcanzó un estado no válido en relación con su pago.\n"
+"Para ser coherente, los apuntes contables deben compartir el mismo partner."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -12714,8 +12740,8 @@ msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
 msgstr ""
-"El asiento del diario que contiene el balance inicial de todas las cuentas "
-"de esta empresa."
+"El asiento contable que contiene el balance inicial de todas las cuentas de "
+"esta empresa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_move_id
@@ -12808,8 +12834,8 @@ msgid ""
 " Please change the journal entry date or the tax lock date set in the "
 "settings (%s) to proceed."
 msgstr ""
-"La operación es rechazada ya que impactaría una declaración de impuestos ya "
-"emitida. Cambie la fecha de asiento de diario o la fecha de bloqueo de "
+"La operación se rechaza porque impactaría una declaración de impuestos ya "
+"emitida. Cambie la fecha de asiento contable o la fecha de bloqueo de "
 "impuestos establecida en la configuración (%s) para continuar."
 
 #. module: account
@@ -12882,7 +12908,7 @@ msgstr "El importe del pago no puede ser negativo."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,help:account.field_account_move__payment_reference
 msgid "The payment reference to set on journal items."
-msgstr "La referencia de pago para establecer en apuntes de diario."
+msgstr "La referencia de pago para establecer en apuntes contables."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
@@ -13240,7 +13266,7 @@ msgstr "Actualmente no hay facturas ni pagos para su cuenta."
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
-msgstr "No hay apuntes de diario en el estado borrador para publicar."
+msgstr "No hay apuntes contables en el estado borrador para publicar."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -13279,8 +13305,8 @@ msgid ""
 "There isn't any journal entry flagged for data inalterability yet for this "
 "journal."
 msgstr ""
-"Todavía no hay ningún asiento de diario marcado por inalterabilidad de datos"
-" para este diario."
+"Todavía no hay ningún asiento contable marcado por inalterabilidad de datos "
+"para este diario."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -13375,7 +13401,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "This can only be used on journal items"
-msgstr "Esto solo se puede usar en apuntes de diario"
+msgstr "Esto solo se puede usar en apuntes contables"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -13399,7 +13425,7 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
-"Este campo se utiliza en asientos de diario por pagar y por cobrar. Puede "
+"Este campo se utiliza en asientos contables por pagar y por cobrar. Puede "
 "establecer la fecha límite para el pago de esta línea."
 
 #. module: account
@@ -13521,6 +13547,16 @@ msgstr ""
 "de venta y facturas de clientes"
 
 #. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+"Este producto ya se utiliza en asientos contables publicados.\n"
+"Si desea cambiar su unidad de medida, archive este producto y cree uno nuevo."
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
@@ -13541,7 +13577,7 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Aquellos que pueden utilizarse para crear rápidamente apuntes de diario al conciliar\n"
+"Aquellos que pueden utilizarse para crear rápidamente apuntes contables al conciliar\n"
 "                un estado de cuenta bancario o una cuenta."
 
 #. module: account
@@ -13879,6 +13915,12 @@ msgid "Unposted"
 msgstr "Sin asentar"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr "Asientos sin publicar"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "Asientos no validados"
@@ -13930,7 +13972,7 @@ msgstr "No conciliado"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Importe sin impuestos"
+msgstr "Subtotal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_signed
@@ -14043,10 +14085,10 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"Utilizado en reportes para saber si se deberían considerar los apuntes de "
-"diario desde el principio en lugar de para el año fiscal en curso solamente."
-" No disponen de esta opción los tipos de cuenta que deben restablecerse a "
-"cero en cada año fiscal (como gastos, ingresos...)."
+"Utilizado en reportes para saber si se deberían considerar los apuntes "
+"contables desde el principio en lugar de para el año fiscal en curso "
+"solamente. No disponen de esta opción los tipos de cuenta que deben "
+"restablecerse a cero en cada año fiscal (como gastos, ingresos...)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__reference
@@ -14082,8 +14124,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
-"Utilizado para registrar una ganancia cuando el balance final de un registro"
-" de caja difiere de lo que el sistema calcula"
+"Se utiliza para registrar una ganancia cuando el balance final de una caja "
+"registradora difiere de lo calculado por el sistema"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__user_id
@@ -14414,7 +14456,7 @@ msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
 msgstr ""
-"Puede seleccionar esta casilla para indicar que el apunte de diario "
+"Puede seleccionar esta casilla para indicar que el apunte contable "
 "corresponde a un litigio con el partner asociado."
 
 #. module: account
@@ -14437,10 +14479,10 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"No puede archivar un diario que contiene asientos de diario en estado de borrador.\n"
+"No puede archivar un diario que contiene asientos contables en estado de borrador.\n"
 "\n"
 "Para continuar:\n"
-"1/ haga clic en el botón de \"asientos de diario\" ubicado en la parte superior derecha en el formulario del diario\n"
+"1/ haga clic en el botón \"asientos contables\" ubicado en la parte superior derecha en el formulario del diario\n"
 "2/ luego filtre los asientos en estado de borrador\n"
 "3/ seleccione todos y publique o elimínelos a través del menú de acción"
 
@@ -14478,8 +14520,7 @@ msgstr ""
 #, python-format
 msgid "You can only change the period/account for posted journal items."
 msgstr ""
-"Solo puede cambiar el periodo / cuenta para los apuntes del diario "
-"registrados."
+"Solo puede cambiar el periodo/cuenta para los apuntes contables registrados."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14557,8 +14598,8 @@ msgid ""
 "You can't change the company of your account since there are some journal "
 "items linked to it."
 msgstr ""
-"No puede cambiar la empresa de su cuenta ya que hay algunos apuntes de "
-"diario vinculados a ella."
+"No puede cambiar la empresa de su cuenta porque hay algunos apuntes "
+"contables vinculados a ella."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14567,8 +14608,8 @@ msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
 msgstr ""
-"No puede cambiar la empresa de su diario ya que hay algunos asientos de "
-"diario vinculados a él."
+"No puede cambiar la empresa de su diario porque hay algunos asientos "
+"contables vinculados a él."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -14577,8 +14618,8 @@ msgid ""
 "You can't change the company of your tax since there are some journal items "
 "linked to it."
 msgstr ""
-"No puede cambiar la empresa de su impuesto ya que hay algunos apuntes de "
-"diario vinculados a ella."
+"No puede cambiar la empresa de su impuesto porque hay algunos apuntes "
+"contables vinculados a ella."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -14616,8 +14657,8 @@ msgid ""
 "You can't manually change the state of journal entry %s, as it has been "
 "created by bank statement %s."
 msgstr ""
-"No puede cambiar manualmente el estado del asiento de diario %s, ya que se "
-"ha creado mediante el estado de cuenta bancario %s."
+"No puede cambiar manualmente el estado del asiento contable %s, ya que se "
+"creó mediante el estado de cuenta bancario %s."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14646,8 +14687,8 @@ msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
 msgstr ""
-"No puede registrar un pago porque no queda nada por pagar en los apuntes de "
-"diario seleccionados."
+"No puede registrar un pago porque no queda nada por pagar en los apuntes "
+"contables seleccionados."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14656,7 +14697,7 @@ msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
 msgstr ""
-"No puede registrar pagos para apuntes del diario que sean todos entrantes o "
+"No puede registrar pagos para apuntes contables que sean todos entrantes o "
 "salientes."
 
 #. module: account
@@ -14666,8 +14707,8 @@ msgid ""
 "You can't set a different company on your analytic account since there are "
 "some journal items linked to it."
 msgstr ""
-"No puede establecer una empresa diferente en su cuenta analítica ya que hay "
-"algunos apuntes de diario vinculados a ella."
+"No puede establecer una empresa diferente en su cuenta analítica porque hay "
+"algunos apuntes contables vinculados a ella."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -14676,8 +14717,8 @@ msgid ""
 "You can't set a different company on your analytic tags since there are some"
 " journal items linked to it."
 msgstr ""
-"No puede establecer una empresa diferente en sus etiquetas analíticas ya que"
-" hay algunos apuntes de diario vinculados a ella."
+"No puede establecer una empresa diferente en sus etiquetas analíticas porque"
+" hay algunos apuntes contables vinculados a ella."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14709,6 +14750,13 @@ msgstr ""
 "No puede cambiar la divisa de la empresa ya que contiene asientos contables"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Contacte a su contador para imprimir el resultado de la integridad de hash."
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -14716,7 +14764,7 @@ msgid ""
 "journal items."
 msgstr ""
 "No puede cambiar la empresa propietaria de una cuenta que ya tiene apuntes "
-"de diario."
+"contables."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14758,19 +14806,21 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
-"No puede hacer esta modificación en un asiento de diario conciliado. Puede cambiar algunos campos no legales o primero debe romper la conciliación.\n"
-"Entrada de diario (id): %s (%s)"
+"No puede hacer esta modificación en un asiento contable conciliado. Puede cambiar algunos campos no legales o primero debe romper la conciliación.\n"
+"Asiento contable (id): %s (%s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"No puede editar los siguientes campos debido a que el modo restringido está "
-"activado en el diario: %s."
+"No puede editar los siguientes campos: %s.\n"
+"Los siguientes campos ya están en un hash:\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14837,8 +14887,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
-"No puede modificar los impuestos relacionados con un apunte de diario "
-"publicado, debe restablecer el asiento de diario a borrador para hacerlo."
+"No puede modificar los impuestos relacionados con un apunte contable "
+"publicado, debe restablecer el asiento contable a borrador para hacerlo."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14856,7 +14906,7 @@ msgstr ""
 msgid ""
 "You cannot perform this action on an account that contains journal items."
 msgstr ""
-"No puede realizar esta acción en una cuenta que contenga apuntes de diario."
+"No puede realizar esta acción en una cuenta que contenga apuntes contables."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:0
@@ -14896,7 +14946,7 @@ msgstr ""
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
 msgstr ""
-"No puede restablecer para redactar un asiento de diario de impuestos en "
+"No puede restablecer para redactar un asiento contable de impuestos en "
 "efectivo."
 
 #. module: account
@@ -14904,7 +14954,7 @@ msgstr ""
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
 msgstr ""
-"No puede restablecer para redactar un asiento de diario de diferencia de "
+"No puede restablecer para redactar un asiento contable de diferencia de "
 "cambio."
 
 #. module: account
@@ -14915,7 +14965,7 @@ msgid ""
 "entries having a different foreign currency."
 msgstr ""
 "No puede establecer una divisa en esta cuenta porque ya tiene algunos "
-"asientos de diario que tienen una divisa extranjera diferente."
+"asientos contables que tienen una divisa extranjera diferente."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -14966,7 +15016,7 @@ msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
 msgstr ""
-"No puede utilizar este asistente en asientos de diario que pertenezcan a "
+"No puede utilizar este asistente en asientos contables que pertenezcan a "
 "distintas empresas."
 
 #. module: account
@@ -15227,6 +15277,16 @@ msgid "the parent company"
 msgstr "la empresa matriz"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+"La unidad de medida (UdM) \"%s\" que seleccionó para el producto \"%s\" no "
+"es compatible con su categoría: %s."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "to"
@@ -15256,3 +15316,22 @@ msgid ""
 msgstr ""
 "Un predeterminado analítico necesita una cuenta o etiqueta analíticas que se"
 " utilizan para la distribución analítica."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "¡Sus impuestos han sido actualizados!"
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"Reviste estos impuestos, pueden estar desfasados. Nosotros no los "
+"actualizamos. En efecto, no coinciden con los impuestos de la versión "
+"original del módulo de localización.<br/>Tal vez quiera archivarlos o "
+"adaptarlos.<br/><ul>"

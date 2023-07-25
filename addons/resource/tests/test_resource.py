@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
+from freezegun import freeze_time
 from pytz import timezone, utc
 
 from odoo import fields
@@ -1205,4 +1206,17 @@ class TestTimezones(TestResourceCommon):
             (date(2018, 4, 11), 8),
             (date(2018, 4, 12), 8),
             (date(2018, 4, 13), 8),
+        ])
+
+    @freeze_time("2022-09-21 15:30:00", tz_offset=-10)
+    def test_unavailable_intervals(self):
+        resource = self.env['resource.resource'].create({
+            'name': 'resource',
+            'tz': self.tz3,
+        })
+        intervals = resource._get_unavailable_intervals(datetime(2022, 9, 21), datetime(2022, 9, 22))
+        self.assertEqual(list(intervals.values())[0], [
+            (datetime(2022, 9, 21, 0, 0, tzinfo=utc), datetime(2022, 9, 21, 6, 0, tzinfo=utc)),
+            (datetime(2022, 9, 21, 10, 0, tzinfo=utc), datetime(2022, 9, 21, 11, 0, tzinfo=utc)),
+            (datetime(2022, 9, 21, 15, 0, tzinfo=utc), datetime(2022, 9, 22, 0, 0, tzinfo=utc)),
         ])

@@ -12,16 +12,11 @@ class AccountMove(models.Model):
     def action_post(self):
         #inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
         res = super(AccountMove, self).action_post()
-        line_ids = self.mapped('line_ids').filtered(lambda line: line.sale_line_ids.is_downpayment)
+        line_ids = self.mapped('line_ids').filtered(lambda line: any(line.sale_line_ids.mapped('is_downpayment')))
         for line in line_ids:
             try:
                 line.sale_line_ids.tax_id = line.tax_ids
-                if all(line.tax_ids.mapped('price_include')):
-                    line.sale_line_ids.price_unit = line.price_unit
-                else:
-                    #To keep positive amount on the sale order and to have the right price for the invoice
-                    #We need the - before our untaxed_amount_to_invoice
-                    line.sale_line_ids.price_unit = -line.sale_line_ids.untaxed_amount_to_invoice
+                line.sale_line_ids.price_unit = line.price_unit
             except UserError:
                 # a UserError here means the SO was locked, which prevents changing the taxes
                 # just ignore the error - this is a nice to have feature and should not be blocking
@@ -232,3 +227,7 @@ class AccountMoveLine(models.Model):
         if currency_id and currency_id != order.currency_id:
             price_unit = currency_id._convert(price_unit, order.currency_id, order.company_id, order.date_order or fields.Date.today())
         return price_unit
+
+    def _get_downpayment_lines(self):
+        # OVERRIDE
+        return self.sale_line_ids.filtered('is_downpayment').invoice_lines.filtered(lambda line: line.move_id._is_downpayment())

@@ -305,6 +305,7 @@ var RTEWidget = Widget.extend({
         $('.o_not_editable').attr('contentEditable', false);
 
         var $editable = this.editable();
+        this.__$editable = $editable;
 
         // When a undo/redo is performed, the whole DOM is changed so we have
         // to prepare for it (website will restart animations for example)

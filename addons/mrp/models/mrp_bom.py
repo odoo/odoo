@@ -209,7 +209,7 @@ class MrpBom(models.Model):
         if not products:
             return bom_by_product
         product_templates = products.mapped('product_tmpl_id')
-        domain = ['|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_templates.ids)]
+        domain = ['|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_templates.ids), ('active', '=', True)]
         if picking_type:
             domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
         if company_id or self.env.context.get('company_id'):
@@ -453,11 +453,11 @@ class MrpBomLine(models.Model):
         self.ensure_one()
         if product._name == 'product.template':
             return False
-        if self.bom_product_template_attribute_value_ids:
-            for ptal, iter_ptav in groupby(self.bom_product_template_attribute_value_ids.sorted('attribute_line_id'), lambda ptav: ptav.attribute_line_id):
-                if not any(ptav in product.product_template_attribute_value_ids for ptav in iter_ptav):
-                    return True
-        return False
+        # The intersection of the values of the product and those of the line satisfy:
+        # * the number of items equals the number of attributes (since a product cannot
+        #   have multiple values for the same attribute),
+        # * the attributes are a subset of the attributes of the line.
+        return len(product.product_template_attribute_value_ids & self.bom_product_template_attribute_value_ids) != len(self.bom_product_template_attribute_value_ids.attribute_id)
 
     def action_see_attachments(self):
         domain = [

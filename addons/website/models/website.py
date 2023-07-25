@@ -13,6 +13,7 @@ from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools, http
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
@@ -238,9 +239,16 @@ class Website(models.Model):
             vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
 
     def unlink(self):
-        website = self.search([('id', 'not in', self.ids)], limit=1)
-        if not website:
-            raise UserError(_('You must keep at least one website.'))
+        if not self.env.context.get(MODULE_UNINSTALL_FLAG, False):
+            website = self.search([('id', 'not in', self.ids)], limit=1)
+            if not website:
+                raise UserError(_('You must keep at least one website.'))
+
+        self._remove_attachments_on_website_unlink()
+
+        return super().unlink()
+
+    def _remove_attachments_on_website_unlink(self):
         # Do not delete invoices, delete what's strictly necessary
         attachments_to_unlink = self.env['ir.attachment'].search([
             ('website_id', 'in', self.ids),
@@ -250,7 +258,6 @@ class Website(models.Model):
             ('url', 'ilike', '.assets\\_'),
         ])
         attachments_to_unlink.unlink()
-        return super(Website, self).unlink()
 
     def create_and_redirect_to_theme(self):
         self._force()
@@ -397,7 +404,7 @@ class Website(models.Model):
         key_copy = string
         inc = 0
         domain_static = self.get_current_website().website_domain()
-        while self.env['website.page'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
+        while self.env['ir.ui.view'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
             inc += 1
             key_copy = string + (inc and "-%s" % inc or "")
         return key_copy
@@ -795,7 +802,6 @@ class Website(models.Model):
         """
 
         router = http.root.get_db_router(request.db)
-        # Force enumeration to be performed as public user
         url_set = set()
 
         sitemap_endpoint_done = set()
@@ -886,6 +892,9 @@ class Website(models.Model):
             domain = []
         domain += self.get_current_website().website_domain()
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
+        # TODO In 16.0 remove condition on _filter_duplicate_pages.
+        if self.env.context.get('_filter_duplicate_pages'):
+            pages = pages.filtered(pages._is_most_specific_page)
         return pages
 
     def search_pages(self, needle=None, limit=None):

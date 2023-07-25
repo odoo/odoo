@@ -60,6 +60,7 @@ _ref_vat = {
     'nl': 'NL123456782B90',
     'no': 'NO123456785',
     'pe': '10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY',
+    'ph': '123-456-789-123',
     'pl': 'PL1234567883',
     'pt': 'PT123456789',
     'ro': 'RO1234567897',
@@ -70,6 +71,7 @@ _ref_vat = {
     'sk': 'SK2022749619',
     'sm': 'SM24165',
     'tr': 'TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)',  # Levent Karakas @ Eska Yazilim A.S.
+    've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
 }
 
@@ -211,6 +213,16 @@ class ResPartner(models.Model):
             name=self.name,
             format=vat_no
         )
+
+    __check_vat_al_re = re.compile(r'^[JKLM][0-9]{8}[A-Z]$')
+
+    def check_vat_al(self, vat):
+        """Check Albania VAT number"""
+        number = stdnum.util.get_cc_module('al', 'vat').compact(vat)
+
+        if len(number) == 10 and self.__check_vat_al_re.match(number):
+            return True
+        return False
 
     __check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
 
@@ -399,6 +411,12 @@ class ResPartner(models.Model):
             dig_check = 1
         return int(vat[10]) == dig_check
 
+    # Philippines TIN (+ branch code) validation
+    __check_vat_ph_re = re.compile(r"\d{3}-\d{3}-\d{3}(-\d{3,5})?$")
+
+    def check_vat_ph(self, vat):
+        return len(vat) >= 11 and len(vat) <= 17 and self.__check_vat_ph_re.match(vat)
+
     def check_vat_ru(self, vat):
         '''
         Check Russia VAT number.
@@ -499,6 +517,57 @@ class ResPartner(models.Model):
                     res.append(False)
         return all(res)
 
+    def check_vat_ve(self, vat):
+        # https://tin-check.com/en/venezuela/
+        # https://techdocs.broadcom.com/us/en/symantec-security-software/information-security/data-loss-prevention/15-7/About-content-packs/What-s-included-in-Content-Pack-2021-02/Updated-data-identifiers-in-Content-Pack-2021-02/venezuela-national-identification-number-v115451096-d327e108002-CP2021-02.html
+        # Sources last visited on 2022-12-09
+
+        # VAT format: (kind - 1 letter)(identifier number - 8-digit number)(check digit - 1 digit)
+        vat_regex = re.compile(r"""
+            ([vecjpg])                          # group 1 - kind
+            (
+                (?P<optional_1>-)?                      # optional '-' (1)
+                [0-9]{2}
+                (?(optional_1)(?P<optional_2>[.])?)     # optional '.' (2) only if (1)
+                [0-9]{3}
+                (?(optional_2)[.])                      # mandatory '.' if (2)
+                [0-9]{3}
+                (?(optional_1)-)                        # mandatory '-' if (1)
+            )                                   # group 2 - identifier number
+            ([0-9]{1})                          # group X - check digit
+        """, re.VERBOSE | re.IGNORECASE)
+
+        matches = re.fullmatch(vat_regex, vat)
+        if not matches:
+            return False
+
+        kind, identifier_number, *_, check_digit = matches.groups()
+        kind = kind.lower()
+        identifier_number = identifier_number.replace("-", "").replace(".", "")
+        check_digit = int(check_digit)
+
+        if kind == 'v':                   # Venezuela citizenship
+            kind_digit = 1
+        elif kind == 'e':                 # Foreigner
+            kind_digit = 2
+        elif kind == 'c' or kind == 'j':  # Township/Communal Council or Legal entity
+            kind_digit = 3
+        elif kind == 'p':                 # Passport
+            kind_digit = 4
+        else:                             # Government ('g')
+            kind_digit = 5
+
+        # === Checksum validation ===
+        multipliers = [3, 2, 7, 6, 5, 4, 3, 2]
+        checksum = kind_digit * 4
+        checksum += sum(map(lambda n, m: int(n) * m, identifier_number, multipliers))
+
+        checksum_digit = 11 - checksum % 11
+        if checksum_digit > 9:
+            checksum_digit = 0
+
+        return check_digit == checksum_digit
+
     def check_vat_xi(self, vat):
         """ Temporary Nothern Ireland VAT validation following Brexit
         As of January 1st 2021, companies in Northern Ireland have a
@@ -541,6 +610,10 @@ class ResPartner(models.Model):
     def format_vat_ch(self, vat):
         stdnum_vat_format = getattr(stdnum.util.get_cc_module('ch', 'vat'), 'format', None)
         return stdnum_vat_format('CH' + vat)[2:] if stdnum_vat_format else vat
+
+    def format_vat_sm(self, vat):
+        stdnum_vat_format = stdnum.util.get_cc_module('sm', 'vat').compact
+        return stdnum_vat_format('SM' + vat)[2:]
 
     def _fix_vat_number(self, vat, country_id):
         code = self.env['res.country'].browse(country_id).code if country_id else False

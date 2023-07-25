@@ -12,11 +12,13 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
 # Joan Ignasi Florit <jfloritmir@gmail.com>, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2021
-# jabelchi, 2021
-# Harcogourmet, 2022
 # ericrolo, 2022
 # marcescu, 2022
 # CristianCruzParra, 2022
+# Harcogourmet, 2022
+# jabelchi, 2022
+# jabiri7, 2022
+# Ivan Espinola, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,8 +26,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: CristianCruzParra, 2022\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: Ivan Espinola, 2022\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -69,6 +71,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"<h3>Si us plau, feu el pagament a: </h3><ul><li>Banc: %s</li><li>Número de "
+"compte: %s</li><li>Titular del compte: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -148,6 +152,9 @@ msgid ""
 "<span>Start selling directly without an account; an email will be sent by "
 "Paypal to create your new account and collect your payments.</span>"
 msgstr ""
+"<span>Comença a vendre directament sense un compte; Paypal enviarà un correu"
+" electrònic per crear el vostre compte nou i cobrar els vostres "
+"pagaments</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -402,7 +409,7 @@ msgstr "Model de document de devolució de trucada"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Resum de la crida de retorn"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
@@ -839,7 +846,7 @@ msgstr "Formulari amb tokenization"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "From"
-msgstr "De"
+msgstr "Des de"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -1333,7 +1340,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Followup"
-msgstr ""
+msgstr "Seguiment del pagament"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1365,7 +1372,7 @@ msgstr "Diari de pagament"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr ""
+msgstr "Enllaç de pagament"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__payment_method
@@ -1502,7 +1509,7 @@ msgstr ""
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set an amount smaller than %s."
-msgstr ""
+msgstr "Establiu una quantitat més petita que %s."
 
 #. module: payment
 #. openerp-web
@@ -1521,7 +1528,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr ""
+msgstr "Processat per"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__provider
@@ -1659,7 +1666,7 @@ msgstr "Servidor a servidor"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Server error"
-msgstr ""
+msgstr "Error del servidor"
 
 #. module: payment
 #. openerp-web
@@ -1946,7 +1953,7 @@ msgstr "Transacció buida"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "S'està esperant el pagament"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2037,6 +2044,8 @@ msgstr "Cal que definiu un diari pel mètode de pagament %s."
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"Hauríeu de rebre un correu electrònic que confirmi el pagament d'aquí a uns "
+"minuts."
 
 #. module: payment
 #. openerp-web

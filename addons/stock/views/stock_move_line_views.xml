@@ -74,7 +74,7 @@
                 <field name="location_id" string="Source Location" groups="stock.group_stock_multi_locations"/>
                 <field name="location_dest_id" string="Destination Location" groups="stock.group_stock_multi_locations"/>
                 <separator/>
-                <filter string="To Do" name="todo" domain="[('state', 'not in', ['done', 'draft'])]"/>
+                <filter string="To Do" name="todo" domain="[('state', 'not in', ['done', 'draft', 'cancel'])]"/>
                 <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
                 <separator/>
                 <filter string="Incoming" name="incoming" domain="[('picking_id.picking_type_id.code', '=', 'incoming')]"/>

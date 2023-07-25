@@ -16,17 +16,19 @@
 # Arnau Ros, 2020
 # Susanna Pujol, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2021
-# Quim - eccit <quim@eccit.com>, 2021
 # Camille Dantinne <cmd@odoo.com>, 2021
-# Eugeni Chafer <eugeni@chafer.cat>, 2022
-# Harcogourmet, 2022
 # AncesLatino2004, 2022
 # ericrolo, 2022
 # Jonatan Gk, 2022
 # marcescu, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # eriiikgt, 2022
+# Eugeni Chafer <eugeni@chafer.cat>, 2022
+# Harcogourmet, 2022
+# Quim - eccit <quim@eccit.com>, 2022
 # jabelchi, 2022
+# Ivan Espinola, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# martioodo hola, 2023
 # 
 msgid ""
 msgstr ""
@@ -34,8 +36,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: jabelchi, 2022\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: martioodo hola, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -399,6 +401,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
 "'/')]}\">Draft</span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
+"'/')]}\">Esborrany</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -820,6 +824,11 @@ msgstr "<strong>Empresa:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr "<strong>Data de la nota de crèdit:</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Codi de client:</strong>"
 
@@ -832,6 +841,11 @@ msgstr "<strong>Client: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>Client</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Data:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -887,6 +901,11 @@ msgstr "<strong>Forma de pagament:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Producte</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>Data de recepció:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1007,6 +1026,14 @@ msgid ""
 msgstr ""
 "Un diari s'utilitza per anotar transaccions de les dades comptables "
 "associades als negocis diaris."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"Una línia d'aquest moviment utilitza un compte obsolet, no podeu publicar-"
+"lo."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4377,7 +4404,7 @@ msgstr "ABAIX"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
-msgstr "Taulell"
+msgstr "Tauler"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
@@ -5662,7 +5689,7 @@ msgstr "Lliure"
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__email_from
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "From"
-msgstr "De"
+msgstr "Des de"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6841,7 +6868,7 @@ msgstr "S'ha Enviat el Moviment"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__is_off_balance
 msgid "Is Off Balance"
-msgstr "Està fora d'equilibri"
+msgstr "Està desquadrat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__printed
@@ -7866,7 +7893,7 @@ msgstr "Missatges"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Methods"
-msgstr ""
+msgstr "Mètodes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__minus_report_line_ids
@@ -10962,7 +10989,7 @@ msgstr "Mostrar impostos inactius"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "Mostrar diari al taulell"
+msgstr "Mostrar diari al tauler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_line_subtotals_tax_included
@@ -11298,7 +11325,7 @@ msgstr "Rang de subministraments"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr "Compte Suspicós"
+msgstr "Compte pont"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -12240,9 +12267,9 @@ msgid ""
 "balance."
 msgstr ""
 "La quantitat expressada en la moneda secundaria ha de ser positiva quan el "
-"compte es desbiteix i negativa quan el compte sigui assignat. Si la moneda "
-"és igual que la de la companyia, aquesta quantitat ha de ser estrictament "
-"igual a l'equilibri."
+"compte és deutor i negativa quan el compte és creditor. Si la moneda és "
+"igual que la de la companyia, aquesta quantitat ha de ser estrictament igual"
+" al saldo."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13402,6 +13429,17 @@ msgstr ""
 "comandes de venda i factures de client."
 
 #. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+"Aquest producte ja s'està utilitzant en entrades de revistes publicades. Si "
+"voleu canviar la seva unitat de mesura, arxiveu aquest producte i creeu-ne "
+"un de nou."
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
@@ -13445,7 +13483,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "To"
-msgstr "Per"
+msgstr "Fins a"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__to_check
@@ -13759,6 +13797,12 @@ msgid "Unposted"
 msgstr "Sense comptabilitzar"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr "Entrades no comptabilitzades"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "Assentaments no assentats"
@@ -13940,7 +13984,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "Utilitzat per ordenar els diaris en la vista taulell"
+msgstr "Utilitzat per ordenar els diaris en la vista tauler"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_method__sequence
@@ -14233,7 +14277,7 @@ msgstr "Si missatge és una nota interna (només mode comentari)"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "Ja sigui si aquest diari s'ha de mostrar-se al taulell o no"
+msgstr "Ja sigui si aquest diari s'ha de mostrar-se al tauler o no"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
@@ -14586,6 +14630,14 @@ msgstr ""
 "No es pot canviar la moneda de l'empresa quan ja hi ha apunts comptables"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Contacteu amb el vostre comptable per a imprimir els resultats del resum "
+"d'integritat."
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -14643,11 +14695,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"No podeu editar els camps següents degut a restringir el mode que s' "
-"activarà en el diari: %s."
+"No podeu editar els camps següents: %s.\n"
+"Les entrades següents ja estan resumides:\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15102,6 +15156,16 @@ msgid "the parent company"
 msgstr "la empresa principal"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+"La Unitat de mesura (UdM) «%s» que heu seleccionat per al producte «%s», és "
+"incompatible amb la seva categoria: %s."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "to"
@@ -15131,3 +15195,22 @@ msgid ""
 msgstr ""
 "Una anàlisi predeterminada requereix un compte analític o una etiqueta "
 "analítica utilitzada per a la distribució analítica."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "S'han actualitzat els vostres impostos!"
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"Si us plau, comproveu aquests impostos. Podrien estar desfasats. No els hem "
+"actualitzat. De fet, no coincideixen exactament amb els impostos de la "
+"versió original del mòdul de localització.<br/>És possible que vulgueu "
+"arxivar-los o adaptar-los.<br/><ul>"

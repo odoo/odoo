@@ -83,7 +83,7 @@ class PartnerCategory(models.Model):
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
     parent_path = fields.Char(index=True)
-    partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners')
+    partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners', copy=False)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -238,7 +238,7 @@ class Partner(models.Model):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
 
-    @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
+    @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name', 'commercial_company_name')
     def _compute_display_name(self):
         diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=None)
         names = dict(self.with_context(**diff).name_get())
@@ -274,8 +274,9 @@ class Partner(models.Model):
             Partner = self.with_context(active_test=False).sudo()
             domain = [
                 ('vat', '=', partner.vat),
-                ('company_id', 'in', [False, partner.company_id.id]),
             ]
+            if partner.company_id:
+                domain += [('company_id', 'in', [False, partner.company_id.id])]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
             partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and Partner.search(domain, limit=1)
@@ -439,7 +440,7 @@ class Partner(models.Model):
         partners that aren't `commercial entities` themselves, and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'credit_limit']
+        return ['vat', 'credit_limit', 'industry_id']
 
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
@@ -448,6 +449,7 @@ class Partner(models.Model):
         if commercial_partner != self:
             sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
+            self._commercial_sync_to_children()
 
     def _commercial_sync_to_children(self):
         """ Handle sync of commercial fields to descendants """
@@ -759,7 +761,7 @@ class Partner(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        self = self.with_user(name_get_uid or self.env.uid)
+        self = self.with_user(name_get_uid) if name_get_uid else self
         # as the implementation is in SQL, we force the recompute of fields if necessary
         self.recompute(['display_name'])
         self.flush()

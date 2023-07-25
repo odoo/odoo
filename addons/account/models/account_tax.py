@@ -132,6 +132,12 @@ class AccountTax(models.Model):
     @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids')
     def _validate_repartition_lines(self):
         for record in self:
+            # if the tax is an aggregation of its sub-taxes (group) it can have no repartition lines
+            if record.amount_type == 'group' and \
+                    not record.invoice_repartition_line_ids and \
+                    not record.refund_repartition_line_ids:
+                continue
+
             invoice_repartition_line_ids = record.invoice_repartition_line_ids.sorted()
             refund_repartition_line_ids = record.refund_repartition_line_ids.sorted()
             record._check_repartition_lines(invoice_repartition_line_ids)
@@ -301,9 +307,14 @@ class AccountTax(models.Model):
 
         # We first need to find out whether this tax computation is made for a refund
         tax_type = self and self[0].type_tax_use
-        is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
 
-        rslt = self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
+        if self._context.get('manual_reco_widget'):
+            is_refund = is_refund or (tax_type == 'sale' and price_unit > 0) or (tax_type == 'purchase' and price_unit < 0)
+        else:
+            is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
+
+        rslt = self.with_context(caba_no_transition_account=True)\
+                   .compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
 
         # The reconciliation widget calls this function to generate writeoffs on bank journals,
         # so the sign of the tags might need to be inverted, so that the tax report
@@ -579,7 +590,9 @@ class AccountTax(models.Model):
                     'amount': sign * line_amount,
                     'base': round(sign * base, precision_rounding=prec),
                     'sequence': tax.sequence,
-                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
+                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' \
+                                                                             and not self._context.get('caba_no_transition_account')\
+                                                                          else repartition_line.account_id.id,
                     'analytic': tax.analytic,
                     'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,

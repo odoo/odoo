@@ -37,9 +37,9 @@
                         <span> </span><t t-esc="props.line.get_unit().name" />
                         at
                         <t t-if="props.line.display_discount_policy() == 'without_discount' and
-                            props.line.get_unit_display_price() &lt; props.line.get_lst_price()">
+                            props.line.get_unit_display_price() &lt; props.line.get_taxed_lst_unit_price()">
                             <s>
-                                <t t-esc="env.pos.format_currency(props.line.get_fixed_lst_price(),'Product Price')" />
+                                <t t-esc="env.pos.format_currency(props.line.get_taxed_lst_unit_price(),'Product Price')" />
                             </s>
                             <t t-esc="env.pos.format_currency(props.line.get_unit_display_price(),'Product Price')" />
                         </t>
