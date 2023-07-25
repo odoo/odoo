@@ -51,18 +51,23 @@ class TestMassMailing(TestMailFullCommon):
                 'content': 'Hello %s' % recipient.name}
             # opt-out: ignored (cancel mail)
             if recipient in recipients[1] | recipients[2]:
+                recipient_info['failure_type'] = False
                 recipient_info['state'] = 'ignored'
             # blacklisted: ignored (cancel mail)
             elif recipient in recipients[3] | recipients[4]:
+                recipient_info['failure_type'] = False
                 recipient_info['state'] = 'ignored'
             # duplicates: ignored (cancel mail)
             elif recipient == recipient_dup_1:
+                recipient_info['failure_type'] = False
                 recipient_info['state'] = 'ignored'
             # void: ignored (cancel mail)
             elif recipient == recipient_void_1:
+                recipient_info['failure_type'] = False
                 recipient_info['state'] = 'ignored'
             # falsy: ignored (cancel mail)
             elif recipient == recipient_falsy_1:
+                recipient_info['failure_type'] = False
                 recipient_info['state'] = 'ignored'
                 recipient_info['email'] = recipient.email_from  # normalized is False but email should be falsymail
             else:
