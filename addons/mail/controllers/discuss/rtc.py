@@ -18,7 +18,7 @@ class RtcController(http.Controller):
             - list target_session_ids: list of the ids of the sessions that should receive the content
             - string content: the content to send to the other sessions
         """
-        guest = request.env["mail.guest"]._get_guest_from_request(request)
+        guest = request.env["mail.guest"]._get_guest_from_context()
         notifications_by_session = defaultdict(list)
         for sender_session_id, target_session_ids, content in peer_notifications:
             session_sudo = guest.env["discuss.channel.rtc.session"].sudo().browse(int(sender_session_id)).exists()
@@ -40,7 +40,7 @@ class RtcController(http.Controller):
         :param dict values: write dict for the fields to update
         """
         if request.env.user._is_public():
-            guest = request.env["mail.guest"]._get_guest_from_request(request)
+            guest = request.env["mail.guest"]._get_guest_from_context()
             if guest:
                 session = guest.env["discuss.channel.rtc.session"].sudo().browse(int(session_id)).exists()
                 if session and session.guest_id == guest:
@@ -56,9 +56,7 @@ class RtcController(http.Controller):
         """Joins the RTC call of a channel if the user is a member of that channel
         :param int channel_id: id of the channel to join
         """
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         return channel_member_sudo._rtc_join_call(check_rtc_session_ids=check_rtc_session_ids)
 
     @http.route("/mail/rtc/channel/leave_call", methods=["POST"], type="json", auth="public")
@@ -66,9 +64,7 @@ class RtcController(http.Controller):
         """Disconnects the current user from a rtc call and clears any invitation sent to that user on this channel
         :param int channel_id: id of the channel from which to disconnect
         """
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         return channel_member_sudo._rtc_leave_call()
 
     @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="json", auth="public")
@@ -77,9 +73,7 @@ class RtcController(http.Controller):
         :param member_ids: members whose invitation is to cancel
         :type member_ids: list(int) or None
         """
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         return channel_member_sudo.channel_id._rtc_cancel_invitations(member_ids=member_ids)
 
     @http.route("/mail/rtc/audio_worklet_processor", methods=["GET"], type="http", auth="public")
@@ -98,9 +92,7 @@ class RtcController(http.Controller):
 
     @http.route("/discuss/channel/ping", methods=["POST"], type="json", auth="public")
     def channel_ping(self, channel_id, rtc_session_id=None, check_rtc_session_ids=None):
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=int(channel_id))
         if rtc_session_id:
             domain = [
                 ("id", "=", int(rtc_session_id)),

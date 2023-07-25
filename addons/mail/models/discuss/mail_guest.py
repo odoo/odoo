@@ -49,7 +49,7 @@ class MailGuest(models.Model):
         """Returns the current guest record from the context, if applicable."""
         guest = self.env.context.get('guest')
         if isinstance(guest, self.pool['mail.guest']):
-            return guest
+            return guest.with_context(guest=guest)
         return self.env['mail.guest']
 
     def _get_guest_from_request(self, request):

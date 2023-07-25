@@ -25,3 +25,11 @@ class IrHttp(models.AbstractModel):
                 'user_context': user_context,
             })
         return result
+
+    @classmethod
+    def _pre_dispatch(cls, rule, args):
+        """Overriden to add the guest to the context if any."""
+        super()._pre_dispatch(rule, args)
+        guest = request.env["mail.guest"]._get_guest_from_request(request)
+        if guest:
+            request.update_context(guest=guest)

@@ -11,9 +11,7 @@ from odoo.tools import consteq
 class ChannelController(http.Controller):
     @http.route("/discuss/channel/members", methods=["POST"], type="json", auth="public")
     def discuss_channel_members(self, channel_id, known_member_ids):
-        channel_member = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=channel_id
-        )
+        channel_member = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=channel_id)
         return channel_member.channel_id.sudo().load_more_members(known_member_ids)
 
     @http.route("/discuss/channel/add_guest_as_member", methods=["POST"], type="json", auth="public")
@@ -23,13 +21,11 @@ class ChannelController(http.Controller):
             raise NotFound()
         if channel_sudo.channel_type == "chat":
             raise NotFound()
-        guest = channel_sudo.env["mail.guest"]._get_guest_from_request(request)
+        guest = channel_sudo.env["mail.guest"]._get_guest_from_context()
         # Only guests should take this route.
         if not guest:
             raise NotFound()
-        channel_member = channel_sudo.env["discuss.channel.member"]._get_as_sudo_from_request(
-            request=request, channel_id=channel_id
-        )
+        channel_member = channel_sudo.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=channel_id)
         # Do not add the guest to channel members if they are already member.
         if not channel_member:
             channel_sudo = channel_sudo.with_context(guest=guest)
@@ -45,18 +41,14 @@ class ChannelController(http.Controller):
             raise NotFound()
         channel.write({"image_128": data})
 
-    @http.route("/discuss/channel/info", methods=["POST"], type="json")
+    @http.route("/discuss/channel/info", methods=["POST"], type="json", auth="public")
     def discuss_channel_info(self, channel_id):
-        member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=int(channel_id))
         return member_sudo.channel_id._channel_info()
 
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     def discuss_channel_messages(self, channel_id, before=None, after=None, limit=30, around=None):
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         domain = [
             ("res_id", "=", channel_id),
             ("model", "=", "discuss.channel"),
@@ -69,21 +61,15 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public")
     def discuss_channel_pins(self, channel_id):
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         return channel_member_sudo.channel_id.pinned_message_ids.sorted(key="pinned_at", reverse=True).message_format()
 
     @http.route("/discuss/channel/set_last_seen_message", methods=["POST"], type="json", auth="public")
     def discuss_channel_mark_as_seen(self, channel_id, last_message_id, allow_older=False):
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         return channel_member_sudo.channel_id._channel_seen(last_message_id, allow_older=allow_older)
 
     @http.route("/discuss/channel/notify_typing", methods=["POST"], type="json", auth="public")
     def discuss_channel_notify_typing(self, channel_id, is_typing):
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         channel_member_sudo._notify_typing(is_typing)

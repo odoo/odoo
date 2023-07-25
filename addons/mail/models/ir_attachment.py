@@ -90,5 +90,5 @@ class IrAttachment(models.Model):
         ]
 
     @api.model
-    def _get_upload_env(self, request, thread_model, thread_id):
+    def _get_upload_env(self, thread_model, thread_id):
         return request.env

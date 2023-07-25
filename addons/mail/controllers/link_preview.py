@@ -9,7 +9,7 @@ class LinkPreviewController(http.Controller):
     def mail_link_preview(self, message_id, clear=None):
         if not request.env["mail.link.preview"]._is_link_preview_enabled():
             return
-        guest = request.env["mail.guest"]._get_guest_from_request(request)
+        guest = request.env["mail.guest"]._get_guest_from_context()
         message = guest.env["mail.message"].search([("id", "=", int(message_id))])
         if not message:
             return
@@ -21,7 +21,7 @@ class LinkPreviewController(http.Controller):
 
     @http.route("/mail/link_preview/delete", methods=["POST"], type="json", auth="public")
     def mail_link_preview_delete(self, link_preview_id):
-        guest = request.env["mail.guest"]._get_guest_from_request(request)
+        guest = request.env["mail.guest"]._get_guest_from_context()
         link_preview_sudo = guest.env["mail.link.preview"].sudo().search([("id", "=", int(link_preview_id))])
         if not link_preview_sudo:
             return

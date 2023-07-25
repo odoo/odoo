@@ -11,7 +11,7 @@ from odoo.tools import consteq
 class AttachmentController(http.Controller):
     @http.route("/mail/attachment/upload", methods=["POST"], type="http", auth="public")
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
-        env = request.env["ir.attachment"]._get_upload_env(request, thread_model, thread_id)
+        env = request.env["ir.attachment"]._get_upload_env(thread_model, thread_id)
         vals = {
             "name": ufile.filename,
             "raw": ufile.read(),
@@ -49,7 +49,7 @@ class AttachmentController(http.Controller):
     @http.route("/mail/attachment/delete", methods=["POST"], type="json", auth="public")
     def mail_attachment_delete(self, attachment_id, access_token=None):
         attachment_sudo = request.env["ir.attachment"].browse(int(attachment_id)).sudo().exists()
-        guest = request.env["mail.guest"]._get_guest_from_request(request)
+        guest = request.env["mail.guest"]._get_guest_from_context()
         message_sudo = guest.env["mail.message"].sudo().search([("attachment_ids", "in", attachment_sudo.ids)], limit=1)
         if not attachment_sudo:
             target = request.env.user.partner_id
