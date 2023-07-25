@@ -167,7 +167,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
         await click(target.querySelector(".o_data_row:nth-child(2) .o_data_cell"));
         // Edit content to trigger the expected actual save at row opening
         assert.verifySteps(["save parent form"]);
-        assert.containsNone(target, ".o_selected_row");
+        assert.containsOnce(target, ".o_selected_row");
         assert.containsOnce(target, ".modal .o_form_view");
     });
 

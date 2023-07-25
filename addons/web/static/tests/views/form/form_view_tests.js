@@ -13400,4 +13400,64 @@ QUnit.module("Views", (hooks) => {
             ]);
         }
     );
+
+    QUnit.test("widget update several fields including an x2m", async function (assert) {
+        assert.expect(7);
+
+        serverData.models.partner.onchanges = {
+            name() {},
+            p() {},
+        };
+        class TestWidget extends Component {
+            static template = xml`<div><button t-on-click="onClick">Click</button></div>`;
+
+            onClick() {
+                this.props.record.update({ name: "New Name", p: [[0, false, { name: "yop" }]] });
+            }
+        }
+        widgetRegistry.add("test", {
+            component: TestWidget,
+            fieldDependencies: [
+                { name: "name", type: "char" },
+                { name: "p", type: "one2many", relation: "partner" },
+            ],
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <widget name="test"/>
+                    <field name="name"/>
+                    <field name="p">
+                        <tree>
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 2,
+            async mockRPC(route, args) {
+                if (args.method === "onchange2") {
+                    assert.strictEqual(args.args[1].name, "New Name");
+                    assert.strictEqual(args.args[1].p.length, 1);
+                    assert.deepEqual(args.args[1].p[0][2], { name: "yop" });
+                }
+            },
+        });
+
+        assert.strictEqual(target.querySelector("[name=name] input").value, "name");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+            []
+        );
+
+        await click(target, ".o_widget_test button");
+        assert.strictEqual(target.querySelector("[name=name] input").value, "New Name");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+            ["yop"]
+        );
+    });
 });

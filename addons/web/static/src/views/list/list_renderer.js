@@ -876,6 +876,7 @@ export class ListRenderer extends Component {
 
     isCellReadonly(column, record) {
         return (
+            this.isRecordReadonly(record) ||
             (column.relatedPropertyField && record.selected && record.model.multiEdit) ||
             evalDomain(column.modifiers.readonly, record.evalContext)
         );

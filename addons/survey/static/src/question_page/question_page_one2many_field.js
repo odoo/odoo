@@ -95,17 +95,19 @@ class QuestionPageOneToManyField extends X2ManyField {
             updateRecord,
         });
         this._openRecord = async (params) => {
-            if (!await self.props.record.save()) {
+            const { record, name } = this.props;
+            if (!await record.save()) {
                 // do not open question form as it won't be savable either.
                 return;
             }
             if (params.record) {
+                params.record = record.data[name].records.find(r => r.resId === params.record.resId);
                 // Force synchronization of fields that depend on sequence
                 // (allowed_triggering_question_ids, is_placed_before_trigger)
                 // as records may have been re-ordered before opening this one.
                 await params.record.load();
             }
-            openRecord(params);
+            await openRecord(params);
         };
         this.canOpenRecord = true;
     }
