@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
-import { patch } from "@web/core/utils/patch";
 import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
+import { x2ManyCommands } from "@web/core/orm_service";
+import { patch } from "@web/core/utils/patch";
 
 
 patch(SaleOrderLineProductField.prototype, 'event_booth_sale', {
@@ -60,13 +61,10 @@ patch(SaleOrderLineProductField.prototype, 'event_booth_sale', {
                     } else {
                         const { event_id, event_booth_category_id, event_booth_pending_ids } =
                             closeInfo.eventBoothConfiguration;
-                        this.props.record.data.event_booth_pending_ids.replaceWith(
-                            event_booth_pending_ids,
-                            { silent: true }
-                        );
                         this.props.record.update({
                             event_id,
                             event_booth_category_id,
+                            event_booth_pending_ids: [x2ManyCommands.replaceWith(event_booth_pending_ids)],
                         });
                     }
                 }
