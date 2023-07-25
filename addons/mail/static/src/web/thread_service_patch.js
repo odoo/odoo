@@ -36,11 +36,15 @@ patch(ThreadService.prototype, "mail/web", {
         if (requestList.includes("messages")) {
             this.fetchNewMessages(thread);
         }
-        const result = await this.rpc("/mail/thread/data", {
-            request_list: requestList,
-            thread_id: thread.id,
-            thread_model: thread.model,
-        });
+        const result = await this.rpc(
+            "/mail/thread/data",
+            {
+                request_list: requestList,
+                thread_id: thread.id,
+                thread_model: thread.model,
+            },
+            { silent: true }
+        );
         if ("attachments" in result) {
             result["attachments"] = result["attachments"].map((attachment) => ({
                 ...attachment,
