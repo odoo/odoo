@@ -177,6 +177,7 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
     (normalize-space(cbc:TaxCurrencyCode) != 'RON' and normalize-space(cbc:DocumentCurrencyCode) = 'RON') or 
     (not(exists (cbc:TaxCurrencyCode)) and normalize-space(cbc:DocumentCurrencyCode) = 'RON')
     # If the Invoice currency code (BT-5) is other than RON, then the VAT accounting currency code(BT-6) must be RON.
+    # FIXES BR-RO-030 -> BR-53 -> ... (ongoing BR-CO-15)
     """
     def test_diff_currency_code(self):
         self.company_data["company"].write({

@@ -9,7 +9,7 @@ SECTOR_RO_CODES = ['SECTOR1', 'SECTOR2', 'SECTOR3', 'SECTOR4', 'SECTOR5', 'SECTO
 
 class AccountEdiXmlUBLRO(models.AbstractModel):
     _inherit = "account.edi.xml.ubl_bis3"
-    _name = 'account.edi.xml.ubl_ro'
+    _name = "account.edi.xml.ubl_ro"
     _description = "CIUS RO"
 
     def _export_invoice_filename(self, invoice):
@@ -33,15 +33,27 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
 
         return vals
 
+    def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
+        vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
+        for tax_total_vals in vals_list:
+            tax_total_vals['currency'] = self.env.ref("base.RON")
+            tax_total_vals['currency_dp'] = self.env.ref("base.RON").decimal_places
+            for subtotal_vals in tax_total_vals.get('tax_subtotal_vals', []):
+                subtotal_vals['currency'] = self.env.ref("base.RON")
+                subtotal_vals['currency_dp'] = self.env.ref("base.RON").decimal_places
+        print(vals_list)
+        return vals_list
+
+
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._export_invoice_vals(invoice)
 
         vals.update({
-            'InvoiceType_template': 'l10n_ro_edi.ubl_21_InvoiceType_ciusro',
+            'InvoiceType_template': 'l10n_ro_edi.cius_ro_InvoiceType',
         })
 
         vals['vals']['customization_id'] = 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
-        vals['vals']['tax_currency_code'] = 'RONNIE'
+        vals['vals']['tax_currency_code'] = 'RON'
 
         return vals
