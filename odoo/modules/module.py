@@ -463,3 +463,36 @@ def adapt_version(version):
     return version
 
 current_test = None
+
+
+def check_python_external_dependency(pydep):
+    try:
+        pkg_resources.get_distribution(pydep)
+    except pkg_resources.DistributionNotFound as e:
+        try:
+            importlib.import_module(pydep)
+            _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
+        except ImportError:
+            # backward compatibility attempt failed
+            _logger.warning("DistributionNotFound: %s", e)
+            raise Exception('Python library not installed: %s' % (pydep,))
+    except pkg_resources.VersionConflict as e:
+        _logger.warning("VersionConflict: %s", e)
+        raise Exception('Python library version conflict: %s' % (pydep,))
+    except Exception as e:
+        _logger.warning("get_distribution(%s) failed: %s", pydep, e)
+        raise Exception('Error finding python library %s' % (pydep,))
+
+
+def check_manifest_dependencies(manifest):
+    depends = manifest.get('external_dependencies')
+    if not depends:
+        return
+    for pydep in depends.get('python', []):
+        check_python_external_dependency(pydep)
+
+    for binary in depends.get('bin', []):
+        try:
+            tools.find_in_path(binary)
+        except IOError:
+            raise Exception('Unable to find %r in path' % (binary,))
