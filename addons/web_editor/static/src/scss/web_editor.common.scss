@@ -719,6 +719,12 @@ blockquote {
         $-bg-color: o-color($-bg);
         @include o-bg-color($-bg-color, o-color($-text), $important: false, $yiq-min-opacity-threshold: 0);
 
+        // In the future, we might want to use CSS variables to define all
+        // colors for all components of o_cc and use them here. That way there
+        // would be way less CSS rules and more advantages. For now, this only
+        // exposes the background color which is needed in some snippets.
+        --o-cc-bg: #{$-bg-color};
+
         #{$o-color-extras-nesting-selector} {
             // Headings
             h1, h2, h3, h4, h5, h6 {
