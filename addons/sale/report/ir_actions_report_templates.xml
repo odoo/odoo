@@ -73,7 +73,7 @@
                         <th name="th_description" class="text-start">Description</th>
                         <th name="th_quantity" class="text-end">Quantity</th>
                         <th name="th_priceunit" class="text-end">Unit Price</th>
-                        <th name="th_discount" t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line">
+                        <th name="th_discount" t-if="display_discount" class="text-end">
                             <span>Disc.%</span>
                         </th>
                         <th name="th_taxes" class="text-end">Taxes</th>
@@ -102,7 +102,7 @@
                                 <td name="td_priceunit" class="text-end">
                                     <span t-field="line.price_unit"/>
                                 </td>
-                                <td t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line">
+                                <td t-if="display_discount" class="text-end">
                                     <span t-field="line.discount"/>
                                 </td>
                                 <td name="td_taxes" class="text-end">
