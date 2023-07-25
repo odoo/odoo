@@ -7,12 +7,12 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='code']" position="after">
-                    <field name="l10n_pt_account_invoice_tax_authority_series_id"
+                    <field name="l10n_pt_account_invoice_official_series_id"
                            attrs="{
                                 'invisible': [('country_code', '!=', 'PT')],
                                 'required': [('country_code', '=', 'PT'), ('type', '=', 'sale')],
                            }"/>
-                    <field name="l10n_pt_account_refund_tax_authority_series_id"
+                    <field name="l10n_pt_account_refund_official_series_id"
                            attrs="{
                                 'invisible': [('country_code', '!=', 'PT')],
                                 'required': [('country_code', '=', 'PT'), ('type', '=', 'sale')],

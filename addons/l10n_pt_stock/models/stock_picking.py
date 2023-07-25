@@ -17,11 +17,11 @@ class PickingType(models.Model):
         help='Sequence to use to ensure the securisation of data',
         readonly=True, copy=False
     )
-    l10n_pt_stock_tax_authority_series_id = fields.Many2one("l10n_pt_account.tax.authority.series", string="Official Series of the Tax Authority")
+    l10n_pt_stock_official_series_id = fields.Many2one("l10n_pt_account.official.series", string="Official Series of the Tax Authority")
 
     def write(self, vals):
         for picking_type in self.filtered(lambda pt: pt.company_id.country_id.code == 'PT'):
-            if vals.get('l10n_pt_stock_tax_authority_series_id') and picking_type.l10n_pt_stock_tax_authority_series_id:
+            if vals.get('l10n_pt_stock_official_series_id') and picking_type.l10n_pt_stock_official_series_id:
                 if self.env['stock.picking'].search_count([('picking_type_id', '=', picking_type.id)]):
                     raise UserError(_("You cannot change the official series of a journal once it has been used."))
         return super().write(vals)
@@ -64,16 +64,16 @@ class StockPicking(models.Model):
                 picking.l10n_pt_stock_inalterable_hash_version = False
                 picking.l10n_pt_stock_inalterable_hash_short = False
 
-    @api.depends('name', 'picking_type_id.l10n_pt_stock_tax_authority_series_id.code', 'l10n_pt_stock_inalterable_hash')
+    @api.depends('name', 'picking_type_id.l10n_pt_stock_official_series_id.code', 'l10n_pt_stock_inalterable_hash')
     def _compute_l10n_pt_stock_atcud(self):
         for picking in self:
             if (
                 picking.company_id.country_id.code == 'PT'
-                and picking.picking_type_id.l10n_pt_stock_tax_authority_series_id
+                and picking.picking_type_id.l10n_pt_stock_official_series_id
                 and picking.l10n_pt_stock_inalterable_hash
                 and not picking.l10n_pt_stock_atcud
             ):
-                picking.l10n_pt_stock_atcud = f"{picking.picking_type_id.l10n_pt_stock_tax_authority_series_id.code}-{picking._get_l10n_pt_stock_sequence_info()[1]}"
+                picking.l10n_pt_stock_atcud = f"{picking.picking_type_id.l10n_pt_stock_official_series_id.code}-{picking._get_l10n_pt_stock_sequence_info()[1]}"
             else:
                 picking.l10n_pt_stock_atcud = False
 
@@ -95,7 +95,7 @@ class StockPicking(models.Model):
             if not company_vat_ok or not hash_ok or not atcud_ok:
                 error_msg = _("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
                 error_msg += _('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
-                error_msg += _("- The `ATCUD` is not defined. Please verify the journal's tax authority series") if not atcud_ok else ""
+                error_msg += _("- The `ATCUD` is not defined. Please verify the journal's official series") if not atcud_ok else ""
                 error_msg += _("- The `hash` is not defined. You can contact the support.") if not hash_ok else ""
                 raise UserError(error_msg)
 
@@ -217,8 +217,8 @@ class StockPicking(models.Model):
         for picking in self.filtered(lambda p: p.company_id.country_id.code == 'PT' and not p.l10n_pt_secure_sequence_number):
             if not picking.company_id.country_id:
                 raise UserError(_("You have to set a country in your company setting."))
-            if picking.company_id.country_id.code == 'PT' and not picking.picking_type_id.l10n_pt_stock_tax_authority_series_id:
-                raise UserError(_("You have to set a official Tax Authority Series in the Stock Picking Type."))
+            if picking.company_id.country_id.code == 'PT' and not picking.picking_type_id.l10n_pt_stock_official_series_id:
+                raise UserError(_("You have to set an Official Series in the Stock Picking Type."))
             picking.picking_type_id._create_l10n_pt_stock_secure_sequence()
             picking.l10n_pt_secure_sequence_number = picking.picking_type_id.l10n_pt_stock_secure_sequence_id.next_by_id()
         return super().button_validate()

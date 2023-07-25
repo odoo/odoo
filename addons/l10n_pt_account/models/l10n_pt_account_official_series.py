@@ -2,8 +2,8 @@ from odoo import models, fields, _
 from odoo.exceptions import UserError
 
 
-class L10nPtTaxAuthoritySeries(models.Model):
-    _name = "l10n_pt_account.tax.authority.series"
+class L10nPtAccountOfficialSeries(models.Model):
+    _name = "l10n_pt_account.official.series"
     _description = "Official Series provided by the Portuguese Tax Authority"
     _rec_name = 'code'
 
@@ -15,7 +15,7 @@ class L10nPtTaxAuthoritySeries(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        for tax_authority_series in self:
-            if vals.get('code') and tax_authority_series.code:
+        for official_series in self:
+            if vals.get('code') and official_series.code:
                 raise UserError(_("You cannot change the code of a series."))
         return res

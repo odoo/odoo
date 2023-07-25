@@ -22,7 +22,7 @@ class ResCompany(models.Model):
         picking_types = self.env['stock.picking.type'].search([
             ('company_id', '=', self.env.company.id),
             ('code', '=', 'outgoing'),
-            ('l10n_pt_stock_tax_authority_series_id', '!=', False),
+            ('l10n_pt_stock_official_series_id', '!=', False),
         ])
 
         for picking_type in picking_types:

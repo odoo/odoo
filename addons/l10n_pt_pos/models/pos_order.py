@@ -32,16 +32,16 @@ class PosOrder(models.Model):
                 order.l10n_pt_stock_inalterable_hash_version = False
                 order.l10n_pt_pos_inalterable_hash_short = False
 
-    @api.depends('name', 'config_id.l10n_pt_pos_tax_authority_series_id.code', 'l10n_pt_pos_inalterable_hash')
+    @api.depends('name', 'config_id.l10n_pt_pos_official_series_id.code', 'l10n_pt_pos_inalterable_hash')
     def _compute_l10n_pt_pos_atcud(self):
         for order in self:
             if (
                 order.company_id.country_id.code == 'PT'
-                and order.config_id.l10n_pt_pos_tax_authority_series_id
+                and order.config_id.l10n_pt_pos_official_series_id
                 and order.l10n_pt_pos_inalterable_hash
                 and not order.l10n_pt_pos_atcud
             ):
-                order.l10n_pt_pos_atcud = f"{order.config_id.l10n_pt_pos_tax_authority_series_id.code}-{order._get_l10n_pt_pos_sequence_info()[1]}"
+                order.l10n_pt_pos_atcud = f"{order.config_id.l10n_pt_pos_official_series_id.code}-{order._get_l10n_pt_pos_sequence_info()[1]}"
             else:
                 order.l10n_pt_pos_atcud = False
 
@@ -89,7 +89,7 @@ class PosOrder(models.Model):
             if not company_vat_ok or not hash_ok or not atcud_ok:
                 error_msg = _("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
                 error_msg += _('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
-                error_msg += _("- The `ATCUD` is not defined. Please verify the journal's tax authority series") if not atcud_ok else ""
+                error_msg += _("- The `ATCUD` is not defined. Please verify the journal's official series") if not atcud_ok else ""
                 error_msg += _("- The `hash` is not defined. You can contact the support.") if not hash_ok else ""
                 raise UserError(error_msg)
 

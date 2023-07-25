@@ -30,21 +30,21 @@ class AccountMove(models.Model):
     @api.depends(
         'sequence_number',
         'inalterable_hash',
-        'journal_id.l10n_pt_account_invoice_tax_authority_series_id.code',
-        'journal_id.l10n_pt_account_refund_tax_authority_series_id.code',
+        'journal_id.l10n_pt_account_invoice_official_series_id.code',
+        'journal_id.l10n_pt_account_refund_official_series_id.code',
     )
     def _compute_l10n_pt_account_atcud(self):
         for move in self:
             if (
                 move.company_id.account_fiscal_country_id.code == 'PT'
                 and not move.l10n_pt_account_atcud
-                and move.journal_id.l10n_pt_account_invoice_tax_authority_series_id
-                and move.journal_id.l10n_pt_account_refund_tax_authority_series_id
+                and move.journal_id.l10n_pt_account_invoice_official_series_id
+                and move.journal_id.l10n_pt_account_refund_official_series_id
                 and move.inalterable_hash
                 and move.is_sale_document()
             ):
-                tax_authority_series = move.journal_id.l10n_pt_account_invoice_tax_authority_series_id if move.move_type == 'out_invoice' else move.journal_id.l10n_pt_account_refund_tax_authority_series_id
-                move.l10n_pt_account_atcud = f"{tax_authority_series.code}-{move.sequence_number}"
+                official_series = move.journal_id.l10n_pt_account_invoice_official_series_id if move.move_type == 'out_invoice' else move.journal_id.l10n_pt_account_refund_official_series_id
+                move.l10n_pt_account_atcud = f"{official_series.code}-{move.sequence_number}"
             else:
                 move.l10n_pt_account_atcud = False
 
@@ -110,7 +110,7 @@ class AccountMove(models.Model):
             if not company_vat_ok or not atcud_ok:
                 error_msg = _("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
                 error_msg += _('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
-                error_msg += _("- The `ATCUD` is not defined. Please verify the journal's tax authority series") if not atcud_ok else ""
+                error_msg += _("- The `ATCUD` is not defined. Please verify the journal's official series") if not atcud_ok else ""
                 raise UserError(error_msg)
 
             company_vat = re.sub(r'\D', '', move.company_id.vat)

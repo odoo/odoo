@@ -11,7 +11,7 @@ class TestL10nPtPos(TestPoSCommon):
     def setUp(self):
         super().setUp()
         self.config = self.basic_config
-        self.config.l10n_pt_pos_tax_authority_series_id = self.env['l10n_pt_account.tax.authority.series'].create({
+        self.config.l10n_pt_pos_official_series_id = self.env['l10n_pt_account.official.series'].create({
             'code': 'TESTSERIES',
         })
         self.product1 = self.create_product('Product 1', self.categ_basic, 150, standard_price=50)

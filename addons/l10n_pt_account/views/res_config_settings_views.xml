@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="action_open_l10_pt_account_tax_authority_series_list_view" model="ir.actions.act_window">
-        <field name="name">Tax Authority Series</field>
-        <field name="res_model">l10n_pt_account.tax.authority.series</field>
+    <record id="action_open_l10_pt_account_official_series_series_list_view" model="ir.actions.act_window">
+        <field name="name">Official Series</field>
+        <field name="res_model">l10n_pt_account.official.series</field>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="l10n_pt_account.view_l10n_pt_tax_authority_series_tree"/>
+        <field name="view_id" ref="l10n_pt_account.view_l10n_pt_official_series_series_tree"/>
     </record>
 
     <record id="res_config_settings_view_form" model="ir.ui.view">
@@ -19,7 +19,7 @@
                             <div class="content-group">
                                 <div class="mt16">
                                     <div class="d-flex mt4 align-items-center">
-                                        <button name="%(l10n_pt_account.action_open_l10_pt_account_tax_authority_series_list_view)d" icon="oi-arrow-right" type="action" string="View Tax Authority Series" class="btn-link p-1"/>
+                                        <button name="%(l10n_pt_account.action_open_l10_pt_account_official_series_series_list_view)d" icon="oi-arrow-right" type="action" string="View Official Series" class="btn-link p-1"/>
                                     </div>
                                 </div>
                             </div>

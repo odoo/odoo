@@ -21,7 +21,7 @@
         'views/account_tax_view.xml',
         'views/report_template.xml',
         'views/report_invoice.xml',
-        'views/l10n_pt_tax_authority_series_views.xml',
+        'views/l10n_pt_account_official_series_views.xml',
         'views/res_config_settings_views.xml',
         'security/ir.model.access.csv',
     ],
