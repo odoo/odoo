@@ -3,7 +3,7 @@
     import makeTestEnvironment from "web.test_env";
     import Popover from "web.Popover";
     import testUtils from "web.test_utils";
-    import { click, mount } from "@web/../tests/helpers/utils";
+    import { click, getFixture, mount } from "@web/../tests/helpers/utils";
     import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { useState, xml } = owl;
@@ -46,7 +46,7 @@
                     </Popover>
                 </div>`;
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const env = makeTestEnvironment();
 
             /**
@@ -164,7 +164,7 @@
                     <span id="dismissPopovers">💀</span>
                 </div>`;
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const env = makeTestEnvironment();
 
             const body = document.querySelector('body');
@@ -204,7 +204,7 @@
             `;
             Parent.components = { Popover };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const env = makeTestEnvironment();
 
             await mount(Parent, target, { env });
@@ -248,7 +248,7 @@
                 </div>
             `;
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const env = makeTestEnvironment();
 
             await mount(Parent, target, { env });
