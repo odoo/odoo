@@ -382,8 +382,7 @@ class Lead(models.Model):
     def _compute_function(self):
         """ compute the new values when partner_id has changed """
         for lead in self:
-            if not lead.function or lead.partner_id.function:
-                lead.function = lead.partner_id.function
+            lead.function = lead.partner_id.function
 
     @api.depends('partner_id')
     def _compute_title(self):
@@ -396,15 +395,13 @@ class Lead(models.Model):
     def _compute_mobile(self):
         """ compute the new values when partner_id has changed """
         for lead in self:
-            if not lead.mobile or lead.partner_id.mobile:
-                lead.mobile = lead.partner_id.mobile
+            lead.mobile = lead.partner_id.mobile
 
     @api.depends('partner_id')
     def _compute_website(self):
         """ compute the new values when partner_id has changed """
         for lead in self:
-            if not lead.website or lead.partner_id.website:
-                lead.website = lead.partner_id.website
+            lead.website = lead.partner_id.website
 
     @api.depends('partner_id')
     def _compute_lang_id(self):
@@ -435,8 +432,7 @@ class Lead(models.Model):
     @api.depends('partner_id.email')
     def _compute_email_from(self):
         for lead in self:
-            if lead.partner_id.email and lead._get_partner_email_update():
-                lead.email_from = lead.partner_id.email
+            lead.email_from = lead.partner_id.email
 
     def _inverse_email_from(self):
         for lead in self:
@@ -446,8 +442,7 @@ class Lead(models.Model):
     @api.depends('partner_id.phone')
     def _compute_phone(self):
         for lead in self:
-            if lead.partner_id.phone and lead._get_partner_phone_update():
-                lead.phone = lead.partner_id.phone
+            lead.phone = lead.partner_id.phone
 
     def _inverse_phone(self):
         for lead in self:
@@ -642,11 +637,8 @@ class Lead(models.Model):
         return self._convert_to_write(values)
 
     def _prepare_address_values_from_partner(self, partner):
-        # Sync all address fields from partner, or none, to avoid mixing them.
-        if any(partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC):
-            values = {f: partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
-        else:
-            values = {f: self[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+        # Sync all address fields from partner
+        values = {f: partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
         return values
 
     def _prepare_contact_name_from_partner(self, partner):
@@ -661,7 +653,7 @@ class Lead(models.Model):
             partner_name = partner.name
         elif not partner_name and partner.company_name:
             partner_name = partner.company_name
-        return {'partner_name': partner_name or self.partner_name}
+        return {'partner_name': partner_name}
 
     def _get_partner_email_update(self):
         """Calculate if we should write the email on the related partner. When
