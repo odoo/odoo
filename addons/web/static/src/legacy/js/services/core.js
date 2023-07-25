@@ -31,13 +31,10 @@ export default {
     // core classes and functions
     Class: Class,
     bus: bus,
-    main_bus: new Bus(),
     _t: translation._t,
     _lt: translation._lt,
 
     // registries
-    action_registry: new Registry(),
-    crash_registry: new Registry(),
     serviceRegistry: new Registry(),
     /**
      * @type {String}
