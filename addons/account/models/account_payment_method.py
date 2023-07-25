@@ -152,7 +152,7 @@ class AccountPaymentMethodLine(models.Model):
         """
         unused_payment_method_lines = self
         for line in self:
-            payment_count = self.env['account.payment'].search_count([('payment_method_line_id', '=', line.id)])
+            payment_count = self.env['account.payment'].sudo().search_count([('payment_method_line_id', '=', line.id)])
             if payment_count > 0:
                 unused_payment_method_lines -= line
 
