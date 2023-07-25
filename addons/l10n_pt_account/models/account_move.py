@@ -27,16 +27,24 @@ class AccountMove(models.Model):
             else:
                 move.l10n_pt_account_inalterable_hash_short = False
 
-    @api.depends('sequence_number', 'journal_id.l10n_pt_account_tax_authority_series_id.code', 'inalterable_hash')
+    @api.depends(
+        'sequence_number',
+        'inalterable_hash',
+        'journal_id.l10n_pt_account_invoice_tax_authority_series_id.code',
+        'journal_id.l10n_pt_account_refund_tax_authority_series_id.code',
+    )
     def _compute_l10n_pt_account_atcud(self):
         for move in self:
             if (
                 move.company_id.account_fiscal_country_id.code == 'PT'
                 and not move.l10n_pt_account_atcud
-                and move.journal_id.l10n_pt_account_tax_authority_series_id
+                and move.journal_id.l10n_pt_account_invoice_tax_authority_series_id
+                and move.journal_id.l10n_pt_account_refund_tax_authority_series_id
                 and move.inalterable_hash
+                and move.is_sale_document()
             ):
-                move.l10n_pt_account_atcud = f"{move.journal_id.l10n_pt_account_tax_authority_series_id.code}-{move.sequence_number}"
+                tax_authority_series = move.journal_id.l10n_pt_account_invoice_tax_authority_series_id if move.move_type == 'out_invoice' else move.journal_id.l10n_pt_account_refund_tax_authority_series_id
+                move.l10n_pt_account_atcud = f"{tax_authority_series.code}-{move.sequence_number}"
             else:
                 move.l10n_pt_account_atcud = False
 
@@ -44,10 +52,10 @@ class AccountMove(models.Model):
     def _compute_l10n_pt_show_future_date_warning(self):
         for move in self:
             move.l10n_pt_account_show_future_date_warning = (
-                    move.company_id.account_fiscal_country_id.code == 'PT'
-                    and move.state == 'draft'
-                    and move.invoice_date
-                    and move.invoice_date > fields.Date.today()
+                move.company_id.account_fiscal_country_id.code == 'PT'
+                and move.state == 'draft'
+                and move.invoice_date
+                and move.invoice_date > fields.Date.today()
             )
 
     @api.depends('l10n_pt_account_atcud')
@@ -248,11 +256,14 @@ class AccountMove(models.Model):
         message = self._l10n_pt_account_get_message_to_hash(previous_hash)
         return L10nPtHashingUtils._l10n_pt_verify_integrity(message, self.inalterable_hash, public_key_string)
 
+    @api.model
     def l10n_pt_account_compute_missing_hashes(self, company_id):
         """
         Compute the hash for all records that do not have one yet
         (because they were not printed/previewed yet)
         """
+        if self.env['res.company'].browse(company_id).account_fiscal_country_id.code != 'PT':
+            return
         all_moves = self.search([
             ('company_id', '=', company_id),
             ('restrict_mode_hash_table', '=', True),

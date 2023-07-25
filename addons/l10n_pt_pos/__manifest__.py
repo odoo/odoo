@@ -20,6 +20,9 @@
         'views/pos_order_views.xml',
         'report/l10n_pt_pos_hash_integrity_templates.xml',
     ],
+    'demo': [
+        'demo/demo_data.xml',
+    ],
     'assets': {
         'point_of_sale._assets_pos': [
             'l10n_pt_pos/static/src/js/**/*',

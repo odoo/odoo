@@ -21,6 +21,9 @@
         'views/report_delivery_slip.xml',
         'report/l10n_pt_stock_hash_integrity_templates.xml',
     ],
+    'demo': [
+        'demo/demo_data.xml',
+    ],
     'installable': True,
     'license': 'LGPL-3',
 }
