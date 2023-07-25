@@ -119,7 +119,7 @@ class SaleOrder(models.Model):
             action['views'] = [(form_view_id, 'form')]
             action['res_id'] = self.tasks_ids.id
         # set default project
-        default_line = next(sol for sol in self.order_line if sol.product_id.detailed_type == 'service')
+        default_line = next((sol for sol in self.order_line if sol.product_id.detailed_type == 'service'), self.env['sale.order.line'])
         default_project_id = default_line.project_id.id or self.project_id.id or self.project_ids[:1].id
 
         action['context'] = {
