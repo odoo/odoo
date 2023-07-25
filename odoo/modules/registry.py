@@ -18,6 +18,7 @@ import warnings
 import psycopg2
 
 import odoo
+from odoo.modules import module
 from odoo.modules.db import FunctionStatus
 from odoo.osv.expression import get_unaccent_wrapper
 from .. import SUPERUSER_ID
@@ -74,6 +75,11 @@ class Registry(Mapping):
     def new(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Create and return a new registry for the given database name. """
         t0 = time.time()
+
+        if module.running_test:
+            _logger.error('Cannot initiate a registry while running a test')
+            return cls.registries.get(db_name)
+
         registry = object.__new__(cls)
         registry.init(db_name)
 
@@ -727,9 +733,6 @@ class Registry(Mapping):
 
     def setup_signaling(self):
         """ Setup the inter-process signaling on this registry. """
-        if self.in_test_mode():
-            return
-
         with self.cursor() as cr:
             # The `base_registry_signaling` sequence indicates when the registry
             # must be reloaded.
@@ -753,7 +756,7 @@ class Registry(Mapping):
         """ Check whether the registry has changed, and performs all necessary
         operations to update the registry. Return an up-to-date registry.
         """
-        if self.in_test_mode():
+        if module.running_test:
             return self
 
         with closing(self.cursor()) as cr:
@@ -783,7 +786,7 @@ class Registry(Mapping):
 
     def signal_changes(self):
         """ Notifies other processes if registry or cache has been invalidated. """
-        if self.in_test_mode():
+        if module.running_test:
             if self.registry_invalidated:
                 self.registry_sequence += 1
             if self.cache_invalidated:

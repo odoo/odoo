@@ -2,6 +2,7 @@ import importlib
 import importlib.util
 import inspect
 import itertools
+import logging
 import sys
 import threading
 import unittest
@@ -11,6 +12,9 @@ from .. import tools
 from .tag_selector import TagsSelector
 from .suite import OdooSuite
 from .result import OdooTestResult
+
+
+_logger = logging.getLogger(__name__)
 
 
 def get_test_modules(module):
@@ -73,15 +77,21 @@ def make_suite(module_names, position='at_install'):
 def run_suite(suite, module_name=None):
     # avoid dependency hell
     from ..modules import module
-    module.current_test = module_name
-    threading.current_thread().testing = True
+    if module.running_test:
+        _logger.error('Running a suite inside a suite is not supported')
+        return
+    try:
+        module.current_test = module_name
+        module.running_test = True
+        threading.current_thread().testing = True
 
-    results = OdooTestResult()
-    suite(results)
-
-    threading.current_thread().testing = False
-    module.current_test = None
-    return results
+        results = OdooTestResult()
+        suite(results)
+        return results
+    finally:
+        module.running_test = False
+        threading.current_thread().testing = False
+        module.current_test = None
 
 
 def unwrap_suite(test):

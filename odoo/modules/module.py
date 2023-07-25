@@ -449,3 +449,4 @@ def adapt_version(version):
 
 
 current_test = None
+running_test = False
