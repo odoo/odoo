@@ -167,6 +167,7 @@ class TestWebsiteSaleProductPricelist(AccountTestInvoicingCommon, TestSaleProduc
         # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart
         self.env.user.partner_id.country_id = False
         current_website = self.env['website'].get_current_website()
+        self.env['product.pricelist'].search([]).action_archive()
         pricelist = self.env['product.pricelist'].create({
             'name': 'Base Pricelist',
             'sequence': 4,
