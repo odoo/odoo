@@ -32,11 +32,30 @@ class account_journal(models.Model):
     has_statement_lines = fields.Boolean(compute='_compute_current_statement_balance') # technical field used to avoid computing the value multiple times
     entries_count = fields.Integer(compute='_compute_entries_count')
     has_sequence_holes = fields.Boolean(compute='_compute_has_sequence_holes')
+    last_statement_id = fields.Many2one(comodel_name='account.bank.statement', compute='_compute_last_bank_statement')
 
     def _compute_current_statement_balance(self):
         query_result = self._get_journal_dashboard_bank_running_balance()
         for journal in self:
             journal.has_statement_lines, journal.current_statement_balance = query_result.get(journal.id)
+
+    def _compute_last_bank_statement(self):
+        self.env.cr.execute("""
+            SELECT journal.id, statement.id
+              FROM account_journal journal
+         LEFT JOIN LATERAL (
+                      SELECT id, company_id
+                        FROM account_bank_statement
+                       WHERE journal_id = journal.id
+                    ORDER BY first_line_index DESC
+                       LIMIT 1
+                   ) statement ON TRUE
+             WHERE journal.id = ANY(%s)
+               AND statement.company_id = ANY(%s)
+        """, [self.ids, self.env.companies.ids])
+        last_statements = {journal_id: statement_id for journal_id, statement_id in self.env.cr.fetchall()}
+        for journal in self:
+            journal.last_statement_id = self.env['account.bank.statement'].browse(last_statements.get(journal.id))
 
     def _kanban_dashboard(self):
         dashboard_data = self._get_journal_dashboard_data_batched()
@@ -337,23 +356,31 @@ class account_journal(models.Model):
         }
 
         # Last statement
-        self.env.cr.execute("""
-            SELECT journal.id, statement.id
-              FROM account_journal journal
-         LEFT JOIN LATERAL (
-                      SELECT id, company_id
-                        FROM account_bank_statement
-                       WHERE journal_id = journal.id
-                    ORDER BY first_line_index DESC
-                       LIMIT 1
-                   ) statement ON TRUE
-             WHERE journal.id = ANY(%s)
-               AND statement.company_id = ANY(%s)
-        """, [self.ids, self.env.companies.ids])
-        last_statements = {journal_id: statement_id for journal_id, statement_id in self.env.cr.fetchall()}
-        self.env['account.bank.statement'].browse(i for i in last_statements.values() if i).mapped('balance_end_real')  # prefetch
+        bank_cash_journals.last_statement_id.mapped(lambda s: s.balance_end_real)  # prefetch
 
         outstanding_pay_account_balances = bank_cash_journals._get_journal_dashboard_outstanding_payments()
+
+        # Misc Entries (journal items in the default_account not linked to bank.statement.line)
+        misc_domain = []
+        for journal in bank_cash_journals:
+            date_limit = journal.last_statement_id.date or journal.company_id.fiscalyear_lock_date
+            misc_domain.append(
+                [('account_id', '=', journal.default_account_id.id), ('date', '>', date_limit)]
+                if date_limit else
+                [('account_id', '=', journal.default_account_id.id)]
+            )
+        misc_domain = [
+            ('statement_line_id', '=', False),
+            ('parent_state', '=', 'posted'),
+        ] + expression.OR(misc_domain)
+
+        misc_totals = {
+            account: (balance, count)
+            for account, balance, count in self.env['account.move.line']._read_group(
+                domain=misc_domain,
+                aggregates=['balance:sum', 'id:count'],
+                groupby=['account_id'])
+        }
 
         # To check
         to_check = {
@@ -370,24 +397,26 @@ class account_journal(models.Model):
         }
 
         for journal in bank_cash_journals:
-            last_statement = self.env['account.bank.statement'].browse(last_statements.get(journal.id))
             currency = journal.currency_id or journal.company_id.currency_id
             has_outstanding, outstanding_pay_account_balance = outstanding_pay_account_balances[journal.id]
             to_check_balance, number_to_check = to_check.get(journal.id, (0, 0))
+            misc_balance, number_misc = misc_totals.get(journal.default_account_id, (0, 0))
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
                 'to_check_balance': currency.format(to_check_balance),
                 'number_to_reconcile': number_to_reconcile.get(journal.id, 0),
                 'account_balance': currency.format(journal.current_statement_balance),
-                'has_at_least_one_statement': bool(last_statement),
+                'has_at_least_one_statement': bool(journal.last_statement_id),
                 'nb_lines_bank_account_balance': bool(journal.has_statement_lines),
                 'outstanding_pay_account_balance': currency.format(outstanding_pay_account_balance),
                 'nb_lines_outstanding_pay_account_balance': has_outstanding,
-                'last_balance': currency.format(last_statement.balance_end_real),
-                'last_statement_id': last_statement.id,
+                'last_balance': currency.format(journal.last_statement_id.balance_end_real),
+                'last_statement_id': journal.last_statement_id.id,
                 'bank_statements_source': journal.bank_statements_source,
                 'is_sample_data': journal.has_statement_lines,
+                'nb_misc_operations': number_misc,
+                'misc_operations_balance': currency.format(misc_balance),
             })
 
     def _fill_sale_purchase_dashboard_data(self, dashboard_data):
@@ -732,6 +761,24 @@ class account_journal(models.Model):
                 action=action["name"],
                 journal=self.name,
             )
+        return action
+
+    def open_bank_difference_action(self):
+        self.ensure_one()
+        action = self.env["ir.actions.act_window"]._for_xml_id("account.action_account_moves_all_a")
+        action['context'] = {
+            'search_default_account_id': self.default_account_id.id,
+            'search_default_group_by_move': False,
+            'search_default_no_st_line_id': True,
+            'search_default_posted': False,
+        }
+        date_from = self.last_statement_id.date or self.company_id.fiscalyear_lock_date
+        if date_from:
+            action['context'] |= {
+                'date_from': date_from,
+                'date_to': fields.Date.context_today(self),
+                'search_default_date_between': True
+            }
         return action
 
     def show_sequence_holes(self):
