@@ -179,15 +179,20 @@ class StockQuant(models.Model):
             if any(field for field in vals.keys() if field not in allowed_fields):
                 raise UserError(_("Quant's creation is restricted, you can't do this operation."))
 
-            inventory_quantity = vals.pop('inventory_quantity', False) or vals.pop(
-                'inventory_quantity_auto_apply', False) or 0
+            auto_apply = 'inventory_quantity_auto_apply' in vals
+            inventory_quantity = vals.pop('inventory_quantity_auto_apply', False) or vals.pop(
+                'inventory_quantity', False) or 0
             # Create an empty quant or write on a similar one.
             product = self.env['product.product'].browse(vals['product_id'])
             location = self.env['stock.location'].browse(vals['location_id'])
             lot_id = self.env['stock.production.lot'].browse(vals.get('lot_id'))
             package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
             owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
-            quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+            quant = self.env["stock.quant"]
+            if not self.env.context.get('import_file'):
+                # Merge quants later, to make sure one line = one record during batch import
+                quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+
             if lot_id:
                 quant = quant.filtered(lambda q: q.lot_id)
 
@@ -195,10 +200,13 @@ class StockQuant(models.Model):
                 quant = quant[0].sudo()
             else:
                 quant = self.sudo().create(vals)
-            # Set the `inventory_quantity` field to create the necessary move.
-            quant.inventory_quantity = inventory_quantity
-            quant.user_id = vals.get('user_id', self.env.user.id)
-            quant.inventory_date = fields.Date.today()
+            if auto_apply:
+                quant.write({'inventory_quantity_auto_apply': inventory_quantity})
+            else:
+                # Set the `inventory_quantity` field to create the necessary move.
+                quant.inventory_quantity = inventory_quantity
+                quant.user_id = vals.get('user_id', self.env.user.id)
+                quant.inventory_date = fields.Date.today()
 
             return quant
         res = super(StockQuant, self).create(vals)
@@ -209,11 +217,21 @@ class StockQuant(models.Model):
     def _load_records_create(self, values):
         """ Add default location if import file did not fill it"""
         company_user = self.env.company
+        self = self.with_context(inventory_mode=True)
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
         for value in values:
             if 'location_id' not in value:
                 value['location_id'] = warehouse.lot_stock_id.id
         return super()._load_records_create(values)
+
+    def _load_records_write(self, values):
+        """ Only allowed fields should be modified """
+        self = self.with_context(inventory_mode=True)
+        allowed_fields = self._get_inventory_fields_write()
+        for field in values.keys():
+            if field not in allowed_fields:
+                raise UserError(_("Changing %s is restricted, you can't do this operation.") % (field))
+        return super()._load_records_write(values)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -248,6 +266,15 @@ class StockQuant(models.Model):
                 raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
         return super(StockQuant, self).write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_wrong_permission(self):
+        if not self.env.is_superuser():
+            if not self.user_has_groups('stock.group_stock_manager'):
+                raise UserError(_("Quants are auto-deleted when appropriate. If you must manually delete them, please ask a stock manager to do it."))
+            self = self.with_context(inventory_mode=True)
+            self.inventory_quantity = 0
+            self._apply_inventory()
 
     def action_view_stock_moves(self):
         self.ensure_one()
@@ -522,7 +549,7 @@ class StockQuant(models.Model):
                 self.product_id, self.location_id, lot_id=self.lot_id,
                 package_id=self.package_id, owner_id=self.owner_id, strict=True)
             if quant:
-                self.quantity = quant.quantity
+                self.quantity = quant.filtered(lambda q: q.lot_id == self.lot_id).quantity
 
             # Special case: directly set the quantity to one for serial numbers,
             # it'll trigger `inventory_quantity` compute.

@@ -194,6 +194,12 @@ class TestCalendar(SavepointCaseWithUserDemo):
         f.start = '2022-07-07 01:00:00'  # This is in UTC. In NY, it corresponds to the 6th of july at 9pm.
         f.recurrency = True
         self.assertEqual(f.weekday, 'WED')
+        self.assertEqual(f.event_tz, 'US/Eastern', "The value should correspond to the user tz")
+        self.assertEqual(f.count, 1, "The default value should be displayed")
+        self.assertEqual(f.interval, 1, "The default value should be displayed")
+        self.assertEqual(f.month_by, "date", "The default value should be displayed")
+        self.assertEqual(f.end_type, "count", "The default value should be displayed")
+        self.assertEqual(f.rrule_type, "weekly", "The default value should be displayed")
 
     def test_event_activity_timezone(self):
         activty_type = self.env['mail.activity.type'].create({

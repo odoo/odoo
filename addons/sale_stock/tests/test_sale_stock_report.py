@@ -109,19 +109,19 @@ class TestSaleStockInvoices(TestSaleCommon):
             'product_id': self.product_by_lot.id,
             'company_id': self.env.company.id,
         })
-        usn01 = self.env['stock.production.lot'].create({
+        self.usn01 = self.env['stock.production.lot'].create({
             'name': 'USN0001',
             'product_id': self.product_by_usn.id,
             'company_id': self.env.company.id,
         })
-        usn02 = self.env['stock.production.lot'].create({
+        self.usn02 = self.env['stock.production.lot'].create({
             'name': 'USN0002',
             'product_id': self.product_by_usn.id,
             'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(self.product_by_lot, self.stock_location, 10, lot_id=lot)
-        self.env['stock.quant']._update_available_quantity(self.product_by_usn, self.stock_location, 1, lot_id=usn01)
-        self.env['stock.quant']._update_available_quantity(self.product_by_usn, self.stock_location, 1, lot_id=usn02)
+        self.env['stock.quant']._update_available_quantity(self.product_by_usn, self.stock_location, 1, lot_id=self.usn01)
+        self.env['stock.quant']._update_available_quantity(self.product_by_usn, self.stock_location, 1, lot_id=self.usn02)
 
     def test_invoice_less_than_delivered(self):
         """
@@ -360,3 +360,112 @@ class TestSaleStockInvoices(TestSaleCommon):
         self.assertRegex(text, r'Product By Lot\n6.00\nUnits\nLOT0002', "There should be a line that specifies 6 x LOT0002")
         self.assertRegex(text, r'Product By Lot\n2.00\nUnits\nLOT0003', "There should be a line that specifies 2 x LOT0003")
         self.assertNotIn('LOT0001', text)
+
+    def test_refund_cancel_invoices(self):
+        """
+        Suppose the lots are printed on the invoices.
+        The user sells 2 tracked-by-usn products, he delivers 2 products and invoices them
+        Then he adds credit notes and issues a full refund. Receive the products.
+        The reversed invoice should also have correct USN
+        """
+        report = self.env['ir.actions.report']._get_report_from_name('account.report_invoice_with_payments')
+        display_lots = self.env.ref('stock_account.group_lot_on_invoice')
+        display_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 2}),
+            ],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_lines.move_line_ids[0].qty_done = 1
+        picking.move_lines.move_line_ids[1].qty_done = 1
+        picking.button_validate()
+
+        invoice01 = so._create_invoices()
+        invoice01.action_post()
+
+        html = report._render_qweb_html(invoice01.ids)[0]
+        text = html2plaintext(html)
+        self.assertRegex(text, r'Product By USN\n1.00\nUnits\nUSN0001', "There should be a line that specifies 1 x USN0001")
+        self.assertRegex(text, r'Product By USN\n1.00\nUnits\nUSN0002', "There should be a line that specifies 1 x USN0002")
+
+        # Refund the invoice
+        refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
+            'refund_method': 'cancel',
+            'journal_id': invoice01.journal_id.id,
+        })
+        res = refund_wizard.reverse_moves()
+        refund_invoice = self.env['account.move'].browse(res['res_id'])
+
+        # recieve the returned product
+        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(active_ids=picking.ids, active_id=picking.sorted().ids[0], active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
+        res = return_wiz.create_returns()
+        pick_return = self.env['stock.picking'].browse(res['res_id'])
+
+        move_form = Form(pick_return.move_lines, view='stock.view_stock_move_nosuggest_operations')
+        with move_form.move_line_nosuggest_ids.new() as line:
+            line.lot_id = self.usn01
+            line.qty_done = 1
+        with move_form.move_line_nosuggest_ids.new() as line:
+            line.lot_id = self.usn02
+            line.qty_done = 1
+        move_form.save()
+        pick_return.button_validate()
+
+        # reversed invoice
+        html = report._render_qweb_html(refund_invoice.ids)[0]
+        text = html2plaintext(html)
+        self.assertRegex(text, r'Product By USN\n1.00\nUnits\nUSN0001', "There should be a line that specifies 1 x USN0001")
+        self.assertRegex(text, r'Product By USN\n1.00\nUnits\nUSN0002', "There should be a line that specifies 1 x USN0002")
+
+    def test_refund_modify_invoices(self):
+        """
+        Suppose the lots are printed on the invoices.
+        The user sells 1 tracked-by-usn products, he delivers 1 and invoices it
+        Then he adds credit notes and issues full refund and new draft invoice.
+        The new draft invoice should have correct USN
+        """
+
+        report = self.env['ir.actions.report']._get_report_from_name('account.report_invoice_with_payments')
+        display_lots = self.env.ref('stock_account.group_lot_on_invoice')
+        display_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 1}),
+            ],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_lines.move_line_ids[0].qty_done = 1
+        picking.button_validate()
+
+        invoice01 = so._create_invoices()
+        invoice01.action_post()
+
+        html = report._render_qweb_html(invoice01.ids)[0]
+        text = html2plaintext(html)
+        self.assertRegex(text, r'Product By USN\n1.00\nUnits\nUSN0001', "There should be a line that specifies 1 x USN0001")
+
+        # Refund the invoice with full refund and new draft invoice
+        refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
+            'refund_method': 'modify',
+            'journal_id': invoice01.journal_id.id,
+        })
+        res = refund_wizard.reverse_moves()
+        invoice02 = self.env['account.move'].browse(res['res_id'])
+        invoice02.action_post()
+
+        # new draft invoice
+        html = report._render_qweb_html(invoice02.ids)[0]
+        text = html2plaintext(html)
+        self.assertRegex(text, r'Product By USN\n1.00\nUnits\nUSN0001', "There should be a line that specifies 1 x USN0001")

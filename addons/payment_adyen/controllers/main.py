@@ -8,7 +8,6 @@ import json
 import logging
 import pprint
 
-import werkzeug
 from werkzeug import urls
 
 from odoo import _, http
@@ -17,6 +16,7 @@ from odoo.http import request
 from odoo.tools.pycompat import to_text
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_adyen import utils as adyen_utils
 from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS
 
 _logger = logging.getLogger(__name__)
@@ -120,6 +120,9 @@ class AdyenController(http.Controller):
             'recurringProcessingModel': 'CardOnFile',  # Most susceptible to trigger a 3DS check
             'shopperIP': payment_utils.get_customer_ip_address(),
             'shopperInteraction': 'Ecommerce',
+            'shopperEmail': tx_sudo.partner_email,
+            'shopperName': adyen_utils.format_partner_name(tx_sudo.partner_name),
+            'telephoneNumber': tx_sudo.partner_phone,
             'storePaymentMethod': tx_sudo.tokenize,  # True by default on Adyen side
             'additionalData': {
                 'allow3DS2': True
@@ -134,6 +137,7 @@ class AdyenController(http.Controller):
                 # by the /payments endpoint of Adyen.
                 f'/payment/adyen/return?merchantReference={reference}'
             ),
+            **adyen_utils.include_partner_addresses(tx_sudo),
         }
         response_content = acquirer_sudo._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
@@ -241,6 +245,11 @@ class AdyenController(http.Controller):
                 acquirer_sudo = PaymentTransaction.sudo()._get_tx_from_feedback_data(
                     'adyen', notification_data
                 ).acquirer_id  # Find the acquirer based on the transaction
+            except ValidationError:
+                # Warn rather than log the traceback to avoid noise when a POS payment notification
+                # is received and the corresponding `payment.transaction` record is not found.
+                _logger.warning("unable to find the transaction; skipping to acknowledge")
+            else:
                 if not self._verify_notification_signature(
                     received_signature, notification_data, acquirer_sudo.adyen_hmac_key
                 ):
@@ -259,11 +268,13 @@ class AdyenController(http.Controller):
                     notification_data['resultCode'] = 'Authorised' if success else 'Error'
                 else:
                     continue  # Don't handle unsupported event codes and failed events
-
-                # Handle the notification data as a regular feedback
-                PaymentTransaction.sudo()._handle_feedback_data('adyen', notification_data)
-            except ValidationError:  # Acknowledge the notification to avoid getting spammed
-                _logger.exception("unable to handle the notification data; skipping to acknowledge")
+                try:
+                    # Handle the notification data as a regular feedback
+                    PaymentTransaction.sudo()._handle_feedback_data('adyen', notification_data)
+                except ValidationError:  # Acknowledge the notification to avoid getting spammed
+                    _logger.exception(
+                        "unable to handle the notification data;skipping to acknowledge"
+                    )
 
         return '[accepted]'  # Acknowledge the notification
 

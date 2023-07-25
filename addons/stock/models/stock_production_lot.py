@@ -30,7 +30,7 @@ class ProductionLot(models.Model):
     product_qty = fields.Float('Quantity', compute='_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
-    company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True)
+    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
     last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
@@ -64,7 +64,7 @@ class ProductionLot(models.Model):
     @api.model
     def _get_next_serial(self, company, product):
         """Return the next serial number to be attributed to the product."""
-        if product.tracking == "serial":
+        if product.tracking != "none":
             last_serial = self.env['stock.production.lot'].search(
                 [('company_id', '=', company.id), ('product_id', '=', product.id)],
                 limit=1, order='id DESC')

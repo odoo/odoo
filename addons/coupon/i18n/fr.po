@@ -5,13 +5,15 @@
 # Translators:
 # Martin Trigaux, 2021
 # Eloïse Stilmant <est@odoo.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Priscilla (prs) Odoo <prs@odoo.com>, 2021
 # Frédéric GILSON <frederic.gilson@logicasoft.eu>, 2021
 # Pauline Thiry <pth@odoo.com>, 2021
 # Vallen Delobel <edv@odoo.com>, 2021
 # Rémi CAZENAVE, 2021
 # Cécile Collart <cco@odoo.com>, 2022
+# Jinjiu Liu, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,13 +21,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
@@ -326,7 +328,7 @@ msgstr "Campagne de Coupon"
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
 msgid "Coupon Programs"
-msgstr "Campagnes de bons de réduction"
+msgstr "Campagnes de coupons"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
@@ -483,7 +485,7 @@ msgstr "Le pourcentage de la réduction devrait être entre 1-100"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__display_name
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_mail_compose_message
@@ -1063,7 +1065,7 @@ msgstr "Ce bon de promotion n'est plus valide (%s)."
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__total_order_count
 msgid "Total Order Count"
-msgstr ""
+msgstr "Valeur totale de la commande"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_uom_id
@@ -1127,6 +1129,16 @@ msgid "You can not delete a program in active state"
 msgstr "Vous ne pouvez pas supprimer un programme actif"
 
 #. module: coupon
+#: code:addons/coupon/models/product_product.py:0
+#, python-format
+msgid ""
+"You cannot delete a product that is linked with Coupon or Promotion program."
+" Archive it instead."
+msgstr ""
+"Vous ne pouvez pas supprimer un produit qui est lié à un programme de coupon"
+" ou de promotion. Veuillez plutôt l'archiver."
+
+#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "e.g. 10% Discount"
 msgstr "par exemple : 10% de réduction"
@@ -1134,7 +1146,7 @@ msgstr "par exemple : 10% de réduction"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off %s"
-msgstr "de remise sur %s"
+msgstr "de remise %s"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon

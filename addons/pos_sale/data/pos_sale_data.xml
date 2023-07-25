@@ -19,7 +19,7 @@
             <field name="purchase_ok">False</field>
         </record>
 
-        <record model="pos.config" id="point_of_sale.pos_config_main">
+        <record model="pos.config" id="point_of_sale.pos_config_main" forcecreate="0">
             <field name="down_payment_product_id" ref="pos_sale.default_downpayment_product"/>
         </record>
     </data>

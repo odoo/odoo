@@ -4,7 +4,7 @@
 from odoo.tests import Form, tagged, TransactionCase
 from odoo.exceptions import MissingError
 
-@tagged('post_install')
+@tagged('post_install', '-at_install')
 class TestEmployeeDeletion(TransactionCase):
 
     def test_employee_deletion(self):

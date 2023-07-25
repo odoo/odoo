@@ -5,10 +5,10 @@
         <xpath expr="//t[@name='has_packages']" position="before">
             <!-- get only the top level kits' (i.e. no subkit) move lines for easier mapping later on + we ignore subkit groupings-->
             <!-- note that move.name uses top level kit's product.template.display_name value instead of product.template.name -->
-            <t t-set="has_kits" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id and l.move_id.bom_line_id.bom_id.product_tmpl_id.display_name == l.move_id.name)"/>
+            <t t-set="has_kits" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id and l.move_id.bom_line_id.bom_id.type == 'phantom')"/>
         </xpath>
         <xpath expr="//t[@name='no_package_section']" position="before">
-            <t t-set="has_kits" t-value="move_lines.filtered(lambda l: l.move_id.bom_line_id and l.move_id.bom_line_id.bom_id.product_tmpl_id.display_name == l.move_id.name)"/>
+            <t t-set="has_kits" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id and l.move_id.bom_line_id.bom_id.type == 'phantom')"/>
             <t t-if="has_kits">
                 <!-- print the products not in a package or kit first -->
                 <t t-set="move_lines" t-value="move_lines.filtered(lambda m: not m.move_id.bom_line_id)"/>
@@ -30,26 +30,32 @@
         <!-- get all kits-related SML, including subkits and excluding the packaged SML -->
         <t t-set="all_kits_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id.bom_id.type == 'phantom' and not l.result_package_id)"/>
         <!-- do another map to get unique top level kits -->
-        <t t-set="kits" t-value="has_kits.mapped('move_id.bom_line_id.bom_id.product_tmpl_id')"/>
-        <t t-foreach="kits" t-as="kit">
+        <t t-set="boms" t-value="has_kits.mapped('move_id.bom_line_id.bom_id')"/>
+        <t t-foreach="boms" t-as="bom">
+            <!-- Separate product.product from template for variants-->
+            <t t-if="bom.product_id">
+                <t t-set="kit_product" t-value="bom.product_id"/>
+            </t>
+            <t t-else="">
+                <t t-set="kit_product" t-value="bom.product_tmpl_id"/>
+            </t>
             <tr t-att-class="'bg-200 font-weight-bold o_line_section'">
                 <td colspan="99">
-                    <span t-esc="kit.display_name"/>
+                    <span t-esc="kit_product.display_name"/>
                 </td>
             </tr>
-            <t t-set="kit_move_lines" t-value="all_kits_move_lines.filtered(lambda l: l.move_id.name == kit.display_name)"/>
+            <t t-set="kit_move_lines" t-value="all_kits_move_lines.filtered(lambda l: l.move_id.bom_line_id.bom_id == bom)"/>
             <t t-if="has_serial_number">
                 <tr t-foreach="kit_move_lines" t-as="move_line">
                     <t t-set="description" t-value="move_line.move_id.description_picking"/>
-                    <t t-if="description == kit.name">
+                    <t t-if="description == kit_product.display_name">
                         <t t-set="description" t-value=""/>
                     </t>
                     <t t-call="stock.stock_report_delivery_has_serial_move_line"/>
                 </tr>
             </t>
             <t t-else="">
-                <!-- move line description by default is the product_template.name (kit name), instead of display_name-->
-                <t t-set="aggregated_lines" t-value="kit_move_lines._get_aggregated_product_quantities(kit_name=kit.name)"/>
+                <t t-set="aggregated_lines" t-value="kit_move_lines._get_aggregated_product_quantities(kit_name=kit_product.display_name)"/>
                 <t t-if="aggregated_lines">
                     <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
                 </t>

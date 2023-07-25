@@ -5,8 +5,9 @@
 # Translators:
 # Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Bert Burggraaf, 2021
+# 04a2cd0fd6ee22172c36ea91f27a38c5_60041bf, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -628,7 +629,7 @@ msgid ""
 "Enter</span>"
 msgstr ""
 "<span class=\"o_survey_enter font-weight-bold text-muted ml-2\">of druk op "
-"enter</span>"
+"Enter</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -1911,7 +1912,7 @@ msgstr "Fruit en groenten"
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_badge
 msgid "Gamification Badge"
-msgstr "Gamification badge"
+msgstr "Gamificatie badge"
 
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_challenge
@@ -4779,6 +4780,16 @@ msgid ""
 msgstr ""
 "Je kunt alleen certificeringen maken voor enquêtes die een score mechanisme "
 "hebben."
+
+#. module: survey
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
+"Je kan de vragen van de enquêtes \"%(survey_names)s\"  niet verwijderen "
+"tijdens live sessies."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0

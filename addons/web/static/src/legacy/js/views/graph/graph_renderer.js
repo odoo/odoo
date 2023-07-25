@@ -585,7 +585,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                         this.props.fields[this.props.processedGroupBy[0].split(":")[0]].string :
                         "",
                 },
-                ticks: { callback: label => this._relabelling(label, comparisonFieldIndex) },
+                ticks: { callback: label => shortenLabel(this._relabelling(label, comparisonFieldIndex)) },
             }];
             const yAxes = [{
                 type: "linear",

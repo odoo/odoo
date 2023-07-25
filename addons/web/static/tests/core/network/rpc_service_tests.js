@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { ConnectionAbortedError, rpcService } from "@web/core/network/rpc_service";
+import { ConnectionAbortedError, ConnectionLostError, rpcService } from "@web/core/network/rpc_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -241,8 +241,30 @@ QUnit.test("check connection aborted", async (assert) => {
     let MockXHR = makeMockXHR({}, () => {}, def);
     patchWithCleanup(browser, { XMLHttpRequest: MockXHR }, { pure: true });
     const env = await makeTestEnv({ serviceRegistry });
+    env.bus.on("RPC:REQUEST", null, (rpcId) => {
+        assert.step("RPC:REQUEST");
+    });
+    env.bus.on("RPC:RESPONSE", null, (rpcId) => {
+        assert.step("RPC:RESPONSE");
+    });
 
     const connection = env.services.rpc();
     connection.abort();
     assert.rejects(connection, ConnectionAbortedError);
+    assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
+});
+
+QUnit.test("trigger a ConnectionLostError when response isn't json parsable", async (assert) => {
+    const env = await makeTestEnv({ serviceRegistry });
+
+    const MockXHR = makeMockXHR({}, () => {});
+    const request = new MockXHR();
+    request.response = "<h...";
+    request.status = "500";
+
+    try {
+        await env.services.rpc("/test/", null, { xhr: request });
+    } catch (e) {
+        assert.ok(e instanceof ConnectionLostError);
+    }
 });

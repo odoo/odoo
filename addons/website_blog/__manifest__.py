@@ -41,6 +41,9 @@
             'website_blog/static/src/js/website_blog.editor.js',
             'website_blog/static/src/js/tours/website_blog.js',
         ],
+        'web.assets_tests': [
+            'website_blog/static/tests/**/*',
+        ],
         'web.assets_frontend': [
             'website_blog/static/src/scss/website_blog.scss',
             'website_blog/static/src/js/contentshare.js',

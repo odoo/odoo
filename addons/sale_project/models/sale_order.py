@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
         for order in self:
-            order.tasks_ids = self.env['project.task'].search(['&', ('display_project_id', '!=', 'False'), '|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
+            order.tasks_ids = self.env['project.task'].search(['&', ('display_project_id', '!=', False), '|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
             order.tasks_count = len(order.tasks_ids)
 
     @api.depends('order_line.product_id.service_tracking')
@@ -112,8 +112,15 @@ class SaleOrder(models.Model):
 
     def write(self, values):
         if 'state' in values and values['state'] == 'cancel':
-            self.project_id.sale_line_id = False
+            self.project_id.sudo().sale_line_id = False
         return super(SaleOrder, self).write(values)
+
+    def _compute_line_data_for_template_change(self, line):
+        data = super()._compute_line_data_for_template_change(line)
+        # prevent the association of a related task on the SOL if a task would be generated when confirming the SO.
+        if 'default_task_id' in self.env.context and line.product_id.service_tracking in ['task_in_project', 'task_global_project']:
+            data['task_id'] = False
+        return data
 
 
 class SaleOrderLine(models.Model):
@@ -376,11 +383,12 @@ class SaleOrderLine(models.Model):
                 analytic_account_ids = {rec['analytic_account_id'][0] for rec in (task_analytic_account_id + project_analytic_account_id)}
                 if len(analytic_account_ids) == 1:
                     values['analytic_account_id'] = analytic_account_ids.pop()
-        if self.task_id.analytic_tag_ids:
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids]
-        elif self.is_service and not self.is_expense:
+        analytic_tag_ids = [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids]
+        if self.is_service and not self.is_expense:
             tag_ids = self.env['account.analytic.tag'].search([
                 ('task_ids.sale_line_id', '=', self.id)
             ])
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in tag_ids]
+            analytic_tag_ids += [Command.link(tag_id.id) for tag_id in tag_ids]
+        if analytic_tag_ids:
+            values['analytic_tag_ids'] = values.get('analytic_tag_ids', []) + analytic_tag_ids
         return values

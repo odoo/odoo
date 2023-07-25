@@ -22,9 +22,9 @@
 # Levent Karakaş <levent@mektup.at>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
-# Ediz Duman <neps1192@gmail.com>, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Ediz Duman <neps1192@gmail.com>, 2023
+# Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -32,8 +32,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -701,6 +701,16 @@ msgid ""
 msgstr ""
 "Proje paylaşım erişiminde bir ortak çalışan birden fazla seçilemez. Lütfen "
 "yinelenenleri kaldırın ve tekrar deneyin."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"Kişisel bir aşama, yalnızca ilgili kullanıcı tarafından görülebildiği için "
+"bir projeye bağlanamaz."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -1720,6 +1730,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Bu projenin ve görevlerinin görüleceği kişiler.\n"
+"\n"
+"- Davet edilen dahili kullanıcılar: bir projeyi takip ederken, dahili kullanıcılar ayrım gözetmeksizin projenin tüm görevlerine erişebilecek. Aksi takdirde, yalnızca takip ettikleri belirli görevlere erişim elde edeceklerdir.\n"
+"Proje > yönetici erişim hakkı düzeyine sahip bir kullanıcı, açıkça takipçilerin bir parçası olmasalar bile bu projeye ve görevlerine erişebilir.\n"
+"\n"
+"- Tüm dahili kullanıcılar: tüm dahili kullanıcılar, projeye ve tüm görevlerine ayrım gözetmeksizin erişebilir.\n"
+"\n"
+"- Davet edilen portal kullanıcıları ve tüm dahili kullanıcılar: tüm dahili kullanıcılar projeye ve tüm görevlerine ayrım gözetmeksizin erişebilir.\n"
+"Bir projeyi takip ederken, portal kullanıcıları tüm görevlerine ayrım gözetmeksizin erişebilecekler. Aksi takdirde, yalnızca takip ettikleri belirli görevlere erişim elde edeceklerdir.\n"
+"\n"
+"Bir proje salt okunur olarak paylaşıldığında, portal kullanıcısı kendi portalına yönlendirilir. Görevleri görüntüleyebilirler ancak düzenleyemezler.\n"
+"Düzenlemede bir proje paylaşıldığında, portal kullanıcısı görevlerin kanbana ve liste görünümlerine yönlendirilir. Görevlerdeki seçili sayıda alanı değiştirebilirler.\n"
+"\n"
+"Her durumda, proje erişim hakları olmayan dahili bir kullanıcı, ilgili URL'nin kendisine verilmesi (ve proje özelse takipçilerin bir parçası olması) şartıyla bir göreve erişebilir."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -5380,12 +5404,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "Görevdeki %s %s alanlarını yapamazsınız."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
@@ -5441,6 +5459,20 @@ msgid ""
 "their tasks."
 msgstr ""
 "Görevleri içeren aşamaları silemezsiniz. Önce tüm görevlerini silmelisiniz."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr "Görevdeki %s alanlarını okuyamazsınız."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr "Görevde %s alanlarına yazamazsınız."
 
 #. module: project
 #: code:addons/project/models/project.py:0

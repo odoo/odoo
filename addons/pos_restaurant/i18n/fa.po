@@ -4,13 +4,15 @@
 # 
 # Translators:
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
-# Far Har <fhari1234@gmail.com>, 2022
+# Farid Hariri <fhari1234@gmail.com>, 2022
 # Sepehr Khoshnood <sepehr.kho@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
 # Hamid Darabi, 2022
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022
+# Hanna Kheradroosta, 2022
+# Ali Reza Feizi Derakhshi, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,8 +20,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"Last-Translator: Ali Reza Feizi Derakhshi, 2023\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -215,7 +217,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_color
 msgid "Background Color"
-msgstr ""
+msgstr "رنگ پس‌زمینه"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_image
@@ -249,6 +251,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_splitbill
 #, python-format
 msgid "Bill Splitting"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
+#, python-format
+msgid "Blocked action"
 msgstr ""
 
 #. module: pos_restaurant
@@ -315,6 +324,13 @@ msgid "Color"
 msgstr "رنگ"
 
 #. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
+#, python-format
+msgid "Connection Error"
+msgstr "خطای اتصال"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
@@ -352,6 +368,13 @@ msgstr "نام نمایشی"
 #: model:pos.category,name:pos_restaurant.drinks
 msgid "Drinks"
 msgstr "نوشیدنی‌ها"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
+#, python-format
+msgid "Due to a connection error, the orders are not synchronized."
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -767,7 +790,7 @@ msgstr "پیکربندی پایانه فروش"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "سطرهای سفارش پایانه فروش"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
@@ -823,7 +846,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Printing is not supported on some browsers"
-msgstr ""
+msgstr "چاپ در برخی از مرورگرها پشتیبانی نمی شود"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -834,6 +857,8 @@ msgid ""
 "protocol is available. It is possible to print your tickets by making use of"
 " an IoT Box."
 msgstr ""
+"به دلیل وجود نداشتن پروتکل چاپ پیش‌فرض، چاپ در برخی از مرورگرها پشتیبانی "
+"نمی‌شود. با استفاده از جعبه اینترنت اشیا می توانید تیکت های خود را چاپ کنید."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -922,7 +947,7 @@ msgstr "معکوس/برگشت"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reverse Payment"
-msgstr ""
+msgstr "پرداخت معکوس"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__round
@@ -962,7 +987,7 @@ msgstr "دنباله"
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "Served by"
-msgstr ""
+msgstr "سرو شده توسط"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__set_tip_after_payment
@@ -1005,7 +1030,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/SplitBillButton.xml:0
 #, python-format
 msgid "Split"
-msgstr ""
+msgstr "جدا کردن"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -1034,6 +1059,7 @@ msgstr "جمع جزء"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
@@ -1336,6 +1362,13 @@ msgid "Yellow"
 msgstr "زرد"
 
 #. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
+#, python-format
+msgid "You cannot put a number that exceeds %s "
+msgstr ""
+
+#. module: pos_restaurant
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid ""
@@ -1399,4 +1432,10 @@ msgstr "تخفیف"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "env.pos.config.set_tip_after_payment and !currentOrder.is_paid()"
+msgstr ""
+
+#. module: pos_restaurant
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash Bar"
 msgstr ""

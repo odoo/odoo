@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1397,6 +1397,12 @@ msgstr "Змінити кількість товару"
 #: model:ir.model.fields,help:stock.field_stock_move_line__move_id
 msgid "Change to a better name"
 msgstr "Змініть на кращу назву"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr "Зміна %s обмежена, ви не можете виконати цю операцію."
 
 #. module: stock
 #: code:addons/stock/models/product_strategy.py:0
@@ -3535,6 +3541,15 @@ msgid "Invalid domain right operand %s"
 msgstr "Невірний правий операнд домену %s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Недійсна конфігурація правила, наступне правило викликає нескінченний цикл: "
+"%s"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
 msgid "Inventoried Quantity"
 msgstr "Інвентаризовані кількості"
@@ -3712,6 +3727,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Чи є величина редагованою"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+"Заборонено імпортувати зарезервовану кількість, її потрібно безпосередньо "
+"використовувати."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5665,7 +5690,7 @@ msgstr "Кількість товару підтверджено"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Product Quantity Updated"
-msgstr "Кількість товару на замовлення"
+msgstr "Відредагована кількість товару"
 
 #. module: stock
 #. openerp-web
@@ -5926,6 +5951,16 @@ msgstr "Робочий аркуш якості"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__quant_ids
 msgid "Quant"
 msgstr "Кількість"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+"Кількості видаляються автоматично, коли це необхідно. Якщо вам потрібно "
+"видалити їх вручну, зверніться до менеджера зі складу."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7770,7 +7805,7 @@ msgstr "Назва складу повинна бути унікальною д�
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must be greater than zero."
-msgstr ""
+msgstr "Кількість серійних номерів для створення має бути більшою за нуль."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8081,6 +8116,26 @@ msgstr ""
 "рекомендується змінювати тип товару, оскільки це може призвести до "
 "невідповідностей. Кращим рішенням може бути архівування товару та створення "
 "замість нього нового."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"Компанію цього товару не можна змінити, доки певна кількість товару належить"
+" іншій компанії."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"Компанію цього товару не можна змінити, доки є складські переміщення, що "
+"належать іншій компанії."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8495,7 +8550,7 @@ msgstr "Одиниці вимірювання"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unity of measure"
+msgid "Unit of measure"
 msgstr "Одиниця вимірювання"
 
 #. module: stock
@@ -9099,6 +9154,12 @@ msgstr ""
 "складських переміщень."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "Ви не можете змінити тип товару, який вже використовувався."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9266,6 +9327,14 @@ msgstr ""
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Неможливо зарезервувати складське переміщення, встановлене на \"Виконано\"."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"Ви не можете змінити скасоване складське переміщення, замість цього створіть"
+" новий рядок."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9605,3 +9674,10 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Замовлення на доставку (Ref {{ object.name or "
 "'n/a' }})"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Загальна видима кількість днів"

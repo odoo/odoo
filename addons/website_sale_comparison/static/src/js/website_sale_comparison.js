@@ -70,8 +70,8 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         $(document.body).on('click.product_comparaison_widget', '.o_comparelist_remove', function (ev) {
             self._removeFromComparelist(ev);
             self.guard.exec(function() {
-                var new_link = '/shop/compare?products=' + self.comparelist_product_ids.toString();
-                window.location.href = _.isEmpty(self.comparelist_product_ids) ? '/shop' : new_link;
+                const newLink = '/shop/compare?products=' + encodeURIComponent(self.comparelist_product_ids);
+                window.location.href = _.isEmpty(self.comparelist_product_ids) ? '/shop' : newLink;
             });
         });
 
@@ -195,8 +195,12 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         var self = this;
         this.$('.o_comparelist_products .o_product_row').remove();
         _.each(this.comparelist_product_ids, function (res) {
-            var $template = self.product_data[res].render;
-            self.$('.o_comparelist_products').append($template);
+            if (self.product_data.hasOwnProperty(res)) {
+                // It is possible that we do not have the required product_data for all IDs in
+                // comparelist_product_ids
+                var $template = self.product_data[res].render;
+                self.$('.o_comparelist_products').append($template);
+            }
         });
         if (force !== 'hide' && (this.comparelist_product_ids.length > 1 || force === 'show')) {
             $('#comparelist .o_product_panel_header').popover('show');
@@ -239,7 +243,8 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             this.$('.o_comparelist_products').addClass('d-md-block');
             if (this.comparelist_product_ids.length >=2) {
                 this.$('.o_comparelist_button').addClass('d-md-block');
-                this.$('.o_comparelist_button a').attr('href', '/shop/compare?products='+this.comparelist_product_ids.toString());
+                this.$('.o_comparelist_button a').attr('href',
+                    '/shop/compare?products=' + encodeURIComponent(this.comparelist_product_ids));
             }
         }
     },
@@ -261,7 +266,7 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
     events: {
         'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',
-        'submit form[action="/shop/cart/update"]': '_onFormSubmit',
+        'submit .o_add_cart_form_compare': '_onFormSubmit',
     },
 
     /**

@@ -194,6 +194,7 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(self.task_1.child_ids.stage_id.name, "New", "The stage of the child task should be the default one of the display project id, once set.")
 
     def test_copy_project_with_subtasks(self):
+        """ Test that when copying a project, the subtasks are copied correctly. """
         self.env['project.task'].with_context({'mail_create_nolog': True}).create({
 
             'name': 'Parent Task',
@@ -219,6 +220,9 @@ class TestProjectSubtasks(TestProjectCommon):
         project_goats_duplicated = self.project_goats.copy()
 
         self.project_pigs._compute_task_count()  # retrigger since a new task should be added in the project after the duplication of Project Goats
+
+        subtask_with_display_project_id = project_goats_duplicated.tasks.filtered(lambda t: t.name == 'child 2')
+        self.assertEqual(subtask_with_display_project_id.display_project_id, project_goats_duplicated, "The display project id of the subtask should be the duplicated project.")
 
         self.assertEqual(
             project_goats_duplicated.with_context(active_test=False).task_count_with_subtasks,

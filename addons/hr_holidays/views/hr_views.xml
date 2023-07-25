@@ -173,7 +173,7 @@
                 <button name="action_time_off_dashboard"
                         type="object"
                         class="oe_stat_button"
-                        context="{'search_default_employee_id': active_id}"
+                        context="{'search_default_employee_id': id}"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
                         <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_present')]}"
                               role="img" class="fa fa-fw fa-plane o_button_icon text-success" aria-label="Off Till" title="Off Till"/>
@@ -193,7 +193,7 @@
                         class="oe_stat_button"
                         icon="fa-calendar"
                         attrs="{'invisible': [('show_leaves','=', False)]}"
-                        context="{'search_default_employee_id': active_id}"
+                        context="{'search_default_employee_id': id}"
                         groups="base.group_user"
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info">

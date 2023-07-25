@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, models
-from odoo.tools import float_is_zero, format_date, float_round
+from odoo.tools import float_compare, float_is_zero, format_date, float_round
 
 
 class ReplenishmentReport(models.AbstractModel):
@@ -39,8 +39,8 @@ class ReplenishmentReport(models.AbstractModel):
 
     def _move_confirmed_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
         in_domain, out_domain = self._move_domain(product_template_ids, product_variant_ids, wh_location_ids)
-        out_domain += [('state', 'not in', ['draft', 'cancel', 'done'])]
-        in_domain += [('state', 'not in', ['draft', 'cancel', 'done'])]
+        out_domain += [('state', 'in', ['waiting', 'assigned', 'confirmed', 'partially_available'])]
+        in_domain += [('state', 'in', ['waiting', 'assigned', 'confirmed', 'partially_available'])]
         return in_domain, out_domain
 
     def _compute_draft_quantity_count(self, product_template_ids, product_variant_ids, wh_location_ids):
@@ -159,15 +159,35 @@ class ReplenishmentReport(models.AbstractModel):
             product_template_ids, product_variant_ids, wh_location_ids
         )
         outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
-        reserved_outs = self.env['stock.move'].search(
-            out_domain + [('state', 'in', ('partially_available', 'assigned'))],
-            order='priority desc, date, id')
         outs_per_product = defaultdict(list)
+        reserved_outs = self.env['stock.move']
+        reserved_outs_quantitites = defaultdict(float)
         reserved_outs_per_product = defaultdict(list)
+        outs_reservation = {}
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
-        for out in reserved_outs:
-            reserved_outs_per_product[out.product_id.id].append(out)
+            out_qty_reserved = 0
+            moves_orig = out._get_moves_orig()
+            for move in moves_orig:
+                rounding = move.product_id.uom_id.rounding
+                move_qty_reserved = sum(move.move_line_ids.mapped('product_qty'))
+                if float_is_zero(move_qty_reserved, precision_rounding=rounding):
+                    continue
+                already_used_qty = reserved_outs_quantitites.get(move, 0)
+                remaining_qty = move_qty_reserved - already_used_qty
+                if float_compare(remaining_qty, 0, precision_rounding=rounding) <= 0:
+                    continue
+                qty_reserved = min(remaining_qty, out.product_qty - out_qty_reserved)
+                out_qty_reserved += qty_reserved
+                reserved_outs_quantitites[move] += qty_reserved
+                if float_compare(out_qty_reserved, out.product_qty, precision_rounding=rounding) >= 0:
+                    break
+            if not float_is_zero(out_qty_reserved, out.product_id.uom_id.rounding):
+                reserved_outs |= out
+                reserved_outs_per_product[out.product_id.id].append(out)
+                outs_reservation[out.id] = out_qty_reserved
+        # Different sort than unreserved outs
+        reserved_outs = self.env['stock.move'].search([('id', 'in', reserved_outs.ids)], order="priority desc, date, id")
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
         ins_per_product = defaultdict(list)
         for in_ in ins:
@@ -183,17 +203,18 @@ class ReplenishmentReport(models.AbstractModel):
             product_rounding = product.uom_id.rounding
             for out in reserved_outs_per_product[product.id]:
                 # Reconcile with reserved stock.
+                reserved = outs_reservation[out.id]
                 current = currents[product.id]
-                reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 currents[product.id] -= reserved
                 lines.append(self._prepare_report_line(reserved, move_out=out, reservation=True))
 
             unreconciled_outs = []
             for out in outs_per_product[product.id]:
+                reserved_availability = outs_reservation.get(out.id, 0)
                 # Reconcile with the current stock.
                 reserved = 0.0
-                if out.state in ('partially_available', 'assigned'):
-                    reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                if not float_is_zero(reserved_availability, precision_rounding=product_rounding):
+                    reserved = reserved_availability
                 demand = out.product_qty - reserved
 
                 if float_is_zero(demand, precision_rounding=product_rounding):

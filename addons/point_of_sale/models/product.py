@@ -45,13 +45,20 @@ class ProductProduct(models.Model):
 
         # Tax related
         taxes = self.taxes_id.compute_all(price, config.currency_id, quantity, self)
+        grouped_taxes = {}
+        for tax in taxes['taxes']:
+            if tax['id'] in grouped_taxes:
+                grouped_taxes[tax['id']]['amount'] += tax['amount']/quantity if quantity else 0
+            else:
+                grouped_taxes[tax['id']] = {
+                    'name': tax['name'],
+                    'amount': tax['amount']/quantity if quantity else 0
+                }
+
         all_prices = {
             'price_without_tax': taxes['total_excluded']/quantity if quantity else 0,
             'price_with_tax': taxes['total_included']/quantity if quantity else 0,
-            'tax_details': [{
-                    'name': tax['name'],
-                    'amount': tax['amount']/quantity if quantity else 0
-                } for tax in taxes['taxes']],
+            'tax_details': list(grouped_taxes.values()),
         }
 
         # Pricelists

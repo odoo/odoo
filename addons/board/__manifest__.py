@@ -26,6 +26,10 @@ Allows users to create custom dashboard.
         ],
         'web.qunit_suite_tests': [
             'board/static/tests/**/*',
+            ('remove', 'board/static/tests/mobile/**/*'), # mobile test
+        ],
+        'web.qunit_mobile_suite_tests': [
+            'board/static/tests/mobile/**/*',
         ],
         'web.assets_qweb': [
             'board/static/src/**/*.xml',

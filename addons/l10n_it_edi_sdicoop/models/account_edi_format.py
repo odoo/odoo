@@ -30,13 +30,22 @@ class AccountEdiFormat(models.Model):
         for proxy_user in proxy_users:
             company = proxy_user.company_id
             try:
-                res = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice',
-                                               params={'recipient_codice_fiscale': company.l10n_it_codice_fiscale})
+                res = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice')
+
             except AccountEdiProxyError as e:
+                res = {}
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
 
             proxy_acks = []
+            retrigger = False
             for id_transaction, fattura in res.items():
+
+                # The server has a maximum number of documents it can send at a time
+                # If that maximum is reached, then we search for more
+                # by re-triggering the download cron, avoiding the timeout.
+                current_num, max_num = fattura.get('current_num', 0), fattura.get('max_num', 0)
+                retrigger = retrigger or current_num == max_num > 0
+
                 if self.env['ir.attachment'].search([('name', '=', fattura['filename']), ('res_model', '=', 'account.move')], limit=1):
                     # name should be unique, the invoice already exists
                     _logger.info('E-invoice already exist: %s', fattura['filename'])
@@ -78,6 +87,10 @@ class AccountEdiFormat(models.Model):
                                             params={'transaction_ids': proxy_acks})
                 except AccountEdiProxyError as e:
                     _logger.error('Error while receiving file from SdiCoop: %s', e)
+
+            if retrigger:
+                _logger.info('Retriggering "Receive invoices from the exchange system"...')
+                self.env.ref('l10n_it_edi_sdicoop.ir_cron_receive_fattura_pa_invoice')._trigger()
 
     # -------------------------------------------------------------------------
     # Export
@@ -193,6 +206,7 @@ class AccountEdiFormat(models.Model):
         to_check = {i.l10n_it_edi_transaction: i for i in invoices}
         to_return = {}
         company = invoices.company_id
+
         proxy_user = self._get_proxy_user(company)
         if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
             return {invoice: {
@@ -220,50 +234,20 @@ class AccountEdiFormat(models.Model):
             if state == 'awaiting_outcome':
                 to_return[invoice] = {
                     'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
-                    'blocking_level': 'info',
-                }
-                continue
+                    'blocking_level': 'info'}
+
             elif state == 'not_found':
                 # Invoice does not exist on proxy. Either it does not belong to this proxy_user or it was not created correctly when
                 # it was sent to the proxy.
                 to_return[invoice] = {'error': _('You are not allowed to check the status of this invoice.'), 'blocking_level': 'error'}
-                continue
 
-            if not response.get('file'): # It means there is no status update, so we can skip it
-                document = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'fattura_pa')
-                to_return[invoice] = {'error': document.error, 'blocking_level': document.blocking_level}
-                continue
-            xml = proxy_user._decrypt_data(response['file'], response['key'])
-            response_tree = etree.fromstring(xml)
-            if state == 'ricevutaConsegna':
+            elif state == 'ricevutaConsegna':
                 if invoice._is_commercial_partner_pa():
                     to_return[invoice] = {'error': _('The invoice has been succesfully transmitted. The addressee has 15 days to accept or reject it.')}
                 else:
                     to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
-            elif state == 'notificaScarto':
-                elements = response_tree.xpath('//Errore')
-                error_codes = [element.find('Codice').text for element in elements]
-                errors = [element.find('Descrizione').text for element in elements]
-                # Duplicated invoice
-                if '00404' in error_codes:
-                    idx = error_codes.index('00404')
-                    invoice.message_post(body=_(
-                        'This invoice number had already been submitted to the SdI, so it is'
-                        ' set as Sent. Please verify that the system is correctly configured,'
-                        ' because the correct flow does not need to send the same invoice'
-                        ' twice for any reason.\n'
-                        ' Original message from the SDI: %s', errors[idx]))
-                    to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
-                else:
-                    # Add helpful text if duplicated filename error
-                    if '00002' in error_codes:
-                        idx = error_codes.index('00002')
-                        errors[idx] = _(
-                            'The filename is duplicated. Try again (or adjust the FatturaPA Filename sequence).'
-                            ' Original message from the SDI: %s', [errors[idx]]
-                        )
-                    to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
-                    invoice.l10n_it_edi_transaction = False
+                proxy_acks.append(id_transaction)
+
             elif state == 'notificaMancataConsegna':
                 if invoice._is_commercial_partner_pa():
                     to_return[invoice] = {'error': _(
@@ -284,15 +268,63 @@ class AccountEdiFormat(models.Model):
                         ' System, and promptly notify him that the original is deposited'
                         ' in his personal area on the portal "Invoices and Fees" of the'
                         ' Revenue Agency.'))
-            elif state == 'notificaEsito':
-                outcome = response_tree.find('Esito').text
-                if outcome == 'EC01':
-                    to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
-                else:  # ECO2
-                    to_return[invoice] = {'error': _('The invoice was refused by the addressee.'), 'blocking_level': 'error'}
+                proxy_acks.append(id_transaction)
+
             elif state == 'NotificaDecorrenzaTermini':
+                # This condition is part of the Public Administration flow
+                invoice._message_log(body=_(
+                    'The invoice has been correctly issued. The Public Administration recipient'
+                    ' had 15 days to either accept or refused this document, but they did not reply,'
+                    ' so from now on we consider it accepted.'))
                 to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
-            proxy_acks.append(id_transaction)
+                proxy_acks.append(id_transaction)
+
+            # In the transaction states above, we don't need to read the attachment.
+            # In the following cases instead we need to read the information inside
+            # about the notification itself, i.e. the error message in case of rejection.
+            else:
+                attachment_file = response.get('file')
+                if not attachment_file: # It means there is no status update, so we can skip it
+                    document = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'fattura_pa')
+                    to_return[invoice] = {'error': document.error, 'blocking_level': document.blocking_level}
+                    continue
+
+                xml = proxy_user._decrypt_data(attachment_file, response['key'])
+                response_tree = etree.fromstring(xml)
+
+                if state == 'notificaScarto':
+                    elements = response_tree.xpath('//Errore')
+                    error_codes = [element.find('Codice').text for element in elements]
+                    errors = [element.find('Descrizione').text for element in elements]
+                    # Duplicated invoice
+                    if '00404' in error_codes:
+                        idx = error_codes.index('00404')
+                        invoice.message_post(body=_(
+                            'This invoice number had already been submitted to the SdI, so it is'
+                            ' set as Sent. Please verify that the system is correctly configured,'
+                            ' because the correct flow does not need to send the same invoice'
+                            ' twice for any reason.\n'
+                            ' Original message from the SDI: %s', errors[idx]))
+                        to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
+                    else:
+                        # Add helpful text if duplicated filename error
+                        if '00002' in error_codes:
+                            idx = error_codes.index('00002')
+                            errors[idx] = _(
+                                'The filename is duplicated. Try again (or adjust the FatturaPA Filename sequence).'
+                                ' Original message from the SDI: %s', [errors[idx]]
+                            )
+                        to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
+                        invoice.l10n_it_edi_transaction = False
+                    proxy_acks.append(id_transaction)
+
+                elif state == 'notificaEsito':
+                    outcome = response_tree.find('Esito').text
+                    if outcome == 'EC01':
+                        to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
+                    else:  # ECO2
+                        to_return[invoice] = {'error': _('The invoice was refused by the addressee.'), 'blocking_level': 'error'}
+                    proxy_acks.append(id_transaction)
 
         if proxy_acks:
             try:

@@ -522,6 +522,7 @@
             <we-button class="ml-0 border-left-0" data-reset-crop="" data-no-preview="true" title="Reset crop">
                 Reset
             </we-button>
+            <!-- TODO adapt in master, this is patched in JS to simulate a data-dependencies -->
             <we-button class="fa fa-fw fa-object-ungroup" data-transform="true" data-no-preview="true" title="Transform the picture"/>
             <we-button class="ml-0 border-left-0" data-reset-transform="" data-no-preview="true" title="Reset transformation">
                 Reset
@@ -540,9 +541,9 @@
     <div data-selector="span.fa, i.fa, img">
         <we-select string="Alignment" data-state-to-first-class="true">
             <we-button data-select-class="" title="Unalign">None</we-button>
-            <we-button data-select-class="float-left" title="Align Left">Left</we-button>
+            <we-button data-select-class="mr-auto float-left" title="Align Left">Left</we-button>
             <we-button data-select-class="mx-auto d-block" title="Align Center">Center</we-button>
-            <we-button data-select-class="float-right" title="Align Right">Right</we-button>
+            <we-button data-select-class="ml-auto float-right" title="Align Right">Right</we-button>
         </we-select>
 
         <we-row string="Style">

@@ -67,4 +67,29 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
     PaymentScreen.check.validateButtonIsHighlighted(true);
 
     Tour.register('PaymentScreenTour', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.exec.addOrderline('Letter Tray', '1', '10');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.do.pressNumpad('1 0 0 0');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('0.0');
+
+    Tour.register('PaymentScreenTour2', { test: true, url: '/pos/ui' }, getSteps());
+
+
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.exec.addOrderline('Letter Tray', '-1', '10');
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickValidate();
+    PaymentScreen.check.errorPopupIsShown();
+
+    Tour.register('PaymentScreenTour3', { test: true, url: '/pos/ui' }, getSteps());
 });

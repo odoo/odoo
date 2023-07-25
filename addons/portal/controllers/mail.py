@@ -4,13 +4,12 @@
 from werkzeug import urls
 from werkzeug.exceptions import NotFound, Forbidden
 
-from odoo import http, _
+from odoo import http
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import consteq, plaintext2html
 from odoo.addons.mail.controllers import mail
-from odoo.addons.portal.controllers.portal import CustomerPortal
-from odoo.exceptions import AccessError, MissingError, UserError
+from odoo.exceptions import AccessError
 
 
 def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
@@ -104,13 +103,7 @@ class PortalChatter(http.Controller):
         return ['token', 'pid']
 
     def _portal_post_check_attachments(self, attachment_ids, attachment_tokens):
-        if len(attachment_tokens) != len(attachment_ids):
-            raise UserError(_("An access token must be provided for each attachment."))
-        for (attachment_id, access_token) in zip(attachment_ids, attachment_tokens):
-            try:
-                CustomerPortal._document_check_access(self, 'ir.attachment', attachment_id, access_token)
-            except (AccessError, MissingError):
-                raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.", attachment_id))
+        request.env['ir.attachment'].browse(attachment_ids)._check_attachments_access(attachment_tokens)
 
     @http.route(['/mail/chatter_post'], type='json', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, attachment_ids=None, attachment_tokens=None, **kw):
@@ -227,6 +220,10 @@ class MailController(mail.MailController):
             If so, those two parameters are used to authentify the recipient in the chatter, if any.
         :return:
         """
+        # no model / res_id, meaning no possible record -> direct skip to super
+        if not model or not res_id or model not in request.env:
+            return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
+
         if issubclass(type(request.env[model]), request.env.registry['portal.mixin']):
             uid = request.session.uid or request.env.ref('base.public_user').id
             record_sudo = request.env[model].sudo().browse(res_id).exists()
@@ -246,4 +243,4 @@ class MailController(mail.MailController):
                             url_params.update([("pid", pid), ("hash", hash)])
                             url = url.replace(query=urls.url_encode(url_params)).to_url()
                         return request.redirect(url)
-        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token)
+        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)

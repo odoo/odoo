@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -546,7 +547,7 @@ msgstr "비밀번호 재설정 : 사용자 이름 또는 이메일이 잘못되�
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset Instructions"
-msgstr ""
+msgstr "비밀번호 재설정 안내 전송"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -671,13 +672,13 @@ msgstr "사용자 : 등록되지 않은 사용자 알림"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr "{{ object.company_id.name }}! 에 오신 것을 환영합니다!"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr ""
+msgstr "보관 처리된 사용자에 대해서는 이 작업을 수행할 수 없습니다."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -701,3 +702,4 @@ msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
 msgstr ""
+"{{ object.company_id.name }} 의 {{ object.create_uid.name }} 이(가) 귀하를 초대합니다."

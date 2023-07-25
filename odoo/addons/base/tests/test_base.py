@@ -664,6 +664,35 @@ class TestGroups(TransactionCase):
         b = a.copy()
         self.assertFalse(a.name == b.name)
 
+    def test_apply_groups(self):
+        a = self.env['res.groups'].create({'name': 'A'})
+        b = self.env['res.groups'].create({'name': 'B'})
+        c = self.env['res.groups'].create({'name': 'C', 'implied_ids': [Command.set(a.ids)]})
+
+        # C already implies A, we want both B+C to imply A
+        (b + c)._apply_group(a)
+
+        self.assertIn(a, b.implied_ids)
+        self.assertIn(a, c.implied_ids)
+
+    def test_remove_groups(self):
+        u = self.env['res.users'].create({'login': 'u', 'name': 'U'})
+
+        a = self.env['res.groups'].create({'name': 'A', 'users': [Command.set(u.ids)]})
+        b = self.env['res.groups'].create({'name': 'B', 'users': [Command.set(u.ids)]})
+        c = self.env['res.groups'].create({'name': 'C', 'implied_ids': [Command.set(a.ids)]})
+
+        # C already implies A, we want none of B+C to imply A
+        (b + c)._remove_group(a)
+
+        self.assertNotIn(a, b.implied_ids)
+        self.assertNotIn(a, c.implied_ids)
+
+        # Since B didn't imply A, removing A from the implied groups of (B+C)
+        # should not remove user U from A, even though C implied A, since C does
+        # not have U as a user
+        self.assertIn(u, a.users)
+
 
 class TestUsers(TransactionCase):
     def test_superuser(self):

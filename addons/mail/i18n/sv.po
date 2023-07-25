@@ -22,15 +22,16 @@
 # Lisa <lisa.oskoma@vertel.se>, 2021
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Martin Trigaux, 2021
-# Robin Calvin, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Victor Ekström, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Simon S, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
 # Daniel Löfgren, 2022
-# Mikael Carlsson, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Robin Calvin, 2023
+# Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Lasse Larsson, 2023
 # 
 msgid ""
 msgstr ""
@@ -38,8 +39,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2022\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"Last-Translator: Lasse Larsson, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -81,6 +82,8 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
+"%(email)s känns inte igen som en giltig e-post. Detta krävs för att skapa en"
+" ny kund."
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -246,7 +249,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid ", enter to"
-msgstr ""
+msgstr "gå in på"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -954,6 +957,12 @@ msgid "All"
 msgstr "Alla"
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "En åtkomsttoken måste anges för respektive dokument."
+
+#. module: mail
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -1328,7 +1337,7 @@ msgstr "Studsade"
 #: code:addons/mail/static/src/components/rtc_configuration_menu/rtc_configuration_menu.xml:0
 #, python-format
 msgid "Browser default"
-msgstr ""
+msgstr "Standard för webbläsaren"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread_cc.py:0
@@ -1346,13 +1355,13 @@ msgstr "Samtal"
 #: code:addons/mail/static/src/components/media_preview/media_preview.xml:0
 #, python-format
 msgid "Camera is off"
-msgstr ""
+msgstr "Kameran är avstängd"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Kan redigera stycket"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -1760,7 +1769,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr ""
+msgstr "Anser att svaren är nya trådar"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -2005,7 +2014,7 @@ msgstr "Tidsfrist"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Deafen"
-msgstr ""
+msgstr "Slå av ljud"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
@@ -2026,7 +2035,7 @@ msgstr "Standard"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__default_display_mode
 msgid "Default Display Mode"
-msgstr ""
+msgstr "Standard visningsläge"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_note
@@ -2156,6 +2165,8 @@ msgid ""
 "Determines how the channel will be displayed by default when opening it from"
 " its invitation link. No value means display text (no voice/video)."
 msgstr ""
+"Bestämmer hur kanalen ska visas som standard när den öppnas från dess "
+"inbjudningslänk. Inget värde betyder visa text (ingen röst/video)."
 
 #. module: mail
 #. openerp-web
@@ -2200,18 +2211,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_tree
 #, python-format
 msgid "Disconnect"
-msgstr ""
+msgstr "Koppla ifrån"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "Disconnected from the RTC call by the server"
-msgstr ""
+msgstr "Bortkopplad från RTC samtal av servern"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -2289,6 +2301,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Behåll inte en kopia av e-postmeddelandet i dokumentets "
+"kommunikationshistorik (endast massutskick)"
 
 #. module: mail
 #. openerp-web
@@ -2316,7 +2330,7 @@ msgstr "Dokumentmodell"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_name
 msgid "Document Name"
-msgstr ""
+msgstr "Dokumentets namn"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2419,7 +2433,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Typ av förfallodag"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_dup
@@ -2568,6 +2582,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"Avsändarens e-postadress. Det här fältet sätts när ingen matchande partner "
+"hittas och ersätter fältet author_id i chatten."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2770,7 +2786,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
-msgstr ""
+msgstr "Felorsak"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_reason
@@ -2885,7 +2901,7 @@ msgstr "Hitta eller skapa en kanal..."
 #: code:addons/mail/static/src/models/messaging_initializer/messaging_initializer.js:0
 #, python-format
 msgid "Find or start a conversation..."
-msgstr ""
+msgstr "Sök eller starta en konversation"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_partner__fold_state__folded
@@ -2992,7 +3008,7 @@ msgstr "Fullskärm"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__default_display_mode__video_full_screen
 msgid "Full screen video"
-msgstr ""
+msgstr "Helskärmsvideo"
 
 #. module: mail
 #. openerp-web
@@ -3050,7 +3066,7 @@ msgstr "Gruppera efter ..."
 #: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #, python-format
 msgid "Grouped Chat"
-msgstr ""
+msgstr "Gruppsamtal"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_tree
@@ -3069,19 +3085,19 @@ msgstr "Grupper"
 #: model_terms:ir.ui.view,arch_db:mail.mail_guest_view_tree
 #, python-format
 msgid "Guest"
-msgstr ""
+msgstr "Gäst"
 
 #. module: mail
 #: code:addons/mail/models/mail_guest.py:0
 #, python-format
 msgid "Guest's name cannot be empty."
-msgstr ""
+msgstr "Gästens namn kan ej vara tomt."
 
 #. module: mail
 #: code:addons/mail/models/mail_guest.py:0
 #, python-format
 msgid "Guest's name is too long."
-msgstr ""
+msgstr "Gästens namn är för långt"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_guest_menu
@@ -3500,7 +3516,7 @@ msgstr "Inledande meddelande i tråd."
 #: code:addons/mail/static/src/components/rtc_configuration_menu/rtc_configuration_menu.xml:0
 #, python-format
 msgid "Input device"
-msgstr ""
+msgstr "Ingång"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_integrations_menu
@@ -3561,7 +3577,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Invitation Link"
-msgstr ""
+msgstr "Inbjudningslänk"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -3581,21 +3597,21 @@ msgstr "Bjud in följare"
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Invite people"
-msgstr ""
+msgstr "Bjud in personer"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/channel_invitation_form/channel_invitation_form.js:0
 #, python-format
 msgid "Invite to Channel"
-msgstr ""
+msgstr "Bjud in till kanal"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/channel_invitation_form/channel_invitation_form.js:0
 #, python-format
 msgid "Invite to group chat"
-msgstr ""
+msgstr "Bjud in till gruppsamtal"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -3622,7 +3638,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Är Redigerare"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
@@ -3663,7 +3679,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_muted
 msgid "Is microphone muted"
-msgstr ""
+msgstr "Är mikrofonen avstängd"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_pinned
@@ -3678,7 +3694,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_screen_sharing_on
 msgid "Is sharing the screen"
-msgstr ""
+msgstr "Delar skärmen"
 
 #. module: mail
 #. openerp-web
@@ -3697,7 +3713,7 @@ msgstr "Gå med"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Join Call"
-msgstr ""
+msgstr "Gå med i samtalet"
 
 #. module: mail
 #. openerp-web
@@ -3712,7 +3728,7 @@ msgstr "Gå med i Kanalen"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Join Video Call"
-msgstr ""
+msgstr "Delta i videosamtal"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -4011,7 +4027,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Typ av e-postaktivitet"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
@@ -4055,7 +4071,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__template_id
 msgid "Mail Template"
-msgstr ""
+msgstr "E-postmall"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_template_editor
@@ -4128,6 +4144,8 @@ msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
 msgstr ""
+"Hantera svar som nya inkommande e-postmeddelanden istället för svar som går "
+"till samma tråd."
 
 #. module: mail
 #. openerp-web
@@ -4135,7 +4153,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Mark Done"
-msgstr ""
+msgstr "Klarmarkera"
 
 #. module: mail
 #. openerp-web
@@ -4231,7 +4249,7 @@ msgstr "Meddelande"
 #: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
 #, python-format
 msgid "Message #%s..."
-msgstr ""
+msgstr "Meddelande #%s..."
 
 #. module: mail
 #. openerp-web
@@ -4475,7 +4493,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr ""
+msgstr "Modul Avinstallera"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__months
@@ -4495,7 +4513,7 @@ msgstr "Mer"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Mute"
-msgstr ""
+msgstr "Tysta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
@@ -4761,7 +4779,7 @@ msgstr "Inga"
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normaliserad e-post"
 
 #. module: mail
 #. openerp-web
@@ -4816,7 +4834,7 @@ msgstr "Meddela följare"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "Meddela följare om dokumentet (endast massutskick)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -5123,6 +5141,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Valfritt översättningsspråk (ISO-kod) som ska väljas när du skickar ett "
+"e-postmeddelande. Om inget anges används den engelska versionen. Detta bör "
+"vanligtvis vara ett platshållaruttryck som anger lämpligt språk, t.ex. {{ "
+"object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__null_value
@@ -5139,6 +5161,9 @@ msgid ""
 " Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
+"Ursprunglig Diskussion: Svar går i den ursprungliga dokumentdiskussionstråden.\n"
+"En Annan E-postadress: Svar går till e-postadressen som nämns i spårningsmeddelandets id istället för den ursprungliga dokumentdiskussionstråden.\n"
+"Detta har en inverkan på det genererade meddelande-id."
 
 #. module: mail
 #. openerp-web
@@ -5463,7 +5488,7 @@ msgstr "Förhandsgranskning"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Preview of"
-msgstr ""
+msgstr "Förhandsgranskning av"
 
 #. module: mail
 #. openerp-web
@@ -5687,7 +5712,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__resource_ref
 msgid "Record"
-msgstr ""
+msgstr "Spela in"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
@@ -5826,12 +5851,12 @@ msgstr "Ta bort denna följare"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Renderingsmodell"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
 msgid "Replies"
-msgstr ""
+msgstr "Svar"
 
 #. module: mail
 #. openerp-web
@@ -5856,6 +5881,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
+"E-postadress för svar. Om du anger reply_to går du förbi det automatiska "
+"skapandet av tråden."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to
@@ -6169,7 +6196,7 @@ msgstr "Utvalda användargrupper"
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Selected users:"
-msgstr ""
+msgstr "Valda användare:"
 
 #. module: mail
 #. openerp-web
@@ -6284,7 +6311,7 @@ msgstr "Inställningar"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Share screen"
-msgstr ""
+msgstr "Dela skärm"
 
 #. module: mail
 #. openerp-web
@@ -6324,7 +6351,7 @@ msgstr "Genväg"
 #: code:addons/mail/static/src/components/rtc_layout_menu/rtc_layout_menu.xml:0
 #, python-format
 msgid "Show All"
-msgstr ""
+msgstr "Visa alla"
 
 #. module: mail
 #. openerp-web
@@ -6339,7 +6366,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Show Member List"
-msgstr ""
+msgstr "Visa Deltagarlista"
 
 #. module: mail
 #. openerp-web
@@ -6387,7 +6414,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_layout_menu/rtc_layout_menu.xml:0
 #, python-format
 msgid "Sidebar"
-msgstr ""
+msgstr "Sidofält"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
@@ -6442,7 +6469,7 @@ msgstr "Stärnmärkt"
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Start a Call"
-msgstr ""
+msgstr "Starta ett samtal"
 
 #. module: mail
 #. openerp-web
@@ -6450,7 +6477,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Start a Video Call"
-msgstr ""
+msgstr "starta ett videosamtal"
 
 #. module: mail
 #. openerp-web
@@ -6458,7 +6485,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_initializer/messaging_initializer.js:0
 #, python-format
 msgid "Start a conversation"
-msgstr ""
+msgstr "Starta en konversation"
 
 #. module: mail
 #. openerp-web
@@ -6510,7 +6537,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Stop camera"
-msgstr ""
+msgstr "Stäng av kamera"
 
 #. module: mail
 #. openerp-web
@@ -6524,7 +6551,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Stop screen sharing"
-msgstr ""
+msgstr "Stoppa skärmdelning"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__push_to_talk_key
@@ -6739,7 +6766,7 @@ msgstr "Förfallodatum kan inte vara negativt"
 #: code:addons/mail/static/src/models/rtc_call_viewer/rtc_call_viewer.js:0
 #, python-format
 msgid "The FullScreen mode was denied by the browser"
-msgstr ""
+msgstr "Helskärmsläget nekades av webbläsaren"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat
@@ -6750,6 +6777,19 @@ msgid ""
 msgstr ""
 "Skatte -ID. Fyll i den om kontakten är föremål för statlig skatt. Används i "
 "vissa juridiska rapporter."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Bilagan %s finns inte eller så har du inte åtkomst till den."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
@@ -6890,7 +6930,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr ""
+msgstr "Detta"
 
 #. module: mail
 #. openerp-web
@@ -6903,6 +6943,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
+"Detta e-postmeddelande är svartlistat för massutskick. Klicka för att ta "
+"bort svartlistningen."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -6917,6 +6959,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
+"Detta fält används för att söka på e-postadress eftersom det primära "
+"e-postfältet kan innehålla mer än bara en e-postadress."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__public
@@ -7038,7 +7082,7 @@ msgstr "Dagens aktiviteter"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "Today:"
-msgstr ""
+msgstr "Idag:"
 
 #. module: mail
 #. openerp-web
@@ -7110,7 +7154,7 @@ msgstr "Utlös nästa aktivitet"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Turn camera on"
-msgstr ""
+msgstr "Slå på kameran"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
@@ -7149,6 +7193,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typ av serveråtgärd. Följande värden är tillgängliga:\n"
+"- execute Python Code\": ett block av Python-kod som ska exekveras\n"
+"- \"Create\": skapar en ny post med nya värden\n"
+"- \"Update a Record\": Uppdatera värdena i en post\n"
+"- \"Execute several actions\": definierar en åtgärd som utlöser flera andra serveråtgärder\n"
+"- \"Skicka e-post\": skickar automatiskt ett e-postmeddelande (diskussion)\n"
+"- 'Add Followers': lägg till följare till en post (Diskutera)\n"
+"- \"Skapa nästa aktivitet\": skapa en aktivitet (Diskutera)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -7193,6 +7245,7 @@ msgstr ""
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
+"Det går inte att skicka meddelandet, konfigurera avsändarens e-postadress."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -7210,7 +7263,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Undeafen"
-msgstr ""
+msgstr "Slå på ljud"
 
 #. module: mail
 #. openerp-web
@@ -7237,14 +7290,14 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
 #, python-format
 msgid "Unknown error"
-msgstr ""
+msgstr "Okänt fel"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Unmute"
-msgstr ""
+msgstr "Aktivera mikrofon"
 
 #. module: mail
 #. openerp-web
@@ -7332,6 +7385,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Använd \"Specifik användare\" för att alltid tilldela samma användare vid "
+"nästa aktivitet. Använd 'Generisk användare från post' för att ange "
+"fältnamnet på den användare som ska väljas på posten."
 
 #. module: mail
 #. openerp-web
@@ -7414,7 +7470,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "Namn på användarfält"
 
 #. module: mail
 #. openerp-web
@@ -7487,6 +7543,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -7529,7 +7593,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/discuss_sidebar_category/discuss_sidebar_category.xml:0
 #, python-format
 msgid "View or join channels"
-msgstr ""
+msgstr "Visa eller anslut till kanaler"
 
 #. module: mail
 #. openerp-web
@@ -7670,6 +7734,9 @@ msgid ""
 "access to it unless you are invited again. Are you sure you want to "
 "continue?"
 msgstr ""
+"Du är på väg att lämna den här gruppkonversationen och kommer inte längre "
+"att ha tillgång till den om du inte blir inbjuden igen. Är du säker på att "
+"du vill fortsätta?"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -7783,19 +7850,19 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "You have been assigned to %s"
-msgstr ""
+msgstr "Du har blivit tilldelad %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "You have been assigned to the"
-msgstr ""
+msgstr "Du har blivit tilldelad "
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "You have been invited to #%s"
-msgstr ""
+msgstr "Du har blivit inbjuden till #%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
@@ -7825,14 +7892,14 @@ msgstr ""
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "You've been invited to a chat!"
-msgstr ""
+msgstr "Du har blivit inbjuden till en chatt!"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "You've been invited to a meeting!"
-msgstr ""
+msgstr "Du har blivit inbjuden till ett möte!"
 
 #. module: mail
 #. openerp-web
@@ -7845,7 +7912,7 @@ msgstr "Du"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Your"
-msgstr "Ditt"
+msgstr "Din"
 
 #. module: mail
 #. openerp-web
@@ -8159,7 +8226,7 @@ msgstr "ms"
 #: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
 #, python-format
 msgid "muted"
-msgstr ""
+msgstr "mikrofonen avstängd"
 
 #. module: mail
 #. openerp-web
@@ -8221,7 +8288,7 @@ msgstr "läs mer"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "record:"
-msgstr ""
+msgstr "post:"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

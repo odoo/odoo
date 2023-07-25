@@ -78,30 +78,22 @@ class MicrosoftSync(models.AbstractModel):
     def write(self, vals):
         if 'ms_universal_event_id' in vals:
             self._from_uids.clear_cache(self)
-        synced_fields = self._get_microsoft_synced_fields()
-        if (
-            'need_sync_m' not in vals and vals.keys() & synced_fields
-            and self.ms_organizer_event_id
-            and not self.env.user.microsoft_synchronization_stopped
-        ):
-            fields_to_sync = [x for x in vals.keys() if x in synced_fields]
-            if fields_to_sync:
-                vals['need_sync_m'] = True
-        else:
-            fields_to_sync = [x for x in vals.keys() if x in synced_fields]
+
+        fields_to_sync = [x for x in vals.keys() if x in self._get_microsoft_synced_fields()]
+        if fields_to_sync and 'need_sync_m' not in vals and not self.env.user.microsoft_synchronization_stopped:
+            vals['need_sync_m'] = True
 
         result = super().write(vals)
-        need_delete = 'active' in vals.keys() and not vals.get('active')
-        for record in self.filtered('need_sync_m'):
-            if record.ms_universal_event_id:
-                if need_delete:
-                    # We need to delete the event. Cancel is not sufficant. Errors may occurs
-                    record._microsoft_delete(record._get_organizer(), record.ms_organizer_event_id, timeout=3)
-                elif fields_to_sync:
-                    values = record._microsoft_values(fields_to_sync)
-                    if not values:
-                        continue
-                    record._microsoft_patch(record._get_organizer(), record.ms_organizer_event_id, values, timeout=3)
+
+        for record in self.filtered(lambda e: e.need_sync_m and e.ms_organizer_event_id):
+            if not vals.get('active', True):
+                # We need to delete the event. Cancel is not sufficant. Errors may occurs
+                record._microsoft_delete(record._get_organizer(), record.ms_organizer_event_id, timeout=3)
+            elif fields_to_sync:
+                values = record._microsoft_values(fields_to_sync)
+                if not values:
+                    continue
+                record._microsoft_patch(record._get_organizer(), record.ms_organizer_event_id, values, timeout=3)
 
         return result
 
@@ -140,6 +132,12 @@ class MicrosoftSync(models.AbstractModel):
                 ['|', ('microsoft_id', '=', False), ('microsoft_id', '=ilike', f'%{IDS_SEPARATOR}')]
                 if with_uid
                 else [('microsoft_id', '=', False)]
+            )
+        elif operator == '!=' and not value:
+            return (
+                [('microsoft_id', 'ilike', f'{IDS_SEPARATOR}_')]
+                if with_uid
+                else [('microsoft_id', '!=', False)]
             )
         return (
             ['|'] * (len(value) - 1) + [_domain(v) for v in value]
@@ -469,14 +467,7 @@ class MicrosoftSync(models.AbstractModel):
         :param full_sync: If True, all events attended by the user are returned
         :return: events
         """
-        domain = self._get_microsoft_sync_domain()
-        if not full_sync:
-            is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
-            domain = expression.AND([domain, [
-                '|',
-                '&', ('ms_universal_event_id', '=', False), is_active_clause,
-                ('need_sync_m', '=', True),
-            ]])
+        domain = self.with_context(full_sync_m=full_sync)._get_microsoft_sync_domain()
         return self.with_context(active_test=False).search(domain)
 
     @api.model
@@ -521,3 +512,18 @@ class MicrosoftSync(models.AbstractModel):
         a given user.
         """
         raise NotImplementedError()
+
+    def _extend_microsoft_domain(self, domain):
+        """ Extends the sync domain based on the full_sync_m context parameter.
+        In case of full sync it shouldn't include already synced events.
+        """
+        if self._context.get('full_sync_m', True):
+            domain = expression.AND([domain, [('ms_universal_event_id', '=', False)]])
+        else:
+            is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
+            domain = expression.AND([domain, [
+                '|',
+                '&', ('ms_universal_event_id', '=', False), is_active_clause,
+                ('need_sync_m', '=', True),
+            ]])
+        return domain

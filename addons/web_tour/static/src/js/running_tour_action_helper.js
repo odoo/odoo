@@ -28,6 +28,9 @@ var RunningTourActionHelper = core.Class.extend({
     text: function (text, element) {
         this._text(this._get_action_values(element), text);
     },
+    remove_text(text, element) {
+        this._text(this._get_action_values(element), '\n');
+    },
     text_blur: function (text, element) {
         this._text_blur(this._get_action_values(element), text);
     },
@@ -92,14 +95,22 @@ var RunningTourActionHelper = core.Class.extend({
                 bubbles: true,
             }));
         } else if (values.$element.is("select")) {
-            var $options = values.$element.children("option");
+            var $options = values.$element.find("option");
             $options.prop("selected", false).removeProp("selected");
             var $selectedOption = $options.filter(function () { return $(this).val() === text; });
             if ($selectedOption.length === 0) {
                 $selectedOption = $options.filter(function () { return $(this).text().trim() === text; });
             }
+            const regex = /option\s+([0-9]+)/;
+            if ($selectedOption.length === 0 && regex.test(text)) {
+                // Extract position as 1-based, as the nth selectors.
+                const position = parseInt(regex.exec(text)[1]);
+                $selectedOption = $options.eq(position - 1); // eq is 0-based.
+            }
             $selectedOption.prop("selected", true);
             this._click(values);
+            // For situations where an `oninput` is defined.
+            values.$element.trigger("input");
         } else {
             values.$element.focusIn();
             values.$element.trigger($.Event( "keydown", {key: '_', keyCode: 95}));

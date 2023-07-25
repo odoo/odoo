@@ -11,7 +11,6 @@
 # Anatolij, 2022
 # Rolandas <info@paninfo.lt>, 2022
 # Donatas <donatasvaliulis16@gmail.com>, 2022
-# Arunas V. <arunas@devoro.com>, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
@@ -22,6 +21,7 @@
 # Arminas Grigonis <arminas@versada.lt>, 2022
 # Jonas Zinkevicius <jozi@odoo.com>, 2022
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# Arunas V. <arunas@devoro.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,8 +29,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022\n"
-"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"Last-Translator: Arunas V. <arunas@devoro.com>, 2023\n"
+"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1655,7 +1655,7 @@ msgstr "Niekada (pasirinkimas)"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Kitas veiklos kalendoriaus įvykis"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
@@ -1674,6 +1674,14 @@ msgstr "Kito veiksmo santrauka"
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
 msgstr "Kito veiksmo tipas"
+
+#. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2469,11 +2477,9 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Nurodykite fiksuota suma, kuri bus pridėta ar atimta (jei neigiama) prie "
-"apskaičiuotos kainos su nuolaida."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3237,6 +3243,12 @@ msgstr ""
 "kompanijos pagrindinės valiutos apvalinimo faktorius"
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr ""
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3251,7 +3263,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 
 #. module: product
@@ -3278,8 +3291,7 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
 
 #. module: product
@@ -3288,6 +3300,13 @@ msgstr ""
 msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
 msgstr ""
 
 #. module: product

@@ -4,6 +4,7 @@ odoo.define('web.GroupByMenu', function (require) {
     const CustomGroupByItem = require('web.CustomGroupByItem');
     const { FACET_ICONS, GROUPABLE_TYPES } = require('web.searchUtils');
     const { useModel } = require('web.Model');
+    const { SearchDropdownItem } = require("@web/search/search_dropdown_item/search_dropdown_item");
 
     const { Component } = owl;
 
@@ -43,7 +44,7 @@ odoo.define('web.GroupByMenu', function (require) {
          * @returns {boolean}
          */
         _validateField(field) {
-            return (field.sortable || (field.type === "many2many" && field.store)) &&
+            return (field.type === "many2many" ? field.store : field.sortable) &&
                 field.name !== "id" &&
                 GROUPABLE_TYPES.includes(field.type);
         }
@@ -67,7 +68,7 @@ odoo.define('web.GroupByMenu', function (require) {
         }
     }
 
-    GroupByMenu.components = { CustomGroupByItem };
+    GroupByMenu.components = { CustomGroupByItem, DropdownItem: SearchDropdownItem };
     GroupByMenu.props = { fields: Object };
     GroupByMenu.template = "web.GroupByMenu";
 

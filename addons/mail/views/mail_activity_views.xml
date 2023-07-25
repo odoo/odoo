@@ -44,9 +44,8 @@
                             </div>
                         </group>
                     </group>
-                    <group>
-                        <field name="default_note"/>
-                    </group>
+                    <label for="default_note" class="fw-bold"/>
+                    <field nolabel="1" name="default_note" placeholder="e.g. &quot;Go over the offer and discuss details&quot;" class="oe-bordered-editor"/>
                     <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
                 </sheet>
             </form>

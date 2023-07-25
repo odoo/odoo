@@ -106,7 +106,7 @@ def _check_olecf(data):
 
 def _check_svg(data):
     """This simply checks the existence of the opening and ending SVG tags"""
-    if b'<svg' in data and b'/svg>' in data:
+    if b'<svg' in data and b'/svg' in data:
         return 'image/svg+xml'
 
 
@@ -123,7 +123,7 @@ _mime_mappings = (
     _Entry('image/png', [b'\x89PNG\r\n\x1A\n'], []),
     _Entry('image/gif', [b'GIF87a', b'GIF89a'], []),
     _Entry('image/bmp', [b'BM'], []),
-    _Entry('image/svg+xml', [b'<'], [
+    _Entry('application/xml', [b'<'], [
         _check_svg,
     ]),
     _Entry('image/x-icon', [b'\x00\x00\x01\x00'], []),

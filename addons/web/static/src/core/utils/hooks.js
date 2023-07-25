@@ -46,7 +46,7 @@ export function useAutofocus(params = {}) {
             const target = comp.el.querySelector(selector);
             if (target) {
                 target.focus();
-                if (["INPUT", "TEXTAREA"].includes(target.tagName)) {
+                if (["INPUT", "TEXTAREA"].includes(target.tagName) && target.type !== 'number') {
                     const inputEl = target;
                     inputEl.selectionStart = inputEl.selectionEnd = inputEl.value.length;
                 }

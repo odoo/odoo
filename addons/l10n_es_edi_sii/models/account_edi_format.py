@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from urllib3.util.ssl_ import create_urllib3_context, DEFAULT_CIPHERS
+from urllib3.contrib.pyopenssl import inject_into_urllib3
 from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 from zeep.transports import Transport
 
@@ -27,6 +28,7 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
 
     def init_poolmanager(self, *args, **kwargs):
         # OVERRIDE
+        inject_into_urllib3()
         kwargs['ssl_context'] = create_urllib3_context(ciphers=EUSKADI_CIPHERS)
         return super().init_poolmanager(*args, **kwargs)
 
@@ -229,6 +231,9 @@ class AccountEdiFormat(models.Model):
         if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
             # ES partner with VAT.
             partner_info['NIF'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
+            if self.env.context.get('error_1117'):
+                partner_info['IDOtro'] = {'IDType': '07', 'ID': IDOtro_ID}
+
         elif partner.country_id.code in eu_country_codes and partner.vat:
             # European partner.
             partner_info['IDOtro'] = {'IDType': '02', 'ID': IDOtro_ID}
@@ -404,9 +409,15 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_edi_web_service_aeat_vals(self, invoices):
         if invoices[0].is_sale_document():
-            return {'url': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/SuministroFactEmitidas.wsdl'}
+            return {
+                'url': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/SuministroFactEmitidas.wsdl',
+                'test_url': 'https://prewww1.aeat.es/wlpl/SSII-FACT/ws/fe/SiiFactFEV1SOAP',
+            }
         else:
-            return {'url': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/SuministroFactRecibidas.wsdl'}
+            return {
+                'url': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/SuministroFactRecibidas.wsdl',
+                'test_url': 'https://prewww1.aeat.es/wlpl/SSII-FACT/ws/fr/SiiFactFRV1SOAP',
+            }
 
     def _l10n_es_edi_web_service_bizkaia_vals(self, invoices):
         if invoices[0].is_sale_document():
@@ -556,6 +567,11 @@ class AccountEdiFormat(models.Model):
                 results[inv] = {'success': True}
                 inv.message_post(body=_("We saw that this invoice was sent correctly before, but we did not treat "
                                         "the response.  Make sure it is not because of a wrong configuration."))
+
+            elif respl.CodigoErrorRegistro == 1117 and not self.env.context.get('error_1117'):
+                return self.with_context(error_1117=True)._post_invoice_edi(invoices)
+
+
             else:
                 results[inv] = {
                     'error': _("[%s] %s", respl.CodigoErrorRegistro, respl.DescripcionErrorRegistro),

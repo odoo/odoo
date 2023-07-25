@@ -231,7 +231,7 @@
                 </div>
                 <group>
                     <group name="col_left">
-                        <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="w-100"/>
+                        <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from, 'default_date_to':date_to}" options="{'no_create': True, 'no_open': True}" class="w-100"/>
                         <label for="request_date_from" string="Dates" id="label_dates"/>
                         <div>
                             <field name="date_from" invisible="1" widget="daterange"/>
@@ -408,7 +408,7 @@
             <field name="holiday_status_id" position="replace"/>
             <div name="title" position="inside">
                 <h1 class="d-flex flex-row justify-content-between">
-                    <field name="holiday_status_id" options="{'no_open': True}" context="{'from_manager_leave_form': True ,'employee_id': employee_id}"/>
+                    <field name="holiday_status_id" options="{'no_open': True}" context="{'from_manager_leave_form': True ,'employee_id': employee_id, 'default_date_from':date_from, 'default_date_to':date_to}"/>
                 </h1>
             </div>
             <field name="employee_id" position="replace"/>
@@ -662,7 +662,10 @@
             'search_default_active_time_off': 4,
             'hide_employee_name': 1}
         </field>
-        <field name="domain">[('employee_id.company_id', 'in', allowed_company_ids)]</field>
+        <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
+                                    '&amp;', ('multi_employee', '=', True),
+                                    '&amp;', ('state', 'in', ['draft', 'confirm', 'validate1']),
+                                    ('employee_ids.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.

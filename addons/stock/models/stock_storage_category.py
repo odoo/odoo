@@ -20,6 +20,7 @@ class StorageCategory(models.Model):
         ('mixed', 'Allow mixed products')], default='mixed', required=True)
     location_ids = fields.One2many('stock.location', 'storage_category_id')
     company_id = fields.Many2one('res.company', 'Company')
+    weight_uom_name = fields.Char(string='Weight unit', compute='_compute_weight_uom_name')
 
     _sql_constraints = [
         ('positive_max_weight', 'CHECK(max_weight >= 0)', 'Max weight should be a positive number.'),
@@ -30,6 +31,9 @@ class StorageCategory(models.Model):
         for storage_category in self:
             storage_category.product_capacity_ids = storage_category.capacity_ids.filtered(lambda c: c.product_id)
             storage_category.package_capacity_ids = storage_category.capacity_ids.filtered(lambda c: c.package_type_id)
+
+    def _compute_weight_uom_name(self):
+        self.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
 
     def _set_storage_capacity_ids(self):
         for storage_category in self:

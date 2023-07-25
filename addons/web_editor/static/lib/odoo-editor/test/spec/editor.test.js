@@ -1,4 +1,3 @@
-import { applyInlineStyle } from '../../src/commands/commands.js';
 import { OdooEditor } from '../../src/OdooEditor.js';
 import { getTraversedNodes } from '../../src/utils/utils.js';
 import {
@@ -83,6 +82,28 @@ describe('Editor', () => {
                     contentBefore: '<p>ab</p><i class="fa fa-beer"></i><p>c</p>',
                     contentAfter: '<p>ab</p><p style="margin-bottom: 0px;"><i class="fa fa-beer"></i></p><p>c</p>',
                 });
+            });
+        });
+        describe('allowInlineAtRoot options', () => {
+            it('should wrap inline node inside a p by default', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'abc',
+                    contentAfter: '<p style="margin-bottom: 0px;">abc</p>',
+                });
+            });
+            it('should wrap inline node inside a p if value is false', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'abc',
+                    contentAfter: '<p style="margin-bottom: 0px;">abc</p>',
+                }, { allowInlineAtRoot: false }
+                );
+            });
+            it('should keep inline nodes unchanged if value is true', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'abc',
+                    contentAfter: 'abc',
+                }, { allowInlineAtRoot: true, }
+                );
             });
         });
     });
@@ -1132,6 +1153,11 @@ X[]
                     // JW cAfter: '<p>[]def</p>',
                     contentAfter: '<h1>[]<br></h1><p>def</p>',
                 });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>[abc</h1><p>]<br></p><p>def</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<h1>[]<br></h1><p><br></p><p>def</p>',
+                });
             });
             it('should empty an inline unremovable but remain in it', async () => {
                 await testEditor(BasicEditor, {
@@ -1334,6 +1360,13 @@ X[]
                         stepFunction: deleteBackward,
                         contentAfter:
                             '<table><tbody><tr><td>[]<br></td><td>abc</td></tr></tbody></table>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore:
+                            '<table><tbody><tr><td>abc</td><td>[]<br></td><td>abc</td></tr></tbody></table>',
+                        stepFunction: deleteBackward,
+                        contentAfter:
+                            '<table><tbody><tr><td>abc</td><td>[]<br></td><td>abc</td></tr></tbody></table>',
                     });
                 });
                 it('should not break a table', async () => {
@@ -2351,6 +2384,11 @@ X[]
                     // JW cAfter: '<p>[]def</p>',
                     contentAfter: '<h1>[]<br></h1><p>def</p>',
                 });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>[abc</h1><p>]<br></p><p>def</p>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<h1>[]<br></h1><p><br></p><p>def</p>',
+                });
             });
             it('should delete last character of paragraph, ignoring the selected paragraph break', async () => {
                 await testEditor(BasicEditor, {
@@ -2360,6 +2398,14 @@ X[]
                     // doesn't remove a paragraph break.
                     stepFunction: deleteBackward,
                     contentAfter: '<p>ab[]</p><p>def</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p>]<br></p><p>def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteBackward,
+                    contentAfter: '<p>ab[]</p><p><br></p><p>def</p>',
                 });
             });
             it('should delete first character of paragraph, as well as selected paragraph break', async () => {
@@ -2377,6 +2423,22 @@ X[]
                     // doesn't remove a paragraph break.
                     stepFunction: deleteBackward,
                     contentAfter: '<p>ab[]</p><p t="unbreak">def</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p t="unbreak">]<br></p><p>def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteBackward,
+                    contentAfter: '<p>ab[]</p><p t="unbreak"><br></p><p>def</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p>]<br></p><p t="unbreak">def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteBackward,
+                    contentAfter: '<p>ab[]</p><p><br></p><p t="unbreak">def</p>',
                 });
             });
             it('should delete first character of unbreakable, ignoring selected paragraph break', async () => {
@@ -2427,7 +2489,20 @@ X[]
                     contentAfter: '<p>ab<b class="oe_unremovable">[]\u200B</b>ef</p>',
                 });
             });
+            it('should delete if first element and append in paragraph', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<blockquote><br>[]</blockquote>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>[]<br></p>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: `<h1>[]abcd</h1>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>[]abcd</p>`,
+                });
+            });
         });
+
     });
 
     describe('deleterange', () => {
@@ -2857,23 +2932,41 @@ X[]
         });
     });
 
-    describe('insertLineBreak', () => {
-        describe('Selection not collapsed', () => {
-            it('should insert a char into an empty span', async () => {
-                await testEditor(BasicEditor, {
-                    contentBefore: '<p>ab<span>[]\u200B</span>cd</p>',
-                    stepFunction: async editor => {
-                        await insertText(editor, 'x');
-                    },
-                    contentAfter: '<p>ab<span>x[]</span>cd</p>',
-                });
-                await testEditor(BasicEditor, {
-                    contentBefore: '<p>uv <span>[]\u200B</span> wx</p>',
-                    stepFunction: async editor => {
-                        await insertText(editor, 'y');
-                    },
-                    contentAfter: '<p>uv <span>y[]</span> wx</p>',
-                });
+    describe('ZWS', () => {
+        it('should insert a char into an empty span without removing the zws', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab<span>[]\u200B</span>cd</p>',
+                stepFunction: async editor => {
+                    await insertText(editor, 'x');
+                },
+                contentAfter: '<p>ab<span>x[]\u200B</span>cd</p>',
+            });
+        });
+        it('should insert a char into an empty span surrounded by space without removing the zws', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab <span>[]\u200B</span> cd</p>',
+                stepFunction: async editor => {
+                    await insertText(editor, 'x');
+                },
+                contentAfter: '<p>ab <span>x[]\u200B</span> cd</p>',
+            });
+        });
+        it('should insert a char into a oe-zws-empty-inline span removing the zws and oe-zws-empty-inline', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab<span oe-zws-empty-inline="">[]\u200B</span>cd</p>',
+                stepFunction: async editor => {
+                    await insertText(editor, 'x');
+                },
+                contentAfter: '<p>ab<span>x[]</span>cd</p>',
+            });
+        });
+        it('should insert a char into a oe-zws-empty-inline span surrounded by space without removing the zws and oe-zws-empty-inline', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab<span oe-zws-empty-inline="">[]\u200B</span>cd</p>',
+                stepFunction: async editor => {
+                    await insertText(editor, 'x');
+                },
+                contentAfter: '<p>ab<span>x[]</span>cd</p>',
             });
         });
     });
@@ -2924,18 +3017,15 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab []cd</p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible (because it's before a
-                        // <br>).
-                        // JW cAfter: '<p>ab&nbsp;<br>[]cd</p>',
-                        contentAfter: '<p>ab <br>[]cd</p>', // Note: JW seems just wrong here...
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p>ab&nbsp;<br>[]cd</p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab[] cd</p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible (because it's after a
-                        // <br>).
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's after a <br>).
                         contentAfter: '<p>ab<br>[]&nbsp;cd</p>',
                     });
                 });
@@ -3032,16 +3122,15 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>abc <b>[]def</b></p>',
                         stepFunction: insertLineBreak,
-                        // JW cAfter: '<p>abc&nbsp;<br><b>[]def</b></p>',
-                        contentAfter: '<p>abc <b><br>[]def</b></p>', // Note: JW seems just wrong here
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p>abc&nbsp;<b><br>[]def</b></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>abc<b>[] def </b></p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible (because it's before a
-                        // <br>).
-                        // JW cAfter: '<p>abc<br><b>[]&nbsp;def</b></p>',
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
                         contentAfter: '<p>abc<b><br>[]&nbsp;def </b></p>',
                     });
                 });
@@ -3072,8 +3161,9 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>abc []</b>def</p>',
                         stepFunction: insertLineBreak,
-                        // JW cAfter: '<p><b>abc&nbsp;[]<br></b>def</p>',
-                        contentAfter: '<p><b>abc <br>[]</b>def</p>', // Note: JW seems wrong here
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p><b>abc&nbsp;<br>[]</b>def</p>',
                     });
                 });
                 it('should insert a <br> at the beginning of a format node', async () => {
@@ -3105,10 +3195,9 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>ab []cd</b></p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible.
-                        // JW cAfter: '<p><b>ab&nbsp;<br>[]cd</b></p>',
-                        contentAfter: '<p><b>ab <br>[]cd</b></p>', // Note: JW seems just wrong here...
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p><b>ab&nbsp;<br>[]cd</b></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>ab[] cd</b></p>',
@@ -3268,6 +3357,27 @@ X[]
                             ),
                         )
                         .to.eql(['abc', 'DIV', 'def']);
+                },
+            });
+        });
+        it('should return an image in a parent selection', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div id="parent-element-to-select"><img/></div>',
+                stepFunction: editor => {
+                    const sel = editor.document.getSelection();
+                    const range = editor.document.createRange();
+                    const parent = editor.document.querySelector('div#parent-element-to-select');
+                    range.setStart(parent, 0);
+                    range.setEnd(parent, 1);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    window.chai
+                        .expect(
+                            getTraversedNodes(editor.editable).map(node =>
+                                node.nodeType === Node.TEXT_NODE ? node.textContent : node.nodeName,
+                            ),
+                        )
+                        .to.eql(['DIV', 'IMG']);
                 },
             });
         });
@@ -3449,12 +3559,8 @@ X[]
                     stepFunction: async editor => {
                         // simulate preview
                         editor.historyPauseSteps();
-                        try {
-                            applyInlineStyle(editor, (el) => el.style.color = 'lime');
-                            // a[bcd]e with bcd in lime
-                        } finally {
-                            editor.historyUnpauseSteps();
-                        }
+                        editor.execCommand('bold');
+                        editor.historyUnpauseSteps();
                         // simulate preview's reset
                         editor.historyRevertCurrentStep(); // back to initial state
                     },
@@ -3472,6 +3578,84 @@ X[]
                         editor.historyStep();
                     },
                     contentAfter: `<div contenteditable="false"><div contenteditable="true">abc</div></div>`,
+                });
+            });
+        });
+        describe('prevent renderingClasses to be set from history', () => {
+            it('should prevent renderingClasses to be added', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        p.className = 'x';
+                        editor.observerFlush();
+                        editor.historyStep();
+                        window.chai.expect(editor._historySteps.length).to.eql(1);
+                    },
+                }, {
+                    renderingClasses: ['x']
+                });
+            });
+            it('should prevent renderingClasses to be added when adding 2 classes', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        p.className = 'x y';
+                        editor.observerFlush();
+                        editor.historyStep();
+                        editor.historyUndo();
+                        editor.historyRedo();
+                    },
+                    contentAfter: `<p class="y">a</p>`,
+                }, {
+                    renderingClasses: ['x']
+                });
+            });
+            it('should prevent renderingClasses to be added in historyApply', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        editor.historyApply([{
+                            attributeName:"class",
+                            id: p.oid,
+                            oldValue: null,
+                            type:"attributes",
+                            value: "x y",
+                        }]);
+                    },
+                    contentAfter: `<p class="y">a</p>`,
+                }, {
+                    renderingClasses: ['x']
+                });
+            });
+            it('should skip the mutations if no changes in state', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p class="x">a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        editor.historyPauseSteps();
+                        p.className = ""; // remove class 'x'
+                        p.className = "x"; // apply class 'x' again
+                        editor.historyUnpauseSteps();
+                        editor.historyRevertCurrentStep(); // back to the initial state
+                    },
+                    contentAfter: `<p class="x">a</p>`,
+                }, {
+                    renderingClasses: ['y']
+                });
+            });
+        });
+    });
+
+    describe('tables', () => {
+        describe('tab', () => {
+            it('should add a new row on press tab at the end of a table', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<table><tbody><tr><td>ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
+                    stepFunction: async editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab'}),
+                    contentAfter: '<table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr><tr><td>[]<br></td><td><br></td><td><br></td></tr></tbody></table>',
                 });
             });
         });
@@ -3731,6 +3915,22 @@ X[]
                     contentAfter: '<p>a[b<span>]\u200B</span>cd</p>',
                     // Final state: '<p>a[]b<span>\u200B</span>cd</p>'
                 });
+            });
+        });
+        it('should apply a color to a slice of text containing a span', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[b<span>c</span>d]e</p>',
+                stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'color'),
+                contentAfter: '<p>a<font style="color: rgb(255, 0, 0);">[b<span>c</span>d]</font>e</p>',
+            });
+        });
+        it('should distribute color to texts and to button separately', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[b<a class="btn">c</a>d]e</p>',
+                stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'color'),
+                contentAfter: '<p>a<font style="color: rgb(255, 0, 0);">[b</font>' +
+                    '<a class="btn"><font style="color: rgb(255, 0, 0);">c</font></a>' +
+                    '<font style="color: rgb(255, 0, 0);">d]</font>e</p>',
             });
         });
     });

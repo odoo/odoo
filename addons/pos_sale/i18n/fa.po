@@ -5,11 +5,12 @@
 # Translators:
 # Zahed Alfak <tamass4116@gmail.com>, 2022
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
-# Far Har <fhari1234@gmail.com>, 2022
+# Farid Hariri <fhari1234@gmail.com>, 2022
 # Hamid Darabi, 2022
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
 # Martin Trigaux, 2022
+# Hanna Kheradroosta, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,13 +18,20 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"Last-Translator: Hanna Kheradroosta, 2022\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#, python-format
+msgid "(left:"
+msgstr ""
 
 #. module: pos_sale
 #. openerp-web
@@ -94,6 +102,13 @@ msgstr "نرخ ارز"
 #, python-format
 msgid "Customer"
 msgstr "مشتری"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Customer loading error"
+msgstr ""
 
 #. module: pos_sale
 #. openerp-web
@@ -190,7 +205,7 @@ msgstr "قفل شده"
 #: code:addons/pos_sale/static/src/js/SetSaleOrderButton.js:0
 #, python-format
 msgid "Network Error"
-msgstr ""
+msgstr "خطای شبکه"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
@@ -203,7 +218,7 @@ msgstr "جدید"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Next Order List"
-msgstr ""
+msgstr "لیست سفارش بعدی"
 
 #. module: pos_sale
 #. openerp-web
@@ -264,7 +279,7 @@ msgstr "پیکربندی پایانه فروش"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "سطرهای سفارش پایانه فروش"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
@@ -284,7 +299,7 @@ msgstr "پایانه فروش"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
 msgid "Pos Order Count"
-msgstr ""
+msgstr "تعداد سفارش Pos"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
@@ -297,7 +312,7 @@ msgstr "ارسال شد"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Previous Order List"
-msgstr ""
+msgstr "لیست سفارش قبلی"
 
 #. module: pos_sale
 #. openerp-web
@@ -345,7 +360,7 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "تعداد سفارش فروش"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
@@ -424,6 +439,13 @@ msgstr ""
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
+msgid "Settle the order"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
 msgid ""
 "Some of the products in your Sale Order are not available in POS, do you "
 "want to import them?"
@@ -432,13 +454,6 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
 msgid "Source Sale Order Line"
-msgstr ""
-
-#. module: pos_sale
-#. openerp-web
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
-#, python-format
-msgid "Settle the order"
 msgstr ""
 
 #. module: pos_sale
@@ -460,6 +475,13 @@ msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
 msgstr "نرخ ارز به نرخ ارز قابل اعمال در تاریخ سفارش"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "There was a problem in loading the %s customer."
+msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -526,3 +548,12 @@ msgstr "چه کاری می‌خواهید انجام دهید؟"
 #, python-format
 msgid "Yes"
 msgstr "بله"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
+msgstr ""

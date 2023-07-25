@@ -57,7 +57,7 @@ var SlideLikeWidget = publicWidget.Widget.extend({
                     if (signupAllowed) {
                         message = _t('Please <a href="/web/signup?redirect=%s">create an account</a> to vote this lesson');
                     }
-                    self._popoverAlert(self.$el, _.str.sprintf(message, (document.URL)));
+                    self._popoverAlert(self.$el, _.str.sprintf(message, encodeURIComponent(document.URL)));
                 } else if (data.error === 'vote_done') {
                     self._popoverAlert(self.$el, _t('You have already voted for this lesson'));
                 } else if (data.error === 'slide_access') {

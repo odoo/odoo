@@ -15,7 +15,7 @@ class ReportBomStructure(models.AbstractModel):
         for bom_id in docids:
             bom = self.env['mrp.bom'].browse(bom_id)
             variant = data.get('variant')
-            candidates = variant and self.env['product.product'].browse(variant) or bom.product_id or bom.product_tmpl_id.product_variant_ids
+            candidates = variant and self.env['product.product'].browse(int(variant)) or bom.product_id or bom.product_tmpl_id.product_variant_ids
             quantity = float(data.get('quantity', bom.product_qty))
             for product_variant_id in candidates.ids:
                 if data and data.get('childs'):
@@ -74,6 +74,7 @@ class ReportBomStructure(models.AbstractModel):
             'bom_id': bom_id,
             'currency': self.env.company.currency_id,
             'byproducts': lines,
+            'extra_column_count': self._get_extra_column_count(),
         }
         return self.env.ref('mrp.report_mrp_byproduct_line')._render({'data': values})
 
@@ -117,13 +118,12 @@ class ReportBomStructure(models.AbstractModel):
         else:
             product = bom.product_id or bom.product_tmpl_id.product_variant_id
         if product:
-            price = product.uom_id._compute_price(product.with_company(company).standard_price, bom.product_uom_id) * bom_quantity
             attachments = self.env['mrp.document'].search(['|', '&', ('res_model', '=', 'product.product'),
             ('res_id', '=', product.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', product.product_tmpl_id.id)])
         else:
             # Use the product template instead of the variant
-            price = bom.product_tmpl_id.uom_id._compute_price(bom.product_tmpl_id.with_company(company).standard_price, bom.product_uom_id) * bom_quantity
-            attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', bom.product_tmpl_id.id)])
+            product = bom.product_tmpl_id
+            attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', product.id)])
         operations = self._get_operation_line(product, bom, float_round(bom_quantity, precision_rounding=1, rounding_method='UP'), 0)
         lines = {
             'bom': bom,
@@ -132,7 +132,7 @@ class ReportBomStructure(models.AbstractModel):
             'currency': company.currency_id,
             'product': product,
             'code': bom and bom.display_name or '',
-            'price': price,
+            'price': product.uom_id._compute_price(product.with_company(company).standard_price, bom.product_uom_id) * bom_quantity,
             'total': sum([op['total'] for op in operations]),
             'level': level or 0,
             'operations': operations,
@@ -248,7 +248,7 @@ class ReportBomStructure(models.AbstractModel):
             if line._skip_bom_line(product):
                 continue
             if line.child_bom_id:
-                qty = line.product_uom_id._compute_quantity(line.product_qty * (factor / bom.product_qty) , line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
+                qty = line.product_uom_id._compute_quantity(line.product_qty * (factor / bom.product_qty), line.child_bom_id.product_uom_id)
                 sub_price = self._get_price(line.child_bom_id, qty, line.product_id)
                 byproduct_cost_share = sum(line.child_bom_id.byproduct_ids.mapped('cost_share'))
                 if byproduct_cost_share:

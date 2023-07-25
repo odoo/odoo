@@ -8,6 +8,7 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,6 +30,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                Show me how to obtain the Twitter API key and Twitter API secret"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                Näytä, miten saan Twitter API -avaimen ja Twitter API -salaisuuden"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -50,7 +53,7 @@ msgstr "<strong>Kuvaus: </strong> Odoo Twitter Integraatio"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Name: </strong> Odoo Twitter Integration"
-msgstr ""
+msgstr "<strong>Nimi: </strong> Odoo Twitter-integraatio"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -67,7 +70,7 @@ msgstr "API Avain"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_secret
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
-msgstr ""
+msgstr "API-salaisuus"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -83,6 +86,8 @@ msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
 msgstr ""
+"Tunnistautumistiedot puuttuivat tai olivat virheelliset. Ehkä "
+"käyttäjätunnuksen twiitit on suojattu."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
@@ -120,7 +125,7 @@ msgstr "Näyttönimi"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_screen_name
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
-msgstr ""
+msgstr "Suosikit kohteesta"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
@@ -148,6 +153,7 @@ msgstr "Tunniste (ID)"
 #, python-format
 msgid "Internet connection refused: We failed to reach a twitter server."
 msgstr ""
+"Internet-yhteys ei sallittu: Twitter-palvelinta ei onnistuttu tavoittamaan."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet____last_update
@@ -194,6 +200,8 @@ msgid ""
 "Request cannot be served due to the applications rate limit having been "
 "exhausted for the resource."
 msgstr ""
+"Pyyntöä ei voida suorittaa, koska sovellusten nopeusraja on käytetty loppuun"
+" resurssin osalta."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__screen_name
@@ -220,6 +228,8 @@ msgstr ""
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
 msgstr ""
+"Twitterin palvelimet ovat toiminnassa, mutta ne ovat ylikuormitettuja "
+"pyynnöistä. Yritä myöhemmin uudelleen."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -228,6 +238,8 @@ msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
 msgstr ""
+"Twitter-palvelimet ovat toiminnassa, mutta pyyntöä ei voitu palvella, koska "
+"pinoissamme oli jokin vika. Yritä myöhemmin uudelleen."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -236,6 +248,8 @@ msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
 msgstr ""
+"Pyyntö on ymmärretty, mutta se on hylätty tai pääsy ei ole sallittu. "
+"Tarkista Twitter API-avaimesi ja salaisuutesi."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -244,12 +258,14 @@ msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
 "authentication are considered invalid and will yield this response."
 msgstr ""
+"Pyyntö ei ollut pätevä tai sitä ei voida toimittaa muulla tavoin. Pyynnöt "
+"ilman todennusta katsotaan virheellisiksi, ja ne antavat tämän vastauksen."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "There was no new data to return."
-msgstr ""
+msgstr "Palautettavia uusia tietoja ei ollut."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
@@ -264,7 +280,7 @@ msgstr "Twiitit"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter API Credentials"
-msgstr ""
+msgstr "Twitter API-tunnukset"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
@@ -284,7 +300,7 @@ msgstr "Twitter API-avain"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Twitter API-avaimen saat osoitteesta https://apps.twitter.com/"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
@@ -294,7 +310,7 @@ msgstr "Twitter API-secret"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Twitterin API-salaisuuden saat osoitteesta https://apps.twitter.com/"
 
 #. module: website_twitter
 #. openerp-web
@@ -310,6 +326,8 @@ msgid ""
 "Twitter authorization error! Please double-check your Twitter API Key and "
 "Secret!"
 msgstr ""
+"Twitterin valtuutusvirhe! Tarkista Twitter API-avaimesi ja salaisuutesi "
+"uudelleen!"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -324,16 +342,18 @@ msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
 msgstr ""
+"Twitter näyttää olevan rikki. Yritä myöhemmin uudelleen. Voit harkita "
+"ongelman ilmoittamista Twitterin foorumeille saadaksesi apua."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
 msgid "Twitter server uri"
-msgstr ""
+msgstr "Twitter-palvelimen uri"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter tutorial"
-msgstr ""
+msgstr "Twitter opetusohjelma"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:0
@@ -350,14 +370,14 @@ msgstr ""
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 #, python-format
 msgid "Twitter's user"
-msgstr ""
+msgstr "Twitterin käyttäjä"
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
 #: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr ""
+msgstr "Twitter: Hae uusia suosikkeja"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
@@ -368,7 +388,7 @@ msgstr "Verkkosivu"
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "Website Twitter"
-msgstr ""
+msgstr "Verkkosivusto Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

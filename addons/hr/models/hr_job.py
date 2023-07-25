@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons.web_editor.controllers.main import handle_history_divergence
 
 
 class Job(models.Model):
@@ -22,7 +23,7 @@ class Job(models.Model):
     no_of_hired_employee = fields.Integer(string='Hired Employees', copy=False,
         help='Number of hired employees for this job position during recruitment phase.')
     employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
-    description = fields.Html(string='Job Description')
+    description = fields.Html(string='Job Description', sanitize_attributes=False)
     requirements = fields.Text('Requirements')
     department_id = fields.Many2one('hr.department', string='Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
@@ -69,3 +70,8 @@ class Job(models.Model):
             'no_of_recruitment': 0,
             'no_of_hired_employee': 0
         })
+
+    def write(self, vals):
+        if len(self) == 1:
+            handle_history_divergence(self, 'description', vals)
+        return super(Job, self).write(vals)

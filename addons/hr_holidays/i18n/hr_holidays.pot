@@ -3148,9 +3148,9 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
 msgid ""
-"The accrual starts after a defined period from the employee start date. This"
-" field defines the number of days, months or years after which accrual is "
-"used."
+"The accrual starts after a defined period from the allocation start date. "
+"This field defines the number of days, months or years after which accrual "
+"is used."
 msgstr ""
 
 #. module: hr_holidays
@@ -3199,6 +3199,12 @@ msgstr ""
 msgid ""
 "The number of remaining time off is not sufficient for this time off type.\n"
 "Please also check the time off waiting for validation."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "\nThe employees that lack allocation days are:\n%s"
 msgstr ""
 
 #. module: hr_holidays

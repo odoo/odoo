@@ -3,11 +3,12 @@
 # 	* purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Link Up링크업 <linkup.way@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # Heesoo Choi, 2021
+# Sarah Park, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Heesoo Choi, 2021\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -42,6 +43,11 @@ msgstr "<strong>날짜</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Description</strong>"
 msgstr "<strong>설명</strong>"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Product</strong>"
+msgstr "<strong>품목</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -280,7 +286,7 @@ msgstr "통화"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
 msgid "Custom Description"
-msgstr ""
+msgstr "맞춤 설명"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -494,7 +500,7 @@ msgstr "신규 견적서"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "다음 활동 캘린더 행사"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_date_deadline
@@ -742,7 +748,7 @@ msgstr "구매 계약 검색"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ (non-exclusive)"
-msgstr ""
+msgstr "여러 개의 견적요청서를 선택하십시오 (복수 선택 가능)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
@@ -756,6 +762,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"구매요청서를 하나만 선택 (단독): 구매발주서가 확정되면, 다른 발주서는 취소됩니다.\n"
+"\n"
+"                       구매요청서를 여러 개 선택 (복수): 여러 개의 구매발주서를 선택할 수 있습니다. 발주서를 확정해도 나머지 발주서는 취소되지 않습니다"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -767,7 +776,7 @@ msgstr "순서"
 msgid ""
 "Set active to false to hide the Purchase Agreement Types without removing "
 "it."
-msgstr ""
+msgstr "구매 계약 유형을 삭제하지 않고 숨기려면 활성화 선택을 False 로 설정합니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -841,6 +850,7 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you "
 "complete this open blanket order, instead of creating a new one."
 msgstr ""
+"이 업체에 미결 상태인 장기 단가 계약이 이미 있습니다. 신규로 발주서를 생성하는 것보다 기존의 미결 계약을 완료하는 것이 좋습니다. "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter

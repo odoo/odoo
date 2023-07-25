@@ -374,20 +374,22 @@ class AccountTestInvoicingCommon(TransactionCase):
         })
 
     @classmethod
-    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=None, amounts=None, taxes=None, company=False):
+    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=None, amounts=None, taxes=None, company=False, currency=None):
         move_form = Form(cls.env['account.move'] \
                     .with_company(company or cls.env.company) \
                     .with_context(default_move_type=move_type, account_predictive_bills_disable_prediction=True))
         move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
         move_form.date = move_form.invoice_date
         move_form.partner_id = partner or cls.partner_a
+        move_form.currency_id = currency if currency else cls.company_data['currency']
 
         for product in (products or []):
             with move_form.invoice_line_ids.new() as line_form:
                 line_form.product_id = product
                 if taxes:
                     line_form.tax_ids.clear()
-                    line_form.tax_ids.add(taxes)
+                    for tax in taxes:
+                        line_form.tax_ids.add(tax)
 
         for amount in (amounts or []):
             with move_form.invoice_line_ids.new() as line_form:
@@ -661,7 +663,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         if currency_id:
             invoice_vals['currency_id'] = currency_id
 
-        invoice = self.env['account.move'].with_context(default_move_type=type).create(invoice_vals)
+        invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
         if auto_validate:
             invoice.action_post()
         return invoice

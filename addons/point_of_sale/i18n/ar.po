@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Mustafa Rawi <mustafa@cubexco.com>, 2021
-# Martin Trigaux, 2021
 # Paul Andrawes, 2021
 # Farid Fox, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Abdullah Mohamed, 2022
+# Martin Trigaux, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -71,7 +72,7 @@ msgstr "(سوف يتم إرسال كليهما عبر البريد الإلكت�
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "(RESCUE FOR %(session)s)"
-msgstr "(استعادة %(session)s)"
+msgstr "(استرجاع %(session)s)"
 
 #. module: point_of_sale
 #. openerp-web
@@ -838,6 +839,13 @@ msgstr "لا يمكن تغيير العميل"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Can't mix order with refund products with new products."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ConfirmPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/EditListPopup.js:0
@@ -903,6 +911,7 @@ msgstr "لا يمكن فوترة الطلب من جلسة مغلقة. "
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
@@ -1993,6 +2002,7 @@ msgid "Do you want to open the customer list to select customer?"
 msgstr "هل ترغب في فتح قائمة العملاء لاختيار العميل؟ "
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "التوثيق"
@@ -2154,7 +2164,7 @@ msgstr "خطأ"
 #: code:addons/point_of_sale/models/pos_category.py:0
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr "خطأ! لا يمكنك إنشاء فئات تكرارية."
+msgstr "خطأ! لا يمكنك إنشاء فئات متداخلة. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -2255,6 +2265,7 @@ msgstr "الأوضاء المالية "
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
@@ -3175,6 +3186,13 @@ msgid "Maximum Exceeded"
 msgstr "تم تجاوز الحد الأقصى "
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr "تم الوصول إلى القيمة القصوى "
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "خطأ في تسليم الرسائل"
@@ -3293,11 +3311,6 @@ msgstr "جلسة جديدة"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "رف الصحف"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "الفعالية التالية في تقويم الأنشطة "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3879,6 +3892,13 @@ msgid "POS Session"
 msgstr "جلسة نقطة البيع"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "POS error"
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS order line %s"
@@ -4056,6 +4076,13 @@ msgid "Payments:"
 msgstr "المدفوعات:"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Pending Electronic Payments"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
 msgid "Per session"
 msgstr "لكل جلسة"
@@ -4100,8 +4127,11 @@ msgid "Picking POS"
 msgstr "الانتقاء في نقطة البيع "
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#, python-format
 msgid "Pickings"
 msgstr "عمليات الانتقاء "
 
@@ -4136,10 +4166,20 @@ msgstr "يرجى التحقق ما إذا كان جهاز IoT لا يزال مت
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
-#: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the printer is still connected."
 msgstr "يرجى التحقق مما إذا كانت الطابعة لا تزال متصلة. "
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/printers.js:0
+#, python-format
+msgid ""
+"Please check if the printer is still connected. \n"
+"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
+msgstr ""
+"يرجى التحقق مما إذا كانت الطابعة لا تزال متصلة. \n"
+"لا تسمح بعض المتصفحات باستدعاءات HTTP من المواقع الإلكترونية وإلى الأجهزة في الشبكة (لأسباب أمنية). إذا كان الأمر كذلك، ستحتاج إلى متابعة وثائق أودو عن 'الشهادة الموقعة ذاتياً لطابعات نقاط البيع الإلكترونية' و 'والاتصال الآمن (HTTPS)' لحل المشكلة "
 
 #. module: point_of_sale
 #. openerp-web
@@ -5000,6 +5040,12 @@ msgid "Returned"
 msgstr "المنتجات المرجعة "
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "عكس: %s"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
@@ -5447,19 +5493,22 @@ msgid "Shopping cart"
 msgstr "عربة التسوق"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Show checkout to customers through a second display"
-msgstr "إظهار نافذة الدفع والخروج للعملاء عن طريق شاشة عرض ثانية "
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_via_proxy
 msgid "Show checkout to customers with a remotely-connected screen."
 msgstr "إظهار القيمة المستحقة للعملاء مستخدمي الشاشات المتصلة عن بعد."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Show customers checkout in a pop-up window. Can be moved to a second screen."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_local
-msgid "Show checkout to customers."
-msgstr "إظهار نافذة الدفع والخروج للعملاء. "
+msgid ""
+"Show customers checkout in a pop-up window. Recommend to be moved to a "
+"second screen visible to the client."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -5553,6 +5602,7 @@ msgstr ""
 #, python-format
 msgid "Some, if not all, post-processing after syncing order failed."
 msgstr ""
+"بعض عمليات المعالجة الأولية قد فشلت إن لم يكن كلها وذلك بعد مزامنة الطلب. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5627,6 +5677,11 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_stock_move
 msgid "Stock Move"
 msgstr "حركة المخزون"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_rule
+msgid "Stock Rule"
+msgstr "قاعدة المخزون"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
@@ -5834,6 +5889,17 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr "تدعم نقطة البيع فقط استراتيجية تقريب \"إضافة بند تقريب\". "
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+"لا يمكن أن يكون المبلغ أكبر من المبلغ المستحق إذا لم تكن لديك طريقة دفع "
+"نقدية مهيئة. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -6150,6 +6216,15 @@ msgid "There is already an electronic payment in progress."
 msgstr "هناك عملية دفع إلكترونية قيد التنفيذ بالفعل. "
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is at least one pending electronic payment.\n"
+"Please finish the payment with the terminal or cancel it then remove the payment line."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
@@ -6157,6 +6232,16 @@ msgid ""
 msgstr ""
 "لا يوجد مخطط حسابات مهيأ في الشركة. يرجى الذهاب غلى إعدادات الفوترة لتثبيت "
 "مخطط الحسابات. "
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is no cash payment method available in this point of sale to handle the change.\n"
+"\n"
+" Please add a cash payment method in the point of sale configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -6309,6 +6394,16 @@ msgid "This order is empty"
 msgstr "هذا الطلب فارغ "
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"هذا الطلب غير متزامن في الخادم بعد. تأكد من أنه متزامن ثم حاول مجدداً. "
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "This product is used as reference on customer receipts."
@@ -6333,6 +6428,7 @@ msgstr ""
 "المرجعية لطلباتك. "
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -6692,6 +6788,13 @@ msgid "Unsupported File Format"
 msgstr "صيغة ملف غير مدعومة"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "طلب غير متزامن "
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "UoM"
 msgstr "وحدة القياس"
@@ -6868,7 +6971,6 @@ msgstr "هل ترغب في تحميل البيانات التوضيحية؟ "
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_config.py:0
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
@@ -6912,7 +7014,19 @@ msgid ""
 msgstr "لا يمكنك تصديق كشف حساب بنكي مُستخدَم في جلسة مفتوحة لنقطة البيع. "
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid ""
+"You can't: create a pos order from the backend interface, or unset the "
+"pricelist, or create a pos.order in a python test with Form tool, or edit "
+"the form view in studio if no PoS order exist"
+msgstr ""
+"لا يمكنك: إنشاء أمر في نقطة البيع من الواجهة الخلفية، أو إزالة أعدادات قائمة"
+" الأسعار، أو إنشاء أمر في نقطة البيع في اختبار بايثون باستخدام أداة نسخ "
+"معلومات الاستمارات أو تحرير نافذة عرض الاستمارة في الاستوديو إذا لم يكن هناك"
+" أمر في نقطة بيع "
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6923,6 +7037,7 @@ msgstr ""
 "الفواتير: %s "
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
@@ -6973,6 +7088,30 @@ msgstr ""
 #, python-format
 msgid "You do not have any products"
 msgstr "لا تملك أي منتجات "
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr "لا تملك صلاحية الوصول إلى- بيانات التحكم في إقفال نقطة البيع. "
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "You don't have the access rights to set the point of sale cash box."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You have enabled the \"Identify Customer\" option for %s payment method,but "
+"the order %s does not contain a customer."
+msgstr ""
+"لقد قمت بتمكين خاصية \"التعرف على العميل\" لطريقة دفع %s، ولكن الطلب %s لا "
+"يحتوي على عميل. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:0
@@ -7172,7 +7311,7 @@ msgstr "الطلبات "
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
 #, python-format
 msgid "out"
-msgstr ""
+msgstr "للخارج"
 
 #. module: point_of_sale
 #. openerp-web

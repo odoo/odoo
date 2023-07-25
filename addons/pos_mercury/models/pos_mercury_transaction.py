@@ -6,6 +6,7 @@ from datetime import date, timedelta
 import requests
 
 from html import unescape
+from markupsafe import Markup
 
 from odoo import models, api, service
 from odoo.tools.translate import _
@@ -47,14 +48,19 @@ class MercuryTransaction(models.Model):
         data['memo'] = "Odoo " + service.common.exp_version()['server_version']
 
     def _do_request(self, template, data):
-        xml_transaction = self.env.ref(template)._render(data)
-
         if not data['merchant_id'] or not data['merchant_pwd']:
             return "not setup"
 
-        soap_header = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mer="http://www.mercurypay.com"><soapenv:Header/><soapenv:Body><mer:CreditTransaction><mer:tran>'
-        soap_footer = '</mer:tran><mer:pw>' + data['merchant_pwd'] + '</mer:pw></mer:CreditTransaction></soapenv:Body></soapenv:Envelope>'
-        xml_transaction = soap_header + misc.html_escape(xml_transaction) + soap_footer
+        # transaction is str()'ed so it's escaped inside of <mer:tran>
+        xml_transaction = Markup('''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mer="http://www.mercurypay.com">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <mer:CreditTransaction>
+      <mer:tran>{transaction}</mer:tran>
+      <mer:pw>{password}</mer:pw>
+    </mer:CreditTransaction>
+  </soapenv:Body>
+</soapenv:Envelope>''').format(transaction=str(self.env.ref(template)._render(data)), password=data['merchant_pwd'])
 
         response = ''
 
@@ -113,12 +119,3 @@ class MercuryTransaction(models.Model):
         response = self._do_request('pos_mercury.mercury_return', data)
         return response
 
-    # One time (the ones we use) Vantiv tokens are required to be
-    # deleted after 6 months
-    @api.autovacuum
-    def _gc_old_tokens(self):
-        expired_creation_date = (date.today() - timedelta(days=6 * 30)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-        for order in self.env['pos.order'].search([('create_date', '<', expired_creation_date)]):
-            order.ref_no = ""
-            order.record_no = ""

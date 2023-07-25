@@ -53,6 +53,7 @@
                 <filter name="Sales" string="Sales Orders" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
                 <separator/>
                 <filter name="filter_date" date="date" default_period="this_month"/>
+                <filter name="filter_order_date" invisible="1" string="Order Date: Last 365 Days" domain="[('date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(days=-365), datetime.time(0,0,0))).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                 <separator/>
                 <field name="user_id"/>
                 <field name="team_id"/>
@@ -88,7 +89,7 @@
         <field name="view_mode">graph,pivot</field>
         <field name="view_id"></field>  <!-- force empty -->
         <field name="search_view_id" ref="view_order_product_search"/>
-        <field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[], 'search_default_filter_order_date': 1}</field>
         <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 </odoo>

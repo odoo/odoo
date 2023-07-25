@@ -32,6 +32,8 @@ class Partner(models.Model):
     @api.model
     def _fields_view_get_address(self, arch):
         arch = super(Partner, self)._fields_view_get_address(arch)
+        if self.env.context.get('no_address_format'):
+            return arch
         # render the partner address accordingly to address_view_id
         doc = etree.fromstring(arch)
         if doc.xpath("//field[@name='city_id']"):
@@ -40,6 +42,7 @@ class Partner(models.Model):
         replacement_xml = """
             <div>
                 <field name="country_enforce_cities" invisible="1"/>
+                <field name="type" invisible="1"/>
                 <field name='city' placeholder="%(placeholder)s" class="o_address_city"
                     attrs="{
                         'invisible': [('country_enforce_cities', '=', True), '|', ('city_id', '!=', False), ('city', 'in', ['', False ])],

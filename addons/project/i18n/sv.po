@@ -20,11 +20,14 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # emavertel, 2022
-# Robin Calvin, 2022
 # Simon S, 2022
 # Daniel Löfgren, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Simon Nilsson, 2023
+# Robin Calvin, 2023
+# Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
+# Lasse Larsson, 2023
 # 
 msgid ""
 msgstr ""
@@ -32,8 +35,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2022\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"Last-Translator: Lasse Larsson, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -78,7 +81,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr ""
+msgstr "Medarbetare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -453,6 +456,9 @@ msgid ""
 "                                    Collaborators\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Medarbetare\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -486,7 +492,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_stat_text\">Gross Margin</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Bruttomarginal</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -531,7 +537,7 @@ msgstr "<strong class=\"d-block mb-2\">Bilagor</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assignees</strong>"
-msgstr ""
+msgstr "<strong>Tilldelad</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -590,6 +596,14 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr ""
@@ -602,7 +616,7 @@ msgstr "Ta emot e-post från"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__access_mode
 msgid "Access Mode"
-msgstr ""
+msgstr "Åtkomst"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_warning
@@ -742,7 +756,7 @@ msgstr "Aliasdomän"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_value
 msgid "Alias email"
-msgstr ""
+msgstr "E-post alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
@@ -830,7 +844,7 @@ msgstr "Arkiv"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Archive Stages"
-msgstr ""
+msgstr "Arkivera Stadier"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -854,12 +868,12 @@ msgstr "Arkiverad"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
-msgstr ""
+msgstr "Är du säker på att du vill fortsätta?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
-msgstr ""
+msgstr "Är du säker på att du vill ta bort dessa steg?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -892,7 +906,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignees"
-msgstr ""
+msgstr "tilldelad"
 
 #. module: project
 #. openerp-web
@@ -926,7 +940,7 @@ msgstr "Tilldelad"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
-msgstr ""
+msgstr "Tilldelad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -1173,12 +1187,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_ids
 #, python-format
 msgid "Collaborators"
-msgstr ""
+msgstr "Medarbetare"
 
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "Medarbetare i delat projekt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1601,7 +1615,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr ""
+msgstr "Radera steg"
 
 #. module: project
 #. openerp-web
@@ -2007,19 +2021,19 @@ msgstr "Ger sorteringsordning vid listning av aktiviteter."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Grön Kanban-etikett"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Grå Kanban-etikett"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Gross Margin"
-msgstr ""
+msgstr "Bruttomarginal"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2085,12 +2099,6 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
 msgstr ""
 
 #. module: project
@@ -2389,12 +2397,12 @@ msgstr "juni"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Kanban blockerad förklaring"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Kanban - löpande förklaring"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__state
@@ -2406,12 +2414,12 @@ msgstr "Kanbanstatus"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Kanban Statusetikett"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Kanban - giltig förklaring"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -2803,7 +2811,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks"
-msgstr ""
+msgstr "Namn på aktiviteter"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2958,12 +2966,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid "No stages found. Let's create one!"
-msgstr ""
+msgstr "Inga steg hittades. Låt oss skapa en!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "No tags found. Let's create one!"
-msgstr ""
+msgstr "Inga taggar hittades. Låt oss skapa en!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3115,7 +3123,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_hold
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_hold
 msgid "On Hold"
-msgstr ""
+msgstr "Pausad"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
@@ -3423,7 +3431,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_collaborator_action
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Project Collaborators"
-msgstr ""
+msgstr "Projektmedarbetare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
@@ -3609,7 +3617,7 @@ msgstr "Betyg"
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Rating (/5)"
-msgstr ""
+msgstr "Betyg (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
@@ -3684,12 +3692,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_reached
 msgid "Reached"
-msgstr ""
+msgstr "Nått"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__reached_date
 msgid "Reached Date"
-msgstr ""
+msgstr "Uppnådd Datum"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
@@ -3796,7 +3804,7 @@ msgstr "Återkommande aktiviteter"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Röd Kanban Etikett"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3813,7 +3821,7 @@ msgstr "Nekad"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "Relaterade dokument"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_id
@@ -3919,7 +3927,7 @@ msgstr ""
 #. module: project
 #: model:project.project,name:project.project_project_2
 msgid "Research & Development"
-msgstr ""
+msgstr "Forskning och utveckling"
 
 #. module: project
 #. openerp-web
@@ -3985,7 +3993,7 @@ msgstr "Skript"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "Sök ( <span class=\"nolabel\"> i innehåll)</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4007,13 +4015,13 @@ msgstr "Sök på allt"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr ""
+msgstr "Sök i Tilldelade"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "Sök i meddelanden"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4080,7 +4088,7 @@ msgstr "Sekvens"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "Ange omslagsbild"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4105,18 +4113,18 @@ msgstr "Utdelning"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Editable"
-msgstr ""
+msgstr "Dela redigerbar"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Share Project"
-msgstr ""
+msgstr "Dela Projekt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Readonly"
-msgstr ""
+msgstr "Dela endast läsbar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4226,12 +4234,12 @@ msgstr "Etapp ändrad"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr ""
+msgstr "Aktiva Steg"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
 msgid "Stages To Delete"
-msgstr ""
+msgstr "Stadier att ta bort"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -4443,7 +4451,7 @@ msgstr "Aktivitetsetapp ändrad"
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr ""
+msgstr "Uppgiftsstadier"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4465,7 +4473,7 @@ msgstr "Aktivitet blockerad"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
+msgstr "Pågående uppgift. Klicka för att blockera eller ange som utfört."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -4709,6 +4717,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"Detta steg viks undan i kanbanvyn när det inte finns några poster i det "
+"steget att visa."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
@@ -4954,7 +4964,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Use <b>activities</b> to organize your daily work."
-msgstr ""
+msgstr "Använd <b>aktiviteter</b> för att organisera ditt dagliga arbete."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
@@ -5112,13 +5122,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_open
 msgid "Working Hours to Assign"
-msgstr ""
+msgstr "Arbetstid för att tilldela"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_close
 msgid "Working Hours to Close"
-msgstr ""
+msgstr "Arbetstid till stängning"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -5159,12 +5169,6 @@ msgstr "År"
 msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "You cannot %s %s fields in task."
 msgstr ""
 
 #. module: project
@@ -5218,15 +5222,29 @@ msgid ""
 msgstr ""
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have been assigned to %s"
-msgstr ""
+msgstr "Du har blivit tilldelad %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "You have been assigned to the"
-msgstr ""
+msgstr "Du har blivit tilldelad "
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -18,11 +18,11 @@
 # ericrolo, 2022
 # Jonatan Gk, 2022
 # Quim - eccit <quim@eccit.com>, 2022
-# jabelchi, 2022
 # marcescu, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # eriiikgt, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Josep Anton Belchi, 2023
 # 
 msgid ""
 msgstr ""
@@ -30,8 +30,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: Josep Anton Belchi, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -950,6 +950,12 @@ msgstr "Pseudònims"
 #, python-format
 msgid "All"
 msgstr "Tots"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Cal facilitar un token d'accés per a cada adjunt"
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -2234,6 +2240,7 @@ msgstr "Desconnectat de la crida RTC pel servidor"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -2685,7 +2692,7 @@ msgstr "Emojis"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_internal
 #: model:ir.model.fields,field_description:mail.field_mail_message__is_internal
 msgid "Employee Only"
-msgstr "Només Epiployee"
+msgstr "Només empleats"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
@@ -3024,7 +3031,7 @@ msgstr "E-mail formatat"
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_from
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_from
 msgid "From"
-msgstr "De"
+msgstr "Des de"
 
 #. module: mail
 #. openerp-web
@@ -3403,6 +3410,10 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
+"Si s'estableix, el gestor de la cua enviarà el correu electrònic després de "
+"la data. Si no s'estableix, el correu s'enviarà al més aviat possible. A "
+"menys que s'especifiqui una zona horària, es considera que està en la zona "
+"horària UTC."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -5230,10 +5241,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
-"Idioma opcional de traducció (ISO codi) per a seleccionar en enviar un "
-"correu electrònic. Si no està establerta, s' usarà la versió anglesa. Això "
-"normalment hauria de ser una expressió de substitució que proveeix el "
-"llenguatge apropiat, p. ex. {{ objecte. partner_ id. Lang }}."
+"Idioma opcional de traducció (codi ISO) per a seleccionar en enviar un "
+"correu electrònic. Si no està establert, s'usarà la versió anglesa. Això "
+"normalment hauria de ser una expressió de substitució que proveeixi l'idioma"
+" apropiat, p. ex. {{ object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__null_value
@@ -6906,6 +6917,19 @@ msgstr ""
 "impostos del govern. Utilitzada en algunes declaracions legals."
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "L'adjunt %s no existeix o no hi teniu drets d'accès."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "El canal UUID ha de ser únic"
@@ -7158,7 +7182,7 @@ msgstr "Zona horària"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_to
 msgid "To"
-msgstr "Per"
+msgstr "Fins a"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_to
@@ -7680,6 +7704,14 @@ msgstr ""
 "punt per usar- lo (@my empresa.odeo.com)."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -7837,7 +7869,7 @@ msgstr "Nom d' operació incorrecte (%s)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr ""
+msgstr "AAAA-MM-DD HH:MM:SS"
 
 #. module: mail
 #. openerp-web

@@ -152,17 +152,19 @@ QUnit.test("arabic has the correct numbering system (Tunisia)", async (assert) =
 
 QUnit.test("bengalese has the correct numbering system", async (assert) => {
     await patchLang("bn");
-    assert.strictEqual(
-        DateTime.utc(2021, 12, 10).toFormat("dd MMM, yyyy hh:mm:ss"),
-        "১০ ডিসেম্বর, ২০২১ ১২:০০:০০"
+    assert.ok(
+        ["১০ ডিসেম্বর, ২০২১ ১২:০০:০০", "১০ ডিসে, ২০২১ ১২:০০:০০"].includes(
+            DateTime.utc(2021, 12, 10).toFormat("dd MMM, yyyy hh:mm:ss")
+        )
     );
 });
 
 QUnit.test("punjabi (gurmukhi) has the correct numbering system", async (assert) => {
     await patchLang("pa_in");
-    assert.strictEqual(
-        DateTime.utc(2021, 12, 10).toFormat("dd MMM, yyyy hh:mm:ss"),
-        "੧੦ M12, ੨੦੨੧ ੧੨:੦੦:੦੦"
+    assert.ok(
+        ["੧੦ M12, ੨੦੨੧ ੧੨:੦੦:੦੦", "੧੦ ਦਸੰ, ੨੦੨੧ ੧੨:੦੦:੦੦"].includes(
+            DateTime.utc(2021, 12, 10).toFormat("dd MMM, yyyy hh:mm:ss")
+        )
     );
 });
 

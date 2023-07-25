@@ -3,13 +3,14 @@
 # 	* mrp_account
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Miku Laitinen <miku.laitinen@gmail.com>, 2021
 # Jussi Lehto <jussi@gulfeo.com>, 2021
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2021
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2021
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2021
+# Martin Trigaux, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,8 +18,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2021\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,11 +27,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/mrp_production.py:0
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+#, python-format
 msgid "Analytic Account"
 msgstr "Kustannuspaikka"
 
@@ -45,6 +48,8 @@ msgid ""
 "Analytic account in which cost and revenue entries will take        place "
 "for financial management of the manufacturing order."
 msgstr ""
+"Analyyttinen tili, jolle tehdään kustannus- ja tulokirjaukset "
+"valmistustilauksen taloushallintoa varten."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_bom__analytic_account_id
@@ -52,6 +57,8 @@ msgid ""
 "Analytic account in which cost and revenue entries will take place for "
 "financial management of the manufacturing order."
 msgstr ""
+"Analyyttinen tili, jolle tehdään kustannus- ja tulokirjaukset "
+"valmistustilauksen taloushallintoa varten."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_bom
@@ -59,15 +66,17 @@ msgid "Bill of Material"
 msgstr "Osaluettelo"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+#, python-format
 msgid "Bills of Materials"
 msgstr "Osaluettelot"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
 msgid "BoM Count"
-msgstr ""
+msgstr "Osaluetteloiden määrä"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -81,7 +90,7 @@ msgstr "Tuoteryhmä(t)"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr ""
+msgstr "Laske hinta osaluettelosta"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -91,21 +100,23 @@ msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
+"Laske tuotteen hinta käyttämällä tuotteita ja niihin liittyvän "
+"materiaaliluettelon toimintoja vain valmistetuille tuotteille."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid "Cost Recorded"
-msgstr ""
+msgstr "Kirjatut kustannukset"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Cost"
-msgstr ""
+msgstr "Lisäkustannus"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__extra_cost
 msgid "Extra cost per produced unit"
-msgstr ""
+msgstr "Lisäkustannus per valmistettu yksikkö"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
@@ -122,20 +133,22 @@ msgid "Manufacturing Order"
 msgstr "Valmistustilaus"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+#, python-format
 msgid "Manufacturing Orders"
 msgstr "Valmistustilaukset"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
 msgid "Manufacturing Orders Count"
-msgstr ""
+msgstr "Vaklmistustilausten määrä"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_id
 msgid "Mo Analytic Account Line"
-msgstr ""
+msgstr "Valmistustilauksen analyyttisen tilin rivi"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
@@ -155,7 +168,7 @@ msgstr "Valmistustilaus"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
 msgid "Show Valuation"
-msgstr ""
+msgstr "Näytä arvostus"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_move
@@ -184,7 +197,7 @@ msgstr "Arvostus"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_id
 msgid "Wc Analytic Account Line"
-msgstr ""
+msgstr "Työpisteen analyyttisen tilin rivi"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
@@ -199,27 +212,33 @@ msgstr "Työtilaus"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
 msgid "Work Order Count"
-msgstr ""
+msgstr "Työtilausten määrä"
+
+#. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
+#, python-format
+msgid "Work Orders"
+msgstr "Työtilaukset"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr ""
+msgstr "Työpisteen tuottavuusloki"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
 msgid "Workcenters"
-msgstr ""
+msgstr "Työpisteet"
 
 #. module: mrp_account
 #: code:addons/mrp_account/models/stock_move.py:0
 #, python-format
 msgid "[Raw] %s"
-msgstr ""
+msgstr "[Raw] %s"
 
 #. module: mrp_account
 #: code:addons/mrp_account/models/mrp_production.py:0
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 #, python-format
 msgid "[WC] %s"
-msgstr ""
+msgstr "[WC] %s"

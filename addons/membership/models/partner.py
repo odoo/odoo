@@ -19,7 +19,7 @@ class Partner(models.Model):
     membership_amount = fields.Float(string='Membership Amount', digits=(16, 2),
         help='The price negotiated by the partner')
     membership_state = fields.Selection(membership.STATE, compute='_compute_membership_state',
-        string='Current Membership Status', store=True,
+        string='Current Membership Status', store=True, recursive=True,
         help='It indicates the membership state.\n'
              '-Non Member: A partner who has not applied for any membership.\n'
              '-Cancelled Member: A member who has cancelled his membership.\n'
@@ -43,60 +43,41 @@ class Partner(models.Model):
                  'member_lines.account_invoice_line.move_id.partner_id',
                  'free_member',
                  'member_lines.date_to', 'member_lines.date_from',
-                 'associate_member')
+                 'associate_member', 'associate_member.membership_state')
     def _compute_membership_state(self):
         today = fields.Date.today()
         for partner in self:
-            state = 'none'
-
             partner.membership_start = self.env['membership.membership_line'].search([
-                ('partner', '=', partner.associate_member.id or partner.id), ('date_cancel','=',False)
+                ('partner', '=', partner.associate_member.id or partner.id), ('date_cancel', '=', False)
             ], limit=1, order='date_from').date_from
             partner.membership_stop = self.env['membership.membership_line'].search([
-                ('partner', '=', partner.associate_member.id or partner.id),('date_cancel','=',False)
+                ('partner', '=', partner.associate_member.id or partner.id), ('date_cancel', '=', False)
             ], limit=1, order='date_to desc').date_to
             partner.membership_cancel = self.env['membership.membership_line'].search([
                 ('partner', '=', partner.id)
             ], limit=1, order='date_cancel').date_cancel
 
-            if partner.membership_cancel and today > partner.membership_cancel:
-                partner.membership_state = 'free' if partner.free_member else 'canceled'
-                continue
-            if partner.membership_stop and today > partner.membership_stop:
-                if partner.free_member:
-                    partner.membership_state = 'free'
-                    continue
             if partner.associate_member:
-                partner.associate_member._compute_membership_state()
                 partner.membership_state = partner.associate_member.membership_state
                 continue
 
-            line_states = [mline.state for mline in partner.member_lines if \
-                           (mline.date_to or date.min) >= today and \
-                           (mline.date_from or date.min) <= today and \
-                           mline.account_invoice_line.move_id.partner_id == partner]
+            if partner.free_member and partner.membership_state != 'paid':
+                partner.membership_state = 'free'
+                continue
 
-            if 'paid' in line_states:
-                state = 'paid'
-            elif 'invoiced' in line_states:
-                state = 'invoiced'
-            elif 'waiting' in line_states:
-                state = 'waiting'
-            elif 'canceled' in line_states:
-                state = 'canceled'
-
-            if state == 'none':
-                for mline in partner.member_lines:
-                    # if there is an old invoice paid, set the state to 'old'
-                    if ((mline.date_from or date.min) < today and (mline.date_to or date.min) < today and \
-                            (mline.date_from or date.min) <= (mline.date_to or date.min) and \
-                            mline.account_invoice_id and mline.account_invoice_id.payment_state in ('in_payment', 'paid')):
-                        state = 'old'
-                        break
-
-            if partner.free_member and state != 'paid':
-                state = 'free'
-            partner.membership_state = state
+            for mline in partner.member_lines:
+                if (mline.date_to or date.min) >= today and (mline.date_from or date.min) <= today:
+                    partner.membership_state = mline.state
+                    break
+                elif ((mline.date_from or date.min) < today and (mline.date_to or date.min) <= today and \
+                      (mline.date_from or date.min) < (mline.date_to or date.min)):
+                    if mline.account_invoice_id and mline.account_invoice_id.payment_state in ('in_payment', 'paid'):
+                        partner.membership_state = 'old'
+                    elif mline.account_invoice_id and mline.account_invoice_id.state == 'cancel':
+                        partner.membership_state = 'canceled'
+                    break
+            else:
+                partner.membership_state = 'none'
 
     @api.constrains('associate_member')
     def _check_recursion_associate_member(self):

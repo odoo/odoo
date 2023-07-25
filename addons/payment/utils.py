@@ -1,9 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from hashlib import sha1
+
 from odoo import fields
 from odoo.http import request
 from odoo.tools import consteq, float_round, ustr
 from odoo.tools.misc import hmac as hmac_tool
+
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 
 
 # Access token management
@@ -53,6 +57,10 @@ def singularize_reference_prefix(prefix='tx', separator='-', max_length=None):
     If the `max_length` argument is passed, the end of the prefix can be stripped before
     singularizing to ensure that the result accounts for no more than `max_length` characters.
 
+    Warning: Generated prefixes are *not* uniques! This function should be used only for making
+    transaction reference prefixes more distinguishable and *not* for operations that require the
+    generated value to be unique.
+
     :param str prefix: The custom prefix to singularize
     :param str separator: The custom separator used to separate the prefix from the suffix
     :param int max_length: The maximum length of the singularized prefix
@@ -85,7 +93,7 @@ def to_major_currency_units(minor_amount, currency, arbitrary_decimal_number=Non
     currency.ensure_one()
 
     if arbitrary_decimal_number is None:
-        decimal_number = currency.decimal_places
+        decimal_number = CURRENCY_MINOR_UNITS.get(currency.name, currency.decimal_places)
     else:
         decimal_number = arbitrary_decimal_number
     return float_round(minor_amount, precision_digits=0) / (10**decimal_number)
@@ -111,7 +119,7 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
         decimal_number = arbitrary_decimal_number
     else:
         currency.ensure_one()
-        decimal_number = currency.decimal_places
+        decimal_number = CURRENCY_MINOR_UNITS.get(currency.name, currency.decimal_places)
     return int(float_round(major_amount * (10**decimal_number), precision_digits=0))
 
 
@@ -171,3 +179,29 @@ def check_rights_on_recordset(recordset):
     """
     recordset.check_access_rights('write')
     recordset.check_access_rule('write')
+
+
+# Idempotency
+
+def generate_idempotency_key(tx, scope=None):
+    """ Generate an idempotency key for the provided transaction and scope.
+
+    Idempotency keys are used to prevent API requests from going through twice in a short time: the
+    API rejects requests made after another one with the same payload and idempotency key if it
+    succeeded.
+
+    The idempotency key is generated based on the transaction reference, database UUID, and scope if
+    any. This guarantees the key is identical for two API requests with the same transaction
+    reference, database, and endpoint. Should one of these parameters differ, the key is unique from
+    one request to another (e.g., after dropping the database, for different endpoints, etc.).
+
+    :param recordset tx: The transaction to generate an idempotency key for, as a
+                         `payment.transaction` record.
+    :param str scope: The scope of the API request to generate an idempotency key for. This should
+                      typically be the API endpoint. It is not necessary to provide the scope if the
+                      API takes care of comparing idempotency keys per endpoint.
+    :return: The generated idempotency key.
+    :rtype: str
+    """
+    database_uuid = tx.env['ir.config_parameter'].sudo().get_param('database.uuid')
+    return sha1(f'{database_uuid}{tx.reference}{scope or ""}'.encode()).hexdigest()

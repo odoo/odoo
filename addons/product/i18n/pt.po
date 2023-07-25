@@ -11,11 +11,12 @@
 # Manuela Silva <mmsrs@sky.com>, 2021
 # Pedro Castro Silva <pedrocs@exo.pt>, 2021
 # Nuno Silva <nuno.silva@arxi.pt>, 2021
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2021
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2021
 # Marcelo Pereira <marcelo.pereira@arxi.pt>, 2021
 # Pedro Filipe <pedro2.10@hotmail.com>, 2021
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
+# Mónica Pinheiro, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,8 +24,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2022\n"
-"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
+"Last-Translator: Mónica Pinheiro, 2023\n"
+"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -157,6 +158,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        Preços Adicionais\n"
+"                                    </span>\n"
+"                                    <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        Preço Adicional\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -552,7 +559,7 @@ msgstr "Índice de Cor"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__columns
 msgid "Columns"
-msgstr ""
+msgstr "Colunas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
@@ -640,6 +647,8 @@ msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
 msgstr ""
+"Consumíveis são produtos físicos que não são geridos no inventário: "
+"consideram-se sempre disponíveis."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -1639,6 +1648,14 @@ msgid "Next Activity Type"
 msgstr "Tipo da Atividade Seguinte "
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr ""
@@ -1961,7 +1978,7 @@ msgstr "Imprimir"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Print Labels"
-msgstr ""
+msgstr "Imprimir Etiquetas"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -2323,7 +2340,7 @@ msgstr "Vendas"
 #: model:ir.model.fields,field_description:product.field_product_template__description_sale
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales Description"
-msgstr ""
+msgstr "Descrição das Vendas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
@@ -2430,11 +2447,9 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Especifique o montante fixo a somar ou subtrair (se negativo) ao montante "
-"calculado com o desconto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2473,6 +2488,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Estados baseados nas atividades\n"
+"Vencida: Ultrapassada a data planeada\n"
+"Hoje: Data da atividade é a de hoje\n"
+"Planeada: Atividades futuras."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
@@ -2673,12 +2692,12 @@ msgstr "Esta é a soma do preço acrescido de todos os atributos"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr ""
+msgstr "Esta nota é adicionada às ordens de venda e faturas."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "Esta nota serve apenas para fins internos."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
@@ -3175,6 +3194,12 @@ msgstr ""
 "arredondamento da moeda principal da empresa"
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr ""
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3187,7 +3212,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 
 #. module: product
@@ -3210,8 +3236,7 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
 
 #. module: product
@@ -3220,6 +3245,13 @@ msgstr ""
 msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
 msgstr ""
 
 #. module: product

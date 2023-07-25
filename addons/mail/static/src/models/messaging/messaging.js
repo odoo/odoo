@@ -294,6 +294,10 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
+        discussPublicView: one2one('mail.discuss_public_view', {
+            inverse: 'messagingAsPublicView',
+            isCausal: true,
+        }),
         focusedRtcSession: one2one('mail.rtc_session'),
         /**
          * Mailbox History.

@@ -5,7 +5,8 @@
 # Translators:
 # Martin Trigaux, 2021
 # Paul Andrawes, 2021
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Jinjiu Liu, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,7 +30,7 @@ msgid ""
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
 "(\n"
-"                object.state == 'draft' و 'عرض سعر الإصلاح - %s' % (object.name) أو\n"
+"                object.state == 'draft' and 'عرض سعر الإصلاح - %s' % (object.name) or\n"
 "                'أمر الإصلاح - %s' % (object.name)) "
 
 #. module: repair
@@ -1387,6 +1388,18 @@ msgstr "لا يمكنك حذف أمر إصلاح مرتبط بفاتورة قت 
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr "لا يمكنك إدخال كميات سالبة."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot cancel a completed repair order."
+msgstr "لا يمكنك إلغاء أمر تصليح مكتمل. "
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot delete a completed repair order."
+msgstr "لا يمكنك حذف أمر تصليح مكتمل. "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0

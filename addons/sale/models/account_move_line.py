@@ -159,7 +159,8 @@ class AccountMoveLine(models.Model):
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
 
         fpos = order.fiscal_position_id or order.fiscal_position_id.get_fiscal_position(order.partner_id.id)
-        taxes = fpos.map_tax(self.product_id.taxes_id)
+        product_taxes = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == order.company_id)
+        taxes = fpos.map_tax(product_taxes)
 
         return {
             'order_id': order.id,
@@ -205,3 +206,7 @@ class AccountMoveLine(models.Model):
         if currency_id and currency_id != order.currency_id:
             price_unit = currency_id._convert(price_unit, order.currency_id, order.company_id, order.date_order or fields.Date.today())
         return price_unit
+
+    def _get_downpayment_lines(self):
+        # OVERRIDE
+        return self.sale_line_ids.filtered('is_downpayment').invoice_lines.filtered(lambda line: line.move_id._is_downpayment())

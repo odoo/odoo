@@ -23,6 +23,7 @@
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -30,8 +31,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -200,6 +201,8 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"Kustannus- ja oikaisurivit eivät vastaa toisiaan. Sinun pitäisi ehkä laskea "
+"uudelleen lasketut kustannukset."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
@@ -242,7 +245,7 @@ msgstr "Päivämäärä"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Default Journal"
-msgstr ""
+msgstr "Oletuspäiväkirja"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
@@ -255,6 +258,8 @@ msgstr "Oletus jakoperuste"
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
 msgstr ""
+"Oletusarvoinen jakomenetelmä, kun sitä käytetään kokonaiskustannusten "
+"määrittämiseen"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -296,6 +301,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Tasan : Kustannukset jaetaan tasan.\n"
+"Määrän mukaan : Kustannukset jaetaan tuotteen määrän mukaan.\n"
+"Nykyisten kustannusten mukaan : Kustannukset jaetaan tuotteen nykyisten kustannusten mukaan.\n"
+"Painon mukaan : Kustannukset jaetaan tuotteen painon mukaan.\n"
+"Määrän mukaan : Kustannukset jaetaan tuotteen tilavuuden mukaan."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -370,7 +380,7 @@ msgstr "On seuraaja"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
 msgid "Is Landed Costs Line"
-msgstr ""
+msgstr "Onko kokonaiskulurivi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
@@ -426,7 +436,7 @@ msgstr "Läh. kokonaiskulu"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr ""
+msgstr "Kokonaiskustannukset näkyvissä"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -462,7 +472,7 @@ msgstr "Myöhässä olevat toimenpiteet"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
 msgid "Lc Journal"
-msgstr ""
+msgstr "Kokonaiskulujen päiväkirja"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_main_attachment_id
@@ -552,7 +562,7 @@ msgstr "Lukemattomia viestejä"
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "Ainoastaan luonnos kokonaiskustannuksista voidaan vahvistaa"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
@@ -574,7 +584,7 @@ msgstr "Konfiguroi varastokulutili tuotteelle: %s."
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "Määrittele %s, johon näitä lisäkustannuksia olisi sovellettava."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -658,7 +668,7 @@ msgstr "Varaston kokonaiskulu"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "Varaston kokonaiskulujen rivi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
@@ -669,7 +679,7 @@ msgstr "Varastosiirto"
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Varaston arvostuskerros"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -714,6 +724,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
+"Vahvistettuja laskettuja kustannuksia ei voi peruuttaa, mutta voit luoda "
+"negatiivisia laskettuja kustannuksia niiden peruuttamiseksi"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -723,7 +735,7 @@ msgstr "Arvostus"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "Arvonkorjausrivit"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -763,6 +775,9 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
+"Valittuihin %s(iin) ei voi soveltaa maahantuontikustannuksia. "
+"Alamomenttikustannuksia voidaan soveltaa vain tuotteisiin, joiden "
+"kustannuslaskentamenetelmänä on FIFO tai keskiarvokustannuslaskenta."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/product.py:0
@@ -771,3 +786,5 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
 msgstr ""
+"Et voi muuttaa tuotetyyppiä tai poistaa tuotekustannusvaihtoehtoa käytöstä, "
+"koska tuotetta käytetään tilisiirtorivillä."

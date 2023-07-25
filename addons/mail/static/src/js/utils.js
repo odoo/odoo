@@ -42,6 +42,25 @@ function _parseAndTransform(nodes, transformFunction) {
     }).join("");
 }
 
+/**
+ * Escape < > & as html entities (copy from _.escape with less escaped characters)
+ *
+ * @param {string}
+ * @return {string}
+ */
+var _escapeEntities = (function () {
+    var map = {"&":"&amp;","<":"&lt;",">":"&gt;"};
+    var escaper = function(match) {
+        return map[match];
+    };
+    var testRegexp = RegExp('(?:&|<|>)');
+    var replaceRegexp = RegExp('(?:&|<|>)', 'g');
+    return function(string) {
+        string = string == null ? '' : '' + string;
+        return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
+    };
+})();
+
 // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
 // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
 // And further extended to include Latin-1 Supplement, Latin Extended-A, Latin Extended-B and Latin Extended Additional.
@@ -62,10 +81,17 @@ function linkify(text, attrs) {
     attrs = _.map(attrs, function (value, key) {
         return key + '="' + _.escape(value) + '"';
     }).join(' ');
-    return text.replace(urlRegexp, function (url) {
-        var href = (!/^https?:\/\//i.test(url)) ? "http://" + url : url;
-        return '<a ' + attrs + ' href="' + href + '">' + url + '</a>';
-    });
+    var curIndex = 0;
+    var result = "";
+    var match;
+    while ((match = urlRegexp.exec(text)) !== null) {
+        result += _escapeEntities(text.slice(curIndex, match.index));
+        var url = match[0];
+        var href = (!/^https?:\/\//i.test(url)) ? "http://" + _.escape(url) : _.escape(url);
+        result += '<a ' + attrs + ' href="' + href + '">' + _escapeEntities(url) + '</a>';
+        curIndex = match.index + match[0].length;
+    }
+    return result + _escapeEntities(text.slice(curIndex));
 }
 
 function addLink(node, transformChildren) {

@@ -93,7 +93,7 @@ class PosSession(models.Model):
         help="Auto-generated session for orphan orders, ignored in constraints",
         readonly=True,
         copy=False)
-    move_id = fields.Many2one('account.move', string='Journal Entry')
+    move_id = fields.Many2one('account.move', string='Journal Entry', index=True)
     payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Payment Methods')
     total_payments_amount = fields.Float(compute='_compute_total_payments_amount', string='Total Payments Amount')
     is_in_company_currency = fields.Boolean('Is Using Company Currency', compute='_compute_is_in_company_currency')
@@ -148,6 +148,7 @@ class PosSession(models.Model):
     def action_stock_picking(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
+        action['display_name'] = _('Pickings')
         action['context'] = {}
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
@@ -192,7 +193,7 @@ class PosSession(models.Model):
                                   "Cash Registers: %r", list(statement.name for statement in closed_statement_ids)))
 
     def _check_invoices_are_posted(self):
-        unposted_invoices = self.order_ids.account_move.filtered(lambda x: x.state != 'posted')
+        unposted_invoices = self.order_ids.sudo().with_company(self.company_id).account_move.filtered(lambda x: x.state != 'posted')
         if unposted_invoices:
             raise UserError(_('You cannot close the POS when invoices are not posted.\n'
                               'Invoices: %s') % str.join('\n',
@@ -322,7 +323,7 @@ class PosSession(models.Model):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         self.ensure_one()
         sudo = self.user_has_groups('point_of_sale.group_pos_user')
-        if self.order_ids or self.statement_ids.line_ids:
+        if self.order_ids or self.sudo().statement_ids.line_ids:
             self.cash_real_transaction = self.cash_register_total_entry_encoding
             self.cash_real_expected = self.cash_register_balance_end
             self.cash_real_difference = self.cash_register_difference
@@ -334,7 +335,8 @@ class PosSession(models.Model):
                 self._create_picking_at_end_of_session()
                 self.order_ids.filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_lines)
             try:
-                data = self.with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
+                with self.env.cr.savepoint():
+                    data = self.with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
             except AccessError as e:
                 if sudo:
                     data = self.sudo().with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
@@ -366,7 +368,7 @@ class PosSession(models.Model):
             statement = self.cash_register_id
             if not self.config_id.cash_control:
                 statement.write({'balance_end_real': statement.balance_end})
-            statement.button_post()
+            statement.sudo().button_post()
             statement.button_validate()
         self.write({'state': 'closed'})
         return True
@@ -434,6 +436,9 @@ class PosSession(models.Model):
         return {'successful': True}
 
     def update_closing_control_state_session(self, notes):
+        # Prevent closing the session again if it was already closed
+        if self.state == 'closed':
+            raise UserError(_('This session is already closed.'))
         # Prevent the session to be opened again.
         self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
         self._post_cash_details_message('Closing', self.cash_register_difference, notes)
@@ -529,6 +534,8 @@ class PosSession(models.Model):
                 return {'successful': False, 'message': message, 'redirect': False}
 
     def get_closing_control_data(self):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("You don't have the access rights to get the point of sale closing control data."))
         self.ensure_one()
         orders = self.order_ids.filtered(lambda o: o.state == 'paid' or o.state == 'invoiced')
         payments = orders.payment_ids.filtered(lambda p: p.payment_method_id.type != "pay_later")
@@ -540,7 +547,7 @@ class PosSession(models.Model):
         cash_in_count = 0
         cash_out_count = 0
         cash_in_out_list = []
-        for cash_move in self.cash_register_id.line_ids.sorted('create_date'):
+        for cash_move in self.sudo().cash_register_id.line_ids.sorted('create_date'):
             if cash_move.amount > 0:
                 cash_in_count += 1
                 name = f'Cash in {cash_in_count}'
@@ -563,7 +570,7 @@ class PosSession(models.Model):
             'default_cash_details': {
                 'name': default_cash_payment_method_id.name,
                 'amount': self.cash_register_id.balance_start + total_default_cash_payment_amount +
-                                             sum(self.cash_register_id.line_ids.mapped('amount')),
+                                             sum(self.sudo().cash_register_id.line_ids.mapped('amount')),
                 'opening': self.cash_register_id.balance_start,
                 'payment_amount': total_default_cash_payment_amount,
                 'moves': cash_in_out_list,
@@ -749,9 +756,11 @@ class PosSession(models.Model):
                         line['base_tags'],
                     )
                     sales[sale_key] = self._update_amounts(sales[sale_key], {'amount': line['amount']}, line['date_order'])
+                    sales[sale_key].setdefault('tax_amount', 0.0)
                     # Combine tax lines
                     for tax in line['taxes']:
                         tax_key = (tax['account_id'] or line['income_account_id'], tax['tax_repartition_line_id'], tax['id'], tuple(tax['tag_ids']))
+                        sales[sale_key]['tax_amount'] += tax['amount']
                         order_taxes[tax_key] = self._update_amounts(
                             order_taxes[tax_key],
                             {'amount': tax['amount'], 'base_amount': tax['base']},
@@ -774,9 +783,12 @@ class PosSession(models.Model):
                     for move in stock_moves:
                         exp_key = move.product_id._get_product_accounts()['expense']
                         out_key = move.product_id.categ_id.property_stock_account_output_categ_id
-                        amount = -sum(move.sudo().stock_valuation_layer_ids.mapped('value'))
+                        signed_product_qty = move.product_qty
+                        if move._is_in():
+                            signed_product_qty *= -1
+                        amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity_done, move)
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
-                        if move.location_id.usage == 'customer':
+                        if move._is_in():
                             stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                         else:
                             stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
@@ -800,9 +812,12 @@ class PosSession(models.Model):
                 for move in stock_moves:
                     exp_key = move.product_id._get_product_accounts()['expense']
                     out_key = move.product_id.categ_id.property_stock_account_output_categ_id
-                    amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
+                    signed_product_qty = move.product_qty
+                    if move._is_in():
+                        signed_product_qty *= -1
+                    amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity_done, move)
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
-                    if move.location_id.usage == 'customer':
+                    if move._is_in():
                         stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                     else:
                         stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
@@ -858,7 +873,7 @@ class PosSession(models.Model):
 
         MoveLine.create(
             tax_vals
-            + [self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()]
+            + [self._get_sale_vals(key, amounts['amount'], amounts['amount_converted'], amounts['tax_amount']) for key, amounts in sales.items()]
             + [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
             + rounding_vals
         )
@@ -1137,7 +1152,7 @@ class PosSession(models.Model):
         """
         def get_income_account(order_line):
             product = order_line.product_id
-            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income']
+            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income'] or self.config_id.journal_id.default_account_id
             if not income_account:
                 raise UserError(_('Please define income account for this product: "%s" (id:%d).')
                                 % (product.name, product.id))
@@ -1184,6 +1199,10 @@ class PosSession(models.Model):
 
     def _get_split_receivable_vals(self, payment, amount, amount_converted):
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
+        if not accounting_partner:
+            raise UserError(_("You have enabled the \"Identify Customer\" option for %s payment method,"
+                              "but the order %s does not contain a customer.") % (payment.payment_method_id.name,
+                               payment.pos_order_id.name))
         partial_vals = {
             'account_id': accounting_partner.property_account_receivable_id.id,
             'move_id': self.move_id.id,
@@ -1208,7 +1227,7 @@ class PosSession(models.Model):
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
-    def _get_sale_vals(self, key, amount, amount_converted):
+    def _get_sale_vals(self, key, amount, amount_converted, tax_amount):
         account_id, sign, tax_keys, base_tag_ids = key
         tax_ids = set(tax[0] for tax in tax_keys)
         applied_taxes = self.env['account.tax'].browse(tax_ids)
@@ -1222,6 +1241,8 @@ class PosSession(models.Model):
             'move_id': self.move_id.id,
             'tax_ids': [(6, 0, tax_ids)],
             'tax_tag_ids': [(6, 0, base_tag_ids)],
+            'price_subtotal': abs(amount_converted),
+            'price_total': abs(amount_converted) + abs(tax_amount),
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
@@ -1431,6 +1452,7 @@ class PosSession(models.Model):
         # we are querying over the account.move.line because its 'ref' is indexed.
         # And yes, we are only concern for split bank payment methods.
         diff_lines_ref = [self._get_diff_account_move_ref(pm) for pm in self.payment_method_ids if pm.type == 'bank' and pm.split_transactions]
+        diff_lines_ref.append("Opening Balance difference for %s" % (self.name))
         return self.env['account.move.line'].search([('ref', 'in', diff_lines_ref)]).mapped('move_id')
 
     def _get_related_account_moves(self):
@@ -1474,11 +1496,21 @@ class PosSession(models.Model):
         }
 
     def set_cashbox_pos(self, cashbox_value, notes):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("You don't have the access rights to set the point of sale cash box."))
         self.state = 'opened'
         self.opening_notes = notes
         difference = cashbox_value - self.cash_register_id.balance_start
-        self.cash_register_id.balance_start = cashbox_value
         self._post_cash_details_message('Opening', difference, notes)
+        #if there is a difference create an account move to register the loss
+        if difference:
+            self.env['account.bank.statement.line'].sudo().create({
+                'payment_ref': 'Opening Balance difference for %s' % (self.name),
+                'journal_id': self.cash_register_id.journal_id.id,
+                'date': self.start_at,
+                'amount': difference,
+                'statement_id': self.cash_register_id.id,
+            })
 
     def _post_cash_details_message(self, state, difference, notes):
         message = ""

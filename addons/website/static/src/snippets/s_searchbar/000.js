@@ -65,15 +65,16 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
             for (const keyValue of urlParams.split('&')) {
                 const [key, value] = keyValue.split('=');
                 if (value && key !== 'search') {
-                    this.options[key] = value;
+                    // Decode URI parameters: revert + to space then decodeURIComponent.
+                    this.options[decodeURIComponent(key.replace(/\+/g, '%20'))] = decodeURIComponent(value.replace(/\+/g, '%20'));
                 }
             }
         }
         const pathParts = urlPath.split('/');
         for (const index in pathParts) {
-            const value = pathParts[index];
+            const value = decodeURIComponent(pathParts[index]);
             if (index > 0 && /-[0-9]+$/.test(value)) { // is sluggish
-                this.options[pathParts[index - 1]] = value;
+                this.options[decodeURIComponent(pathParts[index - 1])] = value;
             }
         }
 
@@ -171,6 +172,17 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
                 fuzzySearch: res['fuzzy_search'],
                 widget: this,
             }));
+
+            // TODO adapt directly in the template in master
+            const mutedItemTextEl = this.$menu.find('span.dropdown-item-text.text-muted')[0];
+            if (mutedItemTextEl) {
+                const newItemTextEl = document.createElement('span');
+                newItemTextEl.classList.add('dropdown-item-text');
+                mutedItemTextEl.after(newItemTextEl);
+                mutedItemTextEl.classList.remove('dropdown-item-text');
+                newItemTextEl.appendChild(mutedItemTextEl);
+            }
+
             this.$menu.css('min-width', this.autocompleteMinWidth);
 
             // Handle the case where the searchbar is in a mega menu by making

@@ -8,6 +8,8 @@
 # Mark Lee <odoos@soti.33mail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # JH CHOI <hwangtog@gmail.com>, 2022
+# Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -41,7 +43,7 @@ msgstr "BoM 유형"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
 msgid "Can be Subcontracted"
-msgstr ""
+msgstr "외주 가능"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -72,7 +74,7 @@ msgstr "계속"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__move_line_raw_ids
 msgid "Detail Component"
-msgstr ""
+msgstr "세부 구성 요소"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
@@ -87,22 +89,22 @@ msgstr "부품 기록 작업 표시"
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
 msgid "Facultative"
-msgstr ""
+msgstr "조건적"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
 msgid "Has been recorded?"
-msgstr ""
+msgstr "녹화 하셨습니까?"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
 msgid "Hide"
-msgstr ""
+msgstr "숨기기"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
 msgid "Is Subcontract"
-msgstr ""
+msgstr "외주"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -116,18 +118,18 @@ msgstr "주문하기"
 msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
-msgstr ""
+msgstr "재고 현황에 불일치가 발생하지 않도록 하청업체에 재공급 피킹을 확인하거나 조정해야 합니다."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "필수"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
 msgid "Nothing to record"
-msgstr ""
+msgstr "기록할 내용 없음"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_quant.py:0
@@ -215,7 +217,7 @@ msgstr "반품 선별"
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence Resupply Subcontractor"
-msgstr ""
+msgstr "외주 재공급 순서"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -242,12 +244,12 @@ msgstr "재고 규칙"
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Subcontract"
-msgstr ""
+msgstr "외주"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__subcontract_location_id
 msgid "Subcontract Location"
-msgstr ""
+msgstr "외주 생산 위치"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -271,7 +273,7 @@ msgstr "하도급 위치"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
 msgid "Subcontracting Locations"
-msgstr ""
+msgstr "외주 생산 위치"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -291,12 +293,12 @@ msgstr "하도급 생산 유형"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
 msgid "Subcontracting Resupply Operation Type"
-msgstr ""
+msgstr "외주 재공급 운영 유형"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom_line_inherit_mrp_subcontracting
 msgid "Subcontracting:"
-msgstr ""
+msgstr "외주생산:"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
@@ -344,7 +346,7 @@ msgstr "하도급 업무 절차 중에 이 연락처로 상품을 보낼 때 자
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "This MO isn't related to a subcontracted move"
-msgstr ""
+msgstr "이 제조 주문은 외주 이동과 관련이 없습니다"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
@@ -355,7 +357,7 @@ msgstr "하도급을 하려면 계획된 이전을 사용하십시오."
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
 msgid "Total Consumed"
-msgstr ""
+msgstr "총 소요량"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
@@ -372,7 +374,7 @@ msgstr "창고"
 msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
-msgstr ""
+msgstr "경고/최소 모드에서 소비되고 재료 명세서와 관련된 더 많은 부품이 제조 주문서에 사용된 경우 마법사"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_bom.py:0
@@ -380,19 +382,19 @@ msgstr ""
 msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
-msgstr ""
+msgstr "재료 명세서에는 작업 또는 부산물 내역을 하청으로 설정할 수 없습니다."
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You must enter a serial number for %s"
-msgstr ""
+msgstr "%s의 일련번호를 입력해주십시오"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You must enter a serial number for each line of %s"
-msgstr ""
+msgstr "각 줄에 %s의 일련번호를 입력해야 합니다"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0

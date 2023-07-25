@@ -6,7 +6,9 @@
 # Martin Trigaux, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco, 2022
+# Aimée Mendoza Sánchez, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,13 +16,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website_blog.py:0
@@ -402,7 +404,7 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/website_blog.js:0
 #, python-format
 msgid "Amazing blog article: %s! Check it live: %s"
-msgstr "Increíble artículo de blog: %s Compruébelo en vivo: %s"
+msgstr "Increíble artículo de blog: %s Véalo en vivo: %s"
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_1
@@ -1082,8 +1084,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_blog.field_blog_post__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan un error de "
-"entrega."
+"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -1258,6 +1259,7 @@ msgstr "Último"
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_latest_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_latest_blog_posts
 msgid "Latest Blog Posts"
 msgstr "Últimas publicaciones en el blog"
 
@@ -1427,6 +1429,7 @@ msgstr ""
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_most_viewed_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_most_viewed_blog_posts
 msgid "Most Viewed Blog Posts"
 msgstr "Publicaciones del blog más vistas"
 
@@ -2022,16 +2025,16 @@ msgid ""
 "begin looking for ways to look deeper and learn more about the spectacular "
 "universe we see in the millions of stars above us each night."
 msgstr ""
-"Ese momento “Wow” es de lo que trata la astronomía, ese momento de asombro "
+"Ese momento “Wow” es de lo que trata la astronomía, ese instante de asombro "
 "se convierte en una pasión que lleva a una carrera estudiando las estrellas."
-" Para unos pocos afortunados, ese momento de asombro se convierte en una "
-"obsesión que los lleva a viajar a las estrellas en un transbordador espacial"
-" o en una de las primeras misiones espaciales. Pero para la mayoría de "
-"nosotros la astronomía puede convertirse en un pasatiempo o actividad "
-"habitual. Sin embargo, ese momento de asombro nos acompaña durante el resto "
-"de nuestras vidas y así empezamos a buscar formas de profundizar y aprender "
-"más sobre el espectacular universo que vemos en los millones de estrellas "
-"que hay sobre nosotros cada noche."
+" Para unos pocos afortunados, ese momento se convierte en una obsesión que "
+"los lleva a viajar a las estrellas en un transbordador espacial o en una de "
+"las primeras misiones espaciales. Pero para la mayoría de nosotros la "
+"astronomía puede convertirse en un pasatiempo o actividad habitual. Sin "
+"embargo, el asombro nos acompaña durante el resto de nuestras vidas y así "
+"empezamos a buscar formas de profundizar y aprender más sobre el "
+"espectacular universo que vemos en los millones de estrellas que hay sobre "
+"nosotros cada noche."
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_5

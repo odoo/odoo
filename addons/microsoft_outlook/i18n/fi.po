@@ -7,6 +7,7 @@
 # Johanna Valkonen <miujohanna@gmail.com>, 2022
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-30 11:00+0000\n"
 "PO-Revision-Date: 2022-05-17 12:42+0000\n"
-"Last-Translator: Jussi Heikkilä <jussi.heikkila@panimo.com>, 2022\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,6 +29,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Yhdistä Outlook-tilisi"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -53,13 +56,13 @@ msgstr ""
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
-msgstr ""
+msgstr "Pääsytunnisteen noutamisessa tapahtui virhe. %s"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "Todennus URI"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -79,7 +82,7 @@ msgstr "Konfiguraatioasetukset"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back to your mail server"
-msgstr ""
+msgstr "Palaa sähköpostipalvelimelle"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
@@ -88,12 +91,14 @@ msgid ""
 "Incorrect Connection Security for Outlook mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"Outlookin sähköpostipalvelimen virheellinen yhteyden tietoturva-asetus %r. "
+"Aseta arvoksi \"TLS (STARTTLS)\"."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr ""
+msgstr "Onko Outlookin tunnukset määritetty"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -103,30 +108,30 @@ msgstr "Sähköpostipalvelin"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
 msgid "Microsoft Outlook Mixin"
-msgstr ""
+msgstr "Microsoft Outlook Mixin"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr ""
+msgstr "Vain järjestelmänvalvoja voi yhdistää Outlookin sähköpostipalvelimen."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid "Outlook"
-msgstr ""
+msgstr "Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "Outlook pääsytunniste"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Outlook pääsytunnisteen viimeinen voimassaoloaika"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__use_microsoft_outlook_service
@@ -137,24 +142,24 @@ msgstr ""
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr ""
+msgstr "Outlook Client Id"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr ""
+msgstr "Outlook Client salaisuus"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "Outlook virkistä pääsytunniste"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
-msgstr ""
+msgstr "Määritä Outlook-tunnukset."
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
@@ -163,6 +168,8 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"Jätä salasanakenttä tyhjäksi Outlookin sähköpostipalvelimelle %r. OAuth-"
+"prosessi ei vaadi sitä"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
@@ -181,15 +188,17 @@ msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
 " account."
 msgstr ""
+"Määritä Outlookin API-tunnukset yleisissä asetuksissa Outlook-tilin "
+"yhdistämiseksi."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "URL-osoite, jonka avulla valtuutuskoodi luodaan Outlookista"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."
-msgstr ""
+msgstr "Tuntematon virhe."

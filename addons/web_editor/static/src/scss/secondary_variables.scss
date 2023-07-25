@@ -135,3 +135,14 @@ $o-we-auto-contrast-exclusions: () !default;
     }
     @return increase-contrast($color1, $color2);
 }
+
+// Replace invalid characters used for colors in url.
+// (e.g. "rgba(0, 0, 0, .5)" or "#111111").
+@function encode-color($colors) {
+    $colors: str-replace($colors, '#', '%23');
+    $colors: str-replace($colors, '(', '%28');
+    $colors: str-replace($colors, ')', '%29');
+    $colors: str-replace($colors, ',', '%2C');
+    $colors: str-replace($colors, ' ', '%20');
+    @return $colors;
+}

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<!--
+TODO review in master: this snippet's images use contenteditable="true" to be
+editable, their parent being o_not_editable/contenteditable="false" to prevent
+adding text by mistake. After the first save, contenteditable="true" are lost,
+so this is a bad practice / requires a better system to do this in the future.
+Meanwhile, this is fixed in JS (see COMPANY_TEAM_CONTENTEDITABLE).
+-->
 <template id="s_company_team" name="Team">
     <section class="s_company_team pt48 pb48">
         <div class="container">

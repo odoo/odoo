@@ -14,7 +14,7 @@
                 </group>
                 <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
                     <field name="lead_id" invisible="1"/>
-                    <field name="duplicated_lead_ids" nolabel="1">
+                    <field name="duplicated_lead_ids" colspan="2" nolabel="1">
                         <tree>
                             <field name="create_date" widget="date"/>
                             <field name="name"/>

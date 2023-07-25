@@ -65,6 +65,67 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.test_move.action_post()
         self.assertEqual(self.test_move.name, 'MyMISC/2020/0000001')
 
+
+    def test_sequence_draft_change_date(self):
+        # When a draft entry is added to an empty period, it should get a name.
+        # When a draft entry with a name is moved to a period already having entries, its name should be reset to '/'.
+
+        new_move = self.test_move.copy({'date': '2016-02-01'})
+        new_multiple_move_1 = self.test_move.copy({'date': '2016-03-01'})
+        new_multiple_move_2 = self.test_move.copy({'date': '2016-04-01'})
+        new_moves = new_multiple_move_1 + new_multiple_move_2
+
+        # Empty period, so a name should be set
+        self.assertEqual(new_move.name, 'MISC/2016/02/0001')
+        self.assertEqual(new_multiple_move_1.name, 'MISC/2016/03/0001')
+        self.assertEqual(new_multiple_move_2.name, 'MISC/2016/04/0001')
+
+        # Move to an existing period with another move in it
+        new_move.date = fields.Date.to_date('2016-01-10')
+        new_moves.date = fields.Date.to_date('2016-01-15')
+
+        # Not an empty period, so names should be reset to '/' (draft)
+        self.assertEqual(new_move.name, '/')
+        self.assertEqual(new_multiple_move_1.name, '/')
+        self.assertEqual(new_multiple_move_2.name, '/')
+
+        # Move back to a period with no moves in it
+        new_move.date = fields.Date.to_date('2016-02-01')
+        new_moves.date = fields.Date.to_date('2016-03-01')
+
+        # All moves in the previously empty periods should be given a name instead of `/`
+        self.assertEqual(new_move.name, 'MISC/2016/02/0001')
+        self.assertEqual(new_multiple_move_1.name, 'MISC/2016/03/0001')
+        # Since this is the second one in the same period, it should remain `/`
+        self.assertEqual(new_multiple_move_2.name, '/')
+
+        # Move both moves back to different periods, both with already moves in it.
+        new_multiple_move_1.date = fields.Date.to_date('2016-01-10')
+        new_multiple_move_2.date = fields.Date.to_date('2016-02-10')
+
+        # Moves are not in empty periods, so names should be set to '/' (draft)
+        self.assertEqual(new_multiple_move_1.name, '/')
+        self.assertEqual(new_multiple_move_2.name, '/')
+
+        # Change the journal of the last two moves (empty)
+        journal = self.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
+        new_moves.journal_id = journal
+
+        # Both moves should be assigned a name, since no moves are in the journal and they are in different periods.
+        self.assertEqual(new_multiple_move_1.name, 'AJ/2016/01/0001')
+        self.assertEqual(new_multiple_move_2.name, 'AJ/2016/02/0001')
+
+        # When the date is removed in the form view, the name should not recompute
+        with Form(new_multiple_move_1) as move_form:
+            move_form.date = False
+            self.assertEqual(new_multiple_move_1.name, 'AJ/2016/01/0001')
+            move_form.date = fields.Date.to_date('2016-01-10')
+
+
     def test_journal_sequence(self):
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
         self.test_move.action_post()

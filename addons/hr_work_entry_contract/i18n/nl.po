@@ -7,6 +7,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -35,8 +36,8 @@ msgid ""
 "%s has multiple contracts from %s to %s. A work entry cannot overlap "
 "multiple contracts."
 msgstr ""
-"%sheeft meerdere contracten van %s t/m %s. Een werkinvoer mag niet meerdere "
-"contracten overlappen."
+"%sheeft meerdere contracten van %s t/m %s. Een werkboeking mag niet meerdere"
+" contracten overlappen."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -144,7 +145,7 @@ msgstr "HR werkboeking"
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "HR werk boekingssoort"
+msgstr "HR werkboekingssoort"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
@@ -167,7 +168,7 @@ msgid ""
 msgstr ""
 "Om de werkboekingen opnieuw te genereren, moet je de wizard voorzien van een"
 " employee_id, een date_from en een date_to. Daarnaast mag het tijdsinterval "
-"gedefinieerd door date_from en date_to geen gevalideerde werkinvoeren "
+"gedefinieerd door date_from en date_to geen gevalideerde werkboekingen "
 "bevatten."
 
 #. module: hr_work_entry_contract
@@ -237,9 +238,9 @@ msgid ""
 "be <= '%(latest_available_date)s', which correspond to the generated work "
 "entries time interval."
 msgstr ""
-"De vanaf-datum moet> = '%(earliest_available_date)s' zijn en de tot-datum "
+"De vanaf-datum moet> = '%(earliest_available_date)s' zijn en de t/m-datum "
 "moet <= '%(latest_available_date)s' zijn, wat overeenkomt met het "
-"gegenereerde tijdsinterval voor werkinvoer."
+"gegenereerde tijdsinterval voor werkboeking."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit
@@ -271,14 +272,14 @@ msgstr "Geldig"
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid "Work Entries"
-msgstr "Werk boekingen"
+msgstr "Werkboekingen"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__validated_work_entry_ids
 msgid "Work Entries Within Interval"
-msgstr "Werkinvoer binnen interval"
+msgstr "Werkboeking binnen interval"
 
 #. module: hr_work_entry_contract
 #: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action
 msgid "Work Entry Regeneration"
-msgstr "Herstel van werkinvoer"
+msgstr "Herstel van werkboeking"

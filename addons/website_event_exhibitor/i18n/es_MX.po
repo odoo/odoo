@@ -5,9 +5,10 @@
 # Translators:
 # Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,13 +16,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_event_exhibitor
 #. openerp-web
@@ -64,7 +65,7 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Icono de flecha\" "
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Flecha\"/>"
 
 #. module: website_event_exhibitor
@@ -173,7 +174,7 @@ msgstr "Archivado"
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_2
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
 msgid "As a team, we are happy to contribute to this event."
-msgstr "Como equipo, estamos contentos de contribuir a este evento."
+msgstr "Como equipo, nos complace contribuir a este evento."
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_attachment_count
@@ -234,7 +235,7 @@ msgstr "Vuelva entre"
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_2
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
 msgid "Come see us live, we hope to meet you !"
-msgstr "Ven a vernos en vivo, ¡estamos ansiosos de verte!"
+msgstr "Venga a vernos en vivo, ¡esperamos conocerle!"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
@@ -465,7 +466,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Si se encuentra seleccionado, algunos mensajes tienen error de entrega."
+"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__image_128
@@ -561,7 +562,7 @@ msgstr "Logo"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Archivos adjuntos principales"
+msgstr "Archivo adjunto principal"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_max_capacity
@@ -581,7 +582,7 @@ msgstr "Tipo de menú"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_has_error
 msgid "Message Delivery error"
-msgstr "Error en el envío del mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_ids
@@ -852,7 +853,7 @@ msgid ""
 "    Exhibitors have a dedicated page a with chat room for people to connect with them."
 msgstr ""
 "Los patrocinadores se anuncian en las páginas de sus eventos.<br>\n"
-"    Los expositores tienen una página dedicada con una sala de chat para que la gente conecte con ellos."
+"    Los expositores tienen una página específica con una sala de chat para que la gente conecte con ellos."
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_state
@@ -863,8 +864,8 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Estado basado en actividades\n"
-"Vencida: ya pasó la fecha límite\n"
-"Hoy: La fecha límite es hoy\n"
+"Vencida: la fecha límite ya pasó\n"
+"Hoy: la fecha límite es hoy\n"
 "Planeada: futuras actividades."
 
 #. module: website_event_exhibitor
@@ -880,7 +881,7 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__website_url
 msgid "The full URL to access the document through the website."
-msgstr "El URL completo para acceder al documento a través del sitio web."
+msgstr "La URL completa para acceder al documento a través del sitio web."
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__event_date_tz
@@ -956,12 +957,12 @@ msgstr "Por ejemplo: decoración de OpenWood"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "e.g. : https://www.odoo.com"
-msgstr "ej. : https://www.odoo.com"
+msgstr "Por ejemplo: https://www.odoo.com"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "e.g. : open.wood.decoration@example.com"
-msgstr "Por ejemplo: open.wood.decoration@example.com"
+msgstr "Por ejemplo: open.wood.decoration@ejemplo.com"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -1002,7 +1003,7 @@ msgstr "minutos"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
 msgid "search."
-msgstr "buscar"
+msgstr "búsqueda."
 
 #. module: website_event_exhibitor
 #. openerp-web

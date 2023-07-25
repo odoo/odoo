@@ -17,7 +17,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _get_replenishment_order_notification(self):
         self.ensure_one()
         domain = [('orderpoint_id', 'in', self.ids)]
-        if self.env.context.get('written_date'):
+        if self.env.context.get('written_after'):
             domain = AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
         production = self.env['mrp.production'].search(domain, limit=1)
         if production:
@@ -124,3 +124,9 @@ class StockWarehouseOrderpoint(models.Model):
             ('state', '=', 'draft'),
         ]).action_confirm()
         return super()._post_process_scheduler()
+
+    def _product_exclude_list(self):
+        # don't create an order point for kit products
+        boms = self.env['mrp.bom'].search([('type', '=', 'phantom')])
+        variant_boms = boms.filtered(lambda x: x.product_id)
+        return super()._product_exclude_list() + variant_boms.product_id.ids + (boms - variant_boms).product_tmpl_id.product_variant_ids.ids

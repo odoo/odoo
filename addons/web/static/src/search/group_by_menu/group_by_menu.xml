@@ -28,6 +28,7 @@
                             </t>
                             <DropdownItem class="o_item_option"
                                 t-att-class="{ selected: option.isActive }"
+                                checked="option.isActive ? true : false"
                                 payload="{ itemId: item.id, optionId: option.id }"
                                 parentClosingMode="'none'"
                                 t-esc="option.description"
@@ -39,6 +40,7 @@
                 <t t-else="">
                     <DropdownItem class="o_menu_item"
                         t-att-class="{ selected: item.isActive }"
+                        checked="item.isActive"
                         payload="{ itemId: item.id }"
                         parentClosingMode="'none'"
                         t-esc="item.description"

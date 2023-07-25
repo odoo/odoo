@@ -73,6 +73,10 @@ odoo.define('website.s_website_form', function (require) {
             return res;
         },
         start: function () {
+            // Reset the form first, as it is still filled when coming back
+            // after a redirect.
+            this.$target[0].reset();
+
             // Prepare visibility data and update field visibilities
             const visibilityFunctionsByFieldName = new Map();
             for (const fieldEl of this.$target[0].querySelectorAll('[data-visibility-dependency]')) {
@@ -87,7 +91,6 @@ odoo.define('website.s_website_form', function (require) {
             for (const [name, funcs] of visibilityFunctionsByFieldName.entries()) {
                 this._visibilityFunctionByFieldName.set(name, () => funcs.some(func => func()));
             }
-            this._updateFieldsVisibility();
 
             this._onFieldInputDebounced = _.debounce(this._onFieldInput.bind(this), 400);
             this.$el.on('input.s_website_form', '.s_website_form_field', this._onFieldInputDebounced);
@@ -129,9 +132,14 @@ odoo.define('website.s_website_form', function (require) {
             if (dataForEl || Object.keys(this.preFillValues).length) {
                 const dataForValues = dataForEl ?
                     JSON.parse(dataForEl.dataset.values
-                        .replace('False', '""')
-                        .replace('None', '""')
-                        .replace(/'/g, '"')
+                        // replaces `True` by `true` if they are after `,` or `:` or `[`
+                        .replace(/([,:\[]\s*)True/g, '$1true')
+                        // replaces `False` and `None` by `""` if they are after `,` or `:` or `[`
+                        .replace(/([,:\[]\s*)(False|None)/g, '$1""')
+                        // replaces the `'` by `"` if they are before `,` or `:` or `]` or `}`
+                        .replace(/'(\s*[,:\]}])/g, '"$1')
+                        // replaces the `'` by `"` if they are after `{` or `[` or `,` or `:`
+                        .replace(/([{\[:,]\s*)'/g, '$1"')
                     ) : {};
                 const fieldNames = this.$target.serializeArray().map(el => el.name);
                 // All types of inputs do not have a value property (eg:hidden),
@@ -173,6 +181,7 @@ odoo.define('website.s_website_form', function (require) {
                     }
                 }
             }
+            this._updateFieldsVisibility();
 
             // Check disabled states
             this.inputEls = this.$target[0].querySelectorAll('.s_website_form_field.s_website_form_field_hidden_if .s_website_form_input');
@@ -291,13 +300,21 @@ odoo.define('website.s_website_form', function (require) {
             // force server date format usage for existing fields
             this.$target.find('.s_website_form_field:not(.s_website_form_custom)')
             .find('.s_website_form_date, .s_website_form_datetime').each(function () {
+                const inputEl = this.querySelector('input');
+
+                // Datetimepicker('viewDate') will return `new Date()` if the
+                // input is empty but we want to keep the empty value
+                if (!inputEl.value) {
+                    return;
+                }
+
                 var date = $(this).datetimepicker('viewDate').clone().locale('en');
                 var format = 'YYYY-MM-DD';
                 if ($(this).hasClass('s_website_form_datetime')) {
                     date = date.utc();
                     format = 'YYYY-MM-DD HH:mm:ss';
                 }
-                form_values[$(this).find('input').attr('name')] = date.format(format);
+                form_values[inputEl.getAttribute('name')] = date.format(format);
             });
 
             if (this._recaptchaLoaded) {
@@ -335,12 +352,39 @@ odoo.define('website.s_website_form', function (require) {
                     }
                     switch (successMode) {
                         case 'redirect': {
-                            successPage = successPage.startsWith("/#") ? successPage.slice(1) : successPage;
+                            let hashIndex = successPage.indexOf("#");
+                            if (hashIndex > 0) {
+                                // URL containing an anchor detected: extract
+                                // the anchor from the URL if the URL is the
+                                // same as the current page URL so we can scroll
+                                // directly to the element (if found) later
+                                // instead of redirecting.
+                                // Note that both currentUrlPath and successPage
+                                // can exist with or without a trailing slash
+                                // before the hash (e.g. "domain.com#footer" or
+                                // "domain.com/#footer"). Therefore, if they are
+                                // not present, we add them to be able to
+                                // compare the two variables correctly.
+                                let currentUrlPath = window.location.pathname;
+                                if (!currentUrlPath.endsWith("/")) {
+                                    currentUrlPath = currentUrlPath + "/";
+                                }
+                                if (!successPage.includes("/#")) {
+                                    successPage = successPage.replace("#", "/#");
+                                    hashIndex++;
+                                }
+                                if ([successPage, "/" + session.lang_url_code + successPage].some(link => link.startsWith(currentUrlPath + '#'))) {
+                                    successPage = successPage.substring(hashIndex);
+                                }
+                            }
                             if (successPage.charAt(0) === "#") {
-                                await dom.scrollTo($(successPage)[0], {
-                                    duration: 500,
-                                    extraOffset: 0,
-                                });
+                                const successAnchorEl = document.getElementById(successPage.substring(1));
+                                if (successAnchorEl) {
+                                    await dom.scrollTo(successAnchorEl, {
+                                        duration: 500,
+                                        extraOffset: 0,
+                                    });
+                                }
                                 break;
                             }
                             $(window.location).attr('href', successPage);
@@ -354,7 +398,7 @@ odoo.define('website.s_website_form', function (require) {
 
                             self.$target[0].classList.add('d-none');
                             self.$target[0].parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
-                            return;
+                            break;
                         }
                         default: {
                             // Prevent double-clicking on the send button and
@@ -385,6 +429,9 @@ odoo.define('website.s_website_form', function (require) {
             // Loop on all fields
             this.$target.find('.form-field, .s_website_form_field').each(function (k, field) { // !compatibility
                 var $field = $(field);
+                // FIXME that seems broken, "for" does not contain the field
+                // but this is used to retrieve errors sent from the server...
+                // need more investigation.
                 var field_name = $field.find('.col-form-label').attr('for');
 
                 // Validate inputs for this field
@@ -394,17 +441,27 @@ odoo.define('website.s_website_form', function (require) {
                     // field as it seems checkValidity forces every required
                     // checkbox to be checked, instead of looking at other
                     // checkboxes with the same name and only requiring one
-                    // of them to be checked.
+                    // of them to be valid.
                     if (input.required && input.type === 'checkbox') {
                         // Considering we are currently processing a single
                         // field, we can assume that all checkboxes in the
                         // inputs variable have the same name
+                        // TODO should be improved: probably do not need to
+                        // filter neither on required, nor on checkbox and
+                        // checking the validity of the group of checkbox is
+                        // currently done for each checkbox of that group...
                         var checkboxes = _.filter(inputs, function (input) {
                             return input.required && input.type === 'checkbox';
                         });
-                        return !_.any(checkboxes, checkbox => checkbox.checked);
+                        return !_.any(checkboxes, checkbox => checkbox.checkValidity());
 
                     // Special cases for dates and datetimes
+                    // FIXME this seems like dead code, the inputs do not use
+                    // those classes, their parent does (but it seemed to work
+                    // at some point given that https://github.com/odoo/odoo/commit/75e03c0f7692a112e1b0fa33267f4939363f3871
+                    // was made)... need more investigation (if restored,
+                    // consider checking the date inputs are not disabled before
+                    // saying they are invalid (see checkValidity used here))
                     } else if ($(input).hasClass('s_website_form_date') || $(input).hasClass('o_website_form_date')) { // !compatibility
                         if (!self.is_datetime_valid(input.value, 'date')) {
                             return true;
@@ -414,13 +471,26 @@ odoo.define('website.s_website_form', function (require) {
                             return true;
                         }
                     }
+
+                    // Note that checkValidity also takes care of the case where
+                    // the input is disabled, in which case, it is considered
+                    // valid (as the data will not be sent anyway).
+                    // This takes care of conditionally-hidden fields (whose
+                    // inputs are disabled while they are hidden) which should
+                    // not require validation while they are hidden. Indeed,
+                    // their purpose is to be able to enter additional data when
+                    // some condition is fulfilled. If such a field is required,
+                    // it is only required when visible for example.
                     return !input.checkValidity();
                 });
 
                 // Update field color if invalid or erroneous
-                $field.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+                const $controls = $field.find('.form-control, .custom-select, .form-check-input, .form-control-file');
+                $field.removeClass('o_has_error');
+                $controls.removeClass('is-invalid');
                 if (invalid_inputs.length || error_fields[field_name]) {
-                    $field.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+                    $field.addClass('o_has_error');
+                    $controls.addClass('is-invalid');
                     if (_.isString(error_fields[field_name])) {
                         $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
                         // update error message and show it.
@@ -517,6 +587,13 @@ odoo.define('website.s_website_form', function (require) {
          * @returns {boolean}
          */
         _compareTo(comparator, value = '', comparable, between) {
+            // Value can be null when the compared field is supposed to be
+            // visible, but is not yet retrievable from the FormData() because
+            // the field was conditionally hidden. It can be considered empty.
+            if (value === null) {
+                value = '';
+            }
+
             switch (comparator) {
                 case 'contains':
                     return value.includes(comparable);
@@ -603,8 +680,20 @@ odoo.define('website.s_website_form', function (require) {
          * Calculates the visibility for each field with conditional visibility
          */
         _updateFieldsVisibility() {
+            let anyFieldVisibilityUpdated = false;
             for (const [fieldEl, visibilityFunction] of this._visibilityFunctionByFieldEl.entries()) {
-                this._updateFieldVisibility(fieldEl, visibilityFunction());
+                const wasVisible = !fieldEl.closest(".s_website_form_field")
+                    .classList.contains("d-none");
+                const isVisible = !!visibilityFunction();
+                this._updateFieldVisibility(fieldEl, isVisible);
+                anyFieldVisibilityUpdated |= wasVisible !== isVisible;
+            }
+            // Recursive check needed in case of a field (C) that
+            // conditionally displays a prefilled field (B), which in turn
+            // triggers a conditional visibility on another field (A),
+            // registered before B.
+            if (anyFieldVisibilityUpdated) {
+                this._updateFieldsVisibility();
             }
         },
         /**

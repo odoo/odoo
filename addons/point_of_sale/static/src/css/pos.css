@@ -759,6 +759,7 @@ td {
 .pos .actionpad .button.set-customer.decentered {
     padding-left: 40px;
     padding-right: 5px;
+    word-break: break-word;
 }
 .pos .actionpad .button .fa-user {
     position: absolute;
@@ -1258,15 +1259,19 @@ td {
     width:100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     /* troublesome in latest webkit
     background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     */
     /*background:#FFF;*/
     padding: 3px;
     padding-top:15px;
+}
+
+/*rtl:ignore*/
+.pos .product .product-name {
+    background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
 }
 
 
@@ -1727,6 +1732,7 @@ td {
     }
     body * {
         visibility: hidden;
+        height: 0 !important;
     }
     .pos, .pos * {
         position: static !important;
@@ -1740,6 +1746,7 @@ td {
         visibility: visible;
         background: white !important;
         color: black !important;
+        height: auto !important;
     }
     .pos .pos-receipt {
         margin: 0 !important;
@@ -2574,6 +2581,11 @@ td {
     border: solid 1px rgba(60,60,60,0.1);
 
     background: rgba(0,0,0,0.05);
+}
+.pos .popup .button.dynamic-size {
+    width: auto; 
+    white-space: nowrap; 
+    padding: 0 15px;
 }
 
 .pos .popup .button.dont-show-again {

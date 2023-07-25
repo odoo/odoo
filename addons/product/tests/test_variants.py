@@ -3,7 +3,7 @@
 
 import base64
 from collections import OrderedDict
-from datetime import timedelta
+from datetime import datetime, timedelta
 import io
 import unittest.mock
 
@@ -212,6 +212,31 @@ class TestVariants(common.TestProductCommon):
         self.assertEqual(template_copy.name, 'Test Copy (copy)')
         self.assertEqual(variant_copy.name, 'Test Copy (copy) (copy)')
         self.assertEqual(len(variant_copy.product_variant_ids), 2)
+
+    def test_dynamic_variants_copy(self):
+        self.color_attr = self.env['product.attribute'].create({'name': 'Color', 'create_variant': 'dynamic'})
+        self.color_attr_value_r = self.env['product.attribute.value'].create({'name': 'Red', 'attribute_id': self.color_attr.id})
+        self.color_attr_value_b = self.env['product.attribute.value'].create({'name': 'Blue', 'attribute_id': self.color_attr.id})
+
+        # test copy of variant with dynamic attribute
+        template_dyn = self.env['product.template'].create({
+            'name': 'Test Dynamical',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': self.color_attr.id,
+                'value_ids': [(4, self.color_attr_value_r.id), (4, self.color_attr_value_b.id)],
+            })]
+        })
+
+        self.assertEqual(len(template_dyn.product_variant_ids), 0)
+        self.assertEqual(template_dyn.name, 'Test Dynamical')
+
+        variant_dyn = template_dyn._create_product_variant(template_dyn._get_first_possible_combination())
+        self.assertEqual(len(template_dyn.product_variant_ids), 1)
+
+        variant_dyn_copy = variant_dyn.copy()
+        template_dyn_copy = variant_dyn_copy.product_tmpl_id
+        self.assertEqual(len(template_dyn_copy.product_variant_ids), 1)
+        self.assertEqual(template_dyn_copy.name, 'Test Dynamical (copy)')
 
     def test_standard_price(self):
         """ Ensure template values are correctly (re)computed depending on the context """
@@ -667,10 +692,17 @@ class TestVariantsImages(common.TestProductCommon):
         """
         # Pretend setup happened in an older transaction by updating on the SQL layer and making sure it gets reloaded
         # Using _write() instead of write() because write() only allows updating log access fields at boot time
-        self.variants._write({
-            'write_date': self.cr.now() - timedelta(milliseconds=1),
+        before = self.env.cr.now() - timedelta(seconds=1)
+        self.template._write({
+            'create_date': before,
+            'write_date': before,
         })
-        self.variants.invalidate_cache(['write_date'], self.variants.ids)
+        self.variants._write({
+            'create_date': before,
+            'write_date': before,
+        })
+        self.template.invalidate_cache(['create_date', 'write_date'], self.template.ids)
+        self.variants.invalidate_cache(['create_date', 'write_date'], self.variants.ids)
 
         f = io.BytesIO()
         Image.new('RGB', (800, 500), '#000000').save(f, 'PNG')
@@ -684,6 +716,7 @@ class TestVariantsImages(common.TestProductCommon):
 
         self.assertFalse(variant_no_image.image_1920)
         self.template.image_1920 = image_black
+        self.template.write({'write_date': datetime.now()})
         new_last_update = variant_no_image['__last_update']
 
         # the first has no image variant, all the others do
@@ -1133,6 +1166,19 @@ class TestVariantsArchive(common.TestProductCommon):
         self.assertTrue(product_white.active)
 
         Product._revert_method('unlink')
+
+    def test_set_barcode(self):
+        tmpl = self.product_0.product_tmpl_id
+        tmpl.barcode = '123'
+        self.assertEqual(tmpl.barcode, '123')
+        self.assertEqual(self.product_0.barcode, '123')
+
+        tmpl.toggle_active()
+
+        tmpl.barcode = '456'
+        tmpl.invalidate_cache(fnames=['barcode'], ids=tmpl.ids)
+        self.assertEqual(tmpl.barcode, '456')
+        self.assertEqual(self.product_0.barcode, '456')
 
     def _update_color_vars(self, ptal):
         self.ptal_color = ptal

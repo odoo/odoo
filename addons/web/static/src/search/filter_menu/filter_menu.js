@@ -3,6 +3,7 @@
 import { CustomFilterItem } from "./custom_filter_item";
 import { FACET_ICONS } from "../utils/misc";
 import { useBus } from "@web/core/utils/hooks";
+import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 
 const { Component } = owl;
 
@@ -35,5 +36,5 @@ export class FilterMenu extends Component {
     }
 }
 
-FilterMenu.components = { CustomFilterItem };
+FilterMenu.components = { CustomFilterItem, DropdownItem: SearchDropdownItem };
 FilterMenu.template = "web.FilterMenu";

@@ -17,11 +17,13 @@
 # Quim - eccit <quim@eccit.com>, 2021
 # AncesLatino2004, 2022
 # Jonatan Gk, 2022
-# jabelchi, 2022
 # marcescu, 2022
 # Harcogourmet, 2022
 # oscaryuu, 2022
 # CristianCruzParra, 2022
+# jabelchi, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Ivan Espinola, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,8 +31,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: CristianCruzParra, 2022\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: Ivan Espinola, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -700,6 +702,16 @@ msgstr ""
 "No es pot seleccionar un col·laborador més d'una vegada a l'accés al "
 "projecte de compartició. Si us plau suprimiu els duplicat(s) i torneu-ho a "
 "provar."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"Una etapa personal no pot enllaçar-se a un projecte perquè només és visible "
+"al seu usuari corresponent."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -3328,13 +3340,13 @@ msgstr "Obre"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
-msgstr "Obre Tasques"
+msgstr "Tasques obertes"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Open tasks"
-msgstr "Obre tasques"
+msgstr "Tasques obertes"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -5406,12 +5418,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "No podeu %s %s camps en la tasca."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
@@ -5470,6 +5476,20 @@ msgid ""
 msgstr ""
 "No pots esborrar les fases que conté tasques. Primer hauries d'esborrar "
 "totes les tasques."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr "No podeu llegir els %s camps de la tasca."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr "No podeu escriure en %s camps de la tasca."
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -6,6 +6,9 @@ from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import User
 from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_token, _modified_date_in_the_future, patch_api
+from odoo.tests import users
+
+import json
 
 
 @patch.object(User, '_get_microsoft_calendar_token', mock_get_token)
@@ -154,3 +157,26 @@ class TestAnswerEvents(TestCommon):
             ('partner_id', '=', self.attendee_user.partner_id.id)
         ])
         self.assertEqual(attendee.state, "declined")
+
+    @users('admin')
+    def test_sync_data_with_stopped_sync(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        self.env['ir.config_parameter'].sudo().set_param(
+            'microsoft_calendar_client_id',
+            'test_microsoft_calendar_client_id'
+        )
+        self.env.user.sudo().microsoft_calendar_rtoken = 'test_microsoft_calendar_rtoken'
+        self.env.user.stop_microsoft_synchronization()
+        payload = {
+            'params': {
+                'model': 'calendar.event'
+            }
+        }
+        # Sending the request to the sync_data
+        response = self.url_open(
+            '/microsoft_calendar/sync_data',
+            data=json.dumps(payload),
+            headers={'Content-Type': 'application/json'}
+        ).json()
+        # the status must be sync_stopped
+        self.assertEqual(response['result']['status'], 'sync_stopped')

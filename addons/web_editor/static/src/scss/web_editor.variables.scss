@@ -596,6 +596,7 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
     @if type-of($-related-color) == 'number' {
         // This is a preset to be applied, just extend it. This should probably
         // be avoided and use the class in XML if possible.
+        @extend .o_cc;
         @extend .o_cc#{$-related-color};
     } @else {
         @include o-bg-color(o-color($-related-color), $with-extras: $with-extras, $background: $background, $important: false);

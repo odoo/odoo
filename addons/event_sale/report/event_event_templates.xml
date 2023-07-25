@@ -12,9 +12,9 @@
                 <div class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_small_caps font-weight-bold">Order Date</div>
                 <div class="o_event_full_page_ticket_small" t-esc="attendee.sale_order_id.date_order.date()"/>
             </div>
-            <div t-if="attendee and attendee.sale_order_line_id.price_total">
+            <div t-if="attendee and attendee.sale_order_line_id.price_unit">
                 <div class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_small_caps font-weight-bold">Price</div>
-                <div class="o_event_full_page_ticket_small" t-field="attendee.sale_order_line_id.price_total"
+                <div class="o_event_full_page_ticket_small" t-field="attendee.sale_order_line_id.price_unit"
                         t-options="{'widget': 'monetary', 'display_currency': attendee.sale_order_line_id.currency_id}"/>
             </div>
         </xpath>

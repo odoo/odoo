@@ -133,7 +133,7 @@ class Message(models.Model):
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(
         'res.partner', 'mail_notification', string='Partners with Need Action',
-        context={'active_test': False}, depends=['notification_ids'])
+        context={'active_test': False}, depends=['notification_ids'], copy=False)
     needaction = fields.Boolean(
         'Need Action', compute='_compute_needaction', search='_search_needaction',
         help='Need Action')
@@ -190,10 +190,11 @@ class Message(models.Model):
     @api.depends_context('guest', 'uid')
     def _compute_is_current_user_or_guest_author(self):
         user = self.env.user
+        guest = self.env['mail.guest']._get_guest_from_context()
         for message in self:
             if not user._is_public() and (message.author_id and message.author_id == user.partner_id):
                 message.is_current_user_or_guest_author = True
-            elif user._is_public() and (message.author_guest_id and message.author_guest_id == self.env.context.get('guest')):
+            elif message.author_guest_id and message.author_guest_id == guest:
                 message.is_current_user_or_guest_author = True
             else:
                 message.is_current_user_or_guest_author = False
@@ -689,6 +690,8 @@ class Message(models.Model):
             }
             attachement_values = thread._message_post_process_attachments([], attachment_ids, message_values)
             self.update(attachement_values)
+        # Cleanup related message data if the message is empty
+        self.sudo()._filter_empty()._cleanup_side_records()
         thread._message_update_content_after_hook(self)
 
     def action_open_document(self):
@@ -786,8 +789,8 @@ class Message(models.Model):
         self.ensure_one()
         self.check_access_rule('write')
         self.check_access_rights('write')
-        if self.env.user._is_public() and 'guest' in self.env.context:
-            guest = self.env.context.get('guest')
+        guest = self.env['mail.guest']._get_guest_from_context()
+        if self.env.user._is_public() and guest:
             partner = self.env['res.partner']
         else:
             guest = self.env['mail.guest']
@@ -806,8 +809,8 @@ class Message(models.Model):
         self.ensure_one()
         self.check_access_rule('write')
         self.check_access_rights('write')
-        if self.env.user._is_public() and 'guest' in self.env.context:
-            guest = self.env.context.get('guest')
+        guest = self.env['mail.guest']._get_guest_from_context()
+        if self.env.user._is_public() and guest:
             partner = self.env['res.partner']
         else:
             guest = self.env['mail.guest']
@@ -869,7 +872,7 @@ class Message(models.Model):
                 })]
             else:
                 vals['author_id'] = author
-            reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
+            reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
             reaction_groups = [('insert-and-replace', [{
@@ -1028,6 +1031,24 @@ class Message(models.Model):
     # TOOLS
     # ------------------------------------------------------
 
+    def _cleanup_side_records(self):
+        """ Clean related data: notifications, stars, ... to avoid lingering
+        notifications / unreachable counters with void messages notably. """
+        self.write({
+            'starred_partner_ids': [(5, 0, 0)],
+            'notification_ids': [(5, 0, 0)],
+        })
+
+    def _filter_empty(self):
+        """ Return subset of "void" messages """
+        return self.filtered(
+            lambda msg:
+                (not msg.body or tools.is_html_empty(msg.body)) and
+                (not msg.subtype_id or not msg.subtype_id.description) and
+                not msg.attachment_ids and
+                not msg.tracking_value_ids
+        )
+
     @api.model
     def _get_record_name(self, values):
         """ Return the related document name, using name_get. It is done using
@@ -1079,7 +1100,7 @@ class Message(models.Model):
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
-            if issubclass(self.pool[model], self.pool['mail.thread']):
+            if model and issubclass(self.pool[model], self.pool['mail.thread']):
                 self.env[model].invalidate_cache(fnames=[
                     'message_ids',
                     'message_unread',

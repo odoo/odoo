@@ -286,7 +286,7 @@ const ProjectTaskKanbanModel = KanbanModel.extend({
         }
         const groupBy = parent.groupedBy[0];
         const context = Object.assign({}, parent.context, {
-            default_user_id: this.getSession().user_id[0],
+            default_user_id: this.getSession().uid,
         });
         // In case it's a personal stage we don't want to assign it to the project.
         delete context.default_project_id;
@@ -341,7 +341,7 @@ const ProjectTaskKanbanModel = KanbanModel.extend({
         const groupedBy = list.groupedBy[0];
         if (groupedBy === 'personal_stage_type_ids') {
             list.domain = Domain.and([
-                [['user_ids', 'in', this.getSession().user_id[0]]],
+                [['user_ids', 'in', this.getSession().uid]],
                 list.domain
             ]).toList();
         }

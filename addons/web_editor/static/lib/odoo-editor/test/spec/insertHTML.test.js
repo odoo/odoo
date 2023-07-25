@@ -65,6 +65,33 @@ describe('insert HTML', () => {
                 contentAfter: '<p>ab</p><p>c</p><p>d[]e<br></p>',
             });
         });
+        it('should keep a paragraph after a div block', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[]<br></p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insertHTML', '<div><p>content</p></div>');
+                },
+                contentAfter: '<div><p>content</p></div><p>[]<br></p>',
+            });
+        });
+        it('should not split a pre to insert another pre but just insert the text', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<pre>abc[]<br>ghi</pre>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insertHTML', '<pre>def</pre>');
+                },
+                contentAfter: '<pre>abcdef[]<br>ghi</pre>',
+            });
+        });
+        it('should keep an "empty" block which contains fontawesome nodes when inserting multiple nodes', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>content[]</p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insertHTML', '<p>unwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after</p>');
+                },
+                contentAfter: '<p>contentunwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after[]</p>',
+            });
+        });
     });
     describe('not collapsed selection', () => {
         it('should delete selection and insert html in its place', async () => {

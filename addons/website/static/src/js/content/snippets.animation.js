@@ -12,7 +12,6 @@ var core = require('web.core');
 const dom = require('web.dom');
 var mixins = require('web.mixins');
 var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
 const wUtils = require('website.utils');
 
 var qweb = core.qweb;
@@ -115,6 +114,9 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
      *        startEvents is received again)
      * @param {jQuery|DOMElement} [options.$endTarget=$startTarget]
      *        the element(s) on which the endEvents are listened
+     * @param {boolean} [options.enableInModal]
+     *        when it is true, it means that the 'scroll' event must be
+     *        triggered when scrolling a modal.
      */
     init: function (parent, updateCallback, startEvents, $startTarget, options) {
         mixins.ParentedMixin.init.call(this);
@@ -126,7 +128,8 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         // Initialize the animation startEvents, startTarget, endEvents, endTarget and callbacks
         this._updateCallback = updateCallback;
         this.startEvents = startEvents || 'scroll';
-        const mainScrollingElement = $().getScrollingElement()[0];
+        const modalEl = options.enableInModal ? parent.target.closest('.modal') : null;
+        const mainScrollingElement = modalEl ? modalEl : $().getScrollingElement()[0];
         const mainScrollingTarget = mainScrollingElement === document.documentElement ? window : mainScrollingElement;
         this.$startTarget = $($startTarget ? $startTarget : this.startEvents === 'scroll' ? mainScrollingTarget : window);
         if (options.getStateCallback) {
@@ -400,6 +403,7 @@ var Animation = publicWidget.Widget.extend({
                 endEvents: desc.endEvents || undefined,
                 $endTarget: _findTarget(desc.endTarget),
                 maxFPS: self.maxFPS,
+                enableInModal: desc.enableInModal || undefined,
             });
 
             // Return the DOM element matching the selector in the form
@@ -475,15 +479,19 @@ registry.slider = publicWidget.Widget.extend({
         var maxHeight = 0;
         var $items = this.$('.carousel-item');
         $items.css('min-height', '');
-        _.each($items, function (el) {
+        _.each($items, el => {
             var $item = $(el);
             var isActive = $item.hasClass('active');
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive('_computeHeights');
             $item.addClass('active');
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive('_computeHeights');
             var height = $item.outerHeight();
             if (height > maxHeight) {
                 maxHeight = height;
             }
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive('_computeHeights');
             $item.toggleClass('active', isActive);
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive('_computeHeights');
         });
         $items.css('min-height', maxHeight);
     },
@@ -506,6 +514,7 @@ registry.Parallax = Animation.extend({
     effects: [{
         startEvents: 'scroll',
         update: '_onWindowScroll',
+        enableInModal: true,
     }],
 
     /**
@@ -514,6 +523,13 @@ registry.Parallax = Animation.extend({
     start: function () {
         this._rebuild();
         $(window).on('resize.animation_parallax', _.debounce(this._rebuild.bind(this), 500));
+        this.modalEl = this.$target[0].closest('.modal');
+        if (this.modalEl) {
+            $(this.modalEl).on('shown.bs.modal.animation_parallax', () => {
+                this._rebuild();
+                this.modalEl.dispatchEvent(new Event('scroll'));
+            });
+        }
         return this._super.apply(this, arguments);
     },
     /**
@@ -522,6 +538,9 @@ registry.Parallax = Animation.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(window).off('.animation_parallax');
+        if (this.modalEl) {
+            $(this.modalEl).off('.animation_parallax');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -966,13 +985,25 @@ registry.anchorSlide = publicWidget.Widget.extend({
      * @private
      */
     _onAnimateClick: function (ev) {
-        if (this.$target[0].pathname !== window.location.pathname) {
-            return;
-        }
         var hash = this.$target[0].hash;
-        if (!utils.isValidAnchor(hash)) {
+        if (hash === '#top' || hash === '#bottom') {
+            // If the anchor targets #top or #bottom, directly call the
+            // "scrollTo" function. The reason is that the header or the footer
+            // could have been removed from the DOM. By receiving a string as
+            // parameter, the "scrollTo" function handles the scroll to the top
+            // or to the bottom of the document even if the header or the
+            // footer is removed from the DOM.
+            dom.scrollTo(hash, {
+                duration: 500,
+                extraOffset: this._computeExtraOffset(),
+            });
             return;
         }
+        if (!hash.length) {
+            return;
+        }
+        // Escape special characters to make the jQuery selector to work.
+        hash = '#' + $.escapeSelector(hash.substring(1));
         var $anchor = $(hash);
         const scrollValue = $anchor.attr('data-anchor');
         if (!$anchor.length || !scrollValue) {
@@ -1050,9 +1081,15 @@ registry.ScrollButton = registry.anchorSlide.extend({
      */
     _onAnimateClick: function (ev) {
         ev.preventDefault();
-        const $nextElement = this.$el.closest('section').next();
-        if ($nextElement.length) {
-            this._scrollTo($nextElement);
+        // Scroll to the next visible element after the current one.
+        const currentSectionEl = this.el.closest('section');
+        let nextEl = currentSectionEl.nextElementSibling;
+        while (nextEl) {
+            if ($(nextEl).is(':visible')) {
+                this._scrollTo($(nextEl));
+                return;
+            }
+            nextEl = nextEl.nextElementSibling;
         }
     },
 });
@@ -1080,6 +1117,13 @@ registry.FooterSlideout = publicWidget.Widget.extend({
         this.__pixelEl.style.width = `1px`;
         this.__pixelEl.style.height = `1px`;
         this.__pixelEl.style.marginTop = `-1px`;
+        // On safari, add a background attachment fixed to fix the glitches that
+        // appear when scrolling the page with a footer slide out.
+        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            this.__pixelEl.style.backgroundColor = "transparent";
+            this.__pixelEl.style.backgroundAttachment = "fixed";
+            this.__pixelEl.style.backgroundImage = "url(/website/static/src/img/website_logo.svg)";
+        }
         this.el.appendChild(this.__pixelEl);
 
         return this._super(...arguments);
@@ -1091,6 +1135,42 @@ registry.FooterSlideout = publicWidget.Widget.extend({
         this._super(...arguments);
         this.el.classList.remove('o_footer_effect_enable');
         this.__pixelEl.remove();
+    },
+});
+
+registry.TopMenuCollapse = publicWidget.Widget.extend({
+    selector: "header #top_menu_collapse",
+
+    /**
+     * @override
+     */
+    async start() {
+        this.throttledResize = _.throttle(() => this._onResize(), 25);
+        window.addEventListener("resize", this.throttledResize);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        window.removeEventListener("resize", this.throttledResize);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onResize() {
+        if (this.el.classList.contains("show")) {
+            const togglerEl = this.el.closest("nav").querySelector(".navbar-toggler");
+            if (getComputedStyle(togglerEl).display === "none") {
+                this.$el.collapse("hide");
+            }
+        }
     },
 });
 
@@ -1155,6 +1235,20 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
             return;
         }
 
+        // The bottom fixed elements are always hidden when a modal is open
+        // thanks to the CSS that is based on the 'modal-open' class added to
+        // the body. However, when the modal does not have a backdrop (e.g.
+        // cookies bar), this 'modal-open' class is not added. That's why we
+        // handle it here. Note that the popup widget code triggers a 'scroll'
+        // event when the modal is hidden to make the bottom fixed elements
+        // reappear.
+        if (this.el.querySelector('.s_popup_no_backdrop.show')) {
+            for (const el of $bottomFixedElements) {
+                el.classList.add('o_bottom_fixed_element_hidden');
+            }
+            return;
+        }
+
         $bottomFixedElements.removeClass('o_bottom_fixed_element_hidden');
         if ((this.$scrollingElement[0].offsetHeight + this.$scrollingElement[0].scrollTop) >= (this.$scrollingElement[0].scrollHeight - 2)) {
             const buttonEls = [...this.$('.btn:visible')];
@@ -1180,9 +1274,25 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
     start() {
         this.lastScroll = 0;
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
+        this.$animatedElements = this.$('.o_animate');
+
+        // Fix for "transform: none" not overriding keyframe transforms on
+        // some iPhone using Safari. Note that all animated elements are checked
+        // (not only one) as the bug is not systematic and may depend on some
+        // other conditions (for example: an animated image in a block which is
+        // hidden on mobile would not have the issue).
+        const couldOverflowBecauseOfSafariBug = [...this.$animatedElements].some(el => {
+            return window.getComputedStyle(el).transform !== 'none';
+        });
+        this.forceOverflowXHidden = false;
+        if (couldOverflowBecauseOfSafariBug) {
+            this._toggleOverflowXHidden(true);
+            // Now prevent any call to _toggleOverflowXHidden to have an effect
+            this.forceOverflowXHidden = true;
+        }
+
         // By default, elements are hidden by the css of o_animate.
         // Render elements and trigger the animation then pause it in state 0.
-        this.$animatedElements = this.$target.find('.o_animate');
         _.each(this.$animatedElements, el => {
             if (el.closest('.dropdown')) {
                 el.classList.add('o_animate_in_dropdown');
@@ -1270,6 +1380,9 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      * @param {Boolean} add
      */
     _toggleOverflowXHidden(add) {
+        if (this.forceOverflowXHidden) {
+            return;
+        }
         if (add) {
             this.$scrollingElement[0].classList.add('o_wanim_overflow_x_hidden');
         } else if (!this.$scrollingElement.find('.o_animating').length) {
@@ -1405,6 +1518,89 @@ registry.ImagesLazyLoading = publicWidget.Widget.extend({
     _restoreImage(imgEl) {
         imgEl.style.minHeight = imgEl.dataset.lazyLoadingInitialMinHeight;
         delete imgEl.dataset.lazyLoadingInitialMinHeight;
+    },
+});
+
+/**
+ * @todo while this solution mitigates the issue, it is not fixing it entirely
+ * but mainly, we should find a better solution than a JS solution as soon as
+ * one is available and ideally without having to make ugly patches to the SVGs.
+ *
+ * Due to a bug on Chrome when using browser zoom, there is sometimes a gap
+ * between sections with shapes. This gap is due to a rounding issue when
+ * positioning the SVG background images. This code reduces the rounding error
+ * by ensuring that shape elements always have a width value as close to an
+ * integer as possible.
+ *
+ * Note: a gap also appears between some shapes without zoom. This is likely
+ * due to error in the shapes themselves. Many things were done to try and fix
+ * this, but the remaining errors will likely be fixed with a review of the
+ * shapes in future Odoo versions.
+ *
+ * /!\
+ * If a better solution for stable comes up, this widget behavior may be
+ * disabled, avoid depending on it if possible.
+ * /!\
+ */
+registry.ZoomedBackgroundShape = publicWidget.Widget.extend({
+    selector: '.o_we_shape',
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start() {
+        this._onBackgroundShapeResize();
+        this.throttledShapeResize = _.throttle(() => this._onBackgroundShapeResize(), 25);
+        window.addEventListener('resize', this.throttledShapeResize);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._updateShapePosition();
+        window.removeEventListener('resize', this.throttledShapeResize);
+        this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Updates the left and right offset of the shape.
+     *
+     * @private
+     * @param {string} offset
+     */
+    _updateShapePosition(offset = '') {
+        this.el.style.left = offset;
+        this.el.style.right = offset;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onBackgroundShapeResize() {
+        this._updateShapePosition();
+        // Get the decimal part of the shape element width.
+        let decimalPart = this.el.getBoundingClientRect().width % 1;
+        // Round to two decimal places.
+        decimalPart = Math.round((decimalPart + Number.EPSILON) * 100) / 100;
+        // If there is a decimal part. (e.g. Chrome + browser zoom enabled)
+        if (decimalPart > 0) {
+            // Compensate for the gap by giving an integer width value to the
+            // shape by changing its "right" and "left" positions.
+            let offset = (decimalPart < 0.5 ? decimalPart : decimalPart - 1) / 2;
+            // This never causes the horizontal scrollbar to appear because it
+            // only appears if the overflow to the right exceeds 0.333px.
+            this._updateShapePosition(offset + 'px');
+        }
     },
 });
 

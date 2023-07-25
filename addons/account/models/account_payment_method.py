@@ -23,7 +23,7 @@ class AccountPaymentMethod(models.Model):
         payment_methods = super().create(vals_list)
         methods_info = self._get_payment_method_information()
         for method in payment_methods:
-            information = methods_info.get(method.code)
+            information = methods_info.get(method.code, {})
 
             if information.get('mode') == 'multi':
                 method_domain = method._get_payment_method_domain()
@@ -76,6 +76,14 @@ class AccountPaymentMethod(models.Model):
         return {
             'manual': {'mode': 'multi', 'domain': [('type', 'in', ('bank', 'cash'))]},
         }
+
+    @api.model
+    def _get_sdd_payment_method_code(self):
+        """
+        TO OVERRIDE
+        This hook will be used to return the list of sdd payment method codes
+        """
+        return []
 
 
 class AccountPaymentMethodLine(models.Model):

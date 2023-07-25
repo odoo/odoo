@@ -9,6 +9,8 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Martin Trigaux, 2022
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Jesse Järvi <me@jessejarvi.net>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,8 +18,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-01 12:13+0000\n"
 "PO-Revision-Date: 2022-03-03 13:11+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -30,6 +32,8 @@ msgid ""
 ".\n"
 "                <br/>"
 msgstr ""
+".\n"
+"                <br/>"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,body_html:auth_totp_mail_enforce.mail_template_totp_mail_code
@@ -70,6 +74,40 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Moi <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"    Joku yritti kirjautua tilillesi uudella laitteella.</p>\n"
+"    <ul>\n"
+"        <t t-set=\"not_available\">ei tiedossa</t>\n"
+"        <li>Sijainti: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"        <li>Laite: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"        <li>Selain: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"        <li>IP-osoite: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"    </ul>\n"
+"    <p>Jos tämä olit sinä, syötä tämä vahvistuskoodi kirjautuaksesi sisään:</p>\n"
+"    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"    <t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"    <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"/>\n"
+"    </div>\n"
+"    Vahvistuskoodi vanhenee <t t-out=\"expiration\"/>.</small>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        Jos ET kirjautunut sisään, vaihda salasanasi välittömästi tilisi suojaamiseksi.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        Suosittelemme vahvasti kaksivaiheisen tunnistautumisen käyttöönottoa.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            Ota kaksivaiheinen tunnistautuminen käyttöön\n"
+"        </a>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -77,6 +115,8 @@ msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                Kirjautuaksesi sisään, syötä kuusinumeroinen vahvistuskoodi joka lähetettiin sähköpostiosoitteeseen "
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
@@ -93,7 +133,7 @@ msgstr ""
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__code_check
 msgid "Code Checking"
-msgstr ""
+msgstr "Koodin tarkistus"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_res_config_settings
@@ -118,7 +158,7 @@ msgstr "Näyttönimi"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__employee_required
 msgid "Employees only"
-msgstr ""
+msgstr "Vain työntekijät"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.res_config_settings_view_form
@@ -127,11 +167,14 @@ msgid ""
 "                                (including portal users) if they didn't enable any other two-factor authentication\n"
 "                                method."
 msgstr ""
+"Kaksivaiheisen tunnistuksen käyttöönotto sähköpostitse työntekijöille tai kaikille käyttäjille\n"
+"                                (mukaan lukien portaalin käyttäjät), jos he eivät ole ottaneet käyttöön mitään muuta kaksivaiheisen tunnistuksen\n"
+"                                menetelmää."
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
-msgstr ""
+msgstr "Kaksivaiheisen tunnistuksen käyttöönotto"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__id
@@ -141,7 +184,7 @@ msgstr "ID"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__ip
 msgid "Ip"
-msgstr ""
+msgstr "IP"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log____last_update
@@ -166,12 +209,12 @@ msgstr "Lue lisää"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__limit_type
 msgid "Limit Type"
-msgstr ""
+msgstr "Rajoitustyyppi"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
 msgid "Re-send email"
-msgstr ""
+msgstr "Lähetä sähköposti uudelleen"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__send_email
@@ -191,12 +234,12 @@ msgstr ""
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
 msgid "TOTP rate limit logs"
-msgstr ""
+msgstr "TOTP-rajoituslokit"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr ""
+msgstr "Kaksivaiheisen tunnistuksen pakollinen käyttöönotto"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__user_id
@@ -212,7 +255,7 @@ msgstr "Käyttäjät"
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr ""
+msgstr "Vahvistus epäonnistui, tarkista kuusinumeroinen koodi"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -220,20 +263,23 @@ msgid ""
 "We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
+"Suosittelemme, että otat käyttöön kaksivaiheisen tunnistuksen matkapuhelinohjelmiston tilisi suojaamiseksi.\n"
+"               <br/>"
 
 #. module: auth_totp_mail_enforce
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
 msgstr ""
+"Saavutit tilillesi lähetettyjen tunnistautumisviestien määrän ylärajan"
 
 #. module: auth_totp_mail_enforce
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"
-msgstr ""
+msgstr "Saavutit tilisi koodivarmennusten enimmäismäärän"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
-msgstr ""
+msgstr "Kaksivaiheisen tunnistuksesi koodi"

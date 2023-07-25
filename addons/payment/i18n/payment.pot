@@ -2176,6 +2176,12 @@ msgid "You cannot delete a view that is used by a payment acquirer."
 msgstr ""
 
 #. module: payment
+#: code:addons/payment/models/payment_acquirer.py:0
+#, python-format
+msgid "You cannot delete the payment acquirer %s; archive it instead."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
@@ -2340,4 +2346,18 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "to choose another payment method."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/wizards/payment_link_wizard.py:0
+#, python-format
+msgid "Force Payment Acquirer"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"You must first deactivate a payment acquirer before deleting its journal.\n"
+"Linked acquirer(s): %s"
 msgstr ""

@@ -70,6 +70,9 @@ class ProductCategory(models.Model):
         main_category = self.env.ref('product.product_category_all')
         if main_category in self:
             raise UserError(_("You cannot delete this product category, it is the default generic category."))
+        expense_category = self.env.ref('product.cat_expense', raise_if_not_found=False)
+        if expense_category and expense_category in self:
+            raise UserError(_("You cannot delete the %s product category.", expense_category.name))
 
 
 class ProductProduct(models.Model):
@@ -183,6 +186,15 @@ class ProductProduct(models.Model):
 
     def _set_image_1920(self):
         return self._set_template_field('image_1920', 'image_variant_1920')
+
+    @api.depends("create_date", "write_date", "product_tmpl_id.create_date", "product_tmpl_id.write_date")
+    def compute_concurrency_field_with_access(self):
+        # Intentionally not calling super() to involve all fields explicitly
+        for record in self:
+            record[self.CONCURRENCY_CHECK_FIELD] = max(filter(None, (
+                record.product_tmpl_id.write_date or record.product_tmpl_id.create_date,
+                record.write_date or record.create_date or fields.Datetime.now(),
+            )))
 
     def _compute_image_1024(self):
         """Get the image from the template if no image is set on the variant."""
@@ -449,7 +461,12 @@ class ProductProduct(models.Model):
         For convenience the template is copied instead and its first variant is
         returned.
         """
-        return self.product_tmpl_id.copy(default=default).product_variant_id
+        # copy variant is disabled in https://github.com/odoo/odoo/pull/38303
+        # this returns the first possible combination of variant to make it
+        # works for now, need to be fixed to return product_variant_id if it's
+        # possible in the future
+        template = self.product_tmpl_id.copy(default=default)
+        return template.product_variant_id or template._create_first_product_variant()
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
@@ -634,16 +651,16 @@ class ProductProduct(models.Model):
     def _prepare_sellers(self, params=False):
         return self.seller_ids.filtered(lambda s: s.name.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
+    def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
         if date is None:
             date = fields.Date.context_today(self)
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
-        res = self.env['product.supplierinfo']
-        sellers = self._prepare_sellers(params)
-        sellers = sellers.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
-        for seller in sellers:
+        sellers_filtered = self._prepare_sellers(params)
+        sellers_filtered = sellers_filtered.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
+        sellers = self.env['product.supplierinfo']
+        for seller in sellers_filtered:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
@@ -659,9 +676,16 @@ class ProductProduct(models.Model):
                 continue
             if seller.product_id and seller.product_id != self:
                 continue
+            sellers |= seller
+        return sellers
+
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
+        sellers = self._get_filtered_sellers(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, params=params)
+        res = self.env['product.supplierinfo']
+        for seller in sellers:
             if not res or res.name == seller.name:
                 res |= seller
-        return res.sorted('price')[:1]
+        return res and res.sorted('price')[:1]
 
     def price_compute(self, price_type, uom=False, currency=False, company=None):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
@@ -695,8 +719,9 @@ class ProductProduct(models.Model):
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency
             if currency:
+                company = company or self.env.company
                 prices[product.id] = product.currency_id._convert(
-                    prices[product.id], currency, product.company_id, fields.Date.today())
+                    prices[product.id], currency, company, fields.Date.today())
 
         return prices
 

@@ -24,10 +24,11 @@ class MailTemplatePreview(models.TransientModel):
         result = super(MailTemplatePreview, self).default_get(fields)
         if not result.get('mail_template_id') or 'resource_ref' not in fields:
             return result
-        mail_template = self.env['mail.template'].browse(result['mail_template_id'])
-        res = self.env[mail_template.model_id.model].search([], limit=1)
+        mail_template = self.env['mail.template'].browse(result['mail_template_id']).sudo()
+        model = mail_template.model
+        res = self.env[model].search([], limit=1)
         if res:
-            result['resource_ref'] = '%s,%s' % (mail_template.model_id.model, res.id)
+            result['resource_ref'] = '%s,%s' % (model, res.id)
         return result
 
     mail_template_id = fields.Many2one('mail.template', string='Related Mail Template', required=True)
@@ -52,8 +53,9 @@ class MailTemplatePreview(models.TransientModel):
 
     @api.depends('model_id')
     def _compute_no_record(self):
-        for preview in self:
-            preview.no_record = (self.env[preview.model_id.model].search_count([]) == 0) if preview.model_id else True
+        for preview, preview_sudo in zip(self, self.sudo()):
+            model_id = preview_sudo.model_id
+            preview.no_record = not model_id or not self.env[model_id.model].search_count([])
 
     @api.depends('lang', 'resource_ref')
     def _compute_mail_template_fields(self):
@@ -68,7 +70,7 @@ class MailTemplatePreview(models.TransientModel):
             else:
                 copy_depends_values['resource_ref'] = '%s,%s' % (self.resource_ref._name, self.resource_ref.id)
                 mail_values = mail_template.with_context(template_preview_lang=self.lang).generate_email(
-                    self.resource_ref.id, self._MAIL_TEMPLATE_FIELDS)
+                    self.resource_ref.id, self._MAIL_TEMPLATE_FIELDS + ['partner_to'])
                 self._set_mail_attributes(values=mail_values)
             self.error_msg = False
         except UserError as user_error:

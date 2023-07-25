@@ -18,6 +18,15 @@
 
                 .o_portal_chatter_attachments {
                     margin-bottom: 1rem;
+                    .o_portal_chatter_attachment {
+                        .o_portal_chatter_attachment_delete {
+                            @include o-position-absolute($top: 0, $right: 0);
+                            opacity: 0;
+                        }
+                        &:hover .o_portal_chatter_attachment_delete {
+                            opacity: 1;
+                        }
+                    }
                 }
             }
         }
@@ -25,6 +34,18 @@
         .o_portal_chatter_avatar {
             width: 45px;
             height: 45px;
+        }
+
+        .o_portal_message_internal_off {
+            .btn-danger {
+                display: none;
+            }
+        }
+
+        .o_portal_message_internal_on {
+            .btn-success {
+                display: none;
+            }
         }
     }
 

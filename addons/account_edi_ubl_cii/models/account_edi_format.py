@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import models, fields, SUPERUSER_ID
 from odoo.tools import str2bool
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import COUNTRY_EAS
 
@@ -17,6 +17,7 @@ FORMAT_CODES = [
     'efff_1',
     'ubl_2_1',
     'ehf_3',
+    'ubl_sg',
 ]
 
 
@@ -33,18 +34,21 @@ class AccountEdiFormat(models.Model):
         customization_id = tree.find('{*}CustomizationID')
         if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
             return self.env['account.edi.xml.cii']
-        if customization_id is not None:
-            if 'xrechnung' in customization_id.text:
-                return self.env['account.edi.xml.ubl_de']
-            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0':
-                return self.env['account.edi.xml.ubl_bis3']
-            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
-                return self.env['account.edi.xml.ubl_nl']
         if ubl_version is not None:
             if ubl_version.text == '2.0':
                 return self.env['account.edi.xml.ubl_20']
-            if ubl_version.text == '2.1':
+            if ubl_version.text in ('2.1', '2.2', '2.3'):
                 return self.env['account.edi.xml.ubl_21']
+        if customization_id is not None:
+            if 'xrechnung' in customization_id.text:
+                return self.env['account.edi.xml.ubl_de']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
+                return self.env['account.edi.xml.ubl_nl']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0':
+                return self.env['account.edi.xml.ubl_sg']
+            # Allow to parse any format derived from the european semantic norm EN16931
+            if 'urn:cen.eu:en16931:2017' in customization_id.text:
+                return self.env['account.edi.xml.ubl_bis3']
         return
 
     def _get_xml_builder(self, company):
@@ -64,6 +68,8 @@ class AccountEdiFormat(models.Model):
         # the EDI option will only appear on the journal of belgian companies
         if self.code == 'efff_1' and company.country_id.code == 'BE':
             return self.env['account.edi.xml.ubl_efff']
+        if self.code == 'ubl_sg' and company.country_id.code == 'SG':
+            return self.env['account.edi.xml.ubl_sg']
 
     def _is_ubl_cii_available(self, company):
         """
@@ -100,7 +106,7 @@ class AccountEdiFormat(models.Model):
             return super()._is_enabled_by_default_on_journal(journal)
         return self.code == 'facturx_1_0_05'
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         # EXTENDS account_edi
         self.ensure_one()
 
@@ -121,12 +127,12 @@ class AccountEdiFormat(models.Model):
                 'raw': xml_content,
                 'mimetype': 'application/xml',
             }
-            # we don't want the Factur-X and E-FFF xml to appear in the attachment of the invoice when confirming it
-            # E-FFF will appear after the pdf is generated, Factur-X will never appear (it's contained in the PDF)
-            if self.code not in ['facturx_1_0_05', 'efff_1']:
+            # we don't want the Factur-X, E-FFF and NLCIUS xml to appear in the attachment of the invoice when confirming it
+            # E-FFF and NLCIUS will appear after the pdf is generated, Factur-X will never appear (it's contained in the PDF)
+            if self.code not in ['facturx_1_0_05', 'efff_1', 'nlcius_1']:
                 attachment_create_vals.update({'res_id': invoice.id, 'res_model': 'account.move'})
 
-            attachment = self.env['ir.attachment'].create(attachment_create_vals)
+            attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachment_create_vals)
             res[invoice] = {
                 'success': True,
                 'attachment': attachment,
@@ -174,11 +180,7 @@ class AccountEdiFormat(models.Model):
         # EXTENDS account_edi
         self.ensure_one()
 
-        if not journal:
-            # infer the journal
-            journal = self.env['account.journal'].search([
-                ('company_id', '=', self.env.company.id), ('type', '=', 'purchase')
-            ], limit=1)
+        journal = journal or self.env['account.move']._get_default_journal()
 
         if not self._is_ubl_cii_available(journal.company_id):
             return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)

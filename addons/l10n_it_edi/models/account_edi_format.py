@@ -89,9 +89,9 @@ class AccountEdiFormat(models.Model):
             errors.append(_("%s must have a country", seller.display_name))
 
         # <1.1.1.2>
-        if not seller.vat:
+        if not invoice.company_id.vat:
             errors.append(_("%s must have a VAT number", seller.display_name))
-        elif len(seller.vat) > 30:
+        if seller.vat and len(seller.vat) > 30:
             errors.append(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.", seller.display_name, seller.vat))
 
         # <1.2.1.2>
@@ -200,9 +200,6 @@ class AccountEdiFormat(models.Model):
         if not buyer.city:
             errors.append(_("%s must have a city.", buyer.display_name))
 
-        if any(line.quantity < 0 for line in invoice.invoice_line_ids):
-            errors.append(_("All quantities should be positive."))
-
         for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
                 errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
@@ -220,14 +217,15 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_it_document_type_mapping(self):
         return {
-            'TD01': dict(move_type='out_invoice', import_type='in_invoice'),
-            'TD04': dict(move_type='out_refund', import_type='in_refund'),
-            'TD07': dict(move_type='out_invoice', import_type='in_invoice', simplified=True),
-            'TD08': dict(move_type='out_refund', import_type='in_refund', simplified=True),
-            'TD09': dict(move_type='out_invoice', import_type='in_invoice', simplified=True),
-            'TD17': dict(move_type='in_invoice', import_type='out_invoice', self_invoice=True, services_or_goods="service"),
-            'TD18': dict(move_type='in_invoice', import_type='out_invoice', self_invoice=True, services_or_goods="consu", partner_in_eu=True),
-            'TD19': dict(move_type='in_invoice', import_type='out_invoice', self_invoice=True, services_or_goods="consu", goods_in_italy=True),
+            'TD01': dict(move_types=['out_invoice'], import_type='in_invoice', downpayment=False),
+            'TD02': dict(move_types=['out_invoice'], import_type='in_invoice', downpayment=True),
+            'TD04': dict(move_types=['out_refund'], import_type='in_refund'),
+            'TD07': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
+            'TD08': dict(move_types=['out_refund'], import_type='in_refund', simplified=True),
+            'TD09': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
+            'TD17': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', self_invoice=True, services_or_goods="service"),
+            'TD18': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', self_invoice=True, services_or_goods="consu", partner_in_eu=True),
+            'TD19': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', self_invoice=True, services_or_goods="consu", goods_in_italy=True),
         }
 
     def _l10n_it_get_document_type(self, invoice):
@@ -240,7 +238,10 @@ class AccountEdiFormat(models.Model):
             info_services_or_goods = infos.get('services_or_goods', "both")
             info_partner_in_eu = infos.get('partner_in_eu', False)
             if all([
-                invoice.move_type == infos.get('move_type', False),
+                invoice.move_type in infos.get('move_types', False),
+                # Only check downpayment if the key is specified in the document_type_mapping entry
+                # If it's not specified, the get() will return None and the condition will be True
+                infos.get('downpayment') in (None, invoice._is_downpayment()),
                 is_self_invoice == infos.get('self_invoice', False),
                 is_simplified == infos.get('simplified', False),
                 info_services_or_goods in ("both", services_or_goods),
@@ -248,6 +249,7 @@ class AccountEdiFormat(models.Model):
                 goods_in_italy == infos.get('goods_in_italy', False),
             ]):
                 return code
+
         return None
 
     def _l10n_it_is_simplified_document_type(self, document_type):
@@ -306,7 +308,7 @@ class AccountEdiFormat(models.Model):
             res['success'] = True
         return {invoice: res}
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         # OVERRIDE
         self.ensure_one()
         edi_result = super()._post_invoice_edi(invoices)
@@ -320,9 +322,9 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
 
     def _check_filename_is_fattura_pa(self, filename):
-        return re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", filename)
+        return re.search("[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))", filename)
 
-    def _is_fattura_pa(self, filename, tree):
+    def _is_fattura_pa(self, filename, tree=None):
         return self.code == 'fattura_pa' and self._check_filename_is_fattura_pa(filename)
 
     def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
@@ -362,19 +364,30 @@ class AccountEdiFormat(models.Model):
 
     def _create_invoice_from_binary(self, filename, content, extension):
         self.ensure_one()
-        if extension.lower() == '.xml.p7m':
+        if extension.lower() == '.xml.p7m' and self._is_fattura_pa(filename):
             decoded_content = self._decode_p7m_to_xml(filename, content)
-            if decoded_content is not None and self._is_fattura_pa(filename, decoded_content):
+            if decoded_content is not None:
                 return self._import_fattura_pa(decoded_content, self.env['account.move'])
         return super()._create_invoice_from_binary(filename, content, extension)
 
     def _update_invoice_from_binary(self, filename, content, extension, invoice):
         self.ensure_one()
-        if extension.lower() == '.xml.p7m':
+        if extension.lower() == '.xml.p7m' and self._is_fattura_pa(filename):
             decoded_content = self._decode_p7m_to_xml(filename, content)
-            if decoded_content is not None and self._is_fattura_pa(filename, decoded_content):
+            if decoded_content is not None:
                 return self._import_fattura_pa(decoded_content, invoice)
         return super()._update_invoice_from_binary(filename, content, extension, invoice)
+
+    def _convert_date_from_xml(self, xsdate_str):
+        """ Dates in FatturaPA are ISO 8601 date format, pattern '[-]CCYY-MM-DD[Z|(+|-)hh:mm]' """
+        xsdate_str = xsdate_str.strip()
+        xsdate_pattern = r"^-?(?P<date>-?\d{4}-\d{2}-\d{2})(?P<tz>[zZ]|[+-]\d{2}:\d{2})?$"
+        try:
+            match = re.match(xsdate_pattern, xsdate_str)
+            converted_date = datetime.strptime(match.group("date"), DEFAULT_FACTUR_ITALIAN_DATE_FORMAT).date()
+        except Exception:
+            converted_date = False
+        return converted_date
 
     def _import_fattura_pa(self, tree, invoice):
         """ Decodes a fattura_pa invoice into an invoice.
@@ -478,9 +491,14 @@ class AccountEdiFormat(models.Model):
                 # Date. <2.1.1.3>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento/Data')
                 if elements:
-                    date_str = elements[0].text
-                    date_obj = datetime.strptime(date_str, DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
-                    invoice_form.invoice_date = date_obj
+                    document_date = self._convert_date_from_xml(elements[0].text)
+                    if document_date:
+                        invoice_form.invoice_date = document_date
+                    else:
+                        message_to_log.append("%s<br/>%s" % (
+                            _("Document date invalid in XML file:"),
+                            invoice._compose_info_message(elements[0], '.')
+                        ))
 
                 #  Dati Bollo. <2.1.1.6>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo')
@@ -513,9 +531,16 @@ class AccountEdiFormat(models.Model):
                 # Due date. <2.4.2.5>
                 elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento')
                 if elements:
-                    date_str = elements[0].text
-                    date_obj = datetime.strptime(date_str, DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
-                    invoice_form.invoice_date_due = fields.Date.to_string(date_obj)
+                    date_str = elements[0].text.strip()
+                    if date_str:
+                        due_date = self._convert_date_from_xml(date_str)
+                        if due_date:
+                            invoice_form.invoice_date_due = fields.Date.to_string(due_date)
+                        else:
+                            message_to_log.append("%s<br/>%s" % (
+                                _("Payment due date invalid in XML file:"),
+                                invoice._compose_info_message(elements[0], '.')
+                            ))
 
                 # Total amount. <2.4.2.6>
                 elements = body_tree.xpath('.//ImportoPagamento')
@@ -733,11 +758,12 @@ class AccountEdiFormat(models.Model):
                         'name': name_attachment,
                         'datas': attachment_64,
                         'type': 'binary',
+                        'res_model': 'account.move',
+                        'res_id': new_invoice.id,
                     })
 
-                    # default_res_id is had to context to avoid facturx to import his content
                     # no_new_invoice to prevent from looping on the message_post that would create a new invoice without it
-                    new_invoice.with_context(no_new_invoice=True, default_res_id=new_invoice.id).message_post(
+                    new_invoice.with_context(no_new_invoice=True).message_post(
                         body=(_("Attachment from XML")),
                         attachment_ids=[attachment_64.id]
                     )

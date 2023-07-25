@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report_ke" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="tax_report_line_sales_base" model="account.tax.report.line">
+        <field name="name">Details of Sales (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="tax_report_line_general_rate_sales_base" model="account.tax.report.line">
+        <field name="name">1. General Rate 16% (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_base"/>
+        <field name="tag_name">1 General Rate Base</field>
+        <field name="code">box_1_base</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="tax_report_line_other_rate_sales_base" model="account.tax.report.line">
+        <field name="name">2. Other Rate 8% (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_base"/>
+        <field name="tag_name">2 Other Rate Base</field>
+        <field name="code">box_2_base</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="tax_report_line_zero_rated_sales_base" model="account.tax.report.line">
+        <field name="name">3. Zero Rated 0% (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_base"/>
+        <field name="tag_name">3 Zero Rated Base</field>
+        <field name="code">box_3_base</field>
+        <field name="sequence">3</field>
+    </record>
+    <record id="tax_report_line_exempt_sales_base" model="account.tax.report.line">
+        <field name="name">4. Exempt Sales (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_base"/>
+        <field name="tag_name">4 Exempt Base</field>
+        <field name="code">box_4_base</field>
+        <field name="sequence">4</field>
+    </record>
+    <record id="tax_report_line_total_sales_base" model="account.tax.report.line">
+        <field name="name">5. Total Sales (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_base"/>
+        <field name="sequence">5</field>
+        <field name="formula">box_1_base + box_2_base + box_3_base + box_4_base</field>
+    </record>
+    <record id="tax_report_line_total_output_base" model="account.tax.report.line">
+        <field name="name">6. Total Output (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_base"/>
+        <field name="sequence">5</field>
+        <field name="formula">box_1_base + box_2_base + box_3_base</field>
+    </record>
+
+    <record id="tax_report_line_sales_tax" model="account.tax.report.line">
+        <field name="name">Details of Sales (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="tax_report_line_general_rate_sales_tax" model="account.tax.report.line">
+        <field name="name">1. General Rate 16% (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_tax"/>
+        <field name="tag_name">1 General Rate Tax</field>
+        <field name="code">box_1_tax</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="tax_report_line_other_rate_sales_tax" model="account.tax.report.line">
+        <field name="name">2. Other Rate 8% (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_tax"/>
+        <field name="tag_name">2 Other Rate Tax</field>
+        <field name="code">box_2_tax</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="tax_report_line_zero_rated_sales_tax" model="account.tax.report.line">
+        <field name="name">3. Zero Rated 0% (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_tax"/>
+        <field name="tag_name">3 Zero Rate Tax</field>
+        <field name="code">box_3_tax</field>
+        <field name="sequence">3</field>
+    </record>
+    <record id="tax_report_line_exempt_sales_tax" model="account.tax.report.line">
+        <field name="name">4. Exempt Sales (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_tax"/>
+        <field name="code">box_4_tax</field>
+        <field name="sequence">4</field>
+    </record>
+    <record id="tax_report_line_total_sales_tax" model="account.tax.report.line">
+        <field name="name">5. Total Sales (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_tax"/>
+        <field name="code">box_5_tax</field>
+        <field name="sequence">5</field>
+        <field name="formula">box_1_tax + box_2_tax + box_3_tax</field>
+    </record>
+    <record id="tax_report_line_total_output_tax" model="account.tax.report.line">
+        <field name="name">6. Total Output (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_sales_tax"/>
+        <field name="code">box_6_output_vat</field>
+        <field name="sequence">5</field>
+        <field name="formula">box_1_tax + box_2_tax + box_3_tax</field>
+    </record>
+
+    <record id="tax_report_line_purchases_base" model="account.tax.report.line">
+        <field name="name">Details of Purchases (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="tax_report_line_general_rate_purchases_base" model="account.tax.report.line">
+        <field name="name">7. General Rate 16% (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_base"/>
+        <field name="tag_name">7 General Rate Base</field>
+        <field name="code">box_7_base</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="tax_report_line_other_rate_purchases_base" model="account.tax.report.line">
+        <field name="name">8. Other Rate 8% (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_base"/>
+        <field name="tag_name">8 Other Rate Base</field>
+        <field name="code">box_8_base</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="tax_report_line_zero_rated_purchases_base" model="account.tax.report.line">
+        <field name="name">9. Zero Rated 0% (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_base"/>
+        <field name="tag_name">9 Zero Rate Base</field>
+        <field name="code">box_9_base</field>
+        <field name="sequence">3</field>
+    </record>
+    <record id="tax_report_line_exempt_purchases_base" model="account.tax.report.line">
+        <field name="name">10. Exempt Purchases (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_base"/>
+        <field name="tag_name">10 Exempt Base</field>
+        <field name="code">box_10_base</field>
+        <field name="sequence">4</field>
+    </record>
+    <record id="tax_report_line_total_purchases_base" model="account.tax.report.line">
+        <field name="name">11. Total Purchases (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_base"/>
+        <field name="sequence">5</field>
+        <field name="formula">box_7_base + box_8_base + box_9_base + box_10_base</field>
+    </record>
+    <record id="tax_report_line_total_input_vat_base" model="account.tax.report.line">
+        <field name="name">12. Total Input VAT (Base)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_base"/>
+        <field name="sequence">5</field>
+        <field name="formula">box_7_base + box_8_base + box_9_base</field>
+    </record>
+    <record id="tax_report_line_purchases_tax" model="account.tax.report.line">
+        <field name="name">Details of Purchases (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="sequence">4</field>
+    </record>
+    <record id="tax_report_line_general_rate_purchases_tax" model="account.tax.report.line">
+        <field name="name">7. General Rate 16% (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_tax"/>
+        <field name="tag_name">7 General Rate Purchase</field>
+        <field name="code">box_7_tax</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="tax_report_line_other_rate_purchases_tax" model="account.tax.report.line">
+        <field name="name">8. Other Rate 8% (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_tax"/>
+        <field name="tag_name">8 Other Rate Tax</field>
+        <field name="code">box_8_tax</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="tax_report_line_zero_rated_purchases_tax" model="account.tax.report.line">
+        <field name="name">9. Zero Rated 0% (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_tax"/>
+        <field name="tag_name">9 Zero Rate Tax</field>
+        <field name="code">box_9_tax</field>
+        <field name="sequence">3</field>
+    </record>
+    <record id="tax_report_line_exempt_purchases_tax" model="account.tax.report.line">
+        <field name="name">10. Exempt Purchases (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_tax"/>
+        <field name="code">box_10_tax</field>
+        <field name="sequence">4</field>
+    </record>
+    <record id="tax_report_line_total_purchases_tax" model="account.tax.report.line">
+        <field name="name">11. Total Purchases (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_tax"/>
+        <field name="sequence">5</field>
+        <field name="formula">box_7_tax + box_8_tax + box_9_tax</field>
+    </record>
+    <record id="tax_report_line_total_input_vat_tax" model="account.tax.report.line">
+        <field name="name">12. Total Input VAT (Tax)</field>
+        <field name="report_id" ref="tax_report_ke"/>
+        <field name="parent_id" ref="tax_report_line_purchases_tax"/>
+        <field name="sequence">5</field>
+        <field name="formula">box_7_tax + box_8_tax + box_9_tax</field>
+    </record>
+
+</odoo>

@@ -7,7 +7,9 @@ import re
 import time
 
 from lxml import etree
+
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -95,6 +97,18 @@ class Currency(models.Model):
         if group_user and group_mc:
             group_user.sudo()._remove_group(group_mc.sudo())
 
+    @api.constrains('active')
+    def _check_company_currency_stays_active(self):
+        if self._context.get('install_mode') or self._context.get('force_deactivate'):
+            # install_mode : At install, when this check is run, the "active" field of a currency added to a company will
+            #                still be evaluated as False, despite it's automatically set at True when added to the company.
+            # force_deactivate : Allows deactivation of a currency in tests to enable non multi_currency behaviors
+            return
+
+        currencies = self.filtered(lambda c: not c.active)
+        if self.env['res.company'].search([('currency_id', 'in', currencies.ids)]):
+            raise UserError(_("This currency is set on a company and therefore cannot be deactivated."))
+
     def _get_rates(self, company, date):
         if not self.ids:
             return {}
@@ -118,7 +132,7 @@ class Currency(models.Model):
 
     @api.depends('rate_ids.rate')
     def _compute_current_rate(self):
-        date = self._context.get('date') or fields.Date.today()
+        date = self._context.get('date') or fields.Date.context_today(self)
         company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
         # the subquery selects the last rate before 'date' for the given currency/company
         currency_rates = self._get_rates(company, date)
@@ -288,6 +302,7 @@ class Currency(models.Model):
                  LIMIT 1) AS date_end
             FROM res_currency_rate r
             JOIN res_company c ON (r.company_id is null or r.company_id = c.id)
+            ORDER BY date_end
         """
 
     @api.model
@@ -330,7 +345,7 @@ class CurrencyRate(models.Model):
         compute="_compute_inverse_company_rate",
         inverse="_inverse_inverse_company_rate",
         group_operator="avg",
-        help="The currency of rate 1 to the rate of the currency.",
+        help="The rate of the currency to the currency of rate 1 ",
     )
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
@@ -356,7 +371,10 @@ class CurrencyRate(models.Model):
         return super().create([self._sanitize_vals(vals) for vals in vals_list])
 
     def _get_latest_rate(self):
-        return self.currency_id.rate_ids.filtered(lambda x: (
+        # Make sure 'name' is defined when creating a new rate.
+        if not self.name:
+            raise UserError(_("The name for the current rate is empty.\nPlease set it."))
+        return self.currency_id.rate_ids.sudo().filtered(lambda x: (
             x.rate
             and x.company_id == (self.company_id or self.env.company)
             and x.name < (self.name or fields.Date.today())
@@ -364,7 +382,7 @@ class CurrencyRate(models.Model):
 
     def _get_last_rates_for_companies(self, companies):
         return {
-            company: company.currency_id.rate_ids.filtered(lambda x: (
+            company: company.currency_id.rate_ids.sudo().filtered(lambda x: (
                 x.rate
                 and x.company_id == company or not x.company_id
             )).sorted('name')[-1:].rate or 1
@@ -374,7 +392,7 @@ class CurrencyRate(models.Model):
     @api.depends('currency_id', 'company_id', 'name')
     def _compute_rate(self):
         for currency_rate in self:
-            currency_rate.rate = currency_rate.rate or self._get_latest_rate().rate or 1.0
+            currency_rate.rate = currency_rate.rate or currency_rate._get_latest_rate().rate or 1.0
 
     @api.depends('rate', 'name', 'currency_id', 'company_id', 'currency_id.rate_ids.rate')
     @api.depends_context('company')
@@ -382,7 +400,7 @@ class CurrencyRate(models.Model):
         last_rate = self.env['res.currency.rate']._get_last_rates_for_companies(self.company_id | self.env.company)
         for currency_rate in self:
             company = currency_rate.company_id or self.env.company
-            currency_rate.company_rate = (currency_rate.rate or self._get_latest_rate().rate or 1.0) / last_rate[company]
+            currency_rate.company_rate = (currency_rate.rate or currency_rate._get_latest_rate().rate or 1.0) / last_rate[company]
 
     @api.onchange('company_rate')
     def _inverse_company_rate(self):
@@ -394,11 +412,15 @@ class CurrencyRate(models.Model):
     @api.depends('company_rate')
     def _compute_inverse_company_rate(self):
         for currency_rate in self:
+            if not currency_rate.company_rate:
+                currency_rate.company_rate = 1.0
             currency_rate.inverse_company_rate = 1.0 / currency_rate.company_rate
 
     @api.onchange('inverse_company_rate')
     def _inverse_inverse_company_rate(self):
         for currency_rate in self:
+            if not currency_rate.inverse_company_rate:
+                currency_rate.inverse_company_rate = 1.0
             currency_rate.company_rate = 1.0 / currency_rate.inverse_company_rate
 
     @api.onchange('company_rate')

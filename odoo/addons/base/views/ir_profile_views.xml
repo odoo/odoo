@@ -39,7 +39,7 @@
                     <field name="entry_count"/>
                     <field name="speedscope_url" widget="url"/>
                 </group>
-                <group attrs="{'invisible': [('qweb','=', '')]}">
+                <group attrs="{'invisible': [('qweb','=', False)]}">
                     <field name="qweb" widget="profiling_qweb_view" nolabel="1"/>
                 </group>
             </form>

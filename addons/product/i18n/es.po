@@ -8,6 +8,9 @@
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Jonatan Gk, 2022
 # marcescu, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Luis D Lafaurie, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,13 +18,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: marcescu, 2022\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Luis D Lafaurie, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -1690,6 +1693,16 @@ msgid "Next Activity Type"
 msgstr "Siguiente tipo de actividad"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"No hay producto para imprimir, si el producto está archivado primero quítelo"
+" del archivo para imprimir una etiqueta."
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr "No se encontró una lista de precios para el proveedor"
@@ -2493,7 +2506,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
 "Especifica el importe fijo a añadir o a quitar (si es negativo) al importe "
@@ -3287,6 +3300,12 @@ msgstr ""
 "factor de redondeo de la moneda actual de la compañía."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr "No puede borrar la categoría de producto %s"
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3301,10 +3320,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"No puede eliminar el valor %s porque se usa en los siguientes productos:\n"
-"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3332,9 +3350,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
-msgstr "No puede mover el atributo %s del producto %s al producto %s."
+msgid "You cannot delete value %s because it was used in some products."
+msgstr "No puede eliminar el valor %s porque se usó en algunos productos."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3344,6 +3361,13 @@ msgid ""
 "pricelist instead."
 msgstr ""
 "No puede desactivar la regla de lista de precios, bórrela o archívela."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "No puede mover el atributo %s del producto %s al producto %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

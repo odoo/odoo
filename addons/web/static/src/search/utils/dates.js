@@ -210,13 +210,10 @@ export function constructDateRange(params) {
         setParam.month = QUARTERS[setParam.quarter].coveredMonths[0];
         delete setParam.quarter;
     }
-    const date = referenceMoment
-        .set(setParam)
-        .plus(plusParam || {})
-        .setZone("utc", { keepLocalTime: true });
+    const date = referenceMoment.set(setParam).plus(plusParam || {});
     // compute domain
-    let leftDate = date.startOf(granularity);
-    let rightDate = date.endOf(granularity);
+    const leftDate = date.startOf(granularity);
+    const rightDate = date.endOf(granularity);
     let leftBound;
     let rightBound;
     if (fieldType === "date") {
@@ -258,7 +255,7 @@ export function getComparisonParams(referenceMoment, selectedOptionIds, comparis
     if (comparisonOption.plusParam) {
         return [comparisonOption.plusParam, selectedOptions];
     }
-    let plusParam = {};
+    const plusParam = {};
     let globalGranularity = "year";
     if (selectedOptions.month) {
         globalGranularity = "month";

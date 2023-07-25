@@ -309,13 +309,14 @@ class PurchaseOrder(models.Model):
         # are taken with the company of the order
         # if not defined, with_company doesn't change anything.
         self = self.with_company(self.company_id)
+        default_currency = self._context.get("default_currency_id")
         if not self.partner_id:
             self.fiscal_position_id = False
-            self.currency_id = self.env.company.currency_id.id
+            self.currency_id = default_currency or self.env.company.currency_id.id
         else:
             self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
+            self.currency_id = default_currency or self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
         return {}
 
     @api.onchange('fiscal_position_id', 'company_id')
@@ -474,7 +475,8 @@ class PurchaseOrder(models.Model):
         for line in self.order_line:
             # Do not add a contact as a supplier
             partner = self.partner_id if not self.partner_id.parent_id else self.partner_id.parent_id
-            if line.product_id and partner not in line.product_id.seller_ids.mapped('name') and len(line.product_id.seller_ids) <= 10:
+            already_seller = (partner | self.partner_id) & line.product_id.seller_ids.mapped('name')
+            if line.product_id and not already_seller and len(line.product_id.seller_ids) <= 10:
                 # Convert the price in the right currency.
                 currency = partner.property_purchase_currency_id or self.env.company.currency_id
                 price = self.currency_id._convert(line.price_unit, currency, line.company_id, line.date_order or fields.Date.today(), round=False)
@@ -950,7 +952,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             taxes = line.taxes_id.compute_all(**line._prepare_compute_all_values())
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
@@ -984,7 +986,7 @@ class PurchaseOrderLine(models.Model):
             # compute qty_invoiced
             qty = 0.0
             for inv_line in line._get_invoice_lines():
-                if inv_line.move_id.state not in ['cancel']:
+                if inv_line.move_id.state not in ['cancel'] or inv_line.move_id.payment_state == 'invoicing_legacy':
                     if inv_line.move_id.move_type == 'in_invoice':
                         qty += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
                     elif inv_line.move_id.move_type == 'in_refund':
@@ -1009,7 +1011,7 @@ class PurchaseOrderLine(models.Model):
         else:
             return self.invoice_lines
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'product_id.type')
     def _compute_qty_received_method(self):
         for line in self:
             if line.product_id and line.product_id.type in ['consu', 'service']:
@@ -1057,11 +1059,16 @@ class PurchaseOrderLine(models.Model):
             raise UserError(_("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_qty' in values:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for line in self:
-                if line.order_id.state == 'purchase':
+                if (
+                    line.order_id.state == "purchase"
+                    and float_compare(line.product_qty, values["product_qty"], precision_digits=precision) != 0
+                ):
                     line.order_id.message_post_with_view('purchase.track_po_line_template',
                                                          values={'line': line, 'product_qty': values['product_qty']},
                                                          subtype_id=self.env.ref('mail.mt_note').id)
+
         if 'qty_received' in values:
             for line in self:
                 line._track_qty_received(values['qty_received'])
@@ -1096,7 +1103,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id', 'date_order')
     def _compute_account_analytic_id(self):
         for rec in self:
-            if not rec.account_analytic_id:
+            if not rec.display_type:
                 default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
                     product_id=rec.product_id.id,
                     partner_id=rec.order_id.partner_id.id,
@@ -1104,12 +1111,13 @@ class PurchaseOrderLine(models.Model):
                     date=rec.date_order,
                     company_id=rec.company_id.id,
                 )
-                rec.account_analytic_id = default_analytic_account.analytic_id
+                if default_analytic_account:
+                    rec.account_analytic_id = default_analytic_account.analytic_id
 
     @api.depends('product_id', 'date_order')
     def _compute_analytic_tag_ids(self):
         for rec in self:
-            if not rec.analytic_tag_ids:
+            if not rec.display_type:
                 default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
                     product_id=rec.product_id.id,
                     partner_id=rec.order_id.partner_id.id,
@@ -1117,11 +1125,12 @@ class PurchaseOrderLine(models.Model):
                     date=rec.date_order,
                     company_id=rec.company_id.id,
                 )
-                rec.analytic_tag_ids = default_analytic_account.analytic_tag_ids
+                if default_analytic_account:
+                    rec.analytic_tag_ids = default_analytic_account.analytic_tag_ids
 
-    @api.onchange('product_id')
+    @api.onchange('product_id', 'company_id')
     def onchange_product_id(self):
-        if not self.product_id:
+        if not self.product_id or not self.company_id:
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
@@ -1166,9 +1175,9 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.onchange('product_qty', 'product_uom')
+    @api.onchange('product_qty', 'product_uom', 'company_id')
     def _onchange_quantity(self):
-        if not self.product_id:
+        if not self.product_id or self.invoice_lines or not self.company_id:
             return
         params = {'order_id': self.order_id}
         seller = self.product_id._select_seller(
@@ -1228,7 +1237,7 @@ class PurchaseOrderLine(models.Model):
             self.product_packaging_id = False
         # suggest biggest suitable packaging
         if self.product_id and self.product_qty and self.product_uom:
-            self.product_packaging_id = self.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(self.product_qty, self.product_uom)
+            self.product_packaging_id = self.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(self.product_qty, self.product_uom) or self.product_packaging_id
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):
@@ -1396,6 +1405,10 @@ class PurchaseOrderLine(models.Model):
 
     def _track_qty_received(self, new_qty):
         self.ensure_one()
+        # don't track anything when coming from the accrued expense entry wizard, as it is only computing fields at a past date to get relevant amounts
+        # and doesn't actually change anything to the current record
+        if  self.env.context.get('accrual_entry_date'):
+            return
         if new_qty != self.qty_received and self.order_id.state == 'purchase':
             self.order_id.message_post_with_view(
                 'purchase.track_po_line_qty_received_template',

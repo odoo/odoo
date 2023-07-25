@@ -63,7 +63,7 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         select_ = """
-            coalesce(min(l.id), -s.id) as id,
+            min(l.id) as id,
             l.product_id as product_id,
             t.uom_id as product_uom,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as product_uom_qty,
@@ -108,7 +108,7 @@ class SaleReport(models.Model):
     def _from_sale(self, from_clause=''):
         from_ = """
                 sale_order_line l
-                      right outer join sale_order s on (s.id=l.order_id)
+                      left join sale_order s on (s.id=l.order_id)
                       join res_partner partner on s.partner_id = partner.id
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
@@ -146,12 +146,23 @@ class SaleReport(models.Model):
         """ % (groupby)
         return groupby_
 
+    def _select_additional_fields(self, fields):
+        """Hook to return additional fields SQL specification for select part of the table query.
+
+        :param dict fields: additional fields info provided by _query overrides (old API), prefer overriding
+            _select_additional_fields instead.
+        :returns: mapping field -> SQL computation of the field
+        :rtype: dict
+        """
+        return fields
+
     def _query(self, with_clause='', fields=None, groupby='', from_clause=''):
         if not fields:
             fields = {}
+        sale_report_fields = self._select_additional_fields(fields)
         with_ = ("WITH %s" % with_clause) if with_clause else ""
         return '%s (SELECT %s FROM %s WHERE l.display_type IS NULL GROUP BY %s)' % \
-               (with_, self._select_sale(fields), self._from_sale(from_clause), self._group_by_sale(groupby))
+               (with_, self._select_sale(sale_report_fields), self._from_sale(from_clause), self._group_by_sale(groupby))
 
     def init(self):
         # self._table = sale_report

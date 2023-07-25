@@ -5,7 +5,7 @@
     <!-- Add price information on tickets (multi tickets, aka in collapse) -->
     <xpath expr="//div[hasclass('o_wevent_registration_multi_select')]" position="inside">
         <t t-if="ticket.price">
-            <t t-if="(ticket.price-website.get_current_pricelist().currency_id._convert(ticket.price_reduce, event.company_id.sudo().currency_id, event.company_id, datetime.date.today())) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
+            <t t-if="(ticket.price - ticket.price_reduce) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
                 <del class="text-danger mr-1" t-field="ticket.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
             </t>
             <span t-field="ticket.price_reduce"
@@ -35,7 +35,7 @@
     <xpath expr="//div[hasclass('o_wevent_registration_single')]//h6" position="after">
         <div class="px-2 text-dark d-flex align-items-center align-self-stretch">
             <t t-if="tickets.price">
-                <t t-if="(tickets.price-website.get_current_pricelist().currency_id._convert(tickets.price_reduce, event.company_id.sudo().currency_id, event.company_id, datetime.date.today())) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
+                <t t-if="(tickets.price - tickets.price_reduce) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
                     <del class="text-danger mr-1" t-field="tickets.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
                 </t>
                 <span t-field="tickets.price_reduce"

@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -91,7 +92,7 @@ msgstr "수표 위쪽 여백"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "수표 번호는 숫자로만 구성될 수 있습니다"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -279,7 +280,7 @@ msgstr "인쇄할 첫 번째 미리 인쇄된 수표 번호를 입력하십시�
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr ""
+msgstr "선호하는 결제 방법"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -289,6 +290,8 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
+"이 공급업체에 지불할 때 선호하는 결제 방법입니다. 대량 지불 건 등록을 할 경우 선호하는 지불 방법으로 공급업체 청구서를 필터하기 위해"
+" 사용됩니다. 사용 사례: 일괄 이체 시 은행 파일 생성, 점검 실행"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -353,7 +356,7 @@ msgstr "다음에 인쇄된 수표의 일련 번호"
 msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
-msgstr ""
+msgstr "레이아웃 확인에 문제가 발생했습니다. 청구서/회계 설정에서 다른 레이아웃을 선택 후 다시 시도하십시오."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -362,6 +365,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"이미 사용 중인 번호입니다:\n"
+"%s"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -396,6 +401,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"이 옵션을 사용하면 CPA 별로 수표에 날짜 라벨을 인쇄할 수 있습니다.\n"
+"미리 인쇄된 수표에 날짜 라벨이 포함된 경우에는 이 옵션을 비활성화하십시오."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -411,7 +418,7 @@ msgstr "전송 취소 표시"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "무효 수표"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -419,4 +426,4 @@ msgstr ""
 msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
-msgstr ""
+msgstr "수표 레이아웃을 선택하십시오. 선택하시려면 청구서/회계 설정에서 '수표 레이아웃'을 검색 후 설정하십시오. "

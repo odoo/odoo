@@ -243,7 +243,7 @@ class AccountReconcileModel(models.Model):
     match_partner_category_ids = fields.Many2many('res.partner.category', string='Only Those Partner Categories',
         help='The reconciliation model will only be applied to the selected customer/vendor categories.')
 
-    line_ids = fields.One2many('account.reconcile.model.line', 'model_id')
+    line_ids = fields.One2many('account.reconcile.model.line', 'model_id', copy=True)
     partner_mapping_line_ids = fields.One2many(string="Partner Mapping Lines",
                                                comodel_name='account.reconcile.model.partner.mapping',
                                                inverse_name='model_id',
@@ -477,6 +477,8 @@ class AccountReconcileModel(models.Model):
 
         # First associate with each rec models all the statement lines for which it is applicable
         lines_with_partner_per_model = defaultdict(lambda: [])
+        # Exclude already in the statement line associated account move lines
+        excluded_ids = excluded_ids or [] + st_lines.move_id.line_ids.ids
         for st_line in st_lines:
 
             # Statement lines created in old versions could have a residual amount of zero. In that case, don't try to
@@ -537,7 +539,7 @@ class AccountReconcileModel(models.Model):
             or (self.match_amount == 'between' and (abs(st_line.amount) > self.match_amount_max or abs(st_line.amount) < self.match_amount_min))
             or (self.match_partner and not partner)
             or (self.match_partner and self.match_partner_ids and partner not in self.match_partner_ids)
-            or (self.match_partner and self.match_partner_category_ids and partner.category_id not in self.match_partner_category_ids)
+            or (self.match_partner and self.match_partner_category_ids and not (partner.category_id & self.match_partner_category_ids))
         ):
             return False
 
@@ -566,18 +568,37 @@ class AccountReconcileModel(models.Model):
         """
         self.ensure_one()
 
+        # On big databases, it is possible that some setups will create huge queries when trying to apply reconciliation models.
+        # In such cases, this query might take a very long time to run, essentially eating up all the available CPU, and proof
+        # impossible to kill, because of the type of operations ran by SQL. To alleviate that, we introduce the config parameter below,
+        # which essentially allows cutting the list of statement lines to match into slices, and running the matching in multiple queries.
+        # This way, we avoid server overload, giving the ability to kill the process if takes too long.
+        slice_size = len(st_lines_with_partner)
+        slice_size_param = self.env['ir.config_parameter'].sudo().get_param('account.reconcile_model_forced_slice_size')
+        if slice_size_param:
+            converted_param = int(slice_size_param)
+            if converted_param > 0:
+                slice_size = converted_param
+
+        treatment_slices = []
+        slice_start = 0
+        while slice_start < len(st_lines_with_partner):
+            slice_end = slice_start + slice_size
+            treatment_slices.append(st_lines_with_partner[slice_start:slice_end])
+            slice_start = slice_end
+
         treatment_map = {
-            'invoice_matching': lambda x: x._get_invoice_matching_query(st_lines_with_partner, excluded_ids),
-            'writeoff_suggestion': lambda x: x._get_writeoff_suggestion_query(st_lines_with_partner, excluded_ids),
+            'invoice_matching': lambda rec_model, slice: rec_model._get_invoice_matching_query(slice, excluded_ids),
+            'writeoff_suggestion': lambda rec_model, slice: rec_model._get_writeoff_suggestion_query(slice, excluded_ids),
         }
-
-        query_generator = treatment_map[self.rule_type]
-        query, params = query_generator(self)
-        self._cr.execute(query, params)
-
         rslt = defaultdict(lambda: [])
-        for candidate_dict in self._cr.dictfetchall():
-            rslt[candidate_dict['id']].append(candidate_dict)
+        for treatment_slice in treatment_slices:
+            query_generator = treatment_map[self.rule_type]
+            query, params = query_generator(self, treatment_slice)
+            self._cr.execute(query, params)
+
+            for candidate_dict in self._cr.dictfetchall():
+                rslt[candidate_dict['id']].append(candidate_dict)
 
         return rslt
 
@@ -686,12 +707,12 @@ class AccountReconcileModel(models.Model):
         # to the query to only search on move lines that are younger than this limit.
         if self.past_months_limit:
             date_limit = fields.Date.context_today(self) - relativedelta(months=self.past_months_limit)
-            query += "AND aml.date >= %(aml_date_limit)s"
+            query += " AND aml.date >= %(aml_date_limit)s"
             params['aml_date_limit'] = date_limit
 
         # Filter out excluded account.move.line.
         if excluded_ids:
-            query += 'AND aml.id NOT IN %(excluded_aml_ids)s'
+            query += ' AND aml.id NOT IN %(excluded_aml_ids)s'
             params['excluded_aml_ids'] = tuple(excluded_ids)
 
         if self.matching_order == 'new_first':

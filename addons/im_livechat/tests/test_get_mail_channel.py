@@ -1,47 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 
 
-class TestGetMailChannel(TransactionCase):
-    def setUp(self):
-        super(TestGetMailChannel, self).setUp()
-        self.operators = self.env['res.users'].create([{
-            'name': 'Michel',
-            'login': 'michel',
-            'livechat_username': "Michel Operator",
-        }, {
-            'name': 'Paul',
-            'login': 'paul'
-        }, {
-            'name': 'Pierre',
-            'login': 'pierre'
-        }, {
-            'name': 'Jean',
-            'login': 'jean'
-        }, {
-            'name': 'Georges',
-            'login': 'georges'
-        }])
-
-        self.visitor_user = self.env['res.users'].create({
-            'name': 'Rajesh',
-            'login': 'rajesh',
-            'country_id': self.ref('base.in'),
-        })
-
-        self.livechat_channel = self.env['im_livechat.channel'].create({
-            'name': 'The channel',
-            'user_ids': [(6, 0, self.operators.ids)]
-        })
-
-        operators = self.operators
-        def get_available_users(self):
-            return operators
-
-        self.patch(type(self.env['im_livechat.channel']), '_get_available_users', get_available_users)
-
+class TestGetMailChannel(TestImLivechatCommon):
     def test_get_mail_channel(self):
         """For a livechat with 5 available operators, we open 5 channels 5 times (25 channels total).
         For every 5 channels opening, we check that all operators were assigned.

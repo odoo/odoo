@@ -7,6 +7,7 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Simon S, 2021
+# Lasse L, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Simon S, 2021\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"Last-Translator: Lasse L, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -51,12 +52,12 @@ msgstr "Matris"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Produktmall för grid"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Grid Update"
-msgstr ""
+msgstr "Uppdatera grid"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__report_grids
@@ -64,6 +65,8 @@ msgid ""
 "If set, the matrix of configurable products will be shown on the report of "
 "this order."
 msgstr ""
+"Om inställt, kommer matrisen för konfigurerbara produkter att visas på "
+"rapporten för denna order."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__is_configurable_product
@@ -73,7 +76,7 @@ msgstr "Är produkten konfigurerbar?"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "Skriv ut variantgrider"
 
 #. module: purchase_product_matrix
 #: model_terms:ir.ui.view,arch_db:purchase_product_matrix.purchase_order_form_matrix
@@ -88,7 +91,7 @@ msgstr "Produktmall"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__product_no_variant_attribute_value_ids
 msgid "Product attribute values that do not create variants"
-msgstr ""
+msgstr "Produktattributvärden som inte skapar varianter"
 
 #. module: purchase_product_matrix
 #: model:ir.model,name:purchase_product_matrix.model_purchase_order
@@ -103,7 +106,7 @@ msgstr "Inköpsorderrad"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Technical field for product_matrix functionalities."
-msgstr ""
+msgstr "Tekniskt fält för product_matrix-funktioner."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid
@@ -112,11 +115,15 @@ msgid ""
 "If grid_update, will be loaded on the PO. \n"
 "If not, represents the matrix to open."
 msgstr ""
+"Teknisk lagring av rutnät. \n"
+"Om grid_update, kommer det att laddas på inköpsordern. \n"
+"Om inte, representerar det matrisen att öppna."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
 msgstr ""
+"Om rutnätsfältet innehåller en ny matris som ska tillämpas eller inte."
 
 #. module: purchase_product_matrix
 #: code:addons/purchase_product_matrix/models/purchase.py:0
@@ -125,3 +132,4 @@ msgid ""
 "You cannot change the quantity of a product present in multiple purchase "
 "lines."
 msgstr ""
+"Du kan inte ändra kvantiteten för en produkt som finns i flera inköpsrader."

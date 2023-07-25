@@ -130,6 +130,9 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
                 model: 'ir.ui.menu',
                 method: 'load_menus_root',
                 args: [],
+                kwargs: {
+                    context: {force_action: true},
+                },
             });
             const result = await this._loadAppMenusProm;
             const menus = core.qweb.render('website.oe_applications_menu', {

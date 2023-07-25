@@ -44,7 +44,7 @@
                             class="font-weight-bold"
                             attrs="{'invisible': [('comment_single_recipient', '=', False)]}"/>
                         <div attrs="{'invisible': [('comment_single_recipient', '=', False)]}">
-                            <field name="recipient_single_description" class="oe_inline"/>
+                            <field name="recipient_single_description" class="oe_inline" attrs="{'invisible': [('recipient_single_description', '=', False)]}"/>
                             <field name="recipient_single_number_itf" class="oe_inline" nolabel="1" options="{'onchange_on_keydown': True}" placeholder="e.g. +1 415 555 0100"/>
                         </div>
                                                 

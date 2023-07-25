@@ -428,7 +428,7 @@ class IrActionsServer(models.Model):
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
                                    "based on the sequence. Low number means high priority.")
-    model_id = fields.Many2one('ir.model', string='Model', required=True, ondelete='cascade',
+    model_id = fields.Many2one('ir.model', string='Model', required=True, ondelete='cascade', index=True,
                                help="Model on which the server action runs.")
     model_name = fields.Char(related='model_id.model', string='Model Name', readonly=True, store=True)
     # Python code

@@ -130,6 +130,7 @@ export class Race {
     constructor() {
         this.currentProm = null;
         this.currentPromResolver = null;
+        this.currentPromRejecter = null;
     }
     /**
      * Register a new promise. If there is an ongoing race, the promise is added
@@ -138,19 +139,26 @@ export class Race {
      * promise added to the race.
      *
      * @param {Promise} promise
-     * @returns {Promise
+     * @returns {Promise}
      */
     add(promise) {
         if (!this.currentProm) {
-            this.currentProm = new Promise((resolve) => {
+            this.currentProm = new Promise((resolve, reject) => {
                 this.currentPromResolver = (value) => {
                     this.currentProm = null;
                     this.currentPromResolver = null;
+                    this.currentPromRejecter = null;
                     resolve(value);
+                };
+                this.currentPromRejecter = (error) => {
+                    this.currentProm = null;
+                    this.currentPromResolver = null;
+                    this.currentPromRejecter = null;
+                    reject(error);
                 };
             });
         }
-        promise.then(this.currentPromResolver);
+        promise.then(this.currentPromResolver).catch(this.currentPromRejecter);
         return this.currentProm;
     }
     /**

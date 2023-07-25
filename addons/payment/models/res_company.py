@@ -45,26 +45,25 @@ class ResCompany(models.Model):
         """
         self.env.company.get_chart_of_accounts_or_fail()
 
-        self._install_modules(['payment_paypal', 'payment_stripe', 'account_payment'])
+        self._install_modules(['payment_stripe', 'account_payment'])
 
         # Create a new env including the freshly installed module(s)
         new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
 
+        # Configure Stripe
         default_journal = new_env['account.journal'].search(
             [('type', '=', 'bank'), ('company_id', '=', new_env.company.id)], limit=1
         )
 
-        # Configure Stripe
-        stripe_acquirer = new_env.ref('payment.payment_acquirer_stripe')
+        stripe_acquirer = new_env['payment.acquirer'].search(
+            [('company_id', '=', self.env.company.id), ('name', '=', 'Stripe')], limit=1
+        )
+        if not stripe_acquirer:
+            base_acquirer = self.env.ref('payment.payment_acquirer_stripe')
+            # Use sudo to access payment acquirer record that can be in different company.
+            stripe_acquirer = base_acquirer.sudo().copy(default={'company_id': self.env.company.id})
+            stripe_acquirer.company_id = self.env.company.id
         stripe_acquirer.journal_id = stripe_acquirer.journal_id or default_journal
-        if stripe_acquirer.state == 'disabled':  # The onboarding step has never been run
-            # Configure PayPal
-            paypal_acquirer = new_env.ref('payment.payment_acquirer_paypal')
-            if not paypal_acquirer.paypal_email_account:
-                paypal_acquirer.paypal_email_account = new_env.user.email or new_env.company.email
-            if paypal_acquirer.state == 'disabled' and paypal_acquirer.paypal_email_account:
-                paypal_acquirer.state = 'enabled'
-            paypal_acquirer.journal_id = paypal_acquirer.journal_id or default_journal
 
         return stripe_acquirer.action_stripe_connect_account(menu_id=menu_id)
 

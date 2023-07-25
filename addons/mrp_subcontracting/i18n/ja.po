@@ -5,9 +5,11 @@
 # Translators:
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Noma Yuki, 2022
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Martin Trigaux, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Andy Yiu, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -41,13 +43,13 @@ msgstr "部品表タイプ"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
 msgid "Can be Subcontracted"
-msgstr ""
+msgstr "外注可"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
-msgstr ""
+msgstr "プロダクトを外注したい場合は外注先取引先タイプを選択して下さい。"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -72,7 +74,7 @@ msgstr "次へ進む"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__move_line_raw_ids
 msgid "Detail Component"
-msgstr ""
+msgstr "構成品詳細"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
@@ -82,27 +84,27 @@ msgstr "破棄"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_action_record_components
 msgid "Display Action Record Components"
-msgstr ""
+msgstr "アクション記録構成品を表示"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
 msgid "Facultative"
-msgstr ""
+msgstr "任意の"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
 msgid "Has been recorded?"
-msgstr ""
+msgstr "記録されましたか？"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
 msgid "Hide"
-msgstr ""
+msgstr "非表示"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
 msgid "Is Subcontract"
-msgstr ""
+msgstr "外注か"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -116,18 +118,18 @@ msgstr "オーダ基準調達"
 msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
-msgstr ""
+msgstr "在庫の不一致を避けるために、関連する補充のピッキングを検証するか、外注先に適合させるようにして下さい。"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "必須"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
 msgid "Nothing to record"
-msgstr ""
+msgstr "記録対象なし"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_quant.py:0
@@ -159,7 +161,7 @@ msgstr "保管ロット"
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Raw Materials for %s"
-msgstr ""
+msgstr "%s用原材料"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
@@ -169,12 +171,12 @@ msgstr "生産を記録"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Record components"
-msgstr ""
+msgstr "記録構成品"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Register components for subcontracted product"
-msgstr ""
+msgstr "外注加工品に構成品を登録"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
@@ -215,18 +217,18 @@ msgstr "ピッキングの戻し"
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence Resupply Subcontractor"
-msgstr ""
+msgstr "外注先在庫補充付番"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence subcontracting"
-msgstr ""
+msgstr "外注付番"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
 msgid "Show Subcontracting Details Visible"
-msgstr ""
+msgstr "外注詳細を見えるように表示"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
@@ -242,12 +244,12 @@ msgstr "在庫規則"
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Subcontract"
-msgstr ""
+msgstr "外注"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__subcontract_location_id
 msgid "Subcontract Location"
-msgstr ""
+msgstr "外注ロケーション"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -266,37 +268,37 @@ msgstr "外注"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
 #, python-format
 msgid "Subcontracting Location"
-msgstr ""
+msgstr "外注ロケーション"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
 msgid "Subcontracting Locations"
-msgstr ""
+msgstr "外注ロケーション"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
 msgid "Subcontracting MTO Rule"
-msgstr ""
+msgstr "外注MTO規則"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id
 msgid "Subcontracting MTS Rule"
-msgstr ""
+msgstr "外注MTS規則"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
 msgid "Subcontracting Operation Type"
-msgstr ""
+msgstr "外注オペレーションタイプ"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
 msgid "Subcontracting Resupply Operation Type"
-msgstr ""
+msgstr "外注補充オペレーションタイプ"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom_line_inherit_mrp_subcontracting
 msgid "Subcontracting:"
-msgstr ""
+msgstr "外注："
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
@@ -308,7 +310,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
 msgid "Subcontractor"
-msgstr ""
+msgstr "外注先"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -320,7 +322,7 @@ msgstr "外注先ロケーション"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.view_partner_mrp_subcontracting_filter
 msgid "Subcontractors"
-msgstr ""
+msgstr "外注先"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
@@ -330,7 +332,7 @@ msgstr "仕入先価格リスト"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
 msgid "The move is a subcontract receipt"
-msgstr ""
+msgstr "移動は外注入荷です"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -338,13 +340,13 @@ msgstr ""
 msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
-msgstr ""
+msgstr "外注処理において、この連絡先に商品を送る際に、発送元および発送先として使用される在庫ロケーション。"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "This MO isn't related to a subcontracted move"
-msgstr ""
+msgstr "この製造オーダは外注移動に関連していません。"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
@@ -355,7 +357,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
 msgid "Total Consumed"
-msgstr ""
+msgstr "消費済合計"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
@@ -372,7 +374,7 @@ msgstr "倉庫"
 msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
-msgstr ""
+msgstr "警告/厳密で消費され、より多くの構成品が製造オーダ（部品表）に使用された場合のウィザード"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_bom.py:0
@@ -380,19 +382,19 @@ msgstr ""
 msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
-msgstr ""
+msgstr "工程や副産品明細を外注として部品表を設定することはできません。"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You must enter a serial number for %s"
-msgstr ""
+msgstr "%s用のシリアル番号を入力する必要があります。"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You must enter a serial number for each line of %s"
-msgstr ""
+msgstr " %sの各明細用にシリアル番号を入力する必要があります。"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
@@ -400,4 +402,4 @@ msgstr ""
 msgid ""
 "You must indicate a non-zero amount consumed for at least one of your "
 "components"
-msgstr ""
+msgstr "少なくとも1つの構成品について、消費量がゼロでないことを示す必要があります。"

@@ -26,6 +26,14 @@ class SaleOrder(models.Model):
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
+    def get_order_amount_unpaid(self):
+        order_amount_unpaid = {}
+        for sale_order in self:
+            total_invoice_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('invoice_lines').filtered(lambda l: l.parent_state != 'cancel').mapped('price_total'))
+            total_pos_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids.price_subtotal_incl'))
+            order_amount_unpaid[sale_order.id] = sale_order.amount_total - (total_invoice_paid + total_pos_paid)
+        return order_amount_unpaid
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 

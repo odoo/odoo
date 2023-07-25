@@ -10,6 +10,8 @@
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2023
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
-"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023\n"
+"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -51,7 +53,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_crm.event_registration_view_form
 #: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Iniciatyvos</span>"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
@@ -67,7 +69,7 @@ msgstr "Archyvuotas"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__confirm
 msgid "Attendees are confirmed"
-msgstr ""
+msgstr "Patvirtinti dalyviai"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__create
@@ -77,7 +79,7 @@ msgstr ""
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
 msgid "Attendees attended"
-msgstr ""
+msgstr "Dalyvavę dalyviai"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_tag_ids
@@ -88,6 +90,7 @@ msgstr ""
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
 msgid "Automatically assign the created leads to this Sales Team."
 msgstr ""
+"Automatiškai priskirs šią pardavimų komandą, kai sukurs naują galimybę"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
@@ -122,7 +125,7 @@ msgstr "Sukurti"
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Create a Lead Generation Rule"
-msgstr ""
+msgstr "Sukurkite galimybių generavimo taisyklę"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
@@ -186,7 +189,7 @@ msgstr "Renginio registracija"
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
 msgid "Event registrations"
-msgstr ""
+msgstr "Registracija į renginį"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_id
@@ -215,7 +218,7 @@ msgstr ""
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "For any of these Events"
-msgstr ""
+msgstr "Bet kuriam iš šių renginių"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
@@ -225,7 +228,7 @@ msgstr "ID"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "If the Attendees meet these Conditions"
-msgstr ""
+msgstr "Jei dalyviai atitinka šias sąlygas"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule____last_update
@@ -260,7 +263,7 @@ msgstr ""
 #. module: event_crm
 #: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
 msgid "Lead Generation"
-msgstr ""
+msgstr "Iniciatyvų Kūrimas"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
@@ -310,7 +313,7 @@ msgstr "Pavadinimas"
 #: code:addons/event_crm/models/event_lead_rule.py:0
 #, python-format
 msgid "New registrations"
-msgstr ""
+msgstr "Naujos registracijos"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_event
@@ -333,7 +336,7 @@ msgstr "Pardavimo galimybė"
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Participants"
-msgstr ""
+msgstr "Dalyviai"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__attendee
@@ -423,6 +426,7 @@ msgstr "Žymos"
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Those automatically create leads when attendees register."
 msgstr ""
+"Tai automatiškai sukuria potencialias galimybes, kai dalyviai registruojasi."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -434,7 +438,7 @@ msgstr ""
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Updated registrations"
-msgstr ""
+msgstr "Atnaujinti registracijas"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger

@@ -5,7 +5,7 @@ from odoo.addons.test_mass_mailing.data.mail_test_data import MAIL_TEMPLATE
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 from odoo.tests import tagged
 from odoo.tests.common import users
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, email_normalize
 
 
 @tagged('mass_mailing')
@@ -247,6 +247,28 @@ class TestMassMailing(TestMassMailCommon):
             mailing, recipients, check_mail=True
         )
         self.assertEqual(mailing.canceled, 2)
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_w_blacklist_nomixin(self):
+        """Test that blacklist is applied even if the target model doesn't inherit
+        from mail.thread.blacklist."""
+        test_records = self._create_mailing_test_records(model='mailing.test.simple', count=2)
+        self.mailing_bl.write({
+            'mailing_domain': [('id', 'in', test_records.ids)],
+            'mailing_model_id': self.env['ir.model']._get('mailing.test.simple').id,
+        })
+        self.env['mail.blacklist'].create([{
+            'email': test_records[0].email_from,
+            'active': True,
+        }])
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            self.mailing_bl.action_send_mail()
+        self.assertMailTraces([
+            {'email': email_normalize(test_records[0].email_from), 'trace_status': 'cancel', 'failure_type': 'mail_bl'},
+            {'email': email_normalize(test_records[1].email_from), 'trace_status': 'sent'},
+        ], self.mailing_bl, test_records, check_mail=False)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')

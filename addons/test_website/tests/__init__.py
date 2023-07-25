@@ -4,6 +4,7 @@
 from . import test_controller_args
 from . import test_custom_snippet
 from . import test_error
+from . import test_fuzzy
 from . import test_image_upload_progress
 from . import test_is_multilang
 from . import test_media

@@ -45,7 +45,6 @@ QUnit.module("Search", (hooks) => {
     QUnit.module("Comparison");
 
     QUnit.test("simple rendering", async function (assert) {
-        assert.expect(6);
         patchDate(1997, 0, 9, 12, 0, 0);
         const controlPanel = await makeWithSearch({
             serverData,
@@ -68,18 +67,26 @@ QUnit.module("Search", (hooks) => {
             "COMPARISON"
         );
         await toggleComparisonMenu(controlPanel);
+        assert.containsN(controlPanel.el, ".o_comparison_menu .dropdown-item", 2);
+        assert.containsN(
+            controlPanel.el,
+            ".o_comparison_menu .dropdown-item[role=menuitemcheckbox]",
+            2
+        );
         const comparisonOptions = [
             ...controlPanel.el.querySelectorAll(".o_comparison_menu .dropdown-item"),
         ];
-        assert.strictEqual(comparisonOptions.length, 2);
         assert.deepEqual(
             comparisonOptions.map((e) => e.innerText.trim()),
             ["Birthday: Previous Period", "Birthday: Previous Year"]
         );
+        assert.deepEqual(
+            comparisonOptions.map((e) => e.ariaChecked),
+            ["false", "false"]
+        );
     });
 
     QUnit.test("activate a comparison works", async function (assert) {
-        assert.expect(5);
         patchDate(1997, 0, 9, 12, 0, 0);
         const controlPanel = await makeWithSearch({
             serverData,
@@ -112,6 +119,23 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(controlPanel), ["Birthday: January 1997"]);
         await toggleComparisonMenu(controlPanel);
         await toggleMenuItem(controlPanel, "Birthday: Previous Year");
+        assert.containsN(controlPanel.el, ".o_comparison_menu .dropdown-item", 2);
+        assert.containsN(
+            controlPanel.el,
+            ".o_comparison_menu .dropdown-item[role=menuitemcheckbox]",
+            2
+        );
+        const comparisonOptions = [
+            ...controlPanel.el.querySelectorAll(".o_comparison_menu .dropdown-item"),
+        ];
+        assert.deepEqual(
+            comparisonOptions.map((e) => e.innerText.trim()),
+            ["Birthday: Previous Period", "Birthday: Previous Year"]
+        );
+        assert.deepEqual(
+            comparisonOptions.map((e) => e.ariaChecked),
+            ["false", "true"]
+        );
         assert.deepEqual(getFacetTexts(controlPanel), [
             "Birthday: January 1997",
             "Birthday: Previous Year",

@@ -5,9 +5,8 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.misc import find_in_path
+from odoo.tools.misc import find_in_path, ustr
 from odoo.tools import config, is_html_empty, parse_version
-from odoo.sql_db import TestCursor
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
@@ -327,6 +326,10 @@ class IrActionsReport(models.Model):
             if paperformat_id.disable_shrinking:
                 command_args.extend(['--disable-smart-shrinking'])
 
+        # Add extra time to allow the page to render
+        delay = self.env['ir.config_parameter'].sudo().get_param('report.print_delay', '1000')
+        command_args.extend(['--javascript-delay', delay])
+
         if landscape:
             command_args.extend(['--orientation', 'landscape'])
 
@@ -484,6 +487,7 @@ class IrActionsReport(models.Model):
             wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
             process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = process.communicate()
+            err = ustr(err)
 
             if process.returncode not in [0, 1]:
                 if process.returncode == -11:
@@ -522,6 +526,56 @@ class IrActionsReport(models.Model):
         return report_obj.with_context(context).sudo().search(conditions, limit=1)
 
     @api.model
+    def get_barcode_check_digit(self, numeric_barcode):
+        """ Computes and returns the barcode check digit. The used algorithm
+        follows the GTIN specifications and can be used by all compatible
+        barcode nomenclature, like as EAN-8, EAN-12 (UPC-A) or EAN-13.
+
+        https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf
+        https://www.gs1.org/services/how-calculate-check-digit-manually
+
+        :param numeric_barcode: the barcode to verify/recompute the check digit
+        :type numeric_barcode: str
+        :return: the number corresponding to the right check digit
+        :rtype: int
+        """
+        # Multiply value of each position by
+        # N1  N2  N3  N4  N5  N6  N7  N8  N9  N10 N11 N12 N13 N14 N15 N16 N17 N18
+        # x3  X1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  CHECKSUM
+        oddsum = evensum = 0
+        code = numeric_barcode[-2::-1]  # Remove the check digit and reverse the barcode.
+        # The CHECKSUM digit is removed because it will be recomputed and it must not interfer with
+        # the computation. Also, the barcode is inverted, so the barcode length doesn't matter.
+        # Otherwise, the digits' group (even or odd) could be different according to the barcode length.
+        for i, digit in enumerate(code):
+            if i % 2 == 0:
+                evensum += int(digit)
+            else:
+                oddsum += int(digit)
+        total = evensum * 3 + oddsum
+        return (10 - total % 10) % 10
+
+    @api.model
+    def check_barcode_encoding(self, barcode, encoding):
+        """ Checks if the given barcode is correctly encoded.
+
+        :return: True if the barcode string is encoded with the provided encoding.
+        :rtype: bool
+        """
+        if encoding == "any":
+            return True
+        barcode_sizes = {
+            'ean8': 8,
+            'ean13': 13,
+            'upca': 12,
+        }
+        barcode_size = barcode_sizes[encoding]
+        return (encoding != 'ean13' or barcode[0] != '0') \
+               and len(barcode) == barcode_size \
+               and re.match(r"^\d+$", barcode) \
+               and self.get_barcode_check_digit(barcode) == int(barcode[-1])
+
+    @api.model
     def barcode(self, barcode_type, value, **kwargs):
         defaults = {
             'width': (600, int),
@@ -553,6 +607,14 @@ class IrActionsReport(models.Model):
             # But we can use `barBorder` to get a similar behaviour.
             if kwargs['quiet']:
                 kwargs['barBorder'] = 0
+
+        if barcode_type in ('EAN8', 'EAN13') and not self.check_barcode_encoding(value, barcode_type.lower()):
+            # If the barcode does not respect the encoding specifications, convert its type into Code128.
+            # Otherwise, the report-lab method may return a barcode different from its value. For instance,
+            # if the barcode type is EAN-8 and the value 11111111, the report-lab method will take the first
+            # seven digits and will compute the check digit, which gives: 11111115 -> the barcode does not
+            # match the expected value.
+            barcode_type = 'Code128'
 
         try:
             barcode = createBarcodeDrawing(barcode_type, value=value, format='png', **kwargs)
@@ -674,8 +736,8 @@ class IrActionsReport(models.Model):
                     # the top level heading in /Outlines.
                     reader = PdfFileReader(pdf_content_stream)
                     root = reader.trailer['/Root']
+                    outlines_pages = []
                     if '/Outlines' in root and '/First' in root['/Outlines']:
-                        outlines_pages = []
                         node = root['/Outlines']['/First']
                         while True:
                             outlines_pages.append(root['/Dests'][node['/Dest']][0])
@@ -683,10 +745,9 @@ class IrActionsReport(models.Model):
                                 break
                             node = node['/Next']
                         outlines_pages = sorted(set(outlines_pages))
-                        # There should be only one top-level heading by document
-                        assert len(outlines_pages) == len(res_ids)
-                        # There should be a top-level heading on first page
-                        assert outlines_pages[0] == 0
+                    # There should be only one top-level heading by document
+                    # There should be a top-level heading on first page
+                    if len(outlines_pages) == len(res_ids) and outlines_pages[0] == 0:
                         for i, num in enumerate(outlines_pages):
                             to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
                             attachment_writer = PdfFileWriter()
@@ -703,7 +764,9 @@ class IrActionsReport(models.Model):
                             streams.append(stream)
                         close_streams([pdf_content_stream])
                     else:
-                        # If no outlines available, do not save each record
+                        # We can not generate separate attachments because the outlines
+                        # do not reveal where the splitting points should be in the pdf.
+                        _logger.info('The PDF report can not be saved as attachment.')
                         streams.append(pdf_content_stream)
 
         # If attachment_use is checked, the records already having an existing attachment
@@ -736,7 +799,7 @@ class IrActionsReport(models.Model):
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
                 writer.write(result_stream)
-            except utils.PdfReadError:
+            except (utils.PdfReadError, TypeError):
                 unreadable_streams.append(stream)
 
         return unreadable_streams
@@ -787,7 +850,7 @@ class IrActionsReport(models.Model):
         # assets are not in cache and must be generated. To workaround this issue, we manually
         # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
         context = dict(self.env.context)
-        if not config['test_enable']:
+        if not config['test_enable'] and 'commit_assetsbundle' not in context:
             context['commit_assetsbundle'] = True
 
         # Disable the debug mode in the PDF rendering in order to not split the assets bundle
@@ -825,7 +888,8 @@ class IrActionsReport(models.Model):
         # - The report is not fully present in attachments.
         if save_in_attachment and not res_ids:
             _logger.info('The PDF report has been generated from attachments.')
-            self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
+            if len(save_in_attachment) > 1:
+                self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
             return self_sudo._post_pdf(save_in_attachment), 'pdf'
 
         if self.get_wkhtmltopdf_state() == 'install':
@@ -944,12 +1008,14 @@ class IrActionsReport(models.Model):
 
         discard_logo_check = self.env.context.get('discard_logo_check')
         if self.env.is_admin() and not self.env.company.external_report_layout_id and config and not discard_logo_check:
-            action = self.env["ir.actions.actions"]._for_xml_id("web.action_base_document_layout_configurator")
-            ctx = action.get('context')
-            py_ctx = json.loads(ctx) if ctx else {}
-            report_action['close_on_report_download'] = True
-            py_ctx['report_action'] = report_action
-            action['context'] = py_ctx
-            return action
+            return self._action_configure_external_report_layout(report_action)
 
         return report_action
+
+    def _action_configure_external_report_layout(self, report_action):
+        action = self.env["ir.actions.actions"]._for_xml_id("web.action_base_document_layout_configurator")
+        py_ctx = json.loads(action.get('context', {}))
+        report_action['close_on_report_download'] = True
+        py_ctx['report_action'] = report_action
+        action['context'] = py_ctx
+        return action

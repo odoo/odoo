@@ -245,6 +245,9 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(purchase_line2.product_qty, delta, "The quantity of the new PO line is the quantity added on the Sale Line, after first PO confirmation")
 
     def test_pol_description(self):
+        """
+        test cases when product names are different from how the vendor refers to, which is allowed
+        """
         service = self.env['product.product'].create({
             'name': 'Super Product',
             'type': 'service',

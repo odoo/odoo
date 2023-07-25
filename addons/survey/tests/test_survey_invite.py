@@ -6,12 +6,13 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 from odoo.addons.survey.tests import common
+from odoo.addons.test_mail.tests.common import MailCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import users
 
 
-class TestSurveyInvite(common.TestSurveyCommon):
+class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
 
     def setUp(self):
         res = super(TestSurveyInvite, self).setUp()
@@ -72,6 +73,16 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.assertEqual(answers.mapped('partner_id'), self.customer)
         self.assertEqual(set(answers.mapped('deadline')), set([deadline]))
 
+        with self.subTest('Warning when inviting an already invited partner'):
+            action = self.survey.action_send_survey()
+            invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+            invite_form.partner_ids.add(self.customer)
+
+            self.assertIn(self.customer, invite_form.existing_partner_ids)
+            self.assertEqual(invite_form.existing_text,
+                             'The following customers have already received an invite: Caroline Customer.')
+
+
     @users('survey_manager')
     def test_survey_invite_authentication_nosignup(self):
         Answer = self.env['survey.user_input']
@@ -124,6 +135,21 @@ class TestSurveyInvite(common.TestSurveyCommon):
             set(answers.mapped('email')),
             set([self.customer.email, self.user_emp.email, self.user_portal.email]))
         self.assertEqual(answers.mapped('partner_id'), self.customer | self.user_emp.partner_id | self.user_portal.partner_id)
+
+    @users('survey_manager')
+    def test_survey_invite_email_from(self):
+        # Verifies whether changing the value of the "email_from" field reflects on the receiving end.
+        action = self.survey.action_send_survey()
+        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+        invite_form.partner_ids.add(self.survey_user.partner_id)
+        invite_form.template_id.write({'email_from':'{{ object.partner_id.email_formatted }}'})
+        invite = invite_form.save()
+        with self.mock_mail_gateway():
+            invite.action_invite()
+
+        self.assertEqual(len(self._new_mails), 1, "A new mail.mail should have been created")
+        mail = self._new_mails[0]
+        self.assertEqual(mail.email_from, self.survey_user.email_formatted)
 
     @users('survey_manager')
     def test_survey_invite_public(self):

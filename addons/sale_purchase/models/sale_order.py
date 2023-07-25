@@ -243,13 +243,18 @@ class SaleOrderLine(models.Model):
             price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(
                 supplierinfo.price, supplier_taxes, taxes, self.company_id)
             if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
-                price_unit = supplierinfo.currency_id._convert(price_unit, purchase_order.currency_id, purchase_order.company_id, fields.datetime.today())
+                price_unit = supplierinfo.currency_id._convert(price_unit, purchase_order.currency_id, purchase_order.company_id, fields.Date.context_today(self))
             product_ctx.update({'seller_id': supplierinfo.id})
         else:
             product_ctx.update({'partner_id': purchase_order.partner_id.id})
 
+        product = self.product_id.with_context(**product_ctx)
+        name = product.display_name
+        if product.description_purchase:
+            name += '\n' + product.description_purchase
+
         return {
-            'name': self.product_id.with_context(**product_ctx).display_name,
+            'name': name,
             'product_qty': purchase_qty_uom,
             'product_id': self.product_id.id,
             'product_uom': self.product_id.uom_po_id.id,
@@ -259,6 +264,12 @@ class SaleOrderLine(models.Model):
             'order_id': purchase_order.id,
             'sale_line_id': self.id,
         }
+
+    def _retrieve_purchase_partner(self):
+        """ In case we want to explicitely name a partner from whom we want to buy or receive products
+        """
+        self.ensure_one()
+        return False
 
     def _purchase_service_create(self, quantity=False):
         """ On Sales Order confirmation, some lines (services ones) can create a purchase order line and maybe a purchase order.
@@ -272,7 +283,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             line = line.with_company(line.company_id)
             # determine vendor of the order (take the first matching company and product)
-            suppliers = line.product_id._select_seller(quantity=line.product_uom_qty, uom_id=line.product_uom)
+            suppliers = line.product_id._select_seller(partner_id=line._retrieve_purchase_partner(), quantity=line.product_uom_qty, uom_id=line.product_uom)
             if not suppliers:
                 raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.") % (line.product_id.display_name,))
             supplierinfo = suppliers[0]
@@ -288,7 +299,7 @@ class SaleOrderLine(models.Model):
                 ], limit=1)
             if not purchase_order:
                 values = line._purchase_service_prepare_order_values(supplierinfo)
-                purchase_order = PurchaseOrder.create(values)
+                purchase_order = PurchaseOrder.with_context(mail_create_nosubscribe=True).create(values)
             else:  # update origin of existing PO
                 so_name = line.order_id.name
                 origins = []

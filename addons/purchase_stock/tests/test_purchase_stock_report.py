@@ -202,3 +202,161 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         docs = self.get_report_forecast(product_template_ids=self.product_template.ids)[1]
         self.assertEqual(docs['draft_purchase_qty'], 150)
+
+    def test_vendor_delay_report_with_uom(self):
+        """
+        PO 12 units x P
+        Receive 1 dozen x P
+        -> 100% received
+        """
+        uom_12 = self.env.ref('uom.product_uom_dozen')
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner
+        with po_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_qty = 12
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt_move = receipt.move_lines
+        receipt_move.move_line_ids.unlink()
+        receipt_move.move_line_ids = [(0, 0, {
+            'location_id': receipt_move.location_id.id,
+            'location_dest_id': receipt_move.location_dest_id.id,
+            'product_id': self.product.id,
+            'product_uom_id': uom_12.id,
+            'qty_done': 1,
+            'picking_id': receipt.id,
+        })]
+        receipt.button_validate()
+
+        data = self.env['vendor.delay.report'].read_group(
+            [('partner_id', '=', self.partner.id)],
+            ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
+            ['product_id'],
+        )[0]
+        self.assertEqual(data['qty_on_time'], 12)
+        self.assertEqual(data['qty_total'], 12)
+        self.assertEqual(data['on_time_rate'], 100)
+
+    def test_vendor_delay_report_with_multi_location(self):
+        """
+        PO 10 units x P
+        Receive
+            - 6 x P in Child Location 01
+            - 4 x P in Child Location 02
+        -> 100% received
+        """
+        child_loc_01, child_loc_02 = self.stock_location.child_ids
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner
+        with po_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_qty = 10
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt_move = receipt.move_lines
+        receipt_move.move_line_ids.unlink()
+        receipt_move.move_line_ids = [(0, 0, {
+            'location_id': receipt_move.location_id.id,
+            'location_dest_id': child_loc_01.id,
+            'product_id': self.product.id,
+            'product_uom_id': self.product.uom_id.id,
+            'qty_done': 6,
+            'picking_id': receipt.id,
+        }), (0, 0, {
+            'location_id': receipt_move.location_id.id,
+            'location_dest_id': child_loc_02.id,
+            'product_id': self.product.id,
+            'product_uom_id': self.product.uom_id.id,
+            'qty_done': 4,
+            'picking_id': receipt.id,
+        })]
+        receipt.button_validate()
+
+        data = self.env['vendor.delay.report'].read_group(
+            [('partner_id', '=', self.partner.id)],
+            ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
+            ['product_id'],
+        )[0]
+        self.assertEqual(data['qty_on_time'], 10)
+        self.assertEqual(data['qty_total'], 10)
+        self.assertEqual(data['on_time_rate'], 100)
+
+    def test_vendor_delay_report_with_backorder(self):
+        """
+        PO 10 units x P
+        Receive 6 x P with backorder
+        -> 60% received
+        Process the backorder
+        -> 100% received
+        """
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner
+        with po_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_qty = 10
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01_move = receipt01.move_lines
+        receipt01_move.quantity_done = 6
+        action = receipt01.button_validate()
+        Form(self.env[action['res_model']].with_context(action['context'])).save().process()
+
+        data = self.env['vendor.delay.report'].read_group(
+            [('partner_id', '=', self.partner.id)],
+            ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
+            ['product_id'],
+        )[0]
+        self.assertEqual(data['qty_on_time'], 6)
+        self.assertEqual(data['qty_total'], 10)
+        self.assertEqual(data['on_time_rate'], 60)
+
+        receipt02 = receipt01.backorder_ids
+        receipt02.move_lines.quantity_done = 4
+        receipt02.button_validate()
+
+        data = self.env['vendor.delay.report'].read_group(
+            [('partner_id', '=', self.partner.id)],
+            ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
+            ['product_id'],
+        )[0]
+        self.assertEqual(data['qty_on_time'], 10)
+        self.assertEqual(data['qty_total'], 10)
+        self.assertEqual(data['on_time_rate'], 100)
+
+    def test_vendor_delay_report_without_backorder(self):
+        """
+        PO 10 units x P
+        Receive 6 x P without backorder
+        -> 60% received
+        """
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner
+        with po_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_qty = 10
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01_move = receipt01.move_lines
+        receipt01_move.quantity_done = 6
+        action = receipt01.button_validate()
+        Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
+
+        data = self.env['vendor.delay.report'].read_group(
+            [('partner_id', '=', self.partner.id)],
+            ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
+            ['product_id'],
+        )[0]
+        self.assertEqual(data['qty_on_time'], 6)
+        self.assertEqual(data['qty_total'], 10)
+        self.assertEqual(data['on_time_rate'], 60)

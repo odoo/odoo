@@ -79,7 +79,7 @@
     <record id="il_vat_sales_exempt" model="account.tax.template">
         <field name="sequence">9</field>
         <field name="description">0%</field>
-        <field name="name">VAT exempt</field>
+        <field name="name">VAT exempt sales</field>
         <field name="price_include" eval="1"/>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
@@ -125,6 +125,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_out_base')]
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -136,7 +137,7 @@
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_111110'),
-                'plus_report_line_ids': [ref('account_tax_report_line_out_balance')]
+                'minus_report_line_ids': [ref('account_tax_report_line_out_balance')]
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -155,7 +156,7 @@
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_111110'),
-                'minus_report_line_ids': [ref('account_tax_report_line_out_balance')]
+                'plus_report_line_ids': [ref('account_tax_report_line_out_balance')]
             }),
         ]"/>
     </record>
@@ -355,7 +356,7 @@
     <record id="il_vat_purchase_exempt" model="account.tax.template">
         <field name="sequence">7</field>
         <field name="description">0%</field>
-        <field name="name">VAT exempt</field>
+        <field name="name">VAT exempt purchase</field>
         <field name="amount">0</field>
         <field name="price_include" eval="1"/>
         <field name="amount_type">percent</field>
@@ -392,33 +393,34 @@
         <field name="description">0%</field>
         <field name="name">VAT Import Line</field>
         <field name="description">VAT Import Line</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
+        <field name="amount">100</field>
+        <field name="amount_type">division</field>
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tax_group_id" ref="tax_group_vat_17"/>
+        <field name="price_include" eval="True"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'account_id': ref('il_account_101840'),
-                'plus_report_line_ids': [ref('account_tax_report_line_in_balance_17')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('il_account_101840'),
+                'plus_report_line_ids': [ref('account_tax_report_line_in_balance_17')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'account_id': ref('il_account_101840'),
-                'minus_report_line_ids': [ref('account_tax_report_line_in_balance_17')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('il_account_101840'),
+                'minus_report_line_ids': [ref('account_tax_report_line_in_balance_17')],
             }),
         ]"/>
     </record>

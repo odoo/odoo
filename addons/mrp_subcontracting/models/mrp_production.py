@@ -4,6 +4,7 @@
 from collections import defaultdict
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -15,6 +16,32 @@ class MrpProduction(models.Model):
         inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids'
     )
     subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)
+    incoming_picking = fields.Many2one(related='move_finished_ids.move_dest_ids.picking_id')
+
+    @api.depends('name')
+    def name_get(self):
+        return [
+            (record.id, "%s (%s)" % (record.incoming_picking.name, record.name)) if record.bom_id.type == 'subcontract'
+            else (record.id, record.name) for record in self
+        ]
+
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = list(args or [])
+
+        if name == '' and operator == 'ilike':
+            return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+        # search through MO
+        domain = [(self._rec_name, operator, name)]
+
+        # search through transfers
+        picking_rec_name = self.env['stock.picking']._rec_name
+        picking_domain = [('bom_id.type', '=', 'subcontract'), ('incoming_picking.%s' % picking_rec_name, operator, name)]
+        domain = expression.OR([domain, picking_domain])
+
+        args = expression.AND([args, domain])
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
     @api.depends('move_raw_ids.move_line_ids')
     def _compute_move_line_raw_ids(self):

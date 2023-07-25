@@ -3,10 +3,13 @@
 # 	* mail
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Léonie Bouchat <lbo@odoo.com>, 2022
+# Luca Carlo, 2023
+# Sebastiano Picchi, 2023
+# Martin Trigaux, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2022\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -224,7 +227,7 @@ msgstr ", "
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid ", enter to"
-msgstr ""
+msgstr ", premi Invio per"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -451,7 +454,7 @@ msgstr "<span class=\"o_form_label\">Attività</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Custom ICE server list</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Lista server ICE personalizzata</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -935,6 +938,12 @@ msgstr "Alias"
 #, python-format
 msgid "All"
 msgstr "Tutti"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Per ciascun allegato deve essere fornito un token di accesso."
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -1444,7 +1453,7 @@ msgstr "CC"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__chaining_type
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
-msgstr ""
+msgstr "Tipo concatenamento"
 
 #. module: mail
 #. openerp-web
@@ -1494,6 +1503,8 @@ msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(guest_names)s"
 msgstr ""
+"Il canale \"%(channel_name)s\" accetta solo membri del gruppo "
+"\"%(group_name)s\". Vietato per: %(guest_names)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -1502,6 +1513,8 @@ msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(partner_names)s"
 msgstr ""
+"Il canale \"%(channel_name)s\" accetta solo membri del gruppo "
+"\"%(group_name)s\". Vietato per: %(partner_names)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__channel_partner_id
@@ -2126,7 +2139,7 @@ msgstr "Consegna non riuscita"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Delivery failure"
-msgstr ""
+msgstr "Errore nella consegna"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -2210,6 +2223,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -2595,6 +2609,9 @@ msgid ""
 "mass; only used when the reply is not logged in the original discussion "
 "thread."
 msgstr ""
+"Indirizzo e-mail al quale vengono indirizzate le risposte quando si inviano "
+"e-mail di massa. Utilizzato esclusivamente quando la risposta non viene "
+"registrata nel thread di discussione originale."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
@@ -2664,7 +2681,7 @@ msgstr "Solo dipendenti"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
-msgstr ""
+msgstr "Abilitare monitoraggio ordinato"
 
 #. module: mail
 #. openerp-web
@@ -3655,7 +3672,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "È editor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
@@ -4307,7 +4324,7 @@ msgstr "Reazione al messaggio"
 #: model:ir.actions.act_window,name:mail.mail_message_reaction_action
 #: model:ir.ui.menu,name:mail.mail_message_reaction_menu
 msgid "Message Reactions"
-msgstr ""
+msgstr "Reazioni messaggio"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__record_name
@@ -5051,6 +5068,8 @@ msgstr ""
 #, python-format
 msgid "Only administrators are allowed to use grouped read on message model"
 msgstr ""
+"L'utilizzo della lettura raggruppata  nel modello messaggio è consentita "
+"solo agli amministratori."
 
 #. module: mail
 #: code:addons/mail/models/ir_model.py:0
@@ -5957,7 +5976,7 @@ msgstr "Nome file resoconto"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
 msgid "Requesting Partner"
-msgstr ""
+msgstr "Partner richiedente"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_ids
@@ -6683,7 +6702,7 @@ msgstr "Sottotipi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__suggested_next_type_ids
 msgid "Suggest"
-msgstr ""
+msgstr "Suggerimento"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__suggest
@@ -6843,6 +6862,19 @@ msgid ""
 msgstr ""
 "Partita IVA o codice fiscale. Completare se il contatto è soggetto a imposte"
 " governative. Utilizzato in alcuni documenti legali."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "L'allegato %s non esiste o mancano i diritti di accesso."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
@@ -7613,6 +7645,16 @@ msgstr ""
 "già di un server di posta pronto all'uso (@mycompany.odoo.com)."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"Impossibile convalidare il valore per `mail.catchall.domain.allowed`.\n"
+"Dovrebbe essere un elenco di domini separati da virgola es. example.com,example.org."
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -7648,7 +7690,7 @@ msgstr "Tipo vista"
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "View image"
-msgstr ""
+msgstr "Visualizza immagine"
 
 #. module: mail
 #. openerp-web
@@ -7822,7 +7864,7 @@ msgstr "Sei nel canale <b>#%s</b>."
 #: code:addons/mail/controllers/discuss.py:0
 #, python-format
 msgid "You are not allowed to upload an attachment here."
-msgstr ""
+msgstr "Non è possibile caricare un allegato qui."
 
 #. module: mail
 #. openerp-web
@@ -8138,7 +8180,7 @@ msgstr "giorni"
 #: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
 #, python-format
 msgid "deaf"
-msgstr ""
+msgstr "sordo"
 
 #. module: mail
 #. openerp-web
@@ -8420,7 +8462,7 @@ msgstr "vendite"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "save"
-msgstr ""
+msgstr "salva"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0

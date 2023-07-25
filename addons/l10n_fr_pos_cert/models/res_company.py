@@ -65,6 +65,7 @@ class ResCompany(models.Model):
 
             if not orders:
                 msg_alert = (_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS', self.env.company.name))
+                raise UserError(msg_alert)
 
             previous_hash = u''
             corrupted_orders = []
@@ -93,3 +94,5 @@ class ResCompany(models.Model):
                 'printing_date': format_date(self.env,  Date.to_string( Date.today())),
                 'corrupted_orders': corrupted_orders or 'None'
             }
+        else:
+            raise UserError(_('Accounting is not unalterable for the company %s. This mechanism is designed for companies where accounting is unalterable.') % self.env.company.name)

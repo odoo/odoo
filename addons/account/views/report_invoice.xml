@@ -24,7 +24,10 @@
 
                     <div id="informations" class="row mt-4 mb-4">
                         <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
-                            <strong>Invoice Date:</strong>
+                            <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date:</strong></t>
+                            <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date:</strong></t>
+                            <t t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date:</strong></t>
+                            <t t-else=""><strong>Date:</strong></t>
                             <p class="m-0" t-field="o.invoice_date"/>
                         </div>
                         <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
@@ -226,7 +229,7 @@
             -->
             <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
                 <tr>
-                    <t t-if="len(tax_totals['groups_by_subtotal'][subtotal_to_show]) > 1">
+                    <t t-if="len(tax_totals['groups_by_subtotal'][subtotal_to_show]) > 1 or (tax_totals['amount_untaxed'] != amount_by_group['tax_group_base_amount'])">
                         <td>
                             <span t-esc="amount_by_group['tax_group_name']"/>
                             <span class="text-nowrap"> on

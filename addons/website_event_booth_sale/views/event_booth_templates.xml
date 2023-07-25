@@ -4,7 +4,7 @@
     <template id="event_booth_registration" inherit_id="website_event_booth.event_booth_registration">
         <xpath expr="//h5[@name='booth_category_name']" position="after">
             <t t-if="booth_category.price">
-                <t t-if="(booth_category.price-website.get_current_pricelist().currency_id._convert(booth_category.price_reduce, event.company_id.sudo().currency_id, event.company_id, datetime.date.today())) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
+                <t t-if="(booth_category.price - booth_category.price_reduce) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
                     <del class="text-danger mr-1"
                          t-field="booth_category.price"
                          t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
@@ -20,8 +20,13 @@
         </xpath>
         <xpath expr="//input[@name='booth_category_id']" position="attributes">
             <attribute name="t-att-data-price">
-                (booth_category.price_reduce_taxinc if env.user.has_group('account.group_show_line_subtotals_tax_included')
-                else booth_category.price_reduce) or '0'</attribute>
+                event.company_id.sudo().currency_id._convert(
+                    booth_category.price_reduce_taxinc if env.user.has_group('account.group_show_line_subtotals_tax_included') else booth_category.price_reduce,
+                    website.get_current_pricelist().currency_id,
+                    event.company_id,
+                    datetime.date.today()
+                ) or '0'
+            </attribute>
         </xpath>
         <xpath expr="//div[@name='booth_registration_submit']" position="before">
             <div class="row o_wbooth_booth_total_price d-none">

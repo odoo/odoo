@@ -44,7 +44,7 @@
                     <field name="hr_presence_state" invisible="1"/>
                     <field name="image_128" invisible="1" />
                     <header>
-                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_manager"/>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_manager" attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
@@ -230,6 +230,8 @@
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
+                    <field name="address_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
                     <field name="work_location_id" optional="hide"/>
                     <field name="coach_id" invisible="1"/>
                     <field name="active" invisible="1"/>

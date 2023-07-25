@@ -6,7 +6,7 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2021
 # Martin Trigaux, 2021
 # Paul Andrawes, 2021
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1676,6 +1676,16 @@ msgid "Next Activity Type"
 msgstr "نوع النشاط التالي"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"لا يوجد منتج لطباعته. إذا كان المنتج مؤرشفاً، يرجى إلغاء أرشفته قبل طباعة "
+"ملصقه. "
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr "لم يتم العثور على قائمة أسعار مورّد "
@@ -2470,11 +2480,9 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"حدد المبلغ الثابت الذي تريد إضافته أو طرحه (إذا كان سالبًا) إلى المبلغ "
-"المحسوب بالخصم."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2673,6 +2681,12 @@ msgstr ""
 "الكمية لشرائها من هذا المورد للاستفادة من السعر، معبر عنها بوحدة قياس منتَج "
 "المورّد، وإذا لم تكن هناك وحدة قياس أخرى، تُستخدم وحدة القياس الافتراضية "
 "للمنتج. "
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "يجب أن تكون طريقة التقريب إلى قيمة موجبة فقط لا غير. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3227,7 +3241,7 @@ msgstr "لا يمكنك تغيير القيمة للقيمة %s المعينة �
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "You cannot create recursive categories."
-msgstr "لا يمكنك إنشاء فئات متكررة."
+msgstr "لا يمكنك إنشاء فئات متداخلة. "
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
@@ -3246,6 +3260,12 @@ msgstr ""
 "للشركة "
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr "لا يمكنك حذف فئة المنتج %s. "
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3260,10 +3280,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"لا يمكنك حذف القيمة %s لأنها مستخدَمة في المنتجات التالية: \n"
-"%s "
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3289,9 +3308,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
-msgstr "لا يمكنك نقل الخاصية %s من المنتج %s إلى المنتج %s. "
+msgid "You cannot delete value %s because it was used in some products."
+msgstr "لا يمكنك حذف القيمة %s لأنها مستخدَمة في بعض المنتجات. "
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3302,6 +3320,13 @@ msgid ""
 msgstr ""
 "لا يمكنك تعطيل قاعدة قائمة أسعار. يرجى حذفها أو أرشفة قائمة أسعارها عوضاً عن"
 " ذلك. "
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "لا يمكنك نقل الخاصية %s من المنتج %s إلى المنتج %s. "
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

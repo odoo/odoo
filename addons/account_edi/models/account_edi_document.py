@@ -145,13 +145,13 @@ class AccountEdiDocument(models.Model):
             attachments_to_unlink.unlink()
 
         def _postprocess_cancel_edi_results(documents, edi_result):
-            invoice_ids_to_cancel = set()  # Avoid duplicates
+            moves_to_cancel = self.env['account.move'] # Avoid duplicates
             attachments_to_unlink = self.env['ir.attachment']
             for document in documents:
                 move = document.move_id
                 move_result = edi_result.get(move, {})
                 if move_result.get('success') is True:
-                    old_attachment = document.attachment_id
+                    old_attachment = document.sudo().attachment_id
                     document.write({
                         'state': 'cancelled',
                         'error': False,
@@ -159,10 +159,14 @@ class AccountEdiDocument(models.Model):
                         'blocking_level': False,
                     })
 
-                    if move.is_invoice(include_receipts=True) and move.state == 'posted':
+                    if move.state == 'posted' and all(
+                        doc.state == 'cancelled'
+                        or not doc.edi_format_id._needs_web_services()
+                        for doc in move.edi_document_ids
+                    ):
                         # The user requested a cancellation of the EDI and it has been approved. Then, the invoice
                         # can be safely cancelled.
-                        invoice_ids_to_cancel.add(move.id)
+                        moves_to_cancel |= move
 
                     if not old_attachment.res_model or not old_attachment.res_id:
                         attachments_to_unlink |= old_attachment
@@ -172,15 +176,13 @@ class AccountEdiDocument(models.Model):
                         'error': move_result.get('error', False),
                         'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if move_result.get('error') else False,
                     })
-
-            if invoice_ids_to_cancel:
-                invoices = self.env['account.move'].browse(list(invoice_ids_to_cancel))
-                invoices.button_draft()
-                invoices.button_cancel()
+            if moves_to_cancel:
+                moves_to_cancel.button_draft()
+                moves_to_cancel.button_cancel()
 
             # Attachments that are not explicitly linked to a business model could be removed because they are not
             # supposed to have any traceability from the user.
-            attachments_to_unlink.unlink()
+            attachments_to_unlink.sudo().unlink()
 
         documents.edi_format_id.ensure_one()  # All account.edi.document of a job should have the same edi_format_id
         documents.move_id.company_id.ensure_one()  # All account.edi.document of a job should be from the same company
@@ -256,7 +258,7 @@ class AccountEdiDocument(models.Model):
 
         :param job_count: Limit explicitely the number of web service calls. If not provided, process all.
         '''
-        edi_documents = self.search([('state', 'in', ('to_send', 'to_cancel'))])
+        edi_documents = self.search([('state', 'in', ('to_send', 'to_cancel')), ('move_id.state', '=', 'posted')])
         nb_remaining_jobs = edi_documents._process_documents_web_services(job_count=job_count)
 
         # Mark the CRON to be triggered again asap since there is some remaining jobs to process.

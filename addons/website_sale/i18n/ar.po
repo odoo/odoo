@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -355,6 +355,15 @@ msgstr "<span>طلب</span> "
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
 msgstr "<span>معالجة الدفع والخروج</span> "
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
+"<span>للأسف، تعذر تأكيد طلبك لأن المبلغ المدفوع يختلف عن المبلغ في عربة تسوقك.\n"
+"                        يرجى التواصل مع المسؤول عن المحل للمزيد من المعلومات.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -770,7 +779,7 @@ msgstr "المنتجات البديلة:"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
 msgid "Amount of Abandoned Carts"
-msgstr "قيمة العربات المتروكة"
+msgstr "مبالغ عربات التسوق المتروكة "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -1055,6 +1064,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "الفئات التابعة"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"لا يسمح بتغيير اسمك بعد إصدار الفواتير لحسابك. الرجاء التواصل معنا مباشرة "
+"لإتمام هذه العملية."
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
@@ -1514,7 +1533,7 @@ msgstr "أدخل اسمًا لمنتجك الجديد"
 #: code:addons/website_sale/models/product_misc.py:0
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr "خطأ! لا يمكنك إنشاء فئات تكرارية."
+msgstr "خطأ! لا يمكنك إنشاء فئات متداخلة. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info_option
@@ -1689,6 +1708,18 @@ msgstr "صورة 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "اسم الصورة"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"إذا كنت تقوم بالطلب لشخص خارجي، يرجى الطلب من خلال الواجهة الخلفية. إذا أردت"
+" تغيير اسمك أو عنوان بريدك الإلكتروني، يرجى القيام بذلك من خلال إعدادات "
+"الحساب أو التواصل مع المدير. "
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -1902,9 +1933,8 @@ msgstr "عربة تسوقي"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.sort
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name"
 msgstr "الاسم"
 
@@ -2038,7 +2068,7 @@ msgstr "عدد المنتجات في الشبكة على المتجر "
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "On wheels"
-msgstr ""
+msgstr "على عجلات "
 
 #. module: website_sale
 #. openerp-web
@@ -2272,7 +2302,7 @@ msgstr "نوع مستخدم Paypal "
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
-msgstr ""
+msgstr "نظام يفتح عن طريق الدواسات "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2372,7 +2402,7 @@ msgstr "طباعة"
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
-msgstr "معالجة الطلب بمجرد تسلم المستحقات."
+msgstr "معالجة الطلب بمجرد استلام الدفع. "
 
 #. module: website_sale
 #. openerp-web
@@ -2650,7 +2680,7 @@ msgstr "البريد الإلكتروني للاسترجاع بانتظار ال
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Reinforced for heavy loads"
-msgstr ""
+msgstr "مهيئة للدفعات الثقيلة "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -3129,6 +3159,18 @@ msgid "The #1"
 msgstr "رقم واحد "
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "رمز الوصول غير صالح. "
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has been updated. Please refresh the page."
+msgstr "لقد تم تحديث عربة التسوق. يرجى إعادة تحميل الصفحة. "
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3155,6 +3197,12 @@ msgid ""
 msgstr ""
 "ينطبق الوضع المحدد هنا كسياسة فوترة لأي منتج جديد يتم إنشاؤه ولكن ليس "
 "للمنتجات الموجودة بالفعل. "
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr "لقد تم إلغاء الطلب. "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
@@ -3206,7 +3254,7 @@ msgstr "لا توجد طلبات غير مدفوعة من الموقع الإل�
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "There isn't any UTM tag detected in orders"
-msgstr "لم يتم رصد أي بطاقة UTM في الطلبات "
+msgstr "لم يتم رصد أي UTM في الطلبات "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product

@@ -113,7 +113,8 @@ function changePaddingSize(direction) {
 
 /**
  * Click on the top right edit button
- * @param {*} position Where the purple arrow will show up
+ *
+ * @deprecated use `clickOnEditAndWaitEditMode` instead to avoid race condition
  */
 function clickOnEdit(position = "bottom") {
     return {
@@ -122,6 +123,23 @@ function clickOnEdit(position = "bottom") {
         extra_trigger: ".homepage",
         position: position,
     };
+}
+
+/**
+ * Click on the top right edit button and wait for the edit mode
+ *
+ * @param {string} position Where the purple arrow will show up
+ */
+function clickOnEditAndWaitEditMode(position = "bottom") {
+    return [{
+        content: _t("<b>Click Edit</b> to start designing your homepage."),
+        trigger: "a[data-action=edit]",
+        position: position,
+    }, {
+        content: "Check that we are in edit mode",
+        trigger: '#oe_snippets.o_loaded',
+        run: () => null, // it's a check
+    }];
 }
 
 /**
@@ -142,6 +160,14 @@ function clickOnSnippet(snippet, position = "bottom") {
 function clickOnSave(position = "bottom") {
     return [{
         trigger: "button[data-action=save]",
+        // TODO this should not be needed but for now it better simulates what
+        // an human does. By the time this was added, it's technically possible
+        // to drag and drop a snippet then immediately click on save and have
+        // some problem. Worst case probably is a traceback during the redirect
+        // after save though so it's not that big of an issue. The problem will
+        // of course be solved (or at least prevented in stable). More details
+        // in related commit message.
+        extra_trigger: "#oe_snippets:not(:has(.o_we_already_dragging))",
         in_modal: false,
         content: Markup(_t("Good job! It's time to <b>Save</b> your work.")),
         position: position,
@@ -266,6 +292,7 @@ return {
     changeOption,
     changePaddingSize,
     clickOnEdit,
+    clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
     clickOnText,

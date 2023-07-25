@@ -266,11 +266,11 @@ var SlideUploadDialog = Dialog.extend({
             formatNoMatches: false,
             selection_data: false,
             fetch_rpc_fnc: fetchFNC,
-            formatSelection: function (data) {
+            formatSelection: function (data, container, fmt) {
                 if (data.tag) {
                     data.text = data.tag;
                 }
-                return data.text;
+                return fmt(data.text);
             },
             createSearchChoice: function (term, data) {
                 var addedTags = $(this.opts.element).select2('data');

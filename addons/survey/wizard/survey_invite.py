@@ -19,12 +19,6 @@ class SurveyInvite(models.TransientModel):
     _description = 'Survey Invitation Wizard'
 
     @api.model
-    def _get_default_from(self):
-        if self.env.user.email:
-            return tools.formataddr((self.env.user.name, self.env.user.email))
-        raise UserError(_("Unable to post message, please configure the sender's email address."))
-
-    @api.model
     def _get_default_author(self):
         return self.env.user.partner_id
 
@@ -33,7 +27,9 @@ class SurveyInvite(models.TransientModel):
         'ir.attachment', 'survey_mail_compose_message_ir_attachments_rel', 'wizard_id', 'attachment_id',
         string='Attachments')
     # origin
-    email_from = fields.Char('From', default=_get_default_from, help="Email address of the sender.")
+    email_from = fields.Char(
+        'From', compute='_compute_email_from', readonly=False, store=True,
+        help="Email address of the sender.")
     author_id = fields.Many2one(
         'res.partner', 'Author', index=True,
         ondelete='set null', default=_get_default_author,
@@ -70,8 +66,14 @@ class SurveyInvite(models.TransientModel):
 
     @api.depends('partner_ids', 'survey_id')
     def _compute_existing_partner_ids(self):
-        existing_answers = self.survey_id.user_input_ids
-        self.existing_partner_ids = existing_answers.mapped('partner_id') & self.partner_ids
+        self.existing_partner_ids = list(set(self.survey_id.user_input_ids.partner_id.ids) & set(self.partner_ids.ids))
+
+    @api.depends('template_id.email_from')
+    def _compute_email_from(self):
+        if self.template_id.email_from:
+            self.email_from = self.template_id.email_from
+        else:
+            self.email_from = self.env.user.email_formatted
 
     @api.depends('emails', 'survey_id')
     def _compute_existing_emails(self):
@@ -210,11 +212,14 @@ class SurveyInvite(models.TransientModel):
 
     def _send_mail(self, answer):
         """ Create mail specific for recipient containing notably its access token """
+        email_from = self._render_field('email_from', answer.ids)[answer.id]
+        if not email_from:
+            raise UserError(_("Unable to post message, please configure the sender's email address."))
         subject = self._render_field('subject', answer.ids, options={'render_safe': True})[answer.id]
         body = self._render_field('body', answer.ids, post_process=True)[answer.id]
         # post the message
         mail_values = {
-            'email_from': self.email_from,
+            'email_from': email_from,
             'author_id': self.author_id.id,
             'model': None,
             'res_id': None,

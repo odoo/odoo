@@ -75,6 +75,7 @@ class Track(models.Model):
         help='Speaker phone is used for public display and may vary from contact phone')
     partner_biography = fields.Html(
         string='Biography', compute='_compute_partner_biography',
+        sanitize_attributes=False,
         readonly=False, store=True)
     partner_function = fields.Char(
         'Job Position', compute='_compute_partner_function',

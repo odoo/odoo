@@ -65,7 +65,7 @@ class HrExpense(models.Model):
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
     product_id = fields.Many2one('product.product', string='Product', readonly=True, tracking=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'approved': [('readonly', False)], 'refused': [('readonly', False)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_from_product_id_company_id',
-        store=True, copy=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]},
+        store=True, copy=True, readonly=True,
         default=_default_product_uom_id, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True, string="UoM Category")
     unit_amount = fields.Float("Unit Price", compute='_compute_from_product_id_company_id', store=True, required=True, copy=True,
@@ -244,10 +244,10 @@ class HrExpense(models.Model):
         for expense in self.filtered('product_id'):
             expense = expense.with_company(expense.company_id)
             expense.name = expense.name or expense.product_id.display_name
-            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
+            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount) or (expense.attachment_number and expense.unit_amount and not expense.product_id.standard_price):
                 expense.unit_amount = expense.product_id.price_compute('standard_price')[expense.product_id.id]
             expense.product_uom_id = expense.product_id.uom_id
-            expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)  # taxes only from the same company
+            expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.price_include and tax.company_id == expense.company_id)  # taxes only from the same company
             account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
             if account:
                 expense.account_id = account
@@ -332,11 +332,14 @@ class HrExpense(models.Model):
             raise UserError(_("You need to have at least one category that can be expensed in your database to proceed!"))
 
         for attachment in attachments:
-            expense = self.env['hr.expense'].create({
+            vals = {
                 'name': attachment.name.split('.')[0],
                 'unit_amount': 0,
-                'product_id': product.id
-            })
+                'product_id': product.id,
+            }
+            if product.property_account_expense_id:
+                vals['account_id'] = product.property_account_expense_id.id
+            expense = self.env['hr.expense'].create(vals)
             attachment.write({
                 'res_model': 'hr.expense',
                 'res_id': expense.id,
@@ -365,6 +368,8 @@ class HrExpense(models.Model):
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
     def write(self, vals):
+        if 'sheet_id' in vals:
+            self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access_rule('write')
         if 'tax_ids' in vals or 'analytic_account_id' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
                 raise UserError(_('You are not authorized to edit this expense report.'))
@@ -529,7 +534,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             move_line_name = expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64]
             account_src = expense._get_expense_account_source()
             account_dst = expense._get_expense_account_destination()
-            account_date = expense.sheet_id.accounting_date or expense.date or fields.Date.context_today(expense)
+            account_date = expense.date or expense.sheet_id.accounting_date or fields.Date.context_today(expense)
 
             company_currency = expense.company_id.currency_id
 
@@ -699,6 +704,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             ('user_id.email', 'ilike', email_address)
         ], limit=1)
 
+        if not employee:
+            return super().message_new(msg_dict, custom_values=custom_values)
+
         expense_description = msg_dict.get('subject', '')
 
         if employee.user_id:
@@ -761,15 +769,16 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         symbols_pattern = '|'.join(symbols)
         price_pattern = "((%s)?\s?%s\s?(%s)?)" % (symbols_pattern, float_pattern, symbols_pattern)
         matches = re.findall(price_pattern, expense_description)
+        currency = currencies and currencies[0]
         if matches:
             match = max(matches, key=lambda match: len([group for group in match if group])) # get the longuest match. e.g. "2 chairs 120$" -> the price is 120$, not 2
             full_str = match[0]
             currency_str = match[1] or match[3]
             price = match[2].replace(',', '.')
 
-            if currency_str:
-                currency = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])[0]
-                currency = currency or currencies[0]
+            if currency_str and currencies:
+                currencies = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])
+                currency = (currencies and currencies[0]) or currency
             expense_description = expense_description.replace(full_str, ' ') # remove price from description
             expense_description = re.sub(' +', ' ', expense_description.strip())
 
@@ -886,7 +895,7 @@ class HrExpenseSheet(models.Model):
     amount_residual = fields.Monetary(
         string="Amount Due", store=True,
         currency_field='currency_id',
-        related='account_move_id.amount_residual')
+        compute='_compute_amount_residual')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
@@ -910,6 +919,13 @@ class HrExpenseSheet(models.Model):
     def _compute_amount(self):
         for sheet in self:
             sheet.total_amount = sum(sheet.expense_line_ids.mapped('total_amount_company'))
+
+    @api.depends("account_move_id.line_ids")
+    def _compute_amount_residual(self):
+        for sheet in self:
+            payment_term_lines = sheet.account_move_id.sudo().line_ids \
+                .filtered(lambda line: line.expense_id in sheet.expense_line_ids and line.account_internal_type in ('receivable', 'payable'))
+            sheet.amount_residual = -sum(payment_term_lines.mapped('amount_residual'))
 
     @api.depends('account_move_id.payment_state')
     def _compute_payment_state(self):
@@ -1049,6 +1065,7 @@ class HrExpenseSheet(models.Model):
         return res
 
     def action_unpost(self):
+        self = self.with_context(clean_context(self.env.context))
         moves = self.account_move_id
         self.write({
             'account_move_id': False,
@@ -1130,7 +1147,11 @@ class HrExpenseSheet(models.Model):
         if not filtered_sheet:
             return notification
         for sheet in filtered_sheet:
-            sheet.write({'state': 'approve', 'user_id': sheet.user_id.id or self.env.user.id})
+            sheet.write({
+                'state': 'approve',
+                'user_id': sheet.user_id.id or self.env.user.id,
+                'approval_date': fields.Date.context_today(sheet),
+            })
         notification['params'].update({
             'title': _('The expense reports were successfully approved.'),
             'type': 'success',
@@ -1187,6 +1208,8 @@ class HrExpenseSheet(models.Model):
 
     def action_register_payment(self):
         ''' Open the account.payment.register wizard to pay the selected journal entries.
+        There can be more than one bank_account_id in the expense sheet when registering payment for multiple expenses.
+        The default_partner_bank_id is set only if there is one available, if more than one the field is left empty.
         :return: An action opening the account.payment.register wizard.
         '''
         return {
@@ -1196,6 +1219,7 @@ class HrExpenseSheet(models.Model):
             'context': {
                 'active_model': 'account.move',
                 'active_ids': self.account_move_id.ids,
+                'default_partner_bank_id': self.employee_id.sudo().bank_account_id.id if len(self.employee_id.sudo().bank_account_id.ids) <= 1 else None,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',

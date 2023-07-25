@@ -8,6 +8,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.misc import groupby
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare
 
@@ -236,6 +237,8 @@ class Location(models.Model):
         The quantity should be in the default UOM of the product, it is used when
         no package is specified.
         """
+        products = self.env.context.get('products', self.env['product.product'])
+        products |= product
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
         if package:
@@ -243,14 +246,22 @@ class Location(models.Model):
         elif packaging:
             package_type = packaging.package_type_id
 
-        putaway_rules = self.env['stock.putaway.rule']
-        putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id == product and (package_type in x.package_type_ids or package_type == x.package_type_ids))
-        categ = product.categ_id
-        while categ:
-            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+        categ = products.categ_id if len(products.categ_id) == 1 else self.env['product.category']
+        categs = categ
+        while categ.parent_id:
             categ = categ.parent_id
-        if package_type:
-            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: not x.product_id and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+            categs |= categ
+
+        putaway_rules = self.putaway_rule_ids.filtered(lambda rule:
+                                                       (not rule.product_id or rule.product_id in products) and
+                                                       (not rule.category_id or rule.category_id in categs) and
+                                                       (not rule.package_type_ids or package_type in rule.package_type_ids))
+
+        putaway_rules = putaway_rules.sorted(lambda rule: (rule.package_type_ids,
+                                                           rule.product_id,
+                                                           rule.category_id == categs[:1],  # same categ, not a parent
+                                                           rule.category_id),
+                                             reverse=True)
 
         putaway_location = None
         locations = self.child_internal_location_ids
@@ -365,8 +376,18 @@ class Location(models.Model):
             if self.storage_category_id.allow_new_product == "empty" and positive_quant:
                 return False
             # check if only allow same product
-            if self.storage_category_id.allow_new_product == "same" and positive_quant and positive_quant.product_id != product:
-                return False
+            if self.storage_category_id.allow_new_product == "same":
+                # In case it's a package, `product` is not defined, so try to get
+                # the package products from the context
+                product = product or self._context.get('products')
+                if (positive_quant and positive_quant.product_id != product) or len(product) > 1:
+                    return False
+                if self.env['stock.move.line'].search([
+                    ('product_id', '!=', product.id),
+                    ('state', 'not in', ('done', 'cancel')),
+                    ('location_dest_id', '=', self.id),
+                ], limit=1):
+                    return False
         return True
 
 

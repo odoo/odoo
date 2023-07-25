@@ -6,6 +6,7 @@
 # Khanstore <dmashraf@gmail.com>, 2022
 # Abu Zafar <azmikbal@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Noor E Alam Siddique, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Bengali (https://www.transifex.com/odoo/teams/41243/bn/)\n"
+"Last-Translator: Noor E Alam Siddique, 2023\n"
+"Language-Team: Bengali (https://app.transifex.com/odoo/teams/41243/bn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -231,7 +232,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "পদক্ষেপ প্রয়োজন"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__active
@@ -280,7 +281,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Advanced Pricelists"
-msgstr ""
+msgstr "একের অধিক মূল্য তালিকা"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
@@ -359,7 +360,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "সংযুক্তি গণনা"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__name
@@ -400,7 +401,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Attributes"
-msgstr ""
+msgstr "গুণাবলী"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -485,7 +486,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category"
-msgstr ""
+msgstr "শ্রেণী"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -871,7 +872,7 @@ msgstr "বাতিল"
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Discount"
-msgstr ""
+msgstr "ছাড়"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__discount_policy
@@ -892,7 +893,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Discounts"
-msgstr ""
+msgstr "ছাড়"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
@@ -1334,7 +1335,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
-msgstr ""
+msgstr "মালপত্র"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
@@ -1610,6 +1611,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
+msgstr ""
+
+#. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
 msgstr ""
 
 #. module: product
@@ -1927,7 +1936,7 @@ msgstr ""
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "মুদ্রণ করুন"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -2148,7 +2157,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_view_activity
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Products"
-msgstr ""
+msgstr "পণ্য"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -2394,7 +2403,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
 
@@ -3126,6 +3135,12 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr ""
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3138,7 +3153,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 
 #. module: product
@@ -3161,8 +3177,7 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
 
 #. module: product
@@ -3171,6 +3186,13 @@ msgstr ""
 msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
 msgstr ""
 
 #. module: product

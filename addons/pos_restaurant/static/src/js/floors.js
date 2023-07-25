@@ -69,6 +69,9 @@ models.Order = models.Order.extend({
         this.table = this.pos.tables_by_id[json.table_id];
         this.floor = this.table ? this.pos.floors_by_id[json.floor_id] : undefined;
         this.customer_count = json.customer_count || 1;
+        // Overwrite to show it in local time since is saved in UTC
+        if (this.pos.config.is_table_management)
+            this.validation_date = moment.utc(json.creation_date).local().toDate();
     },
     export_for_printing: function() {
         var json = _super_order.export_for_printing.apply(this,arguments);
@@ -281,20 +284,7 @@ models.PosModel = models.PosModel.extend({
         this.set_synch('connecting', 1);
         this._get_from_server(table.id).then(function (server_orders) {
             var orders = self.get_order_list();
-            orders.forEach(function(order){
-                // We don't remove the validated orders because we still want to see them
-                // in the ticket screen. Orders in 'ReceiptScreen' or 'TipScreen' are validated
-                // orders.
-                if (order.server_id && !order.finalized){
-                    self.get("orders").remove(order);
-                    order.destroy();
-                }
-            });
-            server_orders.forEach(function(server_order){
-                var new_order = new models.Order({},{pos: self, json: server_order});
-                self.get("orders").add(new_order);
-                new_order.save_to_db();
-            })
+            self._replace_orders(orders, server_orders);
             if (!ids_to_remove.length) {
                 self.set_synch('connected');
             } else {
@@ -306,7 +296,29 @@ models.PosModel = models.PosModel.extend({
             self.set_order_on_table(order);
         });
     },
-
+    _replace_orders: function(orders_to_replace, new_orders) {
+        var self = this;
+        orders_to_replace.forEach(function(order){
+            // We don't remove the validated orders because we still want to see them
+            // in the ticket screen. Orders in 'ReceiptScreen' or 'TipScreen' are validated
+            // orders.
+            if (order.server_id && !order.finalized){
+                self.get("orders").remove(order);
+                order.destroy();
+            }
+        });
+        new_orders.forEach(function(server_order){
+            var new_order = new models.Order({},{pos: self, json: server_order});
+            self.get("orders").add(new_order);
+            new_order.save_to_db();
+        });
+    },
+    //@throw error
+    replace_table_orders_from_server: async function(table) {
+        const server_orders = await this._get_from_server(table.id);
+        const orders = this.get_table_orders(table);
+        this._replace_orders(orders, server_orders);
+    },
     get_order_with_uid: function() {
         var order_ids = [];
         this.get_order_list().forEach(function(o){

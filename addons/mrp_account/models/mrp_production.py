@@ -30,8 +30,9 @@ class MrpProduction(models.Model):
 
     @api.depends('bom_id')
     def _compute_analytic_account_id(self):
-        if self.bom_id.analytic_account_id:
-            self.analytic_account_id = self.bom_id.analytic_account_id
+        for order in self:
+            if order.bom_id.analytic_account_id:
+                order.analytic_account_id = order.bom_id.analytic_account_id
 
     def write(self, vals):
         origin_analytic_account = {production: production.analytic_account_id for production in self}
@@ -46,11 +47,14 @@ class MrpProduction(models.Model):
                 if vals['analytic_account_id'] and origin_analytic_account[production]:
                     # Link the account analytic lines to the new AA
                     production.move_raw_ids.analytic_account_line_id.write({'account_id': vals['analytic_account_id']})
+                    production.workorder_ids.mo_analytic_account_line_id.write({'account_id': vals['analytic_account_id']})
                 elif vals['analytic_account_id'] and not origin_analytic_account[production]:
                     # Create the account analytic lines if no AA is set in the MO
                     production.move_raw_ids._account_analytic_entry_move()
+                    production.workorder_ids._create_or_update_analytic_entry()
                 else:
                     production.move_raw_ids.analytic_account_line_id.unlink()
+                    production.workorder_ids.mo_analytic_account_line_id.unlink()
         return res
 
     def action_view_stock_valuation_layers(self):
@@ -70,7 +74,7 @@ class MrpProduction(models.Model):
             "res_model": "account.analytic.account",
             'res_id': self.analytic_account_id.id,
             "context": {"create": False},
-            "name": "Analytic Account",
+            "name": _("Analytic Account"),
             'view_mode': 'form',
         }
 
@@ -93,7 +97,7 @@ class MrpProduction(models.Model):
             qty_done = finished_move.product_uom._compute_quantity(
                 finished_move.quantity_done, finished_move.product_id.uom_id)
             extra_cost = self.extra_cost * qty_done
-            total_cost = (sum(-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()) + work_center_cost + extra_cost)
+            total_cost = - sum(consumed_moves.sudo().stock_valuation_layer_ids.mapped('value')) + work_center_cost + extra_cost
             byproduct_moves = self.move_byproduct_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity_done > 0)
             byproduct_cost_share = 0
             for byproduct in byproduct_moves:

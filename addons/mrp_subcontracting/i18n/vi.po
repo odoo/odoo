@@ -10,6 +10,8 @@
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
 # Vo Thanh Thuy, 2022
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2022\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -91,12 +93,12 @@ msgstr "Hiển thị hành động ghi nhận các thành phần"
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
 msgid "Facultative"
-msgstr ""
+msgstr "Ngẫu nhiên"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
 msgid "Has been recorded?"
-msgstr ""
+msgstr "Đã được ghi nhận?"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
@@ -106,7 +108,7 @@ msgstr "Ẩn"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
 msgid "Is Subcontract"
-msgstr ""
+msgstr "Là thầu phụ"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -121,17 +123,19 @@ msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
 msgstr ""
+"Đảm bảo rằng bạn xác thực hoặc điều chỉnh phiếu kho tái cung ứng liên quan "
+"cho nhà thầu phụ của mình để tránh sự không nhất quán trong tồn kho."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "Bắt buộc"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
 msgid "Nothing to record"
-msgstr ""
+msgstr "Không có gì để ghi nhận"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_quant.py:0
@@ -219,7 +223,7 @@ msgstr "Trả hàng"
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence Resupply Subcontractor"
-msgstr ""
+msgstr "Trình tự Nhà thầu phụ tái cung ứng"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -275,7 +279,7 @@ msgstr "Địa điểm gia công ngoài"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
 msgid "Subcontracting Locations"
-msgstr ""
+msgstr "Địa điểm thầu phụ"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -295,12 +299,12 @@ msgstr "Kiểu công đoạn Gia công ngoài"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
 msgid "Subcontracting Resupply Operation Type"
-msgstr ""
+msgstr "Loại hoạt động tái cung ứng thầu phụ"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom_line_inherit_mrp_subcontracting
 msgid "Subcontracting:"
-msgstr ""
+msgstr "Thầu phụ:"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
@@ -350,7 +354,7 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "This MO isn't related to a subcontracted move"
-msgstr ""
+msgstr "LSX này không liên quan đến một dịch chuyển được thầu phụ"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
@@ -389,12 +393,14 @@ msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
 msgstr ""
+"Bạn không thể thiết lập định mức nguyên liệu với hoạt động hoặc mục phụ phẩm"
+" được thầu phụ."
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You must enter a serial number for %s"
-msgstr ""
+msgstr "Bạn phải nhập một số sê-ri cho %s"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0

@@ -44,7 +44,7 @@ class PaymentTransaction(models.Model):
             'partner': self.acquirer_id.alipay_merchant_partner_id,
             'return_url': urls.url_join(base_url, AlipayController._return_url),
             'subject': self.reference,
-            'total_fee': total_fee,
+            'total_fee': f'{total_fee:.2f}',
         }
         if self.acquirer_id.alipay_payment_method == 'standard_checkout':
             # https://global.alipay.com/docs/ac/global/create_forex_trade

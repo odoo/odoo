@@ -19,7 +19,9 @@
 # Martin Trigaux, 2021
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Netta Waizer, 2022
+# NoaFarkash, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Roy Sayag, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,8 +29,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
-"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
+"Last-Translator: Roy Sayag, 2022\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -690,6 +692,14 @@ msgid ""
 msgstr ""
 "לא ניתן לבחור שותף יותר מפעם אחת בגישה לשיתוף הפרויקט. אנא הסר כפילו(יות) "
 "ונסה שוב."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr "לא ניתן לקשר שלב אישי לפרויקט מכיוון שהוא גלוי רק למשתמש המתאים לו."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -2823,7 +2833,7 @@ msgstr "מאי"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
 msgid "Members"
-msgstr "חברים"
+msgstr "מנויים"
 
 #. module: project
 #: model:ir.model,name:project.model_ir_ui_menu
@@ -5133,7 +5143,7 @@ msgstr "השתמש במשימות חוזרות"
 #. module: project
 #: model:res.groups,name:project.group_project_stages
 msgid "Use Stages on Project"
-msgstr "השתמש ב-Stages ב-Project"
+msgstr "השתמש ב-שלבים (Stages) בפרויקט"
 
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
@@ -5323,12 +5333,6 @@ msgstr "תוכל גם להוסיף תיאור שיעזור לעמיתיך להב
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "אתה לא יכול%s%sשדות במשימה"
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr "לא ניתן לאחסן משימות חוזרות בארכיון. אנא השבת תחילה את החזרה."
@@ -5380,6 +5384,20 @@ msgid ""
 "their tasks."
 msgstr ""
 "לא ניתן למחוק שלבים המכילים משימות. תחילה עליך למחוק את כל המשימות שבהם."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0

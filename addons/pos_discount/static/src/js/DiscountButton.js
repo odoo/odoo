@@ -19,7 +19,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
                 isInputSelected: true
             });
             if (confirmed) {
-                const val = Math.round(Math.max(0,Math.min(100,parseFloat(payload))));
+                const val = Math.max(0,Math.min(100,parseFloat(payload)));
                 await self.apply_discount(val);
             }
         }
@@ -37,31 +37,42 @@ odoo.define('pos_discount.DiscountButton', function(require) {
             }
 
             // Remove existing discounts
-            for (const line of lines) {
-                if (line.get_product() === product) {
-                    order.remove_orderline(line);
-                }
-            }
+            lines.filter(line => line.get_product() === product)
+                .forEach(line => order.remove_orderline(line));
 
-            // Add discount
-            // We add the price as manually set to avoid recomputation when changing customer.
-            var base_to_discount = order.get_total_without_tax();
-            if (product.taxes_id.length){
-                var first_tax = this.env.pos.taxes_by_id[product.taxes_id[0]];
-                if (first_tax.price_include) {
-                    base_to_discount = order.get_total_with_tax();
-                }
-            }
-            var discount = - pc / 100.0 * base_to_discount;
+            // Add one discount line per tax group
+            let linesByTax = order.get_orderlines_grouped_by_tax_ids();
+            for (let [tax_ids, lines] of Object.entries(linesByTax)) {
 
-            if( discount < 0 ){
-                order.add_product(product, {
-                    price: discount,
-                    lst_price: discount,
-                    extras: {
-                        price_manually_set: true,
-                    },
-                });
+                // Note that tax_ids_array is an Array of tax_ids that apply to these lines
+                // That is, the use case of products with more than one tax is supported.
+                let tax_ids_array = tax_ids.split(',').filter(id => id !== '').map(id => Number(id));
+
+                let baseToDiscount = order.calculate_base_amount(
+                    tax_ids_array, lines.filter(ll => ll.isGlobalDiscountApplicable())
+                );
+
+                // We add the price as manually set to avoid recomputation when changing customer.
+                let discount = - pc / 100.0 * baseToDiscount;
+                if (discount < 0) {
+                    await order.add_product(product, {
+                        price: discount,
+                        lst_price: discount,
+                        tax_ids: tax_ids_array,
+                        merge: false,
+                        description:
+                            `${pc}%, ` +
+                            (tax_ids_array.length ?
+                                _.str.sprintf(
+                                    this.env._t('Tax: %s'),
+                                    tax_ids_array.map(taxId => this.env.pos.taxes_by_id[taxId].amount + '%').join(', ')
+                                ) :
+                            this.env._t('No tax')),
+                        extras: {
+                            price_automatically_set: true,
+                        },
+                    });
+                }
             }
         }
     }

@@ -180,7 +180,8 @@ class PaymentTransaction(models.Model):
             # Duplicate partner values
             partner = self.env['res.partner'].browse(values['partner_id'])
             values.update({
-                'partner_name': partner.name,
+                # Use the parent partner as fallback if the invoicing address has no name.
+                'partner_name': partner.name or partner.parent_id.name,
                 'partner_lang': partner.lang,
                 'partner_email': partner.email,
                 'partner_address': payment_utils.format_partner_address(
@@ -193,11 +194,14 @@ class PaymentTransaction(models.Model):
                 'partner_phone': partner.phone,
             })
 
-            # Compute fees
-            currency = self.env['res.currency'].browse(values.get('currency_id')).exists()
-            values['fees'] = acquirer._compute_fees(
-                values.get('amount', 0), currency, partner.country_id
-            )
+            # Compute fees, for validation transactions fees are zero
+            if values.get('operation') == 'validation':
+                values['fees'] = 0
+            else:
+                currency = self.env['res.currency'].browse(values.get('currency_id')).exists()
+                values['fees'] = acquirer._compute_fees(
+                    values.get('amount', 0), currency, partner.country_id,
+                )
 
             # Include acquirer-specific create values
             values.update(self._get_specific_create_values(acquirer.provider, values))
@@ -389,7 +393,7 @@ class PaymentTransaction(models.Model):
             # For instance, the prefix 'example' is a valid match for the existing references
             # 'example', 'example-1' and 'example-ref', in that order. Trusting the order to infer
             # the sequence number would lead to a collision with 'example-1'.
-            search_pattern = re.compile(rf'^{prefix}{separator}(\d+)$')
+            search_pattern = re.compile(rf'^{re.escape(prefix)}{separator}(\d+)$')
             max_sequence_number = 0  # If no match is found, start the sequence with this reference
             for existing_reference in same_prefix_references:
                 search_result = re.search(search_pattern, existing_reference)
@@ -676,7 +680,7 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
-        allowed_states = ('draft', 'pending', 'authorized', 'error')
+        allowed_states = ('draft', 'pending', 'authorized', 'error', 'cancel')  # 'cancel' for Payulatam
         target_state = 'done'
         txs_to_process = self._update_state(allowed_states, target_state, state_message)
         txs_to_process._log_received_message()

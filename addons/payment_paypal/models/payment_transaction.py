@@ -108,11 +108,6 @@ class PaymentTransaction(models.Model):
 
         payment_status = data.get('payment_status')
 
-        if payment_status in PAYMENT_STATUS_MAPPING['pending'] + PAYMENT_STATUS_MAPPING['done'] \
-            and not (self.acquirer_id.paypal_pdt_token and self.acquirer_id.paypal_seller_account):
-            # If a payment is made on an account waiting for configuration, send a reminder email
-            self.acquirer_id._paypal_send_configuration_reminder()
-
         if payment_status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending(state_message=data.get('pending_reason'))
         elif payment_status in PAYMENT_STATUS_MAPPING['done']:

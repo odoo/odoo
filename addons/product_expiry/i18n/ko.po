@@ -7,6 +7,7 @@
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Link Up링크업 <linkup.way@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -223,7 +224,7 @@ msgid ""
 "Number of days before the Expiration Date after which an alert should be "
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
-msgstr ""
+msgstr "로트 및 일련번호 기준으로 경고를 안내해야 하는 만료일까지 남은 날짜입니다. 로트 및 일련번호에 대해서 계산됩니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -231,7 +232,7 @@ msgstr ""
 msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
-msgstr ""
+msgstr "재고 항목에서 품목이 제외되어야 하는 만료일까지 남은 날짜입니다. 로트 및 일련번호를 기준으로 계산합니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -241,6 +242,7 @@ msgid ""
 "deteriorating, without being dangerous yet. It will be computed on the "
 "lot/serial number."
 msgstr ""
+"아직 위험 상태까지는 아니지만, 품목 상태가 악화되기 시작하는 만료일까지 남은 날짜입니다. 로트 및 일력번호를 기준으로 계산합니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
@@ -250,7 +252,7 @@ msgstr "선별"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Proceed except for expired one"
-msgstr ""
+msgstr "만료된 항목은 제외하고 진행"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group

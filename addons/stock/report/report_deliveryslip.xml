@@ -3,17 +3,17 @@
     <template id="report_delivery_document">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
-                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
+                <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())" />
                 <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
 
                 <t t-set="address">
                     <div name="div_outgoing_address">
-                        <div t-if="o.move_ids_without_package and o.move_ids_without_package[0].partner_id">
+                        <div t-if="o.should_print_delivery_address()">
                             <span><strong>Delivery Address:</strong></span>
-                            <div t-field="o.move_ids_without_package[0].partner_id"
+                            <div t-field="o.move_lines[0].partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
-                        <div t-if="o.picking_type_id.code != 'internal' and (not o.move_ids_without_package or not o.move_ids_without_package[0].partner_id) and o.picking_type_id.warehouse_id.partner_id">
+                        <div t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id">
                             <span><strong>Warehouse Address:</strong></span>
                             <div t-field="o.picking_type_id.warehouse_id.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
@@ -23,19 +23,19 @@
                 <t t-set="information_block">
                     <div class="row">
                         <div class="col-7" name="div_incoming_address">
+                            <t t-set="show_partner" t-value="False" />
                             <div t-if="o.picking_type_id.code=='incoming' and partner">
                                 <span><strong>Vendor Address:</strong></span>
+                                <t t-set="show_partner" t-value="True" />
                             </div>
-                            <div t-if="o.picking_type_id.code=='internal' and partner">
-                                <span><strong>Warehouse Address:</strong></span>
-                            </div>
-                            <div t-if="o.picking_type_id.code=='outgoing' and partner">
+                            <div t-if="o.picking_type_id.code=='outgoing' and partner and partner != partner.commercial_partner_id">
                                 <span><strong>Customer Address:</strong></span>
+                                <t t-set="show_partner" t-value="True" />
                             </div>
-                            <div t-if="partner" name="partner_header">
-                                <div t-field="partner.self"
+                            <div t-if="show_partner" name="partner_header">
+                                <div t-field="partner.commercial_partner_id"
                                     t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                                <p t-if="partner.sudo().vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="partner.sudo().vat"/></p>
+                                <p t-if="partner.sudo().commercial_partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="partner.sudo().commercial_partner_id.vat"/></p>
                             </div>
                         </div>
                     </div>
@@ -272,7 +272,7 @@
 
     <template id="report_deliveryslip">
         <t t-foreach="docs" t-as="o">
-            <t t-call="stock.report_delivery_document" t-lang="o.partner_id.lang"/>
+            <t t-call="stock.report_delivery_document" t-lang="o._get_report_lang()"/>
         </t>
     </template>
 </odoo>

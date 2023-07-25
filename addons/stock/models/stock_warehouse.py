@@ -395,6 +395,7 @@ class Warehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
+                    'propagate_carrier': True,
                     'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id
                 },
                 'update_values': {

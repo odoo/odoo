@@ -15,6 +15,8 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
                 'country_id': partner.country_id && partner.country_id[0],
                 'state_id': partner.state_id && partner.state_id[0],
             };
+            if (!partner.property_product_pricelist)
+                this.changes['property_product_pricelist'] = this.env.pos.default_pricelist.id;
         }
         mounted() {
             this.env.bus.on('save-customer', this, this.saveChanges);
@@ -56,9 +58,6 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
                 });
             }
             processedChanges.id = this.props.partner.id || false;
-            if (!this.props.partner.id) {
-                processedChanges.company_id = this.env.pos.company.id;
-            }
             this.trigger('save-changes', { processedChanges });
         }
         async uploadImage(event) {

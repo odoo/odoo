@@ -6,15 +6,16 @@
 # Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2021
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-22 14:45+0000\n"
+"POT-Creation-Date: 2023-01-27 15:59+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2022\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -30,7 +31,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "Tidak dapat membuat hubungan ke API."
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
@@ -73,7 +74,7 @@ msgstr "Cara Pembayaran"
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "Token Pembayaran"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
@@ -117,7 +118,7 @@ msgstr ""
 #: model:account.payment.method,name:payment_stripe.payment_method_stripe
 #: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
@@ -195,6 +196,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot set the acquirer state to Enabled until your onboarding to Stripe"
+" is completed."
 msgstr ""
 
 #. module: payment_stripe

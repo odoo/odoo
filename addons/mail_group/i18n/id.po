@@ -7,12 +7,13 @@
 # Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2022
 # William Surya Permana <zarambie_game@yahoo.com>, 2022
 # Edy Kend <edy@azmall.co.id>, 2022
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2022
 # whenwesober, 2022
 # Bonny Useful <bonny.useful@gmail.com>, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2022\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -53,6 +54,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Halo,<br/><br/>\n"
+"                Anda telah meminta untuk berlangganan ke mailing list <strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Untuk mengonfirmasi, silakan kunjungi link berikut: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                Apabila ini merupakan kesalahan atau Anda tidak meminta tindakan ini, silakan abaikan pesan ini.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -67,6 +77,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Halo,<br/><br/>\n"
+"                Anda telah meminta untuk berhenti berlangganan ke mailing list <strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Untuk mengonfirmasi, silakan kunjungi link berikut: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                Apabila ini merupakan kesalahan atau Anda tidak meminta tindakan ini, silakan abaikan pesan ini.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -78,6 +97,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Halo <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Silakan temukan di bawah pedoman untuk mailing list {{ object.mail_group_id.name }}.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -378,7 +403,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Configure a custom domain"
-msgstr ""
+msgstr "Konfigurasikan domain kustom"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -686,7 +711,7 @@ msgstr ""
 #: model:ir.model,name:mail_group.model_mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Mail Group"
-msgstr ""
+msgstr "Kelompok Email"
 
 #. module: mail_group
 #: model:res.groups,name:mail_group.group_mail_group_manager
@@ -870,7 +895,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Moderation"
-msgstr ""
+msgstr "Moderasi"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_tree
@@ -880,7 +905,7 @@ msgstr ""
 #. module: mail_group
 #: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
 msgid "Moderation Rules"
-msgstr ""
+msgstr "Peraturan Moderasi"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -940,7 +965,7 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normalized Email"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized

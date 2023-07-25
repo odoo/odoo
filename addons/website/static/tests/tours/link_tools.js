@@ -77,5 +77,53 @@ tour.register('link_tools', {
         content: "The link should have the secondary button style.",
         trigger: '.s_text_image a.btn.btn-secondary[href="http://odoo.be"]:contains("odoo website")',
         run: () => {}, // It's a check.
-    }
+    },
+    // 4. Add link on image.
+    wTourUtils.clickOnEdit(),
+    wTourUtils.dragNDrop({
+        id: 's_three_columns',
+        name: 'Columns',
+    }),
+    {
+        content: "Click on the first image.",
+        trigger: '.s_three_columns .row > :nth-child(1) img',
+        extra_trigger: '#oe_snippets.o_loaded',
+    },
+    {
+        content: "Activate link.",
+        trigger: '.o_we_customize_panel we-row:contains("Media") we-button.fa-link',
+    },
+    {
+        content: "Set URL.",
+        trigger: '.o_we_customize_panel we-input:contains("Your URL") input',
+        run: 'text odoo.com',
+    },
+    {
+        content: "Deselect image.",
+        trigger: '.s_three_columns .row > :nth-child(2) img',
+    },
+    {
+        content: "Re-select image.",
+        trigger: '.s_three_columns .row > :nth-child(1) img',
+    },
+    {
+        content: "Check that the second image is not within a link.",
+        trigger: '.s_three_columns .row > :nth-child(2) div > img',
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Check that link tools appear.",
+        trigger: '.popover div a:contains("http://odoo.com")',
+        run: () => {}, // It's a check.
+    },
+    // 5. Remove link from image.
+    {
+        content: "Remove link.",
+        trigger: '.popover:contains("http://odoo.com") a .fa-chain-broken',
+    },
+    {
+        content: "Check that image is not within a link anymore.",
+        trigger: '.s_three_columns .row > :nth-child(1) div > img',
+        run: () => {}, // It's a check.
+    },
 ]);

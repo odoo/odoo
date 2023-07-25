@@ -309,7 +309,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <field name="date_closed" invisible="1"/>
-                            <div class="ribbon ribbon-top-right" attrs="{'invisible': [('date_closed', '=', False)]}">
+                            <div class="ribbon ribbon-top-right" style="pointer-events: none;" attrs="{'invisible': [('date_closed', '=', False)]}">
                                 <span class="bg-success">Hired</span>
                             </div>
                             <span class="badge badge-pill badge-danger pull-right mr-4" attrs="{'invisible': [('active', '=', True)]}">Refused</span>

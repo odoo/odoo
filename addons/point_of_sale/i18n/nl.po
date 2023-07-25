@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Martin Trigaux, 2023
+# Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -739,7 +740,7 @@ msgstr "Bankbetalingen"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
 msgid "Bank Statement"
-msgstr "Bankafschrift"
+msgstr "Rekeningafschrift"
 
 #. module: point_of_sale
 #. openerp-web
@@ -845,6 +846,13 @@ msgstr "Kan klant niet wijzigen"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Can't mix order with refund products with new products."
+msgstr "Kan terugbetalingsproducten niet combineren met nieuwe producten."
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ConfirmPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/EditListPopup.js:0
@@ -911,6 +919,7 @@ msgstr "Kan order niet factureren vanuit een gesloten sessie."
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
 msgstr "Kan geen wisselgeld terug geven bij een niet contant betaalwijze"
@@ -943,7 +952,7 @@ msgstr "Kassa uit"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
 msgid "Cash In"
-msgstr "Contant geld"
+msgstr "Geld in"
 
 #. module: point_of_sale
 #. openerp-web
@@ -963,7 +972,7 @@ msgstr "Kasboek"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
 msgid "Cash Out"
-msgstr "Uitbetalen"
+msgstr "Geld uit"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_id
@@ -991,7 +1000,7 @@ msgstr "Betaalbewijzen"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
 #, python-format
 msgid "Cash in/out of %s is ignored."
-msgstr "Cash in/uit van %s wordt genegeerd."
+msgstr "Geld in/uit van %s wordt genegeerd."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -2005,6 +2014,7 @@ msgid "Do you want to open the customer list to select customer?"
 msgstr "Wil je de klantenlijst openen om een klant te selecteren?"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Documentatie"
@@ -2269,6 +2279,7 @@ msgstr "Fiscale posities"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
@@ -3195,6 +3206,13 @@ msgid "Maximum Exceeded"
 msgstr "Maximaal overschreden"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr "Maximum waarde bereikt"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "Bericht afleverfout"
@@ -3314,11 +3332,6 @@ msgstr "Nieuwe sessie"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "Nieuwsbrief rek"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Volgende activiteitenafspraak"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3906,6 +3919,13 @@ msgid "POS Session"
 msgstr "Kassa sessie"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "POS error"
+msgstr "Foutmelding kassa"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS order line %s"
@@ -4083,6 +4103,13 @@ msgid "Payments:"
 msgstr "Betalingen:"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Pending Electronic Payments"
+msgstr "Lopende elektronische betalingen"
+
+#. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
 msgid "Per session"
 msgstr "Per sessie"
@@ -4128,8 +4155,11 @@ msgid "Picking POS"
 msgstr "Picking kassa"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#, python-format
 msgid "Pickings"
 msgstr "Leveringen"
 
@@ -4164,10 +4194,20 @@ msgstr "Controleer of de IoT box nog steeds verbonden is."
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
-#: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the printer is still connected."
 msgstr "Controleer of de printer nog steeds verbonden is."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/printers.js:0
+#, python-format
+msgid ""
+"Please check if the printer is still connected. \n"
+"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
+msgstr ""
+"Controleer of de printer nog is aangesloten.\n"
+"Sommige browsers staan geen HTTP-oproepen van websites naar apparaten in het netwerk toe (om veiligheidsredenen). Als dit het geval is, moet je de Odoo-documentatie voor 'Self-signed certificate for ePOS printer' en 'Secure connection (HTTPS)' volgen om het probleem op te lossen"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5031,6 +5071,12 @@ msgid "Returned"
 msgstr "Geretourneerd"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Omkering van: %s"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
@@ -5224,7 +5270,7 @@ msgstr "Selecteer een order"
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #, python-format
 msgid "Select either Cash In or Cash Out before confirming."
-msgstr "Selecteer Cash In of Cash Out voordat je bevestigt."
+msgstr "Selecteer geld In of geld uit voordat je bevestigt."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5479,19 +5525,26 @@ msgid "Shopping cart"
 msgstr "Winkelmandje"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Show checkout to customers through a second display"
-msgstr "Afrekenen aan klanten laten zien via een tweede display"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_via_proxy
 msgid "Show checkout to customers with a remotely-connected screen."
 msgstr "Toon afrekening aan klanten met een extern verbonden scherm."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Show customers checkout in a pop-up window. Can be moved to a second screen."
+msgstr ""
+"Het afrekenen aan klanten tonen in een pop-upvenster. Kan verplaatst worden "
+"naar een tweede scherm."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_local
-msgid "Show checkout to customers."
-msgstr "Afrekenen aan klanten laten zien."
+msgid ""
+"Show customers checkout in a pop-up window. Recommend to be moved to a "
+"second screen visible to the client."
+msgstr ""
+"Het afrekenen aan klanten tonen in een pop-upvenster. Het is aangeraden om "
+"dit te verplaatsen naar een tweede scherm dat de klant kan zien."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -5662,6 +5715,11 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_stock_move
 msgid "Stock Move"
 msgstr "Voorraadverplaatsing"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_rule
+msgid "Stock Rule"
+msgstr "Voorraadregel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
@@ -5871,6 +5929,17 @@ msgid ""
 msgstr ""
 "Het verkooppunt ondersteunt alleen de afrondingsstrategie \"voeg een "
 "afrondingsregel toe\"."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+"Het bedrag kan niet hoger zijn dan het verschuldigde bedrag als je geen "
+"contante betaalmethode hebt geconfigureerd."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6213,6 +6282,17 @@ msgid "There is already an electronic payment in progress."
 msgstr "Er is al een electronische betaling in uitvoering."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is at least one pending electronic payment.\n"
+"Please finish the payment with the terminal or cancel it then remove the payment line."
+msgstr ""
+"Minstens één elektronische betaling is lopende. \n"
+"Rond de betaling af door middel van de terminal of annuleer deze en verwijder de betalingsregel."
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
@@ -6220,6 +6300,19 @@ msgid ""
 msgstr ""
 "Er is geen grootboekschema ingesteld voor het bedrijf. Ga naar de facturatie"
 " instellingen om een grootboekschema installeren."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is no cash payment method available in this point of sale to handle the change.\n"
+"\n"
+" Please add a cash payment method in the point of sale configuration."
+msgstr ""
+"Er is geen contante betaalwijze beschikbaar in deze kassa om wisselgeld te kunnen gebruiken. \n"
+"\n"
+"Voeg een contante betaalwijze toe in de kassa instellingen."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6381,6 +6474,17 @@ msgid "This order is empty"
 msgstr "Deze order is leeg"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Deze bestelling is nog niet gesynchroniseerd met de server. Zorg ervoor dat "
+"het is gesynchroniseerd en probeer het opnieuw."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "This product is used as reference on customer receipts."
@@ -6405,6 +6509,7 @@ msgstr ""
 "ook je eigen nummering samenstellen."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -6447,7 +6552,7 @@ msgstr "Fooien"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Tips:"
-msgstr "Fooien:"
+msgstr "Tips:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -6767,6 +6872,13 @@ msgid "Unsupported File Format"
 msgstr "Bestandsformaat niet ondersteund"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "Niet-gesynchroniseerde bestelling"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "UoM"
 msgstr "Maateenheid"
@@ -6944,7 +7056,6 @@ msgstr "Wil je demogegevens laden?"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_config.py:0
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
@@ -6986,11 +7097,23 @@ msgid ""
 "You can't validate a bank statement that is used in an opened Session of a "
 "Point of Sale."
 msgstr ""
-"Je kunt een bankafschrift niet afletteren dat gebruikt wordt in een geopende"
-" sessie of kassa."
+"Je kunt een rekeningafschrift niet afletteren dat gebruikt wordt in een "
+"geopende sessie of kassa."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid ""
+"You can't: create a pos order from the backend interface, or unset the "
+"pricelist, or create a pos.order in a python test with Form tool, or edit "
+"the form view in studio if no PoS order exist"
+msgstr ""
+"Je kan geen kassa-order aanmaken vanuit de back-end interface of de "
+"prijslijst opheffen of een kassa-order aanmaken in een python testomgeving "
+"met de formulier tool of de formulierweergave in studio bewerken als er geen"
+" kassa-order bestaat."
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -7001,6 +7124,7 @@ msgstr ""
 "facturen: %s"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
@@ -7018,7 +7142,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a bank statement linked to Point of Sale session."
 msgstr ""
-"Je kunt een bankafschrift dat is gekoppeld aan een Kassa-sessie niet "
+"Je kunt een rekeningafschrift dat is gekoppeld aan een Kassa-sessie niet "
 "verwijderen."
 
 #. module: point_of_sale
@@ -7057,6 +7181,32 @@ msgstr ""
 #, python-format
 msgid "You do not have any products"
 msgstr "Je hebt geen producten."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr ""
+"Je hebt geen toegangsrechten om de gegevens van de sluitingscontrole van de "
+"kassa te verkrijgen."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "You don't have the access rights to set the point of sale cash box."
+msgstr "Je hebt geen toegangsrechten om de kassa in te stellen."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You have enabled the \"Identify Customer\" option for %s payment method,but "
+"the order %s does not contain a customer."
+msgstr ""
+"Je hebt de optie \"Klant identificeren\" ingeschakeld voor %s betaalmethode,"
+" maar de bestelling %s bevat geen klant."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:0

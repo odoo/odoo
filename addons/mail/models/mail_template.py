@@ -69,11 +69,21 @@ class MailTemplate(models.Model):
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
 
+    # access
+    can_write = fields.Boolean(compute='_compute_can_write',
+                               help='The current user can edit the template.')
+
     # Overrides of mail.render.mixin
     @api.depends('model')
     def _compute_render_model(self):
         for template in self:
             template.render_model = template.model
+
+    @api.depends_context('uid')
+    def _compute_can_write(self):
+        writable_templates = self._filter_access_rules('write')
+        for template in self:
+            template.can_write = template in writable_templates
 
     # ------------------------------------------------------------
     # CRUD

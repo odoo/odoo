@@ -8,10 +8,6 @@ weWidgets.LinkTools.include({
     xmlDependencies: (weWidgets.LinkTools.prototype.xmlDependencies || []).concat(
         ['/website/static/src/xml/website.editor.xml']
     ),
-    events: _.extend({}, weWidgets.LinkTools.prototype.events || {}, {
-        'click we-selection-items[name="link_anchor"] we-button': '_onAnchorChange',
-        'input input[name="url"]': '_onURLInput',
-    }),
     custom_events: _.extend({}, weWidgets.LinkTools.prototype.custom_events || {}, {
         website_url_chosen: '_onAutocompleteClose',
     }),
@@ -33,12 +29,12 @@ weWidgets.LinkTools.include({
         var def = await this._super.apply(this, arguments);
         const options = {
             position: {
-                collision: 'flip fit',
+                collision: 'flip flipfit',
             },
             classes: {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
-        }
+        };
         wUtils.autocompleteWithPages(this, this.$('input[name="url"]'), options);
         this._adaptPageAnchor();
         return def;
@@ -60,8 +56,19 @@ weWidgets.LinkTools.include({
         if ($selectMenu.data("anchor-for") !== urlInputValue) { // avoid useless query
             $pageAnchor.toggleClass('d-none', !isFromWebsite);
             $selectMenu.empty();
-            const always = () => $pageAnchor.find('we-toggler').text('\u00A0');
-            wUtils.loadAnchors(urlInputValue).then(anchors => {
+            const always = () => {
+                const anchor = `#${urlInputValue.split('#')[1]}`;
+                let weTogglerText = '\u00A0';
+                if (anchor) {
+                    const weButtonEls = $selectMenu[0].querySelectorAll('we-button');
+                    if (Array.from(weButtonEls).some(el => el.textContent === anchor)) {
+                        weTogglerText = anchor;
+                    }
+                }
+                $pageAnchor[0].querySelector('we-toggler').textContent = weTogglerText;
+            };
+            const urlWithoutHash = urlInputValue.split("#")[0];
+            wUtils.loadAnchors(urlWithoutHash).then(anchors => {
                 for (const anchor of anchors) {
                     const $option = $('<we-button class="dropdown-item">');
                     $option.text(anchor);
@@ -85,10 +92,12 @@ weWidgets.LinkTools.include({
         this._onURLInput();
     },
     /**
+     * @todo this should not be an event handler anymore in master
      * @private
+     * @param {Event} ev
      */
-    _onAnchorChange: function () {
-        const anchorValue = this.$('[name="link_anchor"] we-button.active').data('value');
+    _onAnchorChange: function (ev) {
+        const anchorValue = $(ev.currentTarget).data('value');
         const $urlInput = this.$('[name="url"]');
         let urlInputValue = $urlInput.val();
         if (urlInputValue.indexOf('#') > -1) {
@@ -102,6 +111,16 @@ weWidgets.LinkTools.include({
     _onURLInput: function () {
         this._super.apply(this, arguments);
         this._adaptPageAnchor();
+    },
+    /**
+     * @override
+     * @param {Event} ev
+     */
+    _onPickSelectOption(ev) {
+        if (ev.currentTarget.closest('[name="link_anchor"]')) {
+            this._onAnchorChange(ev);
+        }
+        this._super(...arguments);
     },
 });
 });

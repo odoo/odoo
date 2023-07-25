@@ -150,7 +150,7 @@ class ThemeMenu(models.Model):
     def _convert_to_base_model(self, website, **kwargs):
         self.ensure_one()
         page_id = self.page_id.copy_ids.filtered(lambda x: x.website_id == website)
-        parent_id = self.copy_ids.filtered(lambda x: x.website_id == website)
+        parent_id = self.parent_id.copy_ids.filtered(lambda x: x.website_id == website)
         new_menu = {
             'name': self.name,
             'url': self.url,
@@ -158,6 +158,7 @@ class ThemeMenu(models.Model):
             'new_window': self.new_window,
             'sequence': self.sequence,
             'parent_id': parent_id and parent_id.id or False,
+            'website_id': website.id,
             'theme_template_id': self.id,
         }
         return new_menu
@@ -183,6 +184,7 @@ class ThemePage(models.Model):
             'url': self.url,
             'view_id': view_id.id,
             'website_indexed': self.website_indexed,
+            'website_id': website.id,
             'theme_template_id': self.id,
         }
         return new_page

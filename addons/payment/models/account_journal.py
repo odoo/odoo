@@ -8,33 +8,6 @@ from odoo.exceptions import UserError
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    @api.constrains('inbound_payment_method_line_ids')
-    def _check_inbound_payment_method_line_ids(self):
-        """
-        Check and ensure that the user do not remove a apml that is linked to an acquirer in the test or enabled state.
-        """
-        if not self.company_id:
-            return
-
-        self.env['account.payment.method'].flush(['code', 'payment_type'])
-        self.env['account.payment.method.line'].flush(['payment_method_id'])
-        self.env['payment.acquirer'].flush(['provider', 'state'])
-
-        self._cr.execute('''
-            SELECT acquirer.id
-            FROM payment_acquirer acquirer
-            JOIN account_payment_method apm ON apm.code = acquirer.provider
-            LEFT JOIN account_payment_method_line apml ON apm.id = apml.payment_method_id AND apml.journal_id IS NOT NULL
-            WHERE acquirer.state IN ('enabled', 'test') AND apm.payment_type = 'inbound'
-            AND apml.id IS NULL
-            AND acquirer.company_id IN %(company_ids)s
-        ''', {'company_ids': tuple(self.company_id.ids)})
-        ids = [r[0] for r in self._cr.fetchall()]
-        if ids:
-            acquirers = self.env['payment.acquirer'].sudo().browse(ids)
-            raise UserError(_("You can't delete a payment method that is linked to an acquirer in the enabled or test state.\n"
-                              "Linked acquirer(s): %s", ', '.join(a.display_name for a in acquirers)))
-
     def _get_available_payment_method_lines(self, payment_type):
         lines = super()._get_available_payment_method_lines(payment_type)
 
@@ -68,6 +41,15 @@ class AccountJournal(models.Model):
                 if vals['mode'] == 'unique' and not available:
                     to_remove.append(payment_method.id)
 
-                journal.write({
-                    'available_payment_method_ids': [Command.unlink(payment_method) for payment_method in to_remove]
-                })
+                journal.available_payment_method_ids = [Command.unlink(payment_method) for payment_method in to_remove]
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_to_payment_acquirer(self):
+        linked_acquirers = self.env['payment.acquirer'].sudo().search([]).filtered(
+            lambda acq: acq.journal_id.id in self.ids and acq.state != 'disabled'
+        )
+        if linked_acquirers:
+            raise UserError(_(
+                "You must first deactivate a payment acquirer before deleting its journal.\n"
+                "Linked acquirer(s): %s", ', '.join(acq.display_name for acq in linked_acquirers)
+            ))

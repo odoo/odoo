@@ -5,6 +5,7 @@ import { FACET_ICONS } from "../utils/misc";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { useService } from "@web/core/utils/hooks";
+import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -64,5 +65,5 @@ export class FavoriteMenu extends Component {
         this.dialogService.add(ConfirmationDialog, dialogProps);
     }
 }
-
+FavoriteMenu.components = { DropdownItem: SearchDropdownItem };
 FavoriteMenu.template = "web.FavoriteMenu";

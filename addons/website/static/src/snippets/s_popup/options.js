@@ -76,6 +76,9 @@ options.registry.SnippetPopup = options.Class.extend({
                 clearTimeout(timeoutID);
                 resolve();
             });
+            // The following line is in charge of hiding .s_popup at the same
+            // time the modal is closed when the page is saved in edit mode.
+            this.$target[0].closest('.s_popup').classList.add('d-none');
             this.$target.modal('hide');
         });
     },
@@ -97,7 +100,7 @@ options.registry.SnippetPopup = options.Class.extend({
      * @see this.selectClass for parameters
      */
     moveBlock: function (previewMode, widgetValue, params) {
-        const $container = $(widgetValue === 'moveToFooter' ? 'footer' : 'main');
+        const $container = $(widgetValue === 'moveToFooter' ? 'footer#bottom' : 'main');
         this.$target.closest('.s_popup').prependTo($container.find('.oe_structure:o_editable').first());
     },
     /**
@@ -126,7 +129,7 @@ options.registry.SnippetPopup = options.Class.extend({
     _computeWidgetState: function (methodName, params) {
         switch (methodName) {
             case 'moveBlock':
-                return this.$target.closest('footer').length ? 'moveToFooter' : 'moveToBody';
+                return this.$target.closest('footer#bottom').length ? 'moveToFooter' : 'moveToBody';
         }
         return this._super(...arguments);
     },

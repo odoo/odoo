@@ -100,7 +100,8 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 $group.after($add);
             }
         }).then(function (result) {
-            var val = result.val;
+            // Remove any leading slash.
+            const val = result.val.replace(/^\/*/, "");
             var $dialog = result.dialog;
             if (!val) {
                 return;

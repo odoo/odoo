@@ -360,7 +360,7 @@ class TestBoM(TestMrpCommon):
         # ending the recurse call to not call the compute method and just left the Falsy value `0.0`
         # for the components available qty.
         kit_product_qty, _, _ = (self.product_7_3 + self.product_2 + self.product_3).mapped("qty_available")
-        self.assertEqual(kit_product_qty, 2)
+        self.assertEqual(kit_product_qty, 8)
 
     def test_14_bom_kit_qty_multi_uom(self):
         uom_dozens = self.env.ref('uom.product_uom_dozen')
@@ -971,7 +971,7 @@ class TestBoM(TestMrpCommon):
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
 
-        self.assertAlmostEqual(report_values['lines']['total'], 0.58)
+        self.assertAlmostEqual(report_values['lines']['total'], 2.92)
 
     def test_validate_no_bom_line_with_same_product(self):
         """
@@ -1082,3 +1082,15 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(orderpoint.route_id.id, manufacturing_route_id)
         self.assertEqual(orderpoint.qty_multiple, 2000.0)
         self.assertEqual(orderpoint.qty_to_order, 4000.0)
+
+    def test_bom_kit_with_sub_kit(self):
+        p1, p2, p3, p4 = self.make_prods(4)
+        self.make_bom(p1, p2, p3)
+        self.make_bom(p2, p3, p4)
+
+        loc = self.env.ref("stock.stock_location_stock")
+        self.env["stock.quant"]._update_available_quantity(p3, loc, 10)
+        self.env["stock.quant"]._update_available_quantity(p4, loc, 10)
+        self.assertEqual(p1.qty_available, 5.0)
+        self.assertEqual(p2.qty_available, 10.0)
+        self.assertEqual(p3.qty_available, 10.0)

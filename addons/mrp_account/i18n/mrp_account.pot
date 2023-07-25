@@ -16,11 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/mrp_production.py:0
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+#, python-format
 msgid "Analytic Account"
 msgstr ""
 
@@ -49,8 +51,10 @@ msgid "Bill of Material"
 msgstr ""
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+#, python-format
 msgid "Bills of Materials"
 msgstr ""
 
@@ -110,8 +114,10 @@ msgid "Manufacturing Order"
 msgstr ""
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+#, python-format
 msgid "Manufacturing Orders"
 msgstr ""
 
@@ -187,6 +193,12 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
 msgid "Work Order Count"
+msgstr ""
+
+#. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
+#, python-format
+msgid "Work Orders"
 msgstr ""
 
 #. module: mrp_account

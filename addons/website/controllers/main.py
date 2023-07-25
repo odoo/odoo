@@ -202,7 +202,7 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.with_user(request.website.user_id)._enumerate_pages()
+            locs = request.website.with_context(_filter_duplicate_pages=True).with_user(request.website.user_id)._enumerate_pages()
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
@@ -237,12 +237,26 @@ class Website(Home):
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
-    @http.route('/website/info', type='http', auth="public", website=True, sitemap=True)
+    def sitemap_website_info(env, rule, qs):
+        website = env['website'].get_current_website()
+        if not (
+            website.viewref('website.website_info', False).active
+            and website.viewref('website.show_website_info', False).active
+        ):
+            # avoid 404 or blank page in sitemap
+            return False
+
+        if not qs or qs.lower() in '/website/info':
+            yield {'loc': '/website/info'}
+
+    @http.route('/website/info', type='http', auth="public", website=True, sitemap=sitemap_website_info)
     def website_info(self, **kwargs):
-        try:
-            request.website.get_template('website.website_info').name
-        except Exception as e:
-            return request.env['ir.http']._handle_exception(e)
+        if not request.website.viewref('website.website_info', False).active:
+            # Deleted or archived view (through manual operation in backend).
+            # Don't check `show_website_info` view: still need to access if
+            # disabled to be able to enable it through the customize show.
+            raise request.not_found()
+
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
         l10n = Module.search([('state', '=', 'installed'), ('name', '=like', 'l10n_%')])
@@ -276,7 +290,7 @@ class Website(Home):
         current_website = request.website
 
         matching_pages = []
-        for page in current_website.search_pages(needle, limit=int(limit)):
+        for page in current_website.with_context(_filter_duplicate_pages=True).search_pages(needle, limit=int(limit)):
             matching_pages.append({
                 'value': page['loc'],
                 'label': 'name' in page and '%s (%s)' % (page['loc'], page['name']) or page['loc'],
@@ -284,7 +298,7 @@ class Website(Home):
         matching_urls = set(map(lambda match: match['value'], matching_pages))
 
         matching_last_modified = []
-        last_modified_pages = current_website._get_website_pages(order='write_date desc', limit=5)
+        last_modified_pages = current_website.with_context(_filter_duplicate_pages=True)._get_website_pages(order='write_date desc', limit=5)
         for url, name in last_modified_pages.mapped(lambda p: (p.url, p.name)):
             if needle.lower() in name.lower() or needle.lower() in url.lower() and url not in matching_urls:
                 matching_last_modified.append({
@@ -296,7 +310,7 @@ class Website(Home):
         for name, url, mod in current_website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
                 module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
-                icon = mod and "<img src='%s' width='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
+                icon = mod and "<img src='%s' width='24px' height='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
                     'label': '%s%s (%s)' % (icon, url, name),
@@ -700,8 +714,9 @@ class Website(Home):
         if not request.website.google_search_console:
             logger.warning('Google Search Console not enable')
             raise werkzeug.exceptions.NotFound()
+        gsc = request.website.google_search_console
+        trusted = gsc[gsc.startswith('google') and len('google'):gsc.endswith('.html') and -len('.html') or None]
 
-        trusted = request.website.google_search_console.lstrip('google').rstrip('.html')
         if key != trusted:
             if key.startswith(trusted):
                 request.website.sudo().google_search_console = "google%s.html" % key

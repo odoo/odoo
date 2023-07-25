@@ -14,6 +14,7 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2021
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2021
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,8 +22,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -558,7 +559,7 @@ msgstr "Salasanan nollaus: väärä käyttäjännimi ta sähköposti"
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset Instructions"
-msgstr ""
+msgstr "Lähetä salasanan nollauksen ohjeet"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -656,7 +657,7 @@ msgstr "Lomaketta ei ole täytetty asianmukaisesti."
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "This is their first connection. Wish them luck."
-msgstr ""
+msgstr "Tämä on heidän ensimmäinen yhteytensä. Toivotaan parasta."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -684,13 +685,13 @@ msgstr "Käyttäjät: Huomautus rekisteröitymättömistä käyttäjistä"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr "Tervetuloa {{ object.company_id.name }}!"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr ""
+msgstr "Toimintoa ei voi suorittaa arkistoidulle käyttäjälle."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -714,3 +715,5 @@ msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
 msgstr ""
+"{{ object.create_uid.name }} yrityksestä {{ object.company_id.name }} kutsuu"
+" sinua Odoon käyttäjäksi"

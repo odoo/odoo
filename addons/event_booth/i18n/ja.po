@@ -9,6 +9,9 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Noma Yuki, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Andy Yiu, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: 江口和志 <sandwhale1010@gmail.com>, 2022\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -47,7 +50,7 @@ msgstr ""
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_event_view_form
 msgid "<span class=\"o_stat_text\">Booths</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ブース</span>"
 
 #. module: event_booth
 #: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
@@ -194,12 +197,12 @@ msgstr ""
 #. module: event_booth
 #: model:mail.message.subtype,name:event_booth.mt_event_booth_booked
 msgid "Booth Booked"
-msgstr ""
+msgstr "ブースの予約"
 
 #. module: event_booth
 #: model:ir.ui.menu,name:event_booth.menu_event_booth_category
 msgid "Booth Categories"
-msgstr ""
+msgstr "ブース区分"
 
 #. module: event_booth
 #: model:ir.actions.act_window,name:event_booth.event_booth_category_action
@@ -207,7 +210,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__booth_category_id
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_category_view_form
 msgid "Booth Category"
-msgstr ""
+msgstr "ブース区分"
 
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_event__event_booth_category_available_ids
@@ -219,7 +222,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
 #: model_terms:ir.ui.view,arch_db:event_booth.event_type_booth_view_search
 msgid "Booth Type"
-msgstr ""
+msgstr "ブースタイプ"
 
 #. module: event_booth
 #: model_terms:ir.actions.act_window,help:event_booth.event_booth_category_action
@@ -240,7 +243,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_booth.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:event_booth.event_type_view_form
 msgid "Booths"
-msgstr ""
+msgstr "ブース"
 
 #. module: event_booth
 #: model_terms:ir.actions.act_window,help:event_booth.event_booth_action
@@ -258,7 +261,7 @@ msgstr ""
 #. module: event_booth
 #: model_terms:ir.actions.act_window,help:event_booth.event_booth_category_action
 msgid "Create a Booth Category"
-msgstr ""
+msgstr "ブース区分を作成"
 
 #. module: event_booth
 #: model_terms:ir.actions.act_window,help:event_booth.event_type_booth_action
@@ -303,13 +306,13 @@ msgstr "イベント"
 #: model:ir.model,name:event_booth.model_event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
 msgid "Event Booth"
-msgstr ""
+msgstr "イベントブース"
 
 #. module: event_booth
 #: model:ir.model,name:event_booth.model_event_booth_category
 #: model:ir.model.fields,field_description:event_booth.field_event_event__event_booth_category_ids
 msgid "Event Booth Category"
-msgstr ""
+msgstr "イベントブース区分"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_event__event_booth_category_available_ids
@@ -442,7 +445,7 @@ msgstr "イメージ 512"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__is_available
 msgid "Is Available"
-msgstr ""
+msgstr "利用可能か"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_is_follower
@@ -488,7 +491,7 @@ msgstr "メッセージ"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "活動の締切"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__name
@@ -503,7 +506,7 @@ msgstr "名称"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "次の活動カレンダーイベント"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_date_deadline
@@ -688,7 +691,7 @@ msgstr "記録上の例外アクティビティのタイプ。"
 #: model:ir.model.fields.selection,name:event_booth.selection__event_booth__state__unavailable
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
 msgid "Unavailable"
-msgstr ""
+msgstr "使用不可"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_unread

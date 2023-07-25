@@ -151,9 +151,11 @@ var MockServer = Class.extend({
         if (abort) {
             abort = abort.bind(def);
         } else {
-            abort = function () {
-                throw new Error("Can't abort this request");
-            };
+            abort = function (rejectError = true) {
+                if (rejectError) {
+                    throw new Error("XmlHttpRequestError abort");
+                }
+            }
         }
 
         def = def.then(function (result) {
@@ -165,7 +167,7 @@ var MockServer = Class.extend({
         }, function (result) {
             var message = result && result.message;
             var event = result && result.event;
-            var errorString = JSON.stringify(message || false);
+            var errorString = typeof message !== "string" ? JSON.stringify(message || false) : message;
             if (debug) {
                 console.warn(
                     '%c[rpc] response (error) %s%s, during test %s',
@@ -1621,11 +1623,11 @@ var MockServer = Class.extend({
                             }
                         }
                         const from = type === "date"
-                            ? startDate.format("YYYY-MM-DD")
-                            : startDate.format("YYYY-MM-DD HH:mm:ss");
+                            ? startDate.locale('en').format("YYYY-MM-DD")
+                            : startDate.locale('en').format("YYYY-MM-DD HH:mm:ss");
                         const to = type === "date"
-                            ? endDate.format("YYYY-MM-DD")
-                            : endDate.format("YYYY-MM-DD HH:mm:ss");
+                            ? endDate.locale('en').format("YYYY-MM-DD")
+                            : endDate.locale('en').format("YYYY-MM-DD HH:mm:ss");
                         group.__range[fieldName] = { from, to };
                         group.__domain = [
                             [fieldName, ">=", from],
@@ -1643,9 +1645,13 @@ var MockServer = Class.extend({
                 delete group.__range;
             }
             // compute count key to match dumb server logic...
-            const countKey = kwargs.lazy
-                ? groupBy[0].split(":")[0] + "_count"
-                : "__count";
+            const groupByNoLeaf = kwargs.context ? "group_by_no_leaf" in kwargs.context : false;
+            let countKey;
+            if (kwargs.lazy && (groupBy.length >= 2 || !groupByNoLeaf)) {
+                countKey = groupBy[0].split(":")[0] + "_count";
+            } else {
+                countKey = "__count";
+            }
             group[countKey] = groupRecords.length;
             aggregateFields(group, groupRecords);
             readGroupResult.push(group);
@@ -1684,6 +1690,15 @@ var MockServer = Class.extend({
         var data = {};
         _.each(records, function (record) {
             var groupByValue = record[groupBy]; // always technical value here
+
+            // special case for bool values: rpc call response with capitalized strings
+            if (!(groupByValue in data)) {
+                if (groupByValue === true) {
+                    groupByValue = "True";
+                } else if (groupByValue === false) {
+                    groupByValue = "False";
+                }
+            }
 
             if (!(groupByValue in data)) {
                 data[groupByValue] = {};

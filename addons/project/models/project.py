@@ -8,13 +8,14 @@ from datetime import timedelta, datetime
 from random import randint
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
+from odoo.addons.web_editor.controllers.main import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_amount
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, TRUE_LEAF, FALSE_LEAF
 
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
-
+from odoo.tools.misc import get_lang
 
 PROJECT_TASK_READABLE_FIELDS = {
     'id',
@@ -47,7 +48,6 @@ PROJECT_TASK_READABLE_FIELDS = {
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'partner_id',
-    'partner_email',
     'date_deadline',
     'tag_ids',
     'sequence',
@@ -72,7 +72,7 @@ class ProjectTaskType(models.Model):
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
-        default=_get_default_project_ids)
+        default=lambda self: self._get_default_project_ids())
     legend_blocked = fields.Char(
         'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, required=True,
         help='Override the default value displayed for the blocked state for kanban selection when the task or issue is in that stage.')
@@ -141,6 +141,11 @@ class ProjectTaskType(models.Model):
                 stage.disabled_rating_warning = '\n'.join('- %s' % p.name for p in disabled_projects)
             else:
                 stage.disabled_rating_warning = False
+
+    @api.constrains('user_id', 'project_ids')
+    def _check_personal_stage_not_linked_to_projects(self):
+        if any(stage.user_id and stage.project_ids for stage in self):
+            raise UserError(_('A personal stage cannot be linked to a project because it is only visible to its corresponding user.'))
 
     def remove_personal_stage(self):
         """
@@ -490,7 +495,7 @@ class Project(models.Model):
                 # set the parent to the duplicated task
                 parent_id = old_to_new_tasks.get(task.parent_id.id, False)
                 defaults['parent_id'] = parent_id
-                if not parent_id:
+                if not parent_id or task.display_project_id:
                     defaults['project_id'] = project.id if task.display_project_id == self else False
                     defaults['display_project_id'] = project.id if task.display_project_id == self else False
             elif task.display_project_id == self:
@@ -884,7 +889,7 @@ class Project(models.Model):
         if self.privacy_visibility != 'portal':
             return False
         if self.env.user.has_group('base.group_portal'):
-            return self.env.user.partner_id in self.collaborator_ids.partner_id
+            return self.env['project.collaborator'].search([('project_id', '=', self.sudo().id), ('partner_id', '=', self.env.user.partner_id.id)])
         return self.env.user.has_group('base.group_user')
 
     def _add_collaborators(self, partners):
@@ -950,7 +955,7 @@ class Task(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(string='Title', tracking=True, required=True, index=True)
-    description = fields.Html(string='Description')
+    description = fields.Html(string='Description', sanitize_attributes=False)
     priority = fields.Selection([
         ('0', 'Normal'),
         ('1', 'Important'),
@@ -1040,7 +1045,7 @@ class Task(models.Model):
     allow_subtasks = fields.Boolean(string="Allow Sub-tasks", related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email From', help="These people will receive email.", index=True,
-        compute='_compute_email_from', recursive=True, store=True, readonly=False)
+        compute='_compute_email_from', recursive=True, store=True, readonly=False, copy=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working Hours to Assign', digits=(16, 2), store=True, group_operator="avg")
@@ -1215,8 +1220,8 @@ class Task(models.Model):
                 stage = self.env['project.task.type'].sudo().search([('user_id', '=', user_id.id)], limit=1)
                 # In the case no stages have been found, we create the default stages for the user
                 if not stage:
-                    stages = self.env['project.task.type'].sudo().with_context(lang=user_id.partner_id.lang, default_project_id=False).create(
-                        self._get_default_personal_stage_create_vals(user_id.id)
+                    stages = self.env['project.task.type'].sudo().with_context(lang=user_id.partner_id.lang, default_project_ids=False).create(
+                        self.with_context(lang=user_id.partner_id.lang)._get_default_personal_stage_create_vals(user_id.id)
                     )
                     stage = stages[0]
                 personal_stage_by_user[user_id].sudo().write({'stage_id': stage.id})
@@ -1287,7 +1292,7 @@ class Task(models.Model):
                 task.repeat_week,
                 task.repeat_month,
                 count=number_occurrences)
-            date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+            date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format or get_lang(self.env).date_format
             if recurrence_left == 0:
                 recurrence_title = _('There are no more occurrences.')
             else:
@@ -1532,7 +1537,7 @@ class Task(models.Model):
     # Case management
     # ----------------------------------------
 
-    def stage_find(self, section_id, domain=[], order='sequence'):
+    def stage_find(self, section_id, domain=[], order='sequence, id'):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
             - section_id: if set, stages must belong to this section or
@@ -1620,7 +1625,11 @@ class Task(models.Model):
         if fields and (not check_group_user or self.env.user.has_group('base.group_portal')) and not self.env.su:
             unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
             if unauthorized_fields:
-                raise AccessError(_('You cannot %s %s fields in task.', operation if operation == 'read' else '%s on' % operation, ', '.join(unauthorized_fields)))
+                if operation == 'read':
+                    error_message = _('You cannot read %s fields in task.', ', '.join(unauthorized_fields))
+                else:
+                    error_message = _('You cannot write on %s fields in task.', ', '.join(unauthorized_fields))
+                raise AccessError(error_message)
 
     def read(self, fields=None, load='_classic_read'):
         self._ensure_fields_are_accessible(fields)
@@ -1630,15 +1639,17 @@ class Task(models.Model):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         fields_list = ([f.split(':')[0] for f in fields] or [])
         if groupby:
-            fields_list += [groupby] if isinstance(groupby, str) else groupby
+            fields_groupby = [groupby] if isinstance(groupby, str) else groupby
+            # only take field name when having ':' e.g 'date_deadline:week' => 'date_deadline'
+            fields_list += [f.split(':')[0] for f in fields_groupby]
         if domain:
-            fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list))]
+            fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]]
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        fields_list = {term[0] for term in args if isinstance(term, (tuple, list))}
+        fields_list = {term[0] for term in args if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]}
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
@@ -1650,7 +1661,7 @@ class Task(models.Model):
         return super(Task, self).mapped(func)
 
     def filtered_domain(self, domain):
-        fields_list = [term[0] for term in domain if isinstance(term, (tuple, list))]
+        fields_list = [term[0] for term in domain if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]]
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self).filtered_domain(domain)
 
@@ -1676,7 +1687,16 @@ class Task(models.Model):
                 else:
                     for field_name in self._get_recurrence_fields() + ['recurring_task']:
                         vals.pop(field_name, None)
-        return super()._load_records_create(vals_list)
+        tasks = super()._load_records_create(vals_list)
+        stage_ids_per_project = defaultdict(list)
+        for task in tasks:
+            if task.stage_id and task.stage_id not in task.project_id.type_ids and task.stage_id.id not in stage_ids_per_project[task.project_id]:
+                stage_ids_per_project[task.project_id].append(task.stage_id.id)
+
+        for project, stage_ids in stage_ids_per_project.items():
+            project.write({'type_ids': [Command.link(stage_id) for stage_id in stage_ids]})
+
+        return tasks
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1746,6 +1766,8 @@ class Task(models.Model):
         return tasks
 
     def write(self, vals):
+        if len(self) == 1:
+            handle_history_divergence(self, 'description', vals)
         portal_can_write = False
         if self.env.user.has_group('base.group_portal') and not self.env.su:
             # Check if all fields in vals are in SELF_WRITABLE_FIELDS
@@ -1785,8 +1807,10 @@ class Task(models.Model):
                     recurrence = self.env['project.task.recurrence'].create(rec_values)
                     task.recurrence_id = recurrence.id
 
-        if 'recurring_task' in vals and not vals.get('recurring_task'):
+        if not vals.get('recurring_task', True) and self.recurrence_id:
+            tasks_in_recurrence = self.recurrence_id.task_ids
             self.recurrence_id.unlink()
+            tasks_in_recurrence.write({'recurring_task': False})
 
         tasks = self
         recurrence_update = vals.pop('recurrence_update', 'this')
@@ -1817,7 +1841,7 @@ class Task(models.Model):
 
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
-            self.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
+            tasks.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
         for task in self:
             if task.display_project_id != task.project_id and not task.parent_id:
                 # We must make the display_project_id follow the project_id if no parent_id set
@@ -2001,10 +2025,6 @@ class Task(models.Model):
 
         project_user_group_id = self.env.ref('project.group_project_user').id
         new_group = ('group_project_user', lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'], {})
-        if not self.user_ids and not self.stage_id.fold:
-            take_action = self._notify_get_action_link('assign', **local_msg_vals)
-            project_actions = [{'url': take_action, 'title': _('I take it')}]
-            new_group[2]['actions'] = project_actions
         groups = [new_group] + groups
 
         if self.project_privacy_visibility == 'portal':

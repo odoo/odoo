@@ -35,11 +35,20 @@ class TestPartner(TransactionCase):
             'user_id': user.id,
         } for user in self.users])
         self.leave_type = self.env['hr.leave.type'].create({
+            'leave_validation_type': 'no_validation',
             'requires_allocation': 'no',
             'name': 'Legal Leaves',
             'time_type': 'leave',
         })
-        self.leaves = self.env['hr.leave'].create([{
+
+    def test_res_partner_mail_partner_format(self):
+        self.assertEqual(
+            self.partner.mail_partner_format()[self.partner]['out_of_office_date_end'],
+            False,
+            'Partner is not considered out of office if one of their users is not on holiday',
+        )
+
+        self.env['hr.leave'].create([{
             'date_from': self.today + relativedelta(days=-2),
             'date_to': self.today + relativedelta(days=2),
             'employee_id': self.employees[0].id,
@@ -51,15 +60,8 @@ class TestPartner(TransactionCase):
             'holiday_status_id': self.leave_type.id,
         }])
 
-    def test_res_partner_mail_partner_format(self):
         self.assertEqual(
             self.partner.mail_partner_format()[self.partner]['out_of_office_date_end'],
             (self.today + relativedelta(days=2)).strftime(DEFAULT_SERVER_DATE_FORMAT),
             'Return date is the first return date of all users associated with a partner',
-        )
-        self.leaves[1].unlink()
-        self.assertEqual(
-            self.partner.mail_partner_format()[self.partner]['out_of_office_date_end'],
-            False,
-            'Partner is not considered out of office if one of their users is not on holiday',
         )

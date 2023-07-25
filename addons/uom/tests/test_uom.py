@@ -105,3 +105,12 @@ class TestUom(TransactionCase):
                 'rounding': 1.0,
                 'category_id': category.id
             })
+
+    def test_50_check_ratio(self):
+        with self.assertRaises(ValidationError):
+            self.env['uom.uom'].create({
+                'name': 'Custom UoM',
+                'uom_type': 'bigger',
+                'ratio': 0,
+                'category_id': self.categ_unit_id
+            })

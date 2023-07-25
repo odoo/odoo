@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from collections import defaultdict
 from datetime import timedelta
 from pytz import timezone, utc
 from werkzeug.exceptions import Forbidden, NotFound
@@ -251,15 +252,22 @@ class EventTrackController(http.Controller):
 
         # count the number of tracks by days
         tracks_by_days = dict.fromkeys(days, 0)
+        locations_by_days = defaultdict(list)
         for track in tracks_sudo:
             track_day = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz).date()
             tracks_by_days[track_day] += 1
+            if track.location_id not in locations_by_days[track_day]:
+                locations_by_days[track_day].append(track.location_id)
+
+        for used_locations in locations_by_days.values():
+            used_locations.sort(key=lambda location: location.id if location else 0)
 
         return {
             'days': days,
             'tracks_by_days': tracks_by_days,
+            'locations_by_days': locations_by_days,
             'time_slots': global_time_slots_by_day,
-            'locations': locations
+            'locations': locations  # TODO: clean me in master, kept for retro-compatibility
         }
 
     def _get_locale_time(self, dt_time, lang_code):

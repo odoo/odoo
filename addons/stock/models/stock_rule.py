@@ -54,14 +54,14 @@ class StockRule(models.Model):
     group_id = fields.Many2one('procurement.group', 'Fixed Procurement Group')
     action = fields.Selection(
         selection=[('pull', 'Pull From'), ('push', 'Push To'), ('pull_push', 'Pull & Push')], string='Action',
-        required=True)
+        required=True, index=True)
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
         default=lambda self: self.env.company,
-        domain="[('id', '=?', route_company_id)]")
-    location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
+        domain="[('id', '=?', route_company_id)]", index=True)
+    location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True, index=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
-    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
+    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade', index=True)
     route_company_id = fields.Many2one(related='route_id.company_id', string='Route Company')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
@@ -88,7 +88,7 @@ class StockRule(models.Model):
     propagate_carrier = fields.Boolean(
         'Propagation of carrier', default=False,
         help="When ticked, carrier of shipment will be propgated.")
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True)
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True, index=True)
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
         help="The warehouse to propagate on the created move/procurement, which can be different of the warehouse this rule is for (e.g for resupplying rules from another warehouse)")
@@ -244,8 +244,12 @@ class StockRule(models.Model):
             if rule.procure_method == 'mts_else_mto':
                 qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
                 if float_compare(qty_needed, 0, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
-                    forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
                     procure_method = 'make_to_order'
+                    for move in procurement.values.get('group_id', self.env['procurement.group']).stock_move_ids:
+                        if move.rule_id == rule and float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
+                            procure_method = move.procure_method
+                            break
+                    forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
                 elif float_compare(qty_needed, forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id],
                                    precision_rounding=procurement.product_id.uom_id.rounding) > 0:
                     procure_method = 'make_to_order'
@@ -350,6 +354,9 @@ class StockRule(models.Model):
         :rtype: tuple[int, list[str, str]]
         """
         delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
+        global_visibility_days = self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days')
+        if global_visibility_days:
+            delay += int(global_visibility_days)
         if self.env.context.get('bypass_delay_description'):
             delay_description = []
         else:
@@ -358,6 +365,8 @@ class StockRule(models.Model):
                 for rule in self
                 if rule.action in ['pull', 'pull_push'] and rule.delay
             ]
+        if global_visibility_days:
+            delay_description.append((_('Global Visibility Days'), _('+ %d day(s)') % int(global_visibility_days)))
         return delay, delay_description
 
 
@@ -492,7 +501,7 @@ class ProcurementGroup(models.Model):
         """ Find a pull rule for the location_id, fallback on the parent
         locations if it could not be found.
         """
-        result = False
+        result = self.env['stock.rule']
         location = location_id
         while (not result) and location:
             domain = self._get_rule_domain(location, values)

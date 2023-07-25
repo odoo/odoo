@@ -12,6 +12,13 @@ from dateutil.relativedelta import relativedelta
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    # override existing field domains to prevent suboncontracting production lines from showing in Detailed Operations tab
+    move_line_nosuggest_ids = fields.One2many(
+        domain=['&', '|', ('location_dest_id.usage', '!=', 'production'), ('move_id.picking_code', '!=', 'outgoing'),
+                     '|', ('product_qty', '=', 0.0), '&', ('product_qty', '!=', 0.0), ('qty_done', '!=', 0.0)])
+    move_line_ids_without_package = fields.One2many(
+        domain=['&', '|', ('location_dest_id.usage', '!=', 'production'), ('move_id.picking_code', '!=', 'outgoing'),
+                     '|', ('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
     display_action_record_components = fields.Selection(
         [('hide', 'Hide'), ('facultative', 'Facultative'), ('mandatory', 'Mandatory')],
         compute='_compute_display_action_record_components')
@@ -141,6 +148,9 @@ class StockPicking(models.Model):
     def _subcontracted_produce(self, subcontract_details):
         self.ensure_one()
         for move, bom in subcontract_details:
+            if float_compare(move.product_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
+                continue
             mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))
             self.env['stock.move'].create(mo._get_moves_raw_values())
             self.env['stock.move'].create(mo._get_moves_finished_values())

@@ -11,7 +11,8 @@ import {
     triggerEvent,
 } from "../helpers/utils";
 
-const { Component, mount, tags } = owl;
+const { Component, hooks, mount, tags } = owl;
+const { useRef } = hooks;
 const { css, xml } = tags;
 let container;
 let reference;
@@ -29,8 +30,12 @@ function isWellPositioned(popper, position = "bottom") {
         position,
     };
     const [direction, variant = "middle"] = position.split("-");
-    const d = /** @type {import("@web/core/position/position_hook").DirectionsDataKey} */ (direction[0]);
-    const v = /** @type {import("@web/core/position/position_hook").VariantsDataKey} */ (variant[0]);
+    const d = /** @type {import("@web/core/position/position_hook").DirectionsDataKey} */ (
+        direction[0]
+    );
+    const v = /** @type {import("@web/core/position/position_hook").VariantsDataKey} */ (
+        variant[0]
+    );
     const posSolution = computePositioning(reference, popper, options).get(d, v);
     const hasCorrectClass = popper.classList.contains(posSolution.className);
     const correctLeft = parseFloat(popper.style.left) === posSolution.left;
@@ -142,6 +147,69 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
         [],
         "reference not called even if scroll happened right before the component destroys"
     );
+});
+
+QUnit.test("popper as child of another", async (assert) => {
+    class Child extends Component {
+        setup() {
+            const ref = useRef("ref");
+            usePosition(() => ref.el, { popper: "popper", container, position: "left" });
+        }
+    }
+    Child.template = /* xml */ xml`
+        <div id="child">
+            <div class="ref" t-ref="ref" />
+            <div class="popper" t-ref="popper" />
+        </div>
+    `;
+    Child.style = /* css */ css`
+        #child .ref {
+            background-color: salmon;
+            height: 100px;
+            width: 10px;
+        }
+        #child .popper {
+            background-color: olive;
+            height: 100px;
+            width: 100px;
+        }
+    `;
+    class Parent extends Component {
+        setup() {
+            usePosition(reference, { container });
+        }
+    }
+    Parent.components = { Child };
+    Parent.template = /* xml */ xml`
+        <div id="popper">
+            <Child/>
+        </div>
+    `;
+    Parent.style = /* css */ css`
+        #popper {
+            background-color: khaki;
+            height: 100px;
+            width: 100px;
+        }
+    `;
+    await mount(Parent, { target: container });
+    const parentPopBox1 = container.querySelector("#popper").getBoundingClientRect();
+    const childPopBox1 = container.querySelector("#child .popper").getBoundingClientRect();
+
+    const spacer = document.createElement("div");
+    spacer.id = "foo";
+    spacer.style.height = "1px";
+    spacer.style.width = "100px";
+    container.prepend(spacer);
+    await triggerEvent(document, null, "scroll");
+
+    const parentPopBox2 = container.querySelector("#popper").getBoundingClientRect();
+    const childPopBox2 = container.querySelector("#child .popper").getBoundingClientRect();
+
+    assert.strictEqual(parentPopBox1.top, parentPopBox2.top);
+    assert.strictEqual(childPopBox1.top, childPopBox2.top);
+    assert.strictEqual(parentPopBox2.left, parentPopBox1.left + spacer.offsetWidth * 0.5);
+    assert.strictEqual(childPopBox2.left, childPopBox1.left + spacer.offsetWidth * 0.5);
 });
 
 const getPositionTest = (position, positionToCheck) => {

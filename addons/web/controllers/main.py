@@ -33,7 +33,7 @@ import odoo.modules.registry
 from odoo.api import call_kw
 from odoo.addons.base.models.ir_qweb import render as qweb_render
 from odoo.modules import get_resource_path, module
-from odoo.tools import html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
+from odoo.tools import html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open, file_path
@@ -705,6 +705,9 @@ class ExportXlsxWriter:
         self.datetime_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd hh:mm:ss'})
         self.worksheet = self.workbook.add_worksheet()
         self.value = False
+        self.float_format = '#,##0.00'
+        decimal_places = [res['decimal_places'] for res in request.env['res.currency'].search_read([], ['decimal_places'])]
+        self.monetary_format = f'#,##0.{max(decimal_places or [2]) * "0"}'
 
         if row_count > self.worksheet.xls_rowmax:
             raise UserError(_('There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.') % (row_count, self.worksheet.xls_rowmax))
@@ -752,6 +755,8 @@ class ExportXlsxWriter:
             cell_style = self.datetime_style
         elif isinstance(cell_value, datetime.date):
             cell_style = self.date_style
+        elif isinstance(cell_value, float):
+            cell_style.set_num_format(self.float_format)
         self.write(row, column, cell_value, cell_style)
 
 class GroupExportXlsxWriter(ExportXlsxWriter):
@@ -785,26 +790,16 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
         label = '%s%s (%s)' % ('    ' * group_depth, label, group.count)
         self.write(row, column, label, self.header_bold_style)
-        if any(f.get('type') == 'monetary' for f in self.fields[1:]):
-
-            decimal_places = [res['decimal_places'] for res in group._model.env['res.currency'].search_read([], ['decimal_places'])]
-            decimal_places = max(decimal_places) if decimal_places else 2
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
-            # Float fields may not be displayed properly because of float
-            # representation issue with non stored fields or with values
-            # that, even stored, cannot be rounded properly and it is not
-            # acceptable to display useless digits (i.e. monetary)
-            #
-            # non stored field ->  we force 2 digits
-            # stored monetary -> we force max digits of installed currencies
-            if isinstance(aggregated_value, float):
-                if field.get('type') == 'monetary':
-                    aggregated_value = float_repr(aggregated_value, decimal_places)
-                elif not field.get('store'):
-                    aggregated_value = float_repr(aggregated_value, 2)
-            self.write(row, column, str(aggregated_value if aggregated_value is not None else ''), self.header_bold_style)
+            if field.get('type') == 'monetary':
+                self.header_bold_style.set_num_format(self.monetary_format)
+            elif field.get('type') == 'float':
+                self.header_bold_style.set_num_format(self.float_format)
+            else:
+                aggregated_value = str(aggregated_value if aggregated_value is not None else '')
+            self.write(row, column, aggregated_value, self.header_bold_style)
         return row + 1, 0
 
 
@@ -996,7 +991,6 @@ class WebClient(http.Controller):
         :param lang: the language of the user
         :return:
         """
-        request.disable_db = False
 
         if mods:
             mods = mods.split(',')
@@ -1006,7 +1000,7 @@ class WebClient(http.Controller):
         translations_per_module, lang_params = request.env["ir.translation"].get_translations_for_webclient(mods, lang)
 
         body = json.dumps({
-            'lang': lang,
+            'lang': lang_params and lang_params["code"],
             'lang_parameters': lang_params,
             'modules': translations_per_module,
             'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
@@ -1035,22 +1029,6 @@ class WebClient(http.Controller):
     def benchmarks(self, mod=None, **kwargs):
         return request.render('web.benchmark_suite')
 
-
-class Proxy(http.Controller):
-
-    @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
-    def post(self, path):
-        """Effectively execute a POST request that was hooked through user login"""
-        with request.session.load_request_data() as data:
-            if not data:
-                raise werkzeug.exceptions.BadRequest()
-            from werkzeug.test import Client
-            base_url = request.httprequest.base_url
-            query_string = request.httprequest.query_string
-            client = Client(http.root, werkzeug.wrappers.Response)
-            headers = {'X-Openerp-Session-Id': request.session.sid}
-            return client.post('/' + path, base_url=base_url, query_string=query_string,
-                               headers=headers, data=data)
 
 class Database(http.Controller):
 
@@ -1204,7 +1182,6 @@ class Session(http.Controller):
     def get_session_info(self):
         request.session.check_security()
         request.uid = request.session.uid
-        request.disable_db = False
         return request.env['ir.http'].session_info()
 
     @http.route('/web/session/authenticate', type='json', auth="none")
@@ -1413,10 +1390,15 @@ class Binary(http.Controller):
         '/web/assets/<int:id>-<string:unique>/<string:filename>',
         '/web/assets/<int:id>-<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
     def content_assets(self, id=None, filename=None, unique=None, extra=None, **kw):
-        id = id or request.env['ir.attachment'].sudo().search_read(
-            [('url', '=like', f'/web/assets/%/{extra}/{filename}' if extra else f'/web/assets/%/{filename}')],
-             fields=['id'], limit=1)[0]['id']
-
+        domain = [('url', '!=', False)]
+        if extra:
+            domain += [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
+        else:
+            domain += [
+                ('url', '=like', f'/web/assets/%/{filename}'),
+                ('url', 'not like', f'/web/assets/%/%/{filename}')
+            ]
+        id = id or request.env['ir.attachment'].sudo().search(domain, limit=1).id
         return request.env['ir.http']._get_content_common(xmlid=None, model='ir.attachment', res_id=id, field='datas', unique=unique, filename=filename,
             filename_field='name', download=None, mimetype=None, access_token=None, token=None)
 
@@ -1491,9 +1473,7 @@ class Binary(http.Controller):
                 filename = unicodedata.normalize('NFD', ufile.filename)
 
             try:
-                cids = request.httprequest.cookies.get('cids', str(request.env.user.company_id.id))
-                allowed_company_ids = [int(cid) for cid in cids.split(',')]
-                attachment = Model.with_context(allowed_company_ids=allowed_company_ids).create({
+                attachment = Model.create({
                     'name': filename,
                     'datas': base64.encodebytes(ufile.read()),
                     'res_model': model,
@@ -1815,7 +1795,7 @@ class ExportFormat(object):
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
 
-        Model = request.env[model].with_context(**params.get('context', {}))
+        Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
         if not Model._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
 
@@ -1839,7 +1819,6 @@ class ExportFormat(object):
 
             response_data = self.from_group_data(fields, tree)
         else:
-            Model = Model.with_context(import_compat=import_compat)
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
 
             export_data = records.export_data(field_names).get('datas',[])
@@ -2048,7 +2027,8 @@ class ReportController(http.Controller):
                 'message': "Odoo Server Error",
                 'data': se
             }
-            return request.make_response(html_escape(json.dumps(error)))
+            res = request.make_response(html_escape(json.dumps(error)))
+            raise werkzeug.exceptions.InternalServerError(response=res) from e
 
     @http.route(['/report/check_wkhtmltopdf'], type='json', auth="user")
     def check_wkhtmltopdf(self):

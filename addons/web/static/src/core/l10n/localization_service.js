@@ -11,7 +11,7 @@ const { Settings } = luxon;
 
 /** @type {[RegExp, string][]} */
 const NUMBERING_SYSTEMS = [
-    [/^ar-(sa|001)$/i, "arab"],
+    [/^ar-(sa|sy|001)$/i, "arab"],
     [/^bn/i, "beng"],
     [/^bo/i, "tibt"],
     // [/^fa/i, "Farsi (Persian)"], // No numberingSystem found in Intl

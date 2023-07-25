@@ -10,6 +10,8 @@
 # Martin Trigaux, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
+# Anna, 2023
+# JanaAvalah, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2022\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Last-Translator: JanaAvalah, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -59,11 +61,13 @@ msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
+"Geokodeerimis (kohtade) API-võti on vajalik.\n"
+"Lisateabe saamiseks külastage: https://developers.google.com/maps/documentation/geocoding/get-api-key."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "API:"
-msgstr ""
+msgstr "API:"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
@@ -94,22 +98,22 @@ msgstr "Näidatav nimi"
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Error with geolocation server:"
-msgstr ""
+msgstr "Viga geograafilise asukoha serveriga"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr ""
+msgstr "Geo Coder"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geo Location"
-msgstr ""
+msgstr "Geograafiline asukoht"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr ""
+msgstr "Geo teenusepakkuja"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -135,7 +139,7 @@ msgstr "ID"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr ""
+msgstr "Võti:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
@@ -166,13 +170,13 @@ msgstr "Partneri määramine"
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
-msgstr ""
+msgstr "Pakkuja %s ei ole geograafilise asukoha teenuse jaoks rakendatud."
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Tech Name"
-msgstr ""
+msgstr "Tehniline nimi"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
@@ -186,6 +190,13 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
+"Unable to geolocate, received the error:\n"
+"%s\n"
+"\n"
+"Google made this a paid feature.\n"
+"You should first enable billing on your Google account.\n"
+"Then, go to Developer Console, and enable the APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key

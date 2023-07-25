@@ -29,6 +29,8 @@
                 <t t-set="display_description" t-valuef="true"/>
                 <t t-set="display_detail" t-valuef="false"/>
                 <input type="hidden" name="tag" t-att-value="tag"/>
+                <input type="hidden" name="date_begin" t-att-value="date_begin"/>
+                <input type="hidden" name="date_end" t-att-value="date_end"/>
             </t>
         </div>
     </nav>
@@ -46,7 +48,7 @@
                     <t t-esc="tag.name"/>
                     <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link" t-att-rel="len(active_tag_ids) and 'nofollow'">&#215;</a>
                 </span>
-                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate #{tag.id in active_tag_ids and 'badge-primary' or 'border'} post_link" t-attf-rel="len(active_tag_ids) and 'nofollow'" t-esc="tag.name"/>
+                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate #{tag.id in active_tag_ids and 'badge-primary' or 'border'} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-esc="tag.name"/>
             </t>
         </t>
     </t>
@@ -64,7 +66,7 @@
         <optgroup t-foreach="nav_list" t-as="year" t-attf-label="#{year}">
             <option t-foreach="nav_list[year]" t-as="months"
                     t-att="[('selected' if date_begin and (months['date_begin'] == date_begin) else 'unselected' ) , 'true' ]"
-                    t-attf-value="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}">
+                    t-attf-value="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'], tag=tag)}">
                 <t t-esc="months['month']"/>
                 <t t-esc="year"/>
             </option>

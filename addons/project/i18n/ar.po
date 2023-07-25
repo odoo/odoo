@@ -7,7 +7,7 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2021
 # Martin Trigaux, 2021
 # Paul Andrawes, 2021
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -681,6 +681,15 @@ msgid ""
 msgstr ""
 "لا يمكن تحديد المتعاون أكثر من مرة في وصول مشاركة المشروع. يرجى إزالة النسخة"
 " (النسخ) ثم حاول مجدداً. "
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"لا يمكن أن تقوم بربط مرحلة مستخدم بالمشروع لأنها تكون مرئية فقط للمستخدم. "
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -1697,6 +1706,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"الأشخاص الذين سيكون هذا المشروع ومهامه مرئياً بالنسبة لهم.\n"
+"\n"
+"- المستخدمين الداخليين المدعوين: عند متابعة مشروع ما، سيحصل المستخدمون الداخليون على صلاحية الوصول إلى كافة مهامه دون استثناء. وإلا، فسيحصلون فقط على صلاحية الوصول إلى المهام المحددة التي يتابعونها.\n"
+"بإمكان المستخدم ذو صلاحية الوصول المشروع > المدير الوصول إلى هذا المشروع ومهامه، حتى وإن لم يكن أحد المتابعين.\n"
+"\n"
+"- كافة المستخدمين الداخليين: بوسع كافة المستخدمين الداخليين الوصول إلى المشروع وكافة مهامه دون استثناء.\n"
+"\n"
+"- مستخدمي البوابة المدعوين وكافة المستخدمين الداخليين: بوسع كافة المستخدمين الداخليين الوصول إلى المشروع وكافة مهامه دون استثناء.\n"
+"عند متابعة مشروع ما، سيحصل مستخدمو البوابة على صلاحية الوصول إلى كافة مهامه دون استثناء. وإلا، فسيحصلون فقط على صلاحية الوصول إلى المهام المحددة التي يتابعونها.\n"
+"\n"
+"عندما تتم مشاركة مشروع للقراءة فقط، تتم إعادة توجيه مستخدم البوابة إلى بوابته. بإمكانه عرض المهام ولكن لن يكون بمقدوره تحريرها.\n"
+"عندما تتم مشاركة مشروع للتحرير، تتم إعادة توجيه مستخدم البوابة إلى نافذتي عرض كانبان والقائمة للمهام. بإمكانه تعديل أي عدد من الحقول في المهتم.\n"
+"\n"
+"بأي حال، لا يزال بوسع مستخدم داخلي بلا صلاحيات وصول إلى المشاريع الوصول إلى المهام، إذا تم منحه رابط URL المناسب (ويجب أن يكون أحد المتابعين إذا كان المشروع خاصاً). "
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1962,7 +1985,7 @@ msgstr "خطأ! يجب أن يسبق تاريخ بدء المشروع تاريخ
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr "خطأ! لا يمكنك إنشاء تدرج هرمي متكرر للمهام. "
+msgstr "خطأ! لا يمكنك إنشاء تدرج هرمي متداخل للمهام. "
 
 #. module: project
 #. openerp-web
@@ -5334,12 +5357,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "لا يمكنك %s %s حقول في المهمة. "
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr "لا يمكنك أرشفة المهام المتكررة. يرجى تعطيل التكرار أولاً. "
@@ -5390,6 +5407,20 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr "لا يمكنك حذف مراحل تحتوي على مهام. عليك أولاً حذف كافة مهامها. "
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr "لا يمكنك قراءة %s حقول في المهمة. "
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr "لا يمكنك الكتابة في %s حقول في المهمة. "
 
 #. module: project
 #: code:addons/project/models/project.py:0
