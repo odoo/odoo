@@ -23,18 +23,13 @@ export class Messaging {
         this.store = services["mail.store"];
         this.rpc = services.rpc;
         this.orm = services.orm;
-        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
-        this.attachmentService = services["mail.attachment"];
         /** @type {import("@mail/core/common/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = services["mail.thread"];
-        /** @type {import("@mail/core/common/message_service").MessageService} */
-        this.messageService = services["mail.message"];
         /** @type {import("@mail/core/common/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
         this.router = services.router;
-        this.bus = services.bus_service;
         this.isReady = new Deferred();
         this.imStatusService = services.im_status;
         const user = services.user;
@@ -122,31 +117,6 @@ export class Messaging {
     }
 
     // -------------------------------------------------------------------------
-    // process notifications received by the bus
-    // -------------------------------------------------------------------------
-
-    handleNotification(notifications) {
-        for (const notif of notifications) {
-            switch (notif.type) {
-                case "ir.attachment/delete":
-                    {
-                        const { id: attachmentId, message: messageData } = notif.payload;
-                        if (messageData) {
-                            this.messageService.insert({
-                                ...messageData,
-                            });
-                        }
-                        const attachment = this.store.attachments[attachmentId];
-                        if (attachment) {
-                            this.attachmentService.remove(attachment);
-                        }
-                    }
-                    break;
-            }
-        }
-    }
-
-    // -------------------------------------------------------------------------
     // actions that can be performed on the messaging system
     // -------------------------------------------------------------------------
 
@@ -211,7 +181,6 @@ export const messagingService = {
         "orm",
         "user",
         "router",
-        "bus_service",
         "im_status",
         "mail.attachment",
         "mail.user_settings",
@@ -222,12 +191,6 @@ export const messagingService = {
     start(env, services) {
         const messaging = new Messaging(env, services);
         messaging.initialize();
-        messaging.isReady.then(() => {
-            services.bus_service.addEventListener("notification", (notifEvent) => {
-                messaging.handleNotification(notifEvent.detail);
-            });
-            services.bus_service.start();
-        });
         return messaging;
     },
 };
