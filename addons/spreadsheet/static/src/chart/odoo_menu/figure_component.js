@@ -7,22 +7,21 @@ import { useService } from "@web/core/utils/hooks";
 patch(spreadsheet.components.FigureComponent.prototype, "spreadsheet.FigureComponent", {
     setup() {
         this._super();
-        this.menuService = useService("menu");
         this.actionService = useService("action");
     },
-    async navigateToOdooMenu() {
-        const menu = this.env.model.getters.getChartOdooMenu(this.props.figure.id);
-        if (!menu) {
-            throw new Error(`Cannot find any menu associated with the chart`);
+    async executeOdooAction() {
+        const action = this.env.model.getters.getChartOdooAction(this.props.figure.id);
+        if (!action) {
+            throw new Error(`Cannot find any action associated with the chart`);
         }
-        await this.actionService.doAction(menu.actionID);
+        await this.actionService.doAction(action);
     },
-    get hasOdooMenu() {
-        return this.env.model.getters.getChartOdooMenu(this.props.figure.id) !== undefined;
+    get hasOdooAction() {
+        return this.env.model.getters.getChartOdooAction(this.props.figure.id) !== undefined;
     },
     async onClick() {
-        if (this.env.isDashboard() && this.hasOdooMenu) {
-            this.navigateToOdooMenu();
+        if (this.env.isDashboard() && this.hasOdooAction) {
+            this.executeOdooAction();
         }
     },
 });
