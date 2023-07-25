@@ -8,6 +8,10 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
     content: "Click on the Design Fair event",
     trigger: 'article:contains("Design Fair New York")',
 }, {
+    content: "Check Register button is disabled when no ticket selected",
+    trigger: 'button:disabled:contains("Register")',
+    isCheck: true,
+}, {
     content: "Select 2 'Free' tickets to buy",
     trigger: 'div.row:contains("Free") select.form-select',
     run: 'text 2'
