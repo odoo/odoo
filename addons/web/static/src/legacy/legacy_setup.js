@@ -13,7 +13,6 @@ import { makeLegacyActionManagerService } from "./backend_utils";
 import * as AbstractService from "web.AbstractService";
 import legacyEnv from "web.env";
 import * as session from "web.session";
-import makeLegacyWebClientService from "web.pseudo_web_client";
 import { templates } from "@web/core/assets";
 
 import { Component, whenReady } from "@odoo/owl";
@@ -35,8 +34,6 @@ export const legacySetupProm = new Promise((resolve) => {
     // legacy env on the bus in the wowl env
     const legacySessionService = makeLegacySessionService(legacyEnv, session);
     serviceRegistry.add("legacy_session", legacySessionService);
-    const legacyWebClientService = makeLegacyWebClientService(legacyEnv);
-    serviceRegistry.add("legacy_web_client", legacyWebClientService);
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     serviceRegistry.add("legacy_crash_manager", makeLegacyCrashManagerService(legacyEnv));
     const legacyDialogMappingService = makeLegacyDialogMappingService(legacyEnv);

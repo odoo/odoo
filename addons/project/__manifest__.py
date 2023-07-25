@@ -150,8 +150,6 @@
             'web/static/src/legacy/root_widget.js',
             'web/static/src/legacy/backend_utils.js',
             'web/static/src/legacy/utils.js',
-            'web/static/src/legacy/pseudo_web_client.js',
-            'web/static/src/legacy/web_client.js',
             'web/static/src/legacy/js/core/domain.js',
             'web/static/src/legacy/js/core/py_utils.js',
             'web/static/src/legacy/js/core/context.js',
