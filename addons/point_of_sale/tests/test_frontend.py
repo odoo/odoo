@@ -719,3 +719,29 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/ui?debug=1&config_id=%d" % self.main_pos_config.id, 'BarcodeScanningTour', login="accountman")
+
+    def test_08_show_tax_excluded(self):
+
+        # define a tax included tax record
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 10% Included',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+        })
+
+        # define a product record with the tax
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 110,
+            'taxes_id': [(6, 0, [tax.id])],
+            'available_in_pos': True,
+        })
+
+        # set Tax-Excluded Price
+        self.main_pos_config.write({
+            'iface_tax_included': 'subtotal'
+        })
+
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ShowTaxExcludedTour', login="accountman")

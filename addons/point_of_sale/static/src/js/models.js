@@ -1105,7 +1105,43 @@ exports.PosModel = Backbone.Model.extend({
             order.destroy({'reason':'abandon'});
         }
     },
+    computePriceAfterFp: function(price, taxes){
+        const order = this.get_order();
+        if(order && order.fiscal_position) {
+            let mapped_included_taxes = [];
+            let new_included_taxes = [];
+            const self = this;
+            _(taxes).each(function(tax) {
+                const line_taxes = self._map_tax_fiscal_position(tax, order);
+                if (line_taxes.length && line_taxes[0].price_include){
+                    new_included_taxes = new_included_taxes.concat(line_taxes);
+                }
+                if(tax.price_include && !_.contains(line_taxes, tax)){
+                    mapped_included_taxes.push(tax);
+                }
+            });
 
+            if (mapped_included_taxes.length > 0) {
+                if (new_included_taxes.length > 0) {
+                    const price_without_taxes = this.compute_all(mapped_included_taxes, price, 1, this.currency.rounding, true).total_excluded
+                    return this.compute_all(new_included_taxes, price_without_taxes, 1, this.currency.rounding, false).total_included
+                }
+                else{
+                    return this.compute_all(mapped_included_taxes, price, 1, this.currency.rounding, true).total_excluded;
+                }
+            }
+        }
+        return price;
+    },
+    getTaxesByIds: function(taxIds) {
+        let taxes = [];
+        for (let i = 0; i < taxIds.length; i++) {
+            if (this.taxes_by_id[taxIds[i]]) {
+                taxes.push(this.taxes_by_id[taxIds[i]]);
+            }
+        }
+        return taxes;
+    },
     _convert_product_img_to_base64: function (product, url) {
         return new Promise(function (resolve, reject) {
             var img = new Image();
@@ -2107,14 +2143,16 @@ exports.Product = Backbone.Model.extend({
         return price;
     },
     get_display_price: function(pricelist, quantity) {
+        const taxes = this.pos.get_taxes_after_fp(this.taxes_id);
+        const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
+        const priceAfterFp = this.pos.computePriceAfterFp(this.get_price(pricelist, quantity), currentTaxes);
+        const allPrices = this.pos.compute_all(taxes, priceAfterFp, 1, this.pos.currency.rounding);
         if (this.pos.config.iface_tax_included === 'total') {
-            const taxes = this.pos.get_taxes_after_fp(this.taxes_id);
-            const allPrices = this.pos.compute_all(taxes, this.get_price(pricelist, quantity), 1, this.pos.currency.rounding);
             return allPrices.total_included;
         } else {
-            return this.get_price(pricelist, quantity);
+            return allPrices.total_excluded;
         }
-    }
+    },
 });
 
 var orderline_id = 1;
@@ -2544,14 +2582,25 @@ exports.Orderline = Backbone.Model.extend({
         return parseFloat(round_di(this.price || 0, digits).toFixed(digits));
     },
     get_unit_display_price: function(){
+        const quantity = this.quantity;
+        this.quantity = 1.0;
+        const all_prices = this.get_all_prices()
+        this.quantity = quantity;
         if (this.pos.config.iface_tax_included === 'total') {
-            var quantity = this.quantity;
-            this.quantity = 1.0;
-            var price = this.get_all_prices().priceWithTax;
-            this.quantity = quantity;
-            return price;
+            return all_prices.priceWithTax;
         } else {
-            return this.get_unit_price();
+            return all_prices.priceWithoutTax;
+        }
+    },
+    getUnitDisplayPriceBeforeDiscount: function(){
+        const quantity = this.quantity;
+        this.quantity = 1.0;
+        const all_prices = this.get_all_prices()
+        this.quantity = quantity;
+        if (this.pos.config.iface_tax_included === 'total') {
+            return all_prices.priceWithTaxBeforeDiscount;
+        } else {
+            return all_prices.priceWithoutTaxBeforeDiscount;
         }
     },
     get_base_price:    function(){
@@ -2579,19 +2628,20 @@ exports.Orderline = Backbone.Model.extend({
         if (this.pos.config.iface_tax_included === 'total') {
             return this.get_price_with_tax();
         } else {
-            return this.get_base_price();
+            return this.get_price_without_tax();
         }
     },
     get_taxed_lst_unit_price: function(){
-        var lst_price = this.compute_fixed_price(this.get_lst_price());
+        const lstPrice = this.compute_fixed_price(this.get_lst_price());
+        const product =  this.get_product();
+        const taxesIds = product.taxes_id;
+        const productTaxes = this.get_taxes_after_fp(taxesIds);
+        const unitPrices =  this.compute_all(productTaxes, lstPrice, 1, this.pos.currency.rounding);
         if (this.pos.config.iface_tax_included === 'total') {
-            var product =  this.get_product();
-            var taxes_ids = product.taxes_id;
-            var product_taxes = this.get_taxes_after_fp(taxes_ids);
-            return this.compute_all(product_taxes, lst_price, 1, this.pos.currency.rounding).total_included;
+            return unitPrices.total_included;
+        } else {
+            return unitPrices.total_excluded;
         }
-        var digits = this.pos.dp['Product Price'];
-        return lst_price.toFixed(digits)
     },
     get_price_without_tax: function(){
         return this.get_all_prices().priceWithoutTax;
@@ -2627,13 +2677,7 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_taxes: function(){
         var taxes_ids = this.tax_ids || this.get_product().taxes_id;
-        var taxes = [];
-        for (var i = 0; i < taxes_ids.length; i++) {
-            if (this.pos.taxes_by_id[taxes_ids[i]]) {
-                taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
-            }
-        }
-        return taxes;
+        return this.pos.getTaxesByIds(taxes_ids);
     },
     /**
      * Calculate the amount of taxes of a specific Orderline, that are included in the price.
@@ -2701,6 +2745,7 @@ exports.Orderline = Backbone.Model.extend({
             "priceWithoutTax": all_taxes.total_excluded,
             "priceSumTaxVoid": all_taxes.total_void,
             "priceWithTaxBeforeDiscount": all_taxes_before_discount.total_included,
+            "priceWithoutTaxBeforeDiscount": all_taxes_before_discount.total_excluded,
             "tax": taxtotal,
             "taxDetails": taxdetail,
         };
@@ -2709,33 +2754,7 @@ exports.Orderline = Backbone.Model.extend({
         return this.order.pricelist.discount_policy;
     },
     compute_fixed_price: function (price) {
-        var order = this.order;
-        if(order.fiscal_position) {
-            var taxes = this.get_taxes();
-            var mapped_included_taxes = [];
-            var new_included_taxes = [];
-            var self = this;
-            _(taxes).each(function(tax) {
-                var line_taxes = self._map_tax_fiscal_position(tax, order);
-                if (line_taxes.length && line_taxes[0].price_include){
-                    new_included_taxes = new_included_taxes.concat(line_taxes);
-                }
-                if(tax.price_include && !_.contains(line_taxes, tax)){
-                    mapped_included_taxes.push(tax);
-                }
-            });
-
-            if (mapped_included_taxes.length > 0) {
-                if (new_included_taxes.length > 0) {
-                    var price_without_taxes = this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded
-                    return this.compute_all(new_included_taxes, price_without_taxes, 1, order.pos.currency.rounding, false).total_included
-                }
-                else{
-                    return this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded;
-                }
-            }
-        }
-        return price;
+        return this.pos.computePriceAfterFp(price, this.get_taxes());
     },
     get_fixed_lst_price: function(){
         return this.compute_fixed_price(this.get_lst_price());
@@ -3682,11 +3701,11 @@ exports.Order = Backbone.Model.extend({
         }), 0), this.pos.currency.rounding);
     },
     _reduce_total_discount_callback: function(sum, orderLine) {
-        sum += (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+        let discountUnitPrice = orderLine.getUnitDisplayPriceBeforeDiscount() * (orderLine.get_discount()/100);
         if (orderLine.display_discount_policy() === 'without_discount'){
-            sum += ((orderLine.get_taxed_lst_unit_price() - orderLine.get_unit_price()) * orderLine.get_quantity());
+            discountUnitPrice += orderLine.get_taxed_lst_unit_price() - orderLine.getUnitDisplayPriceBeforeDiscount();
         }
-        return sum;
+        return sum + discountUnitPrice * orderLine.get_quantity();
     },
     get_total_discount: function() {
         const reduce_callback = this._reduce_total_discount_callback.bind(this);
