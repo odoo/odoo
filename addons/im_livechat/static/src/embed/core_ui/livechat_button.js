@@ -11,6 +11,7 @@ import { debounce } from "@web/core/utils/timing";
 
 export class LivechatButton extends Component {
     static template = "im_livechat.LivechatButton";
+    static DEBOUNCE_DELAY = 500;
 
     setup() {
         this.store = useStore();
@@ -20,7 +21,9 @@ export class LivechatButton extends Component {
         this.livechatService = useState(useService("im_livechat.livechat"));
         /** @type {import('@mail/core/common/thread_service').ThreadService} */
         this.threadService = useService("mail.thread");
-        this.onClick = debounce(this.onClick.bind(this), 500, { leading: true });
+        this.onClick = debounce(this.onClick.bind(this), LivechatButton.DEBOUNCE_DELAY, {
+            leading: true,
+        });
     }
 
     onClick() {
