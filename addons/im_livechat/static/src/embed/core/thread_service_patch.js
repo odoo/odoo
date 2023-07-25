@@ -134,17 +134,17 @@ patch(ThreadService.prototype, "im_livechat", {
                 });
             }
             onChange(thread, "state", () => {
-                if (this.livechatService.state !== SESSION_STATE.CLOSED) {
+                if ([SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(thread.state)) {
                     this.livechatService.updateSession({ state: thread.state });
                 }
             });
             onChange(thread, "seen_message_id", () => {
-                if (this.livechatService.state !== SESSION_STATE.CLOSED) {
+                if ([SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(thread.state)) {
                     this.livechatService.updateSession({ seen_message_id: thread.seen_message_id });
                 }
             });
             onChange(thread, "message_unread_counter", () => {
-                if (this.livechatService.state !== SESSION_STATE.CLOSED) {
+                if ([SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(thread.state)) {
                     this.livechatService.updateSession({ channel: thread.channel });
                 }
             });
