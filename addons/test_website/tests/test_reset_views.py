@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import json
 import re
 
 import odoo.tests
@@ -17,8 +19,10 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
         resp = self.url_open(page)
         self.assertEqual(resp.status_code, 500, "Waiting 500")
         self.assertTrue('<button data-mode="soft" class="reset_templates_button' in resp.text)
-        data = {'view_id': self.find_template(resp), 'redirect': page, 'mode': mode}
-        resp = self.url_open('/website/reset_template', data)
+        data = {'params': {'view_id': self.find_template(resp), 'mode': mode}}
+        self.url_open('/website/reset_template', data=json.dumps(data), headers={'Content-Type': 'application/json'})
+        resp = self.url_open(page)
+        self.assertTrue(resp.url.endswith(page), "We should be checking the test page")
         self.assertEqual(resp.status_code, 200, "Waiting 200")
 
     def find_template(self, response):
@@ -104,6 +108,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
         # Break it again to have a previous arch different than file arch
         break_view(self.test_page_view.with_context(website_id=1))
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
+
         with self.assertRaises(AssertionError):
             # soft reset should not be able to reset the view as previous
             # version is also broken

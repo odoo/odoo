@@ -647,8 +647,8 @@ class Website(Home):
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.with_context(display_website=False).read(['name', 'id', 'key', 'xml_id', 'active', 'inherit_id'])
 
-    @http.route('/website/reset_template', type='http', auth='user', methods=['POST'], website=True, csrf=False)
-    def reset_template(self, view_id, mode='soft', redirect='/', **kwargs):
+    @http.route('/website/reset_template', type='json', auth='user', methods=['POST'])
+    def reset_template(self, view_id, mode='soft', **kwargs):
         """ This method will try to reset a broken view.
         Given the mode, the view can either be:
         - Soft reset: restore to previous architeture.
@@ -658,7 +658,7 @@ class Website(Home):
         view = request.env['ir.ui.view'].browse(int(view_id))
         # Deactivate COW to not fix a generic view by creating a specific
         view.with_context(website_id=None).reset_arch(mode)
-        return request.redirect(redirect)
+        return True
 
     @http.route(['/website/publish'], type='json', auth="user", website=True)
     def publish(self, id, object):

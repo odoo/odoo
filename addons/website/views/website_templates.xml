@@ -2326,8 +2326,16 @@
                             if (input.val() == dialog.find('.confirm_word').text()) {
                                 dialog.modal('hide');
                                 button.prop('disabled', true).text('Working...');
-                                $('#reset_templates_form').attr('action', '/website/reset_template');
-                                $('#reset_templates_form').trigger('submit');
+                                const id = document.querySelector('input[id="reset_templates_view_id"]').value;
+                                const redirect = document.querySelector('input[name="redirect"]').value;
+                                const mode = document.querySelector('input[id="reset_templates_mode"]').value;
+                                fetch('/website/reset_template', {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    'body': JSON.stringify({'params': {'view_id': id, 'mode': mode}})
+                                }).then(() => window.location = redirect);
                             } else {
                                 input.val('').focus();
                             }
