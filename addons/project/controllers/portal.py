@@ -47,9 +47,9 @@ class ProjectCustomerPortal(CustomerPortal):
             project=project,
             task_url=f'projects/{project.id}/task',
         )
-        # default value is set to 'project' in _prepare_tasks_values, so we have to set it to 'none' here.
+
         if not groupby:
-            values['groupby'] = 'none'
+            values['groupby'] = 'project' if self._display_project_groupby(project) else 'none'
 
         return self._get_page_view_values(project, access_token, values, 'my_projects_history', False, **kwargs)
 
@@ -291,7 +291,7 @@ class ProjectCustomerPortal(CustomerPortal):
             values['milestone'] = {'label': _('Milestone'), 'order': 'milestone_id', 'sequence': 7}
         return values
 
-    # Meant to be overriden in documents_project
+    # Meant to be overridden in documents_project
     def _display_project_groupby(self, project):
         return not project
 
