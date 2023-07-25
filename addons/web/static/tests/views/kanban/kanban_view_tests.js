@@ -9831,6 +9831,128 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("progress bar recompute after filter selection", async (assert) => {
+        serverData.models.partner.records.push({
+            foo: "yop",
+            bar: true,
+            qux: 100,
+        });
+        serverData.models.partner.records.push({
+            foo: "yop",
+            bar: true,
+            qux: 100,
+        });
+        serverData.models.partner.records.push({
+            foo: "yop",
+            bar: true,
+            qux: 100,
+        });
+
+        const kanban = await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban>
+                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
+                <templates><t t-name="kanban-box">
+                    <div>
+                        <field name="foo"/>
+                    </div>
+                </t></templates>
+            </kanban>`,
+            groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
+        });
+
+        assert.deepEqual(getTooltips(), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
+        assert.deepEqual(getCounters(), ["1", "6"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+        ]);
+
+        await click(getColumn(1), ".progress-bar.bg-success");
+
+        assert.deepEqual(getTooltips(), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
+        assert.deepEqual(getCounters(), ["1", "4"]);
+        assert.verifySteps(["web_search_read"]);
+
+        // Add searchdomain to something restricting progressbars' values (records still in filtered group)
+        await reload(kanban, { domain: [["qux", "=", 100]], groupBy: ["bar"] });
+        assert.deepEqual(getTooltips(), ["3 yop"]);
+        assert.deepEqual(getCounters(), ["3"]);
+        assert.verifySteps(["web_read_group", "read_progress_bar", "web_search_read"]);
+    });
+
+    QUnit.test("progress bar recompute after filter selection (aggregates)", async (assert) => {
+        serverData.models.partner.records.push({
+            foo: "yop",
+            bar: true,
+            qux: 100,
+            int_field: 100,
+        });
+        serverData.models.partner.records.push({
+            foo: "yop",
+            bar: true,
+            qux: 100,
+            int_field: 200,
+        });
+        serverData.models.partner.records.push({
+            foo: "yop",
+            bar: true,
+            qux: 100,
+            int_field: 300,
+        });
+
+        const kanban = await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban>
+                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                <templates><t t-name="kanban-box">
+                    <div>
+                        <field name="foo"/>
+                    </div>
+                </t></templates>
+            </kanban>`,
+            groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
+        });
+
+        assert.deepEqual(getTooltips(), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
+        assert.deepEqual(getCounters(), ["-4", "636"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+        ]);
+
+        await click(getColumn(1), ".progress-bar.bg-success");
+
+        assert.deepEqual(getTooltips(), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
+        assert.deepEqual(getCounters(), ["-4", "610"]);
+        assert.verifySteps([
+            "web_search_read",
+            "web_read_group", // recomputes aggregates
+        ]);
+
+        // Add searchdomain to something restricting progressbars' values (records still in filtered group)
+        await reload(kanban, { domain: [["qux", "=", 100]], groupBy: ["bar"] });
+        assert.deepEqual(getTooltips(), ["3 yop"]);
+        assert.deepEqual(getCounters(), ["600"]);
+        assert.verifySteps(["web_read_group", "read_progress_bar", "web_search_read"]);
+    });
+
     QUnit.test("load more should load correct records after drag&drop event", async (assert) => {
         // Add a sequence number and initialize
         serverData.models.partner.records.forEach((el, i) => (el.sequence = i));
