@@ -973,7 +973,7 @@ class ProductTemplate(models.Model):
             products = self.env['product.product'].browse(self.env.context['default_product_id'])
         if not products and self.env.context.get('default_product_tmpl_id'):
             products = self.env['product.template'].browse(self.env.context['default_product_tmpl_id']).product_variant_ids
-        if not self.user_has_groups('stock.group_stock_multi_warehouses') and len(products) == 1:
+        if not self.user_has_groups('stock.group_stock_multi_warehouses') and products and len(products) == 1:
             company = products.company_id or self.env.company
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
             return self.env.ref('stock.action_report_stock_rule').report_action(None, data={
