@@ -12,7 +12,7 @@ import { formView } from "@web/views/form/form_view";
  * those 2 fields ('event_id' + 'event_ticket_id')
  */
 
-class EventConfiguratorController extends formView.Controller {
+export class EventConfiguratorController extends formView.Controller {
     setup() {
         super.setup();
         this.action = useService("action");
