@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.3alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 11:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,30 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
 msgid "\"QR codes\""
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/product_main_view/product_main_view.xml:0
+#, python-format
+msgid "Add a note:"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/product_main_view/product_main_view.xml:0
+#, python-format
+msgid "Add to Cart"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_order_table_mode
+msgid "Allow customers to Order from their phones"
+msgstr ""
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Allow customers to order from their phones"
 msgstr ""
 
 #. module: pos_self_order
@@ -33,6 +57,35 @@ msgid ""
 msgstr ""
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/self_order_service.js:0
+#, python-format
+msgid "An error has occurred"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Before you can create QR codes, you need to create tables for the "
+"restaurant."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/order_cart/order_cart.xml:0
+#, python-format
+msgid "Cancel last selection"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_order_pay_after
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_order_pay_after
+msgid "Choose when the customer will pay"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
@@ -40,6 +93,34 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Configure Buttons"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/components/popup_table/popup_table.xml:0
+#, python-format
+msgid "Confirm"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/order_cart/order_cart.xml:0
+#, python-format
+msgid "Confirm order cancellation"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/components/popup_table/popup_table.xml:0
+#, python-format
+msgid "Confirm your table"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/self_order_service.js:0
+#, python-format
+msgid "Connection lost, please try again later"
 msgstr ""
 
 #. module: pos_self_order
@@ -81,8 +162,14 @@ msgid "Display Name"
 msgstr ""
 
 #. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_order_pay_after__each
+#: model:ir.model.fields.selection,name:pos_self_order.selection__res_config_settings__pos_self_order_pay_after__each
+msgid "Each Order (mobile payment only)"
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Generate Qr Codes"
+msgid "Generate QR Codes"
 msgstr ""
 
 #. module: pos_self_order
@@ -126,8 +213,28 @@ msgid "Light"
 msgstr ""
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/orders_history/orders_history.xml:0
+#, python-format
+msgid "Loading..."
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_order_pay_after__meal
+#: model:ir.model.fields.selection,name:pos_self_order.selection__res_config_settings__pos_self_order_pay_after__meal
+msgid "Meal (mobile payment or cashier)"
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Mobile Menu"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/landing_page/landing_page.xml:0
+#, python-format
+msgid "My Orders"
 msgstr ""
 
 #. module: pos_self_order
@@ -137,23 +244,70 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/ProductList/ProductList.xml:0
+#: code:addons/pos_self_order/static/src/pages/product_main_view/product_main_view.xml:0
+#, python-format
+msgid "No onions please"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/orders_history/orders_history.xml:0
+#, python-format
+msgid "No order found"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/product_list/product_list.xml:0
+#: code:addons/pos_self_order/static/src/pages/product_list/product_list.xml:0
 #, python-format
 msgid "No products found"
 msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/LandingPage/LandingPage.xml:0
+#: code:addons/pos_self_order/static/src/pages/order_cart/order_cart.js:0
+#, python-format
+msgid "Not yet implemented!"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/landing_page/landing_page.xml:0
 #, python-format
 msgid "Odoo Logo"
 msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/ProductList/ProductList.xml:0
+#: code:addons/pos_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
-msgid "Pizza"
+msgid "Order"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/self_order_service.js:0
+#, python-format
+msgid "Orders wasn't found on the server"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/order_cart/order_cart.js:0
+#, python-format
+msgid "Pay"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_order_pay_after
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_order_pay_after
+msgid "Pay After:"
+msgstr ""
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Pay after"
 msgstr ""
 
 #. module: pos_self_order
@@ -162,8 +316,18 @@ msgid "Point of Sale Configuration"
 msgstr ""
 
 #. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_order
+msgid "Point of Sale Orders"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
-msgid "Point of Sales"
+msgid "Points of Sale"
 msgstr ""
 
 #. module: pos_self_order
@@ -177,15 +341,20 @@ msgid "Pos Self Order Image Name"
 msgstr ""
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_order_table_mode
+msgid "Pos Self Order Table Mode"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_order_view_mode
 msgid "Pos Self Order View Mode"
 msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/LandingPage/LandingPage.xml:0
+#: code:addons/pos_self_order/static/src/pages/landing_page/landing_page.xml:0
 #, python-format
-msgid "Powered By"
+msgid "Powered by"
 msgstr ""
 
 #. module: pos_self_order
@@ -200,9 +369,14 @@ msgid "Primary"
 msgstr ""
 
 #. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_product_product
+msgid "Product Variant"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/ProductList/ProductList.xml:0
-#: code:addons/pos_self_order/static/src/ProductMainView/ProductMainView.xml:0
+#: code:addons/pos_self_order/static/src/components/product_card/product_card.xml:0
+#: code:addons/pos_self_order/static/src/pages/product_main_view/product_main_view.xml:0
 #, python-format
 msgid "Product image"
 msgstr ""
@@ -215,8 +389,52 @@ msgid "QR Code Menu"
 msgstr ""
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/product_main_view/product_main_view.xml:0
+#, python-format
+msgid "Quantity select"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/product_main_view/product_main_view.xml:0
+#, python-format
+msgid "Remove from Cart"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_restaurant_floor
+msgid "Restaurant Floor"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_restaurant_table
+msgid "Restaurant Table"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/product_list/product_list.xml:0
+#, python-format
+msgid "Review ("
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/product_list/product_list.xml:0
+#, python-format
+msgid "Search product"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__secondary
 msgid "Secondary"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__access_token
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__identifier
+msgid "Security Token"
 msgstr ""
 
 #. module: pos_self_order
@@ -228,6 +446,17 @@ msgid ""
 msgstr ""
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__selected_attributes
+msgid "Selected Attributes"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_order_table_mode
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Self Order"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_order_image
 msgid "Self Order Image"
 msgstr ""
@@ -235,6 +464,11 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_order_image_name
 msgid "Self Order Image Name"
+msgstr ""
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Self Ordering Enabled"
 msgstr ""
 
 #. module: pos_self_order
@@ -258,18 +492,102 @@ msgid "Success"
 msgstr ""
 
 #. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_code
+msgid "Table:"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/components/price_details/price_details.xml:0
+#, python-format
+msgid "Tax:"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/self_order_root.xml:0
+#, python-format
+msgid "The restaurant is currently closed"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/components/price_details/price_details.xml:0
+#, python-format
+msgid "Total:"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__url
 msgid "URL"
 msgstr ""
 
 #. module: pos_self_order
-#: model:pos_self_order.custom_link,name:pos_self_order.default_custom_link
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/product_main_view/product_main_view.xml:0
+#, python-format
+msgid "Update Cart"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/landing_page/landing_page.xml:0
+#, python-format
 msgid "View Menu"
 msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
 msgid "Warning"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/components/lines/lines.js:0
+#, python-format
+msgid "You cannot edit an posted order!"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/pages/product_main_view/product_main_view.js:0
+#, python-format
+msgid "You cannot reduce the quantity of an order that has already been sent!"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/self_order_service.js:0
+#, python-format
+msgid "You're not authorized to perform this action"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/self_order_service.js:0
+#, python-format
+msgid "Your order has been canceled"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/self_order_service.js:0
+#, python-format
+msgid "Your order has been paid"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/self_order_service.js:0
+#, python-format
+msgid "Your order has been placed!"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/self_order_service.js:0
+#, python-format
+msgid "Your order status has been changed"
 msgstr ""
 
 #. module: pos_self_order
@@ -290,4 +608,11 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.actions.report,name:pos_self_order.report_self_order_qr_codes_page
 msgid "qr.codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/components/popup_table/popup_table.xml:0
+#, python-format
+msgid "to place the order"
 msgstr ""
