@@ -99,7 +99,6 @@
             'web/static/src/legacy/root_widget.js',
             'web/static/src/legacy/backend_utils.js',
             'web/static/src/legacy/utils.js',
-            'web/static/src/legacy/web_client.js',
             'web/static/src/legacy/js/core/domain.js',
             'web/static/src/legacy/js/core/py_utils.js',
             'web/static/src/legacy/js/core/context.js',
@@ -115,7 +114,6 @@
             'web/static/src/legacy/js/widgets/date_picker.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/owl_compatibility.js',
-            'web/static/src/legacy/pseudo_web_client.js',
 
             'mrp_subcontracting/static/src/subcontracting_portal/*',
             'web/static/src/start.js',
