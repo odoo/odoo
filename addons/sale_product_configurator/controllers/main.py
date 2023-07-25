@@ -312,7 +312,7 @@ class ProductConfiguratorController(Controller):
         # and no_variant attributes into account. Also, drop the id which was auto-included by the
         # search but isn't relevant since it is supposed to be the id of a `product.product` record.
         if not product_or_template.is_product_variant:
-            basic_information.pop('id')
+            basic_information['id'] = False
             combination_name = combination._get_combination_name()
             if combination_name:
                 basic_information.update(
