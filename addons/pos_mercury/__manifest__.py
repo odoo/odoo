@@ -35,14 +35,7 @@ following:
     'installable': True,
     'assets': {
         'point_of_sale._assets_pos': [
-            'pos_mercury/static/src/js/pos_mercury.js',
-            'pos_mercury/static/src/js/OrderReceipt.js',
-            'pos_mercury/static/src/js/PaymentScreen.js',
-            'pos_mercury/static/src/js/PaymentScreenPaymentLines.js',
-            'pos_mercury/static/src/js/PaymentTransactionPopup.js',
-            'pos_mercury/static/src/js/ProductScreen.js',
-            'pos_mercury/static/src/css/pos_mercury.css',
-            'pos_mercury/static/src/xml/**/*',
+            'pos_mercury/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',
