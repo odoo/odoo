@@ -4,7 +4,10 @@ from odoo.tools.pdf import OdooPdfFileReader
 
 from lxml import etree
 from struct import error as StructError
-from PyPDF2.utils import PdfReadError
+try:
+    from PyPDF2.errors import PdfReadError
+except ImportError:
+    from PyPDF2.utils import PdfReadError
 import io
 import logging
 
