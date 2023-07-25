@@ -142,7 +142,6 @@
 
             'web/static/src/legacy/legacy_service_provider.js',
             'web/static/src/legacy/legacy_dialog.js',
-            'web/static/src/legacy/legacy_load_views.js',
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
             'web/static/src/legacy/root_widget.js',
@@ -161,7 +160,6 @@
             'web/static/src/legacy/js/fields/field_registry.js',
             'web/static/src/legacy/js/fields/field_registration.js',
             'web/static/src/legacy/js/fields/field_utils.js',
-            'web/static/src/legacy/js/services/data_manager.js',
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/widgets/date_picker.js',
             'web/static/src/legacy/js/env.js',

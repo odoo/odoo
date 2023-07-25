@@ -179,9 +179,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/legacy/js/core/misc.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/owl_compatibility.js',
-            'web/static/src/legacy/js/services/data_manager.js',
             'web/static/src/legacy/js/services/session.js',
-            'web/static/src/legacy/legacy_load_views.js',
             'web/static/src/legacy/utils.js',
 
             'mail/static/src/core/common/**/*',
