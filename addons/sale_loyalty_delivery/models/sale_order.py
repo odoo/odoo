@@ -4,8 +4,18 @@
 from odoo import _, models
 from odoo.fields import Command
 
+
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
+
+    # delivery overrides
+
+    def _compute_amount_total_without_delivery(self):
+        self.ensure_one()
+        lines = self.order_line.filtered(lambda l: l.coupon_id and l.coupon_id.program_type in ['ewallet', 'gift_card'])
+        return super()._compute_amount_total_without_delivery() - sum(lines.mapped('price_unit'))
+
+    # sale_loyalty overrides
 
     def _get_no_effect_on_threshold_lines(self):
         self.ensure_one()
