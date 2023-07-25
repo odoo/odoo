@@ -3594,10 +3594,7 @@ var SnippetsMenu = Widget.extend({
         const tooltipClass = 'aria-describedby';
         const tooltippedEl = this.el.querySelector(`[${tooltipClass}^="tooltip"]`);
         if (tooltippedEl) {
-            const tooltipEl = document.getElementById(tooltippedEl.getAttribute(tooltipClass));
-            if (tooltipEl) {
-                Tooltip.getInstance(tooltipEl).hide();
-            }
+            Tooltip.getInstance(tooltippedEl).hide();
         }
     },
 
