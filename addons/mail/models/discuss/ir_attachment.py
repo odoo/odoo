@@ -16,14 +16,14 @@ class IrAttachment(models.Model):
         return super()._bus_notification_target()
 
     @api.model
-    def _get_upload_env(self, request, thread_model, thread_id):
+    def _get_upload_env(self, thread_model, thread_id):
         """Overriden to allow guests and (portal) users to upload attachments to channels they have
         access to. The base method returns the env of the current request, which is not sudo and
         relies on access rights. Guests or (portal) users need sudo to upload attachments."""
         if thread_model == "discuss.channel":
             return (
-                request.env["discuss.channel.member"]
-                ._get_as_sudo_from_request_or_raise(request=request, channel_id=int(thread_id))
+                self.env["discuss.channel.member"]
+                ._get_as_sudo_from_context_or_raise(channel_id=int(thread_id))
                 .env
             )
-        return super()._get_upload_env(request, thread_model, thread_id)
+        return super()._get_upload_env(thread_model, thread_id)

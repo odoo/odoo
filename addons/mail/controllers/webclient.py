@@ -11,7 +11,7 @@ class WebclientController(http.Controller):
     def mail_init_messaging(self):
         if not request.env.user.sudo()._is_public():
             return request.env.user.sudo(request.env.user.has_group("base.group_portal"))._init_messaging()
-        guest = request.env["mail.guest"]._get_guest_from_request(request)
+        guest = request.env["mail.guest"]._get_guest_from_context()
         if guest:
             return guest.sudo()._init_messaging()
         raise NotFound()

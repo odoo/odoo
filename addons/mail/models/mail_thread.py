@@ -452,7 +452,7 @@ class MailThread(models.AbstractModel):
             raise exceptions.UserError(_("Only messages type comment can have their content updated"))
 
     @api.model
-    def _get_from_request_or_raise(self, request, thread_id):
+    def _get_from_context_or_raise(self, thread_id):
         return self.browse(thread_id).exists()
 
     # ------------------------------------------------------------
