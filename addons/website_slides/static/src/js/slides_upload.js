@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
+import { markup } from '@odoo/owl';
 import { uniqueId } from '@web/core/utils/functions';
-import { sprintf } from '@web/core/utils/strings';
-import {_t, qweb as QWeb} from 'web.core';
+import { escape, sprintf } from '@web/core/utils/strings';
+import { _t, qweb as QWeb } from 'web.core';
 import Dialog from 'web.Dialog';
 import publicWidget from 'web.public.widget';
 import utils from 'web.utils';
@@ -75,6 +76,47 @@ var SlideUploadDialog = Dialog.extend({
             self._bindSelect2Dropdown();
             self._resetModalButton();
         });
+    },
+
+    _bold(text) {
+        return markup(
+            sprintf(escape(text), {
+                bold_left: "<span class='fw-bold'>",
+                bold_right: "</span>",
+            })
+        );
+    },
+
+    getInstallText(module) {
+        return sprintf(_t("Install the %(module)s app."), { module });
+    },
+
+    get PRIVATE_UPLOAD_TEXT() {
+        const translatedText = _t(
+            "First, upload your videos on Vimeo and mark them as %(bold_left)sPrivate%(bold_right)s. This way, they will be secured."
+        );
+        return this._bold(translatedText);
+    },
+
+    get UNLISTED_UPLOAD_TEXT() {
+        const translatedText = _t(
+            "First, upload your videos on YouTube and mark them as %(bold_left)sunlisted%(bold_right)s. This way, they will be secured."
+        );
+        return this._bold(translatedText);
+    },
+
+    get WHAT_PRIVATE_MEANS_TEXT() {
+        const translatedText = _t(
+            "What does %(bold_left)sPrivate%(bold_right)s mean? The Vimeo “Private” privacy setting means it is a video which can be viewed only by the users with the link to it. Your video will never come up in the search results nor on your channel."
+        );
+        return this._bold(translatedText);
+    },
+
+    get WHAT_UNLISTED_MEANS_TEXT() {
+        const translatedText = _t(
+            "What does %(bold_left)sunlisted%(bold_right)s mean? The YouTube “unlisted” means it is a video which can be viewed only by the users with the link to it. Your video will never come up in the search results nor on your channel."
+        );
+        return this._bold(translatedText);
     },
 
     //--------------------------------------------------------------------------

@@ -29,7 +29,7 @@
                 <a class="o_wslides_js_upload_install_button w-100 text-center mb-4 btn rounded border text-600 p-3"
                     href="#" t-att-title="module_info['name']"
                     t-att-data-module-id="module_info['id']">
-                    <i class="fa fa-trophy"></i> <t t-out="module_info['motivational']"/><span class="text-primary"> Install the <t t-out="module_info['name']"/> app.</span>
+                    <i class="fa fa-trophy"></i> <t t-out="module_info['motivational']"/><span class="text-primary" t-esc="widget.getInstallText(module_info.name)"/>
                 </a>
             </t>
         </t>
@@ -250,15 +250,14 @@
                             <div class="o_slide_tutorial p-3">
                                 <div class="h5">How to upload your videos?</div>
                                 <div class="h6">On YouTube</div>
-                                <div>First, upload your videos on YouTube and mark them as <strong>unlisted</strong>. This way, they will be secured.</div>
-                                <div>What does <strong>unlisted</strong> means? The YouTube "unlisted" means it is a video which can be viewed only by the users with the link to it. Your video will never come up in the search results nor on your channel.</div>
+                                <div t-out="widget.UNLISTED_UPLOAD_TEXT"/>
+                                <div t-out="widget.WHAT_UNLISTED_MEANS_TEXT"/>
                                 <div><a href="https://support.google.com/youtube/answer/157177" target="_blank" >Change video privacy settings</a></div>
                                 <br/>
                                 <div class="h6">On Vimeo</div>
                                 <div>
-                                    <span>First, upload your videos on Vimeo and mark them as <strong>Private</strong>. This way, they will be secured.</span><br/>
-                                    <span>What does <strong>Private</strong> mean? The Vimeo "Private" privacy setting means it is a video which can be viewed only by the users with the link to it.
-                                    Your video will never come up in the search results nor on your channel.</span><br/>
+                                    <span t-out="widget.PRIVATE_UPLOAD_TEXT"/><br/>
+                                    <span t-out="widget.WHAT_PRIVATE_MEANS_TEXT"/><br/>
                                     <span><a href="https://vimeo.zendesk.com/hc/en-us/articles/224819527-Changing-the-privacy-settings-of-your-videos" target="_blank" >Change video privacy settings</a></span><br/><br/>
                                     <span>The video link to input here can be obtained by using the 'share' button in the Vimeo interface.</span><br/>
                                     <span>It should look similar to</span>
