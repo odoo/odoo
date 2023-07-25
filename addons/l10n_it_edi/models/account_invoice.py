@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from functools import reduce
 import logging
 import re
 
@@ -121,11 +120,17 @@ class AccountMove(models.Model):
         tax_lines = []
         for _tax_name, tax_dict in tax_details['tax_details'].items():
             # The assumption is that the company currency is EUR.
+            tax = tax_dict['tax']
             base_amount = tax_dict['base_amount']
             tax_amount = tax_dict['tax_amount']
-            tax_rate = tax_dict['tax'].amount
+            tax_rate = tax.amount
+            tax_exigibility_code = (
+                'S' if tax._l10n_it_is_split_payment()
+                else 'D' if tax.tax_exigibility == 'on_payment'
+                else 'I' if tax.tax_exigibility == 'on_invoice'
+                else False
+            )
             expected_base_amount = tax_amount * 100 / tax_rate if tax_rate else False
-            tax = tax_dict['tax']
             # Constraints within the edi make local rounding on price included taxes a problem.
             # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
             #   taxable base = sum(taxable base for each unit) + Arrotondamento
@@ -139,6 +144,7 @@ class AccountMove(models.Model):
                 'rounding': tax_dict.get('rounding', False),
                 'base_amount': tax_dict['base_amount'],
                 'tax_amount': tax_dict['tax_amount'],
+                'exigibility_code': tax_exigibility_code,
             }
             tax_lines.append(tax_line_dict)
         return tax_lines
@@ -333,11 +339,6 @@ class AccountTax(models.Model):
     _name = "account.tax"
     _inherit = "account.tax"
 
-    l10n_it_vat_due_date = fields.Selection([
-        ("I", "[I] IVA ad esigibilità immediata"),
-        ("D", "[D] IVA ad esigibilità differita"),
-        ("S", "[S] Scissione dei pagamenti")], default="I", string="VAT due date")
-
     l10n_it_has_exoneration = fields.Boolean(string="Has exoneration of tax (Italy)", help="Tax has a tax exoneration.")
     l10n_it_kind_exoneration = fields.Selection(selection=[
             ("N1", "[N1] Escluse ex art. 15"),
@@ -373,15 +374,37 @@ class AccountTax(models.Model):
                     'l10n_it_kind_exoneration',
                     'l10n_it_law_reference',
                     'amount',
-                    'l10n_it_vat_due_date')
+                    'children_tax_ids')
     def _check_exoneration_with_no_tax(self):
         for tax in self:
             if tax.l10n_it_has_exoneration:
                 if not tax.l10n_it_kind_exoneration or not tax.l10n_it_law_reference or tax.amount != 0:
                     raise ValidationError(_("If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0."))
-                if tax.l10n_it_kind_exoneration == 'N6' and tax.l10n_it_vat_due_date == 'S':
-                    raise UserError(_("'Scissione dei pagamenti' is not compatible with exoneration of kind 'N6'"))
+                if tax.l10n_it_kind_exoneration == 'N6' and tax._l10n_it_is_split_payment():
+                    raise UserError(_("Split Payment is not compatible with exoneration of kind 'N6'"))
+
+    def _l10n_it_is_split_payment(self):
+        """ Split payment means that the Public Administration buyer will pay VAT
+            to the tax agency instead of the vendor
+        """
+        self.ensure_one()
+        if not self.children_tax_ids:
+            return False
+
+        children_tax_tags = self.children_tax_ids.mapped(lambda t: t.get_tax_tags(is_refund=False, repartition_type='tax'))
+        it_tax_report_ve38_lines = self.env['account.report.line'].search([
+            ('report_id.country_id.code', '=', 'IT'),
+            ('code', '=', 'VE38'),
+        ])
+        ve38_lines_tags = it_tax_report_ve38_lines.expression_ids._get_matching_tags()
+        return bool(children_tax_tags & ve38_lines_tags)
+
+    def _l10n_it_get_tax_kind(self):
+        """ Will be overridden by submodules implementing different localized kinds of taxes. """
+        if self._l10n_it_is_split_payment():
+            return 'split_payment'
+        return 'vat'
 
     def _l10n_it_filter_kind(self, kind):
-        """ This can be overridden by l10n_it_edi_withholding for different kind of taxes (withholding, pension_fund)."""
-        return self if kind == 'vat' else self.env['account.tax']
+        """ Filters taxes depending on _l10n_it_get_tax_kind. """
+        return self.filtered(lambda tax: tax._l10n_it_get_tax_kind() == kind)

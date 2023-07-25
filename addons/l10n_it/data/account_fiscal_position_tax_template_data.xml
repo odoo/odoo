@@ -78,4 +78,11 @@
         <field name="tax_src_id"  ref="00as"/>
         <field name="tax_dest_id" ref="00rcs"/>
     </record>
+
+    <record id="afpttn_it_split_payment_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="split_payment_fiscal_position"/>
+        <field name="tax_src_id"  ref="22v"/>
+        <field name="tax_dest_id" ref="22vsp_group"/>
+    </record>
+
 </odoo>

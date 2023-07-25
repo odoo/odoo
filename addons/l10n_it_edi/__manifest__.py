@@ -27,9 +27,9 @@ E-invoice implementation
         'data/ir_cron.xml',
         'views/res_config_settings_views.xml',
         'views/l10n_it_view.xml',
-        ],
+    ],
     'demo': [
-        'data/account_invoice_demo.xml',
+        'data/account_invoice_demo.xml'
     ],
     'post_init_hook': '_l10n_it_edi_post_init',
     'license': 'LGPL-3',

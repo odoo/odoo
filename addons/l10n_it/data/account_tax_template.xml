@@ -1167,4 +1167,51 @@
             }),
         ]"/>
     </record>
+
+    <!-- Split Payment (Scissione dei pagamenti) ......................................................... -->
+
+    <record id="22vsp" model="account.tax.template">
+        <field name="description">22vsp</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">22% SPv neg.</field>
+        <field name="sequence">350</field>
+        <field name="amount">-22</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_split_payment"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('1504'),
+                'plus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('1504'),
+                'minus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="22vsp_group" model="account.tax.template">
+        <field name="description">22vsp_group</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">22% SPv</field>
+        <field name="sequence">360</field>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_split_payment"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('22v'),ref('22vsp')])]"/>
+    </record>
+
 </odoo>
