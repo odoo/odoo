@@ -85,7 +85,10 @@
                             <field name="mail_template_id" attrs="{'invisible': [('program_type', 'not in', ('gift_card', 'ewallet'))]}"/>
                             <field name="currency_id"/>
                             <field name="currency_symbol" invisible="1"/>
-                            <field name="pricelist_ids" widget="many2many_tags" groups="product.group_product_pricelist"/>
+                            <field name="pricelist_ids"
+                                   widget="many2many_tags"
+                                   attrs="{'invisible': [('program_type', 'in', ('gift_card', 'ewallet'))]}"
+                                   groups="product.group_product_pricelist"/>
                             <field name="portal_point_name" attrs="{'invisible': [('program_type', 'in', ('loyalty', 'gift_card', 'ewallet'))]}" string="Points Unit" groups="base.group_no_one"/>
                             <field name="portal_point_name" attrs="{'invisible': ['|', ('program_type', 'in', ('gift_card', 'ewallet')), ('program_type', '!=', 'loyalty')]}" string="Points Unit"/>
                             <field name="portal_visible" invisible="1"/>
