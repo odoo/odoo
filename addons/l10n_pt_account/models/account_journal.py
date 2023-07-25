@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
-    l10n_pt_account_tax_authority_series_id = fields.Many2one("l10n_pt.tax.authority.series", string="Official Series of the Tax Authority")
+    l10n_pt_account_tax_authority_series_id = fields.Many2one("l10n_pt_account.tax.authority.series", string="Official Series of the Tax Authority")
 
     def _prepare_liquidity_account_vals(self, company, code, vals):
         account_vals = super()._prepare_liquidity_account_vals(company, code, vals)

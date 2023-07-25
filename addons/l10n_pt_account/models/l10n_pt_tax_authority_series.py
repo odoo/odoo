@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 
 class L10nPtTaxAuthoritySeries(models.Model):
-    _name = "l10n_pt.tax.authority.series"
+    _name = "l10n_pt_account.tax.authority.series"
     _description = "Official Series provided by the Portuguese Tax Authority"
     _rec_name = 'code'
 
@@ -11,7 +11,7 @@ class L10nPtTaxAuthoritySeries(models.Model):
     end_date = fields.Date("End Date of the series")
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [('code', 'unique(code)', 'Code must be unique!')]
+    _sql_constraints = [('code', 'unique(code)', 'Code must be unique.')]
 
     def write(self, vals):
         res = super().write(vals)

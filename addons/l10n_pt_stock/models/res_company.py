@@ -2,7 +2,7 @@
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
-from odoo.addons.l10n_pt.utils.hashing import L10nPtHashingUtils
+from odoo.addons.l10n_pt_account.utils.hashing import L10nPtHashingUtils
 
 
 class ResCompany(models.Model):

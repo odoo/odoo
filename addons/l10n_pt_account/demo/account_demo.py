@@ -10,5 +10,5 @@ class AccountChartTemplate(models.AbstractModel):
         demo_data = super()._get_demo_data(company)
         if company.account_fiscal_country_id.code == "PT":
             sale_journals = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', company.id)])
-            sale_journals.l10n_pt_account_tax_authority_series_id = self.env.ref("l10n_pt.demo_series").id
+            sale_journals.l10n_pt_account_tax_authority_series_id = self.env.ref("l10n_pt_account.demo_series").id
         return demo_data

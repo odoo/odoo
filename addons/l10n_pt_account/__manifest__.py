@@ -12,11 +12,6 @@
         'base',
         'account',
         'base_vat',
-        'l10n_pt',
-    ],
-    'auto_install': [
-        'account',
-        'l10n_pt',
     ],
     'data': [
         'data/account_tax_report.xml',
@@ -26,10 +21,14 @@
         'views/account_tax_view.xml',
         'views/report_template.xml',
         'views/report_invoice.xml',
+        'views/l10n_pt_tax_authority_series_views.xml',
         'views/res_config_settings_views.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [
+        'demo/demo_data.xml',
         'demo/demo_company.xml',
+        'demo/ir_config_parameter_data.xml',
     ],
     'license': 'LGPL-3',
 }

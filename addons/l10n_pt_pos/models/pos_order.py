@@ -2,7 +2,7 @@ import re
 import urllib.parse
 import stdnum.pt.nif
 
-from odoo.addons.l10n_pt.utils.hashing import L10nPtHashingUtils
+from odoo.addons.l10n_pt_account.utils.hashing import L10nPtHashingUtils
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
 from odoo.tools import float_repr, format_date
@@ -143,7 +143,7 @@ class PosOrder(models.Model):
     def _hash_compute(self, previous_hash=None):
         if self.company_id.country_id.code != 'PT' or not self._context.get('l10n_pt_force_compute_signature'):
             return {}
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
+        endpoint = self.env['ir.config_parameter'].sudo().get_param('l10n_pt_account.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
         if endpoint == 'demo':
             return self._l10n_pt_pos_sign_records_using_demo_key(previous_hash)  # sign locally with the demo key provided by the government
         return self._l10n_pt_pos_sign_records_using_iap(previous_hash)  # sign the records using Odoo's IAP (or a custom endpoint)

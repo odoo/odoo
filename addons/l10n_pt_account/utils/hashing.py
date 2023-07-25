@@ -14,11 +14,11 @@ _logger = logging.getLogger(__name__)
 
 
 class L10nPtHashingUtils:
-    L10N_PT_SIGN_DEFAULT_ENDPOINT = 'http://l10n-pt.api.odoo.com/iap/l10n_pt'
+    L10N_PT_SIGN_DEFAULT_ENDPOINT = 'http://l10n-pt.api.odoo.com/iap/l10n_pt_account'
 
     @staticmethod
     def _l10n_pt_get_public_keys(env):
-        endpoint = env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
+        endpoint = env['ir.config_parameter'].sudo().get_param('l10n_pt_account.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
         res = {}
         try:
             params = {'db_uuid': env['ir.config_parameter'].sudo().get_param('database.uuid')}
@@ -40,8 +40,8 @@ class L10nPtHashingUtils:
 
     @staticmethod
     def _l10n_pt_get_last_public_key(env):
-        if env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint') == 'demo':
-            public_key_string = env['ir.config_parameter'].sudo().get_param('l10n_pt.public_key')
+        if env['ir.config_parameter'].sudo().get_param('l10n_pt_account.iap_endpoint') == 'demo':
+            public_key_string = env['ir.config_parameter'].sudo().get_param('l10n_pt_account.public_key')
         else:
             public_keys = L10nPtHashingUtils._l10n_pt_get_public_keys(env)
             public_key_string = public_keys[max(public_keys, key=int)]
@@ -51,7 +51,7 @@ class L10nPtHashingUtils:
 
     @staticmethod
     def _l10n_pt_sign_records_using_iap(env, docs_to_sign):
-        endpoint = env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
+        endpoint = env['ir.config_parameter'].sudo().get_param('l10n_pt_account.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
         res = {}
         try:
             params = {
@@ -87,8 +87,8 @@ class L10nPtHashingUtils:
         Technical requirements from the Portuguese tax authority can be found at page 13 of the following document:
         https://info.portaldasfinancas.gov.pt/pt/docs/Portug_tax_system/Documents/Order_No_8632_2014_of_the_3rd_July.pdf
         """
-        current_key_version = env['ir.config_parameter'].sudo().get_param('l10n_pt.key_version')
-        private_key_string = env['ir.config_parameter'].sudo().get_param(f'l10n_pt.private_key')
+        current_key_version = env['ir.config_parameter'].sudo().get_param('l10n_pt_account.key_version')
+        private_key_string = env['ir.config_parameter'].sudo().get_param(f'l10n_pt_account.private_key')
         if not private_key_string:
             raise UserError(_("The private key for the local hash generation in Portugal is not set."))
         private_key = serialization.load_pem_private_key(str.encode(private_key_string), password=None)

@@ -9,11 +9,11 @@
     'category': 'Accounting/Localizations/Point of Sale',
     'depends': [
         'point_of_sale',
-        'l10n_pt',
+        'l10n_pt_account',
     ],
     'auto_install': [
         'point_of_sale',
-        'l10n_pt',
+        'l10n_pt_account',
     ],
     'data': [
         'views/pos_config_views.xml',

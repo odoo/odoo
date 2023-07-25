@@ -8,7 +8,7 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     country_code = fields.Char(related='company_id.country_id.code', depends=['company_id.country_id'])
-    l10n_pt_pos_tax_authority_series_id = fields.Many2one("l10n_pt.tax.authority.series", string="Official Series of the Tax Authority")
+    l10n_pt_pos_tax_authority_series_id = fields.Many2one("l10n_pt_account.tax.authority.series", string="Official Series of the Tax Authority")
 
     def open_ui(self):
         if not self.company_id.country_id:

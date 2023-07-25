@@ -9,11 +9,11 @@
     'category': 'Accounting/Localizations/Stock',
     'depends': [
         'stock',
-        'l10n_pt',
+        'l10n_pt_account',
     ],
     'auto_install': [
         'stock',
-        'l10n_pt',
+        'l10n_pt_account',
     ],
     'data': [
         'views/stock_picking_views.xml',
