@@ -8,8 +8,6 @@ import {
     getFixture,
     patchDate,
 } from '@web/../tests/helpers/utils';
-import testUtils from 'web.test_utils';
-const find = testUtils.dom.find;
 
 const serviceRegistry = registry.category("services");
 
@@ -85,7 +83,7 @@ QUnit.module('Crm Forecast Model Extension', {
                         "2nd column March should contain 2 records");
 
         // remove the filter
-        await click(find(target, '.o_searchview_facet', "Forecast"), '.o_facet_remove');
+        await click($(target).find(".o_searchview_facet:contains(Forecast)")[0], ".o_facet_remove");
 
         assert.containsN(target, '.o_kanban_group', 3, "There should be 3 columns");
         assert.containsN(target, '.o_kanban_group:nth-child(1) .o_kanban_record', 2,
@@ -118,7 +116,7 @@ QUnit.module('Crm Forecast Model Extension', {
                         "2nd column March should contain 2 records");
 
         // remove the filter
-        await click(find(target, '.o_searchview_facet', "Forecast"), '.o_facet_remove');
+        await click($(target).find(".o_searchview_facet:contains(Forecast)")[0], ".o_facet_remove");
 
         assert.containsN(target, '.o_kanban_group', 3, "There should be 3 columns");
         assert.containsN(target, '.o_kanban_group:nth-child(1) .o_kanban_record', 2,

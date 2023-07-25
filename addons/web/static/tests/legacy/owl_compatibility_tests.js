@@ -62,7 +62,7 @@
                 </div>`;
             Parent.components = { ComponentAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.strictEqual(parent.el.innerHTML, '<div>Hello World!</div>');
@@ -92,7 +92,7 @@
                 </div>`;
             Parent.components = { ComponentAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.strictEqual(parent.el.innerHTML, '<div>Hello World!</div>');
@@ -133,7 +133,7 @@
                 </div>`;
             Parent.components = { ComponentAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             await mount(Parent, target);
         });
 
@@ -167,7 +167,7 @@
                 </div>`;
             Parent.components = { MyWidgetAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.strictEqual(parent.el.innerHTML, '<div>Hello World!</div>');
@@ -198,7 +198,7 @@
                 </div>`;
             Parent.components = { ComponentAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.strictEqual(parent.el.innerHTML, '<div>Hello World!</div>');
@@ -245,7 +245,7 @@
                 </div>`;
             Parent.components = { MyWidgetAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.strictEqual(parent.el.innerHTML, '<div>Hello World!</div>');
@@ -307,7 +307,7 @@
                 </div>`;
             Parent.components = { AsyncComponent, MyWidgetAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.strictEqual(parent.el.innerHTML, '<div>Hi World!</div><div>Hello World!</div>');
@@ -353,7 +353,7 @@
                 </div>`;
             Parent.components = { ComponentAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.verifySteps(['on_attach_callback']);
@@ -385,7 +385,7 @@
                 </div>`;
             Parent.components = { ComponentAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.strictEqual(parent.el.innerHTML, '<div>widget</div><div>component</div>');
@@ -417,7 +417,7 @@
                 </div>`;
             Parent.components = { ComponentAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             await mount(Parent, target);
 
             widget.trigger_up('some-event', { value: 'a' });
@@ -452,7 +452,7 @@
                 },
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target, { env: owl.Component.env });
 
             assert.strictEqual(parent.el.innerHTML, '<div></div>');
@@ -497,7 +497,7 @@
                 }
             };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             await mount(Parent, target, { env });
         });
 
@@ -524,44 +524,8 @@
                 session: { key: 'value' },
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             await mount(Parent, target, { env: owl.Component.env });
-            cleanUp();
-        });
-
-        QUnit.test("sub widget that calls load_views", async function (assert) {
-            assert.expect(4);
-
-            const MyWidget = Widget.extend({
-                willStart: function () {
-                    return this.loadViews('some_model', { x: 2 }, [[false, 'list']]);
-                },
-            });
-            class Parent extends LegacyComponent {
-                constructor() {
-                    super(...arguments);
-                    this.MyWidget = MyWidget;
-                }
-            }
-            Parent.template = xml`
-                <div>
-                    <ComponentAdapter Component="MyWidget"/>
-                </div>`;
-            Parent.components = { ComponentAdapter };
-            const cleanUp = await addMockEnvironmentOwl(Parent, {
-                mockRPC: function (route, args) {
-                    assert.strictEqual(route, '/web/dataset/call_kw/some_model');
-                    assert.deepEqual(args.kwargs.context, { x: 2 });
-                    assert.deepEqual(args.kwargs.views, [[false, 'list']]);
-                    return Promise.resolve();
-                },
-            });
-
-            const target = testUtils.prepareTarget();
-            const parent = await mount(Parent, target, { env: owl.Component.env });
-
-            assert.strictEqual(parent.el.innerHTML, '<div></div>');
-
             cleanUp();
         });
 
@@ -595,7 +559,7 @@
                 </div>`;
             Parent.components = { ComponentAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.strictEqual(parent.el.innerHTML, '<div>Hi</div>');
@@ -639,7 +603,7 @@
                 </div>`;
             Parent.components = { ComponentAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.strictEqual(parent.el.innerHTML, '<div>Hi</div>');
@@ -708,7 +672,7 @@
             `;
             Parent.components = { MyWidgetAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             const widgetEl = myWidget.el;
@@ -779,7 +743,7 @@
             `;
             Parent.components = { MyWidgetAdapter };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.containsOnce(target, ".widget_id_0");
@@ -824,7 +788,7 @@
                 },
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new MyWidget();
             await widget.appendTo(target);
 
@@ -862,7 +826,7 @@
                 },
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new MyWidget();
             await widget.appendTo(target);
 
@@ -914,7 +878,7 @@
             });
 
             const widget = new MyWidget();
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const iframe = document.createElement("iframe");
             target.appendChild(iframe);
             await widget.appendTo(iframe.contentWindow.document.body);
@@ -955,7 +919,7 @@
                 }
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new MyWidget();
             await widget.appendTo(target);
 
@@ -1017,7 +981,7 @@
                 }
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new MyWidget();
             await widget.appendTo(target);
 
@@ -1079,7 +1043,7 @@
                 }
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new MyWidget();
             const fragment = document.createElement("div");
             await widget.appendTo(fragment);
@@ -1130,7 +1094,7 @@
             MyComponent.template = xml`<div><MyChildComponent/></div>`;
             MyComponent.components = { MyChildComponent };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new ComponentWrapper(null, MyComponent, {});
             await widget.mount(target);
 
@@ -1205,7 +1169,7 @@
             MyComponent.template = xml`<div><MyChildComponent t-props="props" /></div>`;
             MyComponent.components = { MyChildComponent };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new ComponentWrapper(null, MyComponent, {
                 text: "takeNoMess"
             });
@@ -1264,7 +1228,7 @@
             MyComponent.template = xml`<div><MyChildComponent t-props="props" /></div>`;
             MyComponent.components = { MyChildComponent };
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new ComponentWrapper(null, MyComponent, {
                 text: "takeNoMess"
             });
@@ -1336,7 +1300,7 @@
                 },
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new MyWidget();
             await widget.appendTo(target);
 
@@ -1368,7 +1332,7 @@
                 },
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new MyWidget();
             await widget.appendTo(target);
             assert.verifySteps([
@@ -1425,7 +1389,7 @@
                 },
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new MyWidget();
             await widget.appendTo(target);
 
@@ -1454,7 +1418,7 @@
                 },
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const widget = new MyWidget();
             await widget.appendTo(target);
 
@@ -1495,7 +1459,7 @@
                 }
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = new Parent();
             await parent.appendTo(target);
 
@@ -1569,7 +1533,7 @@
             Parent.components = { ComponentAdapter };
 
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = await mount(Parent, target);
 
             assert.strictEqual(parent.el.innerHTML, '<div><span>Component</span></div>');
@@ -1633,7 +1597,7 @@
                 }
             });
 
-            const target = testUtils.prepareTarget();
+            const target = getFixture();
             const parent = new Parent();
             await parent.appendTo(target);
 

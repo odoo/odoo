@@ -1,12 +1,11 @@
 /** @odoo-module */
 
 import testUtils from "web.test_utils";
-import { mount } from "@web/../tests/helpers/utils";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { useService } from "@web/core/utils/hooks";
 import { numberBufferService } from "@point_of_sale/app/utils/number_buffer_service";
 import { registry } from "@web/core/registry";
-
-import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 
 import { Component, useState, xml } from "@odoo/owl";
 
@@ -19,7 +18,7 @@ QUnit.module("unit tests for NumberBuffer", {
 
 QUnit.test("simple fast inputs with capture in between", async function (assert) {
     assert.expect(3);
-    const target = testUtils.prepareTarget();
+    const target = getFixture();
     const env = await makeTestEnv();
 
     class Root extends Component {

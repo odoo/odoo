@@ -7,9 +7,7 @@ import {
     dragAndDrop,
     getFixture,
 } from '@web/../tests/helpers/utils';
-import testUtils from 'web.test_utils';
 import { serializeDateTime } from "@web/core/l10n/dates";
-const find = testUtils.dom.find;
 
 let target;
 
@@ -222,7 +220,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             mockRPC: getMockRpc(assert),
         });
 
-        await dragAndDrop(find(target, ".o_kanban_record", "Lead 6"), target.querySelector('.o_kanban_group:nth-of-type(3)'));
+        await dragAndDrop($(target).find(".o_kanban_record:contains(Lead 6)")[0], target.querySelector('.o_kanban_group:nth-of-type(3)'));
         assert.verifySteps(['Go, go, go! Congrats for your first deal.']);
     });
 
@@ -234,7 +232,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             mockRPC: getMockRpc(assert),
         });
 
-        await dragAndDrop(find(target, ".o_kanban_record", "Lead 2"), target.querySelector('.o_kanban_group:nth-of-type(3)'));
+        await dragAndDrop($(target).find(".o_kanban_record:contains(Lead 2)")[0], target.querySelector('.o_kanban_group:nth-of-type(3)'));
         assert.verifySteps(['Boom! Team record for the past 30 days.']);
     });
 
@@ -246,7 +244,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             mockRPC: getMockRpc(assert),
         });
 
-        await dragAndDrop(find(target, ".o_kanban_record", "Lead 1"), target.querySelector('.o_kanban_group:nth-of-type(3)'));
+        await dragAndDrop($(target).find(".o_kanban_record:contains(Lead 1)")[0], target.querySelector('.o_kanban_group:nth-of-type(3)'));
         assert.verifySteps(['Yeah! Deal of the last 7 days for the team.']);
     });
 
@@ -258,7 +256,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             mockRPC: getMockRpc(assert),
         });
 
-        await dragAndDrop(find(target, ".o_kanban_record", "Lead 8"), target.querySelector('.o_kanban_group:nth-of-type(3)'));
+        await dragAndDrop($(target).find(".o_kanban_record:contains(Lead 8)")[0], target.querySelector('.o_kanban_group:nth-of-type(3)'));
         assert.verifySteps(['You just beat your personal record for the past 30 days.']);
     });
 
@@ -270,7 +268,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             mockRPC: getMockRpc(assert),
         });
 
-        await dragAndDrop(find(target, ".o_kanban_record", "Lead 10"), target.querySelector('.o_kanban_group:nth-of-type(3)'));
+        await dragAndDrop($(target).find(".o_kanban_record:contains(Lead 10)")[0], target.querySelector('.o_kanban_group:nth-of-type(3)'));
         assert.verifySteps(['You just beat your personal record for the past 7 days.']);
     });
 
@@ -282,7 +280,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             mockRPC: getMockRpc(assert),
         });
 
-        await dragAndDrop(find(target, ".o_kanban_record", "Lead 8"), target.querySelector('.o_kanban_group:nth-of-type(2)'));
+        await dragAndDrop($(target).find(".o_kanban_record:contains(Lead 8)")[0], target.querySelector('.o_kanban_group:nth-of-type(2)'));
         assert.verifySteps(["no rainbowman"]);
     });
 
