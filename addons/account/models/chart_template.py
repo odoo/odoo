@@ -224,20 +224,20 @@ class AccountChartTemplate(models.AbstractModel):
                         ('code', '=', journal_data['code']),
                         ('company_id', '=', company.id),
                     ])
-                # Try to match by journal name to avoid conflict in the unique constraint on the mail alias
-                if not journal and 'name' in journal_data and 'type' in journal_data:
-                    journal = self.env['account.journal'].with_context(active_test=False).search([
-                        ('type', '=', journal_data['type']),
-                        ('name', '=', journal_data['name']),
-                        ('company_id', '=', company.id),
-                    ], limit=1)
-                if journal:
-                    del data['account.journal'][xmlid]
-                    self.env['ir.model.data']._update_xmlids([{
-                        'xml_id': f"account.{company.id}_{xmlid}",
-                        'record': journal,
-                        'noupdate': True,
-                    }])
+                    # Try to match by journal name to avoid conflict in the unique constraint on the mail alias
+                    if not journal and 'name' in journal_data and 'type' in journal_data:
+                        journal = self.env['account.journal'].with_context(active_test=False).search([
+                            ('type', '=', journal_data['type']),
+                            ('name', '=', journal_data['name']),
+                            ('company_id', '=', company.id),
+                        ], limit=1)
+                    if journal:
+                        del data['account.journal'][xmlid]
+                        self.env['ir.model.data']._update_xmlids([{
+                            'xml_id': f"account.{company.id}_{xmlid}",
+                            'record': journal,
+                            'noupdate': True,
+                        }])
 
         account_group_count = self.env['account.group'].search_count([('company_id', '=', company.id)])
         if account_group_count:
