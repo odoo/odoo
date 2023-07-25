@@ -285,6 +285,10 @@ class ProjectCustomerPortal(CustomerPortal):
             values['milestone'] = {'label': _('Milestone'), 'order': 'milestone_id', 'sequence': 7}
         return values
 
+    # Meant to be overriden in documents_project
+    def _display_project_groupby(self, project):
+        return not project
+
     def _task_get_searchbar_groupby(self, milestones_allowed, project=False):
         values = {
             'none': {'input': 'none', 'label': _('None'), 'order': 1},
@@ -293,7 +297,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'priority': {'input': 'priority', 'label': _('Priority'), 'order': 7},
             'customer': {'input': 'customer', 'label': _('Customer'), 'order': 10},
         }
-        if not project:
+        if self._display_project_groupby(project):
             values['project'] = {'input': 'project', 'label': _('Project'), 'order': 2}
         if milestones_allowed:
             values['milestone'] = {'input': 'milestone', 'label': _('Milestone'), 'order': 6}
