@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import ajax from "@web/legacy/js/core/ajax";
-import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 // Catch registration form event, because of JS for attendee details
@@ -12,15 +11,25 @@ var EventRegistrationForm = publicWidget.Widget.extend({
      */
     start: function () {
         var self = this;
+        const post = this._getPost();
+        const noTicketsOrdered = Object.values(post).map((value) => parseInt(value)).every(value => value === 0);
         var res = this._super.apply(this.arguments).then(function () {
             $('#registration_form .a-submit')
                 .off('click')
                 .click(function (ev) {
                     self.on_click(ev);
                 })
-                .prop('disabled', false);
+                .prop('disabled', noTicketsOrdered);
         });
         return res;
+    },
+
+    _getPost: function () {
+        var post = {};
+        $('#registration_form select').each(function () {
+            post[$(this).attr('name')] = $(this).val();
+        });
+        return post;
     },
 
     //--------------------------------------------------------------------------
@@ -36,37 +45,23 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         ev.stopPropagation();
         var $form = $(ev.currentTarget).closest('form');
         var $button = $(ev.currentTarget).closest('[type="submit"]');
-        var post = {};
-        $('#registration_form table').siblings('.alert').remove();
-        $('#registration_form select').each(function () {
-            post[$(this).attr('name')] = $(this).val();
-        });
-
-        // "post" looks like: { nb_register-9: "2", nb_register-10: "0" }
-        const noTicketsOrdered = Object.values(post).map((value) => parseInt(value)).every(value => value === 0);
-        if (noTicketsOrdered) {
-            $('<div class="alert alert-info"/>')
-                .text(_t('Please select at least one ticket.'))
-                .insertAfter('#registration_form table');
-            return new Promise(function () {});
-        } else {
-            $button.attr('disabled', true);
-            return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
-                var $modal = $(modal);
-                $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
-                $modal.appendTo(document.body);
-                const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
-                modalBS.show();
-                $modal.appendTo('body').modal('show');
-                $modal.on('click', '.js_goto_event', function () {
-                    $modal.modal('hide');
-                    $button.prop('disabled', false);
-                });
-                $modal.on('click', '.btn-close', function () {
-                    $button.prop('disabled', false);
-                });
+        const post = this._getPost();
+        $button.attr('disabled', true);
+        return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
+            var $modal = $(modal);
+            $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
+            $modal.appendTo(document.body);
+            const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
+            modalBS.show();
+            $modal.appendTo('body').modal('show');
+            $modal.on('click', '.js_goto_event', function () {
+                $modal.modal('hide');
+                $button.prop('disabled', false);
             });
-        }
+            $modal.on('click', '.btn-close', function () {
+                $button.prop('disabled', false);
+            });
+        });
     },
 });
 
