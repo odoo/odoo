@@ -508,12 +508,12 @@
         <h6 t-else="" t-field="badge.name" class="d-inline my-0"/>
     </template>
 
-    <!--Private profile-->
-    <template id="private_profile" name="Private Profile Page">
+    <!--Access Denied - Profile Page-->
+    <template id="profile_access_denied" name="Access Denied - Profile Page">
         <t t-call="website.layout">
             <div class="container mb32 mt48">
-                <h1 class="mt32">This profile is private!</h1>
-                <div id="private_profile_return_link_container">
+                <h1 class="mt32" t-out="denial_reason"/>
+                <div id="profile_access_denied_return_link_container">
                     <p><a t-attf-href="/">Return to the website.</a></p>
                 </div>
             </div>
