@@ -338,13 +338,10 @@
                     <div t-field="company.report_footer"/>
                 </ul>
                 <div t-if="report_type == 'pdf'" class="text-muted">
-                    <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
-                        <span t-field="o.name"/>
+                    <span t-if="display_name_in_footer">
+                        <span t-field="o.name"/> -
                     </span>
-                    Page:
-                    <span class="page"/>
-                    of
-                    <span class="topage"/>
+                    Page: <span class="page"/> / <span class="topage"/>
                 </div>
             </div>
         </div>
@@ -385,9 +382,9 @@
         <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
             <div class="text-center">
                 <div t-field="company.report_footer"/>
-                <div t-if="report_type == 'pdf'">
-                    <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
-                        <span t-field="o.name"/>
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    <span t-if="display_name_in_footer">
+                        <span t-field="o.name"/> -
                     </span>
                     Page: <span class="page"/> / <span class="topage"/>
                 </div>
@@ -482,9 +479,8 @@
                 <ul class="list-inline mb4">
                     <div t-field="company.report_footer"/>
                 </ul>
-
                 <div t-if="report_type == 'pdf'" class="text-muted">
-                    <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+                    <span t-if="display_name_in_footer">
                         <span t-field="o.name"/> -
                     </span>
                     Page: <span class="page"/> / <span class="topage"/>
