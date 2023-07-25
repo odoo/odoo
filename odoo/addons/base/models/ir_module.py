@@ -4,11 +4,9 @@ import base64
 from collections import defaultdict, OrderedDict
 from decorator import decorator
 from operator import attrgetter
-import importlib
 import io
 import logging
 import os
-import pkg_resources
 import shutil
 import tempfile
 import threading
@@ -333,44 +331,11 @@ class Module(models.Model):
         """ Domain to retrieve the modules that should be loaded by the registry. """
         return [('state', '=', 'installed')]
 
-    @staticmethod
-    def _check_python_external_dependency(pydep):
-        try:
-            pkg_resources.get_distribution(pydep)
-        except pkg_resources.DistributionNotFound as e:
-            try:
-                importlib.import_module(pydep)
-                _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
-            except ImportError:
-                # backward compatibility attempt failed
-                _logger.warning("DistributionNotFound: %s", e)
-                raise Exception('Python library not installed: %s' % (pydep,))
-        except pkg_resources.VersionConflict as e:
-            _logger.warning("VersionConflict: %s", e)
-            raise Exception('Python library version conflict: %s' % (pydep,))
-        except Exception as e:
-            _logger.warning("get_distribution(%s) failed: %s", pydep, e)
-            raise Exception('Error finding python library %s' % (pydep,))
-
-    @staticmethod
-    def _check_external_dependencies(terp):
-        depends = terp.get('external_dependencies')
-        if not depends:
-            return
-        for pydep in depends.get('python', []):
-            Module._check_python_external_dependency(pydep)
-
-        for binary in depends.get('bin', []):
-            try:
-                tools.find_in_path(binary)
-            except IOError:
-                raise Exception('Unable to find %r in path' % (binary,))
-
     @classmethod
     def check_external_dependencies(cls, module_name, newstate='to install'):
         terp = cls.get_module_info(module_name)
         try:
-            cls._check_external_dependencies(terp)
+            modules.check_manifest_dependencies(terp)
         except Exception as e:
             if newstate == 'to install':
                 msg = _('Unable to install module "%s" because an external dependency is not met: %s')
