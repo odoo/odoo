@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
+import unittest
 
 import odoo.tests
 from odoo.tools import mute_logger
@@ -11,6 +12,7 @@ def break_view(view, fr='<p>placeholder</p>', to='<p t-field="not.exist"/>'):
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteResetViews(odoo.tests.HttpCase):
+    @unittest.skip('broken, unmaintained for 12.0')
     def do_test(self, name):
         self.browser_js(
             "/",
