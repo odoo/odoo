@@ -46,6 +46,7 @@ class ResCompany(models.Model):
             'name': _("Default %s pricelist", self.currency_id.name),
             'currency_id': self.currency_id.id,
             'company_id': self.id,
+            'sequence': 10,
         })
         return values
 
