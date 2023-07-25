@@ -20,6 +20,7 @@ import warnings
 import psycopg2
 
 import odoo
+from odoo.modules import module
 from odoo.modules.db import FunctionStatus
 from odoo.osv.expression import get_unaccent_wrapper
 from .. import SUPERUSER_ID
@@ -767,6 +768,9 @@ class Registry(Mapping):
         """ Setup the inter-process signaling on this registry. """
         if self.in_test_mode():
             return
+        elif module.running_test:
+            _logger.error('signal_changes while running a test not being in test_mode')
+            return
 
         with self.cursor() as cr:
             # The `base_registry_signaling` sequence indicates when the registry
@@ -807,6 +811,8 @@ class Registry(Mapping):
         """
         if self.in_test_mode():
             return self
+        elif module.running_test:
+            _logger.error('signal_changes while running a test not being in test_mode')
 
         with closing(self.cursor()) as cr:
             db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
@@ -842,6 +848,9 @@ class Registry(Mapping):
                 self.cache_sequences[cache_name] += 1
             self.registry_invalidated = False
             self.cache_invalidated.clear()
+            return
+        elif module.running_test:
+            _logger.error('signal_changes while running a test not being in test_mode')
             return
 
         if self.registry_invalidated:
