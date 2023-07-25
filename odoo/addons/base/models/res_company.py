@@ -158,7 +158,7 @@ class Company(models.Model):
     @api.depends('root_id')
     def _compute_color(self):
         for company in self:
-            company.color = company.root_id.partner_id.color or (company.root_id.id % 12)
+            company.color = company.root_id.partner_id.color or (company.root_id._origin.id % 12)
 
     def _inverse_color(self):
         for company in self:
