@@ -143,7 +143,12 @@ export class Chatter extends Component {
             ]);
         });
         onWillUpdateProps((nextProps) => {
-            this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
+            if (
+                nextProps.threadId !== this.props.threadId ||
+                nextProps.threadModel !== this.props.threadModel
+            ) {
+                this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
+            }
             if (nextProps.threadId === false) {
                 this.state.composerType = false;
             }
