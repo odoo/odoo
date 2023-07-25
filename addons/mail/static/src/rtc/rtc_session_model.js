@@ -90,12 +90,9 @@ export class RtcSession {
         if (!this.audioElement) {
             return;
         }
-        try {
-            await this.audioElement.play();
-            this.audioError = undefined;
-        } catch (error) {
-            this.audioError = error.name;
-        }
+        return Promise.resolve(this.audioElement.play())
+            .then(() => (this.audioError = undefined))
+            .catch((error) => (this.audioError = error));
     }
 
     async updateStats() {

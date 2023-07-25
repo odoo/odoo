@@ -124,12 +124,10 @@ export class OutOfFocusService {
 
     async _playSound() {
         if (this.canPlayAudio && this.multiTab.isOnMainTab()) {
-            try {
-                await this.audio.play();
-            } catch {
+            return Promise.resolve(this.audio.play()).catch(() => {
                 // Ignore errors due to the user not having interracted
                 // with the page before playing the sound.
-            }
+            });
         }
     }
 
