@@ -89,6 +89,7 @@ class PosOrder(models.Model):
                     #If the product is delivered with more than one step, we need to update the quantity of the other steps
                     for move in so_line_stock_move_ids.filtered(lambda m: m.state in ['waiting', 'confirmed'] and m.product_id == stock_move.product_id):
                         move.product_uom_qty = stock_move.product_uom_qty
+                        waiting_picking_ids.add(move.picking_id.id)
                     waiting_picking_ids.add(picking.id)
 
             def is_product_uom_qty_zero(move):
