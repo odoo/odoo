@@ -1,9 +1,10 @@
 /** @odoo-module */
 
-import { patch } from "@web/core/utils/patch";
-import { useService } from "@web/core/utils/hooks";
 import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { x2ManyCommands } from "@web/core/orm_service";
+import { useService } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
 
 async function applyProduct(record, product) {
@@ -28,11 +29,11 @@ async function applyProduct(record, product) {
         ptal => ptal.create_variant === "no_variant" && ptal.attribute_values.length > 1
     ).map(ptal => ptal.selected_attribute_value_id);
 
-    proms.push(record.data.product_no_variant_attribute_value_ids.replaceWith(noVariantPTAVIds, { silent: true }));
     await Promise.all(proms);
     await record.update({
         product_id: [product.id, product.display_name],
         product_uom_qty: product.quantity,
+        product_no_variant_attribute_value_ids: [x2ManyCommands.replaceWith(noVariantPTAVIds)],
     });
 };
 

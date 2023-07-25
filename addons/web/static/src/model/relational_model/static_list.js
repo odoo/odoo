@@ -350,29 +350,10 @@ export class StaticList extends DataPoint {
         return this.model.mutex.exec(() => this._sortBy(fieldName));
     }
 
-    async replaceWith(ids, { reload = false, silent = false } = {}) {
+    async replaceWith(ids, { reload = false } = {}) {
         return this.model.mutex.exec(async () => {
-            const resIds = reload ? ids : ids.filter((id) => !this._cache[id]);
-            if (resIds.length) {
-                const records = await this.model._loadRecords({
-                    ...this.config,
-                    resIds,
-                    context: this.context,
-                });
-                for (const record of records) {
-                    this._createRecordDatapoint(record);
-                }
-            }
-            this.records = ids.map((id) => this._cache[id]);
-            const updateCommandsToKeep = this._commands.filter(
-                (c) => c[0] === x2ManyCommands.UPDATE && ids.includes(c[1])
-            );
-            this._commands = [x2ManyCommands.replaceWith(ids)].concat(updateCommandsToKeep);
-            this._currentIds = [...ids];
-            this.count = this._currentIds.length;
-            if (!silent) {
-                await this._onUpdate();
-            }
+            await this._replaceWith(ids, { reload });
+            await this._onUpdate();
         });
     }
 
@@ -693,7 +674,7 @@ export class StaticList extends DataPoint {
         const { CREATE, UPDATE } = x2ManyCommands;
         const options = {
             parentRecord: this._parent,
-            onUpdate: async (changes, { withoutParentUpdate }) => {
+            onUpdate: async ({ withoutParentUpdate }) => {
                 if (!this.currentIds.includes(record.isNew ? record._virtualId : record.resId)) {
                     // the record hasn't been added to the list yet (we're currently creating it
                     // from a dialog)
@@ -820,6 +801,27 @@ export class StaticList extends DataPoint {
         this.records = currentIds.map((id) => this._cache[id]);
         this._currentIds = nextCurrentIds;
         await this.model._updateConfig(this.config, { limit, offset, orderBy }, { noReload: true });
+    }
+
+    async _replaceWith(ids, { reload = false } = {}) {
+        const resIds = reload ? ids : ids.filter((id) => !this._cache[id]);
+        if (resIds.length) {
+            const records = await this.model._loadRecords({
+                ...this.config,
+                resIds,
+                context: this.context,
+            });
+            for (const record of records) {
+                this._createRecordDatapoint(record);
+            }
+        }
+        this.records = ids.map((id) => this._cache[id]);
+        const updateCommandsToKeep = this._commands.filter(
+            (c) => c[0] === x2ManyCommands.UPDATE && ids.includes(c[1])
+        );
+        this._commands = [x2ManyCommands.replaceWith(ids)].concat(updateCommandsToKeep);
+        this._currentIds = [...ids];
+        this.count = this._currentIds.length;
     }
 
     async _resequence(movedId, targetId) {

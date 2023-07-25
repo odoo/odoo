@@ -3818,7 +3818,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("one2many list (non editable): edition", async function (assert) {
-        assert.expect(10);
+        assert.expect(11);
 
         let nbWrite = 0;
         serverData.models.partner.records[0].p = [2, 4];
@@ -3862,6 +3862,10 @@ QUnit.module("Fields", (hooks) => {
 
         // edit first record
         await click(target.querySelector(".o_list_renderer .o_data_cell"));
+        assert.hasClass(
+            target.querySelector(".o_list_renderer .o_data_cell"),
+            "o_readonly_modifier"
+        );
 
         await editInput(target, ".modal .o_form_editable input", "new name");
 
