@@ -750,9 +750,9 @@ class TransactionCase(BaseCase):
                 with cls.registry.cursor() as cr:
                     cls.registry.setup_models(cr)
             cls.registry.registry_invalidated = False
+            cls.registry.registry_sequence = cls.registry_start_sequence
             cls.registry.clear_all_caches()
             cls.registry.cache_invalidated.clear()
-
         cls.addClassCleanup(reset_changes)
 
         cls.cr = cls.registry.cursor()
