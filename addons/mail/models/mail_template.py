@@ -89,6 +89,20 @@ class MailTemplate(models.Model):
     can_write = fields.Boolean(compute='_compute_can_write',
                                help='The current user can edit the template.')
 
+    @api.constrains('partner_to')
+    def _constrain_template_rendering(self):
+        for template in self:
+            model = template.model_id.model
+            if model:
+                record = template.env[model].search([], limit=1)
+                MAIL_TEMPLATE_FIELDS = [
+                    'partner_to'
+                ]
+                try:
+                    template._generate_template(record.ids, MAIL_TEMPLATE_FIELDS)
+                except:
+                    raise ValidationError(_("There are issues in the Architecture of this template"))
+
     # Overrides of mail.render.mixin
     @api.depends('model')
     def _compute_render_model(self):

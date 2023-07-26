@@ -10,8 +10,8 @@ class TestMailFullComposer(HttpCase):
     def test_full_composer_tour(self):
         self.env['mail.template'].create({
             'name': 'Test template',  # name hardcoded for test
-            'partner_to': '${object.id}',
-            'lang': '${object.lang}',
+            'partner_to': '{{object.id}}',
+            'lang': '{{object.lang}',
             'auto_delete': True,
             'model_id': self.ref('base.model_res_partner'),
         })
