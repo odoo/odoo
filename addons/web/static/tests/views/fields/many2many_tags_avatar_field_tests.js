@@ -436,6 +436,46 @@ QUnit.module("Fields", (hooks) => {
         await click(target);
     });
 
+    QUnit.test(
+        "widget many2many_tags_avatar add/remove tags in kanban view",
+        async function (assert) {
+            assert.expect(3);
+
+            await makeView({
+                type: "kanban",
+                resModel: "turtle",
+                serverData,
+                arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="display_name"/>
+                                <div class="oe_kanban_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="partner_ids" widget="many2many_tags_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+                async mockRPC(route, { method, args }) {
+                    if (method === "write") {
+                        assert.step(`write: ${args[1].partner_ids[0][2]}`);
+                    }
+                },
+            });
+            await click(target, ".o_kanban_record:first-child .o_quick_assign", true);
+            // add and directly remove an item
+            await click(target, ".o_popover_container .o-autocomplete--dropdown-item:first-child");
+            await click(target, ".o_popover_container .o_tag .o_delete");
+            assert.verifySteps(["write: 1", "write: "]);
+        }
+    );
+
     QUnit.test("widget many2many_tags_avatar delete tag", async function (assert) {
         await makeView({
             type: "form",
