@@ -137,14 +137,14 @@ export class Many2ManyTagsField extends Component {
         return !this.props.readonly;
     }
 
-    deleteTag(id) {
+    async deleteTag(id) {
         const tagRecord = this.props.record.data[this.props.name].records.find(
             (record) => record.id === id
         );
         const ids = this.props.record.data[this.props.name].currentIds.filter(
             (id) => id !== tagRecord.resId
         );
-        this.props.record.data[this.props.name].replaceWith(ids);
+        await this.props.record.data[this.props.name].replaceWith(ids);
     }
 
     getDomain() {
