@@ -599,8 +599,8 @@
           t-on-contextmenu.prevent=""
           t-att-style="getCellClickableStyle(clickableCell.coordinates)"
         />
+        <FilterIconsOverlay/>
       </div>
-      <FilterIconsOverlay/>
       <VerticalScrollBar/>
       <HorizontalScrollBar/>
       <div class="o-scrollbar corner"/>
@@ -1007,7 +1007,8 @@
     <div
       t-ref="gridOverlay"
       class="o-grid-overlay overflow-hidden"
-      t-att-style="props.gridOverlayDimensions"
+      t-att-class="{'o-paint-format-cursor': isPaintingFormat}"
+      t-att-style="style"
       t-on-mousedown="onMouseDown"
       t-on-dblclick.self="onDoubleClick"
       t-on-contextmenu="onContextMenu">
@@ -2213,10 +2214,11 @@
                   <t t-if="getIconName(menuItem)" t-call="{{getIconName(menuItem)}}"/>
                 </div>
                 <div class="o-menu-item-name align-middle text-truncate" t-esc="getName(menuItem)"/>
+                <t t-set="description" t-value="menuItem.description(env)"/>
                 <div
-                  t-if="menuItem.description"
+                  t-if="description"
                   class="o-menu-item-description ms-auto"
-                  t-esc="menuItem.description"
+                  t-esc="description"
                 />
                 <div
                   t-if="isMenuRoot"
@@ -2239,6 +2241,20 @@
         menuId="props.menuId"
       />
     </Popover>
+  </t>
+
+  <t t-name="o-spreadsheet-PaintFormatButton" owl="1">
+    <span
+      class="o-menu-item-button"
+      title="Paint Format"
+      t-att-class="{active: isActive}"
+      t-attf-class="{{props.class}}"
+      t-on-click="togglePaintFormat"
+      t-on-dblclick="onDblClick">
+      <span>
+        <t t-call="o-spreadsheet-Icon.PAINT_FORMAT"/>
+      </span>
+    </span>
   </t>
 
   <t t-name="o-spreadsheet-Popover" owl="1">
@@ -3502,11 +3518,7 @@
   </t>
 
   <t t-name="o-spreadsheet-FindAndReplacePanel" owl="1">
-    <div
-      class="o-find-and-replace"
-      tabindex="0"
-      t-on-focusin="onFocusSidePanel"
-      t-ref="findAndReplace">
+    <div class="o-find-and-replace" tabindex="0" t-ref="findAndReplace">
       <div class="o-section">
         <div class="o-section-title">Search</div>
         <div class="o-input-search-container">
@@ -3796,7 +3808,7 @@
           <div t-else="" class="o-toolbar-tools d-flex flex-shrink-0 ms-4">
             <ActionButton action="EDIT.undo" class="'o-hoverable-button'"/>
             <ActionButton action="EDIT.redo" class="'o-hoverable-button'"/>
-            <ActionButton action="FORMAT.paintFormat" class="'o-hoverable-button'"/>
+            <PaintFormatButton class="'o-hoverable-button'"/>
             <ActionButton action="FORMAT.clearFormat" class="'o-hoverable-button'"/>
 
             <div class="o-divider"/>
@@ -3937,7 +3949,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.4.0-alpha.7';
-  __info__.date = '2023-07-04T14:12:26.682Z';
-  __info__.hash = 'b04cf78';
+  __info__.version = '16.4.1';
+  __info__.date = '2023-07-26T13:08:07.472Z';
+  __info__.hash = 'e687fa9';
 -->
