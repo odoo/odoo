@@ -272,7 +272,6 @@ class ResourceCalendar(models.Model):
     def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False):
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
-
         if not resources:
             resources = self.env['resource.resource']
             resources_list = [resources]
@@ -339,6 +338,7 @@ class ResourceCalendar(models.Model):
                     per_resource_result[attendance.resource_id].append((day_from, day_to, attendance))
                 else:
                     base_result.append((day_from, day_to, attendance))
+
 
         # Copy the result localized once per necessary timezone
         # Strictly speaking comparing start_dt < time or start_dt.astimezone(tz) < time

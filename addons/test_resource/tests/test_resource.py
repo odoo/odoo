@@ -532,6 +532,26 @@ class TestCalendar(TestResourceCommon):
         calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
         self.assertEqual(calendar_dt, start, "It should have found the attendance on the 3rd April")
 
+    def test_attendance_interval_edge_tz(self):
+        # When genereting the attendance intervals in an edge timezone, the last interval shouldn't
+        # be truncated if the timezone is correctly set
+        self.env.user.tz = "America/Los_Angeles"
+        self.calendar_jean.tz = "America/Los_Angeles"
+        attendances = self.calendar_jean._attendance_intervals_batch(
+            datetime.combine(date(2023, 1, 1), datetime.min.time(), tzinfo=timezone("UTC")),
+            datetime.combine(date(2023, 1, 31), datetime.max.time(), tzinfo=timezone("UTC")))
+        last_attendance = list(attendances[False])[-1]
+        self.assertEqual(last_attendance[0].replace(tzinfo=None), datetime(2023, 1, 31, 8))
+        self.assertEqual(last_attendance[1].replace(tzinfo=None), datetime(2023, 1, 31, 15, 59, 59, 999999))
+
+        attendances = self.calendar_jean._attendance_intervals_batch(
+            datetime.combine(date(2023, 1, 1), datetime.min.time(), tzinfo=timezone("America/Los_Angeles")),
+            datetime.combine(date(2023, 1, 31), datetime.max.time(), tzinfo=timezone("America/Los_Angeles")))
+        last_attendance = list(attendances[False])[-1]
+        self.assertEqual(last_attendance[0].replace(tzinfo=None), datetime(2023, 1, 31, 8))
+        self.assertEqual(last_attendance[1].replace(tzinfo=None), datetime(2023, 1, 31, 16))
+
+
 class TestResMixin(TestResourceCommon):
 
     def test_adjust_calendar(self):
