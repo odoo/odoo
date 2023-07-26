@@ -76,7 +76,6 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'invoice_date': '2017-01-01',
-            # 'currency_id': self.env.ref("base.RON").id,
             'date': '2017-01-01',
             'narration': 'test narration',
             'ref': 'ref_move',
@@ -158,32 +157,69 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
     #     self.post_anaf(attachment)
     #     self.assertEqual(attachment.name[-11:], "cius_ro.xml")
 
-    # def test_change_company_value_here(self):
-    #     self.company_data["company"].write({ "city": "NEWSECTOR"})
-    #     print(self.company_data["company"]["city"], "\n\n")
-
-    # def test_detect_change_company_value(self):
-    #     print("\n\nDETECTING COMPANY VALUE:")
-    #     print(self.company_data["company"]["city"], "\n\n")
-
     # TODO check all rules from schematron
     # Checked Rules:
-    # 020 001 A020 010
+    # 020 001 A020 010 030
     # Notes:
     # string-length constrains are skipped
 
-    """
-    (normalize-space(cbc:TaxCurrencyCode) = 'RON' and normalize-space(cbc:DocumentCurrencyCode) != 'RON') or 
-    (normalize-space(cbc:TaxCurrencyCode) = 'RON' and normalize-space(cbc:DocumentCurrencyCode) = 'RON')  or 
-    (normalize-space(cbc:TaxCurrencyCode) != 'RON' and normalize-space(cbc:DocumentCurrencyCode) = 'RON') or 
-    (not(exists (cbc:TaxCurrencyCode)) and normalize-space(cbc:DocumentCurrencyCode) = 'RON')
-    # If the Invoice currency code (BT-5) is other than RON, then the VAT accounting currency code(BT-6) must be RON.
-    # FIXES BR-RO-030 -> BR-53 -> ... (ongoing BR-CO-15)
-    """
+    # BR-RO-030
     def test_diff_currency_code(self):
+        self.env['res.currency.rate'].create({
+            'name': '2017-01-01',
+            'rate': 4.15,
+            'currency_id': self.env.ref("base.AUD").id,
+            'company_id': self.env.company.id,
+        })
         self.company_data["company"].write({
             "currency_id": self.env.ref("base.AUD").id,
-            # "currency_rate": self.env.ref("base.rateAUD"),
         })
         attachment = self.create_invoice_attachment(self.partner_a.id)
         self.post_anaf(attachment, True)
+
+    """
+    not((cac:AllowanceCharge/cac:TaxCategory/cbc:ID[ancestor::cac:AllowanceCharge/cbc:ChargeIndicator = 'false' and
+        following-sibling::cac:TaxScheme/cbc:ID = 'VAT'] = ('S', 'Z', 'E', 'AE', 'K', 'G', 'L', 'M')) 
+            or
+        (cac:AllowanceCharge/cac:TaxCategory/cbc:ID[ancestor::cac:AllowanceCharge/cbc:ChargeIndicator = 'true'] = 
+        ('S', 'Z', 'E', 'AE', 'K', 'G', 'L', 'M')) 
+            or
+        (cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cbc:ID = ('S', 'Z', 'E', 'AE', 'K', 'G', 'L', 'M'))) 
+    or
+    (cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID, 
+    cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID[boolean(normalize-space(.))])
+    # The Seller tax registration identifier (BT-32) and/or the Seller VAT identifier (BT-31) and/or 
+      the Seller tax representative VAT identifier (BT-63) shall be present
+    """
+    # def test_no_vat(self):
+    #     # self.company_data["company"].write({
+    #     #     "vat": None,
+    #     # })
+    #     invoice = self.env["account.move"].create({
+    #         'move_type': 'out_invoice',
+    #         'partner_id': self.partner_a.id,
+    #         'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
+    #         'invoice_payment_term_id': self.pay_terms_b.id,
+    #         'invoice_date': '2017-01-01',
+    #         'date': '2017-01-01',
+    #         'narration': 'test narration',
+    #         'ref': 'ref_move',
+    #         'invoice_line_ids': [
+    #             Command.create({
+    #                 'product_id': self.product_a.id,
+    #                 'quantity': 1.0,
+    #                 'price_unit': 500.0,
+    #                 'tax_ids': [(6, 0, self.tax_19.ids)],
+    #             }),
+    #             Command.create({
+    #                 'product_id': self.product_b.id,
+    #                 'quantity': 2.0,
+    #                 'price_unit': 350.0,
+    #                 'tax_ids': [(6, 0, self.tax_19.ids)],
+    #             }),
+    #         ],
+    #     })
+    #     invoice.action_post()
+    #     invoice._generate_pdf_and_send_invoice(self.move_template)
+    #     attachment = invoice.ubl_cii_xml_id
+    #     self.post_anaf(attachment, True)
