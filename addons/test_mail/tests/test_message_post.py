@@ -112,6 +112,43 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertEqual(template_values['signature'], '')
 
     @users('employee')
+    def test_notify_mail_translate_group_actions(self):
+        def _notify_get_groups(self, *args, **kwargs):
+            return [
+                (
+                    'user',
+                    lambda pdata: pdata['type'] == 'user',
+                    {'actions': [{'url': '/some/url', 'title': _('TestMailTestActionTitle')}]}
+                )
+            ]
+        self.env['res.lang'].sudo()._activate_lang('es_ES')
+        self.env['ir.translation'].create({
+            'src': 'TestMailTestActionTitle',
+            'value': 'TestMailTestActionTitleSpanish',
+            'type': 'code',
+            'name': 'addons/test_mail/tests/test_message_post.py',
+            'module': 'test_mail',
+            'lang': 'es_ES',
+            'res_id': 0,
+            'state': 'translated',
+        })
+        follower_users = self.env['res.users'].sudo().create([
+            {'login': 'TestTRanslateGroupActions1', 'name': 'Johny English', 'lang': 'en_US'},
+            {'login': 'TestTRanslateGroupActions2', 'name': 'Julio Spanish', 'lang': 'es_ES'}
+        ])
+
+        self.test_record.message_subscribe(partner_ids=follower_users.partner_id.ids)
+
+        with patch.object(type(self.env['mail.thread']), '_notify_get_groups', _notify_get_groups):
+            with self.mock_mail_gateway(mail_unlink_sent=False):
+                self.test_record.message_post(body='Hello', message_type='comment', subtype_xmlid='mail.mt_comment')
+
+        self.assertIn('TestMailTestActionTitle',
+                      self._new_mails.filtered(lambda mail: mail.recipient_ids == follower_users[0].partner_id).body_html)
+        self.assertIn('TestMailTestActionTitleSpanish',
+                      self._new_mails.filtered(lambda mail: mail.recipient_ids == follower_users[1].partner_id).body_html)
+
+    @users('employee')
     def test_notify_prepare_template_context_company_value(self):
         """ Verify that the template context company value is right
         after switching the env company or if a company_id is set

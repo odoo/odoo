@@ -2629,37 +2629,50 @@ class MailThread(models.AbstractModel):
         }]
         only return groups with recipients
         """
+        recipient_lang_groups = self.env['res.partner'].sudo().read_group(
+            [('id', 'in', [recipient['id'] for recipient in recipient_data])],
+            ['lang', 'ids:array_agg(id)'],
+            ['lang']
+        )
+        partner_id_to_recipient_data = {
+            recipient['id']: recipient for recipient in recipient_data
+        }
+        recipient_langs = [group['lang'] for group in recipient_lang_groups] or [self._fallback_lang().env.context['lang']]
         # keep a local copy of msg_vals as it may be modified to include more information about groups or links
         local_msg_vals = dict(msg_vals) if msg_vals else {}
-        groups = self._notify_get_groups(msg_vals=local_msg_vals)
+        groups_by_lang = {lang: self.with_context(lang=lang)._notify_get_groups(msg_vals=local_msg_vals) for lang in recipient_langs}
         access_link = self._notify_get_action_link('view', **local_msg_vals)
 
-        if model_name:
-            view_title = _('View %s', model_name)
-        else:
-            view_title = _('View')
-
         # fill group_data with default_values if they are not complete
-        for group_name, group_func, group_data in groups:
-            group_data.setdefault('notification_group_name', group_name)
-            group_data.setdefault('notification_is_customer', False)
-            is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=msg_vals)['is_thread_notification']
-            group_data.setdefault('has_button_access', is_thread_notification)
-            group_button_access = group_data.setdefault('button_access', {})
-            group_button_access.setdefault('url', access_link)
-            group_button_access.setdefault('title', view_title)
-            group_data.setdefault('actions', list())
-            group_data.setdefault('recipients', list())
+        for lang, lang_groups in groups_by_lang.items():
+            for group_name, group_func, group_data in lang_groups:
+                context = {'lang': lang}
+                if model_name:
+                    view_title = _('View %s', model_name)
+                else:
+                    view_title = _('View')
+                group_data.setdefault('notification_group_name', group_name)
+                group_data.setdefault('notification_is_customer', False)
+                is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=msg_vals)['is_thread_notification']
+                group_data.setdefault('has_button_access', is_thread_notification)
+                group_button_access = group_data.setdefault('button_access', {})
+                group_button_access.setdefault('url', access_link)
+                group_button_access.setdefault('title', view_title)
+                group_data.setdefault('actions', list())
+                group_data.setdefault('recipients', list())
+                del context
 
         # classify recipients in each group
-        for recipient in recipient_data:
-            for group_name, group_func, group_data in groups:
-                if group_func(recipient):
-                    group_data['recipients'].append(recipient['id'])
-                    break
+        for lang, recipient_ids in [(group['lang'], group['ids']) for group in recipient_lang_groups]:
+            for recipient_id in recipient_ids:
+                for group_name, group_func, group_data in groups_by_lang[lang]:
+                    if group_func(partner_id_to_recipient_data[recipient_id]):
+                        group_data['recipients'].append(recipient_id)
+                        break
 
         result = []
-        for group_name, group_method, group_data in groups:
+        for group_name, dummy, group_data in [
+                group for lang_groups in groups_by_lang.values() for group in lang_groups]:
             if group_data['recipients']:
                 result.append(group_data)
 
