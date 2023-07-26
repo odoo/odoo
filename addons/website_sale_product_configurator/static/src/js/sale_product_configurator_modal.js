@@ -2,7 +2,6 @@
 
 import ajax from '@web/legacy/js/core/ajax';
 import Dialog from '@web/legacy/js/core/dialog';
-import OwlDialog from '@web/legacy/js/core/owl_dialog';
 import ServicesMixin from '@web/legacy/js/core/service_mixins';
 import VariantMixin from '@website_sale/js/sale_variant_mixin';
 import { uniqueId } from '@web/core/utils/functions';
@@ -124,9 +123,6 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
                 });
                 modal.show();
                 self._openedResolver();
-
-                // Notifies OwlDialog to adjust focus/active properties on owl dialogs
-                OwlDialog.display(self);
             }
         });
         if (options && options.shouldFocusButtons) {
