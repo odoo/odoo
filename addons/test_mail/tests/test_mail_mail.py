@@ -730,6 +730,7 @@ class TestMailMail(MailCommon):
 
 @tagged('mail_mail')
 class TestMailMailRace(common.TransactionCase):
+    _allow_commit = True
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_bounce_during_send(self):

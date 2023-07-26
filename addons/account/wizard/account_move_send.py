@@ -489,7 +489,7 @@ class AccountMoveSend(models.Model):
         :return: True if commit is accepted, False otherwise.
         """
         self.ensure_one()
-        return not tools.config['test_enable'] and not modules.module.current_test
+        return not tools.config['test_enable'] and not modules.module.running_test
 
     def _call_web_service(self, invoices_data):
         # TO OVERRIDE

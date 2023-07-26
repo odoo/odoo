@@ -25,6 +25,7 @@ import sys
 import tempfile
 import threading
 import time
+import traceback
 import unittest
 from . import case
 import warnings
@@ -282,6 +283,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
 
     @classmethod
     def setUpClass(cls):
+        cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
         def check_remaining_patchers():
             for patcher in _patch._active_patches:
                 _logger.warning("A patcher was remaining active at the end of %s, disabling it...", cls.__name__)
@@ -337,6 +339,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         patcher = patch.object(obj, key, val)   # this is unittest.mock.patch
         patcher.start()
         cls.addClassCleanup(patcher.stop)
+        return patcher
 
     def startPatcher(self, patcher):
         mock = patcher.start()
@@ -701,6 +704,7 @@ class TransactionCase(BaseCase):
     registry: Registry = None
     env: api.Environment = None
     cr: Cursor = None
+    _allow_commit = False # allows to enable commit for a test case is stricltly necessary
 
 
     @classmethod
@@ -722,6 +726,7 @@ class TransactionCase(BaseCase):
         cls.registry_start_sequence = cls.registry.registry_sequence
         def reset_changes():
             if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
+                _logger.info('Registry changed during tests, reseting')
                 with cls.registry.cursor() as cr:
                     cls.registry.setup_models(cr)
                     cls.registry.registry_invalidated = False
@@ -734,6 +739,15 @@ class TransactionCase(BaseCase):
         cls.addClassCleanup(cls.cr.close)
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        original_commit = cls.cr.commit
+        def _commit():
+            if cls._allow_commit:
+                cls._logger.info('Commiting during a test')
+            else:
+                cls._logger.error('Commiting during a test')
+                traceback.print_stack()
+            original_commit()
+        cls.commit_warning_patcher = cls.classPatch(cls.cr, 'commit', _commit)
 
     def setUp(self):
         super().setUp()
@@ -1600,7 +1614,6 @@ class HttpCase(TransactionCase):
         ICP.env.flush_all()
         # v8 api with correct xmlrpc exception handling.
         cls.xmlrpc_url = f'http://{HOST}:{odoo.tools.config["http_port"]:d}/xmlrpc/2/'
-        cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     def setUp(self):
         super().setUp()

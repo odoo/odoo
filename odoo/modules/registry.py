@@ -753,7 +753,7 @@ class Registry(Mapping):
         """ Check whether the registry has changed, and performs all necessary
         operations to update the registry. Return an up-to-date registry.
         """
-        if self.in_test_mode():
+        if odoo.modules.module.running_test:
             return self
 
         with closing(self.cursor()) as cr:
@@ -783,7 +783,7 @@ class Registry(Mapping):
 
     def signal_changes(self):
         """ Notifies other processes if registry or cache has been invalidated. """
-        if self.in_test_mode():
+        if odoo.modules.module.running_test:
             if self.registry_invalidated:
                 self.registry_sequence += 1
             if self.cache_invalidated:

@@ -48,6 +48,8 @@ class TestRealCursor(BaseCase):
             self.assertEqual(cr.connection.isolation_level, ISOLATION_LEVEL_REPEATABLE_READ)
 
 class TestTestCursor(common.TransactionCase):
+    _allow_commit = True
+
     def setUp(self):
         super().setUp()
         # make the registry in test mode
@@ -201,6 +203,8 @@ class TestTestCursor(common.TransactionCase):
 
 
 class TestCursorHooks(common.TransactionCase):
+    _allow_commit = True
+
     def setUp(self):
         super().setUp()
         self.log = []
