@@ -159,15 +159,18 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         let product = this.env.pos.db.get_product_by_barcode(code.base_code);
         if (!product) {
             // find the barcode in the backend
-            let foundProductIds = [];
-            foundProductIds = await this.orm.search("product.product", [
-                ["barcode", "=", code.base_code],
-                ["sale_ok", "=", true],
-            ]);
-            if (foundProductIds.length) {
-                await this.env.pos._addProducts(foundProductIds);
+            const { product_id = [], packaging = [] } = await this.orm.silent.call(
+                "pos.session",
+                "find_product_by_barcode",
+                [odoo.pos_session_id, code.base_code],
+            );
+            if (product_id.length) {
+                await this.env.pos._addProducts(product_id);
+                if (packaging.length) {
+                    this.env.pos.db.add_packagings(packaging);
+                }
                 // assume that the result is unique.
-                product = this.env.pos.db.get_product_by_id(foundProductIds[0]);
+                product = this.env.pos.db.get_product_by_id(product_id[0]);
             } else {
                 return this._barcodeErrorAction(code);
             }
