@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class Product(models.Model):
@@ -18,6 +18,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     use_expiration_date = fields.Boolean(string='Use Expiration Date',
+        compute='_compute_use_expiration_date', readonly=False, store=True,
         help='When this box is ticked, you have the possibility to specify dates to manage'
         ' product expiration, on the product and on the corresponding lot/serial numbers')
     expiration_time = fields.Integer(string='Expiration Date',
@@ -33,3 +34,8 @@ class ProductTemplate(models.Model):
     alert_time = fields.Integer(string='Alert Date',
         help='Number of days before the Expiration Date after which an alert should be'
         ' raised on the lot/serial number. It will be computed on the lot/serial number.')
+
+    @api.depends('tracking')
+    def _compute_use_expiration_date(self):
+        for record in self:
+            record.use_expiration_date = record.use_expiration_date and record.tracking != 'none'
