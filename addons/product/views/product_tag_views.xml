@@ -8,19 +8,25 @@
             <form string="Product Tag">
                 <sheet>
                     <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="color" widget="color"/>
-                        </group>
+                        <field name="name"/>
                     </group>
-                    <group>
-                        <field name="product_template_ids" widget="many2many_tags"/>
-                        <field name="product_product_ids" widget="many2many_tags"/>
-                        <field name="product_ids"
-                               widget="many2many_tags"
-                               attrs="{'invisible': [('product_ids', '=', [])]}"
-                        />
-                    </group>
+                    <notebook>
+                        <page string="Product Templates">
+                            <field name="product_template_ids"
+                                   context="{'tree_view_ref':'product.product_template_view_tree_tag'}"
+                            />
+                        </page>
+                        <page string="Product Variants">
+                            <field name="product_product_ids"
+                                   context="{'tree_view_ref':'product.product_product_view_tree_tag'}"
+                            />
+                        </page>
+                        <page string="All Products" attrs="{'invisible': [('product_ids', '=', [])]}">
+                            <field name="product_ids"
+                                   context="{'tree_view_ref':'product.product_product_view_tree_tag'}"
+                            />
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -33,7 +39,6 @@
                 <field name="name"/>
                 <field name="product_template_ids" widget="many2many_tags" optional="show"/>
                 <field name="product_product_ids" widget="many2many_tags" string="Product Variant" optional="show"/>
-                <field name="color" widget="color" readonly="1" optional="hide"/>
             </tree>
         </field>
     </record>
