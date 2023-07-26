@@ -464,8 +464,8 @@
           t-on-contextmenu.prevent=""
           t-att-style="getCellClickableStyle(clickableCell.coordinates)"
         />
+        <FilterIconsOverlay/>
       </div>
-      <FilterIconsOverlay/>
       <VerticalScrollBar/>
       <HorizontalScrollBar/>
       <div class="o-scrollbar corner"/>
@@ -2975,11 +2975,7 @@
   </t>
 
   <t t-name="o-spreadsheet-FindAndReplacePanel" owl="1">
-    <div
-      class="o-find-and-replace"
-      tabindex="0"
-      t-on-focusin="onFocusSidePanel"
-      t-ref="findAndReplace">
+    <div class="o-find-and-replace" tabindex="0" t-ref="findAndReplace">
       <div class="o-section">
         <div class="o-section-title">Search</div>
         <div class="o-input-search-container">
@@ -3516,7 +3512,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.2.10';
-  __info__.date = '2023-06-26T14:46:16.076Z';
-  __info__.hash = '1d3f47c';
+  __info__.version = '16.2.11';
+  __info__.date = '2023-07-26T13:06:15.871Z';
+  __info__.hash = '0d46dde';
 -->
