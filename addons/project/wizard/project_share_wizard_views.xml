@@ -21,7 +21,23 @@
                 </group>
                 <field name="note" placeholder="Add a note" nolabel="1"/>
                 <footer>
-                    <button string="Send" name="action_send_mail" attrs="{'invisible': [('access_warning', '!=', '')]}" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Send" name="action_share_record" attrs="{'invisible': [('access_warning', '!=', '')]}" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_share_wizard_confirm_form" model="ir.ui.view">
+        <field name="name">project.share.wizard.view.form</field>
+        <field name="model">project.share.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirmation">
+                <p>People invited to collaborate on the project will have portal access rights.</p>
+                <p>They can edit shared project tasks and view specific documents in read-only mode on your website. This includes leads/opportunities, quotations/sales orders, purchase orders, invoices and bills, timesheets, and tickets.</p>
+                <p>You have full control and can revoke portal access anytime. Are you ready to proceed?</p>
+                <footer>
+                    <button string="Grant Portal Access" name="action_send_mail" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
                 </footer>
             </form>
