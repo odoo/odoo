@@ -24,6 +24,10 @@
         ],
         'web.qunit_suite_tests': [
             'hr_homeworking/static/tests/**/*',
+            ('remove', 'hr_homeworking/static/tests/tours/**/*'),
+        ],
+        'web.assets_tests': [
+            '/hr_homeworking/static/tests/tours/**/*'
         ],
     },
     'license': 'LGPL-3',

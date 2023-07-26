@@ -180,5 +180,5 @@ class HrEmployeeBase(models.AbstractModel):
             )
             for employee, locations in read_group:
                 if employee.id in employee_locations_to_remove:
-                    locations.filtered(lambda l: l.weekday in employee_locations_to_remove[employee.id]).unlink()
+                    locations.filtered(lambda l: l.weekday in employee_locations_to_remove[employee.id]).delete_default_worklocation()
         return super().write(values)
