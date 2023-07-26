@@ -1240,6 +1240,7 @@ class Website(models.Model):
         if domain is None:
             domain = []
         domain += self.get_current_website().website_domain()
+        domain = AND([domain, [('url', '!=', False)]])
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
         pages = pages._get_most_specific_pages()
         return pages
