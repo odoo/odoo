@@ -120,11 +120,31 @@ function factory(dependencies) {
                         last_message_id,
                         partner_id,
                     });
+                case 'delete':
+                    return this._handleNotificationChannelDelete(channelId);
                 case 'typing_status':
                     return this._handleNotificationChannelTypingStatus(channelId, data);
                 default:
                     return this._handleNotificationChannelMessage(channelId, data);
             }
+        }
+
+        /**
+         * @private
+         * @param {integer} channelId
+         * @param {Object} param1
+         * @param {integer} param1.partner_id
+         * @param {string} param1.partner_name
+         */
+        async _handleNotificationChannelDelete(channelId) {
+            const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+                id: channelId,
+                model: 'mail.channel',
+            });
+            if (!channel) {
+                return;
+            }
+            channel.delete();
         }
 
         /**

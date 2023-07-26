@@ -271,6 +271,7 @@ class Channel(models.Model):
             all_emp_group = None
         if all_emp_group and all_emp_group in self and not self._context.get(MODULE_UNINSTALL_FLAG):
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
+        self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', channel.id), {'info': 'delete'}] for channel in self])
         return super(Channel, self).unlink()
 
     def write(self, vals):
