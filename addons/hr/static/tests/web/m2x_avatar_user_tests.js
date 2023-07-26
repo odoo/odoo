@@ -90,7 +90,7 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
             res_id: avatarUserId,
             views: [[false, "kanban"]],
         });
-        
+
         patchWithCleanup(browser, {
             setTimeout: (callback, delay) => {
                 assert.step(`setTimeout of ${delay}ms`);
@@ -99,7 +99,7 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
         });
         // Open card
         await triggerEvent(target, ".o_m2o_avatar > img", "mouseover");
-        assert.verifySteps(["setTimeout of 350ms", "user read"]);
+        assert.verifySteps(["setTimeout of 350ms", "setTimeout of 250ms", "user read"]);
         assert.containsOnce(target, ".o_avatar_card");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_card_user_infos > *")), ['Mario', 'sub manager', 'Managemment', ' Mario@odoo.test', ' +585555555']);
         // Close card
