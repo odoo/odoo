@@ -67,9 +67,9 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
         };
     }
 
-    deleteTag(id) {
-        super.deleteTag(id);
-        this._saveUpdate();
+    async deleteTag(id) {
+        await super.deleteTag(id);
+        await this._saveUpdate();
     }
 
     async _saveUpdate() {
