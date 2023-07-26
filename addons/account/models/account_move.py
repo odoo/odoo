@@ -3836,6 +3836,9 @@ class AccountMove(models.Model):
     def action_send_and_print(self):
         template = self.env.ref(self._get_mail_template(), raise_if_not_found=False)
 
+        if any(not x.is_sale_document(include_receipts=True) for x in self):
+            raise UserError(_("You can only send sales documents"))
+
         return {
             'name': _("Send"),
             'type': 'ir.actions.act_window',
@@ -3854,21 +3857,8 @@ class AccountMove(models.Model):
             message loaded by default
         """
         self.ensure_one()
-        template = self.env.ref(self._get_mail_template(), raise_if_not_found=False)
 
-        report_action = {
-            'name': _("Send"),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'account.move.send',
-            'target': 'new',
-            'context': {
-                'active_ids': self.ids,
-                'default_mail_template_id': template.id,
-            },
-        }
-
+        report_action = self.action_send_and_print()
         if self.env.is_admin() and not self.env.company.external_report_layout_id and not self.env.context.get('discard_logo_check'):
             return self.env['ir.actions.report']._action_configure_external_report_layout(report_action)
 
