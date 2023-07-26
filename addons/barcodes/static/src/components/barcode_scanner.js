@@ -18,7 +18,7 @@ export class BarcodeScanner extends Component {
         let error = null;
         let barcode = null;
         try {
-            barcode = await scanBarcode(this.facingMode);
+            barcode = await scanBarcode(this.env, this.facingMode);
         } catch (err) {
             error = err.error.message;
         }
