@@ -144,6 +144,9 @@ class PortalWizardUser(models.TransientModel):
                     user_portal = wizard_user.sudo().with_company(company_id)._create_user()
                 else:
                     user_portal = user
+                    if user_portal.login != wizard_user.email:
+                        user_portal.write({'login': wizard_user.partner_id.email})
+
                 wizard_user.write({'user_id': user_portal.id})
                 if not wizard_user.user_id.active or group_portal not in wizard_user.user_id.groups_id:
                     wizard_user.user_id.write({'active': True, 'groups_id': [(4, group_portal.id)]})

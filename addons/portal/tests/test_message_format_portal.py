@@ -39,3 +39,31 @@ class TestMessageFormatPortal(common.SavepointCase):
         formatted_result = message_note.portal_message_format()
         # subtype is note -> should return True
         self.assertTrue(formatted_result[0].get('is_message_subtype_note'))
+
+    def test_check_email_is_update(self):
+        ''' Test the scenario where we update the partner's email and grant them portal
+        access for the second time. Verify that upon the second update, the user's login
+        should reflect the newly updated email of the partner.'''
+
+        partner = self.env['res.partner'].create({
+            'name': 'Testing_1',
+            'email': 'testing@gmail.com',
+        })
+
+        portal_wizard = self.env['portal.wizard'].create({
+            'user_ids': [(0, 0, {
+                'partner_id' : partner.id,
+                'email': partner.email,
+                'in_portal': True,
+            })]
+        })
+        portal_wizard.action_apply()
+        portal_wizard.user_ids.write({'in_portal': False})
+        portal_wizard.action_apply()
+
+        portal_wizard.user_ids.write({
+            'email': 'testing@odoo.com',
+            'in_portal': True,
+        })
+        portal_wizard.action_apply()
+        self.assertEqual(portal_wizard.user_ids.email, portal_wizard.user_ids.user_id.login)
