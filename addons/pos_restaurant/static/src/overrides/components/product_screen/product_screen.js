@@ -11,10 +11,10 @@ patch(ProductScreen.prototype, {
         const order = this.pos.get_order();
         const orderline = order.get_selected_orderline();
         if (this.pos.config.module_pos_restaurant && this.pos.orderPreparationCategories.size) {
-            let orderline_name = orderline.product.display_name;
-            if (orderline.description) {
-                orderline_name += " (" + orderline.description + ")";
-            }
+            const orderline_name = [
+                orderline.get_product_name(),
+                orderline.description ? `(${orderline.description})` : false
+            ].filter(Boolean).join(" ")
             const changes = Object.values(order.getOrderChanges().orderlines).find(
                 (change) => change.name == orderline_name
             );

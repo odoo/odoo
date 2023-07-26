@@ -6,7 +6,7 @@ from itertools import groupby
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
-from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
+from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty, frozendict
 from odoo.tools.sql import create_index
 
 from odoo.addons.payment import utils as payment_utils
@@ -1376,34 +1376,7 @@ class SaleOrder(models.Model):
                         # if no order_amt, dp order line was not invoiced
                         delta_amount += (inv_amt * (1 if move.is_inbound() else -1)) + order_amt
 
-                if not move.currency_id.is_zero(delta_amount):
-                    receivable_line = move.line_ids.filtered(
-                        lambda aml: aml.account_id.account_type == 'asset_receivable')[:1]
-                    product_lines = move.line_ids.filtered(
-                        lambda aml: aml.display_type == 'product' and aml.is_downpayment)
-                    tax_lines = move.line_ids.filtered(
-                        lambda aml: aml.tax_line_id.amount_type not in (False, 'fixed'))
-                    if tax_lines and product_lines and receivable_line:
-                        line_commands = [Command.update(receivable_line.id, {
-                            'amount_currency': receivable_line.amount_currency + delta_amount,
-                        })]
-                        delta_sign = 1 if delta_amount > 0 else -1
-                        for lines, attr, sign in (
-                            (product_lines, 'price_total', -1 if move.is_inbound() else 1),
-                            (tax_lines, 'amount_currency', 1),
-                        ):
-                            remaining = delta_amount
-                            lines_len = len(lines)
-                            for line in lines:
-                                if move.currency_id.compare_amounts(remaining, 0) != delta_sign:
-                                    break
-                                amt = delta_sign * max(
-                                    move.currency_id.rounding,
-                                    abs(move.currency_id.round(remaining / lines_len)),
-                                )
-                                remaining -= amt
-                                line_commands.append(Command.update(line.id, {attr: line[attr] + amt * sign}))
-                        move.line_ids = line_commands
+                move._ventilate_delta_amount(delta_amount)
 
             move.message_post_with_source(
                 'mail.message_origin_link',
@@ -1819,6 +1792,88 @@ class SaleOrder(models.Model):
                 document.attached_on == 'quotation'
                 or (self.state == 'sale' and document.attached_on == 'sale_order')
         )
+
+
+    def get_down_payment_lines_values(self, ratio):
+        """ Create one down payment line per tax or unique taxes combination and per account.
+            Apply the tax(es) to their respective lines.
+
+            :param ratio: Ratio of the price to set as down payment amount
+            :return:      An array containing an array of accounts at and an array of dicts with the
+                          down payment lines values.
+        """
+
+        self.ensure_one()
+        order_lines = self.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment)
+        # base_downpayment_lines_values = self._prepare_base_downpayment_line_values(order)
+        context = {'lang': self.partner_id.lang}
+        base_downpayment_lines_values = {
+            'product_uom_qty': 0.0,
+            'order_id': self.id,
+            'discount': 0.0,
+            'is_downpayment': True,
+            'sequence': self.order_line and self.order_line[-1].sequence + 1 or 10,
+        }
+        del context
+        tax_base_line_dicts = [
+            line._convert_to_tax_base_line_dict(
+                analytic_distribution=line.analytic_distribution,
+                handle_price_include=False
+            )
+            for line in order_lines
+        ]
+        computed_taxes = self.env['account.tax']._compute_taxes(tax_base_line_dicts)
+        down_payment_values = []
+        for line, tax_repartition in computed_taxes['base_lines_to_update']:
+            account = line['product'].product_tmpl_id.get_product_accounts(
+                fiscal_pos=self.fiscal_position_id
+            ).get('income')
+            taxes = line['taxes'].flatten_taxes_hierarchy()
+            fixed_taxes = taxes.filtered(lambda tax: tax.amount_type == 'fixed')
+            down_payment_values.append([
+                taxes - fixed_taxes,
+                line['analytic_distribution'],
+                tax_repartition['price_subtotal'],
+                account,
+            ])
+            for fixed_tax in fixed_taxes:
+                # Fixed taxes cannot be set as taxes on down payments as they always amounts to 100%
+                # of the tax amount. Therefore fixed taxes are removed and are replace by a new line
+                # with appropriate amount, and non fixed taxes if the fixed tax affected the base of
+                # any other non fixed tax.
+                if fixed_tax.include_base_amount:
+                    pct_tax = taxes[list(taxes).index(fixed_tax) + 1:]\
+                        .filtered(lambda t: t.is_base_affected and t.amount_type != 'fixed')
+                else:
+                    pct_tax = self.env['account.tax']
+                down_payment_values.append([
+                    pct_tax,
+                    line['analytic_distribution'],
+                    line['quantity'] * fixed_tax.amount,
+                    account
+                ])
+
+        downpayment_line_map = {}
+        for tax_id, analytic_distribution, price_subtotal, account in down_payment_values:
+            grouping_key = frozendict({
+                'tax_id': tuple(sorted(tax_id.ids)),
+                'analytic_distribution': analytic_distribution,
+                'account_id': account,
+            })
+            downpayment_line_map.setdefault(grouping_key, {
+                **base_downpayment_lines_values,
+                'tax_id': grouping_key['tax_id'],
+                'analytic_distribution': grouping_key['analytic_distribution'],
+                'product_uom_qty': 0.0,
+                'price_unit': 0.0,
+            })
+            downpayment_line_map[grouping_key]['price_unit'] += price_subtotal * ratio
+
+        res = [
+            list(downpayment_line_map.values()),
+            [key['account_id'].id for key in downpayment_line_map]
+        ]
+        return res
 
     #=== HOOKS ===#
 

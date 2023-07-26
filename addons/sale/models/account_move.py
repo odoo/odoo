@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.fields import Command
 
 
 class AccountMove(models.Model):
@@ -165,3 +166,34 @@ class AccountMove(models.Model):
                 ) for sale_order in sale_orders
             )
             move.partner_credit += max(amount_total_currency - amount_to_invoice_currency, 0.0)
+
+    def _ventilate_delta_amount(self, delta_amount):
+        for move in self:
+            if not move.currency_id.is_zero(delta_amount):
+                receivable_line = move.line_ids.filtered(
+                    lambda aml: aml.account_id.account_type == 'asset_receivable')[:1]
+                product_lines = move.line_ids.filtered(
+                    lambda aml: aml.display_type == 'product' and aml.is_downpayment)
+                tax_lines = move.line_ids.filtered(
+                    lambda aml: aml.tax_line_id.amount_type not in (False, 'fixed'))
+                if tax_lines and product_lines and receivable_line:
+                    line_commands = [Command.update(receivable_line.id, {
+                        'amount_currency': receivable_line.amount_currency + delta_amount,
+                    })]
+                    delta_sign = 1 if delta_amount > 0 else -1
+                    for lines, attr, sign in (
+                        (product_lines, 'price_total', -1 if move.is_inbound() else 1),
+                        (tax_lines, 'amount_currency', 1),
+                    ):
+                        remaining = delta_amount
+                        lines_len = len(lines)
+                        for line in lines:
+                            if move.currency_id.compare_amounts(remaining, 0) != delta_sign:
+                                break
+                            amt = delta_sign * max(
+                                move.currency_id.rounding,
+                                abs(move.currency_id.round(remaining / lines_len)),
+                            )
+                            remaining -= amt
+                            line_commands.append(Command.update(line.id, {attr: line[attr] + amt * sign}))
+                    move.line_ids = line_commands

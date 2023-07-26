@@ -7,7 +7,7 @@ patch(Orderline.prototype, {
     getDisplayData() {
         return {
             ...super.getDisplayData(),
-            l10n_in_hsn_code: this.get_product().l10n_in_hsn_code,
+            l10n_in_hsn_code: this.get_product()?.l10n_in_hsn_code,
         };
     },
 });

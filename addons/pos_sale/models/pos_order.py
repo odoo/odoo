@@ -48,7 +48,7 @@ class PosOrder(models.Model):
     def create_from_ui(self, orders, draft=False):
         order_ids = super(PosOrder, self).create_from_ui(orders, draft)
         for order in self.sudo().browse([o['id'] for o in order_ids]):
-            for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
+            for line in order.lines.filtered(lambda l: l.is_downpayment and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
                 sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
                 sale_order_origin = line.sale_order_origin_id or line.refunded_orderline_id.sale_order_origin_id
                 sale_line = self.env['sale.order.line'].create({
@@ -120,12 +120,14 @@ class PosOrderLine(models.Model):
     sale_order_origin_id = fields.Many2one('sale.order', string="Linked Sale Order")
     sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line")
     down_payment_details = fields.Text(string="Down Payment Details")
+    down_payment_account_id = fields.Many2one('account.account')  # account for aml when invoicing this line
 
     def _export_for_ui(self, orderline):
         result = super()._export_for_ui(orderline)
         # NOTE We are not exporting 'sale_order_line_id' because it is being used in any views in the POS App.
         result['down_payment_details'] = bool(orderline.down_payment_details) and orderline.down_payment_details
         result['sale_order_origin_id'] = bool(orderline.sale_order_origin_id) and orderline.sale_order_origin_id.read(fields=['name'])[0]
+        result['down_payment_account_id'] = bool(orderline.down_payment_account_id) and orderline.down_payment_account_id
         return result
 
     def _order_line_fields(self, line, session_id):

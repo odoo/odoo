@@ -173,7 +173,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                 // settle the order
                 const lines = sale_order.order_line;
                 const product_to_add_in_pos = lines
-                    .filter((line) => !this.pos.db.get_product_by_id(line.product_id[0]))
+                    .filter((line) => !line.is_downpayment && !this.pos.db.get_product_by_id(line.product_id[0]))
                     .map((line) => line.product_id[0]);
                 if (product_to_add_in_pos.length) {
                     const { confirmed } = await this.popup.add(ConfirmPopup, {
@@ -203,7 +203,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
 
                 for (var i = 0; i < lines.length; i++) {
                     const line = lines[i];
-                    if (!this.pos.db.get_product_by_id(line.product_id[0])) {
+                    if (!line.is_downpayment && !this.pos.db.get_product_by_id(line.product_id[0])) {
                         continue;
                     }
 
@@ -212,7 +212,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         {
                             pos: this.pos,
                             order: this.pos.get_order(),
-                            product: this.pos.db.get_product_by_id(line.product_id[0]),
+                            product: !line.is_downpayment && this.pos.db.get_product_by_id(line.product_id[0]),
                             description: line.name,
                             price: line.price_unit,
                             tax_ids: orderFiscalPos ? undefined : line.tax_id,
@@ -220,11 +220,11 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                             sale_order_origin_id: clickedOrder,
                             sale_order_line_id: line,
                             customer_note: line.customer_note,
+                            is_downpayment: line.is_downpayment,
                         }
                     );
-
                     if (
-                        new_line.get_product().tracking !== "none" &&
+                        new_line.get_product() && new_line.get_product().tracking !== "none" &&
                         (this.pos.picking_type.use_create_lots ||
                             this.pos.picking_type.use_existing_lots) &&
                         line.lot_names.length > 0
@@ -254,123 +254,124 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     new_line.setQuantityFromSOL(line);
                     new_line.set_unit_price(line.price_unit);
                     new_line.set_discount(line.discount);
+                    if (line.is_downpayment) {
+                        new_line.product_uom_id = this.pos.uom_unit_id;
+                        new_line.price_subtotal = line.price_subtotal * new_line.quantity;
+                        new_line.price_subtotal_incl = line.price_subtotal_incl * new_line.quantity;
+                        new_line.down_payment_account_id = line.down_payment_account_id;
+                        // line_vals.down_payment_details = this.down_payment_details;
+                    }
                     this.pos.get_order().add_orderline(new_line);
                 }
             } else {
                 // apply a downpayment
-                if (this.pos.config.down_payment_product_id) {
-                    const lines = sale_order.order_line.filter((line) => {
-                        return line.product_id[0] !== this.pos.config.down_payment_product_id[0];
-                    });
-                    const tab = lines.map((line) => ({
-                        product_name: line.product_id[1],
-                        product_uom_qty: line.product_uom_qty,
-                        price_unit: line.price_unit,
-                        total: line.price_total,
-                    }));
-                    let down_payment_product = this.pos.db.get_product_by_id(
-                        this.pos.config.down_payment_product_id[0]
-                    );
-                    if (!down_payment_product) {
-                        await this.pos._addProducts([this.pos.config.down_payment_product_id[0]]);
-                        down_payment_product = this.pos.db.get_product_by_id(
-                            this.pos.config.down_payment_product_id[0]
-                        );
-                    }
-                    const down_payment_tax =
-                        this.pos.taxes_by_id[down_payment_product.taxes_id] || false;
-                    let down_payment;
-                    if (down_payment_tax) {
-                        down_payment = down_payment_tax.price_include
-                            ? sale_order.amount_total
-                            : sale_order.amount_untaxed;
-                    } else {
-                        down_payment = sale_order.amount_total;
-                    }
-
-                    let popupTitle = "";
-                    let popupInputSuffix = "";
-                    const popupTotalDue = sale_order.amount_total;
-                    let getInputBufferReminder = () => false;
-                    const popupSubtitle = _t("Due balance: %s");
-                    if (selectedOption == "dpAmount") {
-                        popupTitle = _t("Down Payment");
-                        popupInputSuffix = this.pos.currency.symbol;
-                    } else {
-                        popupTitle = _t("Down Payment");
-                        popupInputSuffix = "%";
-                        getInputBufferReminder = (buffer) => {
-                            if (buffer && buffer.length > 0) {
-                                const percentage = parseFloat(buffer);
-                                if (isNaN(percentage)) {
-                                    return false;
-                                }
-                                return this.env.utils.formatCurrency(
-                                    (popupTotalDue * percentage) / 100
-                                );
-                            } else {
+                const lines = sale_order.order_line.filter(line=>!line.is_downpayment);
+                const tab = lines.map((line) => ({
+                    product_name: line.product_id[1],
+                    product_uom_qty: line.product_uom_qty,
+                    price_unit: line.price_unit,
+                    total: line.price_total,
+                }));
+                let popupTitle = "";
+                let popupInputSuffix = "";
+                const popupTotalDue = sale_order.amount_total;
+                let getInputBufferReminder = () => false;
+                const popupSubtitle = _t("Due balance: %s");
+                if (selectedOption == "dpAmount") {
+                    popupTitle = _t("Down Payment");
+                    popupInputSuffix = this.pos.currency.symbol;
+                } else {
+                    popupTitle = _t("Down Payment");
+                    popupInputSuffix = "%";
+                    getInputBufferReminder = (buffer) => {
+                        if (buffer && buffer.length > 0) {
+                            const percentage = parseFloat(buffer);
+                            if (isNaN(percentage)) {
                                 return false;
                             }
-                        };
-                    }
-                    const { confirmed, payload } = await this.popup.add(NumberPopup, {
-                        title: popupTitle,
-                        subtitle: sprintf(
-                            popupSubtitle,
-                            this.env.utils.formatCurrency(sale_order.amount_total)
-                        ),
-                        inputSuffix: popupInputSuffix,
-                        startingValue: 0,
-                        getInputBufferReminder,
+                            return this.env.utils.formatCurrency(
+                                (popupTotalDue * percentage) / 100
+                            );
+                        } else {
+                            return false;
+                        }
+                    };
+                }
+                let { confirmed, payload } = await this.popup.add(NumberPopup, {
+                    title: popupTitle,
+                    subtitle: sprintf(
+                        popupSubtitle,
+                        this.env.utils.formatCurrency(sale_order.amount_total)
+                    ),
+                    inputSuffix: popupInputSuffix,
+                    startingValue: 0,
+                    getInputBufferReminder,
+                });
+
+                if (!confirmed) {
+                    return;
+                }
+
+                payload = parseFloat(payload)
+                let down_payment;
+                if(selectedOption == "dpAmount") {
+                    down_payment = payload;
+                } else {
+                    down_payment = sale_order.amount_total * payload / 100;
+                }
+
+                if (down_payment > sale_order.amount_unpaid) {
+                    const errorBody = _t(
+                        "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line.",
+                        this.env.utils.formatCurrency(down_payment),
+                        this.env.utils.formatCurrency(sale_order.amount_unpaid),
+                        sale_order.amount_unpaid > 0
+                            ? this.env.utils.formatCurrency(sale_order.amount_unpaid)
+                            : this.env.utils.formatCurrency(0)
+                    );
+                    await this.popup.add(ErrorPopup, {
+                        title: "Error amount too high",
+                        body: errorBody,
                     });
-
-                    if (!confirmed) {
-                        return;
-                    }
-                    if (selectedOption == "dpAmount") {
-                        down_payment = parseFloat(payload);
-                    } else {
-                        down_payment = (down_payment * parseFloat(payload)) / 100;
-                    }
-
-                    if (down_payment > sale_order.amount_unpaid) {
-                        const errorBody = _t(
-                            "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line.",
-                            this.env.utils.formatCurrency(down_payment),
-                            this.env.utils.formatCurrency(sale_order.amount_unpaid),
-                            sale_order.amount_unpaid > 0
-                                ? this.env.utils.formatCurrency(sale_order.amount_unpaid)
-                                : this.env.utils.formatCurrency(0)
-                        );
-                        await this.popup.add(ErrorPopup, {
-                            title: "Error amount too high",
-                            body: errorBody,
-                        });
-                        down_payment = sale_order.amount_unpaid > 0 ? sale_order.amount_unpaid : 0;
-                    }
-
+                    down_payment = sale_order.amount_unpaid > 0 ? sale_order.amount_unpaid : 0;
+                }
+                const ratio = down_payment / sale_order.amount_total
+                const line_values = await this.orm.call(
+                    "sale.order",
+                    "get_down_payment_lines_values",
+                    [sale_order['id'], ratio],
+                );
+                let amt = 0
+                let newLines = [];
+                line_values[0].map((line, i) => {
                     const new_line = new Orderline(
                         { env: this.env },
                         {
                             pos: this.pos,
                             order: this.pos.get_order(),
-                            product: down_payment_product,
-                            price: down_payment,
+                            is_downpayment: true,
+                            price: line.price_unit,
+                            tax_ids: line.tax_id,
                             price_type: "automatic",
                             sale_order_origin_id: clickedOrder,
                             down_payment_details: tab,
+                            product_uom_id: this.pos.uom_unit_id,
+                            down_payment_account_id: line_values[1][i],
                         }
                     );
-                    new_line.set_unit_price(down_payment);
+                    new_line.set_unit_price(line.price_unit);
                     this.pos.get_order().add_orderline(new_line);
-                } else {
-                    const title = _t("No down payment product");
-                    const body = _t(
-                        "It seems that you didn't configure a down payment product in your point of sale.\
-                        You can go to your point of sale configuration to choose one."
-                    );
-                    await this.popup.add(ErrorPopup, { title, body });
+                    amt += new_line.get_price_with_tax()
+                    newLines.push(new_line);
+                })
+                const delta = down_payment - amt;
+                if(delta && newLines)
+                {
+                    const line = newLines[0];
+                    line.price_subtotal = line.get_price_without_tax();
+                    line.price_subtotal_incl = line.get_price_with_tax() + delta;
                 }
+
             }
 
             this.pos.closeScreen();

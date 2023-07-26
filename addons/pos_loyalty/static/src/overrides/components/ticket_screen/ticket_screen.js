@@ -44,6 +44,9 @@ patch(TicketScreen.prototype, {
         );
     },
     _isEWalletGiftCard(orderline) {
+        if (orderline.is_downpayment)
+            return false;
+
         const linkedProgramIds = this.pos.productId2ProgramIds[orderline.product.id];
         if (linkedProgramIds) {
             return linkedProgramIds.length > 0;

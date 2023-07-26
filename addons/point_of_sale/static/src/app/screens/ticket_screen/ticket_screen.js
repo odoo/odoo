@@ -550,8 +550,9 @@ export class TicketScreen extends Component {
         const newToRefundDetail = {
             qty: 0,
             orderline: {
+                is_downpayment: orderline.is_downpayment,
                 id: orderline.id,
-                productId: orderline.product.id,
+                productId: orderline.product?.id,
                 price: orderline.price,
                 qty: orderline.quantity,
                 refundedQty: orderline.refunded_qty,
@@ -601,6 +602,7 @@ export class TicketScreen extends Component {
             ? { modifiedPackLotLines: [], newPackLotLines: orderline.pack_lot_lines }
             : false;
         return {
+            is_downpayment: orderline.is_downpayment,
             quantity: -qty,
             price: orderline.price,
             extras: { price_type: "automatic" },

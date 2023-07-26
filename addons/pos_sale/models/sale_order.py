@@ -43,7 +43,12 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
         for sale_line in self:
-            sale_line.qty_delivered += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids if sale_line.product_id.type != 'service'], 0)
+            sale_line.qty_delivered += sum([
+                self._convert_qty(sale_line, pos_line.qty, 'p2s')
+                for pos_line
+                in sale_line.pos_order_line_ids
+                if (sale_line.product_id.type != 'service' and not sale_line.is_downpayment)
+            ], 0)
 
     @api.depends('pos_order_line_ids.qty')
     def _compute_qty_invoiced(self):
@@ -52,16 +57,28 @@ class SaleOrderLine(models.Model):
             sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids], 0)
 
     def _get_sale_order_fields(self):
-        return ["product_id", "name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total"]
+        return ["product_id", "name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced",
+                "discount", "qty_to_invoice", "price_total", "is_downpayment"]
 
     def read_converted(self):
         field_names = self._get_sale_order_fields()
         results = []
         for sale_line in self:
-            if sale_line.product_type:
-                product_uom = sale_line.product_id.uom_id
+            if sale_line.product_type or (sale_line.is_downpayment and not sale_line.display_type):
+                product_uom = self.env.ref('uom.product_uom_unit') if sale_line.is_downpayment else sale_line.product_id.uom_id
                 sale_line_uom = sale_line.product_uom
+                sale_line._compute_product_uom()
                 item = sale_line.read(field_names)[0]
+                if sale_line.is_downpayment:
+                    if pos_order_line := sale_line.pos_order_line_ids:
+                        item['price_subtotal'] = pos_order_line.price_subtotal
+                        item['price_subtotal_incl'] = pos_order_line.price_subtotal_incl
+                        item['down_payment_account_id'] = pos_order_line.down_payment_account_id.id
+                    elif invoice_line := sale_line.invoice_lines:
+                        item['price_subtotal'] = invoice_line[0].price_subtotal
+                        item['price_subtotal_incl'] = invoice_line[0].price_total
+                        item['down_payment_account_id'] = invoice_line[0].account_id.id
+
                 if sale_line.product_id.tracking != 'none':
                     item['lot_names'] = sale_line.move_ids.move_line_ids.lot_id.mapped('name')
                 if product_uom == sale_line_uom:
@@ -76,7 +93,7 @@ class SaleOrderLine(models.Model):
 
             elif sale_line.display_type == 'line_note':
                 if results:
-                    results[-1]['customer_note'] = sale_line.name
+                    results[-1]['customer_note'] = sale_line.namelo
 
         return results
 

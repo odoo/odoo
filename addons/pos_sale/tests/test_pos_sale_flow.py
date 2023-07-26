@@ -175,20 +175,12 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             })],
         })
         sale_order.action_confirm()
-        #set downpayment product in pos config
-        self.downpayment_product = self.env['product.product'].create({
-            'name': 'Down Payment',
-            'available_in_pos': True,
-            'type': 'service',
-        })
-        self.main_pos_config.write({
-            'down_payment_product_id': self.downpayment_product.id,
-        })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosRefundDownpayment', login="accountman")
         self.assertEqual(len(sale_order.order_line), 3)
         self.assertEqual(sale_order.order_line[1].qty_invoiced, 1)
         self.assertEqual(sale_order.order_line[2].qty_invoiced, -1)
+
     def test_settle_order_unreserve_order_lines(self):
         #create a product category that use the closest location for the removal strategy
         self.removal_strategy = self.env['product.removal'].search([('method', '=', 'closest')], limit=1)

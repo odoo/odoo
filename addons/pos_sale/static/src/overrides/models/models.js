@@ -7,15 +7,9 @@ patch(Order.prototype, {
     //@override
     select_orderline(orderline) {
         super.select_orderline(...arguments);
-        if (orderline && orderline.product.id === this.pos.config.down_payment_product_id[0]) {
+        if (orderline?.is_downpayment) {
             this.pos.numpadMode = "price";
         }
-    },
-    //@override
-    _get_ignored_product_ids_total_discount() {
-        const productIds = super._get_ignored_product_ids_total_discount(...arguments);
-        productIds.push(this.pos.config.down_payment_product_id[0]);
-        return productIds;
     },
 });
 
@@ -33,6 +27,7 @@ patch(Orderline.prototype, {
         if (this.sale_order_origin_id && this.sale_order_origin_id.shipping_date) {
             this.order.setShippingDate(this.sale_order_origin_id.shipping_date);
         }
+        this.down_payment_account_id = this.down_payment_account_id || options.down_payment_account_id;
     },
     init_from_JSON(json) {
         super.init_from_JSON(...arguments);
@@ -40,6 +35,7 @@ patch(Orderline.prototype, {
         this.sale_order_line_id = json.sale_order_line_id;
         this.down_payment_details =
             json.down_payment_details && JSON.parse(json.down_payment_details);
+        this.down_payment_account_id = json.down_payment_account_id;
     },
     export_as_JSON() {
         const json = super.export_as_JSON(...arguments);
@@ -47,6 +43,7 @@ patch(Orderline.prototype, {
         json.sale_order_line_id = this.sale_order_line_id;
         json.down_payment_details =
             this.down_payment_details && JSON.stringify(this.down_payment_details);
+        json.down_payment_account_id = this.down_payment_account_id;
         return json;
     },
     get_sale_order() {
@@ -72,7 +69,7 @@ patch(Orderline.prototype, {
      * @param {'sale.order.line'} saleOrderLine
      */
     setQuantityFromSOL(saleOrderLine) {
-        if (this.product.type === "service") {
+        if (this.is_downpayment || this.product.type === "service") {
             this.set_quantity(saleOrderLine.qty_to_invoice);
         } else {
             this.set_quantity(

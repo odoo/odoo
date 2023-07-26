@@ -63,7 +63,8 @@ patch(Orderline.prototype, {
         const orderlines = order.orderlines;
         const lastOrderline = order.orderlines.at(orderlines.length - 1);
 
-        if (lastOrderline.product.id !== orderline.product.id || lastOrderline.quantity < 0) {
+        if (lastOrderline.is_downpayment || orderline.is_downpayment ||
+            lastOrderline.product.id !== orderline.product.id || lastOrderline.quantity < 0) {
             return false;
         } else {
             return super.can_be_merged_with(...arguments);

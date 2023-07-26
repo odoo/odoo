@@ -379,6 +379,10 @@ export class Orderline extends PosModel {
         }
         this.product = options.product;
         this.tax_ids = options.tax_ids;
+        this.is_downpayment = !!options.is_downpayment;
+        this.price_subtotal = options.price_subtotal;
+        this.price_subtotal_incl = options.price_subtotal_incl;
+        this.product_uom_id = options.product_uom_id;
         this.set_product_lot(this.product);
         options.quantity ? this.set_quantity(options.quantity) : this.set_quantity(1);
         this.discount = 0;
@@ -397,12 +401,17 @@ export class Orderline extends PosModel {
         if (options.price) {
             this.set_unit_price(options.price);
         } else {
-            this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
+            this.set_unit_price(this.product ? this.product.get_price(this.order.pricelist, this.get_quantity()) : 0);
         }
     }
     init_from_JSON(json) {
-        this.product = this.pos.db.get_product_by_id(json.product_id);
+        this.is_downpayment = json.is_downpayment
+        if (!this.is_downpayment)
+            this.product = this.pos.db.get_product_by_id(json.product_id);
+        this.price_subtotal = json.price_subtotal
+        this.price_subtotal_incl = json.price_subtotal_incl
         this.set_product_lot(this.product);
+        this.product_uom_id = json.product_uom_id;
         this.price = json.price_unit;
         this.price_type = json.price_type;
         this.set_discount(json.discount);
@@ -487,7 +496,7 @@ export class Orderline extends PosModel {
         const editedPackLotLines = await this.pos.getEditedPackLotLines(
             isAllowOnlyOneLot,
             this.getPackLotLinesToEdit(isAllowOnlyOneLot),
-            this.product.display_name
+            this.get_product_name()
         );
         if (!editedPackLotLines) {
             return;
@@ -533,7 +542,7 @@ export class Orderline extends PosModel {
         }
     }
     set_product_lot(product) {
-        this.has_product_lot = product.tracking !== "none";
+        this.has_product_lot = product && product.tracking !== "none";
         this.pack_lot_lines = this.has_product_lot && new PosCollection();
     }
     getNote() {
@@ -571,7 +580,7 @@ export class Orderline extends PosModel {
         this.full_product_name = constructFullProductName(
             this,
             this.pos.db.attribute_value_by_id,
-            this.product.display_name
+            this.get_product_name()
         );
     }
     get_price_extra() {
@@ -634,7 +643,7 @@ export class Orderline extends PosModel {
         }
 
         // just like in sale.order changing the quantity will recompute the unit price
-        if (!keep_price && this.price_type === "original") {
+        if (!this.is_downpayment && !keep_price && this.price_type === "original") {
             this.set_unit_price(
                 this.product.get_price(
                     this.order.pricelist,
@@ -699,14 +708,23 @@ export class Orderline extends PosModel {
 
     // return the unit of measure of the product
     get_unit() {
-        return this.product.get_unit();
+        return this.is_downpayment ? this.pos.units_by_id[this.product_uom_id] : this.product.get_unit();
     }
     // return the product of this orderline
     get_product() {
         return this.product;
     }
+    get_product_name(){
+        return this.is_downpayment ? _t('Down Payment') : this.product.display_name
+    }
     get_full_product_name() {
-        return this.full_product_name || this.product.display_name;
+        if (this.full_product_name) {
+            return this.full_product_name;
+        }
+        return [
+            this.get_product_name(),
+            this.description ? `(${this.description})` : false
+        ].filter(Boolean).join(" ");
     }
     // selects or deselects this orderline
     set_selected(selected) {
@@ -720,6 +738,9 @@ export class Orderline extends PosModel {
     // when we add an new orderline we want to merge it with the last line to see reduce the number of items
     // in the orderline. This returns true if it makes sense to merge the two
     can_be_merged_with(orderline) {
+        if (this.is_downpayment || orderline.is_downpayment)
+            return false;
+
         var price = parseFloat(
             round_di(this.price || 0, this.pos.dp["Product Price"]).toFixed(
                 this.pos.dp["Product Price"]
@@ -779,7 +800,9 @@ export class Orderline extends PosModel {
             price_subtotal: this.get_price_without_tax(),
             price_subtotal_incl: this.get_price_with_tax(),
             discount: this.get_discount(),
-            product_id: this.get_product().id,
+            product_id: this.get_product()?.id,
+            is_downpayment: this.is_downpayment,
+            product_uom_id: this.product_uom_id,
             tax_ids: [[6, false, this.get_applicable_taxes().map((tax) => tax.id)]],
             id: this.id,
             pack_lot_ids: pack_lot_ids,
@@ -811,9 +834,9 @@ export class Orderline extends PosModel {
     }
     get_unit_display_price() {
         if (this.pos.config.iface_tax_included === "total") {
-            return this.get_all_prices(1).priceWithTax;
+            return this.price_subtotal_incl !== undefined ? this.price_subtotal_incl : this.get_all_prices(1).priceWithTax;
         } else {
-            return this.get_all_prices(1).priceWithoutTax;
+            return this.price_subtotal !== undefined ? this.price_subtotal : this.get_all_prices(1).priceWithoutTax;
         }
     }
     /**
@@ -842,14 +865,16 @@ export class Orderline extends PosModel {
             rounding
         );
     }
+    get_tax_ids() {
+        return this.tax_ids || this.get_product()?.taxes_id || [];
+    }
     get_display_price_one() {
         var rounding = this.pos.currency.rounding;
         var price_unit = this.get_unit_price();
         if (this.pos.config.iface_tax_included !== "total") {
             return round_pr(price_unit * (1.0 - this.get_discount() / 100.0), rounding);
         } else {
-            var product = this.get_product();
-            var taxes_ids = this.tax_ids || product.taxes_id;
+            var taxes_ids = this.get_tax_ids();
             var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
             var all_taxes = this.compute_all(
                 product_taxes,
@@ -870,8 +895,7 @@ export class Orderline extends PosModel {
     }
     get_taxed_lst_unit_price() {
         const lstPrice = this.compute_fixed_price(this.get_lst_price());
-        const product = this.get_product();
-        const taxesIds = product.taxes_id;
+        const taxesIds = this.get_tax_ids();
         const productTaxes = this.pos.get_taxes_after_fp(taxesIds, this.order.fiscal_position);
         const unitPrices = this.compute_all(productTaxes, lstPrice, 1, this.pos.currency.rounding);
         if (this.pos.config.iface_tax_included === "total") {
@@ -881,22 +905,28 @@ export class Orderline extends PosModel {
         }
     }
     get_price_without_tax() {
+        if(this.is_downpayment && this.price_subtotal !== undefined)
+            return this.price_subtotal
         return this.get_all_prices().priceWithoutTax;
     }
     get_price_with_tax() {
+        if(this.is_downpayment && this.price_subtotal_incl !== undefined)
+            return this.price_subtotal_incl
         return this.get_all_prices().priceWithTax;
     }
     get_price_with_tax_before_discount() {
         return this.get_all_prices().priceWithTaxBeforeDiscount;
     }
     get_tax() {
+        if(this.is_downpayment && this.price_subtotal !== undefined && this.price_subtotal_incl !== undefined)
+            return this.price_subtotal_incl - this.price_subtotal;
         return this.get_all_prices().tax;
     }
     get_applicable_taxes() {
         var i;
         // Shenaningans because we need
         // to keep the taxes ordering.
-        var ptaxes_ids = this.tax_ids || this.get_product().taxes_id;
+        var ptaxes_ids = this.get_tax_ids();
         var ptaxes_set = {};
         for (i = 0; i < ptaxes_ids.length; i++) {
             ptaxes_set[ptaxes_ids[i]] = true;
@@ -913,8 +943,7 @@ export class Orderline extends PosModel {
         return this.get_all_prices().taxDetails;
     }
     get_taxes() {
-        var taxes_ids = this.tax_ids || this.get_product().taxes_id;
-        return this.pos.getTaxesByIds(taxes_ids);
+        return this.pos.getTaxesByIds(this.get_tax_ids());
     }
     /**
      * Calculate the amount of taxes of a specific Orderline, that are included in the price.
@@ -958,8 +987,7 @@ export class Orderline extends PosModel {
      * @returns {Object} The calculated product taxes after filtering and fiscal position conversion.
      */
     _getProductTaxesAfterFiscalPosition() {
-        const product = this.get_product();
-        let taxesIds = this.tax_ids || product.taxes_id;
+        let taxesIds = this.get_tax_ids();
         taxesIds = taxesIds.filter((t) => t in this.pos.taxes_by_id);
         return this.pos.get_taxes_after_fp(taxesIds, this.order.fiscal_position);
     }
@@ -967,8 +995,7 @@ export class Orderline extends PosModel {
         var price_unit = this.get_unit_price() * (1.0 - this.get_discount() / 100.0);
         var taxtotal = 0;
 
-        var product = this.get_product();
-        var taxes_ids = this.tax_ids || product.taxes_id;
+        var taxes_ids = this.get_tax_ids();
         taxes_ids = taxes_ids.filter((t) => t in this.pos.taxes_by_id);
         var taxdetail = {};
         var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
@@ -1012,7 +1039,7 @@ export class Orderline extends PosModel {
         return this.compute_fixed_price(this.get_lst_price());
     }
     get_lst_price() {
-        return this.product.get_price(this.pos.default_pricelist, 1, this.price_extra);
+        return this.product && this.product.get_price(this.pos.default_pricelist, 1, this.price_extra);
     }
     set_lst_price(price) {
         this.order.assert_editable();
@@ -1041,7 +1068,7 @@ export class Orderline extends PosModel {
      */
     isTipLine() {
         const tipProduct = this.pos.config.tip_product_id;
-        return tipProduct && this.product.id === tipProduct[0];
+        return tipProduct && this.product?.id === tipProduct[0];
     }
 
     /**
@@ -1074,7 +1101,7 @@ export class Orderline extends PosModel {
             productName: this.get_full_product_name(),
             price: this.env.utils.formatCurrency(this.get_display_price()),
             qty: this.get_quantity_str(),
-            unit: this.get_unit().name,
+            unit: this.get_unit()?.name,
             unitPrice: this.env.utils.formatCurrency(this.get_unit_display_price()),
             oldUnitPrice: this.env.utils.formatCurrency(this.get_old_unit_display_price()),
             discount: this.get_discount_str(),
@@ -1415,7 +1442,7 @@ export class Order extends PosModel {
         var orderlines = json.lines;
         for (var i = 0; i < orderlines.length; i++) {
             var orderline = orderlines[i][2];
-            if (orderline.product_id && this.pos.db.get_product_by_id(orderline.product_id)) {
+            if (orderline.is_downpayment || this.pos.db.get_product_by_id(orderline.product_id)) {
                 this.add_orderline(
                     new Orderline(
                         { env: this.env },
@@ -1606,7 +1633,7 @@ export class Order extends PosModel {
                     this.lastOrderPrepaChange[lineKey] = {
                         attribute_value_ids: line.attribute_value_ids,
                         line_uuid: line.uuid,
-                        product_id: line.get_product().id,
+                        product_id: line.get_product()?.id,
                         name: line.get_full_product_name(),
                         note: note,
                         quantity: line.get_quantity(),
@@ -1644,12 +1671,14 @@ export class Order extends PosModel {
             const orderline = this.orderlines[orderlineIdx];
             const product = orderline.get_product();
             const note = orderline.getNote();
-            const productKey = `${product.id} - ${orderline.get_full_product_name()} - ${note}`;
             const lineKey = `${orderline.uuid} - ${note}`;
             if (
-                prepaCategoryIds.size === 0 ||
-                this.pos.db.any_of_is_subcategory(product.pos_categ_ids, [...prepaCategoryIds])
+                product && (
+                    prepaCategoryIds.size === 0 ||
+                    this.pos.db.any_of_is_subcategory(product.pos_categ_ids, [...prepaCategoryIds])
+                )
             ) {
+                const productKey = `${product.id} - ${orderline.get_full_product_name()} - ${note}`;
                 const quantity = orderline.get_quantity();
                 const quantityDiff = oldChanges[lineKey]
                     ? quantity - oldChanges[lineKey].quantity
@@ -1741,7 +1770,7 @@ export class Order extends PosModel {
         }
         if (
             this.orderlines.some(
-                (line) => line.get_product().tracking !== "none" && !line.has_valid_product_lot()
+                (line) => line.get_product() && line.get_product().tracking !== "none" && !line.has_valid_product_lot()
             ) &&
             (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
         ) {
@@ -1994,10 +2023,13 @@ export class Order extends PosModel {
         this.assert_editable();
         options = options || {};
         const quantity = options.quantity ? options.quantity : 1;
-        const line = new Orderline(
-            { env: this.env },
-            { pos: this.pos, order: this, product: product, quantity: quantity }
-        );
+        const line = new Orderline( { env: this.env }, {
+            pos: this.pos,
+            order: this,
+            product: product,
+            quantity: quantity,
+            is_downpayment: options.is_downpayment,
+        });
         this.fix_tax_included_price(line);
 
         this.set_orderline_options(line, options);
@@ -2086,10 +2118,10 @@ export class Order extends PosModel {
             orderline.set_quantity(options.quantity);
         }
 
-        if (options.price_extra !== undefined) {
+        if (options.price_extra !== undefined && orderline.product) {
             orderline.price_extra = options.price_extra;
             orderline.set_unit_price(
-                orderline.product.get_price(
+                orderline.product?.get_price(
                     this.pricelist,
                     orderline.get_quantity(),
                     options.price_extra
@@ -2313,7 +2345,7 @@ export class Order extends PosModel {
         const ignored_product_ids = this._get_ignored_product_ids_total_discount();
         return round_pr(
             this.orderlines.reduce((sum, orderLine) => {
-                if (!ignored_product_ids.includes(orderLine.product.id)) {
+                if (orderLine.product && !ignored_product_ids.includes(orderLine.product.id)) {
                     sum +=
                         orderLine.getUnitDisplayPriceBeforeDiscount() *
                         (orderLine.get_discount() / 100) *
@@ -2419,7 +2451,7 @@ export class Order extends PosModel {
         }
 
         this.orderlines.forEach((line) => {
-            var taxes_ids = this.tax_ids || line.get_product().taxes_id;
+            var taxes_ids = this.get_tax_ids();
             for (var i = 0; i < taxes_ids.length; i++) {
                 if (tax_set[taxes_ids[i]]) {
                     total += line.get_price_with_tax();

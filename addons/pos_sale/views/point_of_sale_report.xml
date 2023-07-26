@@ -5,13 +5,12 @@
             <t t-set="pos_orders" t-value="o.sudo().pos_order_ids"/>
             <t t-if="pos_orders">
                 <div style="margin-left:15px; font-style: italic">
-                    <t t-set="down_payment_product" t-value="pos_orders[0].config_id.down_payment_product_id"/>
-                    <t t-if="line.product_id == down_payment_product">
-                        <t t-set="sale_orders" t-value="pos_orders[0].lines.filtered(lambda l: l.product_id == down_payment_product and l.price_subtotal_incl == line.price_total).mapped('sale_order_origin_id')"/>
+                    <t t-if="line.is_downpayment">
+                        <t t-set="sale_orders" t-value="pos_orders[0].lines.filtered(lambda l: l.is_downpayment and l.price_subtotal_incl == line.price_total).mapped('sale_order_origin_id')"/>
                         <t t-if="sale_orders">
                             <t t-set="sale_order" t-value="sale_orders[0]"/>
                             <t t-foreach="sale_order.order_line" t-as="sale_order_line">
-                                <t t-if="sale_order_line.product_id != down_payment_product">
+                                <t t-if="not sale_order_line.is_downpayment">
                                     <div>
                                         <span style="margin-right: 5px;"><t t-esc="int(sale_order_line.product_uom_qty)"/>x</span>
                                         <span t-esc="sale_order_line.name" />

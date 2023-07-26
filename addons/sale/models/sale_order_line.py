@@ -315,19 +315,22 @@ class SaleOrderLine(models.Model):
                 if ptav._origin not in valid_values:
                     line.product_no_variant_attribute_value_ids -= ptav
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'is_downpayment')
     def _compute_name(self):
         for line in self:
+            name = ''
             if not line.product_id:
-                continue
+                if line.is_downpayment and not line.display_type:
+                    context = {'lang': line.order_partner_id.lang or self.env.user.lang}
+                    name = _('Down Payment')
+                else:
+                    continue
             if not line.order_partner_id.is_public:
                 line = line.with_context(lang=line.order_partner_id.lang)
-            name = line._get_sale_order_line_multiline_description_sale()
-            if line.is_downpayment and not line.display_type:
-                context = {'lang': line.order_partner_id.lang}
+            if name:
                 dp_state = line._get_downpayment_state()
                 if dp_state == 'draft':
-                    name = _("%(line_description)s (Draft)", line_description=name)
+                    name = _('%(line_description)s: %(date)s (Draft)', date=format_date(self.env, fields.Date.today()), line_description=name)
                 elif dp_state == 'cancel':
                     name = _("%(line_description)s (Canceled)", line_description=name)
                 else:
@@ -340,6 +343,8 @@ class SaleOrderLine(models.Model):
                             date=format_date(line.env, invoice.invoice_date),
                         )
                 del context
+            else:
+                name = line._get_sale_order_line_multiline_description_sale()
             line.name = name
 
     def _get_sale_order_line_multiline_description_sale(self):
@@ -409,11 +414,16 @@ class SaleOrderLine(models.Model):
             if float_compare(product_uom_qty, line.product_uom_qty, precision_rounding=line.product_uom.rounding) != 0:
                 line.product_uom_qty = product_uom_qty
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'is_downpayment', 'display_type')
     def _compute_product_uom(self):
         for line in self:
-            if not line.product_uom or (line.product_id.uom_id.id != line.product_uom.id):
-                line.product_uom = line.product_id.uom_id
+            if not line.product_uom or (line.product_id and line.product_id.uom_id.id != line.product_uom.id):
+                if line.display_type:
+                    line.product_uom = False
+                elif line.is_downpayment:
+                    line.product_uom = self.env.ref('uom.product_uom_unit')
+                else:
+                    line.product_uom = line.product_id.uom_id
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_id(self):
@@ -784,7 +794,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             if line.state == 'sale' and not line.display_type:
-                if line.product_id.invoice_policy == 'order':
+                if line.is_downpayment or line.product_id.invoice_policy == 'order':
                     line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
                 else:
                     line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
@@ -1135,6 +1145,8 @@ class SaleOrderLine(models.Model):
             'sale_line_ids': [Command.link(self.id)],
             'is_downpayment': self.is_downpayment,
         }
+        if self.is_downpayment and self.invoice_lines.account_id:
+            res['account_id'] = self.invoice_lines.account_id.id
         analytic_account_id = self.order_id.analytic_account_id.id
         if self.analytic_distribution and not self.display_type:
             res['analytic_distribution'] = self.analytic_distribution

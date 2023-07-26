@@ -10,7 +10,7 @@ patch(Orderline.prototype, {
      */
     isGlobalDiscountApplicable() {
         return !(
-            this.pos.config.tip_product_id && this.product.id === this.pos.config.tip_product_id[0]
+            this.pos.config.tip_product_id && this.product?.id === this.pos.config.tip_product_id[0]
         );
     },
 });

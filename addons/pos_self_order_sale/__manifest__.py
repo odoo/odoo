@@ -5,7 +5,6 @@
     "depends": ["pos_sale", "pos_self_order"],
     "auto_install": True,
     "data": [
-        "views/res_config_settings_views.xml",
         "data/kiosk_sale_team.xml",
     ],
     "assets": {

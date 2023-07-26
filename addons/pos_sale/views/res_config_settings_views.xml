@@ -11,13 +11,6 @@
                     <setting string="Sales Team" help="Sales are reported to the following sales team">
                         <field name="pos_crm_team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                     </setting>
-                    <setting id="down_payment_product" string="Down Payment Product" help="This product will be applied when down payment is made">
-                        <field
-                            name="pos_down_payment_product_id"
-                            domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
-                            context="{'default_detailed_type': 'service', 'default_taxes_id': False }"
-                        />
-                    </setting>
                 </block>
             </block>
         </field>

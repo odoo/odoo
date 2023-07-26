@@ -79,7 +79,7 @@ export class ReceiptScreen extends Component {
         const tip_product_id = this.pos.config.tip_product_id?.[0];
         const tipLine = order
             .get_orderlines()
-            .find((line) => tip_product_id && line.product.id === tip_product_id);
+            .find((line) => tip_product_id && line.product?.id === tip_product_id);
         const tipAmount = tipLine ? tipLine.get_all_prices().priceWithTax : 0;
         const orderAmountStr = this.env.utils.formatCurrency(orderTotalAmount - tipAmount);
         if (!tipAmount) {

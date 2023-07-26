@@ -94,7 +94,7 @@ registry
         url: '/pos/ui', 
         steps: () => {
             startSteps();
-            
+
             ProductScreen.do.clickQuotationButton();
             ProductScreen.do.downPaymentFirstOrder();
             ProductScreen.do.clickPayButton();
@@ -105,16 +105,16 @@ registry
             // Filter should be automatically 'Paid'.
             TicketScreen.check.filterIs('Paid');
             TicketScreen.do.selectOrder('-0001');
-            TicketScreen.check.hasLine({productName: 'Down Payment', withClass: '.selected', quantity: '1.0'});
+            TicketScreen.check.hasLine({productName: 'Down Payment', withClass: '.selected', quantity: '1'});
             ProductScreen.do.pressNumpad('1');
             TicketScreen.do.confirmRefund();
             ProductScreen.do.clickPayButton();
             PaymentScreen.do.clickPaymentMethod('Cash');
             PaymentScreen.do.clickValidate();
             ReceiptScreen.do.clickNextOrder();
-            
-            return getSteps(); 
-        } 
+
+            return getSteps();
+        }
     });
 
 registry

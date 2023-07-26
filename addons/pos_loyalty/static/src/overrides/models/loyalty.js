@@ -760,6 +760,7 @@ patch(Order.prototype, {
                 let orderedProductPaid = 0;
                 for (const line of orderLines) {
                     if (
+                        !line.is_downpayment &&
                         ((!line.reward_product_id &&
                             (rule.any_product ||
                                 rule.valid_product_ids.has(line.get_product().id))) ||
@@ -815,6 +816,7 @@ patch(Order.prototype, {
                     } else if (rule.reward_point_mode === "money") {
                         for (const line of orderLines) {
                             if (
+                                line.is_downpayment ||
                                 line.is_reward_line ||
                                 !rule.valid_product_ids.has(line.get_product().id) ||
                                 line.get_quantity() <= 0 ||
@@ -1342,7 +1344,7 @@ patch(Order.prototype, {
         let available = 0;
         let shouldCorrectRemainingPoints = false;
         for (const line of this.get_orderlines()) {
-            if (line.get_product().id === product.id) {
+            if (line.get_product() && line.get_product().id === product.id) {
                 available += line.get_quantity();
             } else if (line.reward_product_id === product.id) {
                 if (line.reward_id == reward.id) {

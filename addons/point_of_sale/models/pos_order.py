@@ -235,21 +235,28 @@ class PosOrder(models.Model):
 
         base_line_vals_list = []
         for line in self.lines.with_company(self.company_id):
-            account = line.product_id._get_product_accounts()['income']
-            if not account:
-                raise UserError(_(
-                    "Please define income account for this product: '%s' (id:%d).",
-                    line.product_id.name, line.product_id.id,
-                ))
-
-            if self.fiscal_position_id:
-                account = self.fiscal_position_id.map_account(account)
+            if line.is_downpayment:
+                account = line.down_payment_account_id
+            else:
+                account = line.product_id._get_product_accounts()['income']
+                if not account:
+                    raise UserError(_(
+                        "Please define income account for this product: '%s' (id:%d).",
+                        line.product_id.name, line.product_id.id,
+                    ))
+                if self.fiscal_position_id:
+                    account = self.fiscal_position_id.map_account(account)
 
             is_refund = line.qty * line.price_unit < 0
 
-            product_name = line.product_id\
-                .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang)\
-                .get_product_multiline_description_sale()
+            lang = line.order_id.partner_id.lang or self.env.user.lang
+            if line.is_downpayment:
+                context = {'lang': lang}
+                product_name = _('Down Payment')
+                del context
+            else:
+                product_name = line.product_id.with_context(lang=lang)\
+                    .get_product_multiline_description_sale()
             base_line_vals_list.append(
                 {
                     **self.env['account.tax']._convert_to_tax_base_line_dict(
@@ -265,6 +272,7 @@ class PosOrder(models.Model):
                         account=account,
                         is_refund=is_refund,
                     ),
+                    'is_downpayment': line.is_downpayment,
                     'uom': line.product_uom_id,
                     'name': product_name,
                 }
@@ -290,6 +298,8 @@ class PosOrder(models.Model):
                 'name': line_values['name'],
                 'tax_ids': [(6, 0, line_values['taxes'].ids)],
                 'product_uom_id': line_values['uom'].id,
+                'is_downpayment': line_values['is_downpayment'],
+                **({'account_id': line_values['account'].id} if line.is_downpayment and line_values['account'] else {})
             }))
             if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
@@ -909,6 +919,11 @@ class PosOrder(models.Model):
             move_vals = order._prepare_invoice_vals()
             new_move = order._create_invoice(move_vals)
 
+            order_dp_total = sum([l.price_subtotal_incl for l in order.lines if l.is_downpayment])
+            move_dp_total = sum([il.price_total for il in new_move.invoice_line_ids if il.is_downpayment])
+            delta_amount = move_dp_total - order_dp_total
+            new_move._ventilate_delta_amount(delta_amount)
+
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
 
@@ -1203,6 +1218,12 @@ class PosOrderLine(models.Model):
     _description = "Point of Sale Order Lines"
     _rec_name = "product_id"
 
+    _sql_constraints = [(
+        'product_id_or_is_downpayment',
+        "CHECK(product_id IS NOT NULL OR is_downpayment = TRUE)",
+        "Missing product_id on non down payment pos order line.",
+    )]
+
     def _order_line_fields(self, line, session_id=None):
         if line and 'name' not in line[2]:
             session = self.env['pos.session'].browse(session_id).exists() if session_id else None
@@ -1227,7 +1248,7 @@ class PosOrderLine(models.Model):
     name = fields.Char(string='Line No', required=True, copy=False)
     skip_change = fields.Boolean('Skip line when sending ticket to kitchen printers.')
     notice = fields.Char(string='Discount Notice')
-    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
+    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True)
     attribute_value_ids = fields.Many2many('product.template.attribute.value', string="Selected Attributes")
     custom_attribute_value_ids = fields.One2many(
         comodel_name='product.attribute.custom.value', inverse_name='pos_order_line_id',
@@ -1249,7 +1270,7 @@ class PosOrderLine(models.Model):
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
-    product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
+    product_uom_id = fields.Many2one('uom.uom', string='Product UoM', compute='_compute_product_uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
     customer_note = fields.Char('Customer Note')
@@ -1259,6 +1280,7 @@ class PosOrderLine(models.Model):
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
     combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent')
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines')
+    is_downpayment = fields.Boolean()
 
     @api.model
     def _is_field_accepted(self, field):
@@ -1268,6 +1290,11 @@ class PosOrderLine(models.Model):
     def _compute_refund_qty(self):
         for orderline in self:
             orderline.refunded_qty = -sum(orderline.mapped('refund_orderline_ids.qty'))
+
+    @api.depends('product_id', 'is_downpayment')
+    def _compute_product_uom_id(self):
+        for orderline in self:
+            orderline.product_uom_id = self.env.ref('uom.product_uom_unit') if orderline.is_downpayment else orderline.product_id.uom_id
 
     def _prepare_refund_data(self, refund_order, PosOrderLineLot):
         """
@@ -1385,6 +1412,8 @@ class PosOrderLine(models.Model):
             'refunded_orderline_id': orderline.refunded_orderline_id.id,
             'combo_parent_id': orderline.combo_parent_id.id,
             'combo_line_ids': orderline.combo_line_ids.mapped('id'),
+            'is_downpayment': orderline.is_downpayment,
+            'product_uom_id': orderline.product_uom_id,
         }
 
     def export_for_ui(self):
