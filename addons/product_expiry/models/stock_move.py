@@ -76,3 +76,8 @@ class StockMove(models.Model):
         if self.product_id.use_expiration_date:
             return super(StockMove, self.with_context(with_expiration=self.date))._update_reserved_quantity(need, available_quantity, location_id, lot_id, package_id, owner_id, strict)
         return super()._update_reserved_quantity(need, available_quantity, location_id, lot_id, package_id, owner_id, strict)
+
+    def _get_available_quantity(self, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
+        if self.product_id.use_expiration_date:
+            return super(StockMove, self.with_context(with_expiration=self.date))._get_available_quantity(location_id, lot_id, package_id, owner_id, strict, allow_negative)
+        return super()._get_available_quantity(location_id, lot_id, package_id, owner_id, strict, allow_negative)
