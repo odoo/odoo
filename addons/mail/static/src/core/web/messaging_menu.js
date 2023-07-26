@@ -24,6 +24,7 @@ export class MessagingMenu extends Component {
         this.chatWindowService = useState(useService("mail.chat_window"));
         this.threadService = useState(useService("mail.thread"));
         this.action = useService("action");
+        this.installPrompt = useState(useService("installPrompt"));
         this.ui = useState(useService("ui"));
         this.state = useState({
             addingChat: false,
@@ -71,6 +72,10 @@ export class MessagingMenu extends Component {
         return tab === "chat" ? ["chat", "group"] : [tab];
     }
 
+    get canPromptToInstall() {
+        return this.installPrompt.canPromptToInstall;
+    }
+
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
@@ -78,6 +83,19 @@ export class MessagingMenu extends Component {
                 this.store.discuss.activeTab === "all") ||
             (this.notification.permission === "prompt" && this.store.discuss.activeTab === "all")
         );
+    }
+
+    get installationRequest() {
+        return {
+            body: _t("Come here often? Install Odoo on your device!"),
+            displayName: _t("%s has a suggestion", this.store.odoobot.name),
+            onClick: () => {
+                this.installPrompt.show();
+            },
+            iconSrc: this.threadService.avatarUrl(this.store.odoobot),
+            partner: this.store.odoobot,
+            isShown: this.canPromptToInstall,
+        };
     }
 
     get notificationRequest() {
@@ -301,6 +319,9 @@ export class MessagingMenu extends Component {
                 (acc, ng) => acc + parseInt(ng.notifications.length),
                 0
             );
+        if (this.canPromptToInstall) {
+            value++;
+        }
         if (this.notification.permission === "prompt") {
             value++;
         }

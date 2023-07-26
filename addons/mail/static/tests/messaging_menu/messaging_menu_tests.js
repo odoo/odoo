@@ -8,7 +8,7 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains, triggerEvents } from "@web/../tests/utils";
 
 QUnit.module("messaging menu");
@@ -121,6 +121,109 @@ QUnit.test("no 'OdooBot has a request' in mobile app", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     await contains(".o-mail-NotificationItem", { count: 0 });
+});
+
+QUnit.test("rendering with PWA installation request", async (assert) => {
+    const target = getFixture();
+
+    patchWithCleanup(browser, {
+        BeforeInstallPromptEvent: () => {},
+    });
+    patchWithCleanup(browser.localStorage, {
+        getItem(key) {
+            if (key === "pwa.installationState") {
+                assert.step("getItem " + key);
+                // in this test, installation has not yet proceeded
+                return null;
+            }
+            return super.getItem(key);
+        },
+    });
+
+    const { env } = await start();
+    patchWithCleanup(env.services.installPrompt, {
+        show() {
+            assert.step("show prompt");
+        },
+    });
+    assert.verifySteps(["getItem pwa.installationState"]);
+
+    await contains(".o-mail-MessagingMenu-counter");
+    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem");
+    assert.ok(
+        target
+            .querySelector(".o-mail-NotificationItem img")
+            .dataset.src.includes("/web/image?field=avatar_128&id=2&model=res.partner")
+    );
+    assert.strictEqual(
+        target.querySelector(".o-mail-NotificationItem-name").textContent,
+        "OdooBot has a suggestion"
+    );
+    assert.strictEqual(
+        target.querySelector(".o-mail-NotificationItem-text").textContent,
+        "Come here often? Install Odoo on your device!"
+    );
+
+    await click(".o-mail-NotificationItem a.btn-primary");
+    assert.verifySteps(["show prompt"]);
+});
+
+QUnit.test("rendering with PWA installation request (dismissed)", async (assert) => {
+    const target = getFixture();
+
+    patchWithCleanup(browser, {
+        BeforeInstallPromptEvent: () => {},
+    });
+    patchWithCleanup(browser.localStorage, {
+        getItem(key) {
+            if (key === "pwa.installationState") {
+                assert.step("getItem " + key);
+                // in this test, installation has been previously dismissed by the user
+                return "dismissed";
+            }
+            return super.getItem(key);
+        },
+    });
+
+    await start();
+    assert.verifySteps(["getItem pwa.installationState"]);
+    assert.containsNone(target, ".o-mail-MessagingMenu-counter");
+
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsNone(target, ".o-mail-NotificationItem");
+});
+
+QUnit.test("rendering with PWA installation request (already running as PWA)", async (assert) => {
+    const target = getFixture();
+
+    patchWithCleanup(browser, {
+        BeforeInstallPromptEvent: () => {},
+        matchMedia(media) {
+            if (media === "(display-mode: standalone)") {
+                return { matches: true };
+            }
+            return super.matchMedia(media);
+        },
+    });
+    patchWithCleanup(browser.localStorage, {
+        getItem(key) {
+            if (key === "pwa.installationState") {
+                assert.step("getItem " + key);
+                // in this test, we remove any value that could contain localStorage so the service would be allowed to prompt
+                return null;
+            }
+            return super.getItem(key);
+        },
+    });
+
+    await start();
+    assert.verifySteps(["getItem pwa.installationState"]);
+    assert.containsNone(target, ".o-mail-MessagingMenu-counter");
+
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsNone(target, ".o-mail-NotificationItem");
 });
 
 QUnit.test("Is closed after clicking on new message", async () => {

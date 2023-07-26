@@ -28,6 +28,9 @@
                     </div>
                 </div>
             </div>
+            <t t-if="props.slots and props.slots.requestContent">
+                <t t-slot="requestContent" />
+            </t>
         </button>
     </ActionSwiper>
 </t>
