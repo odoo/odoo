@@ -262,7 +262,7 @@ export class Many2OneField extends Component {
         }
     }
     async onBarcodeBtnClick() {
-        const barcode = await BarcodeScanner.scanBarcode();
+        const barcode = await BarcodeScanner.scanBarcode(this.env);
         if (barcode) {
             await this.onBarcodeScanned(barcode);
             if ("vibrate" in browser.navigator) {
