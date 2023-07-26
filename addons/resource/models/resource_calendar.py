@@ -317,8 +317,10 @@ class ResourceCalendar(models.Model):
         start = start_dt.astimezone(utc)
         end = end_dt.astimezone(utc)
         bounds_per_tz = {
-            tz: (start_dt.astimezone(tz), end_dt.astimezone(tz))
-            for tz in resources_per_tz.keys()
+            tz: (
+                tz.localize(start_dt.replace(tzinfo=None)),
+                tz.localize(end_dt.replace(tzinfo=None)),
+            ) for tz in resources_per_tz.keys()
         }
         # Use the outer bounds from the requested timezones
         for tz, bounds in bounds_per_tz.items():
