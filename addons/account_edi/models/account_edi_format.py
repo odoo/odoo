@@ -6,6 +6,15 @@ from odoo.tools.pdf import OdooPdfFileReader
 from odoo.osv import expression
 from odoo.tools import html_escape
 from odoo.exceptions import RedirectWarning
+<<<<<<< HEAD
+||||||| parent of 029913c9245 (temp)
+from PyPDF2.utils import PdfReadError
+=======
+try:
+    from PyPDF2.errors import PdfReadError
+except ImportError:
+    from PyPDF2.utils import PdfReadError
+>>>>>>> 029913c9245 (temp)
 
 from lxml import etree
 from struct import error as StructError
