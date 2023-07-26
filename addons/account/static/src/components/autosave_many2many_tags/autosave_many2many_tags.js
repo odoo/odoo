@@ -22,9 +22,9 @@ export class AutosaveMany2ManyTagsField extends Many2ManyTagsField {
         };
     }
 
-    deleteTag(id) {
-        super.deleteTag(id);
-        this._saveOnUpdate();
+    async deleteTag(id) {
+        await super.deleteTag(id);
+        await this._saveOnUpdate();
     }
 
     willUpdateProps(nextProps) {
