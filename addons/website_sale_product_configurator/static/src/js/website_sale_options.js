@@ -121,7 +121,7 @@ publicWidget.registry.WebsiteSale.include({
                         $quantity.parent().parent().removeClass('d-none');
                         $quantity.text(quantity).hide().fadeIn(600);
                         // find the closest div that has an img tag in it
-                        const imgContainerEl = self.$form.closest('div:has(img)');
+                        const imgContainerEl = self.$form.closest('div:has(.o_wsale_product_images)');
                         wsUtils.animateClone($('header .o_wsale_my_cart').first(), imgContainerEl, 25, 40);
                         sessionStorage.setItem('website_sale_cart_quantity', quantity);
                     }).then(()=>{

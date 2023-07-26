@@ -82,11 +82,8 @@
                                         </span>
                                     </div>
                                     <field name="categ_id" string="Product Category"/>
-                                    <label for="product_tag_ids"/>
-                                    <div>
-                                        <field name="product_tag_ids" widget="many2many_tags" class="oe_inline" context="{'product_template_id': id}"/>
-                                        <button name="%(product_tag_action)d" icon="oi-arrow-right" title="Tags" type="action" class="btn-link"/>
-                                    </div>
+                                    <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
+                                    <button name="%(product_tag_action)d" icon="oi-arrow-right" type="action" class="btn-link ps-0" colspan="2" string="Configure tags"/>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
                                     <field name="currency_id" invisible="1"/>
@@ -288,11 +285,8 @@
                             </group>
                             <group name="tags" string="Tags">
                                 <field name="product_tag_ids" widget="many2many_tags" readonly="1"/>
-                                <label for="additional_product_tag_ids"/>
-                                <div>
-                                    <field name="additional_product_tag_ids" widget="many2many_tags" class="oe_inline" context="{'product_variant_id': id}"/>
-                                    <button name="%(product_tag_action)d" icon="oi-arrow-right" title="Tags" type="action" class="btn-link"/>
-                                </div>
+                                <field name="additional_product_tag_ids" widget="many2many_tags" context="{'product_variant_id': id}"/>
+                                <button name="%(product_tag_action)d" icon="oi-arrow-right" type="action" class="btn-link ps-0" colspan="2" string="Configure tags"/>
                             </group>
                         </group>
                         <group>
@@ -356,6 +350,35 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="product_template_view_tree_tag">
+            <field name="name">product.template.view.tree.tag</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <tree string="Product Templates" editable="bottom">
+                    <field name="name" readonly="1"/>
+                    <field name="default_code" readonly="1" optional="show"/>
+                    <field name="description" readonly="1" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_product_view_tree_tag">
+            <field name="name">product.product.view.tree.tag</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <tree string="Product Variants" editable="bottom">
+                    <field name="name" readonly="1"/>
+                    <field name="default_code" readonly="1" optional="show"/>
+                    <field name="product_template_variant_value_ids"
+                           widget="many2many_tags"
+                           groups="product.group_product_variant"
+                           readonly="1"
+                    />
+                    <field name="description" readonly="1" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.product.form</field>
             <field name="model">product.product</field>
@@ -397,7 +420,7 @@
                     <attribute name="options">{'no_open': true}</attribute>
                 </field>
                 <field name="product_tag_ids" position="after">
-                    <field name="additional_product_tag_ids"/>
+                    <field name="additional_product_tag_ids" widget="many2many_tags"/>
                 </field>
             </field>
         </record>
