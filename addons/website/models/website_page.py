@@ -96,7 +96,7 @@ class Page(models.Model):
         ids = []
         previous_page = None
         # Iterate a single time on the whole list sorted on specific-website first.
-        for page in self.sorted(key=lambda p: (p.url, not p.website_id)):
+        for page in self.sorted(key=lambda p: (p.url or '', not p.website_id)):
             if not previous_page or page.url != previous_page.url:
                 ids.append(page.id)
             previous_page = page
