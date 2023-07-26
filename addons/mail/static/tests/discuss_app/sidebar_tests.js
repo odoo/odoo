@@ -758,7 +758,7 @@ QUnit.test("channel - states: open should update the value on the server", async
 
 QUnit.test("channel - states: close from the bus", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "channel1" });
     const userSettingsId = pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
@@ -774,12 +774,12 @@ QUnit.test("channel - states: close from the bus", async (assert) => {
         });
     });
     assert.containsOnce($, ".o-mail-DiscussCategory-channel .oi-chevron-right");
-    assert.containsNone($, "button:contains(test)");
+    assert.containsNone($, "button:contains(channel1)");
 });
 
 QUnit.test("channel - states: open from the bus", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "channel1" });
     const userSettingsId = pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
@@ -795,25 +795,25 @@ QUnit.test("channel - states: open from the bus", async (assert) => {
         });
     });
     assert.containsOnce($, ".o-mail-DiscussCategory-channel .oi-chevron-down");
-    assert.containsOnce($, "button:contains(test)");
+    assert.containsOnce($, "button:contains(channel1)");
 });
 
 QUnit.test(
     "channel - states: the active category item should be visible even if the category is closed",
     async (assert) => {
         const pyEnv = await startServer();
-        pyEnv["discuss.channel"].create({ name: "test" });
+        pyEnv["discuss.channel"].create({ name: "channel1" });
         const { openDiscuss } = await start();
         await openDiscuss();
-        await click(".o-mail-DiscussCategoryItem:contains(test)");
-        assert.containsOnce($, "button:contains(test).o-active");
+        await click(".o-mail-DiscussCategoryItem:contains(channel1)");
+        assert.containsOnce($, "button:contains(channel1).o-active");
 
         await click(".o-mail-DiscussCategory span:contains(Channels)");
         assert.containsOnce($, ".o-mail-DiscussCategory-channel .oi-chevron-right");
-        assert.containsOnce($, "button:contains(test)");
+        assert.containsOnce($, "button:contains(channel1)");
 
         await click("button:contains(Inbox)");
-        assert.containsNone($, "button:contains(test)");
+        assert.containsNone($, "button:contains(channel1)");
     }
 );
 

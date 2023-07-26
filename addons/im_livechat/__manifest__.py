@@ -133,8 +133,8 @@ Help your customers with this chat, and analyse their feedback.
             ('remove', 'web/static/tests/mock_server_tests.js'),
             ('remove', 'im_livechat/static/**'),
             'im_livechat/static/tests/helpers/**',
-            ('remove', 'im_livechat/static/tests/helpers/**/web/**'),
             'im_livechat/static/src/embed/**/*',
+            ('remove', 'im_livechat/static/src/embed/frontend/**/*'),
             ('remove', 'im_livechat/static/src/embed/external/**/*'),
         ],
         'im_livechat.qunit_embed_suite': [
