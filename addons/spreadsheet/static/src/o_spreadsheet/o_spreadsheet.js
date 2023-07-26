@@ -106,7 +106,7 @@
     const HEADER_BORDER_COLOR = "#C0C0C0";
     const CELL_BORDER_COLOR = "#E2E3E3";
     const BACKGROUND_CHART_COLOR = "#FFFFFF";
-    const MENU_ITEM_DISABLED_COLOR = "#CACACA";
+    const DISABLED_TEXT_COLOR = "#CACACA";
     const DEFAULT_COLOR_SCALE_MIDPOINT_COLOR = 0xb6d7a8;
     const LINK_COLOR = "#01666b";
     const FILTERS_COLOR = "#188038";
@@ -3456,7 +3456,6 @@
         "SET_VIEWPORT_OFFSET",
         "SELECT_SEARCH_NEXT_MATCH",
         "SELECT_SEARCH_PREVIOUS_MATCH",
-        "REFRESH_SEARCH",
         "UPDATE_SEARCH",
         "CLEAR_SEARCH",
         "EVALUATE_CELLS",
@@ -5964,7 +5963,7 @@
         }
       }
       &.disabled {
-        color: ${MENU_ITEM_DISABLED_COLOR};
+        color: ${DISABLED_TEXT_COLOR};
         cursor: not-allowed;
       }
     }
@@ -21716,11 +21715,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         setup() {
             this.showFormulaState = this.env.model.getters.shouldShowFormulas();
+            this.debouncedUpdateSearch = debounce(this.updateSearch.bind(this), 200);
             owl.onMounted(() => this.focusInput());
             owl.onWillUnmount(() => {
                 this.env.model.dispatch("CLEAR_SEARCH");
                 this.env.model.dispatch("SET_FORMULA_VISIBILITY", { show: this.showFormulaState });
             });
+            owl.useEffect(() => {
+                this.state.searchOptions.searchFormulas = this.env.model.getters.shouldShowFormulas();
+                this.searchFormulas();
+            }, () => [this.env.model.getters.shouldShowFormulas()]);
         }
         onInput(ev) {
             this.state.toSearch = ev.target.value;
@@ -21740,10 +21744,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.replace();
             }
         }
-        onFocusSidePanel() {
-            this.state.searchOptions.searchFormulas = this.env.model.getters.shouldShowFormulas();
-            this.env.model.dispatch("REFRESH_SEARCH");
-        }
         searchFormulas() {
             this.env.model.dispatch("SET_FORMULA_VISIBILITY", {
                 show: this.state.searchOptions.searchFormulas,
@@ -21761,13 +21761,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 toSearch: this.state.toSearch,
                 searchOptions: this.state.searchOptions,
             });
-        }
-        debouncedUpdateSearch() {
-            clearTimeout(this.debounceTimeoutId);
-            this.debounceTimeoutId = setTimeout(() => {
-                this.updateSearch();
-                this.debounceTimeoutId = undefined;
-            }, 400);
         }
         replace() {
             this.env.model.dispatch("REPLACE_SEARCH", {
@@ -22272,6 +22265,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     if (dirY < 0) {
                         this.dnd.y = dndInitialY + figure.height * fraction;
                     }
+                    if (this.dnd.x < 0) {
+                        this.dnd.width += this.dnd.x;
+                        this.dnd.x = 0;
+                    }
+                    if (this.dnd.y < 0) {
+                        this.dnd.height += this.dnd.y;
+                        this.dnd.y = 0;
+                    }
                 };
             }
             else {
@@ -22286,6 +22287,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                     if (dirY < 0) {
                         this.dnd.y = dndInitialY - deltaY;
+                    }
+                    if (this.dnd.x < 0) {
+                        this.dnd.width += this.dnd.x;
+                        this.dnd.x = 0;
+                    }
+                    if (this.dnd.y < 0) {
+                        this.dnd.height += this.dnd.y;
+                        this.dnd.y = 0;
                     }
                 };
             }
@@ -34881,6 +34890,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 searchFormulas: false,
             };
             this.toSearch = "";
+            this.isSearchDirty = false;
         }
         // ---------------------------------------------------------------------------
         // Command Handling
@@ -34909,12 +34919,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "REDO":
                 case "REMOVE_COLUMNS_ROWS":
                 case "ADD_COLUMNS_ROWS":
-                    this.clearSearch();
+                case "EVALUATE_CELLS":
+                case "UPDATE_CELL":
+                    this.isSearchDirty = true;
                     break;
                 case "ACTIVATE_SHEET":
-                case "REFRESH_SEARCH":
                     this.refreshSearch();
                     break;
+            }
+        }
+        finalize() {
+            if (this.isSearchDirty) {
+                this.refreshSearch();
+                this.isSearchDirty = false;
             }
         }
         // ---------------------------------------------------------------------------
@@ -34972,6 +34989,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (this.toSearch) {
                 for (const cell of Object.values(cells)) {
                     const { col, row } = this.getters.getCellPosition(cell.id);
+                    const isColHidden = this.getters.isColHidden(sheetId, col);
+                    const isRowHidden = this.getters.isRowHidden(sheetId, row);
+                    if (isColHidden || isRowHidden) {
+                        continue;
+                    }
                     if (cell &&
                         this.currentSearchRegex &&
                         this.currentSearchRegex.test(this.getSearchableString({ sheetId, col, row }))) {
@@ -36174,14 +36196,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * This plugin handles this internal state.
      */
     class SelectionInputsManagerPlugin extends UIPlugin {
+        get currentInput() {
+            return this.focusedInputId ? this.inputs[this.focusedInputId] : null;
+        }
         constructor(config) {
             super(config);
             this.config = config;
             this.inputs = {};
             this.focusedInputId = null;
-        }
-        get currentInput() {
-            return this.focusedInputId ? this.inputs[this.focusedInputId] : null;
         }
         // ---------------------------------------------------------------------------
         // Command Handling
@@ -37414,10 +37436,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                     updateCellCommands.push(newCellValues);
                 }
-                for (const cmd of updateCellCommands) {
-                    this.dispatch("UPDATE_CELL", cmd);
-                }
             }
+            updateCellCommands.forEach((cmdPayload) => this.dispatch("UPDATE_CELL", cmdPayload));
         }
         /**
          * Return the distances between main merge cells in the zone.
@@ -39744,6 +39764,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     .o-sidePanelButton:enabled {
       cursor: pointer;
     }
+
+    .o-sidePanelButton:disabled {
+      color: ${DISABLED_TEXT_COLOR};
+    }
+
     .o-sidePanelButton:last-child {
       margin-right: 0px;
     }
@@ -44283,9 +44308,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.15';
-    __info__.date = '2023-06-26T21:56:50.699Z';
-    __info__.hash = '2b264ad';
+    __info__.version = '16.1.16';
+    __info__.date = '2023-07-26T13:04:26.445Z';
+    __info__.hash = '96f5f09';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
