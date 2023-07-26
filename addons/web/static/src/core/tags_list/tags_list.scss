@@ -2,14 +2,6 @@
     font-size: var(--Tag-font-size, #{$font-size-sm});
     max-width: var(--Tag-max-width, 100%);
 
-    .o_badge_text, a {
-        line-height: 1.1;
-    }
-
-    a {
-        color: inherit;
-    }
-
     @for $size from 1 through length($o-colors) {
         &.o_tag_color_#{$size - 1} {
             $-bg: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 15%);
