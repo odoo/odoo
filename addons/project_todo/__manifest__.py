@@ -28,10 +28,6 @@
             'project_todo/static/src/components/**/*',
             'project_todo/static/src/scss/todo.scss',
             'project_todo/static/src/views/**/*',
-            'project_todo/static/src/web/**/*',
-        ],
-        'web.qunit_suite_tests': [
-            'project_todo/static/tests/**/*',
         ],
     },
     'license': 'LGPL-3',
