@@ -5,6 +5,28 @@
         <xpath expr="//span[@t-field='line.name']" position="after">
             <t t-if="line.product_id.l10n_in_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="line.product_id.l10n_in_hsn_code"/></h6></t>
         </xpath>
+
+        <xpath expr="//div[@id='qrcode_info']" position="attributes">
+            <attribute name="t-if" add="and doc.company_id.account_fiscal_country_id.code != 'IN'" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div[@id='qrcode_info']" position="after">
+            <t t-if="doc.company_id.account_fiscal_country_id.code == 'IN'">
+                <div style="display:-webkit-flex;" class="flex-column">
+                    <strong>PAYMENT QR CODE</strong>
+                    <div t-if="doc.company_id.l10n_in_upi_id" class="mt-1 mb-1">
+                        <p class="mb-0">UPI ID:</p>
+                        <span class="mb-0" t-field="doc.company_id.l10n_in_upi_id"/>
+                    </div>
+                    <div class="d-flex flex-row" t-attf-style="#{'-webkit-transform:translateX(-0.5rem);' if report_type != 'html' else '-webkit-transform:translate(-0.5rem,-0.8rem);'}">
+                        <img src="/l10n_in/static/src/img/PhonePe-Logo.svg" style="width:4.5rem;"/>
+                        <img src="/l10n_in/static/src/img/Google_Pay-Logo.svg" style="width:3.5rem;"/>
+                        <img src="/l10n_in/static/src/img/Paytm-Logo.svg" style="width:4rem;"/>
+                        <img src="/l10n_in/static/src/img/Upi-logo.svg" t-attf-style="#{'' if report_type != 'html' else 'padding:0.5rem;'} width:4rem;"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
     </template>
 
 </odoo>

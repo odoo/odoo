@@ -43,3 +43,5 @@ class ResCompany(models.Model):
             ('manual', "Manual Payment"),
         ],
         string="Sale onboarding selected payment method")
+
+    qr_code_sale = fields.Boolean(string='Display QR-code on sale order print')

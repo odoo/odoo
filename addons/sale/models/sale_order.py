@@ -1668,3 +1668,34 @@ class SaleOrder(models.Model):
         # Override for correct taxcloud computation
         # when using coupon and delivery
         return True
+
+    #=== QR CODE PRINT ===#
+
+    def _generate_qr_code(self, silent_errors=False):
+        """ Generates and returns a QR-code generation URL for this sale order,
+        returning None if something is misconfigured.
+        """
+        self.ensure_one()
+        qr_code_method = None
+
+        bank_ids = self.company_id.partner_id.bank_ids.filtered(
+            lambda bank: not bank.company_id or bank.company_id == self.company_id)
+        if bank_ids:
+            partner_bank_id = bank_ids[0]
+        else:
+            return None
+
+        # we find qr code that's eligible and assign it to the sale order
+        for candidate_method, _candidate_name in self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
+            error_msg = partner_bank_id._get_error_messages_for_qr(candidate_method, self.partner_id, self.currency_id)
+            if not error_msg:
+                qr_code_method = candidate_method
+                break
+        if not qr_code_method:
+            # No eligible method could be found; we can't generate the QR-code
+            return None
+
+        unstruct_ref = self.client_order_ref if self.client_order_ref else self.name
+        rslt = partner_bank_id.build_qr_code_base64(self.order_line.price_total, unstruct_ref, self.reference, self.currency_id, self.partner_id, qr_code_method, silent_errors=silent_errors)
+
+        return rslt
