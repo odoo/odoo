@@ -183,6 +183,7 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
     def test_diff_currency_code(self):
         self.company_data["company"].write({
             "currency_id": self.env.ref("base.AUD").id,
+            # "currency_rate": self.env.ref("base.rateAUD"),
         })
         attachment = self.create_invoice_attachment(self.partner_a.id)
         self.post_anaf(attachment, True)
