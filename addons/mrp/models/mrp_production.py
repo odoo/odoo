@@ -818,10 +818,19 @@ class MrpProduction(models.Model):
             if vals.get('location_src_id'):
                 location_source = self.env['stock.location'].browse(vals.get('location_src_id'))
                 warehouse_id = location_source.warehouse_id.id
+            updated_moves = set()
+            updated_qty = dict()
             for move_vals in vals['move_raw_ids']:
                 command, _id, field_values = move_vals
                 if command == Command.CREATE and not field_values.get('warehouse_id', False):
                     field_values['warehouse_id'] = warehouse_id
+                product_uom_qty = self.move_raw_ids.filtered(lambda m: m.id == _id).product_uom_qty
+                if command == Command.UPDATE and float_compare(field_values.get('product_uom_qty', 0), product_uom_qty, precision_digits=2) == -1:
+                    updated_moves.add(_id)
+                    updated_qty[_id] = field_values.get('product_uom_qty', 0)
+            updated_moves = self.env['stock.move'].browse(updated_moves)
+            if updated_moves:
+                self._log_update_bom_exception(updated_moves, updated_qty, qty_reduce=True)
 
         res = super(MrpProduction, self).write(vals)
 
@@ -2268,6 +2277,8 @@ class MrpProduction(models.Model):
         self.workorder_ids += self.env['mrp.workorder'].create(workorders_values)
 
         # Compares the BoM's lines to the MO's components.
+        updated_moves = self.env['stock.move']
+        updated_qty = dict()
         for move_raw in self.move_raw_ids:
             bom_line = bom_lines_by_id.pop((move_raw.bom_line_id.id, move_raw.product_id.id), False)
             # If the move isn't already linked to a BoM lines, search for a compatible line.
@@ -2280,12 +2291,15 @@ class MrpProduction(models.Model):
             move_raw_qty = bom_line and move_raw.product_uom._compute_quantity(
                 move_raw.product_uom_qty * ratio, bom_line.product_uom_id
             )
+            if move_raw.bom_line_id.product_qty < move_raw_qty:
+                updated_moves += move_raw
             if bom_line and (
                     not move_raw.bom_line_id or
                     move_raw.bom_line_id.bom_id != bom or
                     move_raw.operation_id != bom_line.operation_id or
                     bom_line.product_qty != move_raw_qty
                 ):
+                updated_qty[move_raw.id] = move_raw.product_uom_qty
                 move_raw.bom_line_id = bom_line
                 move_raw.product_id = bom_line.product_id
                 move_raw.product_uom_qty = bom_line.product_qty / ratio
@@ -2295,6 +2309,8 @@ class MrpProduction(models.Model):
                     move_raw.workorder_id = self.workorder_ids.filtered(lambda wo: wo.operation_id == move_raw.operation_id)
             elif not bom_line:
                 moves_to_unlink |= move_raw
+        if updated_moves:
+            self._log_update_bom_exception(updated_moves, updated_qty)
         # Creates a raw moves for each remaining BoM's lines.
         raw_moves_values = []
         for bom_line in bom_lines_by_id.values():
@@ -2340,9 +2356,49 @@ class MrpProduction(models.Model):
             byproduct_values.append(move_byproduct_vals)
         self.move_finished_ids += self.env['stock.move'].create(byproduct_values)
 
+        for production in self:
+            if moves_to_unlink:
+                production._log_update_bom_exception(moves_to_unlink, {}, qty_reduce=True)
         moves_to_unlink._action_cancel()
         moves_to_unlink.unlink()
         self.bom_id = bom
+
+    def _log_update_bom_exception(self, moves, updated_qty, qty_reduce=False):
+
+        def _keys_in_groupby(move):
+            return (move.picking_id, move.product_id.responsible_id)
+
+        def _render_note_exception_quantity_mo(rendering_context):
+            order_exceptions = {key: value for exception in rendering_context for key, value in exception.items()}
+            values = {
+                'production_order': self,
+                'order_exceptions': order_exceptions,
+                'has_multiple_products': True if len(order_exceptions) > 1 else False,
+            }
+            return self.env['ir.qweb']._render('mrp.exception_on_mo', values)
+
+        documents_by_production = {}
+        documents = defaultdict(list)
+        for move in moves:
+            move_qty = (updated_qty.get(move.id, 0), move.product_uom_qty) if qty_reduce else (move.product_uom_qty, updated_qty.get(move.id, 0))
+            document = self.env['stock.picking']._log_activity_get_documents({move: move_qty}, 'move_orig_ids', 'DOWN', _keys_in_groupby)
+            document.update(self.env['stock.picking']._log_activity_get_documents({move: move_qty}, 'move_orig_ids', 'UP'))
+            for key, value in document.items():
+                documents[key] += [value]
+        if documents:
+            documents_by_production[self] = documents
+        for production, documents in documents_by_production.items():
+            filtered_documents_for_mo = {}
+            filtered_documents_for_picking = {}
+            for (parent, responsible), rendering_context in documents.items():
+                if parent._name == 'stock.picking' and parent.state == 'done':
+                    continue
+                if not parent or parent._name == 'stock.picking':
+                    filtered_documents_for_picking[(parent, responsible)] = rendering_context
+                    continue
+                filtered_documents_for_mo[(parent, responsible)] = rendering_context
+            production._log_manufacture_exception(filtered_documents_for_mo)
+            self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, filtered_documents_for_picking)
 
     @api.model
     def _prepare_procurement_group_vals(self, values):
