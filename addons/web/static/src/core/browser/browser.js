@@ -27,6 +27,7 @@ export const browser = {
     AudioBufferSourceNode: window.AudioBufferSourceNode,
     AudioContext: window.AudioContext,
     AudioWorkletNode: window.AudioWorkletNode,
+    BeforeInstallPromptEvent: window.BeforeInstallPromptEvent?.bind(window),
     GainNode: window.GainNode,
     MediaStreamAudioSourceNode: window.MediaStreamAudioSourceNode,
     removeEventListener: window.removeEventListener.bind(window),
