@@ -2,26 +2,14 @@
 /* global BarcodeDetector */
 
 import { browser } from "@web/core/browser/browser";
-import Dialog from "@web/legacy/js/core/owl_dialog";
+import { Dialog } from "@web/core/dialog/dialog";
 import { delay } from "@web/legacy/js/core/concurrency";
-import { loadJS, templates } from "@web/core/assets";
+import { loadJS } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
 
-import {
-    App,
-    Component,
-    EventBus,
-    onMounted,
-    onWillStart,
-    onWillUnmount,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-const bus = new EventBus();
-const busOk = "BarcodeDialog-Ok";
-const busError = "BarcodeDialog-Error";
 
 export class BarcodeDialog extends Component {
     /**
@@ -127,8 +115,8 @@ export class BarcodeDialog extends Component {
      * @param {string} result found code
      */
     onResult(result) {
-        this.props.onClose();
-        bus.trigger(busOk, result);
+        this.props.close();
+        this.props.onResult(result);
     }
 
     /**
@@ -137,8 +125,8 @@ export class BarcodeDialog extends Component {
      * @param {Error} error
      */
     onError(error) {
-        this.props.onClose();
-        bus.trigger(busError, { error });
+        this.props.close();
+        this.props.onError(error);
     }
 
     /**
@@ -201,22 +189,17 @@ export function isBarcodeScannerSupported() {
  *
  * @returns {Promise<string>} resolves when a {qr,bar}code has been detected
  */
-export async function scanBarcode(facingMode = "environment") {
+export async function scanBarcode(env, facingMode = "environment") {
+    let res;
+    let rej;
     const promise = new Promise((resolve, reject) => {
-        bus.on(busOk, null, resolve);
-        bus.on(busError, null, reject);
+        res = resolve;
+        rej = reject;
     });
-    const appForBarcodeDialog = new App(BarcodeDialog, {
-        env: owl.Component.env,
-        dev: owl.Component.env.isDebug(),
-        templates,
-        translatableAttributes: ["data-tooltip"],
-        translateFn: _t,
-        props: {
-            onClose: () => appForBarcodeDialog.destroy(),
-            facingMode: facingMode,
-        },
+    env.services.dialog.add(BarcodeDialog, {
+        facingMode,
+        onResult: (result) => res(result),
+        onError: (error) => rej(error),
     });
-    await appForBarcodeDialog.mount(document.body);
     return promise;
 }
