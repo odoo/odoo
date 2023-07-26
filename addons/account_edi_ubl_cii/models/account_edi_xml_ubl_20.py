@@ -337,6 +337,22 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'price_vals': self._get_invoice_line_price_vals(line),
         }
 
+    def _get_legal_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount):
+        """ Method used to fill the cac:LegalMonetaryTotal node.
+        :param line:    An invoice.
+        :return:        A python dictionary.
+        """
+        return {
+            'currency': invoice.currency_id,
+            'currency_dp': invoice.currency_id.decimal_places,
+            'line_extension_amount': line_extension_amount,
+            'tax_exclusive_amount': taxes_vals['base_amount_currency'],
+            'tax_inclusive_amount': invoice.amount_total,
+            'allowance_total_amount': allowance_total_amount or None,
+            'prepaid_amount': invoice.amount_total - invoice.amount_residual,
+            'payable_amount': invoice.amount_residual,
+        }
+
     def _apply_invoice_tax_filter(self, base_line, tax_values):
         """
             To be overridden to apply a specific tax filter
@@ -454,16 +470,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 # allowances at the document level, the allowances on invoices (eg. discount) are on invoice_line_vals
                 'allowance_charge_vals': document_allowance_charge_vals_list,
                 'tax_total_vals': self._get_invoice_tax_totals_vals_list(invoice, taxes_vals),
-                'legal_monetary_total_vals': {
-                    'currency': invoice.currency_id,
-                    'currency_dp': invoice.currency_id.decimal_places,
-                    'line_extension_amount': line_extension_amount,
-                    'tax_exclusive_amount': taxes_vals['base_amount_currency'],
-                    'tax_inclusive_amount': invoice.amount_total,
-                    'allowance_total_amount': allowance_total_amount or None,
-                    'prepaid_amount': invoice.amount_total - invoice.amount_residual,
-                    'payable_amount': invoice.amount_residual,
-                },
+                'legal_monetary_total_vals': self._get_legal_monetary_total_vals(invoice, taxes_vals, line_extension_amount, allowance_total_amount),
                 'invoice_line_vals': invoice_line_vals_list,
                 'currency_dp': invoice.currency_id.decimal_places,  # currency decimal places
             },

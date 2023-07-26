@@ -76,6 +76,7 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
             'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'invoice_date': '2017-01-01',
+            # 'currency_id': self.env.ref("base.RON").id,
             'date': '2017-01-01',
             'narration': 'test narration',
             'ref': 'ref_move',
