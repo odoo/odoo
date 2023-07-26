@@ -564,3 +564,52 @@ class TestStockLot(TestStockCommon):
         self.assertAlmostEqual(lot.use_date, expiration_date, delta=delta, msg=err_msg)
         self.assertAlmostEqual(lot.removal_date, expiration_date, delta=delta, msg=err_msg)
         self.assertAlmostEqual(lot.alert_date, expiration_date, delta=delta, msg=err_msg)
+
+    def test_no_expiration_date(self):
+        """
+        When use_expiration_date is set to True on the Product, but the lot have an expiration_date set to False,
+        the picking should be able to reserve on it because it is considered as 'non-perishable'
+        """
+        lot_form = Form(self.LotObj)
+        lot_form.name = 'LOT001'
+        lot_form.product_id = self.apple_product
+        lot_form.company_id = self.env.company
+        apple_lot = lot_form.save()
+
+        lot_form = Form(apple_lot)
+        lot_form.expiration_date = False
+        lot_form.use_date = False
+        lot_form.removal_date = False
+        lot_form.alert_date = False
+        apple_lot = lot_form.save()
+
+        self.StockQuantObj.with_context(inventory_mode=True).create({
+            'product_id': self.apple_product.id,
+            'location_id': self.stock_location,
+            'quantity': 100,
+            'lot_id': apple_lot.id,
+        })
+
+        self.assertEqual(self.apple_product.qty_available, 100, 'Wrong quantity.')
+
+        picking_out = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'state': 'draft',
+        })
+
+        self.MoveObj.create({
+            'name': self.apple_product.name,
+            'product_id': self.apple_product.id,
+            'product_uom_qty': 10,
+            'product_uom': self.apple_product.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location
+        })
+
+        self.assertEqual(picking_out.move_ids.state, 'draft', 'Wrong state of move line.')
+        picking_out.action_confirm()
+        picking_out.action_assign()
+        self.assertEqual(picking_out.move_ids.state, 'assigned', 'Wrong state of move line.')
