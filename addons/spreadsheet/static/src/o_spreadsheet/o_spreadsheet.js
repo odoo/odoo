@@ -109,8 +109,8 @@
     const HEADER_BORDER_COLOR = "#C0C0C0";
     const CELL_BORDER_COLOR = "#E2E3E3";
     const BACKGROUND_CHART_COLOR = "#FFFFFF";
-    const MENU_ITEM_DISABLED_COLOR = "#CACACA";
     const BG_HOVER_COLOR = "#EBEBEB";
+    const DISABLED_TEXT_COLOR = "#CACACA";
     const DEFAULT_COLOR_SCALE_MIDPOINT_COLOR = 0xb6d7a8;
     const LINK_COLOR = "#01666b";
     const FILTERS_COLOR = "#188038";
@@ -4219,7 +4219,6 @@
         "SET_VIEWPORT_OFFSET",
         "SELECT_SEARCH_NEXT_MATCH",
         "SELECT_SEARCH_PREVIOUS_MATCH",
-        "REFRESH_SEARCH",
         "UPDATE_SEARCH",
         "CLEAR_SEARCH",
         "EVALUATE_CELLS",
@@ -5540,7 +5539,7 @@
         }
       }
       &.disabled {
-        color: ${MENU_ITEM_DISABLED_COLOR};
+        color: ${DISABLED_TEXT_COLOR};
         cursor: not-allowed;
       }
     }
@@ -16377,7 +16376,7 @@
     };
     const categorieFunctionAll = {
         name: _lt("All"),
-        children: allFunctionListMenuBuilder(),
+        children: [allFunctionListMenuBuilder],
     };
     function allFunctionListMenuBuilder() {
         const fnNames = functionRegistry.getKeys();
@@ -19644,6 +19643,7 @@
         state = owl.useState(this.initialState());
         debounceTimeoutId;
         showFormulaState = false;
+        debouncedUpdateSearch;
         findAndReplaceRef = owl.useRef("findAndReplace");
         get hasSearchResult() {
             return this.env.model.getters.getCurrentSelectedMatchIndex() !== null;
@@ -19653,11 +19653,16 @@
         }
         setup() {
             this.showFormulaState = this.env.model.getters.shouldShowFormulas();
+            this.debouncedUpdateSearch = debounce(this.updateSearch.bind(this), 200);
             owl.onMounted(() => this.focusInput());
             owl.onWillUnmount(() => {
                 this.env.model.dispatch("CLEAR_SEARCH");
                 this.env.model.dispatch("SET_FORMULA_VISIBILITY", { show: this.showFormulaState });
             });
+            owl.useEffect(() => {
+                this.state.searchOptions.searchFormulas = this.env.model.getters.shouldShowFormulas();
+                this.searchFormulas();
+            }, () => [this.env.model.getters.shouldShowFormulas()]);
         }
         onInput(ev) {
             this.state.toSearch = ev.target.value;
@@ -19677,10 +19682,6 @@
                 this.replace();
             }
         }
-        onFocusSidePanel() {
-            this.state.searchOptions.searchFormulas = this.env.model.getters.shouldShowFormulas();
-            this.env.model.dispatch("REFRESH_SEARCH");
-        }
         searchFormulas() {
             this.env.model.dispatch("SET_FORMULA_VISIBILITY", {
                 show: this.state.searchOptions.searchFormulas,
@@ -19698,13 +19699,6 @@
                 toSearch: this.state.toSearch,
                 searchOptions: this.state.searchOptions,
             });
-        }
-        debouncedUpdateSearch() {
-            clearTimeout(this.debounceTimeoutId);
-            this.debounceTimeoutId = setTimeout(() => {
-                this.updateSearch();
-                this.debounceTimeoutId = undefined;
-            }, 400);
         }
         replace() {
             this.env.model.dispatch("REPLACE_SEARCH", {
@@ -36889,6 +36883,7 @@
             searchFormulas: false,
         };
         toSearch = "";
+        isSearchDirty = false;
         // ---------------------------------------------------------------------------
         // Command Handling
         // ---------------------------------------------------------------------------
@@ -36916,12 +36911,19 @@
                 case "REDO":
                 case "REMOVE_COLUMNS_ROWS":
                 case "ADD_COLUMNS_ROWS":
-                    this.clearSearch();
+                case "EVALUATE_CELLS":
+                case "UPDATE_CELL":
+                    this.isSearchDirty = true;
                     break;
                 case "ACTIVATE_SHEET":
-                case "REFRESH_SEARCH":
                     this.refreshSearch();
                     break;
+            }
+        }
+        finalize() {
+            if (this.isSearchDirty) {
+                this.refreshSearch();
+                this.isSearchDirty = false;
             }
         }
         // ---------------------------------------------------------------------------
@@ -36979,6 +36981,11 @@
             if (this.toSearch) {
                 for (const cell of Object.values(cells)) {
                     const { col, row } = this.getters.getCellPosition(cell.id);
+                    const isColHidden = this.getters.isColHidden(sheetId, col);
+                    const isRowHidden = this.getters.isRowHidden(sheetId, row);
+                    if (isColHidden || isRowHidden) {
+                        continue;
+                    }
                     if (cell &&
                         this.currentSearchRegex &&
                         this.currentSearchRegex.test(this.getSearchableString({ sheetId, col, row }))) {
@@ -38616,10 +38623,8 @@
                     }
                     updateCellCommands.push(newCellValues);
                 }
-                for (const cmd of updateCellCommands) {
-                    this.dispatch("UPDATE_CELL", cmd);
-                }
             }
+            updateCellCommands.forEach((cmdPayload) => this.dispatch("UPDATE_CELL", cmdPayload));
         }
         /**
          * Return the distances between main merge cells in the zone.
@@ -42884,6 +42889,11 @@
     .o-sidePanelButton:enabled {
       cursor: pointer;
     }
+
+    .o-sidePanelButton:disabled {
+      color: ${DISABLED_TEXT_COLOR};
+    }
+
     .o-sidePanelButton:last-child {
       margin-right: 0px;
     }
@@ -47632,9 +47642,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.4';
-    __info__.date = '2023-06-26T14:46:52.890Z';
-    __info__.hash = '94f9dcd';
+    __info__.version = '16.3.5';
+    __info__.date = '2023-07-26T13:07:06.378Z';
+    __info__.hash = '328bce4';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
