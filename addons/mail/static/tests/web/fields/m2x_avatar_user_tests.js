@@ -385,7 +385,7 @@ QUnit.test("avatar card preview", async (assert) => {
     });
     // Open card
     await triggerEvent(document, ".o_m2o_avatar > img", "mouseover");
-    assert.verifySteps(["setTimeout of 350ms", "user read"]);
+    assert.verifySteps(["setTimeout of 350ms", "setTimeout of 250ms", "user read"]);
     assert.containsOnce(document.body, ".o_avatar_card");
     assert.strictEqual(
         document.querySelector(".o_card_user_infos").textContent,

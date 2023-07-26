@@ -1,39 +1,14 @@
 /* @odoo-module */
 
-import { busParametersService } from "@bus/bus_parameters_service";
-import { imStatusService } from "@bus/im_status_service";
-import { multiTabService } from "@bus/multi_tab_service";
-import { busService } from "@bus/services/bus_service";
-import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
-
-import { attachmentService } from "@mail/core/common/attachment_service";
-import { channelMemberService } from "@mail/core/common/channel_member_service";
-import { ChatWindowContainer } from "@mail/core/common/chat_window_container";
-import { chatWindowService } from "@mail/core/common/chat_window_service";
-import { messageService } from "@mail/core/common/message_service";
-import { messagingService } from "@mail/core/common/messaging_service";
-import { notificationPermissionService } from "@mail/core/common/notification_permission_service";
-import { outOfFocusService } from "@mail/core/common/out_of_focus_service";
-import { personaService } from "@mail/core/common/persona_service";
-import { soundEffects } from "@mail/core/common/sound_effects_service";
-import { storeService } from "@mail/core/common/store_service";
-import { suggestionService } from "@mail/core/common/suggestion_service";
-import { threadService } from "@mail/core/common/thread_service";
-import { userSettingsService } from "@mail/core/common/user_settings_service";
-import { ActivityMenu } from "@mail/core/web/activity_menu";
-import { activityService } from "@mail/core/web/activity_service";
 import { DiscussClientAction } from "@mail/core/web/discuss_client_action";
-import { MessagingMenu } from "@mail/core/web/messaging_menu";
 
-import { effectService } from "@web/core/effects/effect_service";
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
-import { makeMockXHR } from "@web/../tests/helpers/mock_services";
+import { makeMockXHR, mocks } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
-import { gifPickerService } from "@mail/discuss/gif_picker/common/gif_picker_service";
 
 const ROUTES_TO_IGNORE = [
     "/web/webclient/load_menus",
@@ -53,6 +28,35 @@ const SERVICES_PARAMETER_NAMES = new Set([
     "messagingBus",
     "services",
 ]);
+
+/**
+ * @param {import("@web/core/registry").Registry} source
+ * @param {import("@web/core/registry").Registry} target
+ */
+export function copyRegistry(source, target) {
+    for (const [name, service] of source.getEntries()) {
+        target.add(name, service);
+    }
+    source.addEventListener("UPDATE", ({ operation, key, value }) => {
+        if (operation === "add") {
+            target.add(key, value);
+        }
+    });
+}
+
+// Copy registries before they are cleared by the test setup in
+// order to restore them during `getWebClientReady`.
+const mailServicesRegistry = registry.category("mail.services");
+const webServicesRegistry = registry.category("services");
+copyRegistry(webServicesRegistry, mailServicesRegistry);
+
+const mailMainComponentsRegistry = registry.category("mail.main_components");
+const webMainComponentsRegistry = registry.category("main_components");
+copyRegistry(webMainComponentsRegistry, mailMainComponentsRegistry);
+
+const mailSystrayRegistry = registry.category("mail.systray");
+const webSystrayRegistry = registry.category("systray");
+copyRegistry(webSystrayRegistry, mailSystrayRegistry);
 
 /**
  * @returns function that returns an `XMLHttpRequest`-like object whose response
@@ -98,12 +102,21 @@ export const setupManager = {
      * Add required components to the main component registry.
      */
     setupMainComponentRegistry() {
-        const mainComponentRegistry = registry.category("main_components");
-        mainComponentRegistry.add("mail.ChatWindowContainer", {
-            Component: ChatWindowContainer,
-        });
+        for (const [name, component] of mailMainComponentsRegistry.getEntries()) {
+            webMainComponentsRegistry.add(name, component);
+        }
         if (!registry.category("actions").contains("mail.action_discuss")) {
             registry.category("actions").add("mail.action_discuss", DiscussClientAction);
+        }
+    },
+    /**
+     * Add required components to the systray registry.
+     */
+    setupSystrayRegistry() {
+        for (const [name, component] of mailSystrayRegistry.getEntries()) {
+            if (!webSystrayRegistry.contains(name)) {
+                webSystrayRegistry.add(name, component);
+            }
         }
     },
     /**
@@ -117,13 +130,7 @@ export const setupManager = {
      * @returns {LegacyRegistry} The registry containing all the legacy services that will be passed
      * to the webClient as a legacy parameter.
      */
-    async setupMessagingServiceRegistries({
-        loadingBaseDelayDuration = 0,
-        messagingBus,
-        services,
-    } = {}) {
-        const serviceRegistry = registry.category("services");
-
+    setupServiceRegistries({ loadingBaseDelayDuration = 0, messagingBus, services = {} } = {}) {
         const OriginalAudio = window.Audio;
         patchWithCleanup(
             window,
@@ -137,8 +144,8 @@ export const setupManager = {
             },
             { pure: true }
         );
-
-        const messagingValues = {
+        patchWithCleanup(session, { show_effect: true });
+        services["messagingValues"] = services["messagingValues"] ?? {
             start() {
                 return {
                     isInQUnitTest: true,
@@ -149,10 +156,8 @@ export const setupManager = {
                 };
             },
         };
-
-        services = setupManager.setupServices(services, messagingValues);
-        if (!serviceRegistry.contains("file_upload")) {
-            serviceRegistry.add("file_upload", {
+        if (!webServicesRegistry.contains("file_upload")) {
+            webServicesRegistry.add("file_upload", {
                 ...fileUploadService,
                 start(env, ...args) {
                     this.env = env;
@@ -161,47 +166,14 @@ export const setupManager = {
                 createXhr: getCreateXHR(),
             });
         }
-        patchWithCleanup(session, { show_effect: true });
-        Object.entries(services).forEach(([serviceName, service]) => {
-            if (!serviceRegistry.contains(serviceName)) {
-                serviceRegistry.add(serviceName, service);
+        for (const [name, service] of Object.entries(services)) {
+            webServicesRegistry.add(name, service);
+        }
+        for (const [name, service] of mailServicesRegistry.getEntries()) {
+            if (!mocks[name] && !name.includes("legacy_") && !webServicesRegistry.contains(name)) {
+                webServicesRegistry.add(name, service);
             }
-        });
-        registry
-            .category("systray")
-            .add("mail.activity_menu", { Component: ActivityMenu }, { sequence: 20 });
-        registry
-            .category("systray")
-            .add("mail.messaging_menu", { Component: MessagingMenu }, { sequence: 25 });
-    },
-    setupServices(services, messagingValues) {
-        return {
-            bus_service: busService,
-            "bus.parameters": busParametersService,
-            im_status: imStatusService,
-            effect: effectService,
-            "discuss.channel.member": channelMemberService,
-            "discuss.gifPicker": gifPickerService,
-            "mail.notification.permission": notificationPermissionService,
-            "mail.suggestion": suggestionService,
-            "mail.store": storeService,
-            "mail.activity": activityService,
-            "mail.attachment": attachmentService,
-            "mail.thread": threadService,
-            "mail.message": messageService,
-            "mail.chat_window": chatWindowService,
-            "mail.messaging": messagingService,
-            "mail.sound_effects": soundEffects,
-            "mail.user_settings": userSettingsService,
-            "mail.persona": personaService,
-            "mail.out_of_focus": outOfFocusService,
-            messagingValues,
-            presence: makeFakePresenceService({
-                isOdooFocused: () => true,
-            }),
-            multi_tab: multiTabService,
-            ...services,
-        };
+        }
     },
 };
 
@@ -226,7 +198,8 @@ async function getWebClientReady(param0) {
             servicesParameters[parameterName] = value;
         }
     }
-    await setupManager.setupMessagingServiceRegistries(servicesParameters);
+    setupManager.setupServiceRegistries(servicesParameters);
+    setupManager.setupSystrayRegistry();
 
     const webClientParameters = {};
     for (const [parameterName, value] of param0Entries) {

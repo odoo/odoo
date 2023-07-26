@@ -2,9 +2,6 @@
 
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
-import { chatBotService } from "@im_livechat/embed/chatbot/chatbot_service";
-import { autoPopupService } from "@im_livechat/embed/core/autopopup_service";
-import { livechatService } from "@im_livechat/embed/core/livechat_service";
 import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
 
 import { ChatWindowContainer } from "@mail/core/common/chat_window_container";
@@ -79,32 +76,6 @@ patch(App.prototype, "im_livechat", {
     },
 });
 
-patch(setupManager, "im_livechat", {
-    setupServices(...args) {
-        const services = this._super(...args);
-        return {
-            "im_livechat.livechat": livechatService,
-            "im_livechat.autopopup": autoPopupService,
-            "im_livechat.chatbot": chatBotService,
-            cookie: {
-                start() {
-                    const service = fakeCookieService.start(...arguments);
-                    return {
-                        ...service,
-                        get current() {
-                            return {
-                                ...service.current,
-                                ...cookie,
-                            };
-                        },
-                    };
-                },
-            },
-            ...services,
-        };
-    },
-});
-
 /**
  * Mount the livechat button into the webclient.
  *
@@ -112,7 +83,25 @@ patch(setupManager, "im_livechat", {
  * @returns {Promise<any>}
  */
 export async function start({ mockRPC } = {}) {
-    await setupManager.setupMessagingServiceRegistries();
+    setupManager.setupServiceRegistries();
+    registry.category("services").add(
+        "cookie",
+        {
+            start() {
+                const service = fakeCookieService.start(...arguments);
+                return {
+                    ...service,
+                    get current() {
+                        return {
+                            ...service.current,
+                            ...cookie,
+                        };
+                    },
+                };
+            },
+        },
+        { force: true }
+    );
     const mainComponentRegistry = registry.category("main_components");
     mainComponentRegistry.add("LivechatButton", { Component: LivechatButton });
     mainComponentRegistry.add("ChatWindowContainer", { Component: ChatWindowContainer });
