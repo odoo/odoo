@@ -114,7 +114,6 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
     def test_refuse_approved_leave(self):
         start = datetime(2019, 10, 10, 6, 0)
         end = datetime(2019, 10, 10, 18, 0)
-
         # Setup contract generation state
         contract = self.richard_emp.contract_ids[:1]
         contract.state = 'open'

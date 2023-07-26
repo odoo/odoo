@@ -124,7 +124,6 @@ class HrContract(models.Model):
     def _get_contract_work_entries_values(self, date_start, date_stop):
         start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
         end_dt = pytz.utc.localize(date_stop) if not date_stop.tzinfo else date_stop
-
         contract_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
 
@@ -253,7 +252,18 @@ class HrContract(models.Model):
         Generate a work_entries list between date_start and date_stop for one contract.
         :return: list of dictionnary.
         """
-        contract_vals = self._get_contract_work_entries_values(date_start, date_stop)
+        if isinstance(date_start, datetime):
+            contract_vals = self._get_contract_work_entries_values(date_start, date_stop)
+        else:
+            contract_vals = []
+            contracts_by_tz = defaultdict(lambda: self.env['hr.contract'])
+            for contract in self:
+                contracts_by_tz[contract.resource_calendar_id.tz] += contract
+            for contract_tz, contracts in contracts_by_tz.items():
+                contract_tz = pytz.timezone(contract_tz) if contract_tz else pytz.utc
+                contract_vals += contracts._get_contract_work_entries_values(
+                    contract_tz.localize(date_start),
+                    contract_tz.localize(date_stop))
 
         # {contract_id: ([dates_start], [dates_stop])}
         mapped_contract_dates = defaultdict(lambda: ([], []))
