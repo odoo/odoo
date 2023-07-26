@@ -46,6 +46,9 @@ weWidgets.LinkDialog.include({
     _adaptPageAnchor: function () {
         var urlInputValue = this.$('input[name="url"]').val();
         var $pageAnchor = this.$('.o_link_dialog_page_anchor');
+        if (!$pageAnchor.length) {
+            return;
+        }
         var isFromWebsite = urlInputValue[0] === '/';
         var $selectMenu = this.$('select[name="link_anchor"]');
         var $anchorsLoading = this.$('.o_anchors_loading');
