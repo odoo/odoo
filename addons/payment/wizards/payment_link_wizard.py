@@ -87,7 +87,7 @@ class PaymentLinkWizard(models.TransientModel):
         """
         defaults = self.default_get(['res_model', 'res_id'])
         selection = [('all', "All")]
-        res_model, res_id = defaults['res_model'], defaults['res_id']
+        res_model, res_id = defaults.get('res_model'), defaults.get('res_id')
         if res_id and res_model in ['account.move', "sale.order"]:
             # At module install, the selection method is called
             # but the document context isn't specified.
