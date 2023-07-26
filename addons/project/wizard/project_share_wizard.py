@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class ProjectShareWizard(models.TransientModel):
@@ -43,13 +43,30 @@ class ProjectShareWizard(models.TransientModel):
             else:
                 wizard.resource_ref = None
 
-    def action_send_mail(self):
+    def action_share_record(self):
+        # Confirmation dialog is only opened if new portal user(s) need to be created in a 'on invitation' website
         self.ensure_one()
+        on_invite = self.env['res.users']._get_signup_invitation_scope() == 'b2b'
+        new_portal_user = self.partner_ids.filtered(lambda p: not p.user_ids) and on_invite
+        if not new_portal_user:
+            return self.action_send_mail()
+        return {
+            'name': _('Confirmation'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'views': [(self.env.ref('project.project_share_wizard_confirm_form').id, 'form')],
+            'res_model': 'project.share.wizard',
+            'res_id': self.id,
+            'target': 'new',
+            'context': self.env.context,
+        }
+
+    def action_send_mail(self):
         if self.access_mode == 'edit':
             portal_partners = self.partner_ids.filtered('user_ids')
             self.resource_ref._add_collaborators(self.partner_ids)
             self._send_public_link(portal_partners)
-            self._send_signup_link(partners=self.partner_ids - portal_partners)
+            self._send_signup_link(partners=self.with_context({'signup_valid': True}).partner_ids - portal_partners)
             self.resource_ref.message_subscribe(partner_ids=self.partner_ids.ids)
             return {'type': 'ir.actions.act_window_close'}
         return super().action_send_mail()

@@ -21,7 +21,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: '.ui-autocomplete a.dropdown-item:contains("Georges")',
     in_modal: false,
 }, {
-    trigger: 'footer > button[name="action_send_mail"]',
+    trigger: 'footer > button[name="action_share_record"]',
     content: 'Confirm the project sharing with this portal user.',
 }, {
     trigger: '.o_web_client',
