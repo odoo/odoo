@@ -4,6 +4,7 @@ import traceback
 import xmlrpc.client
 from datetime import date, datetime
 
+from collections import defaultdict
 from markupsafe import Markup
 
 import odoo
@@ -109,6 +110,7 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
     dispatch[date] = dump_date
     dispatch[lazy] = dump_lazy
     dispatch[Command] = dispatch[int]
+    dispatch[defaultdict] = dispatch[dict]
     dispatch[Markup] = lambda self, value, write: self.dispatch[str](self, str(value), write)
 
 
