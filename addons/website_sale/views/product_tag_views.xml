@@ -7,13 +7,20 @@
         <field name="model">product.tag</field>
         <field name="inherit_id" ref="product.product_tag_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='color']/.." position="after">
-                <group>
-                    <field name="visible_on_ecommerce"/>
-                </group>
-            </xpath>
-            <field name="color" position="after">
-                <field name="image" widget="image" options="{'size': [0, 55]}"/>
+            <field name="name" position="after">
+                <field name="visible_on_ecommerce"/>
+                <field name="color"
+                       widget='color'
+                       attrs="{'invisible': [('visible_on_ecommerce', '=', False)]}"
+                />
+                <field name="image"
+                       widget="image"
+                       options="{'size': [0, 55]}"
+                       attrs="{'invisible': [('visible_on_ecommerce', '=', False)]}"
+                />
+                <p class="text-muted" colspan="2" attrs="{'invisible': [('visible_on_ecommerce', '=', False)]}">
+                    If an image is set, the color will not be used on eCommerce.
+                </p>
             </field>
         </field>
     </record>
@@ -25,9 +32,18 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="visible_on_ecommerce" optional="show"/>
-            </field>
-            <field name="color" position="after">
-                <field name="image" widget="image" options="{'size': [0, 30]}" optional="hide"/>
+                <field name="color"
+                       widget="color"
+                       optional="hide"
+                       readonly="1"
+                       attrs="{'invisible': [('visible_on_ecommerce', '=', False)]}"
+                />
+                <field name="image"
+                       widget="image"
+                       options="{'size': [0, 30]}"
+                       optional="hide"
+                       attrs="{'invisible': [('visible_on_ecommerce', '=', False)]}"
+                />
             </field>
         </field>
     </record>

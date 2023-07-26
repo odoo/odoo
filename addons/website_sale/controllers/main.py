@@ -324,11 +324,6 @@ class WebsiteSale(http.Controller):
             else:
                 post['tags'] = None
                 tags = {}
-            ProductTag = request.env['product.tag']
-            all_tags = ProductTag.search(
-                [('product_ids.is_published', '=', True), ('visible_on_ecommerce', '=', True)]
-                + website_domain
-            )
 
         keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
 
@@ -398,6 +393,18 @@ class WebsiteSale(http.Controller):
                     max_price = max_price if max_price >= available_min_price else available_max_price
                     post['max_price'] = max_price
 
+        if filter_by_tags_enabled:
+            if (
+                search_product.product_tag_ids
+                or search_product.product_variant_ids.additional_product_tag_ids
+            ):
+                ProductTag = request.env['product.tag']
+                all_tags = ProductTag.search(
+                    [('product_ids.is_published', '=', True), ('visible_on_ecommerce', '=', True)]
+                    + website_domain
+                )
+            else:
+                all_tags = []
         categs_domain = [('parent_id', '=', False)] + website_domain
         if search:
             search_categories = Category.search(
