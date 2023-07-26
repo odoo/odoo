@@ -727,7 +727,7 @@ class StockQuant(models.Model):
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
         if self.env.context.get('with_expiration'):
-            domain = expression.AND([[('expiration_date', '>=', self.env.context['with_expiration'])], domain])
+            domain = expression.AND([['|', ('expiration_date', '>=', self.env.context['with_expiration']), ('expiration_date', '=', False)], domain])
         return domain
 
     def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, qty=0):
