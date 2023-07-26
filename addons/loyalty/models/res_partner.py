@@ -7,11 +7,14 @@ class ResPartner(models.Model):
 
     loyalty_card_count = fields.Integer(
         string="Active loyalty cards",
-        compute='_compute_count_active_cards')
+        compute='_compute_count_active_cards',
+        compute_sudo=True,
+        groups='base.group_user')
 
     def _compute_count_active_cards(self):
         loyalty_groups = self.env['loyalty.card']._read_group(
             domain=[
+                '|', ('company_id', '=', False), ('company_id', 'in', self.env.companies.ids),
                 ('partner_id', 'in', self.with_context(active_test=False)._search([('id', 'child_of', self.ids)])),
                 ('points', '>', '0'),
                 ('program_id.active', '=', 'True'),
