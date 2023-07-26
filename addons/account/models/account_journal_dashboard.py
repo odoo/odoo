@@ -785,7 +785,11 @@ class account_journal(models.Model):
     def mark_bank_setup_as_done_action(self):
         """ Marks the 'bank setup' step as done in the setup bar and in the company."""
         self.company_id.sudo().set_onboarding_step_done('account_setup_bank_data_state')
+        #force reload the page
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     def unmark_bank_setup_as_done_action(self):
         """ Marks the 'bank setup' step as not done in the setup bar and in the company."""
         self.company_id.account_setup_bank_data_state = 'not_done'
+        #force reload the page
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
