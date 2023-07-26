@@ -325,12 +325,10 @@ export class PosDB {
             }
         }
     }
-    add_packagings(product_packagings) {
-        var self = this;
-        Object.values(product_packagings || {}).map((product_packaging) => {
-            const products = Object.values(self.product_by_id);
-            if (products.find(({ id }) => id === product_packaging.product_id[0])) {
-                self.product_packaging_by_barcode[product_packaging.barcode] = product_packaging;
+    add_packagings(productPackagings) {
+        productPackagings?.forEach(productPackaging => {
+            if (productPackaging.product_id[0] in this.product_by_id) {
+                this.product_packaging_by_barcode[productPackaging.barcode] = productPackaging;
             }
         });
     }
