@@ -179,7 +179,6 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/env.js',
 
-            'web/static/lib/jquery.scrollTo/jquery.scrollTo.js',
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
 
             'web/static/src/scss/ace.scss',
