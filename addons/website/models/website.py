@@ -1274,6 +1274,7 @@ class Website(models.Model):
         if domain is None:
             domain = []
         domain += self.get_current_website().website_domain()
+        domain = AND([domain, [('url', '!=', False)]])
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
         # TODO In 16.0 remove condition on _filter_duplicate_pages.
         if self.env.context.get('_filter_duplicate_pages'):
