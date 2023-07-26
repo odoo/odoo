@@ -1965,9 +1965,15 @@ class PosSession(models.Model):
         return products
 
     def _loader_params_product_packaging(self):
+        domain = [('barcode', 'not in', ['', False])]
+        loaded_data = self._context.get('loaded_data')
+        if loaded_data and self.config_id.limited_products_loading:
+            loaded_product_ids = [x['id'] for x in loaded_data['product.product']]
+            domain = AND([domain, [('product_id', 'in', loaded_product_ids)]])
+
         return {
             'search_params': {
-                'domain': [('barcode', 'not in', ['', False])],
+                'domain': domain,
                 'fields': ['name', 'barcode', 'product_id', 'qty'],
             },
         }
@@ -2034,6 +2040,20 @@ class PosSession(models.Model):
         params['search_params'] = {**params['search_params'], **custom_search_params}
         partners = self.env['res.partner'].search_read(**params['search_params'])
         return partners
+
+    def find_product_by_barcode(self, barcode):
+        product = self.env['product.product'].search([['barcode', '=', barcode], ['sale_ok', '=', True]])
+        if product:
+            return {'product_id': [product.id]}
+
+        packaging_params = self._loader_params_product_packaging()
+        packaging_params['search_params']['domain'] = [['barcode', '=', barcode]]
+        packaging = self.env['product.packaging'].search_read(**packaging_params['search_params'])
+        if packaging:
+            product_id = packaging[0]['product_id']
+            if product_id:
+                return {'product_id': [product_id[0]], 'packaging': packaging}
+        return {}
 
 
 class ProcurementGroup(models.Model):
