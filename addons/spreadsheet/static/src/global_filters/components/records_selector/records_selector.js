@@ -101,6 +101,10 @@ RecordsSelector.props = {
         optional: true,
         type: String,
     },
+    context: {
+        optional: true,
+        type: Object,
+    },
 };
 RecordsSelector.defaultProps = {
     resIds: [],
