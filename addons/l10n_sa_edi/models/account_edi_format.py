@@ -457,7 +457,7 @@ class AccountEdiFormat(models.Model):
         doc = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca' and d.state == 'sent')
         if doc is not None and doc.attachment_id.datas:
             return {invoice: {'xml_file': doc.attachment_id.datas.decode()}}
-        return {invoice: {'xml_file': self._l10n_sa_generate_zatca_template(invoice)}}
+        return self._l10n_sa_generate_zatca_template(invoice).encode()
 
     def _get_move_applicability(self, move):
         # EXTENDS account_edi
