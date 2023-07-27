@@ -1,9 +1,8 @@
-$o-wevent-color-ratio-bg: 15%;
-$o-wevent-bg-color-base: mix(map-get($theme-colors, 'primary'), $body-bg, $o-wevent-color-ratio-bg);
+$o-wevent-bg-color-base: $body-bg;
 $o-wevent-bg-color-base-contrast: color-contrast($o-wevent-bg-color-base);
 $o-wevent-bg-color-light: mix($o-wevent-bg-color-base, #E9ECEF);
 $o-wevent-bg-color-dark: mix($o-wevent-bg-color-base, #24363a);
-$o-wevent-color: mix(map-get($theme-colors, 'primary'), $body-color, $o-wevent-color-ratio-bg);
+$o-wevent-color: $body-color;
 
 .o_wevent_theme_bg_base {
     background-color: $o-wevent-bg-color-base !important;
