@@ -28,16 +28,20 @@ registerModel({
         },
     },
     recordMethods: {
-        onClickAddActivityButton() {
+        async onClickAddActivityButton() {
             const thread = this.thread;
+            const messaging = this.messaging;
             const webRecord = this.webRecord;
-            this.messaging.openActivityForm({
-                thread,
-            }).then(() => {
-                thread.fetchData(['activities']);
-                webRecord.model.load({ resId: thread.id });
-            });
+            const activityForm = this.messaging.openActivityForm({ thread });
+
             this.popoverViewOwner.delete();
+            await activityForm;
+            thread.fetchData(['activities']);
+            await webRecord.load();
+            // Patch the buttonClass attributes in ActivityButtonView instances
+            const activityButtonViews = messaging.models['ActivityButtonView'].all(activityButtonView => activityButtonView.webRecord === webRecord);
+            activityButtonViews.forEach(activityButtonView => activityButtonView.update({ buttonClass: activityButtonView.computeButtonClass() }));
+            webRecord.model.notify();
         },
     },
     fields: {
