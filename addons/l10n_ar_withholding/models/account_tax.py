@@ -15,7 +15,6 @@ class AccountTax(models.Model):
     l10n_ar_withholding_sequence_id = fields.Many2one(
         'ir.sequence', 'Withholding Number Sequence', copy=False,
         domain=[('code', '=', 'l10n_ar.account.tax.withholding')],
-        context="{'default_code': 'l10n_ar.account.tax.withholding', 'default_name': name}",
         help='If no sequence provided then it will be required for you to enter withholding number when registering one.',)
 
     def _get_tax_vals(self, company, tax_template_to_tax):
@@ -23,5 +22,6 @@ class AccountTax(models.Model):
         vals.update({
             'l10n_ar_withholding': self.l10n_ar_withholding,
             'l10n_ar_withholding_amount_type': self.l10n_ar_withholding_amount_type,
+            'l10n_ar_withholding_sequence_id': self.l10n_ar_withholding_sequence_id,
         })
         return vals
