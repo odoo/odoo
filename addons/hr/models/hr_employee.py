@@ -393,20 +393,21 @@ class HrEmployeePrivate(models.Model):
 
     def write(self, vals):
         if 'work_contact_id' in vals:
-            account_id = vals.get('bank_account_id') or self.bank_account_id.id
-            if account_id:
-                bank_account = self.env['res.partner.bank'].browse(account_id)
-                if vals['work_contact_id'] != bank_account.partner_id.id:
-                    if bank_account.allow_out_payment:
-                        bank_account.sudo().allow_out_payment = False
-                    bank_account.partner_id = vals['work_contact_id']
+            account_ids = vals.get('bank_account_id') or self.bank_account_id.ids
+            if account_ids:
+                bank_accounts = self.env['res.partner.bank'].browse(account_ids)
+                for bank_account in bank_accounts:
+                    if vals['work_contact_id'] != bank_account.partner_id.id:
+                        if bank_account.allow_out_payment:
+                            bank_account.sudo().allow_out_payment = False
+                        bank_account.partner_id = vals['work_contact_id']
             self.message_unsubscribe(self.work_contact_id.ids)
             if vals['work_contact_id']:
                 self._message_subscribe([vals['work_contact_id']])
         if 'user_id' in vals:
             # Update the profile pictures with user, except if provided
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
-                                        (bool(self.image_1920))))
+                                        (bool(all(emp.image_1920 for emp in self)))))
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
         res = super(HrEmployeePrivate, self).write(vals)
