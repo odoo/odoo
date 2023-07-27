@@ -103,6 +103,7 @@ class TestProductConfiguratorCommon(TransactionCase):
 
         cls.custom_pricelist = cls.env['product.pricelist'].create({
             'name': 'Custom pricelist (TEST)',
+            'sequence': 9,
             'item_ids': [(0, 0, {
                 'base': 'list_price',
                 'applied_on': '1_product',
