@@ -31,7 +31,7 @@ export class CodeEditor extends Component {
             optional: true,
             validate: (mode) => CodeEditor.MODES.includes(mode),
         },
-        value: { type: String, optional: true },
+        value: { validate: (v) => typeof v === "string", optional: true },
         readonly: { type: Boolean, optional: true },
         onChange: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
