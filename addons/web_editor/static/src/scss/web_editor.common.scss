@@ -78,6 +78,19 @@
     @include print-variable('o-we-content-to-translate-color', $o-we-content-to-translate-color);
     @include print-variable('o-we-translated-content-color', $o-we-translated-content-color);
     @include print-variable('o-system-fonts', $o-system-fonts);
+
+    @include print-variable('display-1-font-size', map-get($display-font-sizes, 1));
+    @include print-variable('display-2-font-size', map-get($display-font-sizes, 2));
+    @include print-variable('display-3-font-size', map-get($display-font-sizes, 3));
+    @include print-variable('display-4-font-size', map-get($display-font-sizes, 4));
+    @include print-variable('h1-font-size', $h1-font-size);
+    @include print-variable('h2-font-size', $h2-font-size);
+    @include print-variable('h3-font-size', $h3-font-size);
+    @include print-variable('h4-font-size', $h4-font-size);
+    @include print-variable('h5-font-size', $h5-font-size);
+    @include print-variable('h6-font-size', $h6-font-size);
+    @include print-variable('font-size-base', $font-size-base);
+    @include print-variable('small-font-size', $small-font-size);
 }
 
 html, body {
@@ -235,6 +248,33 @@ img.ms-auto, img.mx-auto {
 }
 .fa.card-img, .fa.card-img-top, .fa.card-img-bottom {
     width: auto;
+}
+
+@for $index from 1 through 4 {
+    .display-#{$index}-fs {
+        font-size: map-get($display-font-sizes, $index);
+    }
+}
+.h1-fs {
+    font-size: $h1-font-size;
+}
+.h2-fs {
+    font-size: $h2-font-size;
+}
+.h3-fs {
+    font-size: $h3-font-size;
+}
+.h4-fs {
+    font-size: $h4-font-size;
+}
+.h5-fs {
+    font-size: $h5-font-size;
+}
+.h6-fs {
+    font-size: $h6-font-size;
+}
+.base-fs {
+    font-size: $font-size-base;
 }
 
 div.media_iframe_video {

@@ -1623,11 +1623,19 @@
         </we-row>
     </div>
     <div data-js="OptionsTab" data-selector="theme-paragraph" data-no-check="true">
-        <we-input string="Font size"
-                  data-customize-website-variable="null"
-                  data-variable="font-size-base"
-                  data-unit="px"
-                  data-save-unit="rem"/>
+        <we-collapse>
+            <we-input string="Font size"
+                    data-customize-website-variable="null"
+                    data-variable="font-size-base"
+                    data-unit="px"
+                    data-save-unit="rem"/>
+            <we-input string="Small"
+                    class="o_we_sublevel_1"
+                    data-customize-website-variable="null"
+                    data-variable="small-font-size"
+                    data-unit="px"
+                    data-save-unit="rem"/>
+        </we-collapse>
         <we-fontfamilypicker string="Font family" data-variable="font"/>
         <!-- "× ": \u00D7\u2000 -->
         <we-input string="Line height"

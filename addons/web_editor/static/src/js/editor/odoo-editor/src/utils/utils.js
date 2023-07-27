@@ -61,6 +61,12 @@ export const PHONE_REGEX = /^(tel:(?:\/\/)?)?\+?[\d\s.\-()\/]{3,25}$/;
 
 export const PROTECTED_BLOCK_TAG = ['TR','TD','TABLE','TBODY','UL','OL','LI'];
 
+/**
+ * Array of all the classes used by the editor to change the font size.
+ */
+export const FONT_SIZE_CLASSES = ["display-1-fs", "display-2-fs", "display-3-fs", "display-4-fs", "h1-fs",
+    "h2-fs", "h3-fs", "h4-fs", "h5-fs", "h6-fs", "base-fs", "small"];
+
 //------------------------------------------------------------------------------
 // Position and sizes
 //------------------------------------------------------------------------------
@@ -946,8 +952,23 @@ const formatsSpecs = {
     fontSize: {
         isFormatted: isFontSize,
         hasStyle: (node) => node.style && node.style['font-size'],
-        addStyle: (node, props) => node.style['font-size'] = props.size,
+        addStyle: (node, props) => {
+            node.style['font-size'] = props.size;
+            node.classList.remove(...FONT_SIZE_CLASSES);
+        },
         removeStyle: (node) => removeStyle(node, 'font-size'),
+    },
+    setFontSizeClassName: {
+        isFormatted: hasClass,
+        hasStyle: (node, props) => FONT_SIZE_CLASSES
+            .find(cls => node.classList.contains(cls)),
+        addStyle: (node, props) => node.classList.add(props.className),
+        removeStyle: (node) => {
+            node.classList.remove(...FONT_SIZE_CLASSES);
+            if (node.classList.length === 0) {
+                node.removeAttribute("class");
+            }
+        },
     },
     switchDirection: {
         isFormatted: isDirectionSwitched,
@@ -1049,8 +1070,10 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         let parentNode = selectedTextNode.parentElement;
 
         // Remove the format on all inline ancestors until a block or an element
-        // with a class (in case the formating comes from the class).
-        while (parentNode && (!isBlock(parentNode) && !(parentNode.classList && parentNode.classList.length))) {
+        // with a class that is not related to font size (in case the formatting
+        // comes from the class).
+        while (parentNode && (!isBlock(parentNode) && (parentNode.classList.length === 0 ||
+                [...parentNode.classList].every(cls => FONT_SIZE_CLASSES.includes(cls))))) {
             const isUselessZws = parentNode.tagName === 'SPAN' &&
                 parentNode.hasAttribute('data-oe-zws-empty-inline') &&
                 parentNode.getAttributeNames().length === 1;
@@ -1282,6 +1305,18 @@ export function isStrikeThrough(node) {
 export function isFontSize(node, props) {
     const element = closestElement(node);
     return getComputedStyle(element)['font-size'] === props.size;
+}
+/**
+ * Return true if the given node classlist contains `props.className`.
+ *
+ * @param {Object} props
+ * @param {Node} node A node to compare the font-size against.
+ * @param {String} props.className The name of the class.
+ * @returns {boolean}
+ */
+export function hasClass(node, props) {
+    const element = closestElement(node);
+    return element.classList.contains(props.className);
 }
 /**
  * Return true if the given node appears in a different direction than that of
@@ -1778,6 +1813,58 @@ export function isShrunkBlock(blockEl) {
 export function isColorGradient(value) {
     // FIXME duplicated in @web_editor/utils.js
     return value && value.includes('-gradient(');
+}
+
+/**
+ * Finds the font size to display for the current selection. We cannot rely
+ * on the computed font-size only as font-sizes are responsive and we always
+ * want to display the desktop (integer when possible) one.
+ *
+ * @private
+ * @todo probably move `getCSSVariableValue` and `convertNumericToUnit` as
+ *       odoo-editor utils.
+ * @param {Selection} sel The current selection.
+ * @returns {Float} The font size to display.
+ */
+export function getFontSizeDisplayValue(sel, getCSSVariableValue, convertNumericToUnit) {
+    const tagNameRelatedToFontSize = ["h1", "h2", "h3", "h4", "h5", "h6"];
+    const closestStartContainerEl = closestElement(sel.getRangeAt(0).startContainer);
+    const closestFontSizedEl = closestStartContainerEl.closest(`
+        [style*='font-size'],
+        ${FONT_SIZE_CLASSES.map(className => `.${className}`)},
+        ${tagNameRelatedToFontSize}
+    `);
+    let remValue;
+    if (closestFontSizedEl) {
+        const customFontSize = closestFontSizedEl.style.fontSize;
+        if (customFontSize) {
+            // Use the computed value to always convert to px. However, this
+            // currently does not check that the inline font-size is the one
+            // actually having an effect (there could be an !important CSS rule
+            // forcing something else).
+            // TODO align with the behavior of the rest of the editor snippet
+            // options.
+            return parseFloat(getComputedStyle(closestStartContainerEl).fontSize);
+        }
+        // It's a class font size or a hN tag. We don't return the computed
+        // font size because it can be different from the one displayed in
+        // the toolbar because it's responsive.
+        const fontSizeClass = FONT_SIZE_CLASSES.find(
+            className => closestFontSizedEl.classList.contains(className));
+        if (fontSizeClass) {
+            const fsName = fontSizeClass.substring(0, fontSizeClass.length - 3); // Without -fs
+            remValue = parseFloat(getCSSVariableValue(`${fsName}-font-size`));
+        } else {
+            const tagName = closestFontSizedEl.tagName.toLowerCase();
+            remValue = parseFloat(getCSSVariableValue(`${tagName}-font-size`));
+        }
+    }
+    // It's default font size (no font size class / style).
+    if (remValue === undefined) {
+        remValue = parseFloat(getCSSVariableValue("font-size-base"));
+    }
+    const pxValue = convertNumericToUnit(remValue, "rem", "px");
+    return pxValue || parseFloat(getComputedStyle(closestStartContainerEl).fontSize);
 }
 
 //------------------------------------------------------------------------------
@@ -2730,8 +2817,8 @@ export function peek(arr) {
     return arr[arr.length - 1];
 }
 /**
- * Check user OS 
- * @returns {boolean} 
+ * Check user OS
+ * @returns {boolean}
  */
 export function isMacOS() {
     return window.navigator.userAgent.includes('Mac');
