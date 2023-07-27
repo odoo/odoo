@@ -1,16 +1,9 @@
 import odoo
 from odoo.tests import HttpCase
 from odoo.tests.common import new_test_user
-from unittest.mock import patch
-from odoo.addons.bus.models.res_users import ResUsers
-
-def _compute_im_status(self):
-    for record in self:
-        record.im_status = 'online'
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
-@patch.object(ResUsers, '_compute_im_status', _compute_im_status)
 class TestGetRandomOperator(HttpCase):
     def _create_operator(self, lang_code=None, country_code=None):
         operator = new_test_user(self.env, login=f'operator_{lang_code or country_code}_{self.operator_id}')
@@ -19,6 +12,7 @@ class TestGetRandomOperator(HttpCase):
             'lang': lang_code,
             'country_id': self.env['res.country'].search([('code', '=', country_code)]).id if country_code else None,
         })
+        self.env['bus.presence'].create({'user_id': operator.id, 'status': 'online'})  # Simulate online status
         self.operator_id += 1
         return operator
 
