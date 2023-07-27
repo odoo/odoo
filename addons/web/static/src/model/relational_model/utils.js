@@ -55,7 +55,7 @@ export function createPropertyActiveField(property) {
     const { type } = property;
 
     const activeField = makeActiveField();
-    if (type === "many2many") {
+    if (type === "one2many" || type === "many2many") {
         activeField.related = {
             fields: {
                 id: { name: "id", type: "integer" },
@@ -80,21 +80,17 @@ export function patchActiveFields(activeField, patch) {
     // x2manys
     if (patch.related) {
         const related = activeField.related;
-        if (related) {
-            for (const fieldName in patch.related.activeFields) {
-                if (fieldName in related.activeFields) {
-                    patchActiveFields(
-                        related.activeFields[fieldName],
-                        patch.related.activeFields[fieldName]
-                    );
-                } else {
-                    related.activeFields[fieldName] = { ...patch.related.activeFields[fieldName] };
-                }
+        for (const fieldName in patch.related.activeFields) {
+            if (fieldName in related.activeFields) {
+                patchActiveFields(
+                    related.activeFields[fieldName],
+                    patch.related.activeFields[fieldName]
+                );
+            } else {
+                related.activeFields[fieldName] = { ...patch.related.activeFields[fieldName] };
             }
-            Object.assign(related.fields, patch.related.fields);
-        } else {
-            activeField.related = patch.related;
         }
+        Object.assign(related.fields, patch.related.fields);
     }
     if ("limit" in patch) {
         activeField.limit = patch.limit;
@@ -119,6 +115,10 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
             isHandle: fieldNode.isHandle,
         });
         if (["one2many", "many2many"].includes(fields[fieldName].type)) {
+            activeField.related = {
+                activeFields: {},
+                fields: {},
+            };
             if (fieldNode.views) {
                 const viewDescr = fieldNode.views[fieldNode.viewMode];
                 if (viewDescr) {
