@@ -472,12 +472,12 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'checkbox_download': True,
             'enable_send_mail': True,
             'display_mail_composer': True,
-            'send_mail_readonly': False,
-            'checkbox_send_mail': True,
+            'send_mail_readonly': True,
+            'checkbox_send_mail': False,
             'mail_lang': 'en_US',
             'mail_partner_ids': wizard.move_ids.partner_id.ids,
         }])
-        self.assertTrue(wizard.send_mail_warning_message)
+        self.assertFalse(wizard.send_mail_warning_message)
         self.assertTrue(wizard.mail_subject)
         self.assertTrue(wizard.mail_body)
         self._test_mail_attachments_widget(wizard, [{
@@ -499,6 +499,21 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # The PDF has been successfully generated.
         self.assertTrue(invoice.invoice_pdf_report_id)
 
+    def test_invoice_single_readonly_and_checkbox(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice)
+        self.assertRecordValues(wizard, [{
+            'send_mail_readonly': True,
+            'checkbox_send_mail': False,
+        }])
+
+        self.partner_a.email = "turlututu@tsointsoin"
+        wizard = self.create_send_and_print(invoice)
+        self.assertRecordValues(wizard, [{
+            'send_mail_readonly': False,
+            'checkbox_send_mail': True,
+        }])
+
     def test_invoice_multi(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
         invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
@@ -518,7 +533,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'mail_body': False,
             'mail_attachments_widget': False,
         }])
-        self.assertTrue(wizard.send_mail_warning_message)
+        self.assertFalse(wizard.send_mail_warning_message)
 
         # Fix the partner.
         self.partner_a.email = "turlututu@tsointsoin"
@@ -539,6 +554,33 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard.action_send_and_print(from_cron=True)
         self.assertTrue(invoice1.invoice_pdf_report_id)
         self.assertTrue(invoice2.invoice_pdf_report_id)
+
+    def test_invoice_multi_message_readonly_checkbox_values(self):
+        invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+        invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertFalse(wizard.send_mail_warning_message)
+        self.assertRecordValues(wizard, [{
+            'send_mail_readonly': True,
+            'checkbox_send_mail': False,
+        }])
+
+        self.partner_a.email = "turlututu@tsointsoin"
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertTrue(wizard.send_mail_warning_message)
+        self.assertRecordValues(wizard, [{
+            'send_mail_readonly': False,
+            'checkbox_send_mail': True,
+        }])
+
+        self.partner_b.email = "turlututu@tsointsoin"
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertFalse(wizard.send_mail_warning_message)
+        self.assertRecordValues(wizard, [{
+            'send_mail_readonly': False,
+            'checkbox_send_mail': True,
+        }])
 
     def test_invoice_multi_one_attachment_already_generated(self):
         invoice1 = self.init_invoice("out_invoice", amounts=[1000], post=True)
