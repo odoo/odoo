@@ -152,7 +152,7 @@
             <!-- If some tickets expired and there is only one type left, we keep the same layout -->
             <t t-if="len(event.event_ticket_ids) &gt; 1">
                 <div class="d-flex align-items-center py-2 ps-3 pe-2 border-bottom">
-                    <span class="py-2 o_wevent_registration_title text-start">Tickets</span>
+                    <span class="o_wevent_registration_title text-start">Tickets</span>
                     <div class="o_wevent_price_range d-none"/>
                     <t t-call="website_event.registration_configure_tickets_button"
                         t-if="request.env.user.has_group('event.group_event_manager')"/>
@@ -166,7 +166,7 @@
                 </div>
                 <div id="o_wevent_tickets_collapse" class="collapse show">
                     <div t-foreach="tickets" t-as="ticket"
-                         class="o_wevent_theme_bg_light row px-3 py-3 mx-0 border-bottom o_wevent_ticket_selector"
+                         class="o_wevent_theme_bg_light row px-3 py-2 mx-0 border-bottom o_wevent_ticket_selector"
                          t-att-name="ticket.name">
                         <div class="col-md-8 col-xs-12 p-0" itemscope="itemscope" itemtype="http://schema.org/Offer">
                             <h5 itemprop="name" t-field="ticket.name" class="my-0"/>
@@ -292,7 +292,7 @@
                                 <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">Ticket #<span t-out="counter"/> <small class="text-muted">- <span t-out="ticket['name']"/></small></h5>
                                 <div t-if="event.specific_question_ids" class="row">
                                     <t t-foreach="event.specific_question_ids" t-as="question">
-                                        <div class="col-lg-12 mt-2">
+                                        <div class="col-lg-6 mt-2">
                                             <t t-call="website_event.registration_event_question">
                                                 <t t-set="registration_index" t-value="counter"/>
                                             </t>
@@ -306,7 +306,7 @@
                     <div t-if="availability_check and event.general_question_ids" class="modal-body border-top o_wevent_registration_question_global">
                         <div class="row">
                             <t t-foreach="event.general_question_ids" t-as="question">
-                                <div class="col-lg-12 mt-2">
+                                <div class="mt-2" t-att-class="question.question_type=='text_box' and 'col-lg-12' or 'col-lg-6'">
                                     <t t-call="website_event.registration_event_question">
                                         <t t-set="registration_index" t-value="0"/>
                                     </t>
@@ -319,7 +319,7 @@
                             <strong> You ordered more tickets than available seats</strong>
                         </div>
                     </t>
-                    <div class="modal-footer border-top justify-content-between">
+                    <div class="modal-footer border-top">
                         <button type="button" class="btn btn-secondary js_goto_event" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" t-if="availability_check">Confirm Registration</button>
                     </div>
