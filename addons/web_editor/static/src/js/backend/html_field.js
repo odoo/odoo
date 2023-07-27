@@ -368,10 +368,16 @@ export class HtmlField extends Component {
      * @param {Object} position
      */
     positionDynamicPlaceholder(popover, position) {
-        let topPosition = this.wysiwygRangePosition.top;
+        // make sure the popover won't be out(below) of the page
+        const enoughSpaceBelow = window.innerHeight - popover.clientHeight - this.wysiwygRangePosition.top;
+        let topPosition = (enoughSpaceBelow > 0) ? this.wysiwygRangePosition.top : this.wysiwygRangePosition.top + enoughSpaceBelow;
+
         // Offset the popover to ensure the arrow is pointing at
         // the precise range location.
         let leftPosition = this.wysiwygRangePosition.left - 14;
+        // make sure the popover won't be out(right) of the page
+        const enoughSpaceRight = window.innerWidth - popover.clientWidth - leftPosition;
+        leftPosition = (enoughSpaceRight > 0) ? leftPosition : leftPosition + enoughSpaceRight;
 
         // Apply the position back to the element.
         popover.style.top = topPosition + 'px';
