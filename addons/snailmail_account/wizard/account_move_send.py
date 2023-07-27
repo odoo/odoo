@@ -13,7 +13,9 @@ class AccountMoveSend(models.Model):
         store=True,
         readonly=False,
     )
-    send_by_post_warning_message = fields.Text(compute='_compute_send_by_post_warning_message')
+    send_by_post_cost = fields.Integer(string='Stamps', compute='_compute_send_by_post_extra_fields')
+    send_by_post_warning_message = fields.Text(compute='_compute_send_by_post_extra_fields')
+    send_by_post_readonly = fields.Boolean(compute='_compute_send_by_post_extra_fields')
 
     @api.depends('mode')
     def _compute_enable_send_by_post(self):
@@ -21,23 +23,28 @@ class AccountMoveSend(models.Model):
             wizard.enable_send_by_post = wizard.mode in ('invoice_single', 'invoice_multi') \
                 and all(x.state == 'posted' for x in wizard.move_ids)
 
-    @api.depends('send_by_post_warning_message')
+    @api.depends('company_id')
     def _compute_checkbox_send_by_post(self):
         for wizard in self:
-            wizard.checkbox_send_by_post = not wizard.send_by_post_warning_message \
-                and wizard.company_id.invoice_is_snailmail
+            wizard.checkbox_send_by_post = wizard.company_id.invoice_is_snailmail
 
-    @api.depends('mode')
-    def _compute_send_by_post_warning_message(self):
+    @api.depends('mode', 'checkbox_send_by_post')
+    def _compute_send_by_post_extra_fields(self):
         for wizard in self:
-            display_messages = []
-            if wizard.enable_send_by_post:
-                wrong_address_partners = wizard.move_ids.partner_id\
-                    .filtered(lambda x: not self.env['snailmail.letter']._is_valid_address(x))
-                if wrong_address_partners:
-                    display_messages.append(_("The following customers don't have a valid address: "))
-                    display_messages.append(", ".join(wrong_address_partners.mapped('display_name')))
-            wizard.send_by_post_warning_message = "".join(display_messages) if display_messages else None
+            partner_with_valid_address = wizard.move_ids.partner_id \
+                .filtered(self.env['snailmail.letter']._is_valid_address)
+            wizard.send_by_post_cost = len(partner_with_valid_address)
+            wizard.send_by_post_readonly = not partner_with_valid_address
+            wizard.send_by_post_warning_message = False
+
+            if wizard.enable_send_by_post and wizard.checkbox_send_by_post:
+                invoice_without_valid_address = wizard.move_ids.filtered(
+                    lambda move: not self.env['snailmail.letter']._is_valid_address(move.partner_id))
+                if invoice_without_valid_address:
+                    wizard.send_by_post_warning_message = _(
+                        "The partners on the following invoices have no valid address, "
+                        "so those invoices will not be sent: %s"
+                    ) % ", ".join(invoice_without_valid_address.mapped('name'))
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
