@@ -97,7 +97,7 @@ class TestMailingTest(TestMassMailCommon):
         expected_body = 'Hello {{ object.name }}' + f' {expected_test_record.name}'
 
         self.assertSentEmail(self.env.user.partner_id, ['test@test.com'],
-            subject=expected_subject,
+            subject='[TEST] ' + expected_subject,
             body_content=expected_body)
 
         with self.mock_mail_gateway():

@@ -46,6 +46,7 @@ class TestMassMailing(models.TransientModel):
         else:
             full_body = mailing._prepend_preview(mailing.body_html, mailing.preview)
             subject = mailing.subject
+        subject = f'[TEST] {subject}'
 
         # Convert links in absolute URLs before the application of the shortener
         full_body = self.env['mail.render.mixin']._replace_local_links(full_body)
