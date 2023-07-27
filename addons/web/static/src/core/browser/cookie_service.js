@@ -15,7 +15,7 @@ function parseCookieString(str) {
     const cookie = {};
     const parts = str.split("; ");
     for (const part of parts) {
-        const [key, value] = part.split("=");
+        const [key, value] = part.split(/=(.*)/);
         cookie[key] = value || "";
     }
     return cookie;
