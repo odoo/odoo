@@ -2974,11 +2974,11 @@ export class Wysiwyg extends Component {
     }
 
     _getColorpickerTemplate() {
-        return this.orm.call(
+        return this.env.services.orm.call(
             'ir.ui.view',
             'render_public_asset',
             ['web_editor.colorpicker', {}]
-        )
+        );
     }
 
     // -----------------------------------------------------------------------------
