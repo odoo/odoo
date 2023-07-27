@@ -494,7 +494,18 @@ export function formatSelection(value, options = {}) {
  * @returns {string}
  */
 export function formatText(value) {
-    return value || "";
+    return value ? value.toString() : "";
+}
+
+/**
+ * Returns the value.
+ * Note that, this function is added to be coherent with the rest of the formatters.
+ *
+ * @param {html} value
+ * @returns {html}
+ */
+export function formatHtml(value) {
+    return value;
 }
 
 export function formatJson(value) {
@@ -511,7 +522,7 @@ registry
     .add("float", formatFloat)
     .add("float_factor", formatFloatFactor)
     .add("float_time", formatFloatTime)
-    .add("html", (value) => value)
+    .add("html", formatHtml)
     .add("integer", formatInteger)
     .add("json", formatJson)
     .add("many2one", formatMany2one)
