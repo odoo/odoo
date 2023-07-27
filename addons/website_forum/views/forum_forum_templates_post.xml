@@ -40,7 +40,7 @@
                 t-value="'/forum/' + slug(question_tag.forum_id) + '/tag/' + slug(question_tag) + '/questions?' + keep_query( 'search', 'sorting', 'my', 'create_uid', filters='tag')"/>
 
             <a t-att-href="click_action"
-                t-attf-class="badge position-relative z-index-1 #{ 'text-bg-secondary' if tag and tag.name == question_tag.name else 'text-bg-light' } fw-normal"
+                t-attf-class="badge position-relative z-index-1 #{ 'text-bg-primary' if tag and tag.name == question_tag.name else 'text-bg-secondary' } fw-normal"
                 t-field="question_tag.name"/>
         </t>
     </div>
@@ -182,7 +182,7 @@
     <div t-if="question.tag_ids" class="o_wforum_index_entry_tags ms-3">
         <a t-foreach="question.tag_ids" t-as="question_tag"
             t-attf-href="/forum/#{slug(question_tag.forum_id)}/tag/#{slug(question_tag)}/questions?#{keep_query(filters='tag')}"
-            t-attf-class="badge text-bg-light #{'ms-1' if not question_tag_first else ''} fw-normal"
+            t-attf-class="badge text-bg-secondary #{'ms-1' if not question_tag_first else ''} fw-normal"
             t-field="question_tag.name"/>
     </div>
 </template>
