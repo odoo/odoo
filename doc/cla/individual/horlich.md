@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Herbert Orlich herbert@orlich.at https://github.com/horlich
+Herbert Orlich herbert.orlich@mec.at https://github.com/horlich
