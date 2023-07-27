@@ -93,6 +93,11 @@ class AccountReport(models.Model):
         string="Unfold All",
         compute=lambda x: x._compute_report_option_filter('filter_unfold_all'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
+    filter_hide_0_lines = fields.Selection(
+        string="Hide lines at 0",
+        selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
+        compute=lambda x: x._compute_report_option_filter('filter_hide_0_lines', 'optional'), readonly=False, store=True, depends=['root_report_id'],
+    )
     filter_period_comparison = fields.Boolean(
         string="Period Comparison",
         compute=lambda x: x._compute_report_option_filter('filter_period_comparison', True), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
