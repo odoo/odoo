@@ -380,13 +380,9 @@
             trigger: 'we-input[data-attribute-name="value"] input',
             run: "text prefilled",
         },
-        {
-            content: "Save the page",
-            trigger: "button[data-action=save]",
-        },
+        ...wTourUtils.clickOnSave(),
         {
             content: 'Verify value attribute and property',
-            extra_trigger: 'iframe body:not(.editor_enable)',
             trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]:propValue("Mitchell Admin")',
         },
         {
@@ -419,16 +415,11 @@
         ...selectButtonByText(CONDITIONALVISIBILITY),
         ...selectButtonByData('data-set-visibility-dependency="field C"'),
         ...selectButtonByData('data-select-data-attribute="set"'),
-        {
-            content: 'Save the page',
-            trigger: 'button[data-action=save]',
-            run: 'click',
-        },
+        ...wTourUtils.clickOnSave(),
 
         // Check that the resulting form behavior is correct.
         {
             content: 'Verify that the value has not been deleted',
-            extra_trigger: 'iframe body:not(.editor_enable)',
             trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]',
         }, {
             content: "Check that fields A and B are not visible and that field B's prefill text is still set",
@@ -498,16 +489,11 @@
         ...addCustomField("char", "text", "''", false),
         ...addCustomField("char", "text", '""', false),
         ...addCustomField("char", "text", "``", false),
-        {
-            content: 'Save the page',
-            trigger: 'button[data-action=save]',
-            run: 'click',
-        },
+        ...wTourUtils.clickOnSave(),
         {
             content: 'Verify that the recipient email has been saved',
-            trigger: 'iframe body:not(.editor_enable)',
             // We have to this that way because the input type = hidden.
-            extra_trigger: 'iframe form:has(input[name="email_to"][value="test@test.test"])',
+            trigger: 'iframe form:has(input[name="email_to"][value="test@test.test"])',
         },
     ]);
 
@@ -520,14 +506,7 @@
                 run: 'click',
             },
             ...steps,
-            {
-                content: 'Save the page',
-                trigger: 'button[data-action=save]',
-            },
-            {
-                content: 'Wait for reload',
-                trigger: 'body:not(.editor_enable)',
-            },
+            ...wTourUtils.clickOnSave(),
         ];
     }
 
@@ -611,10 +590,8 @@
         }, {
             content: "Choose 'not equal to' comparator",
             trigger: 'we-button[data-select-data-attribute="!selected"]',
-        }, {
-            content: 'Save the page',
-            trigger: 'button[data-action=save]',
         },
+        ...wTourUtils.clickOnSave(),
 
         // Check that the resulting form behavior is correct
         {

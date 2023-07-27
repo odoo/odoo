@@ -152,13 +152,11 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "check: input marked as translated",
     trigger: 'iframe input[placeholder="test Parseltongue placeholder"].oe_translated',
     run: () => {},
-}, {
-    content: "save translation",
-    trigger: 'button[data-action=save]',
-}, {
+},
+...wTourUtils.clickOnSave(),
+{
     content: "check: content is translated",
     trigger: 'iframe #wrap p font:first:contains(translated Parseltongue text)',
-    extra_trigger: 'iframe body:not(.editor_enable)',
     run: function () {}, // it's a check
 }, {
     content: "check: content with special char is translated",

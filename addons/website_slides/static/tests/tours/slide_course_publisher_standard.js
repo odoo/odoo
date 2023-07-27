@@ -61,12 +61,10 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }, {
     content: 'eLearning: is the Corgi set ?',
     trigger: 'iframe img.o_wslides_course_pict[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"]',
-}, {
-    content: 'eLearning: save course edition',
-    trigger: 'button[data-action="save"]',
-}, {
+},
+...wTourUtils.clickOnSave(),
+{
     content: 'eLearning: course create with current member',
-    extra_trigger: 'iframe body:not(.editor_enable)',  // wait for editor to close
     trigger: 'iframe .o_wslides_js_course_join:contains("You\'re enrolled")',
     run: function () {} // check membership
 }
@@ -80,10 +78,9 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     trigger: 'iframe body.editor_enable',
     timeout: 30000,
     run: () => null, // it's a check
-}, {
-    content: "eLearning: save article",
-    trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
-}, {
+},
+...wTourUtils.clickOnSave(),
+{
     content: "eLearning: use breadcrumb to go back to channel",
     trigger: 'iframe .o_wslides_course_nav a:contains("Déboulonnate")',
 }],

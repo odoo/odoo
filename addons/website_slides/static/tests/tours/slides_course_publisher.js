@@ -65,12 +65,10 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
 }, {
     content: 'eLearning: is the Corgi set ?',
     trigger: 'iframe img.o_wslides_course_pict[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"]',
-}, {
-    content: 'eLearning: save course edition',
-    trigger: 'button[data-action="save"]',
-}, {
+},
+...wTourUtils.clickOnSave(),
+{
     content: 'eLearning: course create with current member',
-    extra_trigger: 'iframe body:not(.editor_enable)',  // wait for editor to close
     trigger: 'iframe .o_wslides_js_course_join:contains("You\'re enrolled")',
     run: function () {} // check membership
 }
