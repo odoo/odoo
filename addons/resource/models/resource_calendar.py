@@ -339,7 +339,8 @@ class ResourceCalendar(models.Model):
 
     def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False):
         assert start_dt.tzinfo and end_dt.tzinfo
-        self.ensure_one()
+        assert len(self) <= 1
+
         if not resources:
             resources = self.env['resource.resource']
             resources_list = [resources]
@@ -359,7 +360,7 @@ class ResourceCalendar(models.Model):
         # Group resources per tz they will all have the same result
         resources_per_tz = defaultdict(list)
         for resource in resources_list:
-            resources_per_tz[tz or timezone((resource or self).tz)].append(resource)
+            resources_per_tz[tz or timezone((resource or self).tz or self.env.context.get('tz') or 'UTC')].append(resource)
         # Resource specific attendances
         attendance_per_resource = defaultdict(lambda: self.env['resource.calendar.attendance'])
         # Calendar attendances per day of the week
@@ -424,6 +425,9 @@ class ResourceCalendar(models.Model):
             res = result_per_tz[tz]
             res_intervals = WorkIntervals(res)
             for resource in resources:
+                if resource and not resource.calendar_id:
+                    result_per_resource_id[resource.id] = Intervals([(*bounds_per_tz[tz], self.env['resource.calendar.attendance'])])
+                    continue
                 if resource in per_resource_result:
                     resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2])
                         for val in per_resource_result[resource]]
@@ -444,7 +448,7 @@ class ResourceCalendar(models.Model):
             The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
-        self.ensure_one()
+        assert len(self) <= 1
 
         if not resources:
             resources = self.env['resource.resource']
