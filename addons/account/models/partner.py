@@ -656,17 +656,22 @@ class ResPartner(models.Model):
 
         return action_vals
 
-    def can_edit_vat(self):
-        ''' Can't edit `vat` if there is (non draft) issued invoices. '''
-        can_edit_vat = super(ResPartner, self).can_edit_vat()
-        if not can_edit_vat:
-            return can_edit_vat
-        has_invoice = self.env['account.move'].search([
+    def _has_invoice(self):
+        self.ensure_one()
+        invoice = self.env['account.move'].search([
             ('move_type', 'in', ['out_invoice', 'out_refund']),
             ('partner_id', 'child_of', self.commercial_partner_id.id),
             ('state', '=', 'posted')
         ], limit=1)
-        return can_edit_vat and not (bool(has_invoice))
+        return bool(invoice)
+
+    def _can_edit_name(self):
+        """ Can't edit `name` if there is (non draft) issued invoices. """
+        return super()._can_edit_name() and not self._has_invoice()
+
+    def can_edit_vat(self):
+        """ Can't edit `vat` if there is (non draft) issued invoices. """
+        return super().can_edit_vat() and not self._has_invoice()
 
     @api.model_create_multi
     def create(self, vals_list):
