@@ -41,7 +41,12 @@ export class AceField extends Component {
     }
 
     handleChange(editedValue) {
-        this.isDirty = true;
+        if (this.state.initialValue !== editedValue) {
+            this.isDirty = true;
+        } else {
+            this.isDirty = false;
+        }
+        this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
         this.editedValue = editedValue;
     }
 
