@@ -225,8 +225,7 @@ class Base(models.AbstractModel):
         return values_list
 
     @api.model
-    def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False,
-                       lazy=True, expand=False, expand_limit=None, expand_orderby=False):
+    def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False, lazy=True):
         """
         Returns the result of a read_group (and optionally search for and read records inside each
         group), and the total number of groups matching the search domain.
@@ -238,16 +237,12 @@ class Base(models.AbstractModel):
         :param offset: see ``offset`` param of ``read_group``
         :param orderby: see ``orderby`` param of ``read_group``
         :param lazy: see ``lazy`` param of ``read_group``
-        :param expand: if true, and groupby only contains one field, read records inside each group
-        :param expand_limit: maximum number of records to read in each group
-        :param expand_orderby: order to apply when reading records in each group
         :return: {
             'groups': array of read groups
             'length': total number of groups
         }
         """
-        groups = self._web_read_group(domain, fields, groupby, limit, offset, orderby, lazy, expand,
-                                      expand_limit, expand_orderby)
+        groups = self._web_read_group(domain, fields, groupby, limit, offset, orderby, lazy)
 
         if not groups:
             length = 0
@@ -266,8 +261,7 @@ class Base(models.AbstractModel):
         }
 
     @api.model
-    def _web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False,
-                        lazy=True, expand=False, expand_limit=None, expand_orderby=False):
+    def _web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False, lazy=True):
         """
         Performs a read_group and optionally a web_search_read for each group.
         See ``web_read_group`` for params description.
@@ -276,13 +270,6 @@ class Base(models.AbstractModel):
         """
         groups = self.read_group(domain, fields, groupby, offset=offset, limit=limit,
                                  orderby=orderby, lazy=lazy)
-
-        if expand and len(groupby) == 1:
-            for group in groups:
-                group['__data'] = self.web_search_read(domain=group['__domain'], fields=fields,
-                                                       offset=0, limit=expand_limit,
-                                                       order=expand_orderby)
-
         return groups
 
     @api.model

@@ -4206,11 +4206,6 @@ QUnit.module("Views", (hooks) => {
                         assert.step(
                             `web_read_group.orderby: ${args.kwargs.orderby || "default order"}`
                         );
-                        assert.step(
-                            `web_read_group.expand_orderby: ${
-                                args.kwargs.expand_orderby || "default order"
-                            }`
-                        );
                     }
                     if (method === "unity_web_search_read") {
                         assert.step(
@@ -4226,7 +4221,6 @@ QUnit.module("Views", (hooks) => {
             );
             assert.verifySteps([
                 "web_read_group.orderby: default order",
-                "web_read_group.expand_orderby: default order",
                 "web_search_read.order: default order",
             ]);
 
@@ -4237,7 +4231,6 @@ QUnit.module("Views", (hooks) => {
             );
             assert.verifySteps([
                 "web_read_group.orderby: default order",
-                "web_read_group.expand_orderby: default order",
                 "web_search_read.order: foo ASC",
             ]);
         }
