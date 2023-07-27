@@ -19,6 +19,7 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup, makeDeferred } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
+import { historyService } from "@im_livechat/embed/core/history_service";
 
 // =============================================================================
 // HELPERS
@@ -86,6 +87,7 @@ patch(setupManager, "im_livechat", {
             "im_livechat.livechat": livechatService,
             "im_livechat.autopopup": autoPopupService,
             "im_livechat.chatbot": chatBotService,
+            "im_livechat.history_service": historyService,
             cookie: {
                 start() {
                     const service = fakeCookieService.start(...arguments);
