@@ -19479,4 +19479,37 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_data_row");
         assert.containsOnce(target, ".o_data_row.o_selected_row");
     });
+
+    QUnit.test(
+        "discard the record when validation error occurs",
+        async function (assert) {
+            serviceRegistry.add("error", errorService);
+            // need to preventDefault to remove error from console (so python test pass)
+            const handler = (ev) => ev.preventDefault();
+            window.addEventListener("unhandledrejection", handler);
+            registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree editable="bottom" limit="1"><field name="foo"/></tree>',
+                mockRPC(route, args) {
+                    if (args.method === "write") {
+                        throw new Error("Can't write");
+                    }
+                },
+            });
+
+            await click(target.querySelector(".o_data_cell"));
+            await editInput(target, "[name='foo'] input", "plop");
+
+            await click(
+                target.querySelector(
+                    ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save"
+                )
+            );
+            assert.notOk(document.querySelector('.o_list_button_discard').disabled)
+        });
+
 });

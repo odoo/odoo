@@ -263,11 +263,15 @@ export class ListController extends Component {
 
     async onClickSave() {
         this.disableButtons();
-        const saved = await this.model.root.editedRecord.save();
-        if (saved) {
-            await this.model.root.leaveEditMode();
+        try {
+            const saved = await this.model.root.editedRecord.save();
+            if (saved) {
+                await this.model.root.leaveEditMode();
+            }
         }
-        this.enableButtons();
+        finally {
+            this.enableButtons();
+        }
     }
 
     onMouseDownDiscard(mouseDownEvent) {
