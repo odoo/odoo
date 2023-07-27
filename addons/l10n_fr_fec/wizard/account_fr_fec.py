@@ -404,7 +404,7 @@ class AccountFrFec(models.TransientModel):
             'name': 'FEC',
             'type': 'ir.actions.act_url',
             'url': "web/content/?model=account.fr.fec&id=" + str(self.id) + "&filename_field=filename&field=fec_data&download=true&filename=" + self.filename,
-            'target': 'self',
+            'target': 'new',
         }
 
     def _csv_write_rows(self, rows, lineterminator=u'\r\n'):
