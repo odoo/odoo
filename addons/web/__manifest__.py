@@ -133,7 +133,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/concurrency.js',
             'web/static/src/legacy/js/core/dialog.js',
             'web/static/src/legacy/xml/dialog.xml',
-            'web/static/src/legacy/js/core/owl_dialog.js',
             'web/static/src/legacy/js/core/popover.js',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/local_storage.js',
@@ -216,7 +215,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/views/form/button_box/*.scss',
 
             'web/static/src/legacy/legacy_service_provider.js',
-            'web/static/src/legacy/legacy_dialog.js',
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
             'web/static/src/legacy/root_widget.js',
@@ -345,7 +343,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/concurrency.js',
             'web/static/src/legacy/js/core/dialog.js',
             'web/static/src/legacy/xml/dialog.xml',
-            'web/static/src/legacy/js/core/owl_dialog.js',
             'web/static/src/legacy/js/core/popover.js',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/local_storage.js',

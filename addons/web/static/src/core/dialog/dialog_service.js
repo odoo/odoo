@@ -53,6 +53,7 @@ export const dialogService = {
 
             deactivate();
             stack.push(subEnv);
+            document.body.classList.add("modal-open");
 
             if (env.isSmall) {
                 const scrollOrigin = { top: window.scrollY, left: window.scrollX };
@@ -76,6 +77,8 @@ export const dialogService = {
                         deactivate();
                         if (stack.length) {
                             stack.at(-1).isActive = true;
+                        } else {
+                            document.body.classList.remove("modal-open");
                         }
                         options.onClose?.();
                     },

@@ -3,7 +3,6 @@
 import core from "@web/legacy/js/services/core";
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
-import OwlDialog from "@web/legacy/js/core/owl_dialog";
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -212,9 +211,6 @@ var Dialog = Widget.extend({
                 self._onFocusControlButton();
             }
 
-            // Notifies OwlDialog to adjust focus/active properties on owl dialogs
-            OwlDialog.display(self);
-
             // Notifies new webclient to adjust UI active element
             core.bus.trigger("legacy_dialog_opened", self);
         });
@@ -248,11 +244,7 @@ var Dialog = Widget.extend({
             return;
         }
 
-        // Notifies OwlDialog to adjust focus/active properties on owl dialogs.
-        // Only has to be done if the dialog has been opened (has an el).
         if (this.el) {
-            OwlDialog.hide(this);
-
             // Notifies new webclient to adjust UI active element
             core.bus.trigger("legacy_dialog_destroyed", this);
         }
