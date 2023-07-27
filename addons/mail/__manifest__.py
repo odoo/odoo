@@ -86,6 +86,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_shortcode_views.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
+        'data/ir_config_parameter_data.xml',
         'data/res_partner_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_templates_chatter.xml',

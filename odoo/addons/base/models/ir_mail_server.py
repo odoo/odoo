@@ -529,47 +529,29 @@ class IrMailServer(models.Model):
 
     @api.model
     def _get_default_bounce_address(self):
-        '''Compute the default bounce address.
+        """ Computes the default bounce address.
 
         The default bounce address is used to set the envelop address if no
-        envelop address is provided in the message.  It is formed by properly
-        joining the parameters "mail.bounce.alias" and
-        "mail.catchall.domain".
-
-        If "mail.bounce.alias" is not set it defaults to "postmaster-odoo".
-
-        If "mail.catchall.domain" is not set, return None.
-
-        '''
-        ICP = self.env['ir.config_parameter'].sudo()
-        bounce_alias = ICP.get_param('mail.bounce.alias')
-        domain = ICP.get_param('mail.catchall.domain')
-        if bounce_alias and domain:
-            return '%s@%s' % (bounce_alias, domain)
-        return
+        envelop address is provided in the message. Default behavior is to
+        mimic the default from value. """
+        email_from = self.env['ir.config_parameter'].sudo().get_param("mail.default.from")
+        if email_from and "@" in email_from:
+            return email_from
 
     @api.model
     def _get_default_from_address(self):
-        """Compute the default from address.
+        """ Computes the default from address.
 
         Used for the "header from" address when no other has been received.
 
         :return str/None:
-            If the config parameter ``mail.default.from`` contains
-            a full email address, return it.
-            Otherwise, combines config parameters ``mail.default.from`` and
-            ``mail.catchall.domain`` to generate a default sender address.
-
-            If some of those parameters is not defined, it will default to the
-            ``--email-from`` CLI/config parameter.
+            If the config parameter ``mail.default.from`` contains a full
+            email address, return it. Otherwise default to the ``--email-from``
+            CLI/config parameter.
         """
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        email_from = get_param("mail.default.from")
+        email_from = self.env['ir.config_parameter'].sudo().get_param("mail.default.from")
         if email_from and "@" in email_from:
             return email_from
-        domain = get_param("mail.catchall.domain")
-        if email_from and domain:
-            return "%s@%s" % (email_from, domain)
         return tools.config.get("email_from")
 
     def _prepare_email_message(self, message, smtp_session):

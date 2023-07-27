@@ -382,6 +382,10 @@ class MockSmtplibCase:
 
         matching_emails_count = len(list(matching_emails))
 
+        if matching_emails_count != emails_count:
+            print('CACA smtp_from', smtp_from, 'smtp_to_list', smtp_to_list, 'from', message_from, 'filter', from_filter)
+            for email in self.emails:
+                print(email['smtp_from'], 'smtp_to_list', email['smtp_to_list'], 'filter', email['from_filter'])
         self.assertTrue(
             matching_emails_count == emails_count,
             msg='Emails not sent, %i emails match the condition but %i are expected' % (matching_emails_count, emails_count),
@@ -389,12 +393,8 @@ class MockSmtplibCase:
 
     @classmethod
     def _init_mail_config(cls):
-        cls.alias_bounce = 'bounce.test'
-        cls.alias_domain = 'test.mycompany.com'
-        cls.default_from = 'notifications'
-        cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', cls.alias_domain)
+        cls.default_from = 'notifications@test.mycompany.com'
         cls.env['ir.config_parameter'].sudo().set_param('mail.default.from', cls.default_from)
-        cls.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', cls.alias_bounce)
 
     @classmethod
     def _init_mail_servers(cls):

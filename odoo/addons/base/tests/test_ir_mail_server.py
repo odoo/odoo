@@ -36,24 +36,32 @@ class _FakeSMTP:
 class EmailConfigCase(TransactionCase):
 
     @patch.dict(config.options, {"email_from": "settings@example.com"})
-    def test_default_email_from(self, *args):
-        """Email from setting is respected."""
-        # ICP setting is more important
+    def test_default_email_from(self):
+        """ Email from setting is respected. """
         ICP = self.env["ir.config_parameter"].sudo()
-        ICP.set_param("mail.catchall.domain", "test.mycompany.com")
-        ICP.set_param("mail.default.from", "icp")
-        message = self.env["ir.mail_server"].build_email(
-            False, "recipient@example.com", "Subject",
-            "The body of an email",
-        )
-        self.assertEqual(message["From"], "icp@test.mycompany.com")
-        # Without ICP, the config file/CLI setting is used
+        # no icp: default from
         ICP.set_param("mail.default.from", False)
         message = self.env["ir.mail_server"].build_email(
             False, "recipient@example.com", "Subject",
             "The body of an email",
         )
         self.assertEqual(message["From"], "settings@example.com")
+
+        # if only left-part: don't take default from
+        ICP.set_param("mail.default.from", "icp")
+        message = self.env["ir.mail_server"].build_email(
+            False, "recipient@example.com", "Subject",
+            "The body of an email",
+        )
+        self.assertEqual(message["From"], "settings@example.com")
+
+        # if valid email: take it
+        ICP.set_param("mail.default.from", "icp@test.mycompany.com")
+        message = self.env["ir.mail_server"].build_email(
+            False, "recipient@example.com", "Subject",
+            "The body of an email",
+        )
+        self.assertEqual(message["From"], "icp@test.mycompany.com")
 
 
 @tagged('mail_server')
@@ -239,7 +247,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         # remove the notifications email to simulate a mis-configured Odoo database
         # so we do not have the choice, we have to spoof the FROM
         # (otherwise we can not send the email)
-        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', False)
+        self.env['ir.config_parameter'].sudo().set_param('mail.default.from', False)
         with mute_logger('odoo.addons.base.models.ir_mail_server'):
             mail_server, mail_from = self.env['ir.mail_server']._find_mail_server(email_from='test@unknown_domain.com')
             self.assertEqual(mail_server.from_filter, False, 'No notifications email set, must be forced to spoof the FROM')
@@ -325,7 +333,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
         # Test that the mail from / recipient envelop are encoded using IDNA
-        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'ééééééé.com')
+        self.env['ir.config_parameter'].sudo().set_param('mail.default.from', 'notifications@ééééééé.com')
         with self.mock_smtplib_connection():
             message = self._build_email(mail_from='test@ééééééé.com')
             IrMailServer.send_email(message)
@@ -333,7 +341,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.assertEqual(len(self.emails), 1)
 
         self.assert_email_sent_smtp(
-            smtp_from='bounce.test@xn--9caaaaaaa.com',
+            smtp_from='notifications@xn--9caaaaaaa.com',
             smtp_to_list=['dest@xn--example--i1a.com'],
             message_from='test@=?utf-8?b?w6nDqcOpw6nDqcOpw6k=?=.com',
             from_filter=False,
