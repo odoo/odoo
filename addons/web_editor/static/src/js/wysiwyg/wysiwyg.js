@@ -788,6 +788,11 @@ export class Wysiwyg extends Component {
      * @override
      */
     destroy() {
+        // Sometimes, the component is started and destroyed so quickly that
+        // external calls to `wysiwyg.getColorPickerTemplateService()` fail by
+        // the time it's done, even though `wysiwyg` was properly instantiated.
+        // As it's not needed once the component is destroyed, we return null.
+        this.getColorPickerTemplateService = () => null;
         Wysiwyg.activeWysiwygs.delete(this);
 
         this._stopPeerToPeer();
