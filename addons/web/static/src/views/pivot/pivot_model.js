@@ -1554,7 +1554,7 @@ export class PivotModel extends Model {
                 : this.env._t("No");
         }
         if (value === false) {
-            return this._getEmptyGroupLabel(groupBy);
+            return this._getEmptyGroupLabel(fieldName);
         }
         if (value instanceof Array) {
             return this._getNumberedLabel(value, fieldName, config);
