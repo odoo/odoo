@@ -365,6 +365,7 @@ export const editorCommands = {
     underline: editor => formatSelection(editor, 'underline'),
     strikeThrough: editor => formatSelection(editor, 'strikeThrough'),
     setFontSize: (editor, size) => formatSelection(editor, 'fontSize', {applyStyle: true, formatProps: {size}}),
+    setFontSizeClassName: (editor, className) => formatSelection(editor, 'setFontSizeClassName', {formatProps: {className}}),
     switchDirection: editor => {
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
         const selection = editor.document.getSelection();
