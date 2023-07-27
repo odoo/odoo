@@ -273,7 +273,11 @@ export class Wysiwyg extends Component {
         autostart: true,
         dropImageAsAttachment: true,
         editorPlugins: [],
-    }
+        useResponsiveFontSizes: true,
+        showResponsiveFontSizesBadges: false,
+        getCSSVariableValue: weUtils.getCSSVariableValue,
+        convertNumericToUnit: weUtils.convertNumericToUnit,
+    };
     init() {
         this.id = ++id;
         this.options = this._getEditorOptions(this.props.options);
@@ -447,6 +451,10 @@ export class Wysiwyg extends Component {
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
             dropImageAsAttachment: options.dropImageAsAttachment,
             foldSnippets: !!options.foldSnippets,
+            useResponsiveFontSizes: options.useResponsiveFontSizes,
+            showResponsiveFontSizesBadges: options.showResponsiveFontSizesBadges,
+            getCSSVariableValue: options.getCSSVariableValue,
+            convertNumericToUnit: options.convertNumericToUnit,
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {

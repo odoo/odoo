@@ -1966,6 +1966,13 @@ $o-base-website-values-palette: (
     'display-3-font-size': null, // Default to BS
     'display-4-font-size': null, // Default to BS
 
+    // Forced to use `rem` by default instead of Bootstrap default using `em` as
+    // the editor would not be working with `em` values for now. This will have
+    // the drawback of changing the default small behavior of bootstrap which
+    // can normally be put inside titles etc... but that's not the way the
+    // editor will allow to use it for now. This is a compromise.
+    'small-font-size': 0.875rem,
+
     'google-fonts': null,
     'google-local-fonts': null,
 

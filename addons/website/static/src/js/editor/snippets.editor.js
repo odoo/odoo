@@ -263,6 +263,10 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         `));
         this._toggleAnimatedTextButton();
         this._toggleHighlightAnimatedTextButton();
+
+        // As the toolbar displays css variable that are customizable by users,
+        // we have the recompute the font size selector values.
+        this.options.wysiwyg.odooEditor.computeFontSizeSelectorValues();
     },
     /**
      * Activates the button to animate text if the selection is in an

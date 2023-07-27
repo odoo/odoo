@@ -79,6 +79,8 @@ $-seen-urls: ();
         $i: $i + 1;
     }
 
+    // Note: font-size are not needed as already added by web_editor for the
+    // font-size dropdown
     @include print-variable('paragraph-margin-top', $paragraph-margin-top);
     @include print-variable('paragraph-margin-bottom', $paragraph-margin-bottom);
     @include print-variable('h2-line-height', $h2-line-height);
@@ -90,16 +92,6 @@ $-seen-urls: ();
     @include print-variable('display-2-line-height', $display-2-line-height);
     @include print-variable('display-3-line-height', $display-3-line-height);
     @include print-variable('display-4-line-height', $display-4-line-height);
-    @include print-variable('h1-font-size', $h1-font-size);
-    @include print-variable('h2-font-size', $h2-font-size);
-    @include print-variable('h3-font-size', $h3-font-size);
-    @include print-variable('h4-font-size', $h4-font-size);
-    @include print-variable('h5-font-size', $h5-font-size);
-    @include print-variable('h6-font-size', $h6-font-size);
-    @include print-variable('display-1-font-size', map-get($display-font-sizes, 1));
-    @include print-variable('display-2-font-size', map-get($display-font-sizes, 2));
-    @include print-variable('display-3-font-size', map-get($display-font-sizes, 3));
-    @include print-variable('display-4-font-size', map-get($display-font-sizes, 4));
     // We cannot rely on $o-theme-hx-font because they contain the list of
     // fallback fonts (unicode...).
     $-headings-or-main-font: o-website-value('headings-font') or o-website-value('font');
