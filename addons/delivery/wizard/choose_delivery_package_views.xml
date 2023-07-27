@@ -7,7 +7,7 @@
             <form string="Package">
                 <field name="picking_id" invisible="1"/>
                 <group>
-                    <field name="delivery_package_type_id"  domain="[('package_carrier_type', '=', context.get('current_package_carrier_type', 'none'))]"
+                    <field name="delivery_package_type_id"  domain="[('package_carrier_type', '=', context.get('default_package_carrier_type', 'none'))]"
                       context="{'form_view_ref':'stock.stock_package_type_form'}"/>
                     <label for="shipping_weight" attrs="{'invisible': [('delivery_package_type_id', '=', False)]}"/>
                     <div class="o_row" attrs="{'invisible': [('delivery_package_type_id', '=', False)]}" name="package_weight">
