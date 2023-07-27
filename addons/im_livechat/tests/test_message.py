@@ -27,7 +27,7 @@ class TestImLivechatMessage(TransactionCase):
     @users('emp')
     def test_message_format(self):
         im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
-        self.users[0].im_status = 'online'  # make available for livechat (ignore leave)
+        self.env['bus.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
         channel_livechat_1 = self.env['discuss.channel'].browse(im_livechat_channel._open_livechat_discuss_channel(anonymous_name='anon 1', previous_operator_id=self.users[0].partner_id.id, user_id=self.users[1].id, country_id=self.env.ref('base.in').id)['id'])
         record_rating = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('discuss.channel').id,
