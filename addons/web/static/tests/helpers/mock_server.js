@@ -1370,17 +1370,6 @@ export class MockServer {
 
     mockWebReadGroup(modelName, kwargs) {
         const groups = this.mockReadGroup(modelName, kwargs);
-        if (kwargs.expand && kwargs.groupby.length === 1) {
-            groups.forEach((group) => {
-                group.__data = this.mockSearchReadController({
-                    domain: group.__domain,
-                    model: modelName,
-                    fields: kwargs.fields,
-                    limit: kwargs.expand_limit,
-                    sort: kwargs.expand_orderby,
-                });
-            });
-        }
         const allGroups = this.mockReadGroup(modelName, {
             domain: kwargs.domain,
             fields: ["display_name"],
