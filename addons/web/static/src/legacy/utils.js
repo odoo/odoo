@@ -60,9 +60,6 @@ export function makeLegacyDialogMappingService(legacyEnv) {
 
             legacyEnv.bus.on("legacy_dialog_opened", null, onOpenDialog);
             legacyEnv.bus.on("legacy_dialog_destroyed", null, onCloseDialog);
-
-            legacyEnv.bus.on("owl_dialog_mounted", null, onOpenDialog);
-            legacyEnv.bus.on("owl_dialog_willunmount", null, onCloseDialog);
         },
     };
 }

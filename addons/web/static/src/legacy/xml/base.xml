@@ -11,43 +11,6 @@
     </div>
 </t>
 
-<t t-name="web.OwlDialog" owl="1">
-    <t t-portal="'body'">
-        <div class="o_dialog" t-on-focus="_onFocus" t-on-click="_onClick" t-on-dialog-closed="_onDialogClosed" t-ref="dialog">
-            <div role="dialog" class="modal"
-                tabindex="-1"
-                t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"
-                t-att-data-bs-backdrop="'' + props.backdrop"
-                t-ref="modal"
-                t-on-close_dialog.stop="_close"
-                t-on-click="_onBackdropClick"
-                >
-                <div class="modal-dialog" t-att-class="size">
-                    <div class="modal-content" t-att-class="props.contentClass">
-                        <header t-if="props.renderHeader" class="modal-header">
-                            <h4 class="modal-title">
-                                <t t-esc="props.title"/>
-                                <span t-if="props.subtitle" class="o_subtitle text-muted small" t-esc="props.subtitle"/>
-                            </h4>
-                            <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="_close"></button>
-                        </header>
-                        <main class="modal-body">
-                            <t t-slot="default"/>
-                        </main>
-                        <footer t-if="props.renderFooter" class="modal-footer justify-content-around justify-content-sm-start flex-wrap gap-1" t-ref="modal-footer">
-                            <t t-slot="buttons" close="_close" >
-                                <button class="btn btn-primary" t-on-click.prevent="_close">
-                                    <t>Ok</t>
-                                </button>
-                            </t>
-                        </footer>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-</t>
-
 <t t-name="Popover" owl="1">
     <div t-att-class="{ 'o_is_open': state.displayed }" t-attf-class="{{ props.class }}" t-att-title="props.titleAttribute" t-on-click="_onClick" t-on-o-popover-compute="_onPopoverCompute" t-on-o-popover-close="_onPopoverClose">
         <t t-slot="default"/>
