@@ -458,3 +458,9 @@ class MailActivityMixin(models.AbstractModel):
             return False
         self.activity_search(act_type_xmlids, user_id=user_id).unlink()
         return True
+
+    def _get_mail_thread_data(self, request_list):
+        res = super()._get_mail_thread_data(request_list)
+        if 'activities' in request_list:
+            res['activities'] = self.activity_ids.activity_format()
+        return res
