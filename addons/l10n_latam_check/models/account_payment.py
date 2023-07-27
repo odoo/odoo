@@ -117,7 +117,7 @@ class AccountPayment(models.Model):
                 raise ValidationError(error_message)
 
     @api.depends('payment_method_line_id', 'l10n_latam_check_issuer_vat', 'l10n_latam_check_bank_id', 'company_id',
-                 'check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer')
+                 'check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount')
     def _compute_l10n_latam_check_warning_msg(self):
         """ Compute warning message for latam checks checks """
         self.l10n_latam_check_warning_msg = False
@@ -126,22 +126,8 @@ class AccountPayment(models.Model):
                 'in_third_party_checks', 'out_third_party_checks', 'new_third_party_checks']))
         for rec in latam_draft_checks:
             msgs = rec._get_blocking_l10n_latam_warning_msg()
-            # moved third party check
-            if rec.l10n_latam_check_id:
-                date = rec.date or fields.Datetime.now()
-                last_operation = rec.env['account.payment'].search([
-                    ('state', '=', 'posted'),
-                    '|', ('l10n_latam_check_id', '=', rec.l10n_latam_check_id.id),
-                    ('id', '=', rec.l10n_latam_check_id.id),
-                ], order="date desc, id desc", limit=1)
-                if last_operation and last_operation[0].date > date:
-                    msgs.append(_(
-                        "It seems you're trying to move a check with a date (%s) prior to last operation done with "
-                        "the check (%s). This may be wrong, please double check it. By continue, the last operation on "
-                        "the check will remain being %s",
-                        format_date(self.env, date), last_operation.display_name, last_operation.display_name))
             # new third party check
-            elif rec.check_number and rec.payment_method_line_id.code == 'new_third_party_checks' and \
+            if rec.check_number and rec.payment_method_line_id.code == 'new_third_party_checks' and \
                     rec.l10n_latam_check_bank_id and rec.l10n_latam_check_issuer_vat:
                 same_checks = self.search([
                     ('company_id', '=', rec.company_id.id),
@@ -179,6 +165,20 @@ class AccountPayment(models.Model):
                         rec.l10n_latam_check_id.l10n_latam_check_current_journal_id:
                     msgs.append(_("Check '%s' is on journal '%s', it can't be received it again",
                                 rec.l10n_latam_check_id.display_name, rec.journal_id.name))
+            # moved third party check
+            if rec.l10n_latam_check_id:
+                date = rec.date or fields.Datetime.now()
+                last_operation = rec.env['account.payment'].search([
+                    ('state', '=', 'posted'),
+                    '|', ('l10n_latam_check_id', '=', rec.l10n_latam_check_id.id),
+                    ('id', '=', rec.l10n_latam_check_id.id),
+                ], order="date desc, id desc", limit=1)
+                if last_operation and last_operation[0].date > date:
+                    msgs.append(_(
+                        "It seems you're trying to move a check with a date (%s) prior to last operation done with "
+                        "the check (%s). This may be wrong, please double check it. By continue, the last operation on "
+                        "the check will remain being %s",
+                        format_date(self.env, date), last_operation.display_name, last_operation.display_name))
         return msgs
 
     @api.depends('is_internal_transfer')
