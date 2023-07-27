@@ -164,7 +164,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 offset: '10',
                 animation: false,
                 html: true,
-                customClass: 'o_wforum_bio_popover_container',
+                customClass: 'o_wforum_bio_popover_container shadow-sm',
             });
         });
 
