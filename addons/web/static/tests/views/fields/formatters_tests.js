@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { markup } from "@odoo/owl";
 import { defaultLocalization } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { currencies } from "@web/core/currency";
@@ -15,6 +16,7 @@ import {
     formatMonetary,
     formatPercentage,
     formatReference,
+    formatText,
     formatX2many,
 } from "@web/views/fields/formatters";
 
@@ -237,6 +239,16 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatMany2one([false, "M2O value"]), "M2O value");
         assert.strictEqual(formatMany2one([1, "M2O value"]), "M2O value");
         assert.strictEqual(formatMany2one([1, "M2O value"], { escape: true }), "M2O%20value");
+    });
+
+    QUnit.test("formatText", function (assert) {
+        assert.strictEqual(formatText(false), "");
+        assert.strictEqual(formatText("value"), "value");
+        assert.strictEqual(formatText(1), "1");
+        assert.strictEqual(formatText(1.5), "1.5");
+        assert.strictEqual(formatText(markup("<p>This is a Test</p>")), "<p>This is a Test</p>");
+        assert.strictEqual(formatText([1, 2, 3, 4, 5]), "1,2,3,4,5");
+        assert.strictEqual(formatText({ a: 1, b: 2 }), "[object Object]");
     });
 
     QUnit.test("formatX2many", function (assert) {
