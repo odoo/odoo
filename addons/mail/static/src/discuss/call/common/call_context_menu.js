@@ -67,11 +67,7 @@ export class CallContextMenu extends Component {
     }
 
     get peerConnection() {
-        if (this.rtc.state.connectionType === CONNECTION_TYPES.SERVER) {
-            return this.rtc.state.rtcServer?.peerConnection;
-        } else {
-            return this.props.rtcSession?.peerConnection;
-        }
+        return this.props.rtcSession?.peerConnection; // TODO make it work with mediaSoup server connection
     }
 
     get volume() {

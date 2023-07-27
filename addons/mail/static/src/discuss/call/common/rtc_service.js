@@ -5,7 +5,6 @@ import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
 import { RtcSession } from "@mail/discuss/call/common/rtc_session_model";
 import { removeFromArray } from "@mail/utils/common/arrays";
 import { closeStream, createLocalId, onChange } from "@mail/utils/common/misc";
-import { Transceiver } from "./transceiver_model";
 
 import { reactive } from "@odoo/owl";
 
@@ -31,12 +30,7 @@ const DEFAULT_ICE_SERVERS = [
     { urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
 ];
 
-// whether the client or the server initializes the transceivers, ideally it should be the server but it gets around a bug.
-// TODO after development, erase one of the two modes and code branching.
-const CLIENT_TRANSCEIVERS = true;
-
 let tmpId = 0;
-let localTransactionId = 0;
 
 /**
  * Returns a string representation of a data channel for logging and
@@ -147,9 +141,6 @@ export class Rtc {
             sourceCameraStream: null,
         });
         this.blurManager = undefined;
-        this.transceiverInfo = {};
-        this._ci_transceiverInfo = {};
-        this._ci_undeclaredTransceivers = [];
         this.ringingThreads = reactive([], () => this.onRingingThreadsChange());
         void this.ringingThreads.length;
         this.store.ringingThreads = this.ringingThreads;
@@ -283,13 +274,6 @@ export class Rtc {
             }
             await this.call();
         }, 30_000);
-    }
-
-    getTransceiverInfo(mid) {
-        if (CLIENT_TRANSCEIVERS) {
-            return this._ci_transceiverInfo[mid];
-        }
-        return this.transceiverInfo[mid];
     }
 
     /**
@@ -673,399 +657,11 @@ export class Rtc {
     }
 
     async connectToServer() {
-        const peerConnection = await this.createConnectionToServer();
-        if (CLIENT_TRANSCEIVERS) {
-            this._ci_createServerTransceivers({
-                target: "server",
-                sessionId: this.state.selfSession.id,
-            });
-        }
-        const offer = await peerConnection.createOffer();
-        try {
-            await peerConnection.setLocalDescription(offer);
-        } catch {
-            // Possibly already have a remote offer here: cannot set local description
-            return;
-        }
-        this._ci_declareTransceivers();
-        let response;
-        try {
-            // TODO should come from this.state.serverInfo.url
-            const splitUrl = location.origin.split(":");
-            splitUrl[2] = 8080;
-            const url = splitUrl.join(":");
-            response = await fetch(`${url}/connect`, {
-                body: JSON.stringify({
-                    description: peerConnection.localDescription,
-                    secret: this.state.serverInfo.secret,
-                }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                method: "POST",
-            });
-        } catch (e) {
-            console.log(e);
-            return;
-        }
-        if (!response) {
-            return;
-        }
-        const { description } = await response.json();
-        const remote_description = new window.RTCSessionDescription(description);
-        try {
-            await peerConnection.setRemoteDescription(remote_description);
-        } catch {
-            return;
-        }
-    }
-
-    _ci_declareTransceivers() {
-        const remaining = [];
-        for (const undeclaredTransceiver of this._ci_undeclaredTransceivers) {
-            const mid = undeclaredTransceiver.mid;
-            if (mid) {
-                this._ci_transceiverInfo[mid] = undeclaredTransceiver;
-            } else {
-                remaining.push(undeclaredTransceiver);
-            }
-        }
-        this._ci_undeclaredTransceivers = remaining;
-    }
-
-    /**
-     * FIXME _ci_ prefix is for client initiator (client creates the transceivers)
-     * this is to go around a bug that occurs when the server creates the transceivers
-     * the code for the other (and prefered) direction is not removed yet.
-     *
-     * @param {RTCPeerConnection} peerConnection
-     * @param {String} target "client" or "server"
-     * @param {RtcSession} sessionId
-     * @returns {Object} transceiverPair
-     */
-    _ci_createServerTransceivers({ target, sessionId }) {
-        const peerConnection = this.state.rtcServer.peerConnection;
-        //const direction = target === "client" ? "recvonly" : "sendonly";
-        const direction = "sendrecv";
-        const transceiverPair = {};
-        for (const kind of ORDERED_TRANSCEIVER_NAMES) {
-            const rtcTransceiver = peerConnection.addTransceiver(kind, { direction });
-            const transceiver = new Transceiver({ kind, target, sessionId, rtcTransceiver });
-            transceiverPair[kind] = transceiver;
-            this._ci_undeclaredTransceivers.push(transceiver);
-        }
-        return transceiverPair;
-    }
-
-    async sendOfferToServer(extraKeys = {}) {
-        const server = this.state?.rtcServer;
-        const pc = server?.peerConnection;
-        if (!pc) {
-            return;
-        }
-        if (server?.negotiationTimeoutId) {
-            return;
-        }
-        if (pc.signalingState !== "stable") {
-            // If the signaling state is not stable, it means that there is another transaction in progress.
-            // Although, this transaction may not have captured the latest state of the peer connection.
-            server.negotiationTimeoutId = browser.setTimeout(() => {
-                server.negotiationTimeoutId = undefined;
-                this.sendOfferToServer(extraKeys);
-            }, 500);
-            return;
-        }
-        try {
-            const offer = await pc.createOffer();
-            await pc.setLocalDescription(offer);
-            this._ci_declareTransceivers();
-        } catch (e) {
-            // Possibly already have a remote offer here: cannot set local description
-            this.log(this.state.serverInfo, "Cannot set local offer description", {
-                error: e,
-            });
-            return;
-        }
-        const transactionId = `client_${localTransactionId++}`;
-        this.log(this.state.serverInfo, `Sending offer to server - ${transactionId}`);
-        this.state.rtcServer.dataChannel.send(
-            JSON.stringify({
-                type: "server",
-                data: {
-                    event: "offer",
-                    transactionId,
-                    hasAudio: !!this.state.audioTrack,
-                    hasVideo: !!this.state.videoTrack,
-                    description: pc.localDescription,
-                    ...extraKeys,
-                },
-            })
-        );
-    }
-
-    async createConnectionToServer() {
-        const peerConnection = new window.RTCPeerConnection({ iceServers: this.state.iceServers });
-        this.log(this.state.serverInfo, "RTCPeerConnection created", {
-            step: "peer connection created",
-        });
-        peerConnection.oniceconnectionstatechange = async (event) => {
-            this.log(
-                this.state.serverInfo,
-                `ICE connection state changed: ${peerConnection.iceConnectionState}`,
-                {
-                    state: peerConnection.iceConnectionState,
-                }
-            );
-            if (!this.state.rtcServer) {
-                return;
-            }
-            this.state.rtcServer.iceConnectionState = peerConnection.iceConnectionState;
-        };
-        peerConnection.onsignalingstatechange = (event) => {
-            this.log(
-                this.state.serverInfo,
-                `signaling state changed: ${peerConnection.signalingState}`
-            );
-        };
-        peerConnection.onicegatheringstatechange = (event) => {
-            this.log(
-                this.state.serverInfo,
-                `ICE gathering state changed: ${peerConnection.iceGatheringState}`
-            );
-        };
-        peerConnection.onconnectionstatechange = async (event) => {
-            this.log(
-                this.state.serverInfo,
-                `connection state to server changed: ${peerConnection.connectionState}`
-            );
-            this.state.rtcServer.connectionState = peerConnection.connectionState;
-            if (INVALID_CONNECTION_STATES.has(this.state.rtcServer.connectionState)) {
-                this.startServerTimeout(RECOVERY_DELAY);
-            }
-        };
-        peerConnection.onicecandidateerror = async (error) => {
-            this.log(this.state.serverInfo, "ice candidate error");
-        };
-        peerConnection.onnegotiationneeded = async (event) => {
-            //this.sendOfferToServer();
-        };
-        peerConnection.ontrack = ({ transceiver, track }) => {
-            /*
-            this.log(this.state.serverInfo, `received ${track.kind} track`);
-            const transceiverInfo = this.getTransceiverInfo(transceiver.mid);
-            const sessionId = transceiverInfo.sessionId;
-            const session = this.state.channel?.rtcSessions[sessionId];
-            if (!session) {
-                return;
-            }
-            if (transceiverInfo.isActive) {
-                this.updateStream(session, track, {
-                    mute: this.state.selfSession.isDeaf,
-                });
-            } else if (track.kind === "video") {
-                session.isVideoActive = false;
-            }
-           */
-        };
-        const dataChannel = peerConnection.createDataChannel("notifications", {
-            negotiated: true,
-            id: 1,
-        });
-        dataChannel.onmessage = async (event) => {
-            const { type, data } = JSON.parse(event.data);
-            if (type === "server") {
-                console.log("received server notification", data);
-                await this.handleServerNotification(data);
-            }
-            if (type === "session") {
-                const { session_id, content } = data;
-                this.handleNotification(session_id, content);
-            }
-        };
-        dataChannel.onopen = async () => {
-            /**
-             * FIXME? it appears that the track yielded by the peerConnection's 'ontrack' event is always enabled,
-             * even when it is disabled on the sender-side.
-             */
-            console.log("server data channel opened");
-            this.state.rtcServer.connectionState = "connected";
-            try {
-                await this.notify("trackChange", {
-                    payload: {
-                        type: "audio",
-                        state: {
-                            isTalking: this.state.selfSession.isTalking,
-                            isSelfMuted: this.state.selfSession.isSelfMuted,
-                        },
-                    },
-                });
-                await this.notify("raise_hand", {
-                    payload: {
-                        active: Boolean(this.state.selfSession.raisingHand),
-                    },
-                });
-            } catch (e) {
-                if (!(e instanceof DOMException) || e.name !== "OperationError") {
-                    throw e;
-                }
-                this.log(
-                    this.state.serverInfo,
-                    `failed to send on datachannel; dataChannelInfo: ${serializeRTCDataChannel(
-                        dataChannel
-                    )}`,
-                    { error: e }
-                );
-            }
-        };
-        let resolveInitPromise;
-        let rejectInitPromise;
-        this.state.rtcServer = {
-            peerConnection,
-            dataChannel,
-            connectionState: "connecting",
-            iceConnectionState: "connecting",
-            initialisationPromise: new Promise((resolve, reject) => {
-                resolveInitPromise = resolve;
-                rejectInitPromise = reject;
-            }),
-            negotiationTimeoutId: null,
-            resolveInitPromise,
-            rejectInitPromise,
-        };
-        this.startServerTimeout(RECOVERY_TIMEOUT);
-        return peerConnection;
-    }
-
-    startServerTimeout(timeout) {
-        if (!this.state.rtcServer) {
-            return;
-        }
-        browser.clearTimeout(this.state.rtcServer.rebootTimeout);
-        this.state.rtcServer.rebootTimeout = browser.setTimeout(() => {
-            if (INVALID_CONNECTION_STATES.has(this.state.rtcServer?.connectionState)) {
-                this.notification.add(
-                    _t("Connection to the RTC server timed out, reconnecting..."),
-                    { type: "warning" }
-                );
-                this.log(this.state.serverInfo, `connection to server timed out`);
-                this.disconnectFromServer();
-            }
-        }, timeout);
-    }
-
-    /**
-     * @param {Object} param0
-     * @param {String} param0.event
-     * @param {Object} [param0.description]
-     * @param {String} [param0.transactionId]
-     * @param {Object} [param0.transceiverInfo]
-     * @param {Array} [param0.sessionIds]
-     */
-    async handleServerNotification({
-        event,
-        description,
-        transactionId,
-        transceiverInfo,
-        sessionIds,
-    }) {
-        this.log(this.state.serverInfo, `received server notification: ${event}`);
-        if (transceiverInfo) {
-            this.transceiverInfo = transceiverInfo;
-        }
-        if (description) {
-            console.log(`handling transaction ${transactionId}`);
-            const remote_description = new window.RTCSessionDescription(description);
-            try {
-                await this.state.rtcServer.peerConnection.setRemoteDescription(remote_description);
-            } catch (error) {
-                this.log(this.state.serverInfo, "failed to set remote description", { error });
-            }
-        }
-        if (event === "initialized") {
-            this.state.rtcServer.resolveInitPromise();
-            this.log(this.state.serverInfo, "server initialized");
-        }
-        if (event === "initTransceivers") {
-            const newTransceiversInfo = [];
-            for (const sessionId of sessionIds) {
-                if (sessionId === this.state.selfSession.id) {
-                    continue;
-                }
-                const transceiver_pair = this._ci_createServerTransceivers({
-                    target: "client",
-                    sessionId,
-                });
-                for (const kind of ORDERED_TRANSCEIVER_NAMES) {
-                    newTransceiversInfo.push({ kind, sessionId });
-                }
-                const remote_session = this.state.channel.rtcSessions[sessionId];
-                await remote_session.setAudioStream(
-                    new MediaStream([transceiver_pair.audio.receiver.track]),
-                    {
-                        volume: this.userSettingsService.getVolume(sessionId),
-                        mute: this.state.selfSession.isDeaf,
-                    }
-                );
-                remote_session.videoStream = new MediaStream([
-                    transceiver_pair.video.receiver.track,
-                ]);
-            }
-            this.sendOfferToServer({ newTransceiversInfo });
-            this.log(this.state.serverInfo, `Created ${newTransceiversInfo.length} transceivers`);
-        }
-        if (event === "offer") {
-            try {
-                const answer = await this.state.rtcServer.peerConnection.createAnswer();
-                await this.state.rtcServer.peerConnection.setLocalDescription(answer);
-            } catch (error) {
-                this.log(this.state.serverInfo, "failed to create answer", { error });
-                return;
-            }
-            this.log(this.state.serverInfo, "sending answer to server");
-            this.state.rtcServer.dataChannel.send(
-                JSON.stringify({
-                    type: "server",
-                    data: {
-                        event: "answer",
-                        transactionId,
-                        hasAudio: !!this.state.audioTrack,
-                        hasVideo: !!this.state.videoTrack,
-                        description: this.state.rtcServer.peerConnection.localDescription,
-                    },
-                })
-            );
-        }
+        return true;
     }
 
     disconnectFromServer() {
-        if (!this.state.rtcServer) {
-            return;
-        }
-        this.state.rtcServer.rejectInitPromise?.();
-        browser.clearTimeout(this.state.rtcServer.rebootTimeout);
-        browser.clearTimeout(this.state.rtcServer.negotiationTimeoutId);
-        const pc = this.state.rtcServer.peerConnection;
-        if (pc) {
-            const RTCRtpSenders = pc.getSenders();
-            for (const sender of RTCRtpSenders) {
-                try {
-                    pc.removeTrack(sender);
-                } catch {
-                    // ignore error
-                }
-            }
-            for (const transceiver of pc.getTransceivers()) {
-                try {
-                    transceiver.stop();
-                } catch {
-                    // transceiver may already be stopped by the remote.
-                }
-            }
-            pc.close();
-        }
-        this.log(this.state.rtcServer, "disconnected from RTC server");
-        this.state.rtcServer.dataChannel?.close();
-        this.state.rtcServer = {};
+        return true;
     }
 
     createConnection(session) {
@@ -1285,16 +881,10 @@ export class Rtc {
         );
         this.state.channel.rtcInvitingSessionId = undefined;
         await this.call();
-        if (this.state.rtcServer) {
-            await this.state.rtcServer.initialisationPromise;
-        }
         this.soundEffectsService.play("channel-join");
-        await this.resetAudioTrack({ force: true, signal: false });
+        await this.resetAudioTrack({ force: true });
         if (video) {
-            await this.toggleVideo("camera", { signal: false });
-        }
-        if (this.state.rtcServer) {
-            //this.sendOfferToServer();
+            await this.toggleVideo("camera");
         }
     }
 
@@ -1338,20 +928,7 @@ export class Rtc {
                 await this.sendNotifications();
             }
         } else {
-            // rtc server
-            if (this.state.rtcServer?.dataChannel?.readyState !== "open") {
-                console.log("rtc server datachannel not open");
-                return;
-            }
-            this.state.rtcServer.dataChannel.send(
-                JSON.stringify({
-                    type: "session",
-                    data: {
-                        event,
-                        payload,
-                    },
-                })
-            );
+            // TODO
         }
     }
 
@@ -1479,14 +1056,6 @@ export class Rtc {
             peerConnection.close();
             delete session.peerConnection;
         }
-        if (this.state.rtcServer?.peerConnection) {
-            this.state.rtcServer.peerConnection.getTransceivers().forEach((transceiver) => {
-                if (this.getTransceiverInfo(transceiver.mid)?.sessionId === session.id) {
-                    transceiver.stop();
-                }
-            });
-        }
-        // TODO remove transceivers of state.rtcServer.peerConnection, for the MIDs associated to this session
         browser.clearTimeout(this.state.recoverTimeouts.get(session.id));
         this.state.recoverTimeouts.delete(session.id);
         this.state.outgoingSessions.delete(session.id);
@@ -1623,9 +1192,8 @@ export class Rtc {
      * @param {string} type
      * @param {Object} [options]
      * @param {boolean} [options.force]
-     * @param {boolean} [options.signal] whether to signal the change to the server
      */
-    async toggleVideo(type, { force, signal = true } = {}) {
+    async toggleVideo(type, { force } = {}) {
         if (!this.state.channel.id) {
             return;
         }
@@ -1658,7 +1226,7 @@ export class Rtc {
                 await this.updateRemote(session, "video");
             }
         } else if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
-            await this.updateServer("video", { signal });
+            await this.updateServer(); // TODO
         }
         if (!this.state.selfSession) {
             return;
@@ -1823,44 +1391,10 @@ export class Rtc {
 
     /**
      * @param {String} trackKind
-     * @param {Object} [param1]
-     * @param {boolean} [param1.signal=true] whether to signal the change to the server
      */
-    async updateServer(trackKind, { signal = true } = {}) {
-        console.log("updateServer", trackKind, signal);
-        const track = trackKind === "audio" ? this.state.audioTrack : this.state.videoTrack;
-        let transceiver;
-        for (const rtcTransceiver of this.state.rtcServer?.peerConnection?.getTransceivers() ||
-            []) {
-            const info = this.getTransceiverInfo(rtcTransceiver.mid);
-            if (!info) {
-                continue;
-            }
-            if (info.kind === trackKind && info.target === "server") {
-                transceiver = rtcTransceiver;
-                break;
-            }
-        }
-        if (!transceiver) {
-            return;
-        }
-        try {
-            await transceiver.sender.replaceTrack(track || null);
-            transceiver.direction = track ? "sendonly" : "inactive";
-        } catch {
-            this.log(this.state.serverInfo, `failed to update ${trackKind} transceiver`);
-        }
-        if (track && signal) {
-            this.sendOfferToServer();
-        }
-        if (trackKind === "video") {
-            this.notify("trackChange", {
-                payload: {
-                    type: "video",
-                    state: { isSendingVideo: !!track },
-                },
-            });
-        }
+    async updateServer(trackKind) {
+        // TODO
+        return true;
     }
 
     async resetAudioTrack({ force = false, signal = false }) {
@@ -1914,7 +1448,7 @@ export class Rtc {
                     await this.updateRemote(session, "audio");
                 }
             } else if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
-                await this.updateServer("audio", { signal });
+                await this.updateServer("audio");
             }
         }
     }
@@ -2047,33 +1581,7 @@ export class Rtc {
                 Boolean(this.state.videoTrack)
             );
         } else if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
-            if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
-                // TODO not altering direction at the moment, remove this block later
-                return;
-            }
-            if (!this.state.rtcServer.peerConnection) {
-                return;
-            }
-            this.state.rtcServer.peerConnection.getTransceivers().forEach((transceiver) => {
-                const transceiver_info = this.getTransceiverInfo(transceiver.mid);
-                if (!transceiver_info) {
-                    return;
-                }
-                if (
-                    transceiver_info.sessionId === rtcSession.id &&
-                    transceiver_info.kind === "video" &&
-                    transceiver_info.target === "client"
-                ) {
-                    try {
-                        transceiver.direction = this.getTransceiverDirection(
-                            rtcSession,
-                            false // server transceivers are unidirectional
-                        );
-                    } catch {
-                        return;
-                    }
-                }
-            });
+            // signal (websocket) server that we dont want to consume the specified videos
         }
     }
 
