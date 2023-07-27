@@ -162,12 +162,15 @@
                 <!-- Employee id is only visible if the allocation is created specifically for that user in `_action_validate_create_childs` -->
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_user"
                     invisible="holiday_type != 'employee' or not employee_id or state in ('draft', 'cancel', 'confirm')"
-                    readonly="state in ['cancel', 'refuse', 'validate']"/>
-                <field name="employee_ids" widget="many2many_tags_avatar"
+                    readonly="state in ['cancel', 'refuse', 'validate']"
+                    widget="many2one_avatar_employee"
+                    options="{'relation': 'hr.employee.public'}"/>
+                <field name="employee_ids" widget="many2many_avatar_employee"
                     groups="hr_holidays.group_hr_holidays_user"
                     invisible="holiday_type != 'employee' or (state not in ('draft', 'cancel', 'confirm') and employee_id)"
                     readonly="state in ['cancel', 'refuse', 'validate']"
-                    required="holiday_type == 'employee' and state in ('draft', 'cancel', 'confirm')"/>
+                    required="holiday_type == 'employee' and state in ('draft', 'cancel', 'confirm')"
+                    options="{'relation': 'hr.employee.public'}"/>
             </xpath>
             <xpath expr="//field[@name='employee_id']" position="after">
                 <field name="category_id"
