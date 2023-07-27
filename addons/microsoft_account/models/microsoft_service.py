@@ -151,7 +151,7 @@ class MicrosoftService(models.AbstractModel):
             status = res.status_code
 
             if int(status) in RESOURCE_NOT_FOUND_STATUSES:
-                response = False
+                response = {}
             else:
                 # Some answers return empty content
                 response = res.content and res.json() or {}
@@ -163,7 +163,7 @@ class MicrosoftService(models.AbstractModel):
         except requests.HTTPError as error:
             if error.response.status_code in RESOURCE_NOT_FOUND_STATUSES:
                 status = error.response.status_code
-                response = ""
+                response = {}
             else:
                 _logger.exception("Bad microsoft request : %s !", error.response.content)
                 raise error
