@@ -39,8 +39,8 @@
                 class="card oe_img_bg h-100 justify-content-end shadow-sm border-0 p-3 pt-5 text-reset text-decoration-none transition-base"
                 t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920') if forum.image_1920 else ''}')"
             >
-                <div class="o_we_bg_filter" style="background-image: linear-gradient(0deg, rgba(255, 255, 255, .75) 30%, rgba(255, 255, 255, 0) 100%);"></div>
-                <div t-if="forum_badge" class="badge position-absolute top-0 end-0 m-3 border text-bg-light" t-out="forum_badge"></div>
+                <div class="o_we_bg_filter o_wforum_background_gradient"/>
+                <div t-if="forum_badge" class="badge position-absolute top-0 end-0 m-3 border text-bg-secondary" t-out="forum_badge"></div>
                 <div class="mt-5 pt-5">
                     <h3 class="mb-0 fw-bold" t-field="forum.name"/>
                     <t t-if="is_view_active('website_forum.opt_post_count')">
