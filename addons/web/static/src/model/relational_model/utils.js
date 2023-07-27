@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { markup, onWillDestroy, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
-import { makeContext } from "@web/core/context";
+import { evalPartialContext, makeContext } from "@web/core/context";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -204,49 +204,6 @@ export function getFieldContext(
     };
 }
 
-const SENTINEL = Symbol("sentinel");
-function _getFieldContextSpec(
-    fieldName,
-    activeFields,
-    fields,
-    evalContext,
-    parentActiveFields = null
-) {
-    const rawContext = activeFields[fieldName].context;
-    if (!rawContext || rawContext === "{}") {
-        return fields[fieldName].context;
-    }
-
-    evalContext = {
-        ids: SENTINEL,
-        active_id: SENTINEL,
-        active_ids: SENTINEL,
-        active_model: SENTINEL,
-        ...evalContext,
-        id: SENTINEL,
-    };
-    for (const fieldName in activeFields) {
-        evalContext[fieldName] = SENTINEL;
-    }
-    if (parentActiveFields) {
-        evalContext.parent = {};
-        for (const fieldName in parentActiveFields) {
-            evalContext.parent[fieldName] = SENTINEL;
-        }
-    }
-    const evaluatedContext = makeContext([fields[fieldName].context, rawContext], evalContext);
-    for (const key in evaluatedContext) {
-        if (evaluatedContext[key] === SENTINEL || key.startsWith("default_")) {
-            // FIXME: this isn't perfect, a value might be evaluted to something else
-            // than the symbol because of the symbol
-            delete evaluatedContext[key];
-        }
-    }
-    if (Object.keys(evaluatedContext).length > 0) {
-        return evaluatedContext;
-    }
-}
-
 export function getFieldsSpec(
     activeFields,
     fields,
@@ -283,14 +240,13 @@ export function getFieldsSpec(
             fieldsSpec[fieldName].fields = { display_name: {} };
         }
         if (["many2one", "one2many", "many2many"].includes(fields[fieldName].type)) {
-            const context = _getFieldContextSpec(
-                fieldName,
-                activeFields,
-                fields,
-                evalContext,
-                parentActiveFields
-            );
-            if (context) {
+            let context = activeFields[fieldName].context;
+            if (!context || context === "{}") {
+                context = fields[fieldName].context || {};
+            } else {
+                context = evalPartialContext(context, evalContext);
+            }
+            if (Object.keys(context).length > 0) {
                 fieldsSpec[fieldName].context = context;
             }
         }

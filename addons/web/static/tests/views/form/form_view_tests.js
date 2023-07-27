@@ -3833,6 +3833,52 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
     });
 
+    QUnit.test("form with one2many with dynamic context", async (assert) => {
+        assert.expect(2);
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="p" editable="bottom" context="{'static': 4, 'dynamic': int_field * 2}">
+                        <tree>
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "web_read") {
+                    assert.deepEqual(args.kwargs.specification, {
+                        display_name: {},
+                        int_field: {},
+                        p: {
+                            fields: {
+                                foo: {},
+                            },
+                            context: { static: 4 },
+                            limit: 40,
+                            order: "",
+                        },
+                    });
+                }
+                if (args.method === "onchange2") {
+                    assert.deepEqual(args.kwargs.context, {
+                        dynamic: 20,
+                        lang: "en",
+                        static: 4,
+                        tz: "taht",
+                        uid: 7,
+                    });
+                }
+            },
+        });
+
+        await addRow(target);
+    });
+
     QUnit.test("reference field in one2many list", async function (assert) {
         serverData.models.partner.records[0].reference = "partner,2";
         serverData.views = {
