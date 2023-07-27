@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import contextlib
 import logging
 import werkzeug
 
@@ -106,7 +107,12 @@ class AuthSignupHome(Home):
         request.env.cr.commit()
 
     def _signup_with_values(self, token, values):
-        db, login, password = request.env['res.users'].sudo().signup(values, token)
+        @contextlib.contextmanager
+        def d():
+            yield
+        context_manager = request.env.cr.savepoint() if token else d()
+        with context_manager:
+            db, login, password = request.env['res.users'].sudo().signup(values, token)
         request.env.cr.commit()     # as authenticate will use its own cursor we need to commit the current transaction
         uid = request.session.authenticate(db, login, password)
         if not uid:
