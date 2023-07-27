@@ -3,6 +3,8 @@
 import { registry } from "@web/core/registry";
 import {
     click,
+    clickSave,
+    editInput,
     getFixture,
     nextTick,
     triggerEvent,
@@ -64,6 +66,57 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.ok(target.querySelector(".o_field_code").textContent.includes("yop"));
+    });
+
+    QUnit.test("AceEditorField on html fields works", async function (assert) {
+        serverData.models.partner.fields.htmlField = {
+            string: "HTML Field",
+            type: "html",
+        };
+        serverData.models.partner.records.push({
+            id: 3,
+            htmlField: "<p>My little HTML Test</p>",
+        });
+        serverData.models.partner.onchanges = { htmlField: function () {} };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 3,
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="htmlField" widget="code" />
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                    if (args.method === "write") {
+                        assert.deepEqual(args.args[1], { foo: "DEF" });
+                    }
+                    if (args.method === "onchange") {
+                        throw new Error("Should not call onchange, htmlField wasn't changed");
+                    }
+                }
+            },
+        });
+
+        assert.ok("ace" in window, "the ace library should be loaded");
+        assert.containsOnce(
+            target,
+            "div.ace_content",
+            "should have rendered something with ace editor"
+        );
+
+        assert.ok(
+            target.querySelector(".o_field_code").textContent.includes("My little HTML Test")
+        );
+
+        // Modify foo and save
+        await editInput(target, ".o_field_widget[name=foo] textarea", "DEF");
+        await clickSave(target);
+
+        assert.verifySteps(["get_views", "web_read", "write", "web_read"]);
     });
 
     QUnit.test("AceEditorField doesn't crash when editing", async (assert) => {

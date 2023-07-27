@@ -483,6 +483,27 @@ export function formatSelection(value, options = {}) {
     return option ? option[1] : "";
 }
 
+/**
+ * Returns the value or an empty string if it's falsy.
+ *
+ * @param {string | false} value
+ * @returns {string}
+ */
+export function formatText(value) {
+    return value ? value.toString() : "";
+}
+
+/**
+ * Returns the value.
+ * Note that, this function is added to be coherent with the rest of the formatters.
+ *
+ * @param {html} value
+ * @returns {html}
+ */
+export function formatHtml(value) {
+    return value;
+}
+
 export function formatJson(value) {
     return (value && JSON.stringify(value)) || "";
 }
@@ -497,7 +518,7 @@ registry
     .add("float", formatFloat)
     .add("float_factor", formatFloatFactor)
     .add("float_time", formatFloatTime)
-    .add("html", (value) => value)
+    .add("html", formatHtml)
     .add("integer", formatInteger)
     .add("json", formatJson)
     .add("many2one", formatMany2one)
@@ -510,4 +531,4 @@ registry
     .add("properties_definition", formatProperties)
     .add("reference", formatReference)
     .add("selection", formatSelection)
-    .add("text", (value) => value);
+    .add("text", formatText);
