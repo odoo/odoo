@@ -435,6 +435,11 @@ actual arch.
         if not self._check_recursion(parent='inherit_id'):
             raise ValidationError(_('You cannot create recursive inherited views.'))
 
+    @api.constrains('model')
+    def _check_model(self):
+        if self.type != "qweb" and not self.model:
+            raise ValidationError(_('You must select the Model of the view.'))
+
     _sql_constraints = [
         ('inheritance_mode',
          "CHECK (mode != 'extension' OR inherit_id IS NOT NULL)",
