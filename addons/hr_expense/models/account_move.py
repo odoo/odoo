@@ -23,16 +23,6 @@ class AccountMove(models.Model):
             'res_id': self.expense_sheet_id.id
         }
 
-    # Behave exactly like a receipt for everything except the display
-    # This enables the synchronisation of payment terms, and sets the taxes and accounts based on the product
-    def is_purchase_document(self, include_receipts=False):
-        return bool(include_receipts and self.sudo().expense_sheet_id) or super().is_purchase_document(include_receipts)
-
-    def is_entry(self):
-        if self.expense_sheet_id:
-            return False
-        return super().is_entry()
-
     # Expenses can be written on journal other than purchase, hence don't include them in the constraint check
     def _check_journal_move_type(self):
         return super(AccountMove, self.filtered(lambda x: not x.expense_sheet_id))._check_journal_move_type()

@@ -432,9 +432,10 @@ export class Record extends DataPoint {
                             handle: data[fieldName].id,
                             handleField,
                             viewType: viewMode,
-                            __syncParent: async (value) => {
+                            __syncParent: async (value, viewType) => {
                                 await this.model.__bm__.save(this.__bm_handle__, {
                                     savePoint: true,
+                                    viewType,
                                 });
                                 await this.update({ [fieldName]: value });
                             },
@@ -1302,7 +1303,7 @@ export class RelationalModel extends Model {
             await record.save({ noReload: true });
             operation = { operation: "TRIGGER_ONCHANGE" };
         }
-        await list.__syncParent(operation);
+        await list.__syncParent(operation, record.__viewType);
         if (isM2M) {
             await record.load();
         }
