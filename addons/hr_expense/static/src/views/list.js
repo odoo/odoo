@@ -57,7 +57,7 @@ export class ExpenseListController extends ListController {
     async onClick (action) {
         const records = this.model.root.selection;
         const recordIds = records.map((a) => a.resId);
-        const model = this.model.rootParams.resModel;
+        const model = this.model.config.resModel;
         const res = await this.orm.call(model, action, [recordIds]);
         if (res) {
             await this.actionService.doAction(res, {
@@ -77,7 +77,7 @@ export class ExpenseListController extends ListController {
 
     async action_show_expenses_to_submit () {
         const records = this.model.root.selection;
-        const res = await this.orm.call(this.model.rootParams.resModel, 'get_expenses_to_submit', [records.map((record) => record.resId)]);
+        const res = await this.orm.call(this.model.config.resModel, 'get_expenses_to_submit', [records.map((record) => record.resId)]);
         if (res) {
             await this.actionService.doAction(res, {});
         }
