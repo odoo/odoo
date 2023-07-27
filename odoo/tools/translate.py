@@ -26,6 +26,7 @@ from lxml import etree, html
 from psycopg2.extras import Json
 
 import odoo
+from odoo.exceptions import UserError
 from odoo.modules.module import get_resource_path
 from . import config, pycompat
 from .misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
@@ -293,7 +294,11 @@ def serialize_xml(node):
 _HTML_PARSER = etree.HTMLParser(encoding='utf8')
 
 def parse_html(text):
-    return html.fragment_fromstring(text, parser=_HTML_PARSER)
+    try:
+        parse = html.fragment_fromstring(text, parser=_HTML_PARSER)
+    except TypeError as e:
+        raise UserError(_("Error while parsing view:\n\n%s") % e) from e
+    return parse
 
 def serialize_html(node):
     return etree.tostring(node, method='html', encoding='unicode')
