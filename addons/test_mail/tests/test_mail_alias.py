@@ -349,6 +349,69 @@ class TestMailAlias(TestMailAliasCommon):
             self.assertEqual(alias.alias_name, False)
 
     @users('admin')
+    def test_search(self):
+        """ Test search on aliases, notably searching on display_name which should
+        be split on searching on alias_name and alias_domain_id. """
+        # ensure existing aliases to ease future asserts
+        existing = self.env['mail.alias'].search([('alias_domain_id', '!=', False)])
+        self.assertEqual(existing.alias_domain_id, self.mail_alias_domain)
+        existing.write({'alias_name': False})  # don't be annoyed by existing aliases
+
+        mail_alias_domain = self.mail_alias_domain.with_env(self.env)
+        mail_alias_domain_c2 = self.mail_alias_domain_c2.with_env(self.env)
+        self.assertEqual(mail_alias_domain.name, 'test.mycompany.com')
+        self.assertEqual(mail_alias_domain_c2.name, 'test.mycompany2.com')
+
+        aliases = self.env['mail.alias'].create([
+            {
+                'alias_model_id': self.env['ir.model']._get('mail.test.container.mc').id,
+                'alias_name': f'test.search.{idx}',
+                'alias_domain_id': domain.id,
+            }
+            for idx in range(5)
+            for domain in (mail_alias_domain + mail_alias_domain_c2)
+        ])
+        aliases_d1 = aliases.filtered(lambda a: a.alias_domain_id == mail_alias_domain)
+        aliases_d2 = aliases.filtered(lambda a: a.alias_domain_id == mail_alias_domain_c2)
+
+        # search on alias_name: classic search
+        self.assertEqual(
+            self.env['mail.alias'].search([('alias_name', 'ilike', 'test.search')]),
+            aliases
+        )
+
+        # search on alias_fullname: search on aggregated of {name}@{domain}
+        for search_term, expected, msg in [
+            ('mycompany', aliases,
+             'Match all aliases on both domains as "mycompany" is contained in those two'),
+            (mail_alias_domain.name, aliases_d1,
+             'Exact match on domain 1: should find all aliases in that domain'),
+            (mail_alias_domain_c2.name, aliases_d2,
+             'Exact match on domain 2: should find all aliases in that domain'),
+            ('search.0@test.mycompany', aliases.filtered(lambda a: a.alias_name == 'test.search.0'),
+             'Match in both domains'),
+            ('search.0@test.mycompany.com', aliases.filtered(lambda a: a.alias_name == 'test.search.0' and a.alias_domain_id == mail_alias_domain),
+             'Match only in domain 1'),
+            ('search@test.mycompany.com', self.env['mail.alias'],
+             'Does not match even as ilike'),
+        ]:
+            with self.subTest(search_term=search_term):
+                self.assertEqual(
+                    self.env['mail.alias'].search([('alias_full_name', 'ilike', search_term)]),
+                    expected, msg
+                )
+
+        # search using IN operator
+        for search_term, expected, msg in [
+            (['mycompany'], self.env['mail.alias'], 'mycompany is too vague: does not match a left- and right- part (!= ilike)'),
+            ([mail_alias_domain.name], self.env['mail.alias'], 'Match only right-part of aliases emails'),
+        ]:
+            with self.subTest(search_term=search_term):
+                self.assertEqual(self.env['mail.alias'].search([('alias_full_name', 'in', search_term)]),
+                    expected, msg
+                )
+
+    @users('admin')
     def test_alias_setup(self):
         """ Test various constraints / configuration of alias model"""
         alias = self.env['mail.alias'].create({
@@ -678,6 +741,32 @@ class TestMailAliasMixin(TestMailAliasCommon):
 
         with self.assertRaises(exceptions.ValidationError):
             record.write({'alias_defaults': "{'custom_field': brokendict"})
+
+    @users('erp_manager')
+    def test_alias_mixin_alias_email(self):
+        """ Test 'alias_email' mixin field computation and search capability """
+        Model = self.env['mail.test.container.mc']
+        records = Model.create([
+            {
+                'alias_name': f'alias.email.{idx}',  # will be present in all companies
+                'company_id': company.id,
+                'name': f'Test {company.id} {idx}',
+            }
+            for company in (self.company_admin, self.company_2)
+            for idx in range(5)
+        ])
+        self.assertEqual(
+            Model.search([('alias_email', 'ilike', 'alias.email')]), records,
+            'Search: partial search: any domain, matching all left parts')
+        self.assertEqual(
+            Model.search([('alias_email', 'ilike', 'alias.email.0')]), records[0] + records[5],
+            'Search: partial search: any domain, matching some left parts')
+        self.assertEqual(
+            Model.search([('alias_email', '=', self.mail_alias_domain.name)]), Model,
+            'Search: partial search: does not match any complete email')
+        self.assertEqual(
+            Model.search([('alias_email', '=', f'alias.email.1@{self.mail_alias_domain.name}')]), records[1],
+            'Search: both part search: search on name + domain')
 
     @users('employee')
     @mute_logger('odoo.addons.base.models.ir_model')

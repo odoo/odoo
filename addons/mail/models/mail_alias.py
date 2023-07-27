@@ -38,6 +38,8 @@ class Alias(models.Model):
     alias_name = fields.Char(
         'Alias Name', copy=False,
         help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
+    alias_full_name = fields.Char('Alias Email', compute='_compute_alias_full_name', store=True)
+    display_name = fields.Char(string='Display Name', compute='_compute_display_name')
     alias_domain_id = fields.Many2one(
         'mail.alias.domain', string='Alias Domain', ondelete='restrict',
         default=lambda self: self.env.company.alias_domain_id)
@@ -209,6 +211,18 @@ class Alias(models.Model):
                 _('Aliases %(alias_names)s is already used as bounce or catchall address. Please choose another alias.',
                   alias_names=', '.join(failing.mapped('display_name')))
             )
+
+    @api.depends('alias_domain_id.name', 'alias_name')
+    def _compute_alias_full_name(self):
+        """ A bit like display_name, but without the 'inactive alias' UI display.
+        Moreover it is stored, allowing to search on it. """
+        for record in self:
+            if record.alias_domain_id and record.alias_name:
+                record.alias_full_name = f"{record.alias_name}@{record.alias_domain_id.name}"
+            elif record.alias_name:
+                record.alias_full_name = record.alias_name
+            else:
+                record.alias_full_name = False
 
     @api.depends('alias_domain', 'alias_name')
     def _compute_display_name(self):
