@@ -37,6 +37,7 @@ class Alias(models.Model):
     alias_name = fields.Char(
         'Alias Name', copy=False,
         help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
+    display_name = fields.Char(string='Display Name', compute='_compute_display_name', search='_search_display_name')
     alias_domain_id = fields.Many2one(
         'mail.alias.domain', string='Alias Domain', ondelete='restrict',
         default=lambda self: self.env.company.alias_domain_id)
@@ -170,6 +171,14 @@ class Alias(models.Model):
                 record.display_name = record.alias_name
             else:
                 record.display_name = _("Inactive Alias")
+
+    def _search_display_name(self, operator, operand):
+        """ When searching for 'sales@mycompany.com' we should search on name
+        being sales and domain being mycompany.com. """
+        if '@' in operand:
+            left_part, right_part = operand.split('@', 1)
+            return ['&', ('alias_name', operator, left_part), ('alias_domain_id.name', operator, right_part)]
+        return ['|', ('alias_name', operator, operand), ('alias_domain_id.name', operator, operand)]
 
     @api.depends('alias_name')
     def _compute_alias_domain(self):

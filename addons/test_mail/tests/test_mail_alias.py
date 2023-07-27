@@ -185,6 +185,57 @@ class TestMailAlias(TestMailAliasCommon):
         with self.assertRaises(exceptions.ValidationError):
             alias.write({'alias_defaults': "{'custom_field': brokendict"})
 
+    @users('admin')
+    def test_search(self):
+        """ Test search on aliases, notably searching on display_name which should
+        be split on searching on alias_name and alias_domain_id. """
+        mail_alias_domain = self.mail_alias_domain.with_env(self.env)
+        mail_alias_domain_c2 = self.mail_alias_domain_c2.with_env(self.env)
+        self.assertEqual(mail_alias_domain.name, 'test.mycompany.com')
+        self.assertEqual(mail_alias_domain_c2.name, 'test.mycompany2.com')
+
+        aliases = self.env['mail.alias'].create([
+            {
+                'alias_model_id': self.env['ir.model']._get('mail.test.container.mc').id,
+                'alias_name': f'test.search.{idx}',
+                'alias_domain_id': domain.id,
+            }
+            for idx in range(5)
+            for domain in (mail_alias_domain + mail_alias_domain_c2)
+        ])
+
+        # search on alias_name: classic search
+        self.assertEqual(
+            self.env['mail.alias'].search([('alias_name', 'ilike', 'test.search')]),
+            aliases
+        )
+
+        # search on display_name: search on both parts
+        self.assertEqual(
+            self.env['mail.alias'].search([('display_name', 'ilike', 'mycompany')]),
+            aliases + self.test_alias_mc,
+            'Should find all aliases on both domains, as mycompany is contained in all domains'
+        )
+        self.assertEqual(
+            self.env['mail.alias'].search([('display_name', 'ilike', mail_alias_domain.name)]),
+            aliases.filtered(lambda a: a.alias_domain_id == mail_alias_domain) + self.test_alias_mc,
+            'Should find all aliases linked to the domain name'
+        )
+        self.assertEqual(
+            self.env['mail.alias'].search([('display_name', 'ilike', mail_alias_domain_c2.name)]),
+            aliases.filtered(lambda a: a.alias_domain_id == mail_alias_domain_c2),
+            'Should find all aliases linked to the domain name'
+        )
+        self.assertEqual(
+            self.env['mail.alias'].search([('display_name', 'ilike', 'search.0@test.mycompany')]),
+            aliases.filtered(lambda a: a.alias_name == 'test.search.0'),
+            'Both domains match'
+        )
+        self.assertEqual(
+            self.env['mail.alias'].search([('display_name', 'ilike', 'search.0@test.mycompany.com')]),
+            aliases.filtered(lambda a: a.alias_name == 'test.search.0' and a.alias_domain_id == mail_alias_domain),
+            'Domain specific'
+        )
 
 @tagged('mail_gateway', 'mail_alias', 'mail_alias_mixin', 'multi_company')
 class TestMailAliasMixin(TestMailAliasCommon):
