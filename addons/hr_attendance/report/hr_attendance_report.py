@@ -39,7 +39,7 @@ class HRAttendanceReport(models.Model):
                             at time zone 'utc'
                             at time zone
                                 (SELECT calendar.tz FROM resource_calendar as calendar
-                                INNER JOIN hr_employee as employee ON employee.id = employee_id
+                                INNER JOIN hr_employee as employee ON employee.id = employee_id::integer
                                 WHERE calendar.id = employee.resource_calendar_id)
                     as DATE) as check_in,
                     worked_hours
