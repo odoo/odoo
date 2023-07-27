@@ -188,8 +188,11 @@
             'web_editor/static/src/scss/web_editor.backend.scss',
 
             'web_editor/static/src/js/frontend/loader.js',
+            'web_editor/static/src/js/frontend/loadWysiwygFromTextarea.js',
             'web_editor/static/src/js/backend/**/*',
             'web_editor/static/src/xml/backend.xml',
+
+            ('include', 'web_editor.assets_wysiwyg'),
 
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/views/web/form/form_renderer.scss',
