@@ -1061,33 +1061,31 @@ class WebsiteSale(payment_portal.PaymentPortal):
         error = dict()
         error_message = []
 
-        if mode == ('edit', 'billing') and data.get('partner_id'):
+        if data.get('partner_id'):
             partner_su = request.env['res.partner'].sudo().browse(int(data['partner_id'])).exists()
-            name_change = partner_su and partner_su.name and 'name' in data and data['name'] != partner_su.name
-            email_change = partner_su and 'email' in data and data['email'] != partner_su.email and partner_su.email
-            invoices = request.env['account.move'].sudo().search(
-                [('partner_id', '=', partner_su.id)], limit=1
-            ) if partner_su else False
+            if partner_su:
+                name_change = 'name' in data and partner_su.name and data['name'] != partner_su.name
+                email_change = 'email' in data and partner_su.email and data['email'] != partner_su.email
 
-            # Prevent changing the billing partner name if invoices have been issued.
-            if name_change and not partner_su.can_edit_vat() and invoices:
-                error['name'] = 'error'
-                error_message.append(_(
-                    "Changing your name is not allowed once documents have been issued for your"
-                    " account. Please contact us directly for this operation."
-                ))
+                # Prevent changing the partner name if invoices have been issued.
+                if name_change and not partner_su._can_edit_name():
+                    error['name'] = 'error'
+                    error_message.append(_(
+                        "Changing your name is not allowed once invoices have been issued for your"
+                        " account. Please contact us directly for this operation."
+                    ))
 
-            # Prevent change the partner name or email if it is an internal user.
-            if (name_change or email_change) and not all(partner_su.user_ids.mapped('share')):
-                error.update({
-                    'name': 'error' if name_change else None,
-                    'email': 'error' if email_change else None,
-                })
-                error_message.append(_(
-                    "If you are ordering for an external person, please place your order via the"
-                    " backend. If you wish to change your name or email address, please do so in"
-                    " the account settings or contact your administrator."
-                ))
+                # Prevent change the partner name or email if it is an internal user.
+                if (name_change or email_change) and not all(partner_su.user_ids.mapped('share')):
+                    error.update({
+                        'name': 'error' if name_change else None,
+                        'email': 'error' if email_change else None,
+                    })
+                    error_message.append(_(
+                        "If you are ordering for an external person, please place your order via the"
+                        " backend. If you wish to change your name or email address, please do so in"
+                        " the account settings or contact your administrator."
+                    ))
 
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]

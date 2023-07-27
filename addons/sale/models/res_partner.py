@@ -36,17 +36,21 @@ class ResPartner(models.Model):
                     partner.sale_order_count += count
                 partner = partner.parent_id
 
-    def can_edit_vat(self):
-        ''' Can't edit `vat` if there is (non draft) issued SO. '''
-        can_edit_vat = super(ResPartner, self).can_edit_vat()
-        if not can_edit_vat:
-            return can_edit_vat
-        SaleOrder = self.env['sale.order']
-        has_so = SaleOrder.search([
+    def _has_order(self):
+        self.ensure_one()
+        sale_order = self.env['sale.order'].search([
             ('partner_id', 'child_of', self.commercial_partner_id.id),
             ('state', 'in', ['sent', 'sale'])
         ], limit=1)
-        return can_edit_vat and not bool(has_so)
+        return bool(sale_order)
+
+    def _can_edit_name(self):
+        """ Can't edit `name` if there is (non draft) issued SO. """
+        return super()._can_edit_name() and not self._has_order()
+
+    def can_edit_vat(self):
+        """ Can't edit `vat` if there is (non draft) issued SO. """
+        return super().can_edit_vat() and not self._has_order()
 
     def action_view_sale_order(self):
         action = self.env['ir.actions.act_window']._for_xml_id('sale.act_res_partner_2_sale_order')
