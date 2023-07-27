@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//setting[@id='tax_exigibility']" position="after">
                 <setting id="withholding_tax" string="Withholding"  company_dependent="1" title="Account that will be set on lines created to represent the tax base amounts.">
-                    <div class="content-group" attrs="{'invisible':[('country_code', '!=', 'AR')]}">
+                    <div class="content-group" invisible="country_code != 'AR'">
                         <div class="row mt16">
                             <label for="l10n_ar_tax_base_account_id" class="col-lg-3 o_light_label"/>
                             <field name="l10n_ar_tax_base_account_id"/>

@@ -8,5 +8,5 @@ class AccountMove(models.Model):
 
     withholding_ids = fields.One2many(
         'account.move.line', 'move_id', string='Withholdings',
-        copy=False, readonly=True, domain=[('tax_line_id', '!=', False)],
-        states={'draft': [('readonly', False)]})
+        copy=False, domain=[('tax_line_id', '!=', False)],
+    )

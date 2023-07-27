@@ -45,4 +45,11 @@ class AccountChartTemplate(models.AbstractModel):
         result = super()._post_load_data(template_code, company, template_data)
         if template_code in ['ar_base', 'ar_ri', 'ar_ex']:
             company.l10n_ar_tax_base_account_id = self.ref('base_tax_account')
+        if template_code in ['ar_ri'] and self.ref('base.module_account').demo:
+            self.env['account.tax'].search([('l10n_ar_withholding', '!=', False)]).write({'amount_type': 'percent', 'amount' : 1})
+            caba_wth = self.env.ref('account.%i_ri_tax_withholding_iibb_caba_applied' % company.id).id
+            arba_wth = self.env.ref('account.%i_ri_tax_withholding_iibb_ba_applied' % company.id ).id
+            self.env.ref('product.product_product_2').with_company(company.id).l10n_ar_supplier_withholding_taxes_ids = [(6, 0, [caba_wth])]
+            self.env.ref('product.product_product_27').with_company(company.id).l10n_ar_supplier_withholding_taxes_ids = [(6, 0, [arba_wth])]
+            self.env.ref('l10n_ar.product_product_telefonia').with_company(company.id).l10n_ar_supplier_withholding_taxes_ids = [(6, 0, [caba_wth, arba_wth])]
         return result

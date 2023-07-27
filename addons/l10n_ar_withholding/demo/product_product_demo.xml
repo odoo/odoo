@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product.product_product_2" model="product.product">
+            <field name="l10n_ar_supplier_withholding_taxes_ids" search="[('l10n_ar_withholding', '=', 'supplier'), ('name', 'like', '%CABA%')]"/>
+    </record>
+    <record id="product.product_product_27" model="product.product">
+            <field name="l10n_ar_supplier_withholding_taxes_ids" search="[('l10n_ar_withholding', '=', 'supplier'), ('name', 'like', '%ARBA%')]"/>
+    </record>
+    <record id="l10n_ar.product_product_telefonia" model="product.product">
+            <field name="l10n_ar_supplier_withholding_taxes_ids" search="[('l10n_ar_withholding', '=', 'supplier'), '|', ('name', 'like', 'ARBA'), ('name', 'like', '%CABA%') ]"/>
+    </record>
+</odoo>
