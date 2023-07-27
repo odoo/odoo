@@ -55,15 +55,22 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
         const userId = pyEnv["res.users"].create({
             name: "Mario",
             email: "Mario@odoo.test",
+            work_email: "Mario@odoo.pro",
             im_status: "online",
+            phone: "+78786987",
             work_phone: "+585555555",
             job_title: "sub manager",
             department_id: departmentId,
         });
         const mockRPC = (route, args) => {
             if(route === "/web/dataset/call_kw/res.users/read"){
-                assert.deepEqual(args.args[1], ['name', 'email', 'im_status',
+                assert.deepEqual(args.args[1], [
+                "name", 
+                "email", 
+                "phone", 
+                "im_status",
                 "work_phone",
+                "work_email",
                 "job_title",
                 "department_id",
                 "employee_parent_id",
@@ -101,7 +108,7 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
         await triggerEvent(target, ".o_m2o_avatar > img", "mouseover");
         assert.verifySteps(["setTimeout of 350ms", "setTimeout of 250ms", "user read"]);
         assert.containsOnce(target, ".o_avatar_card");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_card_user_infos > *")), ['Mario', 'sub manager', 'Managemment', ' Mario@odoo.test', ' +585555555']);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_card_user_infos > *")), ['Mario', 'sub manager', 'Managemment', ' Mario@odoo.pro', ' +585555555']);
         // Close card
         await triggerEvent(target, ".o_control_panel", "mouseover");
         assert.verifySteps(["setTimeout of 400ms"]);

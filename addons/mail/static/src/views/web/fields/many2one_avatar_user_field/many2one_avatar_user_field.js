@@ -37,15 +37,17 @@ const userChatter = {
     },
 
     openCard(ev) {
-        if (this.env.isSmall) {
+        if (this.env.isSmall || this.relation !== "res.users") {
             return;
         }
         const target = ev.currentTarget;
+        if (!target.querySelector(":scope > img")) {
+            return;
+        }
         this.openTimeout = browser.setTimeout(() => {
             if (!this.avatarCard.isOpen) {
                 this.avatarCard.open(target, {
                     id: this.props.record.data[this.props.name][0],
-                    relation: this.relation,
                 });
             }
         }, 350);
