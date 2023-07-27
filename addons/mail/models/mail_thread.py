@@ -875,7 +875,8 @@ class MailThread(models.AbstractModel):
         email_from_normalized = tools.email_normalize(email_from)
 
         if self.env['mail.gateway.allowed'].sudo().search_count(
-           [('email_normalized', '=', email_from_normalized)]):
+           [('email_normalized', '=', email_from_normalized)]
+        ):
             return False
 
         # Detect the email address sent to many emails
@@ -982,6 +983,13 @@ class MailThread(models.AbstractModel):
             catchall_domains_allowed = catchall_domains_allowed.split(',') + [catchall_domain_lowered]
         fallback_model = model
 
+        # handle bounce: verify whether this is a bounced email and use it to
+        # collect bounce data and update notifications for customers
+        if message_dict.get('is_bounce'):
+            self._routing_handle_bounce(message, message_dict)
+            return []
+        self._routing_reset_bounce(message, message_dict)
+
         # get email.message.Message variables for future processing
         message_id = message_dict['message_id']
 
@@ -992,9 +1000,10 @@ class MailThread(models.AbstractModel):
             for ref in tools.mail_header_msgid_re.findall(thread_references)
             if 'reply_to' not in ref
         ]
-        mail_messages = self.env['mail.message'].sudo().search([('message_id', 'in', msg_references)], limit=1, order='id desc, message_id')
-        is_a_reply = bool(mail_messages)
-        reply_model, reply_thread_id = mail_messages.model, mail_messages.res_id
+        replying_to_msg = self.env['mail.message'].sudo().search(
+            [('message_id', 'in', msg_references)], limit=1, order='id desc, message_id'
+        ) if msg_references else self.env['mail.message']
+        is_a_reply, reply_model, reply_thread_id = bool(replying_to_msg), replying_to_msg.model, replying_to_msg.res_id
 
         # author and recipients
         email_from = message_dict['email_from']
@@ -1012,12 +1021,6 @@ class MailThread(models.AbstractModel):
                 rcpt_tos_localparts.append(to_local.lower())
         rcpt_tos_valid_localparts = [to for to in rcpt_tos_localparts]
 
-        # Handle bounce: verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
-        if message_dict.get('is_bounce'):
-            self._routing_handle_bounce(message, message_dict)
-            return []
-        self._routing_reset_bounce(message, message_dict)
-
         # 1. Handle reply
         #    if destination = alias with different model -> consider it is a forward and not a reply
         #    if destination = alias with same model -> check contact settings as they still apply
@@ -1030,7 +1033,7 @@ class MailThread(models.AbstractModel):
                 ('alias_model_id', '!=', reply_model_id),
             ])
             if other_model_aliases:
-                is_a_reply = False
+                is_a_reply, reply_model, reply_thread_id = False, False, False
                 rcpt_tos_valid_localparts = [to for to in rcpt_tos_valid_localparts if to in other_model_aliases.mapped('alias_name')]
 
         if is_a_reply and reply_model:
@@ -1050,7 +1053,7 @@ class MailThread(models.AbstractModel):
                     'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
                     email_from, email_to, message_id, reply_model, reply_thread_id, custom_values, self._uid)
                 return [route]
-            elif route is False:
+            if route is False:
                 return []
 
         # 2. Handle new incoming email by checking aliases and applying their settings

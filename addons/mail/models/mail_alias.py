@@ -33,7 +33,12 @@ class Alias(models.Model):
     _rec_name = 'alias_name'
     _order = 'alias_model_id, alias_name'
 
-    alias_name = fields.Char('Alias Name', copy=False, help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
+    # email definition
+    alias_name = fields.Char(
+        'Alias Name', copy=False,
+        help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
+    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain')
+    # target: create / update
     alias_model_id = fields.Many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
                                      help="The model (Odoo Document Kind) to which this alias "
                                           "corresponds. Any incoming email that does not reply to an "
@@ -54,13 +59,14 @@ class Alias(models.Model):
         'Record Thread ID',
         help="Optional ID of a thread (record) to which all incoming messages will be attached, even "
              "if they did not reply to it. If set, this will disable the creation of new records completely.")
-    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain')
+    # owner
     alias_parent_model_id = fields.Many2one(
         'ir.model', 'Parent Model',
         help="Parent model holding the alias. The model holding the alias reference "
              "is not necessarily the model given by alias_model_id "
              "(example: project (parent_model) and task (model))")
     alias_parent_thread_id = fields.Integer('Parent Record Thread ID', help="ID of the parent record holding the alias (example: project holding the task creation alias)")
+    # incoming configuration (mailgateway)
     alias_contact = fields.Selection([
         ('everyone', 'Everyone'),
         ('partners', 'Authenticated Partners'),
@@ -73,12 +79,12 @@ class Alias(models.Model):
     alias_bounced_content = fields.Html(
         "Custom Bounced Message", translate=True,
         help="If set, this content will automatically be sent out to unauthorized users instead of the default message.")
-    alias_status = fields.Selection([
-        ('not_tested', 'Not Tested'),
-        ('valid', 'Valid'),
-        ('invalid', 'Invalid'),
-    ],
-        compute='_compute_alias_status', store=True,
+    alias_status = fields.Selection(
+        [
+            ('not_tested', 'Not Tested'),
+            ('valid', 'Valid'),
+            ('invalid', 'Invalid'),
+        ], compute='_compute_alias_status', store=True,
         help='Alias status assessed on the last message received.')
 
     _sql_constraints = [
@@ -86,36 +92,52 @@ class Alias(models.Model):
     ]
 
     @api.constrains('alias_name')
-    def _alias_is_ascii(self):
+    def _check_alias_is_ascii(self):
         """ The local-part ("display-name" <local-part@domain>) of an
             address only contains limited range of ascii characters.
             We DO NOT allow anything else than ASCII dot-atom formed
             local-part. Quoted-string and internationnal characters are
             to be rejected. See rfc5322 sections 3.4.1 and 3.2.3
         """
-        for alias in self:
-            if alias.alias_name and not dot_atom_text.match(alias.alias_name):
-                raise ValidationError(_(
-                    "You cannot use anything else than unaccented latin characters in the alias address (%s).",
-                    alias.alias_name,
-                ))
-
-    @api.depends('alias_contact', 'alias_defaults', 'alias_model_id')
-    def _compute_alias_status(self):
-        """Reset alias_status to "not_tested" when fields, that can be the source of an error, are modified."""
-        self.alias_status = 'not_tested'
-
-    @api.depends('alias_name')
-    def _compute_alias_domain(self):
-        self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+        for alias in self.filtered('alias_name'):
+            if not dot_atom_text.match(alias.alias_name):
+                raise ValidationError(
+                    _("You cannot use anything else than unaccented latin characters in the alias address %(alias_name)s.",
+                      alias_name=alias.alias_name)
+                )
 
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
         for alias in self:
             try:
                 dict(ast.literal_eval(alias.alias_defaults))
-            except Exception:
-                raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
+            except Exception as e:
+                raise ValidationError(
+                    _('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"')
+                ) from e
+
+    @api.depends('alias_domain', 'alias_name')
+    def _compute_display_name(self):
+        """Return the mail alias display alias_name, including the implicit
+           mail catchall domain if exists from config otherwise "New Alias".
+           e.g. `jobs@mail.odoo.com` or `jobs` or 'New Alias'
+        """
+        for record in self:
+            if record.alias_name and record.alias_domain:
+                record.display_name = f"{record.alias_name}@{record.alias_domain}"
+            elif record.alias_name:
+                record.display_name = record.alias_name
+            else:
+                record.display_name = _("Inactive Alias")
+
+    @api.depends('alias_name')
+    def _compute_alias_domain(self):
+        self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+
+    @api.depends('alias_contact', 'alias_defaults', 'alias_model_id')
+    def _compute_alias_status(self):
+        """Reset alias_status to "not_tested" when fields, that can be the source of an error, are modified."""
+        self.alias_status = 'not_tested'
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -134,32 +156,18 @@ class Alias(models.Model):
             for vals in vals_list:
                 if vals.get('alias_name'):
                     vals['alias_name'] = sanitized_names[alias_names.index(vals['alias_name'])]
-        return super(Alias, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, vals):
         """"Raises UserError if given alias name is already assigned"""
         if vals.get('alias_name') and self.ids:
             if len(self) > 1:
-                raise UserError(_(
-                    'Email alias %(alias_name)s cannot be used on %(count)d records at the same time. Please update records one by one.',
-                    alias_name=vals['alias_name'], count=len(self)
-                    ))
+                raise UserError(
+                    _('Email alias %(alias_name)s cannot be used on %(count)d records at the same time. Please update records one by one.',
+                      alias_name=vals['alias_name'], count=len(self))
+                )
             vals['alias_name'] = self._clean_and_check_unique([vals.get('alias_name')])[0]
-        return super(Alias, self).write(vals)
-
-    @api.depends('alias_domain', 'alias_name')
-    def _compute_display_name(self):
-        """Return the mail alias display alias_name, including the implicit
-           mail catchall domain if exists from config otherwise "New Alias".
-           e.g. `jobs@mail.odoo.com` or `jobs` or 'New Alias'
-        """
-        for record in self:
-            if record.alias_name and record.alias_domain:
-                record.display_name = f"{record.alias_name}@{record.alias_domain}"
-            elif record.alias_name:
-                record.display_name = record.alias_name
-            else:
-                record.display_name = _("Inactive Alias")
+        return super().write(vals)
 
     def _clean_and_check_mail_catchall_allowed_domains(self, value):
         """ The purpose of this system parameter is to avoid the creation
@@ -167,8 +175,10 @@ class Alias(models.Model):
         but that have a pattern matching an internal mail.alias . """
         value = [domain.strip().lower() for domain in value.split(',') if domain.strip()]
         if not value:
-            raise ValidationError(_("Value for `mail.catchall.domain.allowed` cannot be validated.\n"
-                                    "It should be a comma separated list of domains e.g. example.com,example.org."))
+            raise ValidationError(
+                _("Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+                  "It should be a comma separated list of domains e.g. example.com,example.org.")
+            )
         return ",".join(value)
 
     def _clean_and_check_unique(self, names):
