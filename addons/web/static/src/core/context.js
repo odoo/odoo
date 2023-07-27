@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { evaluateExpr } from "./py_js/py";
+import { evaluateExpr, parseExpr } from "./py_js/py";
+import { evaluate } from "./py_js/py_interpreter";
 
 /**
  * @typedef {{[key: string]: any}} Context
@@ -23,6 +24,28 @@ export function makeContext(contexts, initialEvaluationContext) {
             ctx = typeof ctx === "string" ? evaluateExpr(ctx, evaluationContext) : ctx;
             Object.assign(context, ctx);
             Object.assign(evaluationContext, context); // is this behavior really wanted ?
+        }
+    }
+    return context;
+}
+
+/**
+ * Allow to evaluate a context with an incomplete evaluation context. The evaluated context only
+ * contains keys whose values are static or can be evaluated with the given evaluation context.
+ *
+ * @param {string} context
+ * @param {Object} [evaluationContext={}]
+ * @returns {Context}
+ */
+export function evalPartialContext(_context, evaluationContext = {}) {
+    const ast = parseExpr(_context);
+    const context = {};
+    for (const key in ast.value) {
+        const value = ast.value[key];
+        try {
+            context[key] = evaluate(value, evaluationContext);
+        } catch {
+            // ignore this key as we can't evaluate its value
         }
     }
     return context;
