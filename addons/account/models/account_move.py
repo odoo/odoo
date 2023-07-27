@@ -3499,6 +3499,13 @@ class AccountMove(models.Model):
                 customer_count[invoice.partner_id] += 1
             elif invoice.is_purchase_document():
                 supplier_count[invoice.partner_id] += 1
+            elif invoice.move_type == 'entry':
+                sale_amls = invoice.line_ids.filtered(lambda line: line.partner_id and line.account_id.account_type == 'asset_receivable')
+                for partner in sale_amls.mapped('partner_id'):
+                    customer_count[partner] += 1
+                purchase_amls = invoice.line_ids.filtered(lambda line: line.partner_id and line.account_id.account_type == 'liability_payable')
+                for partner in purchase_amls.mapped('partner_id'):
+                    supplier_count[partner] += 1
         for partner, count in customer_count.items():
             (partner | partner.commercial_partner_id)._increase_rank('customer_rank', count)
         for partner, count in supplier_count.items():
