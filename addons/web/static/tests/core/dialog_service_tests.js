@@ -127,19 +127,19 @@ QUnit.test("multiple dialogs can become the UI active element", async (assert) =
 
     env.services.dialog.add(CustomDialog, { title: "Hello" });
     await nextTick();
-    let dialogModal = target.querySelector(".o_dialog .modal:not(.o_inactive_modal)");
+    let dialogModal = target.querySelector(".o_dialog:not(.o_inactive_modal) .modal");
 
     assert.strictEqual(dialogModal, env.services.ui.activeElement);
 
     env.services.dialog.add(CustomDialog, { title: "Sauron" });
     await nextTick();
-    dialogModal = target.querySelector(".o_dialog .modal:not(.o_inactive_modal)");
+    dialogModal = target.querySelector(".o_dialog:not(.o_inactive_modal) .modal");
 
     assert.strictEqual(dialogModal, env.services.ui.activeElement);
 
     env.services.dialog.add(CustomDialog, { title: "Rafiki" });
     await nextTick();
-    dialogModal = target.querySelector(".o_dialog .modal:not(.o_inactive_modal)");
+    dialogModal = target.querySelector(".o_dialog:not(.o_inactive_modal) .modal");
 
     assert.strictEqual(dialogModal, env.services.ui.activeElement);
 });
@@ -168,7 +168,7 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
     env.services.dialog.add(CustomDialog, { title: "Rafiki" });
     await nextTick();
 
-    let modals = document.querySelectorAll(".modal");
+    let modals = document.querySelectorAll(".o_dialog");
     assert.containsN(target, ".o_dialog", 3);
     let res = activity(modals);
     assert.deepEqual(res.active, [false, false, true]);
@@ -177,7 +177,7 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
     let lastDialog = modals[modals.length - 1];
     lastDialog.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
     await nextTick();
-    modals = document.querySelectorAll(".modal");
+    modals = document.querySelectorAll(".o_dialog");
     assert.containsN(target, ".o_dialog", 2);
     res = activity(modals);
     assert.deepEqual(res.active, [false, true]);
@@ -185,7 +185,7 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
 
     lastDialog = modals[modals.length - 1];
     await click(lastDialog, "footer button");
-    modals = document.querySelectorAll(".modal");
+    modals = document.querySelectorAll(".o_dialog");
     assert.containsN(target, ".o_dialog", 1);
     res = activity(modals);
     assert.deepEqual(res.active, [true]);
@@ -193,7 +193,7 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
 
     lastDialog = modals[modals.length - 1];
     await click(lastDialog, "footer button");
-    assert.containsNone(target, ".modal");
+    assert.containsNone(target, ".o_dialog");
 });
 
 QUnit.test("dialog component crashes", async (assert) => {

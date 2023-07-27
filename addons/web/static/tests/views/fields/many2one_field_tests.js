@@ -4115,34 +4115,34 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.containsOnce(target, ".modal");
+        assert.containsOnce(target, ".o_dialog");
         assert.hasClass(document.body, "modal-open");
 
         // Open many2one modal
         await click(target, ".o_external_button");
 
-        const originalModal = target.querySelectorAll(".modal")[1];
+        const originalModal = target.querySelectorAll(".o_dialog")[1];
 
-        assert.containsN(target, ".modal", 2);
+        assert.containsN(target, ".o_dialog", 2);
         assert.doesNotHaveClass(originalModal, "o_inactive_modal");
         assert.hasClass(document.body, "modal-open");
 
         // Open many2one modal of field in many2one modal
         await click(originalModal, ".o_external_button");
 
-        const nextModal = target.querySelectorAll(".modal")[2];
+        const nextModal = target.querySelectorAll(".o_dialog")[2];
 
-        assert.containsN(target, ".modal", 3);
+        assert.containsN(target, ".o_dialog", 3);
         assert.doesNotHaveClass(nextModal, "o_inactive_modal");
         assert.hasClass(document.body, "modal-open");
 
         // Close second modal
         await click(nextModal, "button[class='btn-close']");
 
-        assert.containsN(target, ".modal", 2);
+        assert.containsN(target, ".o_dialog", 2);
         assert.strictEqual(
             originalModal,
-            target.querySelectorAll(".modal")[1],
+            target.querySelectorAll(".o_dialog")[1],
             "First modal is still opened"
         );
         assert.doesNotHaveClass(originalModal, "o_inactive_modal");
@@ -4150,7 +4150,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Close first modal
         await click(originalModal, "button[class='btn-close']");
-        assert.containsOnce(target, ".modal");
+        assert.containsOnce(target, ".o_dialog");
     });
 
     QUnit.test("search more pager is reset when doing a new search", async function (assert) {

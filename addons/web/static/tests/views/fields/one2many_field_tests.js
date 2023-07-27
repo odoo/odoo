@@ -418,8 +418,8 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=parent_id] input", "ABC");
         await clickOpenedDropdownItem(target, "parent_id", "Create and edit...");
 
-        await click(target, ".modal:not(.o_inactive_modal) .modal-footer .o_form_button_save");
-        await click(target, ".modal:not(.o_inactive_modal) .o_form_button_save_new");
+        await click(target, ".o_dialog:not(.o_inactive_modal) .modal-footer .o_form_button_save");
+        await click(target, ".o_dialog:not(.o_inactive_modal) .o_form_button_save_new");
 
         assert.containsOnce(
             target,
@@ -479,11 +479,11 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=parent_id] input", "ABC");
         await clickOpenedDropdownItem(target, "parent_id", "Create and edit...");
         await click(
-            target.querySelector(".modal:not(.o_inactive_modal) .modal-footer .o_form_button_save")
+            target.querySelector(".o_dialog:not(.o_inactive_modal) .modal-footer .o_form_button_save")
         );
         assert.strictEqual(
             target
-                .querySelector(".modal:not(.o_inactive_modal) .modal-footer .o_form_button_save")
+                .querySelector(".o_dialog:not(.o_inactive_modal) .modal-footer .o_form_button_save")
                 .getAttribute("disabled"),
             ""
         );
@@ -491,7 +491,7 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
         // close all dialogs
         await click(
-            target.querySelector(".modal:not(.o_inactive_modal) .modal-footer .o_form_button_save")
+            target.querySelector(".o_dialog:not(.o_inactive_modal) .modal-footer .o_form_button_save")
         );
         await nextTick();
         assert.containsNone(target, ".o_dialog .o_form_view");
