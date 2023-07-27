@@ -73,20 +73,27 @@ class TestPyLint(TransactionCase):
             '--bad-functions=%s' % ','.join(self.BAD_FUNCTIONS),
             '--deprecated-modules=%s' % ','.join(self.BAD_MODULES)
         ]
+        l = len(paths)
+        partitions = [paths[:int(l/2)], paths[int(l/2):]]
 
         pypath = HERE + os.pathsep + os.environ.get('PYTHONPATH', '')
         env = dict(os.environ, PYTHONPATH=pypath)
-        try:
-            pylint_bin = tools.which('pylint')
-            process = subprocess.Popen(
-                [pylint_bin] + options + paths,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                env=env,
-            )
-        except (OSError, IOError):
-            self._skip_test('pylint executable not found in the path')
-        else:
-            out, err = process.communicate()
-            if process.returncode:
-                self.fail("pylint test failed:\n" + (b"\n" + out + b"\n" + err).decode('utf-8').strip())
+        failures = False
+        for paths in partitions:
+            try:
+                pylint_bin = tools.which('pylint')
+                process = subprocess.Popen(
+                    [pylint_bin] + options + [paths],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    env=env,
+                )
+            except (OSError, IOError):
+                self._skip_test('pylint executable not found in the path')
+            else:
+                out, err = process.communicate()
+                if process.returncode:
+                    failures = True
+                    _logger.error("pylint test failed:\n" + (b"\n" + out + b"\n" + err).decode('utf-8').strip())
+        if failures:
+            self.fail('Pylint failed')
