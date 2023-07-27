@@ -63,7 +63,7 @@ import {
 
 /**
  * @typedef Hooks
- * @property {Function} [onWillLoadRoot]
+ * @property {(nextConfiguration: Config) => void} [onWillLoadRoot]
  * @property {Function} [onWillSaveRecord]
  * @property {Function} [onRecordSaved]
  * @property {Function} [onWillSaveMulti]
@@ -305,7 +305,7 @@ export class RelationalModel extends Model {
      */
     async _loadData(config) {
         if (config.isRoot) {
-            this.hooks.onWillLoadRoot();
+            this.hooks.onWillLoadRoot(config);
         }
         if (config.isMonoRecord) {
             const evalContext = {
