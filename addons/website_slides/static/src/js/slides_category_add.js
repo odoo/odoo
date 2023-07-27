@@ -6,6 +6,10 @@ import { _t } from 'web.core';
 
 var CategoryAddDialog = Dialog.extend({
     template: 'slides.category.add',
+    events: Object.assign(
+        { "submit form#slide_category_add_form": "_onClickFormSubmit" },
+        Dialog.events
+    ),
 
     /**
      * @override
@@ -16,8 +20,8 @@ var CategoryAddDialog = Dialog.extend({
             size: 'medium',
             buttons: [{
                 text: _t('Save'),
-                classes: 'btn-primary',
-                click: this._onClickFormSubmit.bind(this)
+                classes: 'btn-primary o_js_website_slides_add_category_btn',
+                click: this._onClickFormSubmit.bind(this),
             }, {
                 text: _t('Discard'),
                 close: true
@@ -37,10 +41,24 @@ var CategoryAddDialog = Dialog.extend({
         return $form[0].checkValidity();
     },
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handle form submission on click button or press ENTER key. Prevent multiple submissions
+     * @private
+     * @param {Event} ev
+     */
     _onClickFormSubmit: function (ev) {
-        var $form = this.$('#slide_category_add_form');
-        if (this._formValidate($form)) {
-            $form.submit();
+        ev.preventDefault();
+        const form = document.getElementById("slide_category_add_form");
+        if (!form.classList.contains("o_js_website_slides_form_submitted")) {
+            if (this._formValidate($(form))) {
+                form.classList.add("o_js_website_slides_form_submitted");
+                document.querySelector("button.o_js_website_slides_add_category_btn").disabled = true;
+                form.submit();
+            }
         }
     },
 });
