@@ -7,14 +7,7 @@
     </t>
 
     <t t-name="hr.avatarCardUserInfos" owl="1">
-        <span class="fw-bold" t-esc="user.name"/>
         <small class="text-muted" t-if="user.job_title" t-esc="user.job_title"/>
         <span class="text-muted" t-if="user.department_id" data-tooltip="Department" t-esc="user.department_id[1]"/>
-        <a t-att-href="'mailto:'+user.email">
-            <i class="fa fa-fw fa-envelope"/> <t t-esc="user.email"/>
-        </a>
-        <a t-att-href="'tel:'+user.work_phone">
-            <i class="fa fa-fw fa-phone"/> <t t-esc="user.work_phone"/>
-        </a>
     </t>
 </templates>

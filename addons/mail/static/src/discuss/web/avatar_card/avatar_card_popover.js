@@ -9,24 +9,27 @@ export class AvatarCardPopover extends Component {
 
     static props = {
         id: { type: Number, required: true },
-        relation: { type: String, required: true },
         close: { type: Function, required: true },
     };
 
     setup() {
         this.orm = useService("orm");
-        this.openChat = useOpenChat(this.props.relation);
+        this.openChat = useOpenChat("res.users");
         onWillStart(async () => {
-            [this.user] = await this.orm.read(
-                this.props.relation,
-                [this.props.id],
-                this.fieldNames
-            );
+            [this.user] = await this.orm.read("res.users", [this.props.id], this.fieldNames);
         });
     }
 
     get fieldNames() {
-        return ["name", "email", "im_status"];
+        return ["name", "email", "phone", "im_status"];
+    }
+
+    get email() {
+        return this.user.email;
+    }
+
+    get phone() {
+        return this.user.phone;
     }
 
     onSendClick() {

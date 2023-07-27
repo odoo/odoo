@@ -13,12 +13,19 @@ export const patchAvatarCardPopover = {
     get fieldNames(){
         let fields = this._super();
         return fields.concat([
-            "work_phone", 
+            "work_phone",
+            "work_email", 
             "job_title", 
             "department_id", 
             "employee_parent_id",
             "employee_id",
         ])
+    },
+    get email(){
+        return this.user.work_email || this.user.email;
+    },
+    get phone(){
+        return this.user.work_phone || this.user.phone;
     },
     async onClickViewEmployee(){
         const employeeId = this.user.employee_id[0];
