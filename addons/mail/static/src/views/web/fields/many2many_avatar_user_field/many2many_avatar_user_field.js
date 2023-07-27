@@ -41,7 +41,7 @@ const userChatter = {
             ...this._super(...arguments),
             onImageClicked: () => this.openChat(record.resId),
             openCard: (ev) => {
-                if (this.env.isSmall) {
+                if (this.env.isSmall || this.relation !== "res.users") {
                     return;
                 }
                 const target = ev.currentTarget;
@@ -52,7 +52,6 @@ const userChatter = {
                     ) {
                         this.avatarCard.open(target, {
                             id: record.resId,
-                            relation: this.relation,
                         });
                         this.lastOpenedId = record.resId;
                     }

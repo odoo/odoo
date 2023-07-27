@@ -1,7 +1,13 @@
 /* @odoo-module */
 
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
-import { click, patchWithCleanup, triggerHotkey, triggerEvent } from "@web/../tests/helpers/utils";
+import {
+    click,
+    patchWithCleanup,
+    triggerHotkey,
+    triggerEvent,
+    getNodesTextContent,
+} from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { nextTick } from "@web/../tests/legacy/helpers/test_utils";
@@ -349,11 +355,12 @@ QUnit.test("avatar card preview", async (assert) => {
     const userId = pyEnv["res.users"].create({
         name: "Mario",
         email: "Mario@odoo.test",
+        phone: "+78786987",
         im_status: "online",
     });
     const mockRPC = (route, args) => {
         if (route === "/web/dataset/call_kw/res.users/read") {
-            assert.deepEqual(args.args[1], ["name", "email", "im_status"]);
+            assert.deepEqual(args.args[1], ["name", "email", "phone", "im_status"]);
             assert.step("user read");
         }
     };
@@ -387,10 +394,11 @@ QUnit.test("avatar card preview", async (assert) => {
     await triggerEvent(document, ".o_m2o_avatar > img", "mouseover");
     assert.verifySteps(["setTimeout of 350ms", "setTimeout of 250ms", "user read"]);
     assert.containsOnce(document.body, ".o_avatar_card");
-    assert.strictEqual(
-        document.querySelector(".o_card_user_infos").textContent,
-        "Mario Mario@odoo.test"
-    );
+    assert.deepEqual(getNodesTextContent(document.querySelectorAll(".o_card_user_infos > *")), [
+        "Mario",
+        " Mario@odoo.test",
+        " +78786987",
+    ]);
     // Close card
     await triggerEvent(document, ".o_control_panel", "mouseover");
     assert.verifySteps(["setTimeout of 400ms"]);
