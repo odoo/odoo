@@ -1502,9 +1502,6 @@ options.registry.OptionsTab = options.Class.extend({
             extraSaturationRangeEl.dataset.max = 100 - minValue.hsl.saturation;
             extraSaturationRangeEl.dataset.min = -maxValue.hsl.saturation;
         }
-        uiFragment.querySelectorAll('we-colorpicker').forEach(el => {
-            el.dataset.lazyPalette = 'true';
-        });
     },
     /**
      * @override

@@ -1417,10 +1417,6 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         const _super = this._super.bind(this);
         const args = arguments;
 
-        if (!this.options.dataAttributes.lazyPalette === 'true') {
-            await this._renderColorPalette();
-        }
-
         // Build the select element with a custom span to hold the color preview
         this.colorPreviewEl = document.createElement('span');
         this.colorPreviewEl.classList.add('o_we_color_preview');
@@ -1432,7 +1428,19 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         this.colorPaletteColorNames = [];
         this.options.childNodes = [this.colorPaletteEl];
         this.options.valueEl = this.colorPreviewEl;
-
+        // TODO: find a better way to do this.
+        // The colorpicker widget is started before the ColorPalette component
+        // is attached to the DOM (which only happens once the user opens the
+        // picker). However, the colorNames are only set after the ColorPalette
+        // has been mounted. Initializing the colorNames through a direct call
+        // to the `getColorPickerTemplateService` so that the widget starts
+        // with possible default values is thus necessary to avoid bugs on
+        // `_computeWidgetState()`.
+        const wysiwyg = this.getParent().options.wysiwyg;
+        if (wysiwyg) {
+            const colorpickerTemplate = await wysiwyg.getColorpickerTemplate.call(wysiwyg);
+            this.colorPaletteColorNames = this._getColorNames(colorpickerTemplate);
+        }
         return _super(...args);
     },
 
@@ -1600,9 +1608,6 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             resetTabCount: 0,
             selectedCC: this._ccValue,
             selectedColor: this._value,
-            onSetColorNames: (colorNames) => {
-                this.colorPaletteColorNames = colorNames
-            },
             getCustomColors: () => {
                 let result = [];
                 this.trigger_up('get_custom_colors', {
@@ -1652,6 +1657,26 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _shouldIgnoreClick(ev) {
         return ev.originalEvent.__isColorpickerClick || this._super(...arguments);
+    },
+    /**
+     * Browses the colorpicker XML template to return all possible values of
+     * [data-color].
+     *
+     * @param {string} colorpickerTemplate
+     * @returns {string[]}
+     */
+    _getColorNames(colorpickerTemplate) {
+        // Init with the color combinations presets as these don't appear in
+        // the template.
+        const colorNames = ["1", "2", "3", "4", "5"];
+        const template = new DOMParser().parseFromString(colorpickerTemplate, "text/html");
+        template.querySelectorAll("button[data-color]:not(.o_custom_gradient_btn)").forEach(el => {
+            const colorName = el.dataset.color;
+            if (!weUtils.isColorGradient(colorName)) {
+                colorNames.push(colorName);
+            }
+        });
+        return colorNames;
     },
 
     //--------------------------------------------------------------------------
