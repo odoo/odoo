@@ -690,7 +690,7 @@ class account_journal(models.Model):
             elif self.type == 'purchase':
                 action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt', 'entry'))]
 
-        action['domain'] = action['domain'] + [('journal_id', '=', self.id)]
+        action['domain'] = (action['domain'] or []) + [('journal_id', '=', self.id)]
         return action
 
     def open_spend_money(self):
