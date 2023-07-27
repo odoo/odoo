@@ -120,159 +120,92 @@
     <record id="project_sharing_project_task_view_form" model="ir.ui.view">
         <field name="name">project.sharing.project.task.view.form</field>
         <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_task_view_form_base"/>
+        <field name="mode">primary</field>
         <field name="priority">999</field>
         <field name="groups_id" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
         <field name="arch" type="xml">
-            <form string="Project Sharing: Task" class="o_form_project_tasks">
-                <header>
-                    <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id" />
-                </header>
+            <form position="attributes">
+                <attribute name="string">Project Sharing: Task</attribute>
+            </form>
+            <header position="after">
                 <div groups="base.group_user" role="status" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                     <div class="text-center">This is a preview of how the project will look when it's shared with customers and they have editing access.
                         <a name="action_redirect_to_project_task_form" type="object"><i class="oi oi-arrow-right me-1"/>Back to edit mode</a>
                     </div>
                 </div>
-                <sheet string="Task">
-                    <div class="oe_button_box" name="button_box">
-                        <field name="display_parent_task_button" invisible="1"/>
-                        <field name="recurrence_id" invisible="1" />
-                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" invisible="not display_parent_task_button">
-                            <div class="o_stat_info">
-                                <span class="o_stat_text">Parent Task</span>
-                            </div>
-                        </button>
-                        <button name="action_project_sharing_recurring_tasks" type="object" invisible="not active or not recurrence_id"
-                                class="oe_stat_button" icon="fa-repeat" context="{'default_user_ids': [(6, 0, [uid])]}">
-                            <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
-                        </button>
-                        <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
-                            invisible="not id or subtask_count == 0" context="{'default_user_ids': [(6, 0, [uid])]}">
-                            <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
-                        </button>
-                        <button name="action_project_sharing_open_blocking" type="object" invisible="not dependent_tasks_count" class="oe_stat_button" icon="fa-tasks">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_text">Blocking Tasks</span>
-                                <span class="o_stat_value ">
-                                    <field name="dependent_tasks_count" widget="statinfo" nolabel="1" />
-                                </span>
-                            </div>
-                        </button>
-                    </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <div class="oe_title pe-0">
-                        <h1 class="d-flex flex-row justify-content-between">
-                            <field name="priority" widget="priority" class="me-3"/>
-                            <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
-                        </h1>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="project_id" invisible="1"/>
-                            <field name="allow_milestones" invisible="1"/>
-                            <field name="milestone_id"
-                                placeholder="e.g. Product Launch"
-                                context="{'default_project_id': project_id}"
-                                invisible="not allow_milestones"
-                                options="{'no_open': True, 'no_create': True, 'no_edit': True}"/>
-                            <field name="user_ids" invisible="1" />
-                            <field name="portal_user_names"
-                                string="Assignees"
-                                class="o_task_user_field"/>
-                            <field name="tag_ids" context="{'project_id': project_id}" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_edit_color': True}"/>
-                        </group>
-                        <group>
-                            <field name="active" invisible="1"/>
-                            <field name="parent_id" invisible="1" />
-                            <field name="company_id" invisible="1" />
-                            <field name="state" invisible="1" />
-                            <field name="depend_on_count" invisible="1" />
-                            <field name="allow_task_dependencies" invisible="1" />
-                            <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
-                            <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date"/>
-                            <field name="recurring_task" />
-                            <label for="repeat_interval" invisible="not recurring_task"/>
-                            <div invisible="not recurring_task" class="d-flex" >
-                                <field name="repeat_interval" required="recurring_task"
-                                       class="me-2" style="max-width: 2rem !important;" />
-                                <field name="repeat_unit" required="recurring_task"
-                                       class="me-2" style="max-width: 4rem !important;" />
-                                <field name="repeat_type" required="recurring_task"
-                                       class="me-2" style="max-width: 15rem !important;" />
-                                <field name="repeat_until" invisible="not repeat_type == 'until'" required="repeat_type == 'until'"
-                                       class="me-2" />
-                            </div>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page name="description_page" string="Description">
-                            <field name="description" type="html" options="{'collaborative': true, 'allowCommandImage': false, 'allowCommandVideo': false, 'allowCommandFile': false}"/>
-                        </page>
-                        <page name="sub_tasks_page" string="Sub-tasks">
-                            <field name="child_ids" context="{'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
-                                <tree editable="bottom">
-                                    <field name="project_id" column_invisible="True"/>
-                                    <field name="state" column_invisible="True"/>
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
-                                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
-                                    <field name="name"/>
-                                    <field name="allow_milestones" column_invisible="True"/>
-                                    <field name="milestone_id"
-                                        optional="hide"
-                                        context="{'default_project_id': project_id}"
-                                        column_invisible="not parent.allow_milestones"
-                                        invisible="not allow_milestones"/>
-                                    <field name="company_id" column_invisible="True"/>
-                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
-                                    <field name="user_ids" column_invisible="True" />
-                                    <field name="portal_user_names" string="Assignees" optional="show"/>
-                                    <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date" optional="show"/>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                                    <field name="stage_id" optional="show"/>
-                                    <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
-                                            context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
-                                            invisible="not project_id or project_id == id"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page name="task_dependencies" string="Blocked By" invisible="not allow_task_dependencies">
-                            <field name="depend_on_ids" widget="depend_on_ids_one2many" nolabel="1" options="{'link': false}"
-                                context="{
-                                    'depend_on_count': depend_on_count,
-                                    'tree_view_ref': 'project.open_view_blocked_by_list_view',
-                                    'search_view_ref': 'project.project_sharing_project_task_view_search',
-                                    'search_default_project_id': project_id,
-                            }">
-                                <tree editable="bottom">
-                                    <field name="project_id" column_invisible="True"/>
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
-                                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
-                                    <field name="name"/>
-                                    <field name="allow_milestones" column_invisible="True"/>
-                                    <field name="milestone_id"
-                                        optional="hide"
-                                        context="{'default_project_id': project_id}"
-                                        invisible="not allow_milestones"
-                                        column_invisible="not parent.allow_milestones"
-                                    />
-                                    <field name="company_id" column_invisible="True"/>
-                                    <field name="partner_id" widget="res_partner_many2one" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
-                                    <field name="portal_user_names" string="Assignees" optional="show"/>
-                                    <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" optional="show"/>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                                    <field name="stage_id" optional="show"/>
-                                    <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
-                                            context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
-                                            invisible="not project_id or project_id == id"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
-                <div class="oe_chatter"/>
-            </form>
+            </header>
+            <div class="oe_button_box" position="inside">
+                <div class="oe_button_box" name="button_box">
+                    <field name="display_parent_task_button" invisible="1"/>
+                    <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" invisible="not display_parent_task_button">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Parent Task</span>
+                        </div>
+                    </button>
+                    <button name="action_project_sharing_recurring_tasks" type="object" invisible="not active or not recurrence_id"
+                            class="oe_stat_button" icon="fa-repeat" context="{'default_user_ids': [(6, 0, [uid])]}">
+                        <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
+                    </button>
+                    <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
+                        invisible="not id or subtask_count == 0" context="{'default_user_ids': [(6, 0, [uid])]}">
+                        <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
+                    </button>
+                    <button name="action_project_sharing_open_blocking" type="object" invisible="not dependent_tasks_count" class="oe_stat_button" icon="fa-tasks">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Blocking Tasks</span>
+                            <span class="o_stat_value ">
+                                <field name="dependent_tasks_count" widget="statinfo" nolabel="1" />
+                            </span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <field name="user_ids" position="after">
+                <field name="depend_on_count" invisible="1"/>
+                <field name="portal_user_names" string="Assignees" class="o_task_user_field"/>
+            </field>
+            <field name="description" position="attributes">
+                <attribute name="options">{'collaborative': true, 'allowCommandImage': false, 'allowCommandVideo': false, 'allowCommandFile': false}</attribute>
+            </field>
+            <xpath expr="//tree[@name='sub_tasks_tree']" position="attributes">
+                <attribute name="open_form_view">False</attribute>
+            </xpath>
+            <xpath expr="//tree[@name='sub_tasks_tree']/field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_open': True, 'no_create': True, 'no_edit': True}</attribute>
+            </xpath>
+            <xpath expr="//tree[@name='sub_tasks_tree']/field[@name='user_ids']" position="after">
+                <field name="portal_user_names" string="Assignees" optional="show"/>
+            </xpath>
+            <xpath expr="//tree[@name='sub_tasks_tree']/field[@name='stage_id']" position="after">
+                <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
+                    context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
+                    invisible="not project_id or project_id == id"/>
+            </xpath>
+            <field name="depend_on_ids" position="attributes">
+                <attribute name="widget">depend_on_ids_one2many</attribute>
+                <attribute name="options">{'link': false}</attribute>
+                <attribute name="context">{
+                    'depend_on_count': depend_on_count,
+                    'tree_view_ref': 'project.open_view_blocked_by_list_view',
+                    'search_view_ref': 'project.project_sharing_project_task_view_search',
+                    'search_default_project_id': project_id,
+                }</attribute>
+            </field>
+            <xpath expr="//tree[@name='blocked_by_tree']" position="attributes">
+                <attribute name="open_form_view">False</attribute>
+            </xpath>
+            <xpath expr="//tree[@name='blocked_by_tree']/field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_open': True, 'no_create': True, 'no_edit': True}</attribute>
+            </xpath>
+             <xpath expr="//tree[@name='blocked_by_tree']/field[@name='user_ids']" position="after">
+                <field name="portal_user_names" string="Assignees" optional="show"/>
+            </xpath>
+            <xpath expr="//tree[@name='blocked_by_tree']/field[@name='stage_id']" position="after">
+                <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
+                    context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
+                    invisible="not project_id or project_id == id"/>
+            </xpath>
         </field>
     </record>
 

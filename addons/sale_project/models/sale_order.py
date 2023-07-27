@@ -145,7 +145,7 @@ class SaleOrder(models.Model):
             return {'type': 'ir.actions.act_window_close'}
 
         list_view_id = self.env.ref('project.view_task_tree2').id
-        form_view_id = self.env.ref('project.view_task_form2').id
+        form_view_id = self.env.ref('project.project_task_view_form').id
         kanban_view_id = self.env.ref('project.view_task_kanban_inherit_view_default_project').id
 
         action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
