@@ -13564,6 +13564,58 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("onchange create a record in an invisible x2many", async function (assert) {
+        serverData.models.partner.onchanges = {
+            foo: function () {},
+        };
+        serverData.models.partner.records[0].p = [2];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name" required="1"/>
+                            <field name="p" invisible="1"/>
+                        </tree>
+                    </field>
+                </form>`,
+            async mockRPC(route, args) {
+                if (args.method === "onchange2") {
+                    return {
+                        value: {
+                            p: [
+                                [
+                                    1,
+                                    2,
+                                    {
+                                        display_name: "plop",
+                                        p: [[0, false, {}]],
+                                    },
+                                ],
+                            ],
+                        },
+                    };
+                }
+            },
+        });
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+            ["second record"]
+        );
+
+        await editInput(target, ".o_field_widget[name=foo] input", "new foo value");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+            ["plop"]
+        );
+    });
+
     QUnit.test("forget command for nested x2manys in form, not in list", async function (assert) {
         assert.expect(8);
 

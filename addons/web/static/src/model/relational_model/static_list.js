@@ -246,19 +246,17 @@ export class StaticList extends DataPoint {
                 record._applyDefaultValues();
                 for (const fieldName in record.activeFields) {
                     if (["one2many", "many2many"].includes(record.fields[fieldName].type)) {
-                        if (activeFields[fieldName].related) {
-                            const list = record.data[fieldName];
-                            const patch = {
-                                activeFields: activeFields[fieldName].related.activeFields,
-                                fields: activeFields[fieldName].related.fields,
-                            };
-                            for (const subRecord of Object.values(list._cache)) {
-                                this.model._updateConfig(subRecord.config, patch, {
-                                    noReload: true,
-                                });
-                            }
-                            this.model._updateConfig(list.config, patch, { noReload: true });
+                        const list = record.data[fieldName];
+                        const patch = {
+                            activeFields: activeFields[fieldName].related.activeFields,
+                            fields: activeFields[fieldName].related.fields,
+                        };
+                        for (const subRecord of Object.values(list._cache)) {
+                            this.model._updateConfig(subRecord.config, patch, {
+                                noReload: true,
+                            });
                         }
+                        this.model._updateConfig(list.config, patch, { noReload: true });
                     }
                 }
                 record._applyValues(data);
