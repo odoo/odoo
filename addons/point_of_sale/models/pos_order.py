@@ -225,23 +225,73 @@ class PosOrder(models.Model):
             }
             order.add_payment(return_payment_vals)
 
-    def _prepare_invoice_line(self, order_line):
-        #apply customer language on invoice
-        name = order_line.product_id.with_context(lang=order_line.order_id.partner_id.lang or self.env.user.lang).get_product_multiline_description_sale()
-        return {
-            'product_id': order_line.product_id.id,
-            'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
-            'discount': order_line.discount,
-            'price_unit': order_line.price_unit,
-            'name': name,
-            'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
-            'product_uom_id': order_line.product_uom_id.id,
-        }
+    def _prepare_tax_base_line_values(self, sign=1):
+        """ Convert pos order lines into dictionaries that would be used to compute taxes later.
+
+        :param sign: An optional parameter to force the sign of amounts.
+        :return: A list of python dictionaries (see '_convert_to_tax_base_line_dict' in account.tax).
+        """
+        self.ensure_one()
+        commercial_partner = self.partner_id.commercial_partner_id
+
+        base_line_vals_list = []
+        for line in self.lines.with_company(self.company_id):
+            account = line.product_id._get_product_accounts()['income']
+            if not account:
+                raise UserError(_(
+                    "Please define income account for this product: '%s' (id:%d).",
+                    line.product_id.name, line.product_id.id,
+                ))
+
+            if self.fiscal_position_id:
+                account = self.fiscal_position_id.map_account(account)
+
+            is_refund = line.qty * line.price_unit < 0
+
+            product_name = line.product_id\
+                .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang)\
+                .get_product_multiline_description_sale()
+            base_line_vals_list.append(
+                {
+                    **self.env['account.tax']._convert_to_tax_base_line_dict(
+                        line,
+                        partner=commercial_partner,
+                        currency=self.currency_id,
+                        product=line.product_id,
+                        taxes=line.tax_ids_after_fiscal_position,
+                        price_unit=line.price_unit,
+                        quantity=sign * line.qty,
+                        price_subtotal=sign * line.price_subtotal,
+                        discount=line.discount,
+                        account=account,
+                        is_refund=is_refund,
+                    ),
+                    'uom': line.product_uom_id,
+                    'name': product_name,
+                }
+            )
+        return base_line_vals_list
 
     def _prepare_invoice_lines(self):
+        """ Prepare a list of orm commands containing the dictionaries to fill the
+        'invoice_line_ids' field when creating an invoice.
+
+        :return: A list of Command.create to fill 'invoice_line_ids' when calling account.move.create.
+        """
+        sign = 1 if self.amount_total >= 0 else -1
+        line_values_list = self._prepare_tax_base_line_values(sign=sign)
         invoice_lines = []
-        for line in self.lines:
-            invoice_lines.append((0, None, self._prepare_invoice_line(line)))
+        for line_values in line_values_list:
+            line = line_values['record']
+            invoice_lines.append((0, None, {
+                'product_id': line_values['product'].id,
+                'quantity': line_values['quantity'],
+                'discount': line_values['discount'],
+                'price_unit': line_values['price_unit'],
+                'name': line_values['name'],
+                'tax_ids': [(6, 0, line_values['taxes'].ids)],
+                'product_uom_id': line_values['uom'].id,
+            }))
             if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
                     'name': _('Price discount from %s -> %s',
@@ -254,7 +304,6 @@ class PosOrder(models.Model):
                     'name': line.customer_note,
                     'display_type': 'line_note',
                 }))
-
 
         return invoice_lines
 
@@ -284,6 +333,7 @@ class PosOrder(models.Model):
         help="Allows to know if all the total cost of the order lines have already been computed")
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', copy=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True)
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order', default=1)
@@ -679,33 +729,7 @@ class PosOrder(models.Model):
         rate = self.currency_id._get_conversion_rate(self.currency_id, company_currency, self.company_id, self.date_order)
 
         # Concert each order line to a dictionary containing business values. Also, prepare for taxes computation.
-        base_line_vals_list = []
-        for line in self.lines.with_company(self.company_id):
-            account = line.product_id._get_product_accounts()['income']
-            if not account:
-                raise UserError(_(
-                    "Please define income account for this product: '%s' (id:%d).",
-                    line.product_id.name, line.product_id.id,
-                ))
-
-            if self.fiscal_position_id:
-                account = self.fiscal_position_id.map_account(account)
-
-            is_refund = line.qty * line.price_unit < 0
-
-            base_line_vals_list.append(self.env['account.tax']._convert_to_tax_base_line_dict(
-                line,
-                partner=commercial_partner,
-                currency=self.currency_id,
-                product=line.product_id,
-                taxes=line.tax_ids_after_fiscal_position,
-                price_unit=line.price_unit,
-                quantity=sign * line.qty,
-                discount=line.discount,
-                account=account,
-                is_refund=is_refund,
-            ))
-
+        base_line_vals_list = self._prepare_tax_base_line_values(sign=sign)
         tax_results = self.env['account.tax']._compute_taxes(base_line_vals_list)
 
         total_balance = 0.0
@@ -863,6 +887,8 @@ class PosOrder(models.Model):
         (reversal_entry_receivable | payment_receivable).reconcile()
 
     def action_pos_order_invoice(self):
+        if len(self.company_id) > 1:
+            raise UserError(_("You cannot invoice orders belonging to different companies."))
         self.write({'to_invoice': True})
         res = self._generate_pos_order_invoice()
         if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing:
@@ -1008,8 +1034,11 @@ class PosOrder(models.Model):
             'attachment_ids': self._add_mail_attachment(name, ticket),
         }
 
-    def refund(self):
-        """Create a copy of order  for refund order"""
+    def _refund(self):
+        """ Create a copy of order to refund them.
+
+        return The newly created refund orders.
+        """
         refund_orders = self.env['pos.order']
         for order in self:
             # When a refund is performed, we are creating it in a session having the same config as the original
@@ -1026,12 +1055,14 @@ class PosOrder(models.Model):
                     PosOrderLineLot += pack_lot.copy()
                 line.copy(line._prepare_refund_data(refund_order, PosOrderLineLot))
             refund_orders |= refund_order
+        return refund_orders
 
+    def refund(self):
         return {
             'name': _('Return Products'),
             'view_mode': 'form',
             'res_model': 'pos.order',
-            'res_id': refund_orders.ids[0],
+            'res_id': self._refund().ids[0],
             'view_id': False,
             'context': self.env.context,
             'type': 'ir.actions.act_window',
