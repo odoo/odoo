@@ -16,5 +16,3 @@ class WorkLocation(models.Model):
         ('home', 'Home'),
         ('office', 'Office'),
         ('other', 'Other')], string='Cover Image', default='office', required=True)
-    address_id = fields.Many2one('res.partner', required=True, string="Work Address", check_company=True)
-    location_number = fields.Char()
