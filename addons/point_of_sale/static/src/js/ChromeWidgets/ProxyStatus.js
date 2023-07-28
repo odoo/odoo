@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 // Previously ProxyStatusWidget
 export class ProxyStatus extends Component {
@@ -8,6 +9,7 @@ export class ProxyStatus extends Component {
 
     setup() {
         super.setup();
+        this.pos = usePos();
         const initialProxyStatus = this.env.proxy.get("status");
         this.state = useState({
             status: initialProxyStatus.status,
