@@ -43,8 +43,8 @@ patch(SuggestionService.prototype, "im_livechat", {
                 };
             });
         const sortFunc = (c1, c2) => {
-            const cleanedName1 = cleanTerm(c1.name ?? "");
-            const cleanedName2 = cleanTerm(c2.name ?? "");
+            const cleanedName1 = cleanTerm(c1.name);
+            const cleanedName2 = cleanTerm(c2.name);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)
