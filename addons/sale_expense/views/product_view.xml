@@ -20,7 +20,7 @@
             </xpath>
             <xpath expr="//field[@name='supplier_taxes_id']" position="after">
                 <field name="taxes_id" widget="many2many_tags" invisible="expense_policy == 'no'"
-                       options="{'no_quick_create': True}"/>
+                       options="{'no_quick_create': True}" class="w-50"/>
             </xpath>
         </field>
     </record>
