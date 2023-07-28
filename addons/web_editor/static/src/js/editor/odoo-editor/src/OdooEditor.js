@@ -1930,7 +1930,10 @@ export class OdooEditor extends EventTarget {
             splitTextNode(start, startOffset);
             startOffset = 0;
         }
-        const restoreUpdate = prepareUpdate(...boundariesOut(start).slice(0, 2), ...boundariesOut(end).slice(2, 4), { allowReenter: false });
+        const restoreUpdate = prepareUpdate(
+            ...boundariesOut(start).slice(0, 2),
+            ...boundariesOut(end).slice(2, 4),
+            { allowReenter: false, label: 'deleteRange' });
 
         // Let the DOM split and delete the range.
         const contents = range.extractContents();
