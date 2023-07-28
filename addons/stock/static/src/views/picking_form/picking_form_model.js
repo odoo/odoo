@@ -10,7 +10,7 @@ export class StockPickingAutoSaveRecord extends Record {
         });
         await new Promise((resolve) => {
             this.model.env.bus.trigger("STOCK_MOVE:SAVED", {
-                id: this.data.id,
+                id: this.resId,
                 product_id: this.data.product_id,
                 resolve,
             });
