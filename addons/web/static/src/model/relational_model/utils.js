@@ -3,6 +3,7 @@
 import { markup, onWillDestroy, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
 import { evalPartialContext, makeContext } from "@web/core/context";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
+import { Domain } from "@web/core/domain";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { Deferred } from "@web/core/utils/concurrency";
 import { omit } from "@web/core/utils/objects";
@@ -35,7 +36,7 @@ const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that
 export function addFieldDependencies(activeFields, fields, fieldDependencies = []) {
     for (const field of fieldDependencies) {
         if (field.name in activeFields) {
-            patchActiveFields(activeFields[field.name], field);
+            patchActiveFields(activeFields[field.name], makeActiveField(field));
         } else {
             activeFields[field.name] = makeActiveField(field);
         }
@@ -70,10 +71,39 @@ export function createPropertyActiveField(property) {
     return activeField;
 }
 
+function combineModifiers(mod1, mod2, operator) {
+    if (operator === "AND") {
+        if (mod1 === false || mod2 === false) {
+            return false;
+        }
+        if (mod1 === true) {
+            return mod2;
+        }
+        if (mod2 === true) {
+            return mod1;
+        }
+        return Domain.and([mod1, mod2]).toString();
+    } else if (operator === "OR") {
+        if (mod1 === true || mod2 === true) {
+            return true;
+        }
+        if (mod1 === false) {
+            return mod2;
+        }
+        if (mod2 === false) {
+            return mod1;
+        }
+        return Domain.or([mod1, mod2]).toString();
+    }
+    throw new Error(
+        `Operator provided to "combineModifiers" must be "AND" or "OR", received ${operator}`
+    );
+}
+
 export function patchActiveFields(activeField, patch) {
-    activeField.invisible = activeField.invisible && patch.invisible;
-    activeField.readonly = activeField.readonly && patch.readonly;
-    activeField.required = activeField.required || patch.required;
+    activeField.invisible = combineModifiers(activeField.invisible, patch.invisible, "AND");
+    activeField.readonly = combineModifiers(activeField.readonly, patch.readonly, "AND");
+    activeField.required = combineModifiers(activeField.required, patch.required, "OR");
     activeField.onChange = activeField.onChange || patch.onChange;
     activeField.forceSave = activeField.forceSave || patch.forceSave;
     activeField.isHandle = activeField.isHandle || patch.isHandle;
