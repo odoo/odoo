@@ -482,7 +482,14 @@ export class ThreadService {
         }
     }
 
-    async getChat({ userId, partnerId }) {
+    /**
+     * Search and fetch for a partner with a given user or partner id.
+     * @param {Object} param0
+     * @param {number} param0.userId
+     * @param {number} param0.partnerId
+     * @returns {Promise<import { Persona } from "@mail/core/common/persona_model";> | undefined}
+     */
+    async getPartner({ userId, partnerId }) {
         if (userId) {
             let user = this.store.users[userId];
             if (!user) {
@@ -528,13 +535,35 @@ export class ThreadService {
                 }
                 partner.user = { id: userId };
             }
+            return partner;
         }
+    }
 
-        let chat = Object.values(this.store.threads).find(
-            (thread) => thread.type === "chat" && thread.chatPartnerId === partnerId
+    /**
+     * @param {import { Persona } from "@mail/core/common/persona_model";} partner
+     * @returns {Thread | undefined}
+     */
+    searchChat(partner) {
+        if (!partner) {
+            return;
+        }
+        return Object.values(this.store.threads).find(
+            (thread) => thread.type === "chat" && thread.chatPartnerId === partner.id
         );
+    }
+
+    /**
+     * Search and fetch for a partner with a given user or partner id.
+     * @param {Object} param0
+     * @param {number} param0.userId
+     * @param {number} param0.partnerId
+     * @returns {Promise<Thread | undefined>}
+     */
+    async getChat({ userId, partnerId }) {
+        const partner = await this.getPartner({ userId, partnerId });
+        let chat = this.searchChat(partner);
         if (!chat || !chat.is_pinned) {
-            chat = await this.joinChat(partnerId);
+            chat = await this.joinChat(partnerId || partner?.id);
         }
         if (!chat) {
             this.notificationService.add(

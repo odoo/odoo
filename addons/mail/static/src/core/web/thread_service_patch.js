@@ -255,6 +255,25 @@ patch(ThreadService.prototype, {
         }
         this.chatWindowService.notifyState(chatWindow);
     },
+    getRecentChannels() {
+        return Object.values(this.store.threads)
+            .filter((thread) => thread.model === "discuss.channel")
+            .sort((a, b) => {
+                if (!a.lastInterestDateTime && !b.lastInterestDateTime) {
+                    return 0;
+                }
+                if (a.lastInterestDateTime && !b.lastInterestDateTime) {
+                    return -1;
+                }
+                if (!a.lastInterestDateTime && b.lastInterestDateTime) {
+                    return 1;
+                }
+                return b.lastInterestDateTime.ts - a.lastInterestDateTime.ts;
+            });
+    },
+    getNeedactionChannels() {
+        return this.getRecentChannels().filter((channel) => this.getCounter(channel) > 0);
+    },
 });
 
 patch(threadService, {

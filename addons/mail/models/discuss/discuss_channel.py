@@ -581,7 +581,7 @@ class Channel(models.Model):
         # Last interest and is_pinned are updated for a chat when posting a message.
         # So a notification is needed to update UI, and it should come before the
         # notification of the message itself to ensure the channel automatically opens.
-        if self.is_chat or self.channel_type == 'group':
+        if self.is_chat or self.channel_type in ['channel', 'group']:
             for member in self.channel_member_ids.filtered('partner_id'):
                 bus_notifications.insert(0, [member.partner_id, 'discuss.channel/last_interest_dt_changed', {
                     'id': self.id,
@@ -614,7 +614,7 @@ class Channel(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
-        self.filtered(lambda channel: channel.is_chat or channel.channel_type == 'group').mapped('channel_member_ids').sudo().write({
+        self.filtered(lambda channel: channel.is_chat or channel.channel_type in ['channel', 'group']).mapped('channel_member_ids').sudo().write({
             'is_pinned': True,
             'last_interest_dt': fields.Datetime.now(),
         })

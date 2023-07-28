@@ -16,6 +16,7 @@
           <div t-if="!state.commands.length" class="o_command_palette_listbox_empty px-4 py-3 fst-italic" t-out="state.emptyMessage"/>
           <t t-if="!isFuzzySearch" t-foreach="commandsByCategory" t-as="category" t-key="category.keyId">
             <div class="o_command_category px-0">
+              <span t-if="category.name" class="text-truncate text-uppercase fw-bold fs-6 px-3" t-out="category.name"/>
               <t t-foreach="category.commands" t-as="command" t-key="command.keyId">
                 <t t-set="commandIndex" t-value="state.commands.indexOf(command)"/>
                 <div t-attf-id="o_command_{{commandIndex}}" class="o_command"
