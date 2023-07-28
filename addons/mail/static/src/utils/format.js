@@ -241,5 +241,5 @@ export function convertBrToLineBreak(str) {
 }
 
 export function cleanTerm(term) {
-    return unaccent(term.toLowerCase());
+    return unaccent((typeof term === "string" ? term : "").toLowerCase());
 }
