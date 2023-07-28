@@ -13,7 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'ec210301',
             'property_account_expense_categ_id': 'ec110307',
             'property_account_income_categ_id': 'ec410201',
-            'property_account_expense_id': 'ec_expense_others',
             'property_stock_account_input_categ_id': 'ec110307',
             'property_stock_account_output_categ_id': 'ec510102',
             'property_stock_valuation_account_id': 'ec110306',

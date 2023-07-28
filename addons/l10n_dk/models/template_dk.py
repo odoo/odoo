@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'dk_coa_5960',
             'property_account_payable_id': 'dk_coa_7180',
-            'property_account_expense_id': 'dk_coa_1610',
-            'property_account_income_id': 'dk_coa_1010',
             'property_account_expense_categ_id': 'dk_coa_1610',
             'property_account_income_categ_id': 'dk_coa_1010',
             'property_tax_payable_account_id': 'dk_coa_7840',
