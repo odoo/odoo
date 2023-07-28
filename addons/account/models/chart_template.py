@@ -546,8 +546,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'res.partner',
             'property_account_expense_categ_id': 'product.category',
             'property_account_income_categ_id': 'product.category',
-            'property_account_expense_id': 'product.template',
-            'property_account_income_id': 'product.template',
             'property_stock_journal': 'product.category',
         }.items():
             value = template_data.get(field)
