@@ -95,6 +95,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/js/tours/account.js',
             'account/static/src/views/**/*.js',
             'account/static/src/js/search/search_bar/search_bar.js',
+            'account/static/src/helpers/*.js',
         ],
         'web.assets_frontend': [
             'account/static/src/js/account_portal_sidebar.js',

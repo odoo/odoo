@@ -771,6 +771,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
 
+
     def test_promotion_program_with_global_discount(self):
         """
         - Create a promotion with a discount of 10%
@@ -837,7 +838,6 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount_applicability': 'order',
             })],
         })
-
 
         self.product = self.env["product.product"].create(
             {
