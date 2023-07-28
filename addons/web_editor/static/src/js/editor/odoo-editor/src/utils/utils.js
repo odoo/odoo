@@ -17,6 +17,9 @@ export const CTYPES = {
     // Br group
     BR: 16,
 };
+export function ctypeToString(ctype) {
+    return Object.keys(CTYPES).find((key) => CTYPES[key] === ctype);
+}
 export const CTGROUPS = {
     // Short for CONTENT_TYPE_GROUPS
     INLINE: CTYPES.CONTENT | CTYPES.SPACE,
@@ -2088,6 +2091,8 @@ const prepareUpdateLockedEditables = new Set();
  * @param {boolean} [options.allowReenter = true] - if false, all calls to
  *     prepareUpdate before this one gets restored will be ignored.
  * @param {string} [options.label = <random 6 character string>]
+ * @param {boolean} [options.debug = false] - if true, adds nicely formatted
+ *     console logs to help with debugging.
  * @returns {function}
  */
 export function prepareUpdate(...args) {
@@ -2097,10 +2102,32 @@ export function prepareUpdate(...args) {
     const options = {
         allowReenter: true,
         label: hash,
+        debug: false,
         ...(args.length && args[args.length - 1] instanceof Object ? args.pop() : {}),
     };
+    if (options.debug) {
+        console.log(
+            '%cPreparing%c update: ' + options.label +
+            (options.label === hash ? '' : ` (${hash})`) +
+            '%c' + (isPrepareUpdateLocked ? ' LOCKED' : ''),
+            'color: cyan;',
+            'color: white;',
+            'color: red; font-weight: bold;',
+        );
+    }
     if (isPrepareUpdateLocked) {
-        return () => {};
+        return () => {
+            if (options.debug) {
+                console.log(
+                    '%cRestoring%c update: ' + options.label +
+                    (options.label === hash ? '' : ` (${hash})`) +
+                    '%c LOCKED',
+                    'color: lightgreen;',
+                    'color: white;',
+                    'color: red; font-weight: bold;',
+                );
+            }
+        };
     }
     if (!options.allowReenter && closestRoot) {
         prepareUpdateLockedEditables.add(closestRoot);
@@ -2116,15 +2143,29 @@ export function prepareUpdate(...args) {
         offset = positions.pop();
         el = positions.pop();
         const left = getState(el, offset, DIRECTIONS.LEFT);
-        restoreData.push(left);
-        restoreData.push(getState(el, offset, DIRECTIONS.RIGHT, left.cType));
+        const right = getState(el, offset, DIRECTIONS.RIGHT, left.cType);
+        if (options.debug) {
+            const editable = el && closestElement(el, '.odoo-editor-editable');
+            const oldEditableHTML = editable && editable.innerHTML.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') || '';
+            left.oldEditableHTML = oldEditableHTML;
+            right.oldEditableHTML = oldEditableHTML;
+        }
+        restoreData.push(left, right);
     }
 
     // Create the callback that will be able to restore the state in each
     // direction wherever the node in the opposite direction has landed.
     return function restoreStates() {
+        if (options.debug) {
+            console.log(
+                '%cRestoring%c update: ' + options.label +
+                (options.label === hash ? '' : ` (${hash})`),
+                'color: lightgreen;',
+                'color: white;',
+            );
+        }
         for (const data of restoreData) {
-            restoreState(data);
+            restoreState(data, options.debug);
         }
         if (!options.allowReenter && closestRoot) {
             prepareUpdateLockedEditables.delete(closestRoot);
@@ -2374,9 +2415,11 @@ const allRestoreStateRules = (function () {
  * direction.
  *
  * @param {Object} prevStateData @see getState
+ * @param {boolean} debug=false - if true, adds nicely formatted
+ *     console logs to help with debugging.
  */
-export function restoreState(prevStateData) {
-    const { node, direction, cType: cType1 } = prevStateData;
+export function restoreState(prevStateData, debug=false) {
+    const { node, direction, cType: cType1, oldEditableHTML } = prevStateData;
     if (!node || !node.parentNode) {
         // FIXME sometimes we want to restore the state starting from a node
         // which has been removed by another restoreState call... Not sure if
@@ -2392,6 +2435,24 @@ export function restoreState(prevStateData) {
      */
     const ruleHashCode = restoreStateRuleHashCode(direction, cType1, cType2);
     const rule = allRestoreStateRules.get(ruleHashCode);
+    if (debug) {
+        const editable = closestElement(node, '.odoo-editor-editable');
+        console.log(
+            '%c' + node.textContent.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') + '\n' +
+            '%c' + (direction === DIRECTIONS.LEFT ? 'left' : 'right') + '\n' +
+            '%c' + ctypeToString(cType1) + '\n' +
+            '%c' + ctypeToString(cType2) + '\n' +
+            '%c' + 'BEFORE: ' + (oldEditableHTML || '(unavailable)') + '\n' +
+            '%c' + 'AFTER:  ' + (editable ? editable.innerHTML.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') : '(unavailable)') + '\n',
+            'color: white; display: block; width: 100%;',
+            'color: ' + (direction === DIRECTIONS.LEFT ? 'magenta' : 'lightgreen') + '; display: block; width: 100%;',
+            'color: pink; display: block; width: 100%;',
+            'color: lightblue; display: block; width: 100%;',
+            'color: white; display: block; width: 100%;',
+            'color: white; display: block; width: 100%;',
+            rule,
+        );
+    }
     if (Object.values(rule).filter(x => x !== undefined).length) {
         const inverseDirection = direction === DIRECTIONS.LEFT ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT;
         enforceWhitespace(el, offset, inverseDirection, rule);
