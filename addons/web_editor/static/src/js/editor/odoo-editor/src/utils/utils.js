@@ -2087,13 +2087,16 @@ const prepareUpdateLockedEditables = new Set();
  * @param {Object} [options]
  * @param {boolean} [options.allowReenter = true] - if false, all calls to
  *     prepareUpdate before this one gets restored will be ignored.
+ * @param {string} [options.label = <random 6 character string>]
  * @returns {function}
  */
 export function prepareUpdate(...args) {
     const closestRoot = args.length && ancestors(args[0]).find(ancestor => ancestor.oid === 'root');
     const isPrepareUpdateLocked = closestRoot && prepareUpdateLockedEditables.has(closestRoot);
+    const hash = (Math.random() + 1).toString(36).substring(7);
     const options = {
         allowReenter: true,
+        label: hash,
         ...(args.length && args[args.length - 1] instanceof Object ? args.pop() : {}),
     };
     if (isPrepareUpdateLocked) {
