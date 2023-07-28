@@ -2342,8 +2342,9 @@ class AccountMove(models.Model):
             for move in self:
                 if 'tax_totals' in vals:
                     super(AccountMove, move).write({'tax_totals': vals['tax_totals']})
+
         if 'journal_id' in vals:
-            move.line_ids._check_constrains_account_id_journal_id()
+            self.line_ids._check_constrains_account_id_journal_id()
 
         return res
 
