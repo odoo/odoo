@@ -18,7 +18,7 @@ class Check {
         return [
             {
                 content: "Bill screen is shown",
-                trigger: '.receipt-screen h1:contains("Bill Printing")',
+                trigger: '.receipt-screen h2:contains("Bill Printing")',
                 run: () => {},
             },
         ];

@@ -2,16 +2,16 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.MoneyDetailsPopup" owl="1">
         <div class="popup money-details">
-            <main class="body">
-                <div class="money-details-title">
-                    Coins/Bills
-                </div>
-                <div class="money-details-info">
+            <div class="modal-header">
+                <h4 class="modal-title">Coins/Bills</h4>
+            </div>
+            <main class="modal-body">
+                <div class="money-details-info d-flex justify-content-end mb-2 oveflow-auto">
                     <div t-foreach="[firstHalfMoneyDetails, lastHalfMoneyDetails]" t-as="moneyDetailsList" t-key="moneyDetailsList_index">
                         <t t-foreach="moneyDetailsList" t-as="moneyValue" t-key="moneyValue">
-                            <div class="money-details-value" t-on-input="updateMoneyDetailsAmount">
-                                <input class="pos-input" t-att-id="moneyValue" type="number" t-model.number="state.moneyDetails[moneyValue]" t-on-focus="ev=>ev.target.select()"/>
-                                <label class="oe_link_icon" t-att-for="moneyValue">
+                            <div class="money-details-value d-flex align-items-center w-100 my-1 mx-auto" t-on-input="updateMoneyDetailsAmount">
+                                <input class="pos-input form-control w-50 text-end" t-att-id="moneyValue" type="number" t-model.number="state.moneyDetails[moneyValue]" t-on-focus="ev=>ev.target.select()"/>
+                                <label class="oe_link_icon w-25 text-end" t-att-for="moneyValue">
                                     <t t-if="currency.position === 'before'"><t t-esc="currency.symbol"/>&nbsp;</t>
                                     <t t-esc="moneyValue"/>
                                     <t t-if="currency.position === 'after'">&nbsp;<t t-esc="currency.symbol"/></t>
@@ -20,14 +20,14 @@
                         </t>
                     </div>
                 </div>
-                <div class="total-section">
-                    <span>Total </span>
-                    <label t-esc="env.utils.formatCurrency(state.total)"/>
-                </div>
+                <h4 class="total-section rounded py-2">
+                    Total 
+                    <t t-esc="env.utils.formatCurrency(state.total)"/>
+                </h4>
             </main>
-            <footer class="footer footer-flex">
-                <div class="button highlight" t-on-click="confirm">Confirm</div>
-                <div class="button" t-on-click="cancel">Discard</div>
+            <footer class="footer footer-flex modal-footer">
+                <div class="button highlight btn btn-lg btn-primary" t-on-click="confirm">Confirm</div>
+                <div class="button btn btn-lg btn-secondary" t-on-click="cancel">Discard</div>
             </footer>
         </div>
     </t>

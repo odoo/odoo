@@ -2,14 +2,14 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PSNumpadInputButton" owl="1">
-        <button t-attf-class="{{ _class }}"
+        <button t-attf-class="{{ _class }} btn btn-light w-100 rounded-0 py-3"
                 t-on-click="() => this.numberBuffer.sendKey(props.value)">
             <t t-slot="default">
                 <t t-if="props.text">
-                    <t t-esc="props.text" />
+                    <h1 t-esc="props.text" />
                 </t>
                 <t t-else="">
-                    <t t-esc="props.value" />
+                    <h1 t-esc="props.value" />
                 </t>
             </t>
         </button>

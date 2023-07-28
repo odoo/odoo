@@ -3,23 +3,23 @@
 
     <t t-name="point_of_sale.EditListPopup" owl="1">
         <div class="popup popup-text edit-list-popup" t-ref="root">
-            <header class="title">
-                <t t-esc="props.title" />
+            <div class="modal-header">
+                <h4 class="modal-title title">
+                    <t t-esc="props.title" />
+                </h4>
                 <span class="sub-title" t-esc="props.name"/>
-            </header>
-            <main>
-                <div class="list-lines">
-                    <t t-foreach="state.array" t-as="item" t-key="item._id">
-                        <EditListInput item="item" createNewItem.bind="createNewItem" removeItem="() => this.removeItem(item._id)"
-                                       deletable="_hasMoreThanOneItem()" onInputChange.bind="onInputChange" />
-                    </t>
-                </div>
+            </div>
+            <main class="modal-body">
+                <t t-foreach="state.array" t-as="item" t-key="item._id">
+                    <EditListInput item="item" createNewItem.bind="createNewItem" removeItem="() => this.removeItem(item._id)"
+                                    deletable="_hasMoreThanOneItem()" onInputChange.bind="onInputChange" />
+                </t>
             </main>
-            <footer class="footer footer-flex">
-                <div class="button confirm highlight" t-on-click="confirm">
+            <footer class="footer footer-flex modal-footer">
+                <div class="button confirm highlight btn btn-lg btn-primary" t-on-click="confirm">
                     Ok
                 </div>
-                <div class="button cancel" t-on-click="cancel">
+                <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
                     Cancel
                 </div>
             </footer>

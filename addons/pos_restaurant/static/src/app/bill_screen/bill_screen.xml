@@ -2,25 +2,24 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_restaurant.BillScreen" owl="1">
-        <div class="receipt-screen screen">
-            <div class="screen-content">
-                <div class="top-content">
-                    <div class="top-content-center">
-                        <h1>Bill Printing</h1>
+        <div class="receipt-screen screen h-100 bg-100">
+            <div class="screen-content d-flex flex-column h-100">
+                <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
+                    <div class="top-content-center flex-grow-1">
+                        <h2 class="mb-0 text-start">Bill Printing</h2>
                     </div>
-                    <span class="button next highlight" t-on-click="confirm">
+                    <button class="button next highlight btn btn-lg btn-outline-primary" t-on-click="confirm">
                         <span>Ok</span>
-                        <span> </span>
-                        <i class="fa fa-angle-double-right"></i>
-                    </span>
+                        <i class="fa fa-angle-double-right ms-2"></i>
+                    </button>
                 </div>
-                <div class="centered-content">
-                    <div class="button print" t-on-click="printReceipt">
+                <div class="centered-content mx-auto mt-3 border-start border-end text-center overflow-x-hidden overflow-y-auto">
+                    <div class="button print btn btn-lg btn-primary" t-on-click="printReceipt">
                         <i class="fa fa-print" t-ref="order-print-receipt-button"></i>
                         <span> </span>
                         <span>Print</span>
                     </div>
-                    <div class="pos-receipt-container" t-ref="order-receipt">
+                    <div class="pos-receipt-container text-center" t-ref="order-receipt">
                         <OrderReceipt order="currentOrder" isBill="true"/>
                     </div>
                 </div>

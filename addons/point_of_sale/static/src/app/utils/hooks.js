@@ -5,7 +5,6 @@ import { ErrorTracebackPopup } from "@point_of_sale/app/errors/popups/error_trac
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { useEnv, onMounted, onPatched, onWillUnmount, useComponent, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { escapeRegExp } from '@web/core/utils/strings';
 
 /**
  * Introduce error handlers in the component.
@@ -100,24 +99,12 @@ export function useValidateCashInput(inputRef, startingValue) {
     const cashInput = useRef(inputRef);
     const localization = useService("localization");
     const decimalPoint = localization.decimalPoint;
-    const thousandsSep = localization.thousandsSep;
-    // Replace the thousands separator and decimal point with regex-escaped versions
-    const escapedDecimalPoint = escapeRegExp(decimalPoint);
-    let floatRegex;
-    if (thousandsSep) {
-        const escapedThousandsSep = escapeRegExp(thousandsSep);
-        floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
-    } else {
-        floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
-    }
-    function isValidFloat(inputValue) {
-        return ![decimalPoint, '-'].includes(inputValue) && floatRegex.test(inputValue);
-    }
+    const env = useEnv();
     function handleCashInputChange(event) {
         let inputValue = (event.target.value || "").trim();
 
         // Check if the current input value is a valid float
-        if (!isValidFloat(inputValue)) {
+        if (!env.utils.isValidFloat(inputValue)) {
             event.target.classList.add('invalid-cash-input');
         } else {
             event.target.classList.remove('invalid-cash-input');
