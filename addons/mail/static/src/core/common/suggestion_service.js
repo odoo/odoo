@@ -218,8 +218,8 @@ export class SuggestionService {
             if (!c1.hasSelfAsMember && c2.hasSelfAsMember) {
                 return 1;
             }
-            const cleanedDisplayName1 = cleanTerm(c1.displayName ?? "");
-            const cleanedDisplayName2 = cleanTerm(c2.displayName ?? "");
+            const cleanedDisplayName1 = cleanTerm(c1.displayName);
+            const cleanedDisplayName2 = cleanTerm(c2.displayName);
             if (
                 cleanedDisplayName1.startsWith(cleanedSearchTerm) &&
                 !cleanedDisplayName2.startsWith(cleanedSearchTerm)
