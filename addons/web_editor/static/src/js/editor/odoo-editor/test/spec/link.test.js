@@ -105,13 +105,13 @@ describe('Link', () => {
         testUrlRegex('google.com/foo/?data=hello&data2=foo#anchor', { expectedUrl: 'google.com/foo/?data=hello&data2=foo#anchor' });
     });
     describe('insert Link', () => {
-        // This fails, but why would the cursor stay inside the link
-        // if the next text insert should be outside of the link (see next test)
         describe('range collapsed', () => {
             it('should insert a link and preserve spacing', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a [] c</p>',
                     stepFunction: createLink,
+                    // Two consecutive spaces like one so `a [] c` is
+                    // effectively the same as `a []c`.
                     contentAfter: '<p>a <a href="#">link</a>[]c</p>',
                 });
             });
