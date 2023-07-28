@@ -1727,7 +1727,7 @@ export function toggleClass(node, className) {
  * @returns {boolean}
  */
 export function isFakeLineBreak(brEl) {
-    return !(getState(...rightPos(brEl), DIRECTIONS.RIGHT).cType & (CTGROUPS.INLINE | CTGROUPS.BR));
+    return !(getState(...rightPos(brEl), DIRECTIONS.RIGHT).cType & (CTYPES.CONTENT | CTGROUPS.BR));
 }
 /**
  * Checks whether or not the given block has any visible content, except for
@@ -2065,6 +2065,7 @@ export function moveNodes(
 // Prepare / Save / Restore state utilities
 //------------------------------------------------------------------------------
 
+const prepareUpdateLockedEditables = new Set();
 /**
  * Any editor command is applied to a selection (collapsed or not). After the
  * command, the content type on the selection boundaries, in both direction,
@@ -2083,9 +2084,24 @@ export function moveNodes(
  * @param {...(HTMLElement|number)} args - argument 1 and 2 can be repeated for
  *     multiple preparations with only one restore callback returned. Note: in
  *     that case, the positions should be given in the document node order.
+ * @param {Object} [options]
+ * @param {boolean} [options.allowReenter = true] - if false, all calls to
+ *     prepareUpdate before this one gets restored will be ignored.
  * @returns {function}
  */
 export function prepareUpdate(...args) {
+    const closestRoot = args.length && ancestors(args[0]).find(ancestor => ancestor.oid === 'root');
+    const isPrepareUpdateLocked = closestRoot && prepareUpdateLockedEditables.has(closestRoot);
+    const options = {
+        allowReenter: true,
+        ...(args.length && args[args.length - 1] instanceof Object ? args.pop() : {}),
+    };
+    if (isPrepareUpdateLocked) {
+        return () => {};
+    }
+    if (!options.allowReenter && closestRoot) {
+        prepareUpdateLockedEditables.add(closestRoot);
+    }
     const positions = [...args];
 
     // Check the state in each direction starting from each position.
@@ -2106,6 +2122,9 @@ export function prepareUpdate(...args) {
     return function restoreStates() {
         for (const data of restoreData) {
             restoreState(data);
+        }
+        if (!options.allowReenter && closestRoot) {
+            prepareUpdateLockedEditables.delete(closestRoot);
         }
     };
 }
@@ -2164,7 +2183,13 @@ export function getState(el, offset, direction, leftCType) {
             // visible if we have content backwards.
             if (direction === DIRECTIONS.LEFT) {
                 if (isVisibleStr(value)) {
-                    cType = lastSpace || expr.test(value) ? CTYPES.SPACE : CTYPES.CONTENT;
+                    if (lastSpace) {
+                        cType = CTYPES.SPACE;
+                    } else {
+                        const rightLeaf = rightLeafOnlyNotBlockPath(node).next().value;
+                        const hasContentRight = rightLeaf && !rightLeaf.textContent.startsWith(' ');
+                        cType = !hasContentRight && node.textContent.endsWith(' ') ? CTYPES.SPACE : CTYPES.CONTENT;
+                    }
                     break;
                 }
                 if (value.length) {
@@ -2173,11 +2198,13 @@ export function getState(el, offset, direction, leftCType) {
             } else {
                 leftCType = leftCType || getState(el, offset, DIRECTIONS.LEFT).cType;
                 if (expr.test(value)) {
+                    const leftLeaf = leftLeafOnlyNotBlockPath(node).next().value;
+                    const hasContentLeft = leftLeaf && !leftLeaf.textContent.endsWith(' ');
                     const rct = isVisibleStr(value)
                         ? CTYPES.CONTENT
                         : getState(...rightPos(node), DIRECTIONS.RIGHT).cType;
                     cType =
-                        leftCType & CTYPES.CONTENT && rct & (CTYPES.CONTENT | CTYPES.BR)
+                        leftCType & CTYPES.CONTENT && rct & (CTYPES.CONTENT | CTYPES.BR) && !hasContentLeft
                             ? CTYPES.SPACE
                             : rct;
                     break;
