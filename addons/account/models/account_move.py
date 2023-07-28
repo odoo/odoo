@@ -2793,7 +2793,7 @@ class AccountMove(models.Model):
                          SELECT account_move_line__account_id.id AS account_id,
                                 account_move_line__account_id.code,
                                 account_move_line.id,
-                                ARRAY_AGG(tax_rel.account_tax_id) AS taxes
+                                ARRAY_AGG(tax_rel.account_tax_id) FILTER (WHERE tax_rel.account_tax_id IS NOT NULL) AS taxes
                            FROM {from_clause}
                       LEFT JOIN account_move_line_account_tax_rel tax_rel ON account_move_line.id = tax_rel.account_move_line_id
                           WHERE {where_clause}
@@ -2801,7 +2801,7 @@ class AccountMove(models.Model):
                                 account_move_line.id
                    ) AS foo
           GROUP BY foo.account_id, foo.code, foo.taxes
-          ORDER BY COUNT(foo.id) DESC, foo.code
+          ORDER BY COUNT(foo.id) DESC, foo.code, taxes ASC NULLS LAST
              LIMIT 1
         """, params)
         return self._cr.fetchone() or (0, False, False)
