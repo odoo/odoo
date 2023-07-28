@@ -34,7 +34,7 @@ export class CalendarConnectProvider extends Component {
     async onConnect(ev) {
         ev.preventDefault();
         ev.stopImmediatePropagation();
-        if (!await this.props.record.save({stayInEdition: true})) {
+        if (!await this.props.record.save()) {
             return;  // handled by view
         }
         await this.orm.call(

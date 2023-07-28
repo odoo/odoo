@@ -78,7 +78,7 @@ export class ChatbotStepsOne2many extends X2ManyField {
             getList: () => this.list,
             saveRecord: async (record) => {
                 await saveRecord(record);
-                await this.props.record.save({ stayInEdition: true });
+                await this.props.record.save();
             },
             updateRecord: updateRecord,
         });

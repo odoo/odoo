@@ -47,12 +47,7 @@ class PeppolSettingsButtons extends Component {
     }
 
     async _save () {
-        this.env.model.root.save({
-            noReload: true,
-            stayInEdition: true,
-            useSaveErrorDialog: false,
-            savePoint: true,
-        });
+        this.env.model.root.save({ noReload: true });
     }
 
     showConfirmation(warning, methodName) {

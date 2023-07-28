@@ -40,9 +40,7 @@ export class AccountMoveFormRenderer extends FormRenderer {
         if (this.props.record.isInEdition && await this.props.record.isDirty()) {
             const contentEl = document.querySelector('.o_content');
             const scrollPos = contentEl.scrollTop;
-            await this.props.record.save({
-                stayInEdition: true,
-            });
+            await this.props.record.save();
             if (scrollPos) {
                 contentEl.scrollTop = scrollPos;
             }
