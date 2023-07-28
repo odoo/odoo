@@ -488,7 +488,7 @@ class AccountChartTemplate(models.AbstractModel):
                     record['id'] = xml_id
                     xml_id = False
                 else:
-                    xml_id = f"{('account.' + str(self.env.company.id) + '_') if '.' not in xml_id else ''}{xml_id}"
+                    xml_id = f"{('account.' + str(self.env.company.id) + '_') if '.' not in xml_id else ''}{xml_id.replace(' ', '_')}"
 
                 create_vals.append({
                     'xml_id': xml_id,
@@ -906,7 +906,7 @@ class AccountChartTemplate(models.AbstractModel):
     # --------------------------------------------------------------------------------
 
     def ref(self, xmlid, raise_if_not_found=True):
-        return self.env.ref(f"account.{self.env.company.id}_{xmlid}" if xmlid and '.' not in xmlid else xmlid, raise_if_not_found)
+        return self.env.ref(f"account.{self.env.company.id}_{xmlid}" if xmlid and '.' not in xmlid else xmlid.replace(' ', '_'), raise_if_not_found)
 
     def _get_parent_template(self, code):
         parents = []
