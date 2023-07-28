@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { click, clickSave, getFixture, selectDropdownItem } from "@web/../tests/helpers/utils";
+import {
+    click,
+    clickSave,
+    getFixture,
+    selectDropdownItem,
+    triggerEvent,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { triggerHotkey } from "../../helpers/utils";
 
@@ -520,6 +526,49 @@ QUnit.module("Fields", (hooks) => {
             "should have 1 record"
         );
     });
+
+    QUnit.test(
+        "widget many2many_tags_avatar quick add tags and close in kanban view with keyboard navigation",
+        async function (assert) {
+            await makeView({
+                type: "kanban",
+                resModel: "turtle",
+                serverData,
+                arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="display_name"/>
+                                <div class="oe_kanban_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="partner_ids" widget="many2many_tags_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            });
+            await click(target, ".o_kanban_record:first-child .o_quick_assign", true);
+            // add and directly close the dropdown
+            await triggerEvent(target, null, "keydown", { key: "Tab" });
+            await triggerEvent(document.activeElement, null, "keydown", { key: "Enter" });
+            await triggerEvent(target, null, "keydown", { key: "Escape" });
+            assert.containsOnce(
+                target,
+                ".o_kanban_record:first-child .o_field_many2many_tags_avatar .o_tag",
+                "should assign the user"
+            );
+            assert.containsNone(
+                target,
+                ".o_kanban_record:first-child .o_field_many2many_tags_avatar .o_popover",
+                "should have close the popover"
+            );
+        }
+    );
 
     QUnit.test(
         "widget many2many_tags_avatar in kanban view missing access rights",
