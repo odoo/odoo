@@ -448,17 +448,18 @@ class AccountMove(models.Model):
     ####################################################
     # Export Electronic Document
     ####################################################
-
     def _action_download_electronic_invoice(self):
+        # To be removed in master
         if not self:
             return False
         return {
             'type': 'ir.actions.act_url',
-            'url': '/account_edi/download_edi_documents?%s' % url_encode({'ids': self.filtered('edi_document_ids').ids}),
+            'url': '/account_edi/download_edi_documents?%s' % url_encode({'ids': self.ids}),
             'target': 'new',
         }
 
     def _create_zipped(self):
+        # To be removed in master
         buffer = io.BytesIO()
         with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_DEFLATED) as zipfile_obj:
             for invoice in self:
@@ -466,6 +467,11 @@ class AccountMove(models.Model):
                     if document.state in {'sent', 'cancelled'}:
                         zipfile_obj.writestr(document.display_name, document.attachment_id.raw)
         return buffer.getvalue()
+
+    def _get_edi_doc_attachments_to_export(self):
+        # EXTENDS 'account'
+        return super()._get_edi_doc_attachments_to_export() + self.edi_document_ids.attachment_id
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
