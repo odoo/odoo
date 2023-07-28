@@ -730,7 +730,7 @@ class ReportMoOverview(models.AbstractModel):
         if not replenish_data['qty_reserved'].get(move_raw):
             total_reserved = 0
             wh_location_ids = self._get_warehouse_locations(warehouse, replenish_data)
-            linked_moves = self.env['stock.move'].browse(move_raw._rollup_move_origs()).filtered(lambda m: m.location_id.id in wh_location_ids or m.location_dest_id.id not in wh_location_ids)
+            linked_moves = self.env['stock.move'].browse(move_raw._rollup_move_origs()).filtered(lambda m: m.location_id.id in wh_location_ids)
             for move in linked_moves:
                 if move.state not in ('partially_available', 'assigned'):
                     continue
