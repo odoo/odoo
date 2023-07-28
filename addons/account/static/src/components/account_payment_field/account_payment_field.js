@@ -63,14 +63,12 @@ export class AccountPaymentField extends Component {
     async assignOutstandingCredit(id) {
         await this.orm.call(this.props.record.resModel, 'js_assign_outstanding_line', [this.move_id, id], {});
         await this.props.record.model.root.load();
-        this.props.record.model.notify();
     }
 
     async removeMoveReconcile(moveId, partialId) {
         this.popover.close();
         await this.orm.call(this.props.record.resModel, 'js_remove_outstanding_partial', [moveId, partialId], {});
         await this.props.record.model.root.load();
-        this.props.record.model.notify();
     }
 
     async openMove(moveId) {

@@ -32,7 +32,6 @@ export function useTranslationDialog() {
             isComingFromTranslationAlert: false,
             onSave: async () => {
                 await record.load();
-                record.model.notify();
             },
         });
     }

@@ -42,7 +42,6 @@ export class ForecastKanbanRenderer extends CrmKanbanRenderer {
             })
             .expand();
         await this.props.list.load();
-        this.props.list.model.notify();
     }
 }
 

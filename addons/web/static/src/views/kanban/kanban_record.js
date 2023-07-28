@@ -278,7 +278,6 @@ export class KanbanRecord extends Component {
                 context: record.context,
                 onClose: async () => {
                     await record.model.root.load();
-                    record.model.notify();
                 },
             });
         } else if (forceGlobalClick || this.allowGlobalClick) {

@@ -36,7 +36,6 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
             title: this.env._t('Edit Personal Stage'),
             onRecordSaved: async () => {
                 await this.props.list.load();
-                this.props.list.model.notify();
             },
         });
     }
