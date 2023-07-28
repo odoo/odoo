@@ -1893,6 +1893,7 @@ var SnippetsMenu = Widget.extend({
             id: 'oe_manipulators',
         });
         this.$body.prepend(this.$snippetEditorArea);
+        this.options.getScrollOptions = this._getScrollOptions.bind(this);
 
         if (this.options.enableTranslation) {
             // Load the sidebar with the style tab only.
@@ -1914,7 +1915,6 @@ var SnippetsMenu = Widget.extend({
         this.emptyOptionsTabContent = document.createElement('div');
         this.emptyOptionsTabContent.classList.add('text-center', 'pt-5');
         this.emptyOptionsTabContent.append(_t("Select a block on your page to style it."));
-        this.options.getScrollOptions = this._getScrollOptions.bind(this);
 
         // Fetch snippet templates and compute it
         defs.push((async () => {
