@@ -62,11 +62,7 @@ class VerificationCodeWidget extends Component {
     _save() {
         let verificationCode = [...this.inputs.map((i) => i.el.value)].join('');
         this.props.record.update({ account_peppol_verification_code: verificationCode });
-        this.env.model.root.save({
-            noReload: true,
-            stayInEdition: true,
-            useSaveErrorDialog: true,
-        });
+        this.env.model.root.save({ noReload: true });
     }
 }
 

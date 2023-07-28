@@ -42,7 +42,7 @@ export class AutosaveMany2ManyTagsField extends Many2ManyTagsField {
     }
 
     async _saveOnUpdate() {
-        await this.props.record.model.root.save({ stayInEdition: true });
+        await this.props.record.model.root.save();
     }
 }
 
