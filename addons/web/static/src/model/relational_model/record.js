@@ -237,11 +237,11 @@ export class Record extends DataPoint {
         return this.model.mutex.exec(() => this._toggleArchive(false));
     }
 
-    update(changes) {
+    update(changes, { save } = {}) {
         if (this.model._urgentSave) {
-            return this._update(changes);
+            return this._update(changes, { save: false }); // save is already scheduled
         }
-        return this.model.mutex.exec(() => this._update(changes));
+        return this.model.mutex.exec(() => this._update(changes, { save }));
     }
 
     urgentSave() {
@@ -913,7 +913,7 @@ export class Record extends DataPoint {
         }
     }
 
-    async _update(changes, { withoutOnchange, withoutParentUpdate } = {}) {
+    async _update(changes, { withoutOnchange, withoutParentUpdate, save } = {}) {
         this.dirty = true;
         const prom = this._preprocessChanges(changes);
         if (prom && !this.model._urgentSave) {
@@ -935,7 +935,7 @@ export class Record extends DataPoint {
         const onChangeFields = Object.keys(changes).filter(
             (fieldName) => this.activeFields[fieldName] && this.activeFields[fieldName].onChange
         );
-        if (onChangeFields.length && !this.model._urgentSave && !withoutOnchange) {
+        if (onChangeFields.length && !this.model._urgentSave && !withoutOnchange && !save) {
             const localChanges = this._getChanges(
                 { ...this._changes, ...changes },
                 { withReadonly: true }
@@ -975,6 +975,9 @@ export class Record extends DataPoint {
                 throw e;
             }
             await this.model.hooks.onRecordChanged(this, this._getChanges());
+        }
+        if (save) {
+            return this._save();
         }
     }
 }

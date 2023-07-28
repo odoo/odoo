@@ -41,13 +41,13 @@ export class ProjectTaskKanbanDynamicGroupList extends RelationalModel.DynamicGr
 }
 
 export class ProjectTaskRecord extends RelationalModel.Record {
-    async _update(changes, options) {
+    _update(changes, options) {
         const value = changes.personal_stage_type_ids;
         if (Array.isArray(value)) {
             delete changes.personal_stage_type_ids;
             changes.personal_stage_type_id = value;
         }
-        await super._update(changes, options);
+        return super._update(changes, options);
     }
 
     get context() {
