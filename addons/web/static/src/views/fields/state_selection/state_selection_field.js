@@ -71,10 +71,7 @@ export class StateSelectionField extends Component {
     }
 
     async updateRecord(value) {
-        await this.props.record.update({ [this.props.name]: value });
-        if (this.props.autosave) {
-            return this.props.record.save();
-        }
+        await this.props.record.update({ [this.props.name]: value }, { save: this.props.autosave });
     }
 }
 

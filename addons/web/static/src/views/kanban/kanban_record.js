@@ -297,8 +297,7 @@ export class KanbanRecord extends Component {
 
     async selectColor(colorIndex) {
         const { archInfo, record } = this.props;
-        await record.update({ [archInfo.colorField]: colorIndex });
-        await record.save();
+        await record.update({ [archInfo.colorField]: colorIndex }, { save: true });
     }
 
     /**

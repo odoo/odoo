@@ -75,10 +75,7 @@ export class ProgressBarField extends Component {
         if (this.props.record.fields[fieldName].type === "integer") {
             parsedValue = Math.floor(parsedValue);
         }
-        this.props.record.update({ [fieldName]: parsedValue });
-        if (this.props.readonly) {
-            this.props.record.save();
-        }
+        this.props.record.update({ [fieldName]: parsedValue }, { save: this.props.readonly });
     }
     onCurrentValueChange(ev) {
         this.onValueChange(ev.target.value, this.currentValueField);
