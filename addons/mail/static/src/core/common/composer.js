@@ -297,7 +297,7 @@ export class Composer extends Component {
     get navigableListProps() {
         const props = {
             anchorRef: this.ref.el,
-            position: this.thread?.type === "chatter" ? "bottom-fit" : "top-fit",
+            position: this.env.inChatter ? "bottom-fit" : "top-fit",
             placeholder: _t("Loading"),
             onSelect: (ev, option) => {
                 this.suggestion.insert(option);
