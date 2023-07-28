@@ -89,6 +89,9 @@ class PickingType(models.Model):
     auto_print_delivery_slip = fields.Boolean(
         "Auto Print Delivery Slip",
         help="If this checkbox is ticked, Odoo will automatically print the delivery slip of a picking when it is validated.")
+    auto_print_return_slip = fields.Boolean(
+        "Auto Print Return Slip",
+        help="If this checkbox is ticked, Odoo will automatically print the return slip of a picking when it is validated.")
 
     auto_print_product_labels = fields.Boolean(
         "Auto Print Product Labels",
@@ -1746,6 +1749,11 @@ class Picking(models.Model):
         pickings_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_delivery_slip)
         if pickings_to_print:
             action = self.env.ref("stock.action_report_delivery").report_action(pickings_to_print.ids, config=False)
+            clean_action(action, self.env)
+            report_actions.append(action)
+        pickings_print_return_slip = self.filtered(lambda p: p.picking_type_id.auto_print_return_slip)
+        if pickings_print_return_slip:
+            action = self.env.ref("stock.return_label_report").report_action(pickings_print_return_slip.ids, config=False)
             clean_action(action, self.env)
             report_actions.append(action)
 
