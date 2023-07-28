@@ -277,7 +277,7 @@ class AccountEdiFormat(models.Model):
 
             # === Invoice ===
 
-            invoice_node['DescripcionOperacion'] = invoice.invoice_origin or 'manual'
+            invoice_node['DescripcionOperacion'] = invoice.invoice_origin[:500] if invoice.invoice_origin else 'manual'
             if invoice.is_sale_document():
                 info['IDFactura']['IDEmisorFactura'] = {'NIF': invoice.company_id.vat[2:]}
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.name[:60]
