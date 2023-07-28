@@ -3,14 +3,13 @@
 
 import logging
 import pytz
-import threading
 from ast import literal_eval
 from collections import OrderedDict, defaultdict
 from datetime import date, datetime, timedelta
 from markupsafe import Markup, escape
 from psycopg2 import sql
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, tools, SUPERUSER_ID, modules
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import mail_validation
 from odoo.addons.phone_validation.tools import phone_validation
@@ -2323,7 +2322,7 @@ class Lead(models.Model):
         # - avoid blocking the table for too long with a too big transaction
         transactions_count, transactions_failed_count = 0, 0
         cron_update_lead_start_date = datetime.now()
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.loading.running_test
         self.flush_model()
         for probability, probability_lead_ids in probability_leads.items():
             for lead_ids_current in tools.split_every(PLS_UPDATE_BATCH_STEP, probability_lead_ids):

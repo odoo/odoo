@@ -6,7 +6,7 @@ import threading
 import uuid
 import werkzeug.urls
 
-from odoo import api, fields, models
+from odoo import api, fields, models, modules
 from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class IapAccount(models.Model):
                 IapAccount.search(domain + [('account_token', '=', False)]).sudo().unlink()
                 accounts = accounts - accounts_without_token
         if not accounts:
-            if hasattr(threading.current_thread(), 'testing') and threading.current_thread().testing:
+            if modules.loading.running_test:
                 # During testing, we don't want to commit the creation of a new IAP account to the database
                 return self.create({'service_name': service_name})
 

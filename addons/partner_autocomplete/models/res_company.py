@@ -3,10 +3,9 @@
 
 import json
 import logging
-import threading
 
 from odoo.addons.iap.tools import iap_tools
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, modules
 
 _logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ class ResCompany(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        if not getattr(threading.current_thread(), 'testing', False):
+        if not modules.loading.running_test:
             res.iap_enrich_auto()
         return res
 

@@ -1273,7 +1273,10 @@ def _reexec(updated_modules=None):
 def load_test_file_py(registry, test_file):
     # pylint: disable=import-outside-toplevel
     from odoo.tests.suite import OdooSuite
-    threading.current_thread().testing = True
+    _logger.warning('--test-file is deprecated. Please use --test-tags (e.g. --test-tags /base/test/test_views.py)')
+    if not config['test_file']:
+        return
+    odoo.modules.loading.running_test = True
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
         for mod in [m for m in get_modules() if '%s%s%s' % (os.path.sep, m, os.path.sep) in test_file]:
@@ -1289,7 +1292,7 @@ def load_test_file_py(registry, test_file):
                         _logger.error('%s: at least one error occurred in a test', test_file)
                     return
     finally:
-        threading.current_thread().testing = False
+        odoo.modules.loading.running_test = False
 
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""

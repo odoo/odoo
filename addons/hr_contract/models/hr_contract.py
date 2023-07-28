@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import threading
-
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, modules
 from odoo.exceptions import ValidationError
 
 from odoo.osv import expression
@@ -216,7 +214,7 @@ class Contract(models.Model):
 
     def _safe_write_for_cron(self, vals, from_cron=False):
         if from_cron:
-            auto_commit = not getattr(threading.current_thread(), 'testing', False)
+            auto_commit = not modules.loading.running_test
             for contract in self:
                 try:
                     with self.env.cr.savepoint():

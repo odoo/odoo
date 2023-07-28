@@ -15,7 +15,6 @@ import logging
 import pytz
 import re
 import time
-import threading
 
 from collections import namedtuple
 from email.message import EmailMessage
@@ -25,7 +24,7 @@ from werkzeug import urls
 from xmlrpc import client as xmlrpclib
 from markupsafe import Markup, escape
 
-from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
+from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command, modules
 from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
 from odoo.tools import is_html_empty, html_escape, html2plaintext
@@ -3139,7 +3138,7 @@ class MailThread(models.AbstractModel):
         #   2. do not send emails immediately if the registry is not loaded,
         #      to prevent sending email during a simple update of the database
         #      using the command-line.
-        test_mode = getattr(threading.current_thread(), 'testing', False)
+        test_mode = modules.loading.running_test
         force_send = self.env.context.get('mail_notify_force_send', force_send)
         if force_send and len(emails) < recipients_max and (not self.pool._init or test_mode):
             # unless asked specifically, send emails after the transaction to

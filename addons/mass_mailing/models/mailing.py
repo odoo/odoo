@@ -10,7 +10,6 @@ import lxml
 import random
 import re
 import requests
-import threading
 import werkzeug.urls
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
@@ -18,7 +17,7 @@ from markupsafe import Markup
 from werkzeug.urls import url_join
 from PIL import Image, UnidentifiedImageError
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, modules
 from odoo.addons.base_import.models.base_import import ImportValidationError
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
@@ -1107,7 +1106,7 @@ class MassMailing(models.Model):
 
             # auto-commit except in testing mode
             composer._action_send_mail(
-                auto_commit=not getattr(threading.current_thread(), 'testing', False)
+                auto_commit=not modules.loading.running_test,
             )
             mailing.write({
                 'state': 'done',
