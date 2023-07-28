@@ -34,7 +34,7 @@ export class ActivityCell extends Component {
                 month: "short",
             });
         } else {
-            return date.toLocaleDateString({
+            return date.toLocaleString({
                 day: "numeric",
                 month: "short",
                 year: "numeric",
