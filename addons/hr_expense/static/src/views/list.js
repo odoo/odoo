@@ -70,9 +70,7 @@ export class ExpenseListController extends ListController {
                 }
             });
         }
-        // sgv note: we tried this.model.notify(); and does not work
         await this.model.root.load();
-        this.render(true);
     }
 
     async action_show_expenses_to_submit () {

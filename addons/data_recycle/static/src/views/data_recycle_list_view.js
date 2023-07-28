@@ -13,7 +13,6 @@ export class DataRecycleListController extends DataCleaningCommonListController 
 
         await this.orm.call('data_recycle.record', 'action_validate', [record_ids]);
         await this.model.load();
-        this.model.notify();
     }
 };
 

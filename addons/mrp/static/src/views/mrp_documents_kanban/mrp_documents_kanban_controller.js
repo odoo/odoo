@@ -15,7 +15,6 @@ export class MrpDocumentsKanbanController extends KanbanController {
             "FILE_UPLOAD_LOADED",
             async () => {
                 await this.model.root.load();
-                this.model.notify();
             },
         );
     }

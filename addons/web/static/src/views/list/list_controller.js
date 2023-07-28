@@ -238,7 +238,6 @@ export class ListController extends Component {
                 context: record.context,
                 onClose: async () => {
                     await record.model.root.load();
-                    record.model.notify();
                 },
             });
         } else {
