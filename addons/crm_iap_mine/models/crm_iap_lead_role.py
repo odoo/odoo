@@ -20,20 +20,3 @@ class PeopleRole(models.Model):
     def _compute_display_name(self):
         for role in self:
             role.display_name = role.name.replace('_', ' ').title()
-
-
-class PeopleSeniority(models.Model):
-    """ Seniority for People Rules """
-    _name = 'crm.iap.lead.seniority'
-    _description = 'People Seniority'
-
-    name = fields.Char(string='Name', required=True, translate=True)
-    reveal_id = fields.Char(required=True)
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'Name already exists!'),
-    ]
-
-    def _compute_display_name(self):
-        for seniority in self:
-            seniority.display_name = seniority.name.replace('_', ' ').title()
