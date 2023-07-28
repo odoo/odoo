@@ -4,13 +4,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1+e\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-25 09:57+0000\n"
-"PO-Revision-Date: 2022-05-20 15:33+0000\n"
+"POT-Creation-Date: 2023-07-28 12:54+0000\n"
+"PO-Revision-Date: 2023-07-28 12:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -57,8 +56,7 @@ msgid ""
 ";\n"
 "                            }\n"
 "                            .page {\n"
-"                                [name=invoice_line_table], "
-"[name=stock_move_table], .o_main_table {\n"
+"                                [name=invoice_line_table], [name=stock_move_table], .o_main_table {\n"
 "                                    th {\n"
 "                                        color:"
 msgstr ""
@@ -81,9 +79,10 @@ msgstr "BIC:"
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__bank_ids
 msgid "Banks"
-msgstr ""
+msgstr "Banken"
 
 #. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Cancelled Invoice"
@@ -101,22 +100,25 @@ msgstr "Geschäftsvorlagen Layout"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__company_registry
-msgid "Company Registry"
-msgstr "Unternehmensregister"
+msgid "Company ID"
+msgstr "Unternehmens-ID"
 
 #. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Credit Note"
 msgstr "Gutschrift"
 
 #. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Draft Invoice"
 msgstr "Rechnungsentwurf"
 
 #. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #: code:addons/l10n_din5008/models/base_document_layout.py:0
 #, python-format
@@ -139,6 +141,7 @@ msgid "IBAN:"
 msgstr "IBAN:"
 
 #. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #: code:addons/l10n_din5008/models/base_document_layout.py:0
 #, python-format
@@ -146,18 +149,7 @@ msgid "Invoice"
 msgstr "Rechnung"
 
 #. module: l10n_din5008
-#: code:addons/l10n_din5008/models/account_move.py:0
-#, python-format
-msgid "Invoicing Address:"
-msgstr "Rechnungsadresse"
-
-#. module: l10n_din5008
-#: code:addons/l10n_din5008/models/account_move.py:0
-#, python-format
-msgid "Invoicing and Shipping Address:"
-msgstr "Rechnungs- und Lieferadresse:"
-
-#. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #: code:addons/l10n_din5008/models/base_document_layout.py:0
 #, python-format
@@ -165,11 +157,27 @@ msgid "Invoice Date"
 msgstr "Rechnungsdatum"
 
 #. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #: code:addons/l10n_din5008/models/base_document_layout.py:0
 #, python-format
 msgid "Invoice No."
-msgstr "Rechnungsnummer"
+msgstr "Rechnungsnr."
+
+#. module: l10n_din5008
+#. odoo-python
+#: code:addons/l10n_din5008/models/account_move.py:0
+#, python-format
+msgid "Invoicing Address:"
+msgstr "Rechnungsadresse"
+
+#. module: l10n_din5008
+#. odoo-python
+#: code:addons/l10n_din5008/models/account_move.py:0
+#: code:addons/l10n_din5008/models/account_move.py:0
+#, python-format
+msgid "Invoicing and Shipping Address:"
+msgstr "Rechnungs- und Lieferadresse"
 
 #. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_account_move
@@ -180,7 +188,6 @@ msgstr "Buchungseintrag"
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_bank_statement_line__l10n_din5008_addresses
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_move__l10n_din5008_addresses
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_payment__l10n_din5008_addresses
-#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_addresses
 msgid "L10N Din5008 Addresses"
 msgstr "L10N Din5008 Adressen"
 
@@ -191,7 +198,7 @@ msgstr "L10N Din5008 Adressen"
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_payment__l10n_din5008_document_title
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_document_title
 msgid "L10N Din5008 Document Title"
-msgstr ""
+msgstr "L10N Din5008 Dokumenttitel"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_analytic_line__l10n_din5008_template_data
@@ -200,7 +207,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_payment__l10n_din5008_template_data
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_template_data
 msgid "L10N Din5008 Template Data"
-msgstr ""
+msgstr "L10N Din5008 Vorlagendaten"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -208,6 +215,7 @@ msgid "Page: <span class=\"page\"/> of <span class=\"topage\"/>"
 msgstr "Seite: <span class=\"page\"/> von <span class=\"topage\"/>"
 
 #. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #: code:addons/l10n_din5008/models/base_document_layout.py:0
 #, python-format
@@ -215,12 +223,14 @@ msgid "Reference"
 msgstr "Referenz"
 
 #. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Shipping Address:"
 msgstr "Lieferadresse"
 
 #. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Source"
@@ -242,12 +252,21 @@ msgid "The country to use the tax reports from for this company"
 msgstr ""
 
 #. module: l10n_din5008
+#: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_registry
+msgid ""
+"The registry number of the company. Use it if it is different from the Tax "
+"ID. It must be unique across all partners of a same country"
+msgstr "Die Registernummer des Unternehmens. Verwenden Sie diese, wenn sie sich von der Steuer-ID unterscheidet. Sie muss für alle Partner desselben Landes eindeutig sein."
+
+#. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill"
 msgstr "Lieferantenrechnung"
 
 #. module: l10n_din5008
+#. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Vendor Credit Note"
