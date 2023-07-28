@@ -13,8 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'a8440',
             'property_account_expense_categ_id': 'a2010',
             'property_account_income_categ_id': 'a1010',
-            'property_account_expense_id': 'a2010',
-            'property_account_income_id': 'a1010',
             'property_stock_account_input_categ_id': 'a8450',
             'property_stock_account_output_categ_id': 'a6670',
             'property_stock_valuation_account_id': 'a6530',

@@ -26,8 +26,6 @@ class AccountChartTemplate(models.AbstractModel):
             'default_pos_receivable_account_id': 'pos_receivable',
             'property_account_receivable_id': 'receivable',
             'property_account_payable_id': 'payable',
-            'property_account_expense_id': 'expense',
-            'property_account_income_id': 'income',
             'property_account_expense_categ_id': 'expense',
             'property_account_income_categ_id': 'income',
             'property_stock_account_input_categ_id': 'stock_in',
