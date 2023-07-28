@@ -135,8 +135,6 @@ QUnit.module("Fields", (hooks) => {
                     if (args.method === "onchange") {
                         throw new Error("Should not call onchange, htmlField wasn't changed");
                     }
-                } else if (route.includes("web.ace_lib")) {
-                    assert.step("web.ace_lib");
                 }
             },
         });
@@ -156,7 +154,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] textarea", "DEF");
         await clickSave(target);
 
-        assert.verifySteps(["get_views", "read", "web.ace_lib", "write", "read"]);
+        assert.verifySteps(["get_views", "read", "write", "read"]);
     });
 
     QUnit.test("AceEditorField doesn't crash when editing", async (assert) => {
