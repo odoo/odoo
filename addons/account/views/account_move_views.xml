@@ -314,6 +314,7 @@
                     <field name="ref"/>
                     <field name="date"/>
                     <field name="invoice_date"/>
+                    <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', self), ('debit', '=', self)]"/>
                     <field name="account_id"/>
                     <field name="account_type"/>
                     <field name="partner_id"/>
@@ -1295,6 +1296,7 @@
                     <field name="ref"/>
                     <field name="date"/>
                     <field name="invoice_date"/>
+                    <field name="amount_total"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <filter string="Unposted" name="unposted" domain="[('state', '=', 'draft')]" help="Unposted Journal Entries"/>
