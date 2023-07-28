@@ -172,8 +172,8 @@ export class SuggestionService {
                     return 1;
                 }
             }
-            const cleanedName1 = cleanTerm(p1.name ?? "");
-            const cleanedName2 = cleanTerm(p2.name ?? "");
+            const cleanedName1 = cleanTerm(p1.name);
+            const cleanedName2 = cleanTerm(p2.name);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)
@@ -192,8 +192,8 @@ export class SuggestionService {
             if (cleanedName1 > cleanedName2) {
                 return 1;
             }
-            const cleanedEmail1 = cleanTerm(p1.email ?? "");
-            const cleanedEmail2 = cleanTerm(p2.email ?? "");
+            const cleanedEmail1 = cleanTerm(p1.email);
+            const cleanedEmail2 = cleanTerm(p2.email);
             if (
                 cleanedEmail1.startsWith(cleanedSearchTerm) &&
                 !cleanedEmail1.startsWith(cleanedSearchTerm)
@@ -259,8 +259,8 @@ export class SuggestionService {
             if (!c1.hasSelfAsMember && c2.hasSelfAsMember) {
                 return 1;
             }
-            const cleanedDisplayName1 = cleanTerm(c1.displayName ?? "");
-            const cleanedDisplayName2 = cleanTerm(c2.displayName ?? "");
+            const cleanedDisplayName1 = cleanTerm(c1.displayName);
+            const cleanedDisplayName2 = cleanTerm(c2.displayName);
             if (
                 cleanedDisplayName1.startsWith(cleanedSearchTerm) &&
                 !cleanedDisplayName2.startsWith(cleanedSearchTerm)
