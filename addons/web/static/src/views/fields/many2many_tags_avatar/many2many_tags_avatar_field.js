@@ -75,7 +75,7 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
         // manual render to dirty record
         this.render();
         // update dropdown
-        this.autoCompleteRef.el.querySelector("input").click();
+        this.autoCompleteRef.el?.querySelector("input")?.click();
     }
 
     get tags() {
