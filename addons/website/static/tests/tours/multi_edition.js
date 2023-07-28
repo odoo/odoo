@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('website_multi_edition', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     {
         content: 'Check the current page has not the elements that will be added',
         trigger: 'iframe body:not(:has(.s_text_image)):not(:has(.s_hr))',

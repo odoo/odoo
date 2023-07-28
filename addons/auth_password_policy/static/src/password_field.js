@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -36,7 +36,7 @@ PasswordField.template = "auth_password_policy.PasswordField";
 
 export const passwordField = {
     component: PasswordField,
-    displayName: _lt("Password"),
+    displayName: _t("Password"),
     supportedTypes: ["char"],
 };
 

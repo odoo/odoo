@@ -2,6 +2,8 @@
 
 import utils from "@web/legacy/js/core/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
+import { localization } from "@web/core/l10n/localization";
+import { patch, unpatch } from "@web/core/utils/patch";
 
 QUnit.module('core', {}, function () {
 
@@ -145,6 +147,11 @@ QUnit.module('core', {}, function () {
     QUnit.test('human_number', function (assert) {
         assert.expect(26);
 
+        patch(localization, "patchLocalization", {
+            grouping : [],
+            thousandsSep : "."
+        });
+        
         var human_number = utils.human_number;
 
         assert.strictEqual(human_number(1020, 2, 1), '1.02k');
@@ -174,6 +181,9 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(human_number(-1.0045e+22, 3, 1), '-1.004e+22');
         assert.strictEqual(human_number(-1.012e+43, 2, 1), '-1.01e+43');
         assert.strictEqual(human_number(-1.012e+43, 2, 2), '-1.01e+43');
+
+        unpatch(localization, "patchLocalization");
+
     });
 
     QUnit.test('round_decimals', function (assert) {

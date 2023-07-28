@@ -1,16 +1,15 @@
 /** @odoo-module **/
 
-import {_t} from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
-import "@web/legacy/translations_loaded";
 
 const { markup } = owl;
 
 registry.category("web_tour.tours").add('hr_recruitment_tour',{
     url: "/web",
-    rainbowManMessage: markup(_t("<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>")),
+    rainbowManMessage: () => markup(_t("<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>")),
     fadeout: 'very_slow',
     sequence: 230,
     steps: () => [stepUtils.showAppsMenuItem(), {

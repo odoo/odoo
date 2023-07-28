@@ -19,8 +19,7 @@ import {
     convertRgbToHsl,
     convertHslToRgb,
  } from '@web/core/utils/colors';
-
-var _t = core._t;
+ import { _t } from "@web/core/l10n/translation";
 var qweb = core.qweb;
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];

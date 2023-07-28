@@ -3,7 +3,8 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import session from "web.session";
 import portalComposer from "@portal/js/portal_composer";
-import {_t, qweb} from "@web/legacy/js/services/core";
+import {qweb} from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 
 const PortalComposer = portalComposer.PortalComposer;
 

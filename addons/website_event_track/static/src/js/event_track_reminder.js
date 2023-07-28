@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import core from "@web/legacy/js/services/core";
-var _t = core._t;
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({

@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { sprintf } from '@web/core/utils/strings';
-import { _t, qweb } from "@web/legacy/js/services/core";
+import { qweb } from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 var CourseJoinWidget = publicWidget.Widget.extend({

@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
 import FormEditorRegistry from "@website/js/form_editor_registry";
-
-var _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 
 FormEditorRegistry.add('create_lead', {
     formFields: [{

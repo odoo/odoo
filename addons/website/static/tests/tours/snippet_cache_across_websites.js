@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_cache_across_websites', {
     edition: true,
     test: true,
     url: '/@/'
-}, [
+}, () => [
     {
         content: "Check that the custom snippet is displayed",
         trigger: '#snippet_custom_body span:contains("custom_snippet_test")',

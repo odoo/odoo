@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
@@ -42,7 +42,7 @@ invalidateCFEvaluationCommands.add("REMOVE_PIVOT");
 invalidateCFEvaluationCommands.add("INSERT_PIVOT");
 
 cellMenuRegistry.add("pivot_see_records", {
-    name: _lt("See records"),
+    name: _t("See records"),
     sequence: 175,
     execute: async (env) => {
         const position = env.model.getters.getActivePosition();

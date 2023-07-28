@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { listView } from "@web/views/list/list_view";
@@ -80,7 +80,7 @@ export const accountFileUploader = {
     extractProps: ({ attrs }) => ({
         togglerTemplate: attrs.template || "account.JournalUploadLink",
         btnClass: attrs.btnClass || "",
-        linkText: attrs.linkText || attrs.title || _lt("Upload"), //TODO: remove linkText attr in master (not translatable)
+        linkText: attrs.linkText || attrs.title || _t("Upload"), //TODO: remove linkText attr in master (not translatable)
     }),
     fieldDependencies: [
         { name: "id", type: "integer" },

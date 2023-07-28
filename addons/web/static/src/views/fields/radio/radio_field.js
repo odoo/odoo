@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Component } from "@odoo/owl";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
@@ -76,10 +76,10 @@ export class RadioField extends Component {
 
 export const radioField = {
     component: RadioField,
-    displayName: _lt("Radio"),
+    displayName: _t("Radio"),
     supportedOptions: [
         {
-            label: _lt("Display horizontally"),
+            label: _t("Display horizontally"),
             name: "horizontal",
             type: "boolean",
         },

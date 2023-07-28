@@ -6,9 +6,8 @@ import mixins from "@web/legacy/js/core/mixins";
 import {setCookie} from "@web/legacy/js/core/cookie_utils";
 import { session } from "@web/session";
 import { loadJS } from "@web/core/assets";
-
-
-var _t = core._t;
+import { localization } from "@web/core/l10n/localization";
+const _t = core._t; 
 var qweb = core.qweb;
 
 // To do: refactor session. Session accomplishes several concerns (rpc,
@@ -333,7 +332,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     _configureLocale: function () {
         // TODO: try to test when re - writing this file in the new system with luxon
-        const dow = (_t.database.parameters.week_start || 0) % 7;
+        const dow = (localization.weekStart || 0) % 7;
         moment.updateLocale(moment.locale(), {
             week: {
                 dow: dow,

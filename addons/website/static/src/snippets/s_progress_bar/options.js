@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
 import utils from "@web/legacy/js/core/utils";
 import options from "@web_editor/js/editor/snippets.options";
-
-const _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 
 options.registry.progress = options.Class.extend({
 

@@ -7,7 +7,6 @@
  */
 
 import AbstractField from "@web/legacy/js/fields/abstract_field";
-import core from "@web/legacy/js/services/core";
 import datepicker from "@web/legacy/js/widgets/date_picker";
 import dom from "@web/legacy/js/core/dom";
 import framework from "@web/legacy/js/core/misc";
@@ -18,9 +17,7 @@ import utils from "@web/legacy/js/core/utils";
 import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
-
-var _t = core._t;
-var _lt = core._lt;
+import { _t } from "@web/core/l10n/translation";
 
 var TranslatableFieldMixin = {
     //--------------------------------------------------------------------------
@@ -62,7 +59,7 @@ var TranslatableFieldMixin = {
 
 var FieldBoolean = AbstractField.extend({
     className: 'o_field_boolean',
-    description: _lt("Checkbox"),
+    description: _t("Checkbox"),
     events: Object.assign({}, AbstractField.prototype.events, {
         change: '_onChange',
     }),
@@ -707,7 +704,7 @@ var NumericField = InputField.extend({
 });
 
 var FieldChar = InputField.extend(TranslatableFieldMixin, {
-    description: _lt("Text"),
+    description: _t("Text"),
     className: 'o_field_char',
     tagName: 'span',
     supportedFieldTypes: ['char'],
@@ -751,7 +748,7 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
 });
 
 var FieldDate = InputField.extend({
-    description: _lt("Date"),
+    description: _t("Date"),
     className: "o_field_date",
     tagName: "span",
     supportedFieldTypes: ['date', 'datetime'],
@@ -907,7 +904,7 @@ var FieldDate = InputField.extend({
 });
 
 var FieldDateTime = FieldDate.extend({
-    description: _lt("Date & Time"),
+    description: _t("Date & Time"),
     supportedFieldTypes: ['datetime'],
     isQuickEditable: true,
 
@@ -968,7 +965,7 @@ var FieldDateTime = FieldDate.extend({
 });
 
 var FieldMonetary = NumericField.extend({
-    description: _lt("Monetary"),
+    description: _t("Monetary"),
     className: 'o_field_monetary o_field_number',
     tagName: 'span',
     supportedFieldTypes: ['float', 'monetary'],
@@ -1081,7 +1078,7 @@ var FieldMonetary = NumericField.extend({
 });
 
 var FieldInteger = NumericField.extend({
-    description: _lt("Integer"),
+    description: _t("Integer"),
     className: 'o_field_integer o_field_number',
     supportedFieldTypes: ['integer'],
     isQuickEditable: true,
@@ -1116,7 +1113,7 @@ var FieldInteger = NumericField.extend({
 });
 
 var FieldFloat = NumericField.extend({
-    description: _lt("Decimal"),
+    description: _t("Decimal"),
     className: 'o_field_float o_field_number',
     supportedFieldTypes: ['float'],
     isQuickEditable: true,
@@ -1136,7 +1133,7 @@ var FieldFloat = NumericField.extend({
 });
 
 var FieldFloatTime = FieldFloat.extend({
-    description: _lt("Time"),
+    description: _t("Time"),
     // this is not strictly necessary, as for this widget to be used, the 'widget'
     // attrs must be set to 'float_time', so the formatType is automatically
     // 'float_time', but for the sake of clarity, we explicitely define a
@@ -1324,7 +1321,7 @@ var FieldFloatToggle = AbstractField.extend({
 
 var FieldPercentage = FieldFloat.extend({
     className: 'o_field_float_percentage o_field_number',
-    description: _lt("Percentage"),
+    description: _t("Percentage"),
 
     /**
      * @constructor
@@ -1361,7 +1358,7 @@ var FieldPercentage = FieldFloat.extend({
 });
 
 var FieldText = InputField.extend(TranslatableFieldMixin, {
-    description: _lt("Multiline Text"),
+    description: _t("Multiline Text"),
     className: 'o_field_text',
     supportedFieldTypes: ['text', 'html'],
     tagName: 'span',
@@ -1427,7 +1424,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
 });
 
 var UrlWidget = InputField.extend({
-    description: _lt("URL"),
+    description: _t("URL"),
     className: 'o_field_url',
     events: Object.assign({}, InputField.prototype.events, {
         'click': '_onClick',
@@ -1627,7 +1624,7 @@ var AbstractFieldBinary = AbstractField.extend({
 });
 
 export var FieldBinaryFile = AbstractFieldBinary.extend({
-    description: _lt("File"),
+    description: _t("File"),
     template: 'FieldBinaryFile',
     events: Object.assign({}, AbstractFieldBinary.prototype.events, {
         'click': function (event) {
@@ -1704,7 +1701,7 @@ export var FieldBinaryFile = AbstractFieldBinary.extend({
  * switching between a green bullet / gray bullet.
 */
 var FieldToggleBoolean = AbstractField.extend({
-    description: _lt("Button"),
+    description: _t("Button"),
     template: "toggle_button",
     events: {
         'click': '_onToggleButton'

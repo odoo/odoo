@@ -2,14 +2,14 @@
 
     import publicWidget from '@web/legacy/js/public/public_widget';
     import Dialog from '@web/legacy/js/core/dialog';
-    import  { qweb as QWeb, _t } from "@web/legacy/js/services/core";
+    import  { qweb as QWeb } from 'web.core';
     import session from 'web.session';
     import { Markup } from "@web/legacy/js/core/utils";
     import CourseJoin from '@website_slides/js/slides_course_join';
     import QuestionFormWidget from '@website_slides/js/slides_course_quiz_question_form';
     import SlideQuizFinishModal from '@website_slides/js/slides_course_quiz_finish';
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
-
+    import { _t } from "@web/core/l10n/translation";
     import SlideEnroll from '@website_slides/js/slides_course_enroll_email';
 
     const CourseJoinWidget = CourseJoin.courseJoinWidget;

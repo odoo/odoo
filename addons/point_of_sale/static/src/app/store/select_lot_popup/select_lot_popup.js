@@ -2,7 +2,7 @@
 
 import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
 import { useAutoFocusToLast } from "@point_of_sale/app/utils/hooks";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useState } from "@odoo/owl";
 import { EditListInput } from "@point_of_sale/app/store/select_lot_popup/edit_list_input/edit_list_input";
 
@@ -42,8 +42,8 @@ export class EditListPopup extends AbstractAwaitablePopup {
     static components = { EditListInput };
     static template = "point_of_sale.EditListPopup";
     static defaultProps = {
-        confirmText: _lt("Add"),
-        cancelText: _lt("Discard"),
+        confirmText: _t("Add"),
+        cancelText: _t("Discard"),
         array: [],
         isSingleItem: false,
     };

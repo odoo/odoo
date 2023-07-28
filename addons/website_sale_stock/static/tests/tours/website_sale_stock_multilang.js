@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add('website_sale_stock_multilang', {
         isCheck: true,
     }, {
         content: "Check price",
-        trigger: 'span:contains("123,45")',
+        trigger: "span.oe_currency_value:contains('10 123,45')",
         isCheck: true,
     }, {
         content: "Open language selector",
@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add('website_sale_stock_multilang', {
         isCheck: true,
     }, {
         content: "Check price",
-        trigger: 'span:contains("123.45")',
+        trigger: "span.oe_currency_value:contains('10,123.45')",
         isCheck: true,
     }, {
         content: "Open language selector",
@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add('website_sale_stock_multilang', {
         isCheck: true,
     }, {
         content: "Check price",
-        trigger: 'span:contains("123,45")',
+        trigger: "span.oe_currency_value:contains('10 123,45')",
         isCheck: true,
     }],
 });

@@ -10,8 +10,7 @@
     import concurrency from "@web/legacy/js/core/concurrency";
     import { sprintf } from "@web/core/utils/strings";
     import { debounce } from "@web/core/utils/timing";
-
-    var _t = core._t;
+    import { _t } from "@web/core/l10n/translation";
     var qweb = core.qweb;
 
     publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({

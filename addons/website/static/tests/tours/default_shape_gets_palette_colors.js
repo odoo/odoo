@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour("default_shape_gets_palette_colors", {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',

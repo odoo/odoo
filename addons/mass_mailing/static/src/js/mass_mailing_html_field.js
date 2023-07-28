@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { initializeDesignTabCss } from "@mass_mailing/js/mass_mailing_design_constants";
 import { toInline, getCSSRules } from "@web_editor/js/backend/convert_inline";
@@ -634,9 +634,9 @@ export class MassMailingHtmlField extends HtmlField {
 export const massMailingHtmlField = {
     ...htmlField,
     component: MassMailingHtmlField,
-    displayName: _lt("Email"),
+    displayName: _t("Email"),
     supportedOptions: [...htmlField.supportedOptions, {
-        label: _lt("Filter templates"),
+        label: _t("Filter templates"),
         name: "filterTemplates",
         type: "boolean"
     }],

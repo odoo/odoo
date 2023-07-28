@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
@@ -44,7 +44,7 @@ invalidateCFEvaluationCommands.add("INSERT_ODOO_LIST");
 invalidateCFEvaluationCommands.add("REMOVE_ODOO_LIST");
 
 cellMenuRegistry.add("list_see_record", {
-    name: _lt("See record"),
+    name: _t("See record"),
     sequence: 200,
     execute: async (env) => {
         const position = env.model.getters.getActivePosition();

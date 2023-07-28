@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -38,7 +38,7 @@ export class BadgeField extends Component {
 
 export const badgeField = {
     component: BadgeField,
-    displayName: _lt("Badge"),
+    displayName: _t("Badge"),
     supportedTypes: ["selection", "many2one", "char"],
     extractProps: ({ decorations }) => {
         return { decorations };

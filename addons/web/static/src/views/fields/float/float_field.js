@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useInputField } from "../input_field_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
@@ -59,27 +59,27 @@ export class FloatField extends Component {
 
 export const floatField = {
     component: FloatField,
-    displayName: _lt("Float"),
+    displayName: _t("Float"),
     supportedOptions: [
         {
-            label: _lt("Format number"),
+            label: _t("Format number"),
             name: "enable_formatting",
             type: "boolean",
-            help: _lt("Format the value according to your language setup - e.g. thousand separators, rounding, etc."),
+            help: _t("Format the value according to your language setup - e.g. thousand separators, rounding, etc."),
             default: true,
         },
         {
-            label: _lt("Digits"),
+            label: _t("Digits"),
             name: "digits",
             type: "string",
         },
         {
-            label: _lt("Type"),
+            label: _t("Type"),
             name: "type",
             type: "string",
         },
         {
-            label: _lt("Step"),
+            label: _t("Step"),
             name: "step",
             type: "number",
         },

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { archParseBoolean } from "@web/views/utils";
 import { standardFieldProps } from "../standard_field_props";
@@ -35,7 +35,7 @@ export class StatInfoField extends Component {
 
 export const statInfoField = {
     component: StatInfoField,
-    displayName: _lt("Stat Info"),
+    displayName: _t("Stat Info"),
     supportedTypes: ["float", "integer", "monetary"],
     isEmpty: () => false,
     extractProps: ({ attrs, options, string }) => {

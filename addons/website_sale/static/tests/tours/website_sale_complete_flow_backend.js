@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('website_sale_tour_backend', {
     test: true,
     url: '/shop/cart',
     edition: true,
-}, [
+}, () => [
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',

@@ -2,8 +2,9 @@
 
 import publicWidget from '@web/legacy/js/public/public_widget';
 import Dialog from "@web/legacy/js/core/dialog";
-import {_t, qweb} from "@web/legacy/js/services/core";
+import { qweb } from "@web/legacy/js/services/core";
 import session from "web.session";
+import { _t } from "@web/core/l10n/translation";
 
 publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
     selector: '.o_portal_new_api_key',

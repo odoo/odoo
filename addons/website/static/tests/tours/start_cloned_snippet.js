@@ -6,15 +6,16 @@ const countdownSnippet = {
     name: 'Countdown',
     id: 's_countdown',
 };
-const dragNDropOutOfFooter = wTourUtils.dragNDrop(countdownSnippet);
-dragNDropOutOfFooter.run = 'drag_and_drop iframe #wrapwrap #wrap';
 
 wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
     edition: true,
     test: true,
     url: '/',
-}, [
-    dragNDropOutOfFooter,
+}, () => [
+    {
+        ...wTourUtils.dragNDrop(countdownSnippet), 
+        run : "drag_and_drop iframe #wrapwrap #wrap",
+    },
     wTourUtils.clickOnSnippet(countdownSnippet),
     {
         content: 'Click on clone snippet',

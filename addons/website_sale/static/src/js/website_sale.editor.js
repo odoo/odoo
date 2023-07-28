@@ -6,11 +6,12 @@ import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
 import { useWowlService } from "@web/legacy/utils";
-import {qweb, _t} from "@web/legacy/js/services/core";
+import { qweb } from "@web/legacy/js/services/core";
 import { Markup } from "@web/legacy/js/core/utils";
 import Dialog from "@web/legacy/js/core/dialog";
 import "@website/js/editor/snippets.options";
 import { patch } from "@web/core/utils/patch";
+import { _t } from "@web/core/l10n/translation";
 
 const { onRendered } = owl;
 patch(WysiwygAdapterComponent.prototype, 'website_sale/static/src/js/website_sale.editor.js', {

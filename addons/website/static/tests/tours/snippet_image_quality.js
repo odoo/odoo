@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('website_image_quality', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',

@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_undraw", {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
 wTourUtils.dragNDrop({
     id: 's_text_image',
     name: 'Text - Image',
@@ -24,7 +24,7 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({
         id: 's_process_steps',
         name: 'Steps',
@@ -64,7 +64,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
     test: true,
     url: "/",
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({
         id: "s_text_image",
         name: "Text - Image",

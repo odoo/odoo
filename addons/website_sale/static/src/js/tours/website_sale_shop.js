@@ -1,14 +1,13 @@
 /** @odoo-module **/
-
-    import {_t} from "@web/legacy/js/services/core";
+    
+    import { _t } from "@web/core/l10n/translation";
     import { Markup } from "@web/legacy/js/core/utils";
     import wTourUtils from "@website/js/tours/tour_utils";
-    import "@web/legacy/translations_loaded";
 
     wTourUtils.registerWebsitePreviewTour("shop", {
         url: '/shop',
         sequence: 130,
-    }, [{
+    }, () => [{
         trigger: ".o_menu_systray .o_new_content_container > a",
         content: _t("Let's create your first product."),
         extra_trigger: "iframe .js_sale",

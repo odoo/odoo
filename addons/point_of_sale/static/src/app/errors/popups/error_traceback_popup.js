@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
@@ -10,13 +10,13 @@ const { DateTime } = luxon;
 export class ErrorTracebackPopup extends ErrorPopup {
     static template = "point_of_sale.ErrorTracebackPopup";
     static defaultProps = {
-        confirmText: _lt("Ok"),
-        cancelText: _lt("Cancel"),
+        confirmText: _t("Ok"),
+        cancelText: _t("Cancel"),
         confirmKey: false,
-        title: _lt("Error with Traceback"),
+        title: _t("Error with Traceback"),
         body: "",
         exitButtonIsShown: false,
-        exitButtonText: _lt("Exit Pos"),
+        exitButtonText: _t("Exit Pos"),
     };
 
     setup() {

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t, _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { Layout } from "@web/search/layout";
@@ -20,10 +20,10 @@ import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Component, useState } from "@odoo/owl";
 
 export const SCALE_LABELS = {
-    day: _lt("Day"),
-    week: _lt("Week"),
-    month: _lt("Month"),
-    year: _lt("Year"),
+    day: _t("Day"),
+    week: _t("Week"),
+    month: _t("Month"),
+    year: _t("Year"),
 };
 
 function useUniqueDialog() {
@@ -207,7 +207,7 @@ export class CalendarController extends Component {
             confirm: () => {
                 this.model.unlinkRecord(record.id);
             },
-            confirmLabel: _lt("Delete"),
+            confirmLabel: _t("Delete"),
             cancel: () => {
                 // `ConfirmationDialog` needs this prop to display the cancel
                 // button but we do nothing on cancel.

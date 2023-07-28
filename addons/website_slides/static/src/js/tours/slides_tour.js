@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import {_t} from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import { Markup } from "@web/legacy/js/core/utils";
 import wTourUtils from "@website/js/tours/tour_utils";
-import "@web/legacy/translations_loaded";
 
 wTourUtils.registerWebsitePreviewTour('slides_tour', {
     url: '/slides',
-}, [{
+}, () => [{
     trigger: "body:not(.editor_has_snippets) .o_new_content_container > a",
     content: Markup(_t("Welcome on your course's home page. It's still empty for now. Click on \"<b>New</b>\" to write your first course.")),
     consumeVisibleOnly: true,

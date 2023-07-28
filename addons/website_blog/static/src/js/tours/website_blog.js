@@ -1,13 +1,11 @@
 /** @odoo-module **/
-
-    import {_t} from "@web/legacy/js/services/core";
-    import "@web/legacy/translations_loaded";
+    import { _t } from "@web/core/l10n/translation";
     import { Markup } from "@web/legacy/js/core/utils";
     import wTourUtils from "@website/js/tours/tour_utils";
 
     wTourUtils.registerWebsitePreviewTour("blog", {
         url: "/",
-    }, [{
+    }, () => [{
         trigger: "body:not(:has(#o_new_content_menu_choices)) .o_new_content_container > a",
         content: _t("Click here to add new content to your website."),
         consumeVisibleOnly: true,

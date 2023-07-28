@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
-
-var _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 
 var BarChart = publicWidget.Widget.extend({
     jsLibs: [

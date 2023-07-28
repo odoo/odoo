@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from "../l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { Component, useRef, useState } from "@odoo/owl";
 import { Dialog } from "../dialog/dialog";
 import { Domain } from "@web/core/domain";

@@ -2,12 +2,9 @@
 
 import { registry } from "@web/core/registry";
 import { Markup } from "@web/legacy/js/core/utils";
-import core from "@web/legacy/js/services/core";
-import "@web/legacy/translations_loaded";
-
 import "@crm/js/tours/crm";
 import { patch } from "@web/core/utils/patch";
-var _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 
 patch(registry.category("web_tour.tours").get("crm_tour"), "patch_crm_tour", {
     steps() {

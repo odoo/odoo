@@ -53,7 +53,7 @@ wTourUtils.registerWebsitePreviewTour("focus_blur_snippets", {
     test: true,
     url: "/",
     edition: true,
-}, [
+}, () => [
     {
         content: 'Drag the custom block into the page',
         trigger: '#snippet_structure .oe_snippet:has(.oe_snippet_body.s_focusblur) .oe_snippet_thumbnail',

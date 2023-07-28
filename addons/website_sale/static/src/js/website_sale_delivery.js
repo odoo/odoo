@@ -3,7 +3,7 @@
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
-const _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 const qweb = core.qweb;
 import concurrency from "@web/legacy/js/core/concurrency";
 

@@ -29,7 +29,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     // 1. Test links in page content (web_editor)
     wTourUtils.dragNDrop({
         id: 's_text_image',

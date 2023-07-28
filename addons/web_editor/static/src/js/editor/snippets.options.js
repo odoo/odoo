@@ -43,10 +43,9 @@ import {
     convertCSSColorToRgba,
     normalizeCSSColor,
  } from '@web/core/utils/colors';
-
+ import { _t } from "@web/core/l10n/translation";
+ 
 var qweb = core.qweb;
-var _t = core._t;
-const _lt = core._lt;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const descendants = OdooEditorLib.descendants;
 
@@ -957,7 +956,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     events: {
         'click': '_onClick',
     },
-    PLACEHOLDER_TEXT: _lt("None"),
+    PLACEHOLDER_TEXT: _t("None"),
 
     /**
      * @override

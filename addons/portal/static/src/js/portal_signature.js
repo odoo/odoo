@@ -3,9 +3,9 @@
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { NameAndSignature } from "@web/legacy/js/widgets/name_and_signature";
+import { _t } from "@web/core/l10n/translation";
 var qweb = core.qweb;
 
-var _t = core._t;
 
 /**
  * This widget is a signature request form. It uses

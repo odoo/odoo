@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour("shop_editor", {
     test: true,
     url: "/shop",
     edition: true,
-}, [{
+}, () => [{
     content: "Click on pricelist dropdown",
     trigger: "iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
 }, {

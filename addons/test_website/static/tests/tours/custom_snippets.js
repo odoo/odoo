@@ -25,7 +25,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     url: '/',
     edition: true,
     test: true,
-}, [
+}, () => [
     {
         content: "drop a snippet",
         trigger: ".oe_snippet[name='Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",

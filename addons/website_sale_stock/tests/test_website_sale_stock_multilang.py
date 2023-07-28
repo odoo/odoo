@@ -21,7 +21,7 @@ class TestWebsiteSaleStockMultilang(HttpCase):
             'allow_out_of_stock_order': False,
             'sale_ok': True,
             'website_published': True,
-            'list_price': 123.45,
+            'list_price': 10123.45,
             'out_of_stock_message': 'Out of stock',
         })
         unavailable_product.update_field_translations('out_of_stock_message', {

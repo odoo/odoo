@@ -25,8 +25,7 @@ import {
     xml,
 } from "@odoo/owl";
 import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
-
-var _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 
 let cacheSnippetTemplate = {};
 

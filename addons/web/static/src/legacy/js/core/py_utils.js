@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
-
-var _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 var py = window.py; // to silence linters
 
 // recursively wraps JS objects passed into the context to attributedicts

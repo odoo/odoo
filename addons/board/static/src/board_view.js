@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { BoardController } from "./board_controller";
 import { XMLParser } from "@web/core/utils/xml";
@@ -60,7 +60,7 @@ export class BoardArchParser extends XMLParser {
 
 export const boardView = {
     type: "form",
-    display_name: _lt("Board"),
+    display_name: _t("Board"),
     Controller: BoardController,
 
     props: (genericProps, view) => {

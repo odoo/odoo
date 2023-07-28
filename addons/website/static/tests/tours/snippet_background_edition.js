@@ -95,7 +95,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_background_edition', {
     edition: true,
     test: true,
 },
-[
+() => [
 wTourUtils.dragNDrop(snippets[0]),
 wTourUtils.clickOnSnippet(snippets[0]),
 

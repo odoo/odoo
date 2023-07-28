@@ -59,7 +59,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({id: 's_social_media', name: 'Social Media'}),
     wTourUtils.clickOnSnippet({id: 's_social_media', name: 'Social Media'}),
     ...addNewSocialNetwork(7, 7, 'https://www.youtu.be/y7TlnAv6cto'),

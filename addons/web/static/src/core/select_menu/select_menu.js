@@ -3,7 +3,7 @@
 import { Component, useState, useRef, onWillUpdateProps, useEffect } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useDebounced } from "@web/core/utils/timing";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -24,7 +24,7 @@ export class SelectMenu extends Component {
         onSelect: () => {},
         required: false,
         searchable: true,
-        searchPlaceholder: _lt("Search..."),
+        searchPlaceholder: _t("Search..."),
         choices: [],
         groups: [],
     };

@@ -3,8 +3,7 @@
 import core from "@web/legacy/js/services/core";
 import PortalChatter from "@portal/js/portal_chatter";
 import { roundPrecision } from "@web/core/utils/numbers";
-
-var _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 var qweb = core.qweb;
 
 /**

@@ -4,9 +4,8 @@ import { escape, sprintf } from "@web/core/utils/strings";
 import ajax from "@web/legacy/js/core/ajax";
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
-
+import { _t } from "@web/core/l10n/translation";
 var qweb = core.qweb;
-var _t = core._t;
 
 /**
  * Widget PortalComposer

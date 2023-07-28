@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     test: true,
     url: "/",
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text"}),
     wTourUtils.dragNDrop({id: "s_popup", name: "Popup"}),
     {

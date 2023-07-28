@@ -1,15 +1,14 @@
 /** @odoo-module **/
 
-    import {_t} from "@web/legacy/js/services/core";
+    import { _t } from "@web/core/l10n/translation";
     import { Markup } from "@web/legacy/js/core/utils";
     import wTourUtils from "@website/js/tours/tour_utils";
-    import "@web/legacy/translations_loaded";
 
 
     wTourUtils.registerWebsitePreviewTour("website_event_tour", {
         test: true,
         url: "/",
-    }, [{
+    }, () => [{
         content: _t("Click here to add new content to your website."),
         trigger: ".o_menu_systray .o_new_content_container > a",
         consumeVisibleOnly: true,

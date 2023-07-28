@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import AccountingPlugin from "./plugins/accounting_plugin";
 import { getFirstAccountFunction, getNumberOfAccountFormulas } from "./utils";
@@ -14,7 +14,7 @@ const { toString, toBoolean } = spreadsheet.helpers;
 featurePluginRegistry.add("odooAccountingAggregates", AccountingPlugin);
 
 cellMenuRegistry.add("move_lines_see_records", {
-    name: _lt("See records"),
+    name: _t("See records"),
     sequence: 176,
     async execute(env) {
         const position = env.model.getters.getActivePosition();

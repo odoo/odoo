@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
 import { makeContext } from "@web/core/context";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { XMLParser } from "@web/core/utils/xml";
 import { DEFAULT_INTERVAL, DEFAULT_PERIOD } from "@web/search/utils/dates";
 
-const ALL = _lt("All");
+const ALL = _t("All");
 const DEFAULT_LIMIT = 200;
 const DEFAULT_VIEWS_WITH_SEARCH_PANEL = ["kanban", "list"];
 

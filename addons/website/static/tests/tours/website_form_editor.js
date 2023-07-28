@@ -128,7 +128,7 @@
         url: '/',
         edition: true,
         test: true,
-    }, [
+    }, () => [
         // Drop a form builder snippet and configure it
         {
             content: "Drop the form snippet",
@@ -535,7 +535,7 @@
         url: '/contactus',
         edition: true,
         test: true,
-    }, editContactUs([
+    }, () => editContactUs([
         {
             content: 'Change the Recipient Email',
             trigger: '[data-field-name="email_to"] input',
@@ -546,7 +546,7 @@
         url: '/contactus',
         edition: true,
         test: true,
-    }, editContactUs([
+    }, () => editContactUs([
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
@@ -558,7 +558,7 @@
         test: true,
         url: '/',
         edition: true,
-    }, [
+    }, () => [
         // Create a form with two checkboxes: the second one required but
         // invisible when the first one is checked. Basically this should allow
         // to have: both checkboxes are visible by default but the form can
