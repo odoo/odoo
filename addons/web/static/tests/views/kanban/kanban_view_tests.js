@@ -4391,7 +4391,7 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
             groupBy: ["product_id"],
             async mockRPC(route, { method, model }) {
-                if (method === "create" && model === "product") {
+                if (method === "name_create" && model === "product") {
                     await prom;
                 }
             },
@@ -5670,7 +5670,7 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
             groupBy: ["product_id"],
             async mockRPC(route, { method }) {
-                if (method === "create" || route === "/web/dataset/resequence") {
+                if (method === "name_create" || route === "/web/dataset/resequence") {
                     assert.step(method || route);
                 }
             },
@@ -5718,7 +5718,7 @@ QUnit.module("Views", (hooks) => {
             "o_column_folded",
             "the created column should not be folded"
         );
-        assert.verifySteps(["create", "/web/dataset/resequence"]);
+        assert.verifySteps(["name_create", "/web/dataset/resequence"]);
 
         // fold and unfold the created column, and check that no RPCs are done (as there are no records)
         const clickColumnAction = await toggleColumnActions(2);
@@ -6107,7 +6107,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         assert.deepEqual(resequencedIDs, [4, 3], "moved column should be resequenced accordingly");
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["name_create"]);
     });
 
     QUnit.test("create a column, delete it and create another one", async (assert) => {
@@ -6535,6 +6535,43 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("quick create column with x_name as _rec_name", async (assert) => {
+        serverData.models.product = {
+            fields: {
+                id: { string: "ID", type: "integer" },
+                x_name: { string: "Display Name", type: "char" },
+            },
+            records: [
+                { id: 3, x_name: "hello" },
+                { id: 5, x_name: "xmo" },
+            ],
+        };
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            mockRPC(route, { model, method, args }) {
+                if (model == "product" && method === "name_create") {
+                    serverData.models.product.records.push({ id: 6, x_name: args[0] });
+                    return Promise.resolve([6, args[0]]);
+                }
+            },
+            arch: `<kanban>
+                <field name="product_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+            groupBy: ["product_id"],
+        });
+        await createColumn();
+        await editColumnName("New Column 1");
+        await validateColumn();
+        assert.containsN(target, ".o_kanban_group", 3, "should now have three columns");
+    });
+
     QUnit.test("quick create column and examples: with folded columns", async (assert) => {
         serverData.models.partner.records = [];
         serverData.models.product.fields.folded = { string: "Folded", type: "boolean" };
@@ -6552,7 +6589,6 @@ QUnit.module("Views", (hooks) => {
             ],
         });
 
-        const expectedGroups = ['[[{"name":"not folded"}]]', '[[{"folded":true,"name":"folded"}]]'];
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -6566,10 +6602,9 @@ QUnit.module("Views", (hooks) => {
                 </kanban>
             `,
             groupBy: ["product_id"],
-            mockRPC(route, args) {
-                if (args?.method === "create") {
-                    assert.step(`${args.method} (model: ${args.model})`);
-                    assert.strictEqual(JSON.stringify(args.args), expectedGroups.shift());
+            mockRPC(route, { model, method, args }) {
+                if (method === "name_create" || method == "write") {
+                    assert.step(`${method} (model: ${model}):${JSON.stringify(args)}`);
                 }
             },
         });
@@ -6583,7 +6618,11 @@ QUnit.module("Views", (hooks) => {
         // apply the examples
         assert.verifySteps([]);
         await click(document.body, ".modal .modal-footer .btn.btn-primary");
-        assert.verifySteps(["create (model: product)", "create (model: product)"]);
+        assert.verifySteps([
+            'name_create (model: product):["not folded"]',
+            'name_create (model: product):["folded"]',
+            'write (model: product):[[7],{"folded":true}]',
+        ]);
 
         // the applied examples should be visible
         assert.containsN(target, ".o_kanban_group", 2);
@@ -9341,7 +9380,7 @@ QUnit.module("Views", (hooks) => {
                 "read_progress_bar",
                 "web_search_read",
                 "web_search_read",
-                "create",
+                "name_create",
                 "/web/dataset/resequence",
             ]);
         }
