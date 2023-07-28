@@ -169,10 +169,6 @@ class TestTaxCommon(AccountTestInvoicingCommon):
 @tagged('post_install', '-at_install')
 class TestTax(TestTaxCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super(TestTax, cls).setUpClass()
-
     def test_tax_group_of_group_tax(self):
         self.fixed_tax.include_base_amount = True
         res = self.group_of_group_tax.compute_all(200.0)

@@ -10,7 +10,7 @@ class TestTaxPython(TestTaxCommon):
     def setUpClass(cls):
         super(TestTaxPython, cls).setUpClass()
         cls.python_tax = cls.env['account.tax'].create({
-            'name': 'Python TAx',
+            'name': 'Python Tax',
             'amount_type': 'code',
             'amount': 0.0,
             'python_compute': 'result = ((price_unit * quantity) - ((price_unit * quantity) / 1.12)) * 0.5',
@@ -49,12 +49,12 @@ class TestTaxPython(TestTaxCommon):
         res = (self.python_tax + self.python_tax).compute_all(130.0)
         self._check_compute_all_results(
             130,    # 'total_included'
-            116.07, # 'total_excluded'
+            116.08, # 'total_excluded'
             [
                 # base , amount     | seq | amount | incl | incl_base
                 # ---------------------------------------------------
-                (116.07, 6.96),   # |  1  |    6%  |   t  |
-                (116.07, 6.97),   # |  1  |    6%  |   t  |
+                (116.08, 6.96),   # |  1  |    6%  |   t  |
+                (116.08, 6.96),   # |  1  |    6%  |   t  |
                 # ---------------------------------------------------
             ],
             res
