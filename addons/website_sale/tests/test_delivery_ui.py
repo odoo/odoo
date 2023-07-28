@@ -7,6 +7,15 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_free_delivery_when_exceed_threshold(self):
+        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
+            self.skipTest("Transfer provider is not installed")
+
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
+            'state': 'enabled',
+            'is_published': True,
+        })
+        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         # Avoid Shipping/Billing address page
         self.env.ref('base.partner_admin').write({
@@ -61,11 +70,5 @@ class TestUi(odoo.tests.HttpCase):
             'variable': 'price',
             'list_base_price': 0,
         }])
-
-        self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-
-        # Ensure "Wire Transfer" is the default provider.
-        # Providers are sorted by state, showing `test` providers first (don't ask why).
-        self.env.ref("payment.payment_provider_transfer").write({"state": "test"})
 
         self.start_tour("/", 'check_free_delivery', login="admin")
