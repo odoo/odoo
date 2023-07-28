@@ -53,8 +53,8 @@ patch(SuggestionService.prototype, "discuss/core/common", {
             if (!c1.channel_types && c2.channel_types) {
                 return 1;
             }
-            const cleanedName1 = cleanTerm(c1.name || "");
-            const cleanedName2 = cleanTerm(c2.name || "");
+            const cleanedName1 = cleanTerm(c1.name);
+            const cleanedName2 = cleanTerm(c2.name);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)

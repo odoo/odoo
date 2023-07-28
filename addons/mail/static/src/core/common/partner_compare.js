@@ -47,8 +47,8 @@ partnerCompareRegistry.add(
 partnerCompareRegistry.add(
     "mail.name",
     (p1, p2, { searchTerm }) => {
-        const cleanedName1 = cleanTerm(p1.name ?? "");
-        const cleanedName2 = cleanTerm(p2.name ?? "");
+        const cleanedName1 = cleanTerm(p1.name);
+        const cleanedName2 = cleanTerm(p2.name);
         if (cleanedName1.startsWith(searchTerm) && !cleanedName2.startsWith(searchTerm)) {
             return -1;
         }
@@ -68,8 +68,8 @@ partnerCompareRegistry.add(
 partnerCompareRegistry.add(
     "mail.email",
     (p1, p2, { searchTerm }) => {
-        const cleanedEmail1 = cleanTerm(p1.email ?? "");
-        const cleanedEmail2 = cleanTerm(p2.email ?? "");
+        const cleanedEmail1 = cleanTerm(p1.email);
+        const cleanedEmail2 = cleanTerm(p2.email);
         if (cleanedEmail1.startsWith(searchTerm) && !cleanedEmail1.startsWith(searchTerm)) {
             return -1;
         }
