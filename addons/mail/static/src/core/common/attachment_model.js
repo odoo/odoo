@@ -16,6 +16,7 @@ export class Attachment extends Record {
     mimetype;
     name;
     originThreadLocalId;
+    res_name;
     type;
     /** @type {string} */
     tmpUrl;
