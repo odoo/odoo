@@ -484,9 +484,21 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         default_fiscal_position = self.config.default_fiscal_position_id
         fiscal_position = customer.property_account_position_id if customer else default_fiscal_position
 
-        def create_order_line(product, quantity, discount=0.0):
+        def normalize_order_line_param(param):
+            if isinstance(param, dict):
+                return param
+
+            assert len(param) >= 2
+            return {
+                'product': param[0],
+                'quantity': param[1],
+                'discount': 0.0 if len(param) == 2 else param[2],
+            }
+
+        def create_order_line(product, quantity, **kwargs):
             price_unit = self.pricelist._get_product_price(product, quantity)
             tax_ids = fiscal_position.map_tax(product.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company)))
+            discount = kwargs.get('discount', 0.0)
             price_unit_after_discount = price_unit * (1 - discount / 100.0)
             tax_values = (
                 tax_ids.compute_all(price_unit_after_discount, self.currency, quantity)
@@ -497,7 +509,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 }
             )
             return (0, 0, {
-                'discount': discount,
+                **kwargs,
                 'id': randint(1, 1000000),
                 'pack_lot_ids': [],
                 'price_unit': price_unit,
@@ -519,9 +531,8 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         # 1. generate the order lines
         order_lines = [
-            create_order_line(product, quantity, discount and discount[0] or 0.0)
-            for product, quantity, *discount
-            in pos_order_lines_ui_args
+            create_order_line(**normalize_order_line_param(param))
+            for param in pos_order_lines_ui_args
         ]
 
         # 2. generate the payments
