@@ -519,28 +519,25 @@
                                 <field name="active" invisible="1"/>
                                 <field name="type" invisible="1"/>
                                 <field name="detailed_type" invisible="1"/>
-                                <field name="standard_price" help="When the cost of an expense product is different than 0, then the user using this product won't be able to change the amount of the expense, only the quantity. Use a cost different than 0 for expense categories funded by the company at fixed cost like allowances for mileage, per diem, accommodation or meal."/>
-                                <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
+                                <field name="standard_price" class="w-25" help="When the cost of an expense product is different than 0, then the user using this product won't be able to change the amount of the expense, only the quantity. Use a cost different than 0 for expense categories funded by the company at fixed cost like allowances for mileage, per diem, accommodation or meal."/>
+                                <field name="uom_id" class="w-25" groups="uom.group_uom" options="{'no_create': True}"/>
                                 <field name="uom_po_id" invisible="1"/>
                                 <label for="default_code"/>
                                 <div>
-                                    <field name="default_code"/>
+                                    <field name="default_code" class="w-50"/>
                                     <span class="d-inline-block"><i class="text-muted">Use this reference as a subject prefix when submitting by email.</i></span>
                                 </div>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="categ_id" class="w-50"/>
+                                <field name="company_id" class="w-50" groups="base.group_multi_company"/>
                             </group>
                             <group string="Accounting">
-                                <field name="property_account_expense_id" groups="account.group_account_readonly"/>
-                                <field name="supplier_taxes_id" widget="many2many_tags"
+                                <field name="property_account_expense_id" class="w-50" groups="account.group_account_readonly"/>
+                                <field name="supplier_taxes_id" class="w-50" widget="many2many_tags"
                                        context="{'default_type_tax_use':'purchase', 'default_price_include': 1}"
                                        options="{'no_quick_create': True}"/>
                             </group>
                         </group>
-                        <notebook>
-                            <page string="Internal Note" name="internal_note">
-                                <field name="description" placeholder="This note will be shown to users when they select this expense product."/>
-                            </page>
-                        </notebook>
+                        <field name="description" class="mt-5" placeholder="This note will be shown to users when they select this expense product."/>
                     </sheet>
                 </form>
             </field>
