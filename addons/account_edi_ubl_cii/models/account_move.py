@@ -52,3 +52,7 @@ class AccountMove(models.Model):
                 return ubl_cii_xml_builder._import_invoice_ubl_cii
 
         return super()._get_edi_decoder(file_data, new=new)
+
+    def _get_edi_doc_attachments_to_export(self):
+        # EXTENDS 'account'
+        return super()._get_edi_doc_attachments_to_export() + self.ubl_cii_xml_id
