@@ -8,10 +8,10 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ForecastWidgetField extends FloatField {
     setup() {
-        const { data, fields } = this.props.record;
+        const { data, fields, resId } = this.props.record;
         this.actionService = useService("action");
         this.orm = useService("orm");
-        this.resId = data.id;
+        this.resId = resId;
 
         this.reservedAvailability = formatFloat(data.reserved_availability, {
             ...fields.reserved_availability,
