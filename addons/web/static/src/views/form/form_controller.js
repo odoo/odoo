@@ -322,7 +322,6 @@ export class FormController extends Component {
         if (dirty) {
             canProceed = await this.model.root.save({
                 noReload: true,
-                stayInEdition: true,
                 onError: this.onSaveError.bind(this),
             });
         }
@@ -335,7 +334,6 @@ export class FormController extends Component {
         if (this.model.root.dirty) {
             return this.model.root.save({
                 noReload: true,
-                stayInEdition: true,
                 onError: this.onSaveError.bind(this),
             });
         }
@@ -430,7 +428,6 @@ export class FormController extends Component {
         if ((dirty || this.model.root.isNew) && !item.skipSave) {
             let hasError = false;
             const isSaved = await this.model.root.save({
-                stayInEdition: true,
                 onError: (...args) => {
                     hasError = true;
                     return this.onSaveError(...args);
@@ -480,11 +477,7 @@ export class FormController extends Component {
     async beforeExecuteActionButton(clickParams) {
         if (clickParams.special !== "cancel") {
             const noReload = this.env.inDialog && clickParams.close;
-            const params = {
-                force: true,
-                stayInEdition: true,
-                noReload,
-            };
+            const params = { noReload };
             if (!this.env.inDialog) {
                 params.onError = this.onSaveError.bind(this);
             }
@@ -503,7 +496,6 @@ export class FormController extends Component {
 
     async create() {
         const canProceed = await this.model.root.save({
-            stayInEdition: true,
             onError: this.onSaveError.bind(this),
         });
         // FIXME: disable/enable not done in onPagerUpdate

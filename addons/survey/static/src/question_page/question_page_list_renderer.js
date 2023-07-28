@@ -138,7 +138,7 @@ export class QuestionPageListRenderer extends ListRenderer {
         );
         if (triggeredRecords.length) {
             const res = await super.onDeleteRecord(record);
-            await this.props.list.model.root.save({ stayInEdition: true });
+            await this.props.list.model.root.save();
             return res;
         } else {
             return super.onDeleteRecord(record);

@@ -66,7 +66,7 @@ export class SettingsFormController extends formView.Controller {
         ) {
             return this._confirmSave();
         } else {
-            return this.model.root.save({ stayInEdition: true });
+            return this.model.root.save();
         }
     }
 
