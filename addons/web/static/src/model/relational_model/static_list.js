@@ -213,10 +213,18 @@ export class StaticList extends DataPoint {
             }
 
             if (record) {
+                record._activeFieldsToRestore = { ...this.config.activeFields };
+                const config = {
+                    ...record.config,
+                    ...params,
+                    activeFields,
+                };
+
                 // case 1: the record already exists
                 if (this._extendedRecords.has(record.id)) {
                     // case 1.1: the record has already been extended
                     // -> simply switch it to edit and store a savepoint
+                    this.model._updateConfig(record.config, config, { noReload: true });
                     record._switchMode("edit");
                     record._addSavePoint();
                     return record;
@@ -231,11 +239,6 @@ export class StaticList extends DataPoint {
                 // These operations must be done in that specific order to ensure that the model is
                 // mutated only once (in a tick), and that datapoints have the correct config to
                 // handle field values they receive.
-                const config = {
-                    ...record.config,
-                    ...params,
-                    activeFields,
-                };
                 let data = {};
                 if (!record.isNew) {
                     const evalContext = Object.assign({}, record.evalContext, config.context);
@@ -275,8 +278,8 @@ export class StaticList extends DataPoint {
                     withoutParent: params.withoutParent,
                     manuallyAdded: true,
                 });
+                record._activeFieldsToRestore = { ...this.config.activeFields };
             }
-
             // mark the record as being extended, to go through case 1.1 next time
             this._extendedRecords.add(record.id);
 
@@ -379,6 +382,7 @@ export class StaticList extends DataPoint {
             if (this.orderBy.length) {
                 await this._sort();
             }
+            record._restoreActiveFields();
             record._savePoint = undefined;
         });
     }
