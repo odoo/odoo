@@ -352,10 +352,10 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
         if (tagRecord.data[this.props.colorField] != 0) {
             this.previousColorsMap[tagRecord.resId] = tagRecord.data[this.props.colorField];
         }
-        tagRecord.update({
+        const changes = {
             [this.props.colorField]: isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1,
-        });
-        tagRecord.save();
+        };
+        tagRecord.update(changes, { save: true });
         this.popover.close();
     }
 
@@ -363,8 +363,7 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
         const tagRecord = this.props.record.data[this.props.name].records.find(
             (record) => record.id === tag.id
         );
-        tagRecord.update({ [this.props.colorField]: colorIndex });
-        tagRecord.save();
+        tagRecord.update({ [this.props.colorField]: colorIndex }, { save: true });
         this.popover.close();
     }
 }

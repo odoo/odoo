@@ -8,12 +8,8 @@ export class ListBooleanToggleField extends BooleanToggleField {
 
     async onClick() {
         if (!this.props.readonly && this.props.record.isInEdition) {
-            await this.props.record.update({
-                [this.props.name]: !this.props.record.data[this.props.name],
-            });
-            if (this.props.autosave) {
-                return this.props.record.save();
-            }
+            const changes = { [this.props.name]: !this.props.record.data[this.props.name] };
+            await this.props.record.update(changes, { save: this.props.autosave });
         }
     }
 }
