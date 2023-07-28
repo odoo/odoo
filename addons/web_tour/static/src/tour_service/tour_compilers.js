@@ -131,11 +131,6 @@ function getAnchorEl(el, consumeEvent) {
     if (consumeEvent === "input" && !["textarea", "input"].includes(el.tagName.toLowerCase())) {
         return el.closest("[contenteditable='true']");
     }
-    if (consumeEvent.includes("apply.daterangepicker")) {
-        return [...el.parentElement.children].find((child) =>
-            child.classList.contains("o_field_date_range")
-        );
-    }
     if (consumeEvent === "sort") {
         // when an element is dragged inside a sortable container (with classname
         // 'ui-sortable'), jQuery triggers the 'sort' event on the container
