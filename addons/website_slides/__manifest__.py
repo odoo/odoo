@@ -143,7 +143,6 @@ Featuring
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/mimetypes.scss',
             'web/static/src/legacy/scss/modal.scss',
-            'web/static/src/legacy/scss/daterangepicker.scss',
             'web/static/src/legacy/scss/popover.scss',
             'web/static/src/legacy/scss/translation_dialog.scss',
             'web/static/src/legacy/scss/keyboard.scss',

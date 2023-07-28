@@ -94,10 +94,6 @@ export function getConsumeEventType(element, runCommand) {
             (!type ||
                 ["email", "number", "password", "search", "tel", "text", "url"].includes(type)))
     ) {
-        // FieldDateRange triggers a special event when using the widget
-        if (classList.contains("o_field_date_range")) {
-            return "apply.daterangepicker input";
-        }
         if (
             utils.isSmall() &&
             element.closest(".o_field_widget")?.matches(".o_field_many2one, .o_field_many2many")
