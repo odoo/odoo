@@ -116,6 +116,9 @@ class PickingType(models.Model):
     auto_print_reception_report_labels = fields.Boolean(
         "Auto Print Reception Report Labels",
         help="If this checkbox is ticked, Odoo will automatically print the reception report labels of a picking when it is validated.")
+    auto_print_packages = fields.Boolean(
+        "Auto Print Packages",
+        help="If this checkbox is ticked, Odoo will automatically print the packages and their contents of a picking when it is validated.")
 
     auto_print_package_label = fields.Boolean(
         "Auto Print Package Label",
@@ -1799,4 +1802,10 @@ class Picking(models.Model):
                 if action:
                     clean_action(action, self.env)
                     report_actions.append(action)
+        if self.user_has_groups('stock.group_tracking_lot'):
+            pickings_print_packages = self.filtered(lambda p: p.picking_type_id.auto_print_packages and p.move_line_ids.result_package_id)
+            if pickings_print_packages:
+                action = self.env.ref("stock.action_report_picking_packages").report_action(pickings_print_packages.ids, config=False)
+                clean_action(action, self.env)
+                report_actions.append(action)
         return report_actions
