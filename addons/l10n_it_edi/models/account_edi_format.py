@@ -147,7 +147,7 @@ class AccountEdiFormat(models.Model):
             Can be overridden by submodules like l10n_it_edi_withholding, which also allows for withholding and pension_fund taxes.
         """
         errors = []
-        for invoice_line in invoice.invoice_line_ids.filtered(lambda x: not x.display_type):
+        for invoice_line in invoice.invoice_line_ids.filtered(lambda x: x.display_type == 'product'):
             if len(invoice_line.tax_ids) != 1:
                 errors.append(_("In line %s, you must select one and only one tax.", invoice_line.name))
         return errors
