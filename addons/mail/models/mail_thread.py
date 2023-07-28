@@ -1950,12 +1950,12 @@ class MailThread(models.AbstractModel):
                      body='', subject=None, message_type='notification',
                      email_from=None, author_id=None, parent_id=False,
                      subtype_xmlid=None, subtype_id=False, partner_ids=None,
-                     attachments=None, attachment_ids=None,
+                     attachments=None, attachment_ids=None, body_is_html=False,
                      **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
 
-        :param str body: body of the message, usually raw HTML that will
-            be sanitized
+        :param str|Markup body: body of the message, str content will be escaped, Markup
+            for html body
         :param str subject: subject of the message
         :param str message_type: see mail_message.message_type field. Can be anything but
             user_notification, reserved for message_notify
@@ -1976,6 +1976,8 @@ class MailThread(models.AbstractModel):
         :param list attachment_ids: list of existing attachments to link to this message
             Should not be a list of commands. Attachment records attached to mail
             composer will be attached to the related document.
+        :param bool body_is_html: indicates body should be threated as HTML even if str
+            to be used only for RPC calls
 
         Extra keyword arguments will be used either
           * as default column values for the new mail.message record if they match
@@ -2055,6 +2057,10 @@ class MailThread(models.AbstractModel):
             # use sudo as record access is not always granted (notably when replying
             # a notification) -> final check is done at message creation level
             msg_values['record_name'] = self.sudo().display_name
+        if body_is_html and self.user_has_groups("base.group_user"):
+            _logger.warning("Posting HTML message using body_is_html=True, use a Markup object instead (user: %s)",
+                self.env.user.id)
+            body = Markup(body)
         msg_values.update({
             # author
             'author_id': author_id,
