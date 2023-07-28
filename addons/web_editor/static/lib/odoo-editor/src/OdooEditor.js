@@ -52,7 +52,6 @@ import {
     rightPos,
     getAdjacentPreviousSiblings,
     getAdjacentNextSiblings,
-    rightLeafOnlyNotBlockPath,
     isBlock,
     isMacOS,
     isVoidElement,
@@ -60,6 +59,9 @@ import {
     isZWS,
     getDeepestPosition,
     leftPos,
+    prepareUpdate,
+    splitTextNode,
+    boundariesOut,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -232,6 +234,8 @@ export class OdooEditor extends EventTarget {
 
         this.isMobile = matchMedia('(max-width: 767px)').matches;
         this.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+
+        this.isPrepareUpdateLocked = false;
 
         // Keyboard type detection, happens only at the first keydown event.
         this.keyboardType = KEYBOARD_TYPES.UNKNOWN;
@@ -1429,16 +1433,28 @@ export class OdooEditor extends EventTarget {
             correctTripleClick: true,
         });
         if (!range) return;
-        let start = range.startContainer;
-        let end = range.endContainer;
-        // Let the DOM split and delete the range.
+        let { startContainer: start, startOffset, endContainer: end, endOffset } = range;
         const doJoin =
             (closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
             closestBlock(end) !== closestBlock(range.commonAncestorContainer))
             && (closestBlock(start).tagName !== 'TD' && closestBlock(end).tagName !== 'TD');
         let next = nextLeaf(end, this.editable);
         const splitEndTd = closestElement(end, 'td') && end.nextSibling;
+
+        // Get the boundaries of the range so as to get the state to restore.
+        if (end.nodeType === Node.TEXT_NODE) {
+            splitTextNode(end, endOffset);
+            endOffset = nodeSize(end);
+        }
+        if (start.nodeType === Node.TEXT_NODE) {
+            splitTextNode(start, startOffset);
+            startOffset = 0;
+        }
+        const restoreUpdate = prepareUpdate(...boundariesOut(start).slice(0, 2), ...boundariesOut(end).slice(2, 4), { allowReenter: false });
+
+        // Let the DOM split and delete the range.
         const contents = range.extractContents();
+
         setSelection(start, nodeSize(start));
         range = getDeepRange(this.editable, { sel });
         // Restore unremovables removed by extractContents.
@@ -1497,16 +1513,7 @@ export class OdooEditor extends EventTarget {
             fillEmpty(closestBlock(start));
         }
         fillEmpty(closestBlock(range.endContainer));
-        // Ensure trailing space remains visible.
         const joinWith = range.endContainer;
-        const oldText = joinWith.textContent;
-        const rightLeaf = rightLeafOnlyNotBlockPath(range.endContainer).next().value;
-        const hasSpaceAfter = !rightLeaf || rightLeaf.textContent.startsWith(' ');
-        const shouldPreserveSpace = (doJoin || hasSpaceAfter) && joinWith && oldText.endsWith(' ');
-        if (shouldPreserveSpace) {
-            joinWith.textContent = oldText.replace(/ $/, '\u00A0');
-            setSelection(joinWith, nodeSize(joinWith));
-        }
         // Rejoin blocks that extractContents may have split in two.
         while (
             doJoin &&
@@ -1530,18 +1537,13 @@ export class OdooEditor extends EventTarget {
                 break;
             }
         }
-        next = range.endContainer && rightLeafOnlyNotBlockPath(range.endContainer).next().value;
-        if (
-            shouldPreserveSpace && next && !(next && next.nodeType === Node.TEXT_NODE && next.textContent.startsWith(' '))
-        ) {
-            // Restore the text we modified in order to preserve trailing space.
-            joinWith.textContent = oldText;
-            setSelection(joinWith, nodeSize(joinWith));
-        }
         if (joinWith) {
             const el = closestElement(joinWith);
             el && fillEmpty(el);
         }
+        const restoreCursor = preserveCursor(this.document);
+        restoreUpdate();
+        restoreCursor();
     }
 
     /**
