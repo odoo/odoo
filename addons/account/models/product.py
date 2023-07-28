@@ -187,12 +187,9 @@ class ProductProduct(models.Model):
 
         # Apply fiscal position.
         if product_taxes and fiscal_position:
-            product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
-            flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
-            flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
-            taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
+            flattened_taxes_before_fp, flattened_taxes_after_fp, mode = fiscal_position._prepare_to_adapt_price_unit(product_taxes)
 
-            if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
+            if mode in ("excluded", "excluded_then_included"):
                 taxes_res = flattened_taxes_before_fp.compute_all(
                     product_price_unit,
                     quantity=1.0,
@@ -202,7 +199,7 @@ class ProductProduct(models.Model):
                 )
                 product_price_unit = taxes_res['total_excluded']
 
-                if any(tax.price_include for tax in flattened_taxes_after_fp):
+                if mode == 'excluded_then_included':
                     taxes_res = flattened_taxes_after_fp.compute_all(
                         product_price_unit,
                         quantity=1.0,

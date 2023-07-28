@@ -132,6 +132,22 @@ class AccountFiscalPosition(models.Model):
                 accounts[key] = ref_dict[acc]
         return accounts
 
+    def _prepare_to_adapt_price_unit(self, product_taxes):
+        self.ensure_one()
+        product_taxes_after_fp = self.map_tax(product_taxes)
+        flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
+        flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
+        taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
+
+        mode = None
+        if set(product_taxes.ids) != set(product_taxes_after_fp.ids):
+            mode = "same_price"
+            if taxes_before_included:
+                mode = 'excluded'
+                if any(tax.price_include for tax in flattened_taxes_after_fp):
+                    mode = 'excluded_then_included'
+        return flattened_taxes_before_fp, flattened_taxes_after_fp, mode
+
     @api.onchange('country_id')
     def _onchange_country_id(self):
         if self.country_id:

@@ -235,7 +235,7 @@ class PosOrder(models.Model):
 
         base_line_vals_list = []
         for line in self.lines.with_company(self.company_id):
-            account = line.product_id._get_product_accounts()['income']
+            account = line.product_id._get_product_accounts()['income'] or self.config_id.journal_id.default_account_id
             if not account:
                 raise UserError(_(
                     "Please define income account for this product: '%s' (id:%d).",
@@ -729,7 +729,7 @@ class PosOrder(models.Model):
 
         # Concert each order line to a dictionary containing business values. Also, prepare for taxes computation.
         base_line_vals_list = self._prepare_tax_base_line_values(sign=sign)
-        tax_results = self.env['account.tax']._compute_taxes(base_line_vals_list)
+        tax_results = self.env['account.tax']._compute_taxes(base_line_vals_list, self.company_id)
 
         total_balance = 0.0
         total_amount_currency = 0.0

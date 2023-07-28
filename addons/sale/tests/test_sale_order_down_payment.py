@@ -199,7 +199,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
 
     def test_tax_price_include_breakdown(self):
         tax_10_incl = self.create_tax(10, {'price_include': True})
-        self.sale_order.order_line[0].tax_id = tax_10_incl + self.tax_10
+        self.sale_order.order_line[0].tax_id = tax_10_incl
         self.sale_order.order_line[1].tax_id = self.tax_10
         self.sale_order.order_line[2].tax_id = self.tax_10
         self.make_downpayment()
@@ -210,12 +210,12 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             # keys
             ['account_id',               'tax_ids',                       'balance',    'price_total'],
             # base lines
-            [self.revenue_account.id,    (tax_10_incl + self.tax_10).ids, -90.91,       109.09       ],
+            [self.revenue_account.id,    tax_10_incl.ids,                 -90.91,       100          ],
             [self.revenue_account.id,    self.tax_10.ids,                 -200,         220          ],
             [self.revenue_account.id,    self.env['account.tax'],         -100,         100          ],
             # taxes
-            [self.tax_account.id,        self.env['account.tax'],         -29.09,       0            ],
             [self.tax_account.id,        self.env['account.tax'],         -9.09,        0            ],
+            [self.tax_account.id,        self.env['account.tax'],         -20,          0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],         down_pay_amt, 0            ],
         ]

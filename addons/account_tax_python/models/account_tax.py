@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
-from odoo.tools.safe_eval import safe_eval
-from odoo.exceptions import UserError
+from odoo import _, api, fields, models
 
 
 class AccountTaxPython(models.Model):
@@ -29,33 +27,41 @@ class AccountTaxPython(models.Model):
             ":param product: product.product recordset singleton or None\n"
             ":param partner: res.partner recordset singleton or None")
 
-    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None, fixed_multiplicator=1):
-        self.ensure_one()
-        if product and product._name == 'product.template':
-            product = product.product_variant_id
-        if self.amount_type == 'code':
-            company = self.env.company
-            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
-            try:
-                safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
-            except Exception as e:
-                raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s", self.python_compute, self.name, e)) from e
-            return localdict['result']
-        return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner, fixed_multiplicator)
+    @api.model
+    def _ascending_process_fixed_taxes_batch(self, batch, tax_computer, extra_base_variable, fixed_multiplicator=1):
+        # EXTENDS 'account'
+        super()._ascending_process_fixed_taxes_batch(batch, tax_computer, extra_base_variable, fixed_multiplicator=fixed_multiplicator)
 
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True, include_caba_tags=False, fixed_multiplicator=1):
-        if product and product._name == 'product.template':
-            product = product.product_variant_id
+        if batch['amount_type'] == 'code':
+            batch['computed'] = 'tax'
+            for tax_values in batch['taxes']:
+                tax_computer.new_equation(tax_values['tax'].python_compute, standalone=True)
+                tax_values['tax_amount'] = tax_computer.new_equation('result')
+                tax_values['tax_amount_factorized'] = tax_computer.new_equation(
+                    f"{tax_values['tax_amount']} * {tax_values['factor']}"
+                )
 
-        def is_applicable_tax(tax, company=self.env.company):
-            if tax.amount_type == 'code':
-                localdict = {'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company}
-                try:
-                    safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
-                except Exception as e:
-                    raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s", tax.python_applicable, tax.name, e)) from e
-                return localdict.get('result', False)
+    @api.model
+    def _descending_process_price_included_taxes_batch(self, batch, tax_computer, extra_base_variable):
+        # EXTENDS 'account'
+        super()._descending_process_price_included_taxes_batch(batch, tax_computer, extra_base_variable)
+        if batch['price_include'] and batch['amount_type'] == 'code':
+            batch['computed'] = True
+            amounts_variable = [tax_values['tax_amount_factorized'] for tax_values in batch['taxes']]
+            batch_base_variable = tax_computer.new_equation(
+                f"((price_unit * quantity) + {extra_base_variable}) - {' - '.join(amounts_variable)}"
+            )
+            for tax_values in batch['taxes']:
+                tax_values['base'] = tax_values['display_base'] = batch_base_variable
 
-            return True
-
-        return super(AccountTaxPython, self.filtered(is_applicable_tax)).compute_all(price_unit, currency, quantity, product, partner, is_refund=is_refund, handle_price_include=handle_price_include, include_caba_tags=include_caba_tags, fixed_multiplicator=fixed_multiplicator)
+    @api.model
+    def _ascending_process_taxes_batch(self, batch, tax_computer, extra_base_variable):
+        # EXTENDS 'account'
+        super()._ascending_process_taxes_batch(batch, tax_computer, extra_base_variable)
+        if not batch['price_include'] and batch['amount_type'] == 'code':
+            batch['computed'] = True
+            base_variable = tax_computer.new_equation(
+                f"(price_unit * quantity) + {extra_base_variable}"
+            )
+            for tax_values in batch['taxes']:
+                tax_values['base'] = tax_values['display_base'] = base_variable
