@@ -288,10 +288,10 @@ class AccountTax(models.Model):
             return base_amount - (base_amount / (1 + self.amount / 100))
         # base / (1 - tax_amount) = new_base
         if self.amount_type == 'division' and not price_include:
-            return base_amount / (1 - self.amount / 100) - base_amount if (1 - self.amount / 100) else 0.0
+            return base_amount - (base_amount / (1 + self.amount / 100))
         # <=> new_base * (1 - tax_amount) = base
         if self.amount_type == 'division' and price_include:
-            return base_amount - (base_amount * (self.amount / 100))
+            return base_amount * self.amount / 100
         # default value for custom amount_type
         return 0.0
 
@@ -501,7 +501,9 @@ class AccountTax(models.Model):
                     if tax.amount_type == 'percent':
                         incl_percent_amount += tax.amount * sum_repartition_factor
                     elif tax.amount_type == 'division':
+                        tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner) * sum_repartition_factor
                         incl_division_amount += tax.amount * sum_repartition_factor
+                        cached_tax_amounts[i] = tax_amount
                     elif tax.amount_type == 'fixed':
                         incl_fixed_amount += abs(quantity) * tax.amount * sum_repartition_factor
                     else:
@@ -541,7 +543,9 @@ class AccountTax(models.Model):
             price_include = self._context.get('force_price_include', tax.price_include)
 
             #compute the tax_amount
-            if not skip_checkpoint and price_include and total_included_checkpoints.get(i) is not None and sum_repartition_factor != 0:
+            if i in cached_tax_amounts:
+                tax_amount = cached_tax_amounts[i]
+            elif not skip_checkpoint and price_include and total_included_checkpoints.get(i) is not None and sum_repartition_factor != 0:
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0

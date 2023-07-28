@@ -1074,6 +1074,56 @@ class TestTax(TestTaxCommon):
             (tax_10_fix + tax_21).compute_all(1210),
         )
 
+    def test_brazilian_tax_division(self):
+        taxes = self.env['account.tax'].create([
+            {
+                'name': "tax_5",
+                'amount_type': 'division',
+                'amount': 5.0,
+                'price_include': True,
+            },
+            {
+                'name': "tax_3",
+                'amount_type': 'division',
+                'amount': 3.0,
+                'price_include': True,
+            },
+            {
+                'name': "tax_0_65",
+                'amount_type': 'division',
+                'amount': 0.65,
+                'price_include': True,
+            },
+            {
+                'name': "tax_9",
+                'amount_type': 'division',
+                'amount': 9.0,
+                'price_include': True,
+            },
+            {
+                'name': "tax_15",
+                'amount_type': 'division',
+                'amount': 15.0,
+                'price_include': True,
+            },
+        ])
+
+        self._check_compute_all_results(
+            48.0,       # 'total_included'
+            32.33,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (32.33, 2.4),
+                (32.33, 1.44),
+                (32.33, 0.31),
+                (32.33, 4.32),
+                (32.33, 7.20),
+                # ---------------
+            ],
+            taxes.compute_all(48),
+        )
+
     def test_price_included_repartition_sum_0(self):
         """ Tests the case where a tax with a non-zero value has a sum
         of tax repartition factors of zero and is included in price. It
