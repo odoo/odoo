@@ -2345,6 +2345,149 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_field_integer.o_field_invalid");
     });
 
+    QUnit.test("twice same field with different required attributes", async function (assert) {
+        delete serverData.models.partner.fields.foo.default;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="bar"/>
+                        <field name="int_field"/>
+                        <field name="foo" attrs="{'required': [['bar', '=', false]]}"/>
+                        <field name="foo" attrs="{'required': [['int_field', '=', 44]]}"/>
+                    </group>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.hasClass(
+            target.querySelectorAll(".o_field_widget[name=foo]")[0],
+            "o_required_modifier"
+        );
+        assert.doesNotHaveClass(
+            target.querySelectorAll(".o_field_widget[name=foo]")[1],
+            "o_required_modifier"
+        );
+
+        await click(target, ".o_field_widget[name=bar] input");
+        assert.doesNotHaveClass(
+            target.querySelectorAll(".o_field_widget[name=foo]")[0],
+            "o_required_modifier"
+        );
+        assert.doesNotHaveClass(
+            target.querySelectorAll(".o_field_widget[name=foo]")[1],
+            "o_required_modifier"
+        );
+
+        await editInput(target, ".o_field_widget[name=int_field] input", "44");
+        assert.doesNotHaveClass(
+            target.querySelectorAll(".o_field_widget[name=foo]")[0],
+            "o_required_modifier"
+        );
+        assert.hasClass(
+            target.querySelectorAll(".o_field_widget[name=foo]")[1],
+            "o_required_modifier"
+        );
+
+        await clickSave(target);
+        assert.containsN(target, ".o_form_label.o_field_invalid", 2);
+        assert.containsN(target, ".o_field_widget.o_field_invalid", 2);
+
+        assert.verifySteps(["get_views", "onchange2"]);
+    });
+
+    QUnit.test("twice same field with different readonly attributes", async function (assert) {
+        delete serverData.models.partner.fields.foo.default;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="bar"/>
+                        <field name="int_field"/>
+                        <field name="foo" attrs="{'readonly': [['bar', '=', false]]}"/>
+                        <field name="foo" attrs="{'readonly': [['int_field', '=', 0]]}"/>
+                    </group>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "create") {
+                    assert.deepEqual(args.args[0][0], {
+                        bar: true,
+                        int_field: 0,
+                        foo: "some value",
+                    });
+                }
+            },
+        });
+
+        assert.hasClass(
+            target.querySelectorAll(".o_field_widget[name=foo]")[0],
+            "o_readonly_modifier"
+        );
+        assert.hasClass(
+            target.querySelectorAll(".o_field_widget[name=foo]")[1],
+            "o_readonly_modifier"
+        );
+
+        await click(target, ".o_field_widget[name=bar] input");
+        assert.doesNotHaveClass(
+            target.querySelectorAll(".o_field_widget[name=foo]")[0],
+            "o_readonly_modifier"
+        );
+        assert.hasClass(
+            target.querySelectorAll(".o_field_widget[name=foo]")[1],
+            "o_readonly_modifier"
+        );
+
+        await editInput(target, ".o_field_widget[name=foo] input", "some value");
+
+        await clickSave(target);
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "some value"
+        );
+    });
+
+    QUnit.test("twice same field with different invisible attributes", async function (assert) {
+        delete serverData.models.partner.fields.foo.default;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="bar"/>
+                        <field name="int_field"/>
+                        <field name="foo" required="1" attrs="{'invisible': [['bar', '=', false]]}"/>
+                        <field name="foo" attrs="{'invisible': [['int_field', '=', 0]]}"/>
+                    </group>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsNone(target, ".o_field_widget[name=foo]");
+
+        await click(target, ".o_field_widget[name=bar] input");
+        assert.containsOnce(target, ".o_field_widget[name=foo]");
+
+        // foo is required, and as it isn't invisible (at least for one occurrence), it shouldn't
+        // allow to save as it is not set
+        await clickSave(target);
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
+
+        assert.verifySteps(["get_views", "onchange2"]);
+    });
+
     QUnit.test("required field computed by another field in a form view", async function (assert) {
         serverData.models.partner.fields.foo.default = false;
         serverData.models.partner.onchanges = {
