@@ -301,7 +301,6 @@ export class Chatter extends Component {
         await this.props.saveRecord?.();
         if (this.props.webRecord) {
             await this.props.webRecord.load();
-            this.props.webRecord.model.notify();
         }
     }
 
