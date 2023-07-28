@@ -2417,6 +2417,8 @@ const allRestoreStateRules = (function () {
  * @param {Object} prevStateData @see getState
  * @param {boolean} debug=false - if true, adds nicely formatted
  *     console logs to help with debugging.
+ * @returns {Object|undefined} the rule that was applied to restore the state,
+ *     if any, for testing purposes.
  */
 export function restoreState(prevStateData, debug=false) {
     const { node, direction, cType: cType1, oldEditableHTML } = prevStateData;
@@ -2457,6 +2459,7 @@ export function restoreState(prevStateData, debug=false) {
         const inverseDirection = direction === DIRECTIONS.LEFT ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT;
         enforceWhitespace(el, offset, inverseDirection, rule);
     }
+    return rule;
 }
 /**
  * Enforces the whitespace and BR visibility in the given direction starting
