@@ -4,3 +4,4 @@
 from . import onboarding
 from . import portal
 from . import terms
+from . import download_edi_docs
