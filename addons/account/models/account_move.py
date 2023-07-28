@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from werkzeug.urls import url_encode
+
 from collections import defaultdict
 from contextlib import ExitStack, contextmanager
 from datetime import date, timedelta
@@ -3042,6 +3044,27 @@ class AccountMove(models.Model):
                     file_data['on_close']()
 
         return success
+
+    ####################################################
+    # Export Electronic Document
+    ####################################################
+
+    def _action_download_electronic_invoice(self):
+        if not self:
+            return False
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/account/export_edi_documents?%s' % url_encode({'ids': self.ids}),
+            'target': 'new',
+        }
+
+    def _get_edi_doc_attachments_to_export(self):
+        """
+        To override
+        :return a recordset of ir.attachment to export
+        """
+        return self.env['ir.attachment']
+
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
