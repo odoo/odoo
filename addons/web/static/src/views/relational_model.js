@@ -2367,10 +2367,18 @@ export class DynamicGroupList extends DynamicList {
      * @returns {Promise<Group>}
      */
     async _createGroup(groupName, groupData = {}, isFolded = false) {
-        groupData = { ...groupData, name: groupName };
-        const [id] = await this.model.orm.create(this.groupByField.relation, [groupData], {
-            context: this.context,
-        });
+        const [id] = await this.model.orm.call(
+            this.groupByField.relation,
+            "name_create",
+            [groupName],
+            { context: this.context }
+        );
+
+        if (Object.keys(groupData).length) {
+            await this.model.orm.write(this.groupByField.relation, [id], groupData, {
+                context: this.context,
+            });
+        }
         const [lastGroup] = this.groups.slice(-1);
         const group = this.model.createDataPoint("group", {
             ...this.commonGroupParams,
