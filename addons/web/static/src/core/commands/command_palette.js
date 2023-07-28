@@ -153,6 +153,7 @@ export class CommandPalette extends Component {
             if (commands.length) {
                 categories.push({
                     commands,
+                    name: this.categoryNames[category],
                     keyId: category,
                 });
             }
@@ -191,6 +192,7 @@ export class CommandPalette extends Component {
      */
     async setCommands(namespace, options = {}) {
         this.categoryKeys = ["default"];
+        this.categoryNames = {};
         const proms = this.providersByNamespace[namespace].map((provider) => {
             const { provide } = provider;
             const result = provide(this.env, options);
@@ -205,6 +207,7 @@ export class CommandPalette extends Component {
             if (namespaceConfig.categories) {
                 let commandsSorted = [];
                 this.categoryKeys = namespaceConfig.categories;
+                this.categoryNames = namespaceConfig.categoryNames || {};
                 if (!this.categoryKeys.includes("default")) {
                     this.categoryKeys.push("default");
                 }

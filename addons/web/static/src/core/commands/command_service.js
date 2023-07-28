@@ -90,14 +90,17 @@ export const commandService = {
                 if (!configByNamespace[namespace]) {
                     configByNamespace[namespace] = {
                         categories: [],
+                        categoryNames: {},
                     };
                 }
             }
 
             for (const [category, el] of commandCategoryRegistry.getEntries()) {
                 const namespace = el.namespace || "default";
+                const name = el.name;
                 if (namespace in configByNamespace) {
                     configByNamespace[namespace].categories.push(category);
+                    configByNamespace[namespace].categoryNames[category] = name;
                 }
             }
 
