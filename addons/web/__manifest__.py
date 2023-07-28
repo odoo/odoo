@@ -620,8 +620,10 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.qunit_suite_tests': [
             'web/static/tests/env_tests.js',
+            'web/static/tests/dependencies_tests.js',
             'web/static/tests/core/**/*.js',
             'web/static/tests/search/**/*.js',
+            'web/static/tests/model/**/*.js',
             ('remove', 'web/static/tests/search/helpers.js'),
             'web/static/tests/views/**/*.js',
             ('remove', 'web/static/tests/views/helpers.js'),
