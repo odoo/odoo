@@ -121,6 +121,7 @@ export class Store {
             canAdd: true,
             serverStateKey: "is_discuss_sidebar_category_channel_open",
             addTitle: _t("Add or join a channel"),
+            addHotkey: "c",
             threads: [], // list of ids
         },
         chats: {
@@ -132,6 +133,7 @@ export class Store {
             canAdd: true,
             serverStateKey: "is_discuss_sidebar_category_chat_open",
             addTitle: _t("Start a conversation"),
+            addHotkey: "d",
             threads: [], // list of ids
         },
         // mailboxes in sidebar
