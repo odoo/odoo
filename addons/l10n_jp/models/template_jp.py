@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'l10n_jp_126000',
             'property_account_payable_id': 'l10n_jp_220000',
-            'property_account_expense_id': 'l10n_jp_510000',
-            'property_account_income_id': 'l10n_jp_410000',
             'property_account_expense_categ_id': 'l10n_jp_510000',
             'property_account_income_categ_id': 'l10n_jp_410000',
             'property_stock_valuation_account_id': 'l10n_jp_121100',

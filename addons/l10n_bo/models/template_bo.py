@@ -15,8 +15,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'l10n_bo_2121',
             'property_account_expense_categ_id': 'l10n_bo_53008',
             'property_account_income_categ_id': 'l10n_bo_4101',
-            'property_account_expense_id': 'l10n_bo_53008',
-            'property_account_income_id': 'l10n_bo_4101',
             'property_stock_account_input_categ_id': 'l10n_bo_11341',
             'property_stock_account_output_categ_id': 'l10n_bo_11342',
             'property_stock_valuation_account_id': 'l10n_bo_1131',
