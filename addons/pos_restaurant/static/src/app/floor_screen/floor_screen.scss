@@ -1,229 +1,18 @@
-.floor-screen {
-    margin: 0px auto;
-    text-align: left;
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    flex-flow: column nowrap;
-
-    .edit-bar-top {
-        display: flex;
-        height: 48px;
-        align-items: center;
-        overflow-x: auto;
-
-        .disabled {
-            color: grey;
-        }
-
-        .edit-button {
-            padding: 3px;
-            margin: 5px 20px;
-            text-align: center;
-            flex: auto;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            flex-basis: 0;
-
-            .icon-button {
-                font-size: 18px;
-            }
-
-            .text-button {
-                font-size: 14px;
-            }
-
-            &.first-button {
-                cursor: default;
-                padding-right: 10px;
-                text-align: right;
-                flex-basis: 10%;
-                border: none;
-            }
-
-            &:last-child {
-                cursor: pointer;
-                padding-right: 10px;
-                text-align: right;
-                flex-basis: 10%;
-                border: none;
-                display: flex;
-                flex-direction: row-reverse;
-
-                .close-edit-button {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
-            }
-        }
-
-        .is-active {
-            background-color: $primary;
-            border: solid 1px white;
-            border-radius: 5px;
-        }
-    }
-
-    .color-picker {
-        display: flex;
-        height: 48px;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 48px;
-        background-color: $o-gray-100;
-
-        .color {
-            float: left;
-            cursor: pointer;
-            width: 48px;
-            height: 48px;
-        }
-    }
-
-    .close-picker {
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        margin-left: -16px;
-        margin-bottom: -16px;
-        width: 32px;
-        height: 32px;
-        line-height: 32px;
-        text-align: center;
-        font-size: 20px;
-        border-radius: 16px;
-        background: black;
-        color: white;
-        cursor: pointer;
-    }
-}
-
-.floor-selector {
-    line-height: 48px;
-    font-size: 18px;
-    display: flex;
-    text-align: center;
-    width: 100%;
-
-    .button {
-        cursor: pointer;
-        border-left: solid 1px $gray-400;
-        flex-grow: 3;
-
-        &:first-child {
-            border-left: none;
-        }
-
-        &.active {
-            background: $o-navbar-badge-bg;
-            color: white;
-        }
-    }
-
-    .button-add {
-        cursor: pointer;
-        flex-grow: 1;
-        background-color: transparent;
-        background-size: cover;
-        transition: all 300ms ease-in-out;
-        color: $primary;
-        border-left: none;
-    }
-}
-
 .floor-map {
-    flex: 1;
-    position: relative;
-    width: auto;
-    height: 100%;
-    background: #D8D7D7;
-    background-repeat: no-repeat;
-    overflow: auto;
-    background-size: cover;
-    transition: all 300ms ease-in-out;
-
     // Should probably be moved to table.scss but currently the selectors are too generic
     .table {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        position: absolute;
-        text-align: center;
-        color: white;
-        background: rgb(53, 211, 116);
-        border-radius: 3px;
-        cursor: pointer;
         box-shadow: 0px 3px rgba(0,0,0,0.07);
         transition: background-color 300ms ease-in-out;
         box-sizing: border-box;
 
         &.selected {
-            outline: solid rgba(255,255,255,0.3);
             cursor: move;
             z-index: 50;
-            overflow: hidden;
-        }
-
-        .infos {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .order-count {
-            background: black;
-            border-radius: 999px;
-            z-index: 10;
-            width: 16px;
-            height: 16px;
-            line-height: 16px;
-            font-size: 16px;
-            position: absolute;
-            padding: 3px;
-
-            &.notify-printing {
-                background: red;
-            }
-
-            &.notify-skipped {
-                background: blue;
-            }
         }
     }
 
-    .table-seats {
-        display: inline-block;
-        border-radius: 5px;
-        background: rgba(0,0,0,0.2);
-        color: white;
-        z-index: 3;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-        padding: 0 10px;
-        position: absolute;
-        bottom: -5px;
-        left: 50%;
-        transform: translate(-50%, -50%);
-
-        .cover {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            background: black;
-            opacity: 0.4;
-            z-index: -1;
-        }
+    .table > * {
+        border-top: none !important;
     }
 
     .table-handle {
@@ -246,13 +35,6 @@
         }
     }
 
-    .label {
-        display: block;
-        max-height: 100%;
-        overflow: hidden;
-        position: relative;
-    }
-
     .edit-button.editing {
         position: fixed;
         top: 0;
@@ -273,25 +55,8 @@
         }
     }
 
-    .empty-floor {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-        width: 400px;
-        height: 40px;
-        font-size: 18px;
-        text-align: center;
-        opacity: 0.6;
-
-        .fa-plus {
-            display: inline-block;
-            padding: 6px 7px 3px;
-            margin: 0px 3px;
-            background: rgba(255,255,255,0.5);
-            border-radius: 3px;
-        }
+    .order-count {
+        height: $o-horizontal-padding * 1.5;
+        width: $o-horizontal-padding * 1.5;
     }
 }

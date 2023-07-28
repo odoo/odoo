@@ -2,16 +2,16 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.OrderSummary" owl="1">
-        <div class="summary clearfix">
+        <div class="summary clearfix sticky-top w-100 py-2 px-3 bg-200 bg-opacity-50 text-end fw-bolder">
             <t t-set="_total" t-value="getTotal()" />
             <t t-set="_tax" t-value="getTax()" />
             <div class="line">
-                <div class="entry total">
-                    <span class="badge">Total: </span>
+                <div class="entry total fs-2 lh-sm">
+                    Total:
                     <span class="value">
                         <t t-esc="_total" />
                     </span>
-                    <div t-if="_tax.hasTax" class="subentry">
+                    <div t-if="_tax.hasTax" class="subentry fs-6 text-muted">
                         Taxes:
                         <span class="value">
                             <t t-esc="_tax.displayAmount" />

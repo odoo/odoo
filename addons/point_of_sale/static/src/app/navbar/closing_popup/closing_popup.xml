@@ -3,22 +3,22 @@
 
     <t t-name="point_of_sale.ClosePosPopup" owl="1">
         <div class="popup close-pos-popup">
-            <header>
-                <div class="title">Closing Session</div>
-                <div class="total-orders">
+            <div class="modal-header">
+                <h4 class="modal-title">Closing Session</h4>
+                <div class="total-orders fw-bolder">
                     Total <t t-esc="ordersDetails.quantity"/> orders:
                     <span class="amount" t-esc="env.utils.formatCurrency(ordersDetails.amount)"/>
                 </div>
-            </header>
-            <main class="body">
-                <div class="payment-methods-overview">
-                    <table>
+            </div>
+            <main class="modal-body">
+                <div class="payment-methods-overview overflow-auto">
+                    <table class="text-start">
                         <thead>
-                            <tr>
+                            <tr class="text-dark">
                                 <th>Payment Method</th>
                                 <th>Expected</th>
-                                <th style="width: 20%">Counted</th>
-                                <th style="width: 20%">Difference</th>
+                                <th style="width:20%">Counted</th>
+                                <th>Difference</th>
                             </tr>
                         </thead>
                         <t t-if="cashControl">
@@ -26,37 +26,38 @@
                                 <tr>
                                     <td t-esc="defaultCashDetails.name"/>
                                     <td t-esc="env.utils.formatCurrency(defaultCashDetails.amount)"/>
-                                    <td class="flex" t-on-input="(event) => this.handleInputChange(defaultCashDetails.id, event)">
-                                        <input class="pos-input" t-ref="closingCashInput" t-on-focus="ev=>ev.target.select()"/>
-                                        <div class="button icon ClosePosPopup" t-on-click="openDetailsPopup">
-                                            <i class="fa fa-money" role="img" title="Open the money details popup"/>
+                                    <td class="input-group" t-on-input="(event) => this.handleInputChange(defaultCashDetails.id, event)">
+                                        <input class="pos-input form-control text-end" t-ref="closingCashInput" t-on-focus="ev=>ev.target.select()"/>
+                                        <div class="button icon ClosePosPopup btn btn-secondary" t-on-click="openDetailsPopup">
+                                            <i class="fa fa-money fa-2x" role="img" title="Open the money details popup"/>
                                         </div>
                                     </td>
-                                    <td t-esc="env.utils.formatCurrency(state.payments[defaultCashDetails.id].difference)" t-att-class="{'warning': state.payments[defaultCashDetails.id].difference}"/>
+                                    <td t-esc="env.utils.formatCurrency(state.payments[defaultCashDetails.id].difference)" 
+                                        t-att-class="{'warning text-danger fw-bolder': state.payments[defaultCashDetails.id].difference}"/>
                                 </tr>
                             </tbody>
-                            <tbody class="cash-overview">
+                            <tbody class="cash-overview border-start small text-muted">
                                 <tr>
                                     <td>Opening</td>
-                                    <td t-esc="env.utils.formatCurrency(defaultCashDetails.opening)"/>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(defaultCashDetails.opening)"/>
                                 </tr>
                                 <tr t-foreach="defaultCashDetails.moves" t-as="move" t-key="move_index">
                                     <td>
-                                        <div class="flex">
-                                            <div class="cash-sign" t-esc="move.amount &lt; 0 ? '-' : '+'"/>
+                                        <div class="flex d-flex flex-row">
+                                            <div class="cash-sign me-1" t-esc="move.amount &lt; 0 ? '-' : '+'"/>
                                             <t t-esc="move.name"/>
                                         </div>
                                     </td>
-                                    <td t-esc="env.utils.formatCurrency(Math.abs(move.amount))"/>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(move.amount))"/>
                                 </tr>
                                 <tr t-if="defaultCashDetails.payment_amount">
                                     <td>
-                                        <div class="flex">
-                                            <div class="cash-sign" t-esc="defaultCashDetails.payment_amount &lt; 0 ? '-' : '+'"/>
+                                        <div class="flex d-flex flex-row">
+                                            <div class="cash-sign me-1" t-esc="defaultCashDetails.payment_amount &lt; 0 ? '-' : '+'"/>
                                             Payments in <t t-esc="defaultCashDetails.name"/>
                                         </div>
                                     </td>
-                                    <td t-esc="env.utils.formatCurrency(Math.abs(defaultCashDetails.payment_amount))"/>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(defaultCashDetails.payment_amount))"/>
                                 </tr>
                             </tbody>
                         </t>
@@ -66,41 +67,43 @@
                                 <td t-esc="env.utils.formatCurrency(pm.amount)"/>
                                 <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
                                 <td t-if="_showDiff" t-on-input="(event) => this.handleInputChange(pm.id, event)">
-                                    <input class="pos-input" t-ref="closingCashInput_{{pm.id}}" t-on-focus="ev=>ev.target.select()"/>
+                                    <input class="pos-input form-control" t-ref="closingCashInput_{{pm.id}}" t-on-focus="ev=>ev.target.select()"/>
                                 </td>
-                                <td t-if="_showDiff" t-esc="env.utils.formatCurrency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
+                                <td t-if="_showDiff" t-esc="env.utils.formatCurrency(state.payments[pm.id].difference)" t-att-class="{'warning text-danger fw-bolder': state.payments[pm.id].difference}"/>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </main>
-            <main class="body notes">
-                <div class="notes-container">
-                    <div class="opening-notes-container" t-if="openingNotes" >
-                        Opening note
-                        <textarea class="opening-notes">
+                <div class="notes-container d-flex flex-column flex-sm-row gap-3 border-top mt-3 pt-3">
+                    <div class="opening-notes-container d-flex flex-column flex-grow-1 align-items-start" t-if="openingNotes" >
+                        <label class="form-label" for="openingNotes">Opening note</label>
+                        <textarea class="opening-notes form-control" id="openingNotes">
                             <t t-esc="openingNotes"/>
                         </textarea>
                     </div>
-                    <div class="closing-notes-container">
-                        Closing note
-                        <textarea class="closing-notes" placeholder="Add a closing note..." t-model="state.notes"/>
+                    <div class="closing-notes-container d-flex flex-column flex-grow-1 align-items-start">
+                        <label class="form-label" for="closingNotes">Closing note</label>
+                        <textarea class="closing-notes form-control" id="closingNotes" placeholder="Add a closing note..." t-model="state.notes"/>
                     </div>
                 </div>
             </main>
-            <footer class="footer">
-                <div class="button highlight" t-on-click="confirm">Close Session</div>
-                <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancel">Discard</div>
-                <!-- Download Sale Details -->
-                <div class="small button icon"
-                    t-on-click="downloadSalesReport"
-                    title="Download a report with all the sales of the current PoS Session">
-                        <div class="daily sale">Daily Sale</div>
-                        <i class="fa fa-download" role="img"/>
+            <footer class="footer modal-footer justify-content-between">
+                <div class="modal-footer-left d-flex gap-2">
+                    <button class="button highlight btn btn-lg btn-primary" t-on-click="confirm">Close Session</button>
+                    <button class="button btn btn-lg btn-secondary" t-att-class="{'disabled': !canCancel()}" t-on-click="cancel">Discard</button>
                 </div>
-                <!-- Print Sale Details -->
-                <div t-if="hardwareProxy.printer" class="small button icon">
-                    <SaleDetailsButton/>
+                <!-- Download Sale Details -->
+                <div class="modal-footer-right d-flex gap-2">
+                    <button class="button icon btn btn-lg btn-secondary"
+                        t-on-click="downloadSalesReport"
+                        title="Download a report with all the sales of the current PoS Session">
+                            Daily Sale
+                            <i class="fa fa-download" role="img"/>
+                    </button>
+                    <!-- Print Sale Details -->
+                    <button t-if="hardwareProxy.printer" class="button icon btn btn-lg btn-secondary">
+                        <SaleDetailsButton/>
+                    </button>
                 </div>
             </footer>
         </div>

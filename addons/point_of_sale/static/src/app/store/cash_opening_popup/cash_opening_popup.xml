@@ -2,25 +2,28 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.CashOpeningPopup" owl="1">
         <div class="popup opening-cash-control">
-            <header class="title drag-handle">
-                OPENING CASH CONTROL
-            </header>
-            <main class="body">
-                <div class="opening-cash-section">
-                    <span class="info-title">Opening cash</span>
-                    <div class="cash-input-sub-section" t-on-input="handleInputChange">
-                        <input class="pos-input" t-ref="cash-input" t-on-focus="ev=>ev.target.select()"/>
-                        <div class="button icon" t-on-click="openDetailsPopup">
-                            <i class="fa fa-money" role="img" title="Open the money details popup"/>
+            <div class="modal-header drag-handle">
+                <h4 class="modal-title">Opening Cash Control</h4>
+            </div>
+            <main class="modal-body">
+                <div class="opening-cash-section mb-3">
+                    <span class="info-title d-flex flex-grow-1 align-items-start">Opening cash</span>
+                    <div class="cash-input-sub-section input-group" t-on-input="handleInputChange">
+                        <input class="pos-input form-control" type="number" t-model.number="state.openingCash" t-ref="cash-input" t-on-focus="ev=>ev.target.select()"/>
+                        <div class="button icon btn btn-secondary" t-on-click="openDetailsPopup">
+                            <i class="fa fa-money fa-2x" role="img" title="Open the money details popup"/>
                         </div>
                     </div>
                 </div>
-                <textarea placeholder="Add an opening note..." class="opening-cash-notes" t-model="state.notes"/>
-            </main>
-            <footer class="footer">
-                <div class="button dynamic-size" t-on-click="confirm">
-                    Open session <span t-esc="env.utils.formatCurrency(state.openingCash)"/> 
+                <div class="opening-notes-container d-flex flex-column align-items-start">
+                    <label class="form-label" for="openingNotes">Opening note</label>
+                    <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-model="state.notes" placeholder="Add an opening note...">
+                        <t t-esc="openingNotes"/>
+                    </textarea>
                 </div>
+            </main>
+            <footer class="footer modal-footer">
+                <div class="button btn btn-lg btn-primary" t-on-click="confirm">Open session <span t-esc="env.utils.formatCurrency(state.openingCash)"/></div>
             </footer>
         </div>
     </t>

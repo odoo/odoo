@@ -3,20 +3,15 @@
 
     <t t-name="point_of_sale.ErrorBarcodePopup" owl="1">
         <div class="popup popup-barcode">
-            <header class="title drag-handle">
-                <span>Unknown Barcode</span>
-                <br />
-                <span class="barcode">
-                    <t t-esc="props.code" />
-                </span>
+            <header class="title drag-handle modal-header">
+                <h5 class="modal-title">Unknown Barcode: <span class="fst-italic" t-esc="props.code"/>
+                </h5>
             </header>
-            <main class="body">
+            <main class="modal-body">
                 <t t-esc="translatedMessage" />
             </main>
-            <footer class="footer">
-                <div class="button cancel" t-on-click="confirm">
-                    Ok
-                </div>
+            <footer class="footer modal-footer">
+                <button type="button" class="btn btn-primary" t-on-click="confirm">Ok</button>
             </footer>
         </div>
     </t>

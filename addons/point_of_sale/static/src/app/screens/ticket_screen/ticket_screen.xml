@@ -2,13 +2,13 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.TicketScreen" owl="1">
-        <div class="ticket-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
-            <div class="screen-full-width">
-                <div class="rightpane pane-border">
-                    <div class="controls">
+        <div class="ticket-screen screen h-100 bg-100" t-att-class="{ oe_hidden: !props.isShown }">
+            <div class="screen-full-width d-flex w-100 h-100">
+                <div class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-50 h-md-100 bg-300 overflow-y-auto">
+                    <div class="controls d-flex align-items-center justify-content-between mt-1 mt-md-0 p-2 bg-400">
                         <t t-if="!ui.isSmall || !state.showSearchBar">
-                            <div class="buttons">
-                                <button class="discard" t-on-click="() => this.pos.closeScreen()">
+                            <div class="buttons d-flex gap-2">
+                                <button class="discard btn btn-lg btn-light" t-on-click="() => this.pos.closeScreen()">
                                     <span class="search-icon">
                                         <i class="fa fa-angle-double-left"/>
                                     </span>
@@ -16,19 +16,19 @@
                                         Back
                                     </t>
                                 </button>
-                                <button t-if="allowNewOrders" class="highlight" t-on-click="() => this.onCreateNewOrder()">New Order</button>
+                                <button t-if="allowNewOrders" class="highlight btn btn-lg btn-primary" t-on-click="() => this.onCreateNewOrder()">New Order</button>
                             </div>
                         </t>
                         <t t-if="ui.isSmall">
                             <t t-if="state.showSearchBar">
-                                <button class="arrow-left" t-on-click="() => { state.showSearchBar = !state.showSearchBar }">
+                                <button class="arrow-left btn btn-lg btn-light" t-on-click="() => { state.showSearchBar = !state.showSearchBar }">
                                     <span class="search-icon">
                                         <i class="fa fa-angle-double-left"/>
                                     </span>
                                 </button>
                             </t>
                             <t t-else="">
-                                <button class="search" t-on-click="() => { state.showSearchBar = !state.showSearchBar }">
+                                <button class="search btn btn-lg btn-light" t-on-click="() => { state.showSearchBar = !state.showSearchBar }">
                                     <span class="search-icon">
                                         <i class="fa fa-search"/>
                                     </span>
@@ -55,61 +55,61 @@
                             </div>
                         </div>
                     </div>
-                    <div class="orders">
+                    <div class="orders overflow-y-auto">
                         <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
                         <t t-if="_filteredOrderList.length !== 0">
-                            <div class="header-row" t-att-class="{ oe_hidden: ui.isSmall }">
-                                <div class="col wide">Date</div>
-                                <div class="col wide">Receipt Number</div>
-                                <div class="col">Customer</div>
-                                <div class="col wide" t-if="showCardholderName()">Cardholder Name</div>
-                                <div class="col">Cashier</div>
-                                <div class="col end">Total</div>
-                                <div class="col narrow">Status</div>
-                                <div class="col very-narrow" name="delete"></div>
+                            <div class="header-row d-flex text-bg-700 fw-bolder" t-att-class="{ oe_hidden: ui.isSmall }">
+                                <div class="col wide p-2">Date</div>
+                                <div class="col wide p-2">Receipt Number</div>
+                                <div class="col p-2">Customer</div>
+                                <div class="col wide p-2" t-if="showCardholderName()">Cardholder Name</div>
+                                <div class="col p-2">Cashier</div>
+                                <div class="col end p-2">Total</div>
+                                <div class="col narrow p-2">Status</div>
+                                <div class="col very-narrow p-2" name="delete"></div>
                             </div>
                             <t t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
-                                <div class="order-row" t-att-class="{ highlight: isHighlighted(order) }" t-on-click="() => this.onClickOrder(order)">
-                                    <div class="col wide">
+                                <div class="order-row" t-att-class="{ 'highlight': isHighlighted(order) }" t-on-click="() => this.onClickOrder(order)">
+                                    <div class="col wide p-2 ">
                                         <div><t t-esc="getDate(order)"></t></div>
                                         <div t-if="ui.isSmall"><t t-esc="getTotal(order)"></t></div>
                                     </div>
-                                    <div class="col wide">
+                                    <div class="col wide p-2">
                                         <div><t t-esc="order.name"></t></div>
                                         <div t-if="ui.isSmall"><t t-esc="getStatus(order)"></t></div>
                                     </div>
-                                    <div class="col" t-if="!ui.isSmall">
+                                    <div class="col p-2" t-if="!ui.isSmall">
                                         <div><t t-esc="getPartner(order)"></t></div>
                                     </div>
-                                    <div t-if="showCardholderName() and !ui.isSmall" class="col">
+                                    <div t-if="showCardholderName() and !ui.isSmall" class="col p-2">
                                         <div><t t-esc="getCardholderName(order)"></t></div>
                                     </div>
-                                    <div class="col">
+                                    <div class="col p-2">
                                         <div t-if="ui.isSmall"><t t-esc="getPartner(order)"></t></div>
                                         <div t-att-class = "ui.isSmall ? 'cashier':''"><t t-esc="getCashier(order)"></t></div>
                                     </div>
-                                    <div class="col end" t-if="!ui.isSmall">
+                                    <div class="col end p-2" t-if="!ui.isSmall">
                                         <div><t t-esc="getTotal(order)"></t></div>
                                     </div>
-                                    <div class="col narrow" t-if="!ui.isSmall">
+                                    <div class="col narrow p-2" t-if="!ui.isSmall">
                                         <div><t t-esc="getStatus(order)"></t></div>
                                     </div>
-                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
+                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                         <i class="fa fa-trash" aria-hidden="true"/><t t-if="ui.isSmall"> Delete</t>
                                     </div>
-                                    <div t-else="" class="col very-narrow"></div>
+                                    <div t-else="" class="col very-narrow p-2"></div>
                                 </div>
                             </t>
                         </t>
                         <t t-else="">
-                            <div class="empty-order-list">
-                                <i role="img" aria-label="Shopping cart" title="Shopping cart" class="fa fa-shopping-cart"></i>
-                                <h1>No orders found</h1>
+                            <div class="empty-order-list m-5 text-center text-muted">
+                                <i role="img" aria-label="Shopping cart" title="Shopping cart" class="fa fa-4x fa-shopping-cart"></i>
+                                <h3 class="mt-2">No orders found</h3>
                             </div>
                         </t>
                     </div>
                 </div>
-                <div class="leftpane">
+                <div class="leftpane d-flex flex-column flex-grow-1 w-100 h-50 h-md-100 bg-200">
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedSyncedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
                     <OrderDetails
@@ -118,14 +118,14 @@
                         order="_selectedSyncedOrder"
                         selectedOrderlineId="_selectedOrderlineId"
                         highlightHeaderNote="_state.ui.highlightHeaderNote" />
-                    <div class="pads">
-                        <div class="control-buttons">
+                    <div class="pads border-top">
+                        <div class="control-buttons d-flex flex-wrap border-bottom overflow-hidden bg-300">
                             <InvoiceButton
                                 onInvoiceOrder.bind="onInvoiceOrder"
                                 order="_selectedSyncedOrder" />
                             <ReprintReceiptButton order="_selectedSyncedOrder" />
                         </div>
-                        <div class="subpads">
+                        <div class="subpads d-flex">
                             <ActionpadWidget
                                 partner="getSelectedPartner()"
                                 actionName="constructor.numpadActionName"

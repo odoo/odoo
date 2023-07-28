@@ -1,0 +1,48 @@
+.pos-receipt-container {
+    direction: ltr;
+}
+
+.receipt-screen .default-view .pos-receipt-container {
+    flex: 0 1 400px;
+}
+
+@include media-breakpoint-down(md) {
+    .receipt-screen .default-view .pos-receipt-container {
+        flex: 1;
+        overflow: visible;
+    }
+}
+
+@page {
+    margin: 0;
+}
+
+@media print {
+    body {
+        background: white;
+    }
+    body * {
+        visibility: hidden;
+    }
+    .pos, .pos * {
+        position: static !important;
+    }
+    .pos .receipt-screen .pos-receipt-container {
+        position: absolute !important;
+        top: 0;
+        left: 0;
+    }
+    .pos .receipt-screen .pos-receipt-container, .pos .receipt-screen .pos-receipt-container  * {
+        visibility: visible;
+        background: white !important;
+        color: black !important;
+    }
+    .pos .pos-receipt {
+        margin: 0 !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        border: none !important;
+        font-size: 14px !important;
+        width: 266px !important;
+    }
+}

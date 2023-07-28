@@ -3,11 +3,11 @@
 
     <t t-name="pos_restaurant.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('header-row')]//div[@name='delete']" position="before">
-            <div t-if="pos.config.module_pos_restaurant" class="col" name="table">Table</div>
+            <div t-if="pos.config.module_pos_restaurant" class="col p-2" name="table">Table</div>
             <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">Tip</div>
         </xpath>
         <xpath expr="//div[hasclass('order-row')]//div[@name='delete']" position="before">
-            <div t-if="pos.config.module_pos_restaurant" class="col" name="table">
+            <div t-if="pos.config.module_pos_restaurant" class="col p-2" name="table">
                 <t t-if="order.tableId">
                     <div t-if="ui.isSmall">Table</div>
                     <div><t t-esc="getTable(order)"></t></div>
@@ -19,7 +19,7 @@
             </div>
         </xpath>
         <xpath expr="//div[hasclass('buttons')]" position="inside">
-            <button class="settle-tips" t-if="_state.ui.filter == 'TIPPING'" t-on-click="settleTips">Settle</button>
+            <button class="settle-tips btn btn-lg btn-primary" t-if="_state.ui.filter == 'TIPPING'" t-on-click="settleTips">Settle</button>
         </xpath>
     </t>
 

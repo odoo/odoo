@@ -48,6 +48,7 @@ export function useCashierSelector(
         if (employee.pin !== Sha1.hash(inputPin)) {
             await popup.add(ErrorPopup, {
                 title: _t("Incorrect Password"),
+                body: _t("Please try again."),
             });
             return false;
         }

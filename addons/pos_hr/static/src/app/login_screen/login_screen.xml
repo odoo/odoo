@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_hr.LoginScreen" owl="1">
-        <div class="login-overlay">
-            <div class="screen-login">
-                <div class="login-title"><small>Log in to </small>
-                    <t t-esc="shopName" />
+        <div class="login-overlay fixed-top w-100 h-100 bg-view">
+            <div class="screen-login position-absolute top-0 start-0 bottom-0 end-0 d-flex flex-column py-4 m-auto w-100 rounded bg-view text-center fw-bolder">
+                <div class="login-title fs-2 mb-3 mb-md-0">Log in to
+                    <span class="text-primary"><t t-esc="shopName" /></span>
                 </div>
-                <div class="login-body">
-                    <span class="login-element">
-                        <img class="login-barcode-img"
+                <div class="login-body d-flex d-flex flex-column flex-sm-row align-items-center justify-content-around px-3 py-4">
+                    <span class="login-element border p-3 rounded">
+                        <img class="login-barcode-img w-50"
                              src="/point_of_sale/static/img/barcode.png" />
-                        <div class="login-barcode-text">Scan your badge</div>
+                        <div class="login-barcode-text mt-2">Scan your badge</div>
                     </span>
-                    <span class="login-or">or</span>
+                    <span class="login-or m-2 fs-2 text-muted">or</span>
                     <span class="login-element">
-                        <button class="login-button select-cashier"
+                        <button class="login-button select-cashier btn btn-lg btn-secondary py-5 px-3"
                                 t-on-click="selectCashier">Select Cashier</button>
                     </span>
                 </div>

@@ -1,0 +1,9 @@
+.product-list {
+    grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
+}
+
+@media only screen and (max-width: 768px) {
+    .product-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

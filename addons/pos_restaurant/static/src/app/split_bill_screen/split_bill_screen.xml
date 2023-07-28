@@ -2,22 +2,21 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_restaurant.SplitBillScreen" owl="1">
-        <div class="splitbill-screen screen">
-            <div class="contents">
-                <div class="top-content">
-                    <span class="button back" t-on-click="back">
-                        <i class="fa fa-angle-double-left"></i>
-                        <span> </span>
+        <div class="splitbill-screen screen h-100 bg-100">
+            <div class="contents d-flex flex-column flex-nowrap h-100 my-0 mx-auto">
+                <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
+                    <button class="button back btn btn-lg btn-outline-primary" t-on-click="back">
+                        <i class="fa fa-angle-double-left me-2"></i>
                         <span>Back</span>
-                    </span>
-                    <div class="top-content-center">
-                        <h1>Bill Splitting</h1>
+                    </button>
+                    <div class="top-content-center flex-grow-1">
+                        <h2 class="mb-0">Bill Splitting</h2>
                     </div>
                 </div>
-                <div t-if="newOrder" class="main">
-                    <div class="lines">
-                        <div class="order">
-                            <ul class="orderlines">
+                <div t-if="newOrder" class="main d-flex flex-nowrap flex-grow-1 overflow-hidden">
+                    <div class="lines d-flex flex-shrink-1 flex-grow-1 flex-basis-0 justify-content-center border-end overflow-y-auto ">
+                        <div class="order w-100 h-auto py-2 m-4 border rounded bg-view text-start">
+                            <ul class="orderlines flex-grow-1 h-100 overflow-auto">
                                 <t t-foreach="orderlines" t-as="line" t-key="line.cid">
                                     <SplitOrderline
                                         onClickLine.bind="onClickLine"
@@ -27,16 +26,15 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="controls">
-                        <div class="order-info">
+                    <div class="controls d-flex flex-column flex-nowrap flex-grow-1 flex-shrink-1 flex-basis-0">
+                        <div class="order-info py-4 border-bottom text-center text-success">
                             <span class="subtotal">
                                 <t t-esc="env.utils.formatCurrency(newOrder.get_subtotal())" />
                             </span>
                         </div>
-                        <div class="pay-button">
-                            <div class="button" t-on-click="proceed">
-                                <i class="oi oi-chevron-right" />
-                                <span> </span>
+                        <div class="pay-button m-3">
+                            <div class="button btn btn-lg btn-secondary py-3 w-100" t-on-click="proceed">
+                                <i class="oi oi-chevron-right me-2" />
                                 <span>Payment</span>
                             </div>
                         </div>
