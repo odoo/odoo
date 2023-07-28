@@ -154,7 +154,13 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] textarea", "DEF");
         await clickSave(target);
 
+<<<<<<< HEAD
         assert.verifySteps(["get_views", "web_read", "write", "web_read"]);
+||||||| parent of 84ee30233be (temp)
+        assert.verifySteps(["get_views", "read", "web.ace_lib", "write", "read"]);
+=======
+        assert.verifySteps(["get_views", "read", "write", "read"]);
+>>>>>>> 84ee30233be (temp)
     });
 
     QUnit.test("AceEditorField doesn't crash when editing", async (assert) => {
