@@ -450,7 +450,7 @@ class ReportMoOverview(models.AbstractModel):
             # Need to order more products to fulfill the need
             resupply_rules = self._get_resupply_rules(production, product, replenish_data)
             rules_delay = sum(rule.delay for rule in resupply_rules)
-            resupply_data = self._get_resupply_data(resupply_rules, rules_delay, missing_quantity, move_raw.product_uom, product, production.warehouse_id)
+            resupply_data = self._get_resupply_data(resupply_rules, rules_delay, missing_quantity, move_raw.product_uom, product, production)
 
             to_order_line = {'summary': {
                 'level': level + 1,
@@ -468,7 +468,8 @@ class ReportMoOverview(models.AbstractModel):
                 'currency': currency,
             }}
             if resupply_data:
-                to_order_line['summary']['mo_cost'] = currency.round(resupply_data['cost'])
+                mo_cost = resupply_data['currency']._convert(resupply_data['cost'], currency, (production.company_id or self.env.company), fields.Date.today())
+                to_order_line['summary']['mo_cost'] = mo_cost
                 to_order_line['summary']['receipt'] = self._check_planned_start(production.date_start, self._format_receipt_date('estimated', fields.datetime.today() + timedelta(days=resupply_data['delay'])))
             else:
                 to_order_line['summary']['mo_cost'] = currency.round(product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
@@ -700,11 +701,11 @@ class ReportMoOverview(models.AbstractModel):
     def _get_extra_replenishments(self, product):
         return []
 
-    def _get_resupply_data(self, rules, rules_delay, quantity, uom_id, product, warehouse):
+    def _get_resupply_data(self, rules, rules_delay, quantity, uom_id, product, production):
         manufacture_rules = [rule for rule in rules if rule.action == 'manufacture']
         if manufacture_rules:
             # Need to get rules from Production location to get delays before production
-            wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=warehouse.route_ids)
+            wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=production.warehouse_id.route_ids)
             wh_manufacture_rules -= rules
             rules_delay += sum(rule.delay for rule in wh_manufacture_rules)
             related_bom = self.env['mrp.bom']._bom_find(product)[product]
@@ -713,6 +714,7 @@ class ReportMoOverview(models.AbstractModel):
             return {
                 'delay': related_bom.produce_delay + rules_delay,
                 'cost': product.standard_price * uom_id._compute_quantity(quantity, product.uom_id),
+                'currency': (production.company_id or self.env.company).currency_id,
             }
         return False
 
