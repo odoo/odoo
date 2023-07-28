@@ -8,7 +8,6 @@ import { makeTestEnv } from "../../helpers/mock_env";
 import {
     click,
     getFixture,
-    legacyExtraNextTick,
     patchWithCleanup,
     mount,
     nextTick,
@@ -16,7 +15,12 @@ import {
     editInput,
     getNodesTextContent,
 } from "../../helpers/utils";
-import { pagerNext, switchView, toggleMenuItem, toggleSearchBarMenu } from "@web/../tests/search/helpers";
+import {
+    pagerNext,
+    switchView,
+    toggleMenuItem,
+    toggleSearchBarMenu,
+} from "@web/../tests/search/helpers";
 import { session } from "@web/session";
 import {
     createWebClient,
@@ -215,7 +219,7 @@ QUnit.module("ActionManager", (hooks) => {
             action: 1,
         });
         await nextTick();
-        await legacyExtraNextTick();
+        await nextTick();
         assert.containsOnce(target, ".o_control_panel");
         assert.containsOnce(target, ".o_kanban_view");
         assert.verifySteps([
@@ -279,7 +283,7 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "form",
         });
         await nextTick();
-        await legacyExtraNextTick();
+        await nextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.verifySteps([
             "/web/webclient/load_menus",
@@ -300,7 +304,7 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "kanban",
         });
         await nextTick();
-        await legacyExtraNextTick();
+        await nextTick();
         assert.containsNone(target, ".o_list_view");
         assert.containsOnce(target, ".o_kanban_view");
         assert.verifySteps([
@@ -329,7 +333,7 @@ QUnit.module("ActionManager", (hooks) => {
                 view_type: "form",
             });
             await nextTick();
-            await legacyExtraNextTick();
+            await nextTick();
             assert.containsNone(target, ".o_list_view");
             assert.containsOnce(target, ".o_form_view");
             assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
@@ -401,7 +405,7 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "kanban",
         });
         await nextTick();
-        await legacyExtraNextTick();
+        await nextTick();
         assert.containsNone(target, ".o_list_view");
         assert.containsOnce(target, ".o_kanban_view");
         // switch to form view, open record 4
@@ -411,7 +415,7 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "form",
         });
         await nextTick();
-        await legacyExtraNextTick();
+        await nextTick();
         assert.containsNone(target, ".o_kanban_view");
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Fourth record"]);
@@ -445,6 +449,7 @@ QUnit.module("ActionManager", (hooks) => {
             id: 4,
             view_type: "form",
         });
+        await nextTick();
         await nextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Fourth record"]);
@@ -485,7 +490,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         assert.verifySteps(["push_state"], "should have pushed the final state");
         await click(target.querySelector("tr .o_data_cell"));
-        await legacyExtraNextTick();
+        await nextTick();
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, {
             action: 3,
@@ -588,7 +593,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.step(route);
         };
         await createWebClient({ serverData, mockRPC });
-        await legacyExtraNextTick();
+        await nextTick();
         assert.containsOnce(target, ".o_kanban_view", "should display a kanban view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1"]);
         assert.verifySteps([
@@ -660,7 +665,6 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(target, ".o_list_view", "should now display the list view");
 
             await switchView(target, "kanban");
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".o_kanban_view", "should now display the kanban view");
 
             const hash = webClient.env.services.router.current.hash;
