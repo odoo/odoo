@@ -227,7 +227,7 @@
                                 </div>
                                 <t t-call="account.document_tax_totals_company_currency_template"/>
                             </div>
-                            <div id="payment_term" t-attf-class="#{'col-7' if report_type != 'html' else '' } clearfix" class="clearfix col-5">
+                            <div id="payment_term" class="clearfix">
                                 <div class="justify-text">
                                     <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note" class="mb-2">
                                         <span t-field="o.fiscal_position_id.note"/>
