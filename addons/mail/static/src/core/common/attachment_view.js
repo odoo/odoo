@@ -59,4 +59,8 @@ export class AttachmentView extends Component {
             model: props.threadModel,
         });
     }
+
+    get displayName() {
+        return this.state.thread.mainAttachment.filename;
+    }
 }

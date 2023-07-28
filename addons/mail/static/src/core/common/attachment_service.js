@@ -34,6 +34,7 @@ export class AttachmentService {
             "accessToken",
             "tmpUrl",
             "message",
+            "res_name",
         ]);
         if (!("extension" in data) && data["name"]) {
             attachment.extension = attachment.name.split(".").pop();
