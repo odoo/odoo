@@ -49,18 +49,17 @@
     odoo.__DEBUG__ = {
         didLogInfo: didLogInfoPromise,
         getDependencies: function (name, transitive) {
-            var deps = name instanceof Array ? name : [name];
-            var changed;
+            const deps = new Set();
+            let queue = [name];
             do {
-                changed = false;
-                jobDeps.forEach(function (dep) {
-                    if (deps.indexOf(dep.to) >= 0 && deps.indexOf(dep.from) < 0) {
-                        deps.push(dep.from);
-                        changed = true;
-                    }
-                });
-            } while (changed && transitive);
-            return deps;
+                queue = queue.flatMap((job) =>
+                    jobDeps.filter((dep) => dep.to === job).map((dep) => dep.from)
+                );
+                for (const dep of queue) {
+                    deps.add(dep);
+                }
+            } while (queue.length && transitive);
+            return [...deps];
         },
         getDependents: function (name) {
             return jobDeps
