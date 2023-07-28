@@ -650,39 +650,11 @@
             parent="menu_mrp_manufacturing"
             sequence="1"/>
 
-        <record id="mrp_production_report" model="ir.actions.act_window">
-            <field name="name">Manufacturing Orders</field>
-            <field name="res_model">mrp.production</field>
-            <field name="view_mode">graph,pivot,form</field>
-            <field name="target">current</field>
-            <field name="context">{
-                'search_default_product': 1,
-                'search_default_scheduled_date': 2,
-                'search_default_filter_confirmed': True,
-                'search_default_filter_planned': True,
-                'default_company_id': allowed_company_ids[0],
-                'allowed_company_ids': allowed_company_ids
-            }</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No data yet!
-                </p><p>
-                    Create a new manufacturing order
-                </p>
-            </field>
-        </record>
-
         <menuitem id="menu_mrp_workorder_todo"
                 name="Work Orders"
                 action="mrp_workorder_todo"
                 parent="menu_mrp_manufacturing"
                 groups="group_mrp_routings"/>
-
-        <menuitem id="menu_mrp_production_report"
-            name="Manufacturing Orders"
-            parent="menu_mrp_reporting"
-            action="mrp_production_report"
-            sequence="11"/>
 
         <menuitem id="menu_mrp_work_order_report"
             name="Work Orders"
