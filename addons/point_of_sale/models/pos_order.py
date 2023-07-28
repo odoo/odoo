@@ -231,7 +231,45 @@ class PosOrder(models.Model):
         :return: A list of python dictionaries (see '_convert_to_tax_base_line_dict' in account.tax).
         """
         self.ensure_one()
-        return self.lines._prepare_tax_base_line_values(sign=sign)
+        commercial_partner = self.partner_id.commercial_partner_id
+
+        base_line_vals_list = []
+        for line in self.lines.with_company(self.company_id):
+            account = line.product_id._get_product_accounts()['income'] or self.config_id.journal_id.default_account_id
+            if not account:
+                raise UserError(_(
+                    "Please define income account for this product: '%s' (id:%d).",
+                    line.product_id.name, line.product_id.id,
+                ))
+
+            if self.fiscal_position_id:
+                account = self.fiscal_position_id.map_account(account)
+
+            is_refund = line.qty * line.price_unit < 0
+
+            product_name = line.product_id\
+                .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang)\
+                .get_product_multiline_description_sale()
+            base_line_vals_list.append(
+                {
+                    **self.env['account.tax']._convert_to_tax_base_line_dict(
+                        line,
+                        partner=commercial_partner,
+                        currency=self.currency_id,
+                        product=line.product_id,
+                        taxes=line.tax_ids_after_fiscal_position,
+                        price_unit=line.price_unit,
+                        quantity=sign * line.qty,
+                        price_subtotal=sign * line.price_subtotal,
+                        discount=line.discount,
+                        account=account,
+                        is_refund=is_refund,
+                    ),
+                    'uom': line.product_uom_id,
+                    'name': product_name,
+                }
+            )
+        return base_line_vals_list
 
     @api.model
     def _get_invoice_lines_values(self, line_values, pos_order_line):
@@ -689,7 +727,7 @@ class PosOrder(models.Model):
 
         # Concert each order line to a dictionary containing business values. Also, prepare for taxes computation.
         base_line_vals_list = self._prepare_tax_base_line_values(sign=-1)
-        tax_results = self.env['account.tax']._compute_taxes(base_line_vals_list)
+        tax_results = self.env['account.tax']._compute_taxes(base_line_vals_list, self.company_id)
 
         total_balance = 0.0
         total_amount_currency = 0.0

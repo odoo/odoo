@@ -841,7 +841,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
         })
 
-
         self.product = self.env["product.product"].create(
             {
                 "name": "Test Product 1",

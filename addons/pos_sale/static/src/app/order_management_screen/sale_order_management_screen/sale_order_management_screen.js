@@ -289,7 +289,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         );
                     }
                     const down_payment_tax =
-                        this.pos.taxes_by_id[down_payment_product.taxes_id] || false;
+                        this.pos.tax_data_by_id[down_payment_product.taxes_id] || false;
                     let down_payment;
                     if (down_payment_tax) {
                         down_payment = down_payment_tax.price_include

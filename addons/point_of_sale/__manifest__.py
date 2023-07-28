@@ -142,6 +142,8 @@
             'web/static/src/legacy/js/libs/jquery.js',
             'web_tour/static/src/tour_pointer/**/*',
             'web_tour/static/src/tour_service/**/*',
+            # account
+            'account/static/src/helpers/*.js',
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [

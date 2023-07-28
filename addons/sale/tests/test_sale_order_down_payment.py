@@ -318,8 +318,14 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[1].tax_id = tax_group_2
         self.sale_order.order_line[2].tax_id = tax_10_a
         self.make_downpayment()
+
+        # Line 1: 200 + 80 = 284
+        # Line 2: 200 + 40 = 240
+        # Line 3: 200 + 20 = 220
+        # Line 4: 200
+        # Total: 944
+
         invoice = self.sale_order.invoice_ids
-        down_pay_amt = self.sale_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
             # keys
@@ -333,7 +339,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.tax_account.id,        self.env['account.tax'],   -31,          0            ],
             [self.tax_account.id,        self.env['account.tax'],   -12,          0            ],
             # receivable
-            [self.receivable_account.id, self.env['account.tax'],   down_pay_amt, 0            ],
+            [self.receivable_account.id, self.env['account.tax'],   473,          0            ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
@@ -393,9 +399,15 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[0].analytic_distribution = {an_acc_01: 50, an_acc_02: 50}
         self.sale_order.order_line[1].tax_id = tax_group_2
         self.sale_order.order_line[2].tax_id = tax_10_a
+
+        # Line 1: 200 + 80 = 284
+        # Line 2: 200 + 40 = 240
+        # Line 3: 200 + 20 = 220
+        # Line 4: 200
+        # Total: 944
+
         self.make_downpayment()
         invoice = self.sale_order.invoice_ids
-        down_pay_amt = self.sale_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
             # keys
@@ -409,7 +421,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.tax_account.id,        self.env['account.tax'],   -31,          0,              False                         ],
             [self.tax_account.id,        self.env['account.tax'],   -12,          0,              False                         ],
             # receivable
-            [self.receivable_account.id, self.env['account.tax'],   down_pay_amt, 0,              False                         ],
+            [self.receivable_account.id, self.env['account.tax'],   473,          0,              False                         ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
