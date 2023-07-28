@@ -175,7 +175,7 @@ class SaleOrder(models.Model):
             # To compute the discountable amount we get the fixed tax amount and
             # subtract it from the order total. This way fixed taxes will not be discounted
             tax_data['taxes'] = tax_data['taxes'].filtered(lambda t: t.amount_type == 'fixed')
-            tax_results = self.env['account.tax']._compute_taxes([tax_data])
+            tax_results = self.env['account.tax']._compute_taxes([tax_data], self.company_id)
             totals = list(tax_results['totals'].values())[0]
             discountable += line.price_total - totals['amount_tax']
             taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')

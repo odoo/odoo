@@ -38,28 +38,21 @@ class AccountTax(models.Model):
 
     l10n_in_reverse_charge = fields.Boolean("Reverse charge", help="Tick this if this tax is reverse charge. Only for Indian accounting")
 
-    @api.model
-    def _get_generation_dict_from_base_line(self, line_vals, tax_vals, force_caba_exigibility=False):
-        # EXTENDS account
-        # Group taxes also by product.
-        res = super()._get_generation_dict_from_base_line(line_vals, tax_vals, force_caba_exigibility=force_caba_exigibility)
-        record = line_vals['record']
-        if isinstance(record, models.Model)\
-                and record._name == 'account.move.line'\
-                and record.company_id.account_fiscal_country_id.code == 'IN':
-            res['product_id'] = record.product_id.id
-            res['product_uom_id'] = record.product_uom_id.id
-        return res
+    def _prepare_dict_for_taxes_computation(self):
+        # EXTENDS 'account'
+        tax_values = super()._prepare_dict_for_taxes_computation()
 
-    @api.model
-    def _get_generation_dict_from_tax_line(self, line_vals):
-        # EXTENDS account
-        # Group taxes also by product.
-        res = super()._get_generation_dict_from_tax_line(line_vals)
-        record = line_vals['record']
-        if isinstance(record, models.Model)\
-                and record._name == 'account.move.line'\
-                and record.company_id.account_fiscal_country_id.code == 'IN':
-            res['product_id'] = record.product_id.id
-            res['product_uom_id'] = record.product_uom_id.id
-        return res
+        if self.country_code == 'IN':
+            l10n_in_tax_type = None
+            tags = self.invoice_repartition_line_ids.tag_ids
+            if self.env.ref('l10n_in.tax_tag_igst') in tags:
+                l10n_in_tax_type = 'igst'
+            elif self.env.ref('l10n_in.tax_tag_cgst') in tags:
+                l10n_in_tax_type = 'cgst'
+            elif self.env.ref('l10n_in.tax_tag_sgst') in tags:
+                l10n_in_tax_type = 'sgst'
+            elif self.env.ref('l10n_in.tax_tag_cess') in tags:
+                l10n_in_tax_type = 'cess'
+            tax_values['_l10n_in_tax_type'] = l10n_in_tax_type
+
+        return tax_values

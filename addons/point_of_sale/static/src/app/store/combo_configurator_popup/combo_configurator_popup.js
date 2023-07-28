@@ -33,7 +33,7 @@ export class ComboConfiguratorPopup extends Component {
             return "";
         } else {
             const product = comboLine.product_id;
-            const price = this.pos.getProductPrice(product, { price: combo_price });
+            const price = this.pos.getProductPrice(product, combo_price);
             return this.env.utils.formatCurrency(price);
         }
     }

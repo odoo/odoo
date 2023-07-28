@@ -89,7 +89,10 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_qty', 'price_unit', 'taxes_id', 'discount')
     def _compute_amount(self):
         for line in self:
-            tax_results = self.env['account.tax']._compute_taxes([line._convert_to_tax_base_line_dict()])
+            tax_results = self.env['account.tax']._compute_taxes(
+                [line._convert_to_tax_base_line_dict()],
+                line.company_id,
+            )
             totals = next(iter(tax_results['totals'].values()))
             amount_untaxed = totals['amount_untaxed']
             amount_tax = totals['amount_tax']

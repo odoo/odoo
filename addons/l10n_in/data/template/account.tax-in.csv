@@ -360,7 +360,7 @@
 "","","","","","","","","","","","","","","","","","base","refund","","l10n_in.tax_tag_base_cess"
 "","","","","","","","","","","","","","","","","","tax","refund","p11235","l10n_in.tax_tag_cess"
 "cess_5_plus_1591_sale","5%+1.591 CESS S","CESS 5%+1.591","CESS 5%+1.591","sale","group","0.0","","","cess_group","","","cess_sale_5,cess_sale_1591","","","","","","","",""
-"cess_21_4170_higer_sale","21% or 4.170 CESS S","CESS 21% or 4.170","CESS 21% or 4.170","sale","code","0.0","","","cess_group","","","","result=base_amount * 0.21; tax=quantity * 4.17; result = tax if (tax > result) else result;","","","","base","invoice","","l10n_in.tax_tag_base_cess"
+"cess_21_4170_higer_sale","21% or 4.170 CESS S","CESS 21% or 4.170","CESS 21% or 4.170","sale","code","0.0","","","cess_group","","","","result = max(quantity * price_unit * 0.21, quantity * 4.17)","","","","base","invoice","","l10n_in.tax_tag_base_cess"
 "","","","","","","","","","","","","","","","","","tax","invoice","p11235","l10n_in.tax_tag_cess"
 "","","","","","","","","","","","","","","","","","base","refund","","l10n_in.tax_tag_base_cess"
 "","","","","","","","","","","","","","","","","","tax","refund","p11235","l10n_in.tax_tag_cess"

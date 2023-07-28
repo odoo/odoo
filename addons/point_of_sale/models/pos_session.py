@@ -237,14 +237,7 @@ class PosSession(models.Model):
             },
             'account.tax': {
                 'domain': [('company_id', '=', config_id.company_id.id)],
-                'fields': [
-                    'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected',
-                    'amount_type', 'children_tax_ids', 'amount', 'repartition_line_ids', 'id'
-                ],
-            },
-            'account.tax.repartition.line': {
-                'domain': lambda data: [('tax_id', 'in', [tax['id'] for tax in data['account.tax']]), ('document_type', '=', 'invoice'), ('repartition_type', '=', 'tax')],
-                'fields': ['id', 'factor', 'factor_percent', 'tax_id']
+                'fields': [],
             },
             'account.cash.rounding': {
                 'domain': [('id', '=', config_id.rounding_method.id)],
@@ -252,10 +245,6 @@ class PosSession(models.Model):
             },
             'account.fiscal.position': {
                 'domain': [('id', 'in', config_id.fiscal_position_ids.ids)],
-                'fields': []
-            },
-            'account.fiscal.position.tax': {
-                'domain': lambda data: [('position_id', 'in', [fpos['id'] for fpos in data['account.fiscal.position']])],
                 'fields': [],
             },
             'stock.picking.type': {
@@ -278,6 +267,7 @@ class PosSession(models.Model):
         response['custom'] = {}
 
         if not only_data:
+
             response['custom'] = {
                 'partner_commercial_fields': self.env['res.partner']._commercial_fields(),
                 'server_version': exp_version(),
@@ -288,10 +278,32 @@ class PosSession(models.Model):
                 'open_orders': self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
             }
 
+            # Taxes.
+            taxes = self.env['account.tax'].search(params['account.tax']['domain'])
+            self._load_account_tax(response, taxes)
+
+            # Fiscal positions.
+            fiscal_positions = self.env['account.fiscal.position'].search(params['account.fiscal.position']['domain'])
+            self._load_account_fiscal_position(response, fiscal_positions)
+
         if len(models_to_load) > 0:
-            response['fields'] = {name: params[name]['fields'] for name in models_to_load}
+            fields_to_load = [(name, params[name]) for name in models_to_load]
         else:
-            response['fields'] = {name: data['fields'] for name, data in params.items()}
+            fields_to_load = [(name, data) for name, data in params.items()]
+
+        # Custom loading.
+        for key, value in fields_to_load:
+            if 'custom_loading' in value:
+                records = self.env[key].with_context(value.get('context', [])).search(value['domain'])
+                response['data'][key] = value['custom_loading'](records)
+                if records:
+                    value['fields'] = [
+                        field_name
+                        for field_name in response['data'][key][0].keys()
+                        if field_name in records._fields
+                    ]
+
+        response['fields'] = {name: data['fields'] for name, data in fields_to_load}
 
         # Load data from search_read
         if len(params) > 0:
@@ -300,18 +312,19 @@ class PosSession(models.Model):
                 if not key in models_to_load and len(models_to_load) > 0:
                     continue
 
-                if isinstance(value['domain'], list):
-                    response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
-                        value['domain'],
-                        value['fields'],
-                        order=value.get('order', []),
-                        load=False)
-                else:
-                    response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
-                        value['domain'](response['data']),
-                        value['fields'],
-                        order=value.get('order', []),
-                        load=False)
+                if key not in response['data']:
+                    if isinstance(value['domain'], list):
+                        response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
+                            value['domain'],
+                            value['fields'],
+                            order=value.get('order', []),
+                            load=False)
+                    else:
+                        response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
+                            value['domain'](response['data']),
+                            value['fields'],
+                            order=value.get('order', []),
+                            load=False)
 
                 if not only_data:
                     model_fields = self.env[key].fields_get(allfields=value['fields'] or None)
@@ -358,6 +371,23 @@ class PosSession(models.Model):
             self._process_pos_ui_product_product(response['data']['product.product'])
 
         return response
+
+    def _load_account_fiscal_position(self, response, fiscal_positions):
+        results = {}
+        for fiscal_position in fiscal_positions:
+            data = results[fiscal_position.id] = {
+                'id': fiscal_position.id,
+                'name': fiscal_position.name,
+                'display_name': fiscal_position.display_name,
+                'tax_mapping_by_id': {},
+            }
+            for fiscal_position_tax in fiscal_position.tax_ids:
+                fiscal_position_tax_data = data['tax_mapping_by_id'].setdefault(fiscal_position_tax.tax_src_id.id, [])
+                fiscal_position_tax_data.append(fiscal_position_tax.tax_dest_id.id)
+        response['custom']['account.fiscal.position'] = results
+
+    def _load_account_tax(self, response, taxes):
+        response['custom']['account.tax'] = {values['id']: values for values in taxes._convert_to_dict_for_taxes_computation()}
 
     def _prepare_pricelist_domain(self, data):
         product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
@@ -615,12 +645,6 @@ class PosSession(models.Model):
             self.sudo()._post_statement_difference(cash_difference_before_statements, False)
             if self.move_id.line_ids:
                 self.move_id.sudo().with_company(self.company_id)._post()
-                #We need to write the price_subtotal and price_total here because if we do it earlier the compute functions will overwrite it here /account/models/account_move_line.py _compute_totals
-                for dummy, amount_data in data['sales'].items():
-                    self.env['account.move.line'].browse(amount_data['move_line_id']).sudo().with_company(self.company_id).write({
-                        'price_subtotal': abs(amount_data['amount_converted']),
-                        'price_total': abs(amount_data['amount_converted']) + abs(amount_data['tax_amount']),
-                    })
                 # Set the uninvoiced orders' state to 'done'
                 self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
             else:
@@ -982,7 +1006,6 @@ class PosSession(models.Model):
         # of this session's move_id.
         combine_inv_payment_receivable_lines = defaultdict(lambda: self.env['account.move.line'])
         split_inv_payment_receivable_lines = defaultdict(lambda: self.env['account.move.line'])
-        rounded_globally = self.company_id.tax_calculation_rounding_method == 'round_globally'
         pos_receivable_account = self.company_id.account_default_pos_receivable_account_id
         currency_rounding = self.currency_id.rounding
         closed_orders = self._get_closed_orders()
@@ -1031,36 +1054,37 @@ class PosSession(models.Model):
                         combine_receivables_pay_later[payment_method] = self._update_amounts(combine_receivables_pay_later[payment_method], {'amount': amount}, date)
 
             if not order_is_invoiced:
-                order_taxes = defaultdict(tax_amounts)
-                for order_line in order.lines:
-                    line = self._prepare_line(order_line)
+                base_lines = order._prepare_tax_base_line_values(sign=1)
+                tax_results = self.env['account.tax']._compute_taxes(base_lines, order.company_id)
+                for base_line, to_update in tax_results['base_lines_to_update']:
                     # Combine sales/refund lines
                     sale_key = (
                         # account
-                        line['income_account_id'],
+                        base_line['account'].id,
                         # sign
-                        -1 if line['amount'] < 0 else 1,
+                        -1 if base_line['is_refund'] else 1,
                         # for taxes
-                        tuple((tax['id'], tax['account_id'], tax['tax_repartition_line_id']) for tax in line['taxes']),
-                        line['base_tags'],
+                        tuple(base_line['record'].tax_ids_after_fiscal_position.flatten_taxes_hierarchy().ids),
+                        tuple(to_update['tax_tag_ids'][0][2]),
                     )
-                    sales[sale_key] = self._update_amounts(sales[sale_key], {'amount': line['amount']}, line['date_order'], round=False)
-                    sales[sale_key].setdefault('tax_amount', 0.0)
-                    # Combine tax lines
-                    for tax in line['taxes']:
-                        tax_key = (tax['account_id'] or line['income_account_id'], tax['tax_repartition_line_id'], tax['id'], tuple(tax['tag_ids']))
-                        sales[sale_key]['tax_amount'] += tax['amount']
-                        order_taxes[tax_key] = self._update_amounts(
-                            order_taxes[tax_key],
-                            {'amount': tax['amount'], 'base_amount': tax['base']},
-                            tax['date_order'],
-                            round=not rounded_globally
-                        )
-                for tax_key, amounts in order_taxes.items():
-                    if rounded_globally:
-                        amounts = self._round_amounts(amounts)
-                    for amount_key, amount in amounts.items():
-                        taxes[tax_key][amount_key] += amount
+                    sales[sale_key] = self._update_amounts(
+                        sales[sale_key],
+                        {'amount': to_update['price_subtotal']},
+                        order.date_order,
+                    )
+
+                # Combine tax lines
+                for tax_line in tax_results['tax_lines_to_add']:
+                    tax_key = (
+                        tax_line['account_id'],
+                        tax_line['tax_repartition_line_id'],
+                        tuple(tax_line['tax_tag_ids'][0][2]),
+                    )
+                    taxes[tax_key] = self._update_amounts(
+                        taxes[tax_key],
+                        {'amount': -tax_line['tax_amount_currency'], 'base_amount': -tax_line['base_amount_currency']},
+                        order.date_order,
+                    )
 
                 if self.company_id.anglo_saxon_accounting and order.picking_ids.ids:
                     # Combine stock lines
@@ -1450,44 +1474,6 @@ class PosSession(models.Model):
             ).filtered(lambda aml: not aml.reconciled).reconcile()
         return data
 
-    def _prepare_line(self, order_line):
-        """ Derive from order_line the order date, income account, amount and taxes information.
-
-        These information will be used in accumulating the amounts for sales and tax lines.
-        """
-        def get_income_account(order_line):
-            product = order_line.product_id
-            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income'] or self.config_id.journal_id.default_account_id
-            if not income_account:
-                raise UserError(_('Please define income account for this product: "%s" (id:%d).',
-                                  product.name, product.id))
-            return order_line.order_id.fiscal_position_id.map_account(income_account)
-
-        company_domain = self.env['account.tax']._check_company_domain(order_line.order_id.company_id)
-        tax_ids = order_line.tax_ids_after_fiscal_position.filtered_domain(company_domain)
-        sign = -1 if order_line.qty >= 0 else 1
-        price = sign * order_line.price_unit * (1 - (order_line.discount or 0.0) / 100.0)
-        # The 'is_refund' parameter is used to compute the tax tags. Ultimately, the tags are part
-        # of the key used for summing taxes. Since the POS UI doesn't support the tags, inconsistencies
-        # may arise in 'Round Globally'.
-        check_refund = lambda x: x.qty * x.price_unit < 0
-        is_refund = check_refund(order_line)
-        tax_data = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund, fixed_multiplicator=sign)
-        taxes = tax_data['taxes']
-        # For Cash based taxes, use the account from the repartition line immediately as it has been paid already
-        for tax in taxes:
-            tax_rep = self.env['account.tax.repartition.line'].browse(tax['tax_repartition_line_id'])
-            tax['account_id'] = tax_rep.account_id.id
-        date_order = order_line.order_id.date_order
-        taxes = [{'date_order': date_order, **tax} for tax in taxes]
-        return {
-            'date_order': order_line.order_id.date_order,
-            'income_account_id': get_income_account(order_line).id,
-            'amount': order_line.price_subtotal,
-            'taxes': taxes,
-            'base_tags': tuple(tax_data['base_tags']),
-        }
-
     def _get_rounding_difference_vals(self, amount, amount_converted):
         if self.config_id.cash_rounding:
             partial_args = {
@@ -1534,8 +1520,7 @@ class PosSession(models.Model):
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
     def _get_sale_vals(self, key, amount, amount_converted):
-        account_id, sign, tax_keys, base_tag_ids = key
-        tax_ids = set(tax[0] for tax in tax_keys)
+        account_id, sign, tax_ids, base_tag_ids = key
         applied_taxes = self.env['account.tax'].browse(tax_ids)
         title = 'Sales' if sign == 1 else 'Refund'
         name = '%s untaxed' % title
@@ -1551,8 +1536,9 @@ class PosSession(models.Model):
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
     def _get_tax_vals(self, key, amount, amount_converted, base_amount_converted):
-        account_id, repartition_line_id, tax_id, tag_ids = key
-        tax = self.env['account.tax'].browse(tax_id)
+        account_id, repartition_line_id, tag_ids = key
+        tax_rep = self.env['account.tax.repartition.line'].browse(repartition_line_id)
+        tax = tax_rep.tax_id
         partial_args = {
             'name': tax.name,
             'account_id': account_id,
@@ -2017,22 +2003,6 @@ class PosSession(models.Model):
             amount += order.amount_paid
 
         return amount
-
-    def get_pos_ui_account_fiscal_positions_by_ids(self, fp_ids):
-        params = {'search_params': {'domain': [('id', 'in', self.config_id.fiscal_position_ids.ids)], 'fields': []}}
-        params['search_params']['domain'] = [('id', 'in', fp_ids)]
-        fps = self.env['account.fiscal.position'].search_read(**params['search_params'])
-        fiscal_position_tax_ids = sum([fpos['tax_ids'] for fpos in fps], [])
-        fiscal_position_tax = self.env['account.fiscal.position.tax'].search_read([('id', 'in', fiscal_position_tax_ids)])
-        fiscal_position_by_id = {fpt['id']: fpt for fpt in fiscal_position_tax}
-        for fiscal_position in fps:
-            if not self.config_id.tax_regime_selection:
-                self.config_id.tax_regime_selection = True
-            fiscal_position_id = self.env['account.fiscal.position'].browse(fiscal_position['id'])
-            self.config_id.fiscal_position_ids += fiscal_position_id
-            fiscal_position['fiscal_position_taxes_by_id'] = {tax_id: fiscal_position_by_id[tax_id] for tax_id in fiscal_position['tax_ids']}
-
-        return fps
 
     def log_partner_message(self, partner_id, action, message_type):
         if message_type == 'ACTION_CANCELLED':

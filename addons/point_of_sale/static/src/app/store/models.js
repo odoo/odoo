@@ -502,6 +502,9 @@ export class Orderline extends PosModel {
                 return pack_lot_ids.push([0, 0, item.export_as_JSON()]);
             });
         }
+
+        const product = this.get_product();
+        const taxes = this.tax_ids || product.taxes_id;
         return {
             uuid: this.uuid,
             skip_change: this.skipChange,
@@ -511,8 +514,8 @@ export class Orderline extends PosModel {
             price_subtotal: this.get_price_without_tax(),
             price_subtotal_incl: this.get_price_with_tax(),
             discount: this.get_discount(),
-            product_id: this.get_product().id,
-            tax_ids: [[6, false, this.get_applicable_taxes().map((tax) => tax.id)]],
+            product_id: product.id,
+            tax_ids: [[6, false, taxes.map(tax => tax.id)]],
             id: this.id,
             pack_lot_ids: pack_lot_ids,
             attribute_value_ids: this.attribute_value_ids || [],
@@ -589,15 +592,22 @@ export class Orderline extends PosModel {
         }
     }
     get_taxed_lst_unit_price() {
-        const lstPrice = this.compute_fixed_price(this.get_lst_price());
+        const priceUnit = this.compute_fixed_price(this.get_lst_price());
         const product = this.get_product();
-        const taxesIds = product.taxes_id;
-        const productTaxes = this.pos.get_taxes_after_fp(taxesIds, this.order.fiscal_position);
-        const unitPrices = this.compute_all(productTaxes, lstPrice, 1, this.pos.currency.rounding);
+
+        let taxes = product.taxes_id;
+
+        // Fiscal position.
+        const order = this.pos.get_order();
+        if(order.fiscal_position){
+            taxes = this.pos.getTaxesAfterFiscalPosition(taxes, order.fiscal_position);
+        }
+
+        const taxesData = this.pos.getTaxesValues(taxes, priceUnit, 1);
         if (this.pos.config.iface_tax_included === "total") {
-            return unitPrices.total_included;
+            return taxesData.total_included;
         } else {
-            return unitPrices.total_excluded;
+            return taxesData.total_excluded;
         }
     }
     get_price_without_tax() {
@@ -609,24 +619,6 @@ export class Orderline extends PosModel {
     get_tax() {
         return this.get_all_prices().tax;
     }
-    get_applicable_taxes() {
-        var i;
-        // Shenaningans because we need
-        // to keep the taxes ordering.
-        var ptaxes_ids = this.tax_ids || this.get_product().taxes_id;
-        var ptaxes_set = {};
-        for (i = 0; i < ptaxes_ids.length; i++) {
-            ptaxes_set[ptaxes_ids[i].id] = true;
-        }
-        var taxes = [];
-        const accountTax = this.pos.models["account.tax"].getAll();
-        for (i = 0; i < accountTax.length; i++) {
-            if (ptaxes_set[accountTax[i].id]) {
-                taxes.push(accountTax[i]);
-            }
-        }
-        return taxes;
-    }
     get_tax_details() {
         return this.get_all_prices().taxDetails;
     }
@@ -636,6 +628,9 @@ export class Orderline extends PosModel {
                 ? this.tax_ids.map((t) => t.id)
                 : this.get_product().taxes_id.map((t) => t.id);
         return this.pos.models["account.tax"].filter((tax) => taxes_ids.includes(tax.id));
+    }
+    getTaxIds() {
+        return this.get_taxes().map(tax => tax.id);
     }
     /**
      * Calculate the amount of taxes of a specific Orderline, that are included in the price.
@@ -648,31 +643,6 @@ export class Orderline extends PosModel {
             .filter((tax) => tax.price_include)
             .reduce((sum, tax) => sum + taxDetails[tax.id].amount, 0);
     }
-    _map_tax_fiscal_position(tax, order = false) {
-        return this.pos._map_tax_fiscal_position(tax, order);
-    }
-    /**
-     * Mirror JS method of:
-     * _compute_amount in addons/account/models/account.py
-     */
-    _compute_all(tax, base_amount, quantity, price_exclude) {
-        return this.pos._compute_all(tax, base_amount, quantity, price_exclude);
-    }
-    /**
-     * Mirror JS method of:
-     * compute_all in addons/account/models/account.py
-     *
-     * Read comments in the python side method for more details about each sub-methods.
-     */
-    compute_all(taxes, price_unit, quantity, currency_rounding, handle_price_include = true) {
-        return this.pos.compute_all(
-            taxes,
-            price_unit,
-            quantity,
-            currency_rounding,
-            handle_price_include
-        );
-    }
     /**
      * Calculates the taxes for a product, and converts the taxes based on the fiscal position of the order.
      *
@@ -680,59 +650,65 @@ export class Orderline extends PosModel {
      */
     _getProductTaxesAfterFiscalPosition() {
         const product = this.get_product();
-        let taxesIds = this.tax_ids || product.taxes_id;
-        taxesIds = taxesIds.filter((t) => t.id in this.pos.models["account.tax"].getAllBy("id"));
-        return this.pos.get_taxes_after_fp(taxesIds, this.order.fiscal_position);
-    }
-    get_all_prices(qty = this.get_quantity()) {
-        var price_unit = this.get_unit_price() * (1.0 - this.get_discount() / 100.0);
-        var taxtotal = 0;
-        var product = this.get_product();
-        var taxes_ids = [];
+        let taxes = this.tax_ids || product.taxes_id;
 
-        if (!this.tax_ids) {
-            taxes_ids = product.taxes_id;
-        } else {
-            taxes_ids = this.tax_ids;
+        // Fiscal position.
+        const fiscalPosition = this.order.fiscal_position;
+        if(fiscalPosition){
+            taxes = this.pos.getTaxesAfterFiscalPosition(taxes, fiscalPosition);
         }
 
-        var taxdetail = {};
-        var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
-        var all_taxes = this.compute_all(
-            product_taxes,
-            price_unit,
-            qty,
-            this.pos.currency.rounding
-        );
+        return taxes;
+    }
+    get_all_prices(qty = this.get_quantity()) {
+        const product = this.get_product();
+        const priceUnit = this.get_unit_price();
+        const discount = this.get_discount();
+        const priceUnitAfterDiscount = priceUnit * (1.0 - discount / 100.0);
 
-        var all_taxes_before_discount = this.compute_all(
-            product_taxes,
-            this.get_unit_price(),
-            qty,
-            this.pos.currency.rounding
-        );
-        all_taxes.taxes.forEach(function (tax) {
-            taxtotal += tax.amount;
-            taxdetail[tax.id] = {
-                amount: tax.amount,
-                base: tax.base,
+        let taxes = this.tax_ids || product.taxes_id;
+
+        // Fiscal position.
+        const fiscalPosition = this.order.fiscal_position;
+        if(fiscalPosition){
+            taxes = this.pos.getTaxesAfterFiscalPosition(taxes, fiscalPosition);
+        }
+
+        const taxesData = this.pos.getTaxesValues(taxes, priceUnitAfterDiscount, qty);
+        const taxesDataBeforeDiscount = this.pos.getTaxesValues(taxes, priceUnit, qty);
+
+        // Tax details.
+        const taxDetails = {};
+        for(const taxValues of taxesData.tax_values_list){
+            taxDetails[taxValues.taxId] = {
+                amount: taxValues.tax_amount_factorized,
+                base: taxValues.display_base,
             };
-        });
+        }
 
         return {
-            priceWithTax: all_taxes.total_included,
-            priceWithoutTax: all_taxes.total_excluded,
-            priceWithTaxBeforeDiscount: all_taxes_before_discount.total_included,
-            priceWithoutTaxBeforeDiscount: all_taxes_before_discount.total_excluded,
-            tax: taxtotal,
-            taxDetails: taxdetail,
+            priceWithTax: taxesData.total_included,
+            priceWithoutTax: taxesData.total_excluded,
+            priceWithTaxBeforeDiscount: taxesDataBeforeDiscount.total_included,
+            priceWithoutTaxBeforeDiscount: taxesDataBeforeDiscount.total_excluded,
+            tax: taxesData.total_included - taxesData.total_excluded,
+            taxDetails: taxDetails,
+            taxValuesList: taxesData.tax_values_list,
         };
     }
     display_discount_policy() {
         return this.order.pricelist ? this.order.pricelist.discount_policy : "with_discount";
     }
     compute_fixed_price(price) {
-        return this.pos.computePriceAfterFp(price, this.get_taxes()).price;
+        const product = this.get_product();
+        const taxes = this.tax_ids || product.taxes_id;
+
+        // Fiscal position.
+        const order = this.pos.get_order();
+        if(order && order.fiscal_position){
+            price = this.pos.getPriceUnitAfterFiscalPosition(taxes, price, order.fiscal_position);
+        }
+        return price;
     }
     get_lst_price() {
         return this.product.get_price(this.pos.config.pricelist_id, 1, this.price_extra);
@@ -2129,34 +2105,25 @@ export class Order extends PosModel {
         );
     }
     get_tax_details() {
-        var details = {};
-        var fulldetails = [];
-
-        this.orderlines.forEach(function (line) {
-            var ldetails = line.get_tax_details();
-            for (var id in ldetails) {
-                if (Object.hasOwnProperty.call(ldetails, id)) {
-                    details[id] = {
-                        amount: (details[id]?.amount || 0) + ldetails[id].amount,
-                        base: (details[id]?.base || 0) + ldetails[id].base,
-                    };
+        const taxDetails = {};
+        for (const line of this.orderlines) {
+            const taxValuesList = line.get_all_prices().taxValuesList;
+            for (const [i, taxValues] of taxValuesList.entries()) {
+                const taxId = taxValues.id;
+                if (!taxDetails.hasOwnProperty(taxId)) {
+                    taxDetails[taxId] = Object.assign(
+                        {},
+                        taxValues,
+                        { amount: 0.0, base: 0.0 },
+                    );
                 }
-            }
-        });
-
-        for (var id in details) {
-            if (Object.hasOwnProperty.call(details, id)) {
-                const tax = this.pos.models["account.tax"].get(id);
-                fulldetails.push({
-                    amount: details[id].amount,
-                    base: details[id].base,
-                    tax: tax,
-                    name: tax.name,
-                });
+                if (i === 0) {
+                    taxDetails[taxId].base += taxValues.display_base;
+                }
+                taxDetails[taxId].amount += taxValues.tax_amount_factorized;
             }
         }
-
-        return fulldetails;
+        return Object.values(taxDetails);
     }
     get_total_for_taxes(tax_id) {
         var total = 0;
@@ -2390,26 +2357,21 @@ export class Order extends PosModel {
         return false;
     }
     updatePricelistAndFiscalPosition(newPartner) {
-        let newPartnerPricelist, newPartnerFiscalPosition;
-        const defaultFiscalPosition = this.pos.models["account.fiscal.position"].find(
-            (position) => position.id === this.pos.config.default_fiscal_position_id?.id
-        );
-
+        let newPartnerPricelist, newPartnerFiscalPositionId;
+        const defaultFiscalPositionId = this.pos.config.default_fiscal_position_id?.id;
         if (newPartner) {
-            newPartnerFiscalPosition = newPartner.property_account_position_id
-                ? this.pos.models["account.fiscal.position"].find(
-                      (position) => position.id === newPartner.property_account_position_id?.id
-                  )
-                : defaultFiscalPosition;
+            newPartnerFiscalPositionId = newPartner.property_account_position_id?.id || defaultFiscalPositionId;
             newPartnerPricelist =
                 this.pos.models["product.pricelist"].find(
                     (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
                 ) || this.pos.config.pricelist_id;
         } else {
-            newPartnerFiscalPosition = defaultFiscalPosition;
-            newPartnerPricelist = this.pos.config.pricelist_id;
+            newPartnerFiscalPositionId = defaultFiscalPositionId;
+            newPartnerPricelist = this.pos.default_pricelist;
         }
-        this.set_fiscal_position(newPartnerFiscalPosition);
+        const fiscalPosition = this.pos.models["account.fiscal.position"]
+            .find(fp => fp.id === newPartnerFiscalPositionId);
+        this.set_fiscal_position(fiscalPosition);
         this.set_pricelist(newPartnerPricelist);
     }
     /* ---- Ship later --- */
