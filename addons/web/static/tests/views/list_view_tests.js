@@ -11092,7 +11092,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_row .o_data_cell")); // edit first row
         await click(target.querySelector(".o_data_row .o_data_cell .o_field_daterange input"));
 
-        // change dates via the daterangepicker
+        // change dates range
         await click(getPickerCell("16").at(0));
         await click(getPickerCell("12").at(1));
         assert.notOk(getPickerApplyButton().disabled);
