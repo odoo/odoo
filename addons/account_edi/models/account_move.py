@@ -379,24 +379,6 @@ class AccountMove(models.Model):
                 move_result.setdefault('attachments', []).extend(edi_attachments.get('attachments', []))
         return result
 
-    ####################################################
-    # Export Electronic Document
-    ####################################################
-
-    def _action_download_electronic_invoice(self):
-        if not self:
-            return False
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/account_edi/download_edi_documents?%s' % url_encode({'ids': self.filtered('edi_document_ids').ids}),
-            'target': 'new',
-        }
-
-    def _create_zipped(self):
-        buffer = io.BytesIO()
-        with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_DEFLATED) as zipfile_obj:
-            for invoice in self:
-                for document in invoice.edi_document_ids:
-                    if document.state in {'sent', 'cancelled'}:
-                        zipfile_obj.writestr(document.display_name, document.attachment_id.raw)
-        return buffer.getvalue()
+    def _get_edi_doc_attachments_to_export(self):
+        # EXTENDS 'account'
+        return super()._get_edi_doc_attachments_to_export() + self.edi_document_ids.attachment_id
