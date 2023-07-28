@@ -1265,13 +1265,14 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {})
         ctx['inventory_report_mode'] = True
         ctx.pop('group_by', None)
+        warehouses = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)])
         action = {
             'name': _('Locations'),
             'view_mode': 'list,form',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': domain or [],
+            'domain': domain or [('location_id', 'child_of', warehouses.lot_stock_id.ids)],
             'help': """
                 <p class="o_view_nocontent_empty_folder">{}</p>
                 <p>{}</p>

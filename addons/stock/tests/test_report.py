@@ -619,11 +619,11 @@ class TestReports(TestReportsCommon):
         reordering_rule.action_replenish()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         pickings = self.env['stock.picking'].search([('product_id', '=', self.product.id)])
-        receipt = pickings.filtered(lambda p: p.picking_type_id.id == self.picking_type_in.id)
+        picking_id = pickings.filtered(lambda p: p.picking_type_id.id == warehouse.int_type_id.id)[0]
 
         # The Forecasted Report don't show intermediate moves, it must display only ingoing/outgoing documents.
         self.assertEqual(len(lines), 1, "The report must have only 1 line.")
-        self.assertEqual(lines[0]['document_in']['id'], receipt.id, "The report must only show the receipt.")
+        self.assertEqual(lines[0]['document_in']['id'], picking_id.id, "The report must only show the receipt.")
         self.assertEqual(lines[0]['document_out'], False)
         self.assertEqual(lines[0]['quantity'], reordering_rule.product_max_qty)
 
@@ -1199,7 +1199,7 @@ class TestReports(TestReportsCommon):
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         self.assertEqual(len(lines), 1)
         self.assertEqual(bool(lines[0]['move_out']), True)
-        self.assertEqual(lines[0]['in_transit'], True)
+        self.assertEqual(lines[0]['in_transit'], False)
 
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received

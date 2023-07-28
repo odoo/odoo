@@ -471,7 +471,9 @@ class StockMove(models.Model):
 
     def _get_source_document(self):
         res = super()._get_source_document()
-        return res or self.production_id or self.raw_material_production_id
+        mo_ids = self.env['stock.move'].browse(self._rollup_move_origs()).production_id
+        mo_id = mo_ids and mo_ids[-1]
+        return mo_id or res or self.production_id or self.raw_material_production_id
 
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.production_id and self.production_id.state not in ('done', 'cancel'):

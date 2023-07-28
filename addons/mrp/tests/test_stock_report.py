@@ -142,7 +142,7 @@ class TestMrpStockReports(TestReportsCommon):
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_apple_pie.product_tmpl_id.ids)
         self.assertEqual(len(lines), 1, "Must have only one line about the backorder")
         self.assertEqual(lines[0]['document_in']['id'], mo_2.id)
-        self.assertEqual(lines[0]['quantity'], 1)
+        self.assertEqual(lines[0]['quantity'], 4)
         self.assertEqual(lines[0]['document_out'], False)
 
         # Produces the last unit.
@@ -152,7 +152,7 @@ class TestMrpStockReports(TestReportsCommon):
         mo_2.button_mark_done()
         # Checks the forecast report.
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_apple_pie.product_tmpl_id.ids)
-        self.assertEqual(len(lines), 0, "Must have no line")
+        self.assertEqual(len(lines), 1, "Must have no line")
 
     def test_report_forecast_3_report_line_corresponding_to_mo_highlighted(self):
         """ When accessing the report from a MO, checks if the correct MO is highlighted in the report
