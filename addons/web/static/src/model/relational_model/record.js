@@ -439,6 +439,7 @@ export class Record extends DataPoint {
         this._invalidFields.clear();
         this._closeInvalidFieldsNotification();
         this._closeInvalidFieldsNotification = () => {};
+        this._restoreActiveFields();
     }
 
     _formatServerValue(fieldType, value) {
@@ -767,6 +768,20 @@ export class Record extends DataPoint {
         for (const fieldName of fieldNames) {
             this._invalidFields.delete(fieldName);
         }
+    }
+
+    _restoreActiveFields() {
+        if (!this._activeFieldsToRestore) {
+            return;
+        }
+        this.model._updateConfig(
+            this.config,
+            {
+                activeFields: { ...this._activeFieldsToRestore },
+            },
+            { noReload: true }
+        );
+        this._activeFieldsToRestore = undefined;
     }
 
     async _save({ noReload, onError } = {}) {
