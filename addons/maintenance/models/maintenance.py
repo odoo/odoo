@@ -95,9 +95,9 @@ class MaintenanceEquipment(models.Model):
     @api.depends('serial_no')
     def _compute_display_name(self):
         for record in self:
-            if record.name and record.serial_no:
+            if record.serial_no:
                 record.display_name = record.name + '/' + record.serial_no
-            if record.name and not record.serial_no:
+            else:
                 record.display_name = record.name
 
     @api.model
