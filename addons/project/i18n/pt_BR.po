@@ -5,13 +5,13 @@
 # Translators:
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
 # Marcos Rodrigues, 2022
-# grazziano <gra.negocia@gmail.com>, 2022
+# grazziano <grazziano.do+transifex@gmail.com>, 2022
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
 # Kevilyn Rosa, 2023
-# Layna Nascimento, 2023
 # adrianojprado <adrianojprado@gmail.com>, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,18 +58,18 @@ msgstr "- Tarefas por prazo"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr "# Colaboradores"
+msgstr "Nº de colaboradores"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
 msgid "# Ratings"
-msgstr "# Classificações"
+msgstr "Nº de avaliações"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
 #: model:ir.model.fields,field_description:project.field_res_users__task_count
 msgid "# Tasks"
-msgstr "# Tarefas"
+msgstr "Nº de tarefas"
 
 #. module: project
 #. odoo-javascript
@@ -78,7 +78,7 @@ msgstr "# Tarefas"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 #, python-format
 msgid "# of Tasks"
-msgstr "# de Tarefas"
+msgstr "Nº de tarefas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -108,14 +108,14 @@ msgstr "Gráfico de Burndown %(name)s"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Milestones"
-msgstr " Etapas%(name)s"
+msgstr " Etapas de %(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Rating"
-msgstr "Classificação %(name)s"
+msgstr "Avaliação de %(name)s"
 
 #. module: project
 #. odoo-python
@@ -136,7 +136,7 @@ msgstr "Planilha de horas %(name)s"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Updates"
-msgstr "Atualizações %(name)s"
+msgstr "Atualizações de %(name)s"
 
 #. module: project
 #. odoo-python
@@ -323,7 +323,7 @@ msgstr "31"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
-msgstr "<b>Arraste & Solte</b> o cartão para mudar sua tarefa de estágio."
+msgstr "<b>Arraste e solte</b> o cartão para mudar sua tarefa de estágio."
 
 #. module: project
 #. odoo-javascript
@@ -483,13 +483,13 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    Olá <t t-out=\"object.partner_id.name or 'customer'\">Maria da Silva</t>,<br>\n"
-"   Tenho o prazer de informar que concluímos o projeto \"<strong t-out=\"object.name or ''\">Renovações</strong> com sucesso \".\n"
+"   Tenho o prazer de informar que concluímos o projeto “<strong t-out=\"object.name or ''\">Renovações</strong>” com sucesso.\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Michel Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Você está recebendo este e-mail porque seu projeto foi movido para a etapa<b t-out=\"object.stage_id.name or ''\">Feito</b></span>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Você está recebendo este e-mail porque seu projeto foi movido para a etapa<b t-out=\"object.stage_id.name or ''\">Concluído</b></span>\n"
 "            "
 
 #. module: project
@@ -516,7 +516,7 @@ msgstr ""
 "    Obrigado,\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Michel Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -639,7 +639,7 @@ msgstr "<span class=\"o_stat_text\">Bloqueio</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Last Rating</span>"
-msgstr "<span class=\"o_stat_text\">Última classificação</span>"
+msgstr "<span class=\"o_stat_text\">Última avaliação</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -728,8 +728,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Um dicionário python que será avaliado para gerar valores padrão quando "
-"forem criados novos registros para este apelido."
+"Um dicionário python que será avaliado para fornecer valores padrões ao "
+"criar novos registros para este alias."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
@@ -761,7 +761,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "A tag with the same name already exists."
-msgstr "Já existe uma tag com o mesmo nome."
+msgstr "Já existe um marcador com o mesmo nome."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -919,7 +919,7 @@ msgstr "Nome do Apelido"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
 msgid "Alias domain"
-msgstr "Apelido do domínio"
+msgstr "Domínio do alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_value
@@ -929,7 +929,7 @@ msgstr "Codinome de e-mail"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
 msgid "Aliased Model"
-msgstr "Modelo Apelidado"
+msgstr "Modelo de alias"
 
 #. module: project
 #. odoo-python
@@ -1240,30 +1240,30 @@ msgstr "Avatar"
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating"
-msgstr "Classificação média"
+msgstr "Avaliação média"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr "Classificação média (%)"
+msgstr "Avaliação média (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Dissatisfied"
-msgstr "Classificação média: Insatisfeito"
+msgstr "Avaliação média: insatisfeito"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr "Classificação média: Bom"
+msgstr "Avaliação média: bom"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Satisfied"
-msgstr "Classificação média: Satisfeito"
+msgstr "Avaliação média: satisfeito"
 
 #. module: project
 #. odoo-javascript
@@ -1491,9 +1491,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
-"Colete feedback de seus clientes enviando a eles uma solicitação de classificação quando uma tarefa entrar em um determinado estágio. Para fazer isso, defina um modelo de e-mail de classificação nos estágios correspondentes.\n"
-"Classificação ao mudar de estágio: um e-mail será enviado automaticamente quando a tarefa atingir o estágio no qual o modelo de e-mail de classificação está definido.\n"
-"Classificação periódica: um e-mail será enviado automaticamente em intervalos regulares, desde que a tarefa permaneça no estágio em que o modelo de e-mail de classificação está definido."
+"Colete feedback de seus clientes enviando a eles uma solicitação de avaliação quando uma tarefa entrar em um determinado estágio. Para fazer isso, defina um modelo de e-mail de avaliação nos estágios correspondentes.\n"
+"Avaliação ao mudar de estágio: um e-mail será enviado automaticamente quando a tarefa atingir o estágio no qual o modelo de e-mail de avaliação está definido.\n"
+"Avaliação periódica: um e-mail será enviado automaticamente em intervalos regulares, desde que a tarefa permaneça no estágio em que o modelo de e-mail de avaliação está definido."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -2198,7 +2198,7 @@ msgstr "Concluído"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Draft"
-msgstr "Provisório"
+msgstr "Rascunho"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -2679,9 +2679,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
-"Se definido, uma solicitação de classificação será automaticamente enviada por e-mail ao cliente quando a tarefa atingir esse estágio. \n"
+"Se definido, uma solicitação de avaliação será automaticamente enviada por e-mail ao cliente quando a tarefa atingir esse estágio. \n"
 "Como alternativa, ela será enviada em um intervalo regular enquanto a tarefa permanecer nesse estágio, dependendo da configuração do seu projeto. \n"
-"Para usar esse recurso, certifique-se de que a opção \"Avaliações do cliente\" esteja ativada em seu projeto."
+"Para usar esse recurso, certifique-se de que a opção “Avaliações do cliente” esteja ativada em seu projeto."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -4411,7 +4411,7 @@ msgstr "Avaliação"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
-msgstr "Classificação (/5)"
+msgstr "Avaliação (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
@@ -4983,7 +4983,7 @@ msgstr "Compartilhar"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Editable"
-msgstr "Configurar editável"
+msgstr "Compartilhar Editável"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
@@ -5343,7 +5343,7 @@ msgstr "Recorrência de Tarefa"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr "Estágios de Tarefas"
+msgstr "Estágio da tarefa"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
@@ -6036,7 +6036,7 @@ msgstr "Usar etiquetas para categorizar suas tarefas."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Use the"
-msgstr "Usar o"
+msgstr "Use"
 
 #. module: project
 #. odoo-javascript

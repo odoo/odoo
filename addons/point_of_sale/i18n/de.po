@@ -49,7 +49,7 @@ msgstr "%(pos_name)s (nicht verwendet)"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s POS payment of %s in %s"
-msgstr "%s Kassensystemzahlung von %s in %s"
+msgstr "%s Kassenzahlung von %s in %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -914,7 +914,7 @@ msgstr "Rechnungsadresse:"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
 msgid "Bills"
-msgstr "Rechnung"
+msgstr "Rechnungen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1185,7 +1185,7 @@ msgstr "Kategorie"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__name
 msgid "Category Name"
-msgstr "Kategorienname"
+msgstr "Kategoriename"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_categ_id
@@ -1235,7 +1235,7 @@ msgstr "Überprüfen Sie, ob dieses Produkt im Kassensystem erscheinen soll."
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr ""
-"Überprüfen Sie, ob Sie Produkte dieser Kategorie in Kassensystemaufträgen "
+"Überprüfen Sie, ob Sie Produkte dieser Kategorie in Kassenaufträgen "
 "gruppieren möchten."
 
 #. module: point_of_sale
@@ -1390,7 +1390,7 @@ msgstr "Münzen/Scheine"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Combine %s POS payments from %s"
-msgstr "%s Kassensystemzahlungen aus %s kombinieren"
+msgstr "%s Kassenzahlungen aus %s kombinieren"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_company
@@ -1674,7 +1674,7 @@ msgstr "Aktuelle Sitzung"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_user_id
 msgid "Current Session Responsible"
-msgstr "Verantwortlich der laufenden Sitzung"
+msgstr "Verantwortlicher der aktuellen Sitzung"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_state
@@ -2854,7 +2854,7 @@ msgstr "Rechnung"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_invoice_journal_id
 msgid "Invoice Journal"
-msgstr "Rechnungsbuch"
+msgstr "Rechnungsjournal"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4434,7 +4434,7 @@ msgid ""
 "Please create/select a Point of Sale above to show the configuration "
 "options."
 msgstr ""
-"Bitte wählen Sie ein Kassensyste, aus, um die Konfigurationsoptionen zu "
+"Bitte wählen Sie ein Kassensystem aus, um die Konfigurationsoptionen zu "
 "sehen."
 
 #. module: point_of_sale
@@ -4478,7 +4478,7 @@ msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
 msgstr ""
-"Bitte gehen Sie zum Journal %s und definieren Sie ein Erlöskonto. Dieses "
+"Bitte gehen Sie zum Journal %s und definieren Sie ein Gewinnkonto. Dieses "
 "Konto wird für die Erfassung der Bargelddifferenz verwendet."
 
 #. module: point_of_sale
@@ -4825,7 +4825,7 @@ msgstr "Rabatt von %s->%s"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Price excl. VAT:"
-msgstr "Preis zzgl. MwSt.:"
+msgstr "Preis exkl. MwSt.:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_extra
@@ -4890,8 +4890,8 @@ msgid ""
 "Print a QR code on the receipt to allow the user to easily request the "
 "invoice for an order."
 msgstr ""
-"Drucken Sie einen QR-Code auf den Beleg, damit der Benutzer die Rechnung für"
-" einen Auftrag einfach anfordern kann."
+"Drucken Sie einen QR-Code auf den Kassenbon, damit der Benutzer die Rechnung"
+" für einen Auftrag einfach anfordern kann."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4936,7 +4936,7 @@ msgid ""
 " an IoT Box."
 msgstr ""
 "Das Drucken wird von einigen Browsern nicht unterstützt, da kein Standard-"
-"Druckprotokoll verfügbar ist. Es ist möglich, Ihre Quittungen mit einer IoT-"
+"Druckprotokoll verfügbar ist. Es ist möglich, Ihre Kassenbons mit einer IoT-"
 "Box zu drucken."
 
 #. module: point_of_sale
@@ -5380,7 +5380,7 @@ msgstr "Retourniert"
 #, python-format
 msgid "Reversal of POS closing entry %s for order %s from session %s"
 msgstr ""
-"Rückbuchung von Abschlussbuchung %s des Kassensystems für Auftrag %s aus "
+"Stornierung der Abschlussbuchung %s des Kassensystems für Auftrag %s aus "
 "Sitzung %s"
 
 #. module: point_of_sale
@@ -6316,7 +6316,7 @@ msgstr ""
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
 msgstr ""
-"Die Standardpreisliste muss in deb verfügbaren Preisliste enthalten sein."
+"Die Standardpreisliste muss in der verfügbaren Preisliste enthalten sein."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6373,8 +6373,8 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
-"Das Rechnungsbuch muss in derselben Währung wie das Verkaufsjournal oder die"
-" Unternehmenswährung sein, wenn diese nicht festgelegt ist."
+"Das Rechnungsjournal muss in derselben Währung wie das Verkaufsjournal oder "
+"die Unternehmenswährung sein, wenn diese nicht festgelegt ist."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6415,7 +6415,7 @@ msgstr "Die Bezeichnung der Kassensitzung muss eindeutig sein!"
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users__pos_order_count
 msgid "The number of point of sales orders related to this customer"
-msgstr "Die Anzahl der Kassensystemaufträge für diesen Kunden"
+msgstr "Die Anzahl der Kassenaufträge für diesen Kunden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6703,7 +6703,7 @@ msgid ""
 "\n"
 " Please pay the exact amount or add a cash payment method in the point of sale configuration"
 msgstr ""
-"Es wurde noch keine Zahlungsmethode für dieses Kassensystem angelegt, die es ermöglicht Wechselgeld herauszugeben.\n"
+"Es wurde noch keine Zahlungsmethode für dieses Kassensystem angelegt, die es ermöglicht, Wechselgeld herauszugeben.\n"
 "\n"
 " Bitte zahlen Sie deshalb den Betrag passend ein oder fügen Sie eine entsprechende Barzahlungsmethode in der Kassensystem-Konfiguration hinzu."
 
@@ -6760,8 +6760,8 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
-"Dieses Feld ist dazu da, dem Kassensystem-Kunden die ID der "
-"Kassenmanagergruppe zu übergeben"
+"Dieses Feld ist dazu da, dem Kassensystem-Kunden die ID der Kassensystem-"
+"Managergruppe zu übergeben."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
@@ -7007,7 +7007,7 @@ msgstr "Rabattsumme"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Total Due"
-msgstr "Gesamtbetrag"
+msgstr "Insgesamt fällig"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7019,7 +7019,7 @@ msgstr "Gesamtmarge:"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Total Paid (with rounding)"
-msgstr "Bezahlte Gesamtsumme (inkl. Rundung)"
+msgstr "Insgesamt bezahlt (inkl. Rundung)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
@@ -7036,7 +7036,7 @@ msgstr "Gesamtpreis"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Total Price excl. VAT:"
-msgstr "Gesamtpreis zzgl. MwSt.:"
+msgstr "Gesamtpreis exkl. MwSt.:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7473,10 +7473,10 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
-"Sie können keinen Kassensystemauftrag aus der Backendschnittstelle erstellen"
-" oder die Preisliste entfernen oder einen pos.order im Python-Test mit dem "
+"Sie können keinen Kassenauftrag aus der Backendschnittstelle erstellen oder "
+"die Preisliste entfernen oder einen pos.order im Python-Test mit dem "
 "Formularwerkzeug erstellen oder die Formularansicht in Studio bearbeiten, "
-"wenn kein Kassensystemauftrag existiert"
+"wenn kein Kassenauftrag existiert"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7484,7 +7484,7 @@ msgstr ""
 #, python-format
 msgid "You cannot archive '%s' as it is used by a POS configuration '%s'."
 msgstr ""
-"Sie können „%s“ nicht archivieren, da es von der Kassensystemkonfiguration "
+"Sie können „%s“ nicht archivieren, da es von der Kassensystem-Konfiguration "
 "„%s“ verwendet wird."
 
 #. module: point_of_sale
@@ -7717,7 +7717,7 @@ msgstr "z. B. Bargeld"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "e.g. Company Address, Website"
-msgstr "z. B. Firmenadresse, Website"
+msgstr "z. B. Unternehmensadresse, Website"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
