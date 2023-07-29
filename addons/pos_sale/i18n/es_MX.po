@@ -127,13 +127,14 @@ msgstr "Entregado de"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr "¿Quiere cargar el SN/lotes vinculados a la orden de compra?"
+msgstr ""
+"¿Desea cargar los números de serie/lotes vinculados a la orden de venta?"
 
 #. module: pos_sale
 #: model:product.product,name:pos_sale.default_downpayment_product
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr "Pago inicial (POS)"
+msgstr "Anticipo (PdV)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
@@ -173,8 +174,8 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of sale.\n"
 "                        You can go to your point of sale configuration to choose one."
 msgstr ""
-"Parece que no configuró un producto para anticipo en su punto de venta.\n"
-"                   Puede ir a la configuración de su punto de venta para elegir uno."
+"Parece que no configuró un producto de anticipo en su punto de venta.\n"
+"                  Puede ir a la configuración de su punto de venta para elegir uno."
 
 #. module: pos_sale
 #: code:addons/pos_sale/models/sale_order.py:0
@@ -234,7 +235,7 @@ msgstr "No"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "No down payment product"
-msgstr "No hay producto de pago anticipado"
+msgstr "No hay producto de anticipo"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -280,12 +281,12 @@ msgstr "Configuración del punto de venta"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Líneas de comanda del punto de venta"
+msgstr "Líneas de orden del punto de venta"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Pedidos del punto de venta"
+msgstr "Órdenes del punto de venta"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
@@ -300,7 +301,7 @@ msgstr "Punto de venta"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
 msgid "Pos Order Count"
-msgstr "Número de órdenes de PDV"
+msgstr "Número de órdenes de PdV"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
@@ -341,14 +342,14 @@ msgstr "Cotización enviada"
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Quotation/Order"
-msgstr "Cotización / Orden"
+msgstr "Cotización/orden"
 
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "SN/Lots Loading"
-msgstr "Cargar SN/Lotes"
+msgstr "Cargar número de serie/lote"
 
 #. module: pos_sale
 #. openerp-web
@@ -568,5 +569,5 @@ msgid ""
 "You have tried to charge a down payment of %s but only %s remains to be "
 "paid, %s will be applied to the purchase order line."
 msgstr ""
-"Trató de realizar un cargo de pago inicial por %s pero solo restan%s por "
-"pagar, se aplicará %s a la línea de orden de compra."
+"Trató de realizar un cargo de anticipo por %s pero solo restan %s por pagar,"
+" se aplicará %s a la línea de orden de compra."

@@ -52,6 +52,13 @@ msgid "Archived"
 msgstr "Archivado"
 
 #. module: phone_validation
+#: code:addons/phone_validation/models/phone_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Phone Number?"
+msgstr ""
+"¿Estás seguro de que desea eliminar este número de teléfono de la lista?"
+
+#. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_attachment_count
 msgid "Attachment Count"
@@ -127,8 +134,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Campo utilizado para guardar el número de teléfono válido. Ayuda a acelerar "
-"las búsquedas y las comparaciones."
+"Campo utilizado para almacenar el número de teléfono válido. Ayuda a "
+"acelerar las búsquedas y las comparaciones."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids

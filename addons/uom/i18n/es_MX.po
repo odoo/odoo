@@ -29,7 +29,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    p.ej: 1*(unidad de referencia)=ratio*(esta unidad)\n"
+"                                    por ejemplo: 1 * (unidad de referencia) = proporción * (esta unidad)\n"
 "                                </span>"
 
 #. module: uom
@@ -40,7 +40,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    p.ej: 1*(esta unidad)=ratio*(unidad de referencia)\n"
+"                                    por ejemplo: 1 * (esta unidad) = proporción * (unidad de referencia)\n"
 "                                </span>"
 
 #. module: uom
@@ -51,7 +51,7 @@ msgstr "Activo"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr "Añadir una nueva unidad de medida"
+msgstr "Agregar una nueva unidad de medida"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -161,7 +161,7 @@ msgid ""
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
 "Qué tan grande o pequeña es esta unidad comparada con la unidad de medida de referencia de esta categoría:\n"
-"1 * (unidad de referencia) = ratio * (esta unidad)"
+"1 * (unidad de referencia) = razón * (esta unidad)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -190,7 +190,7 @@ msgstr "Última actualización el"
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_length
 msgid "Length / Distance"
-msgstr "Longitud / Distancia"
+msgstr "Longitud/distancia"
 
 #. module: uom
 #: model:res.groups,name:uom.group_uom
@@ -211,7 +211,7 @@ msgstr "Categoría de las UdM de productos"
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 msgid "Ratio"
-msgstr "Ratio"
+msgstr "Proporción"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
@@ -255,13 +255,13 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
-"Algunos campos críticos se modificaron en %s.\n"
+"Se modificaron algunos campos críticos en %s.\n"
 "Tome en cuenta que este cambio no modificará la información existente.\n"
 "\n"
-"Ya que las unidades de medida impactan a todo el sistema, esto puede traer problemas críticos\n"
-"P. ej. modificar el redondeo podría alterar el balance de su inventario.\n"
+"Como las unidades de medida impactan a todo el sistema, esto puede traer problemas críticos.\n"
+"Por ejemplo, modificar el redondeo podría alterar el balance de su inventario.\n"
 "\n"
-"Por eso, cambiar las unidades de medida neutrales en una base de datos funcional no está recomendado."
+"Por ello, no se recomienda cambiar las unidades de medida neutrales en una base de datos funcional."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -280,7 +280,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "¡La relación de conversión para una unidad de medida no puede ser 0!"
+msgstr "La relación de conversión para una unidad de medida no puede ser 0"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -311,10 +311,10 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
-"La unidad de medida %s que se definió en la otra linea no pertenece a la "
-"misma categoría que la unidad de medida %s que se definió en el producto. "
-"Corrija la unidad de medida que se definió en la línea de orden o en el "
-"producto, deben de ser de la misma categoría."
+"La unidad de medida %s que se definió en la línea de la orden no pertenece a"
+" la misma categoría que la unidad de medida %s definida en el producto. "
+"Corrija la unidad de medida definida en la línea de orden o en el producto, "
+"deben pertenecer a la misma categoría."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -332,7 +332,8 @@ msgstr "Tipo"
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Desactive el campo activo para desactivar la unidad de medida sin borrarla."
+"Desactive el campo activo para desactivar la unidad de medida sin "
+"eliminarla."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -382,9 +383,9 @@ msgid ""
 "            Hours, Days."
 msgstr ""
 "Las unidades de medida pertenecientes a la misma categoría se pueden\n"
-"convertir entre sí. Por ejemplo,  la categoría\n"
+"convertir entre sí. Por ejemplo, la categoría\n"
 "<i>'Tiempo'</i>, tendrá las siguientes unidades de medida: \n"
-"Horas, Días."
+"horas, días."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0 code:addons/uom/models/uom_uom.py:0
@@ -439,7 +440,7 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
-"Debe definir un ratio de conversión entre varias unidades de\n"
+"Debe definir una proporción de conversión entre varias unidades de\n"
 "medida dentro de la misma categoría."
 
 #. module: uom
