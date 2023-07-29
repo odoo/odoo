@@ -8,8 +8,8 @@
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2022
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Layna Nascimento, 2023
 # Kevilyn Rosa, 2023
+# Layna Nascimento, 2023
 # adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
@@ -807,6 +807,10 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
+"Tempo médio de entrega em dias para fabricar este produto. No caso de BOM "
+"multinível, serão adicionados os prazos de fabricação dos componentes. Caso "
+"o produto seja subcontratado, este pode ser utilizado para determinar a data"
+" em que os componentes devem ser enviados ao subcontratado."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -1495,6 +1499,8 @@ msgid ""
 "Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
+"Crie e confirme Ordens de Fabricação com dias de antecedência, para ter tempo suficiente para reabastecer componentes ou fabricar produtos semi-acabados.\n"
+"Observe que os prazos de segurança também serão considerados quando apropriado."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1660,7 +1666,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,field_description:mrp.field_product_template__days_to_prepare_mo
 msgid "Days to prepare Manufacturing Order"
-msgstr ""
+msgstr "Dias para Preparar a Ordem de Fabricação"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -1850,7 +1856,7 @@ msgstr "Download"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Draft"
-msgstr "Provisório"
+msgstr "Rascunho"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_drawer_drawer_product_template
@@ -2853,7 +2859,7 @@ msgstr "Duração Manual"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "Manuf. Lead Time"
-msgstr ""
+msgstr "Manuf. Tempo de Espera"
 
 #. module: mrp
 #. odoo-python

@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +26,8 @@ msgid ""
 "<i class=\"fa fa-ban me-2\"/>\n"
 "                                            Unpublished"
 msgstr ""
+"<i class=\"fa fa-ban me-2\"/>\n"
+"                                            Неопубліковано"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
@@ -35,6 +37,10 @@ msgid ""
 "                                            Registered\n"
 "                                        </small>"
 msgstr ""
+"<small class=\"o_wevent_participating text-bg-success\">\n"
+"                                            <i class=\"fa fa-check me-2\"/>\n"
+"                                            Зареєстровано\n"
+"                                        </small>"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
@@ -79,7 +85,7 @@ msgstr "Від"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "Go to Event"
-msgstr ""
+msgstr "Перейти на подію"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
@@ -95,7 +101,7 @@ msgstr "Варіант товару"
 #: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__is_published
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_sale_report_view_search
 msgid "Published Events"
-msgstr ""
+msgstr "Опубліковані події"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/controllers/main.py:0
@@ -133,7 +139,7 @@ msgstr ""
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The provided ticket doesn't exist"
-msgstr ""
+msgstr "Наданий квиток не існує."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:0
@@ -150,7 +156,7 @@ msgstr "Попередження"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "We are looking forward to meeting you at the following"
-msgstr ""
+msgstr "Ми з нетерпінням чекаємо на зустріч з вами на наступній"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
@@ -162,16 +168,17 @@ msgstr "Веб-сайт"
 #, python-format
 msgid "You cannot raise manually the event ticket quantity in your cart"
 msgstr ""
+"Ви не можете вручну збільшити кількість квитків на подію у вашому кошику"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "event"
-msgstr ""
+msgstr "подія"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "events"
-msgstr ""
+msgstr "події"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template

@@ -28,6 +28,9 @@ msgid ""
 "                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
+"(\n"
+"                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) 또는\n"
+"                '수리요청서 - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -50,13 +53,20 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* '초안' 상태는 사용자가 신규 미승인된 수리요청서를 기록할 때 사용합니다.\n"
+"* '확인됨' 상태는 사용자가 수리요청서를 승인할 때 사용됩니다.\n"
+"* '수리 준비 완료' 상태는 수리를 시작하는 데 사용되며, 수리요청서가 승인되어야만 수리를 시작할 수 있습니다.\n"
+"* '수리 중' 상태는 수리가 진행 중일 때 사용됩니다.\n"
+"* '청구서 발행대기' 상태는 수리 전 또는 수리 후 청구서를 생성하는 데 사용됩니다.\n"
+"* '완료' 상태는 수리가 완료되면 설정됩니다.\n"
+"* '취소' 상태는 사용자가 수리 요청을 취소할 때 사용됩니다."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
-msgstr ""
+msgstr ": 수리할 수량이 충분하지 않습니다."
 
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
@@ -99,7 +109,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repairs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">수리</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -184,12 +194,12 @@ msgstr "추가"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes."
-msgstr ""
+msgstr "내부용 메모를 추가합니다."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes."
-msgstr ""
+msgstr "견적용 메모를 추가합니다."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
@@ -199,7 +209,7 @@ msgstr "수리 후"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_picking_type_ids
 msgid "Allowed Picking Type"
-msgstr ""
+msgstr "픽업 유형 허용"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -307,13 +317,13 @@ msgstr "청구서 일괄 발행 (수리용)"
 #: code:addons/repair/models/stock_picking.py:0
 #, python-format
 msgid "Create Repair"
-msgstr ""
+msgstr "수리 항목 생성"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__is_repairable
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__is_repairable
 msgid "Create Repair Orders from Returns"
-msgstr ""
+msgstr "반품에서 수리요청서 생성"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -394,7 +404,7 @@ msgstr "표시명"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "Do you confirm you want to repair"
-msgstr ""
+msgstr "수리를 승인하시겠습니까?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -514,7 +524,7 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 #: model:ir.model.fields,help:repair.field_stock_picking_type__is_repairable
 msgid ""
 "If ticked, you will be able to directly create repair orders from a return."
-msgstr ""
+msgstr "선택하면, 반품에서 직접 수리요청서를 생성할 수 있습니다."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -726,7 +736,7 @@ msgstr "수수료가 정의된 상품이 없습니다."
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr ""
+msgstr "수리요청서를 찾을 수 없습니다. 지금 생성합니다!"
 
 #. module: repair
 #. odoo-python
@@ -746,7 +756,7 @@ msgstr "일반"
 #, python-format
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
-msgstr ""
+msgstr "반품 창고와 수리 장소가 일치하는 장소가 아니라는 점에 유의하시기 바랍니다!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -771,7 +781,7 @@ msgstr "전송 오류 메시지 수"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
 msgid "Number of repairs linked to this picking"
-msgstr ""
+msgstr "해당 픽업과 관련된 수리 횟수"
 
 #. module: repair
 #. odoo-python
@@ -933,7 +943,7 @@ msgstr "수리"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__description
 msgid "Repair Description"
-msgstr ""
+msgstr "수리 설명"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
@@ -958,7 +968,7 @@ msgstr "수리 명세 (부품)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "수리 메모"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -1049,19 +1059,19 @@ msgstr "보상을 끝내려면 수리를 받아야 합니다."
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repair_order_count
 msgid "Repair order count"
-msgstr ""
+msgstr "수리요청서 수"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "%s의 수리요청서"
 
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair: Quotation"
-msgstr ""
+msgstr "수리: 견적서"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1105,12 +1115,12 @@ msgstr "반납"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Return Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "수리할 품목에 대한 반품요청서"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__return_type_of_ids
 msgid "Return Type Of"
-msgstr ""
+msgstr "다음에 대한 반품 유형"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_returned
@@ -1131,7 +1141,7 @@ msgstr "판매 주문"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "수리할 품목에 대한 판매주문서입니다."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
@@ -1161,14 +1171,14 @@ msgstr "견적서 보내기"
 #. module: repair
 #: model:mail.template,description:repair.mail_template_repair_quotation
 msgid "Sent manually when clicking on \"Send Quotation\" on a repair order"
-msgstr ""
+msgstr "수리요청서에서 '견적서 보내기'를 누르면 수동으로 전송합니다."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
-msgstr ""
+msgstr "품목의 작업 내역에 대한 시리얼 넘버가 필요합니다: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1315,7 +1325,7 @@ msgstr "전송"
 msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
-msgstr ""
+msgstr "해당 수리 항목과 관련된 반품요청서가 있으며 주문서가 '완료'로 되어 있으면 참입니다. 그렇지 않은 경우 거짓입니다."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type
@@ -1401,7 +1411,7 @@ msgstr "웹사이트 대화 이력"
 msgid ""
 "You can not delete a repair order once it has been confirmed. You must first"
 " cancel it."
-msgstr ""
+msgstr "수리요청서가 확정된 경우에는 삭제할 수 없습니다. 먼저 취소해야 합니다."
 
 #. module: repair
 #. odoo-python
@@ -1424,14 +1434,14 @@ msgstr "음수를 입력할 수 없습니다."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a completed repair order."
-msgstr ""
+msgstr "수리 요청이 완료된 경우에는 취소할 수 없습니다."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot delete a completed repair order."
-msgstr ""
+msgstr "수리 요청이 완료된 경우에는 삭제할 수 없습니다."
 
 #. module: repair
 #. odoo-python
@@ -1465,4 +1475,4 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid ""
 "{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
-msgstr ""
+msgstr "{{ object.partner_id.name }} 수리요청서 (Ref {{ object.name or 'n/a' }})"

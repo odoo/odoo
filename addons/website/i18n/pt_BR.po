@@ -8,7 +8,7 @@
 # Mateus Lopes <mateus1@gmail.com>, 2022
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2022
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2022
-# grazziano <gra.negocia@gmail.com>, 2022
+# grazziano <grazziano.do+transifex@gmail.com>, 2022
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
 # Luis Bispo, 2023
 # Jolien De Paepe, 2023
@@ -49,7 +49,7 @@ msgstr "\" alertar com um"
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
-msgstr ""
+msgstr "“URL de” não pode estar em branco."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -7136,6 +7136,13 @@ msgid "No support"
 msgstr "Sem suporte"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
+#, python-format
+msgid "No website domain configured for this website."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -9866,13 +9873,29 @@ msgid ""
 "in url. Keep it empty to use the default name of the record."
 msgstr ""
 "Este valor terá escape para ser compatível com todos os principais "
-"navegadores e usado em url. Mantenha-o vazio para usar o nome padrão do "
-"registro."
+"navegadores e para ser usado em URL. Deixe em branco para usar o nome padrão"
+" do registro."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "This view arch has been modified"
 msgstr "Este arco de visualização foi modificado"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
+#, python-format
+msgid ""
+"This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\n"
+"To remove this message please set a domain in your website settings"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
