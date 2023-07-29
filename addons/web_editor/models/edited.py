@@ -146,3 +146,30 @@ class EditedModel(models.Model):
                 f"'{url}?",
             ])
         return self._find(likes)
+
+    @api.model
+    def _clean(self):
+        # Called after field definitions have been uninstalled.
+        # Build domain to find existing fields that are referenced in Edited.
+        edited_fields_per_model = {}
+        for res_model, res_field, _ in self._get_edited_html_fields():
+            edited_fields_per_model.setdefault(res_model, set()).add(res_field)
+        fields_domains = [[
+            ('model', '=', model),
+            ('name', 'in', list(edited_fields_per_model[model])),
+        ] for model in edited_fields_per_model]
+        fields_domain = OR(fields_domains)
+        FieldsSudo = self.env['ir.model.fields'].sudo()
+        fields = FieldsSudo.search(fields_domain)
+        # Build domain to find Edited that have no associated field.
+        for field in fields:
+            model_fields = edited_fields_per_model[field.model]
+            model_fields.remove(field.name)
+            if not model_fields:
+                edited_fields_per_model.pop(field.model)
+        unlink_domains = [[
+            ('res_model', '=', model),
+            ('res_field', 'in', list(edited_fields_per_model[model])),
+        ] for model in edited_fields_per_model]
+        if unlink_domains:
+            self.sudo().search(OR(unlink_domains)).unlink()
