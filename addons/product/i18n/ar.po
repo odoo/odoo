@@ -70,7 +70,7 @@ msgstr "%s (نسخة)"
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s: end date (%s) should be greater than start date (%s)"
-msgstr ""
+msgstr "%s: تاريخ الانتهاء (%s) يجب أن يكون أكبر من تاريخ البداية (%s) "
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
@@ -162,6 +162,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        الأسعار الإضافية\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        السعر الإضافي\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -508,6 +514,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"السعر الأساسي للاحتساب.\n"
+"سعر البيع: سيكون السعر الأساسي هو سعر البيع.\n"
+"سعر التكلفة: سيكون السعر الأساسي هو سعر التكلفة.\n"
+"قائمة أسعار أخرى: احتساب السعر الأساسي بناءً على قائمة أسعار أخرى. "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base

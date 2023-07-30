@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Thi Huong Nguyen, 2023
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Nancy Momoland <thanh.np2502@gmail.com>, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +106,8 @@ msgstr "Được tạo vào"
 msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
-msgstr "Ngày để xác định lô và sê-ri đã hết hạn bằng bộ lọc \"Cảnh báo hết hạn\"."
+msgstr ""
+"Ngày để xác định số lô và sê-ri đã hết hạn bằng bộ lọc \"Cảnh báo hết hạn\"."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -221,7 +222,7 @@ msgid ""
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
 msgstr ""
-"Số ngày trước Ngày hết hạn mà sau đó một cảnh báo sẽ về số lô/số sê-ri sẽ "
+"Số ngày trước ngày hết hạn mà sau đó một cảnh báo sẽ về số lô/số sê-ri sẽ "
 "được gửi đi. Số ngày này sẽ được xác định theo số lô/số sê-ri."
 
 #. module: product_expiry
@@ -231,7 +232,7 @@ msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
-"Số ngày trước Ngày hết hạn mà sau đó hàng hóa phải được loại khỏi kho. Số "
+"Số ngày trước ngày hết hạn mà sau đó hàng hóa phải được loại khỏi kho. Số "
 "ngày này sẽ được xác định theo lô/số sê-ri."
 
 #. module: product_expiry
@@ -242,13 +243,13 @@ msgid ""
 "deteriorating, without being dangerous yet. It will be computed on the "
 "lot/serial number."
 msgstr ""
-"Số ngày trước Ngày hết hạn mà sau đó hàng hóa bắt đầu hư hỏng nhưng chưa "
+"Số ngày trước ngày hết hạn mà sau đó hàng hóa bắt đầu hư hỏng nhưng chưa "
 "nguy hiểm. Số ngày này sẽ được xác định theo số lô/số sê-ri."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
 msgid "Picking"
-msgstr "Phiếu kho"
+msgstr "Phiếu lấy hàng"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
@@ -258,7 +259,7 @@ msgstr "Tiếp tục ngoại trừ sản phẩm đã hết hạn"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
 msgid "Procurement Group"
-msgstr "Nhóm cung ứng"
+msgstr "Nhóm thu mua"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
@@ -397,6 +398,8 @@ msgid ""
 "You are going to deliver some product expired lots.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"Bạn sắp giao một số lô sản phẩm đã hết hạn sử dụng.\n"
+"Bạn có xác nhận muốn tiếp tục không?"
 
 #. module: product_expiry
 #. odoo-python
@@ -406,6 +409,8 @@ msgid ""
 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"Bạn sắp giao các sản phẩm %(product_name)s, %(lot_name)s đã hết hạn sử dụng.\n"
+"Bạn có xác nhận muốn tiếp tục không?"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry

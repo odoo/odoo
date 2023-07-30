@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Thi Huong Nguyen, 2023
 # Vo Thanh Thuy, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,7 +84,7 @@ msgstr "Tự động thêm những thẻ này vào lead được tạo. "
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
 msgid "Automatically assign the created leads to this Sales Team."
-msgstr "Tự động phân công lead đã tạo cho đội kinh doanh này. "
+msgstr "Tự động phân công lead đã tạo cho đội ngũ kinh doanh này. "
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
@@ -99,7 +99,7 @@ msgstr "Công ty"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
 msgid "Counter for the registrations linked to this lead"
-msgstr "Bộ đếm số đăng ký liên kết với lead này"
+msgstr "Bộ đếm lượt đăng ký liên kết với lead này"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
@@ -129,7 +129,7 @@ msgstr "Được tạo vào"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Creation Type"
-msgstr "Kiểu tạo"
+msgstr "Cách tạo"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_trigger
@@ -200,7 +200,7 @@ msgid ""
 "not set, no event category restriction will be applied."
 msgstr ""
 "Lọc người tham dự để lấy những người thuộc danh mục sự kiện cụ thể này. Nếu "
-"không đặt, sẽ không áp dụng giới hạn danh mục sự kiện."
+"không thiết lập, sẽ không áp dụng giới hạn danh mục sự kiện."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
@@ -209,7 +209,7 @@ msgid ""
 " event restriction will be applied."
 msgstr ""
 "Lọc người tham dự để lấy những người thuộc danh mục sự kiện cụ thể này. Nếu "
-"không đặt, sẽ không áp dụng giới hạn sự kiện."
+"không thiết lập, sẽ không áp dụng giới hạn sự kiện."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -244,7 +244,7 @@ msgstr "Lead"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Creation Type"
-msgstr "Kiểu tạo lead"
+msgstr "Cách tạo lead"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -337,6 +337,8 @@ msgid ""
 "Per Attendee: A Lead is created for each Attendee (B2C).\n"
 "Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
+"Cho mỗi người tham dự: Tạo một lead cho mỗi người tham dự (B2C).\n"
+"Cho mỗi đơn hàng: Một lead được tạo cho một nhóm vé/Đơn bán hàng (B2B)."
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
@@ -361,7 +363,7 @@ msgstr "Miền đăng ký"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
 msgid "Registrations triggering the rule that created this lead"
-msgstr "Đăng ký kích hoạt quy tắc đã tạo ra lead này"
+msgstr "Lượt đăng ký kích hoạt quy tắc đã tạo ra lead này"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
@@ -369,8 +371,8 @@ msgid ""
 "Restrict the trigger of this rule to events belonging to a specific company.\n"
 "If not set, no company restriction will be applied."
 msgstr ""
-"Giới hạn chỉ cho quy tắc này kích hoạt sự kiện thuộc về một công ty cụ thể.\n"
-"Nếu không đặt, không có giới hạn công ty nào được áp dụng."
+"Giới hạn kích hoạt quy tắc này cho những sự kiện thuộc về một công ty cụ thể.\n"
+"Nếu không thiết lập, không có giới hạn công ty nào được áp dụng."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__name
@@ -410,7 +412,7 @@ msgstr "Sự kiện nguồn"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_ids
 msgid "Source Registrations"
-msgstr "Đăng ký nguồn"
+msgstr "Lượt đăng ký nguồn"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_tag_ids
@@ -433,7 +435,7 @@ msgstr "Loại kích hoạt"
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Updated registrations"
-msgstr "Đăng ký đã cập nhật"
+msgstr "Lượt đăng ký đã được cập nhật"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger

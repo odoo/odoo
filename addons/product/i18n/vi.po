@@ -28,7 +28,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
 msgid "# Product Variants"
-msgstr "SL biến thể sản phẩm"
+msgstr "# biến thể sản phẩm"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
@@ -72,7 +72,7 @@ msgstr "%s (sao chép)"
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s: end date (%s) should be greater than start date (%s)"
-msgstr ""
+msgstr "%s: ngày kết thúc (%s) nên diễn ra sau ngày bắt đầu (%s)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
@@ -164,6 +164,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        Giá bổ sung\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        Giá bổ sung\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -183,8 +189,7 @@ msgstr "<span>%</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
-"<span>Tất cả cài đặt tổng quát về sản phẩm này được quản lý trên</span>"
+msgstr "<span>Tất cả cài đặt chung về sản phẩm này được quản lý trên</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -197,6 +202,8 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                here to set up the feature."
 msgstr ""
+"<strong>Lưu</strong> trang này và quay lại\n"
+"                                    đây để cài đặt tính năng."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -223,8 +230,8 @@ msgid ""
 "Customer Invoice/Credit Note"
 msgstr ""
 "Mô tả sản phẩm mà bạn muốn giới thiệu cho khách hàng của mình. Mô tả này sẽ "
-"được sao chép vào mọi Đơn bán hàng, Phiếu xuất kho và Hóa đơn khách "
-"hàng/Giấy báo có."
+"được sao chép vào mọi đơn bán hàng, phiếu xuất kho và hóa đơn khách "
+"hàng/giấy báo có."
 
 #. module: product
 #. odoo-python
@@ -413,6 +420,8 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Số lượng nhiều nhất có thể được hiển thị cùng lúc là %s. Hãy xóa số lượng đã"
+" chọn để thêm số lượng khác."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -509,6 +518,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"Giá cơ bản dùng cho tính toán.\n"
+"Giá bán: Giá cơ bản được dùng làm giá bán.\n"
+"Giá vốn: Giá cơ bản được dùng làm giá vốn.\n"
+"Bảng giá khác: Tính giá cơ bản dựa vào bảng giá khác."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -631,7 +644,7 @@ msgstr "Công ty"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__complete_name
 msgid "Complete Name"
-msgstr "Tên Đầy đủ"
+msgstr "Tên đầy đủ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -746,12 +759,12 @@ msgstr "Tiền tệ giá vốn"
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
 msgid "Country Group"
-msgstr "Nhóm Quốc gia"
+msgstr "Nhóm quốc gia"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__country_group_ids
 msgid "Country Groups"
-msgstr "Nhóm Quốc gia"
+msgstr "Nhóm quốc gia"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -848,14 +861,14 @@ msgstr "Bàn điều chỉnh được"
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
 msgid "Decimal Precision"
-msgstr "Độ chính xác Thập phân"
+msgstr "Độ chính xác thập phân"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %s pricelist"
-msgstr ""
+msgstr "Bảng giá mặc định %s "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1021,7 +1034,8 @@ msgstr "Linh động"
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
 msgstr ""
-"Mỗi giá trị chỉ nên quy định 1 lần cho mỗi thuộc tính cho từng sản phẩm."
+"Mỗi giá trị chỉ nên được quy định 1 lần cho mỗi thuộc tính của từng sản "
+"phẩm."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -1156,7 +1170,7 @@ msgstr "Hoạt động trong tương lai"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "General Information"
-msgstr "Thông tin Tổng quan"
+msgstr "Thông tin tổng quan"
 
 #. module: product
 #: model:ir.actions.server,name:product.action_product_price_list_report
@@ -1352,7 +1366,7 @@ msgstr "Tức thời"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Notes"
-msgstr "Ghi chú Nội bộ"
+msgstr "Ghi chú nội bộ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__default_code
@@ -1714,6 +1728,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
 msgstr ""
+"Trên sản phẩm %(product)s bạn không thể liên kết giá trị %(value)s với thuộc"
+" tính %(attribute)s bởi vì chúng không khớp."
 
 #. module: product
 #. odoo-python
@@ -1723,6 +1739,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"Trên sản phẩm %(product)s bạn không thể chuyển đổi thuộc tính "
+"%(attribute_src)s thành thuộc tính %(attribute_dest)s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -1768,7 +1786,7 @@ msgstr "Viên "
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number."
-msgstr ""
+msgstr "Vui lòng nhập một số nguyên dương."
 
 #. module: product
 #. odoo-python
@@ -2247,7 +2265,7 @@ msgstr "Số lượng"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Quantities (Price)"
-msgstr ""
+msgstr "Số lượng (Giá)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
@@ -2260,7 +2278,7 @@ msgstr "Số lượng"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "Số lượng đã có (%s)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2283,7 +2301,7 @@ msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
 msgstr ""
-"Đặt giá do nhà cung cấp của bạn yêu cầu cho từng sản phẩm, dựa trên số lượng"
+"Đặt giá mà nhà cung cấp của bạn yêu cầu cho từng sản phẩm, dựa trên số lượng"
 " và giai đoạn."
 
 #. module: product
@@ -2551,6 +2569,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product "
 "%(product)s."
 msgstr ""
+"Thuộc tính %(attribute)s phải có ít nhất một giá trị cho sản phẩm "
+"%(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -2566,7 +2586,7 @@ msgstr ""
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr "Giá đã tính được hiển thị theo Đơn vị tính mặc định của sản phẩm."
+msgstr "Giá đã tính được hiển thị theo đơn vị tính mặc định của sản phẩm."
 
 #. module: product
 #. odoo-python
@@ -2582,7 +2602,7 @@ msgstr "Đơn vị tính mặc định và đơn vị tính mua hàng phải cù
 #: model:ir.model.fields,help:product.field_product_attribute_value__display_type
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
-msgstr "Loại hiển thị được dùng trong Cấu hình sản phẩm."
+msgstr "Loại hiển thị được dùng trong cấu hình sản phẩm."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
@@ -2645,9 +2665,16 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
-"Số lượng cần mua từ nhà cung cấp này để thu lời từ giá cả, được hiển thị "
-"trong Đơn vị tính sản phẩm của nhà cung cấp, nếu không có, trong đơn vị tính"
-" mặc định của sản phẩm."
+"Số lượng cần mua từ nhà cung cấp này để có được lợi nhuận, được hiển thị "
+"theo Đơn vị tính sản phẩm của nhà cung cấp, nếu không có thì theo đơn vị "
+"tính mặc định của sản phẩm."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "The rounding method must be strictly positive."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2666,6 +2693,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"Giá trị %(value)s không được xác định cho thuộc tính %(attribute)s của sản "
+"phẩm %(product)s."
 
 #. module: product
 #. odoo-python
@@ -2874,6 +2903,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Giá trị của sản phẩm (được tính tự động trong AVCO).\n"
+"        Được sử dụng để định giá sản phẩm khi không biết chi phí mua hàng (ví dụ: điều chỉnh tồn kho).\n"
+"        Được sử dụng để tính toán lợi nhuận trên các đơn bán hàng."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3002,7 +3034,7 @@ msgstr "Nhà cung cấp"
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
-msgstr "Dàn dựng nhà ảo"
+msgstr "Bày trí nhà ảo"
 
 #. module: product
 #: model:product.template,name:product.product_product_1_product_template
@@ -3086,6 +3118,8 @@ msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
 msgstr ""
+"Bạn đang tắt tính năng bảng giá. Mọi bảng giá đang hoạt động sẽ được lưu "
+"trữ."
 
 #. module: product
 #. odoo-python
@@ -3134,6 +3168,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Bạn không thể thay đổi Chế độ tạo biến thể của thuộc tính %(attribute)s bởi vì nó được sử dụng cho các sản phẩm sau:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3143,6 +3179,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
 msgstr ""
+"Bạn không thể thay đổi thuộc tính của giá trị %(value)s bởi vì nó được sử "
+"dụng cho các sản phẩm sau: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -3152,6 +3190,8 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"Bạn không thể thay đổi sản phẩm của giá trị %(value)s được cài trên sản phẩm"
+" %(product)s."
 
 #. module: product
 #. odoo-python
@@ -3161,6 +3201,8 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"Bạn không thể thay đổi giá trị của giá trị %(value)s được cài trên sản phẩm "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -3201,6 +3243,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Bạn không thể xóa thuộc tính %(attribute)s bởi vì nó được sử dụng cho các sản phẩm sau:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3211,6 +3255,9 @@ msgid ""
 "%(products)s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"Bạn không thể xoá giá trị %(value)s vì nó đang được sử dụng cho các sản phẩm sau:\n"
+"%(products)s\n"
+" Nếu trước đây giá trị đã được liên kết với sản phẩm, bạn sẽ không thể xoá giá trị đó."
 
 #. module: product
 #. odoo-python
@@ -3252,6 +3299,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
 msgstr ""
+"Bạn không thể chuyển thuộc tính %(attribute)s từ sản phẩm %(product_src)s "
+"sang sản phẩm %(product_dest)s."
 
 #. module: product
 #. odoo-python
@@ -3272,8 +3321,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Bạn phải chỉ định một sản phẩm mỗi khi muốn bán hoặc mua hàng.\n"
-"                 dù đó là một sản phẩm lưu kho, sản phẩm tiêu thụ hay dịch vụ."
+"Bạn phải xác định một sản phẩm mỗi khi muốn bán hoặc mua hàng,\n"
+"                liệu đó là một sản phẩm lưu kho, sản phẩm tiêu thụ hay dịch vụ."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -3306,7 +3355,7 @@ msgstr ""
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "You must leave at least one quantity."
-msgstr ""
+msgstr "Bạn phải để lại số lượng ít nhất là một."
 
 #. module: product
 #. odoo-python

@@ -27,7 +27,8 @@ msgid ""
 " whose company can be identified.<br/>"
 msgstr ""
 "1 tín dụng được sử dụng cho mỗi khách truy cập khớp với điều kiện lưu lượng "
-"truy cập website và công ty của họ có thể được xác định. <br/>"
+"truy cập trang web và có thể xác định được công ty của khách truy cập đó. "
+"<br/>"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -62,7 +63,7 @@ msgstr "CRM Reveal View"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__lead_for
 msgid "Choose whether to track companies only or companies and their contacts"
-msgstr "Chọn chỉ theo dõi công ty hay công ty và các liên hệ của họ"
+msgstr "Chọn chỉ theo dõi công ty hay cả công ty và các liên hệ của họ"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_for__companies
@@ -249,8 +250,7 @@ msgstr "Lead/Cơ hội"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Leave empty to always match. Odoo will not create lead if no match"
-msgstr ""
-"Để trống để luôn luôn phù hợp. Odoo sẽ không tạo lead nếu không phù hợp "
+msgstr "Để trống để luôn luôn khớp. Odoo sẽ không tạo lead nếu không khớp"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__0
@@ -294,7 +294,7 @@ msgstr "Số lượng lead đã tạo "
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__opportunity_count
 msgid "Number of Generated Opportunity"
-msgstr "Số lượng cơ hội được tạo "
+msgstr "Số lượng cơ hội đã tạo "
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__country_ids
@@ -302,8 +302,8 @@ msgid ""
 "Only visitors of following countries will be converted into "
 "leads/opportunities (using GeoIP)."
 msgstr ""
-"Chỉ khách truy cập của các quốc gia sau sẽ được chuyển đổi thành lead / cơ "
-"hội (sử dụng GeoIP)."
+"Chỉ khách truy cập của các quốc gia sau sẽ được chuyển đổi thành lead/cơ hội"
+" (sử dụng GeoIP)."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__state_ids
@@ -359,8 +359,8 @@ msgid ""
 "with /page"
 msgstr ""
 "Regex để theo dõi các trang web. Để trống để theo dõi toàn bộ trang web hoặc"
-" / để nhắm mục tiêu trang chủ. Ví dụ: / page * để theo dõi tất cả các trang "
-"bắt đầu bằng /page"
+" / để nhắm mục tiêu đến trang chủ. Ví dụ: /page* để theo dõi tất cả các "
+"trang bắt đầu bằng /page"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__website_id
@@ -436,9 +436,8 @@ msgid ""
 "leads/opportunities. One credit is consumed per tracked contact."
 msgstr ""
 "Đây là số lượng liên hệ để theo dõi nếu vai trò/thâm niên của họ phù hợp với"
-" tiêu chuẩn của bạn. Chi tiết của họ sẽ xuất hiện trong luồng lịch sử của "
-"lead/ cơ hội được tạo. Một tín dụng được dùng cho mỗi liên hệ được theo dõi."
-" "
+" tiêu chí của bạn. Thông tin của họ sẽ xuất hiện trong luồng lịch sử của "
+"lead/ cơ hội đã tạo. Một tín dụng được dùng cho mỗi liên hệ được theo dõi. "
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__suffix
@@ -446,8 +445,8 @@ msgid ""
 "This will be appended in name of generated lead so you can identify "
 "lead/opportunity is generated with this rule"
 msgstr ""
-"Hậu tố này sẽ được thêm vào phía cuối tên của lead được tạo để bạn có thể "
-"xác định lead/cơ hội được tạo bằng quy tắc này "
+"Hậu tố này sẽ được thêm vào phía cuối tên của lead đã tạo để bạn có thể xác "
+"định lead/cơ hội được tạo bằng quy tắc này "
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__to_process
@@ -487,7 +486,7 @@ msgstr "Rất cao"
 #: model:ir.actions.act_window,name:website_crm_iap_reveal.crm_reveal_rule_action
 #: model:ir.ui.menu,name:website_crm_iap_reveal.crm_reveal_rule_menu_action
 msgid "Visits to Leads Rules"
-msgstr "Quy tắc chuyển khách thành lead"
+msgstr "Quy tắc chuyển khách truy cập thành lead"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__website_id
@@ -497,22 +496,22 @@ msgstr "Trang web"
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Website Traffic Conditions"
-msgstr "Điều kiện lưu lượng truy cập website"
+msgstr "Điều kiện lưu lượng truy cập trang web"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "additional credit(s) are consumed if the company matches this rule."
-msgstr "tín dụng bổ sung được sử dụng nếu công ty khớp với quy tắc này. "
+msgstr "tín dụng bổ sung được sử dụng nếu công ty khớp với quy tắc này."
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "e.g. /page"
-msgstr "vd. /trang"
+msgstr "VD: /page"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "e.g. US Visitors"
-msgstr "vd: Khách truy cập Mỹ"
+msgstr "VD: Khách truy cập Mỹ"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form

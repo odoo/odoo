@@ -246,7 +246,7 @@ msgstr ""
 "                <!-- Nous utilisons le logo de l'entreprise qui a créé le sondage (pour gérer le cas de plusieurs entreprises) -->\n"
 "                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    Certification : <t t-out=\"object.survey_id.display_name or ''\">Formulaire de retour d'expérience</t>\n"
+"                    Certification : <t t-out=\"object.survey_id.display_name or ''\">Formulaire de feedback</t>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -1505,7 +1505,7 @@ msgstr "Chaise de conférence"
 msgid "Congratulations! You are now ready to collect feedback like a pro :-)"
 msgstr ""
 "Toutes nos félicitations ! Vous êtes maintenant prêt à recueillir des "
-"retours d'expérience comme un pro :-)"
+"feedbacks comme un pro :-)"
 
 #. module: survey
 #: model_terms:gamification.badge,description:survey.vendor_certification_badge
@@ -1984,7 +1984,7 @@ msgstr "Fanta"
 #: model:survey.survey,title:survey.survey_feedback
 #, python-format
 msgid "Feedback Form"
-msgstr "Formulaire de retour d'expérience"
+msgstr "Formulaire de feedback"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q5_row2
@@ -4118,7 +4118,7 @@ msgstr "Afficher le champ Commentaires"
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Show Correct Answer(s)"
-msgstr "Afficher les réponses correctes"
+msgstr "Afficher la/les bonne(s) réponse(s)"
 
 #. module: survey
 #. odoo-javascript

@@ -37,7 +37,7 @@ msgstr "설정 구성"
 msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
-msgstr ""
+msgstr "VIES 서버 연결에 실패했습니다. %s VAT 번호가 확인되지 않습니다."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -48,7 +48,7 @@ msgstr "연락처"
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
-msgstr ""
+msgstr "유럽 지역의 VAT 번호는 VIES 데이터베이스에서 자동으로 확인됩니다."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -60,19 +60,19 @@ msgstr "재정 상태"
 msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
-msgstr ""
+msgstr "이 선택란에 표시하면, 재정 상태 기본값은 유럽 VIES 서비스의 확인 결과에 따라서 달라지게 됩니다."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
-msgstr ""
+msgstr "커뮤니티 내 유효"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
+msgstr "VIES 확인 수행"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -87,6 +87,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"유효하지 않은%(vat_label)s 숫자 [%(wrong_vat)s]입니다.\n"
+"메모: 예상 서식은 %(expected_format)s입니다. "
 
 #. module: base_vat
 #. odoo-python
@@ -96,13 +98,15 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"%(record_label)s로 유효하지 않은 %(vat_label)s 숫자  [%(wrong_vat)s]입니다.\n"
+"메모: 예상 서식은 %(expected_format)s입니다."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr ""
+msgstr "%s VAT 번호는 VIES 서버에서 확인할 수 없습니다."
 
 #. module: base_vat
 #. odoo-python
@@ -111,7 +115,7 @@ msgstr ""
 msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
-msgstr ""
+msgstr "이 VAT 번호로 감지된 해외 국가가 해당 재정 상태에서 설정된 국가와 일치하지 않습니다."
 
 #. module: base_vat
 #. odoo-python
@@ -135,7 +139,7 @@ msgstr "유럽 VIES 서비스를 사용하여 부가가치세 번호 확인"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
-msgstr ""
+msgstr "확인할 VIES VAT"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -154,4 +158,4 @@ msgstr "재정 상태 [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "협력사 [%s]"

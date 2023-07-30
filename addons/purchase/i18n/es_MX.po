@@ -8,9 +8,9 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Lucia Pacheco, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Iran Villalobos López, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -35,7 +35,7 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('draft', 'sent') and 'Solicitud de cotización - %s' % (object.name) u\n"
+"                (object.state in ('draft', 'sent') and 'Solicitud de cotización - %s' % (object.name) or\n"
 "                'Orden de compra - %s' % (object.name))"
 
 #. module: purchase
@@ -296,7 +296,7 @@ msgstr "<i class=\"fa fa-fw fa-check\"/><b>Pagado</b>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Esperando pago </b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>En espera de pago </b>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view

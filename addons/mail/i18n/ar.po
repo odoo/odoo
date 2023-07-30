@@ -107,6 +107,8 @@ msgstr "%(name)s: %(message)s)"
 #, python-format
 msgid "%(user)s connected. This is their first connection. Wish them luck."
 msgstr ""
+"%(user)s متصلون. هذه هي المرة الأولى التي يتصلون فيها. تمنّ لهم حظاً موفقاً."
+" "
 
 #. module: mail
 #. odoo-python
@@ -760,13 +762,16 @@ msgid ""
 "type='%(cancel_type)s'>cancel</a></i>, <samp>%(save_keybind)s</samp><i> to "
 "<a href='#' data-type='%(save_type)s'>save</a></i>"
 msgstr ""
+"<samp>%(cancel_keybind)s</samp><i> <a href='#' data-"
+"type='%(cancel_type)s'>للإلغاء</a></i>، <samp>%(save_keybind)s</samp><i> <a "
+"href='#' data-type='%(save_type)s'>للحفظ</a></i> "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/composer/composer.js:0
 #, python-format
 msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
-msgstr ""
+msgstr "<samp>%(send_keybind)s</samp><i> للإرسال</i> "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2046,7 +2051,7 @@ msgstr "COOL button"
 #: code:addons/mail/static/src/composer/composer.js:0
 #, python-format
 msgid "CTRL-Enter"
-msgstr ""
+msgstr "CTRL-Enter"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
@@ -3731,7 +3736,7 @@ msgstr "خطأ، لا يمكن لشريك أن يتابع نفس الكائن م
 #: code:addons/mail/static/src/composer/composer.js:0
 #, python-format
 msgid "Escape"
-msgstr ""
+msgstr "خروج "
 
 #. module: mail
 #. odoo-javascript
@@ -3823,7 +3828,7 @@ msgstr "فشل"
 #: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
 #, python-format
 msgid "Failed to load emojis..."
-msgstr ""
+msgstr "تعذر تحميل الرموز التعبيرية... "
 
 #. module: mail
 #. odoo-python
@@ -7533,7 +7538,7 @@ msgstr "تثبيت "
 #: code:addons/mail/static/src/core/message_service.js:0
 #, python-format
 msgid "Pin It"
-msgstr ""
+msgstr "تثبيت "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__pinned_at
@@ -8547,7 +8552,7 @@ msgstr "البحث عن مستخدم... "
 #: code:addons/mail/static/src/emoji_picker/emoji_picker.xml:0
 #, python-format
 msgid "Search for an emoji"
-msgstr ""
+msgstr "البحث عن رمز تعبيري "
 
 #. module: mail
 #. odoo-javascript
@@ -9462,7 +9467,7 @@ msgstr "المرفق %s غير موجود أو إنك لا تملك حق الو�
 #: code:addons/mail/models/ir_attachment.py:0
 #, python-format
 msgid "The attachment %s does not exist."
-msgstr ""
+msgstr "المرفق %s غير موجود. "
 
 #. module: mail
 #. odoo-javascript
@@ -10195,7 +10200,7 @@ msgstr "إلغاء تثبيت المحادثة "
 #: code:addons/mail/static/src/core/message_service.js:0
 #, python-format
 msgid "Unpin Message"
-msgstr ""
+msgstr "إلغاء تثبيت الرسالة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
@@ -10466,6 +10471,8 @@ msgid ""
 "Value for `mail.catchall.domain.allowed` cannot be validated.\n"
 "It should be a comma separated list of domains e.g. example.com,example.org."
 msgstr ""
+"لا يمكن تصديق قيمة `mail.catchall.domain.allowed`.\n"
+"يجب أن تكون قائمة نطاقات مفصولة بفواصل، مثال: example.com,example.org. "
 
 #. module: mail
 #. odoo-javascript
@@ -10660,6 +10667,7 @@ msgid ""
 "Well, nothing lasts forever, but are you sure you want to unpin this "
 "message?"
 msgstr ""
+"لا شيء يدوم للأبد، ولكن أأنت متأكد من أنك ترغب في إلغاء تثبيت هذه الرسالة؟ "
 
 #. module: mail
 #. odoo-javascript
@@ -10723,7 +10731,7 @@ msgstr "YYYY-MM-DD HH:MM:SS"
 #: code:addons/mail/static/src/core/message_service.js:0
 #, python-format
 msgid "Yeah, pin it!"
-msgstr ""
+msgstr "نعم، قم بتثبيتها! "
 
 #. module: mail
 #. odoo-javascript
@@ -10737,7 +10745,7 @@ msgstr "نعم"
 #: code:addons/mail/static/src/core/message_service.js:0
 #, python-format
 msgid "Yes, remove it please"
-msgstr ""
+msgstr "نعم، قم بإزالتها رجاءً "
 
 #. module: mail
 #. odoo-javascript
@@ -10920,6 +10928,8 @@ msgstr "لا يمكن تحديد قالب في النموذج التجريدي: 
 msgid ""
 "You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr ""
+"هل أنت متأكد من أنك ترغب في أن تكون هذه الرسالة مثبتة في %(conversation)s "
+"للأبد؟ "
 
 #. module: mail
 #. odoo-javascript
