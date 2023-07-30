@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Gideoni Silva <gd.willian@gmail.com>, 2023
-# grazziano <gra.negocia@gmail.com>, 2023
+# grazziano <grazziano.do+transifex@gmail.com>, 2023
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2023
 # danimaribeiro <danimaribeiro@gmail.com>, 2023
 # Vanderlei P. Romera <vanderleiromera@gmail.com>, 2023
@@ -824,6 +824,9 @@ msgid ""
 "                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"                                    Deixe em branco para criar um novo diário para esta conta bancária ou selecione um diário para vinculá-lo à conta bancária.\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1022,7 +1025,7 @@ msgstr "<span>Relatórios</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Running Balance</span>"
-msgstr ""
+msgstr "<span>Saldo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2141,7 +2144,7 @@ msgstr "Nome do Apelido"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_domain
 msgid "Alias domain"
-msgstr "Apelido do domínio"
+msgstr "Domínio do alias"
 
 #. module: account
 #. odoo-python
@@ -3647,6 +3650,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence on payments and "
 "bank transactions posted on this journal"
 msgstr ""
+"Marque esta caixa se não quiser compartilhar a mesma sequência em pagamentos"
+" e transações bancárias lançadas neste diário"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -4972,7 +4977,7 @@ msgstr "Sequência de Nota de Crédito Dedicada"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
 msgid "Dedicated Payment Sequence"
-msgstr ""
+msgstr "Sequência de Pagamento Dedicada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
@@ -5532,7 +5537,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Draft"
-msgstr "Provisório"
+msgstr "Rascunho"
 
 #. module: account
 #. odoo-python
@@ -11327,7 +11332,7 @@ msgstr "Regras para o modelo de reconciliação"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
 msgid "Running Balance"
-msgstr ""
+msgstr "Saldo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -11455,7 +11460,7 @@ msgstr "Salvar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
-msgstr "Salvar essa página e voltar aqui para instalar a funcionalidade"
+msgstr "Salve esta página e retorne aqui para configurar o recurso."
 
 #. module: account
 #. odoo-python
@@ -13659,7 +13664,7 @@ msgstr ""
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "The requested page is invalid, or doesn't exist anymore."
-msgstr ""
+msgstr "A página solicitada é inválida ou não existe mais."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -13681,7 +13686,7 @@ msgstr "O valor residual em um item diário expresso na moeda da empresa."
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr ""
+msgstr "O saldo atual (%s) não corresponde ao saldo final especificado."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
