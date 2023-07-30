@@ -615,12 +615,12 @@ class Lead(models.Model):
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
         if self.phone:
-            self.phone = self.phone_get_sanitized_number(number_fname='phone', force_format='E164') or self.phone
+            self.phone = self.phone_get_sanitized_number(number_fname='phone', force_format='INTERNATIONAL') or self.phone
 
     @api.onchange('mobile', 'country_id', 'company_id')
     def _onchange_mobile_validation(self):
         if self.mobile:
-            self.mobile = self.phone_get_sanitized_number(number_fname='mobile', force_format='E164') or self.mobile
+            self.mobile = self.phone_get_sanitized_number(number_fname='mobile', force_format='INTERNATIONAL') or self.mobile
 
     def _prepare_values_from_partner(self, partner):
         """ Get a dictionary with values coming from partner information to
@@ -2157,7 +2157,8 @@ class Lead(models.Model):
                     s_lead_lost *= value_result['lost'] / total_lost
 
             # 3. Compute Probability to win
-            lead_probabilities[lead_id] = round(100 * s_lead_won / (s_lead_won + s_lead_lost), 2)
+            probability = s_lead_won / (s_lead_won + s_lead_lost)
+            lead_probabilities[lead_id] = min(max(round(100 * probability, 2), 0.01), 99.99)
         return lead_probabilities
 
     # ---------------------------------

@@ -215,7 +215,7 @@ class AutomaticEntryWizard(models.TransientModel):
         }]
 
     def _get_move_dict_vals_change_period(self):
-        reference_move = self.env['account.move'].new({'journal_id': self.journal_id.id})
+        reference_move = self.env['account.move'].new({'journal_id': self.journal_id.id, 'move_type': 'entry'})
 
         def get_lock_safe_date(aml):
             # Use a reference move in the correct journal because _get_accounting_date depends on the journal sequence.
@@ -439,7 +439,7 @@ class AutomaticEntryWizard(models.TransientModel):
         for move, balances_per_account in acc_transfer_per_move.items():
             for account, balance in balances_per_account.items():
                 if account != self.destination_account_id:  # Otherwise, logging it here is confusing for the user
-                    rslt += self._format_strings(format, move, balance) % {'account_source_name': account.display_name}
+                    rslt += self._format_strings(format % {'account_source_name': account.display_name}, move, balance)
 
         rslt += '</ul>'
         return rslt

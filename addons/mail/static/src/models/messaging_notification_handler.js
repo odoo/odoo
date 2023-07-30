@@ -98,6 +98,8 @@ registerModel({
                             return this._handleNotificationPartnerTransientMessage(message.payload);
                         case 'mail.channel/leave':
                             return this._handleNotificationChannelLeave(message.payload);
+                        case 'mail.channel/delete':
+                            return this._handleNotificationChannelDelete(message.payload);
                         case 'res.users/connection':
                             return this._handleNotificationPartnerUserConnection(message.payload);
                         case 'mail.activity/updated': {
@@ -177,6 +179,21 @@ registerModel({
                 this.messaging.messagingBus.trigger('o-attachment-deleted', { attachment });
                 attachment.delete();
             }
+        },
+        /**
+         * @private
+         * @param {Object} payload
+         * @param {integer} payload.id
+         */
+        async _handleNotificationChannelDelete({ id }) {
+            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
+                id,
+                model: 'mail.channel',
+            });
+            if (!channel) {
+                return;
+            }
+            channel.delete();
         },
         /**
          * @private

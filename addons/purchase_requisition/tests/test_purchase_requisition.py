@@ -348,3 +348,58 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
         po_2 = po_1.alternative_po_ids - po_1
         self.assertFalse(po_2.requisition_id, "The requisition_id should not be set in the alternative purchase order")
+
+    def test_12_alternative_po_line_different_currency(self):
+        """ Check alternative PO with different currency is compared correctly"""
+
+        currency_eur = self.env.ref("base.EUR")
+        currency_usd = self.env.ref("base.USD")
+
+        # 1 USD = 0.5 EUR
+        self.env['res.currency.rate'].create([{
+            'currency_id': self.env.ref('base.USD').id,
+            'rate': 1,
+        }, {
+            'currency_id': self.env.ref('base.EUR').id,
+            'rate': 0.5,
+        }])
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.res_partner_1
+        po_form.currency_id = currency_usd
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 1
+            line.price_unit = 10
+        po_orig = po_form.save()
+
+        # Creates an alternative PO
+        action = po_orig.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = self.res_partner_1
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+
+        po_alt = po_orig.alternative_po_ids - po_orig
+        po_alt.currency_id = currency_eur
+        po_alt.order_line.price_unit = 12
+        # po_alt has cheaper price_unit/price_subtotal after conversion USD -> EUR
+        # 12 USD = 12 * 0.5 = 6 EUR < 10 EUR
+
+        best_price_ids, best_date_ids, best_price_unit_ids = po_orig.get_tender_best_lines()
+        self.assertEqual(len(best_price_ids), 1)
+        # Equal dates
+        self.assertEqual(len(best_date_ids), 2)
+        self.assertEqual(len(best_price_unit_ids), 1)
+        # alt_po is cheaper than orig_po
+        self.assertEqual(best_price_ids[0], po_alt.order_line.id)
+        self.assertEqual(best_price_unit_ids[0], po_alt.order_line.id)
+
+        po_alt.order_line.price_unit = 20
+        # po_alt has same price_unit/price_subtotal after conversion USD -> EUR
+        # 20 USD = 20 * 0.5 = 10 EUR
+        best_price_ids, best_date_ids, best_price_unit_ids = po_orig.get_tender_best_lines()
+        self.assertEqual(len(best_price_ids), 2)
+        self.assertEqual(len(best_date_ids), 2)
+        self.assertEqual(len(best_price_unit_ids), 2)
