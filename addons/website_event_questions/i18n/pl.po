@@ -10,17 +10,18 @@
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2023
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
-# Martin Trigaux, 2023
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
 # Maja Stawicka <mjstwck@wp.pl>, 2023
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
+# Grzegorz Krukar <grzegorzgk1@gmail.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:55+0000\n"
+"POT-Creation-Date: 2023-05-25 11:24+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
 "Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -29,6 +30,16 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_2_answer_2
+msgid "A friend"
+msgstr "Przyjaciel"
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_0_question_1
+msgid "Allergies"
+msgstr "Alergie"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__name
@@ -42,7 +53,7 @@ msgstr "Odpowiedź"
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_pivot
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Podział odpowiedzi"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__answer_ids
@@ -54,12 +65,19 @@ msgstr "Odpowiedzi"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Zapytaj raz na zamówienie"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "Odpowiedzi uczestników"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_1_question_0_answer_1
+#: model:event.question.answer,name:website_event_questions.event_5_question_0_answer_1
+#: model:event.question.answer,name:website_event_questions.event_type_data_sports_question_0_answer_1
+msgid "Blog Post"
+msgstr "Wpis bloga"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__partner_id
@@ -70,6 +88,16 @@ msgstr "Zarezerwowane przez"
 #: model_terms:ir.actions.act_window,help:website_event_questions.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
 msgstr ""
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_2_answer_1
+msgid "Commercials"
+msgstr "Reklamy"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_7_question_0_answer_0
+msgid "Consumers"
+msgstr "Konsumenci"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_uid
@@ -102,12 +130,12 @@ msgstr "Wydarzenie"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "Pytanie dotyczące wydarzenia"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "Odpowiedź na pytanie dotyczące wydarzenia"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
@@ -117,7 +145,7 @@ msgstr "Rejestracja wydarzenia"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Odpowiedź dotycząca rejestracji na wydarzenie"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_type
@@ -135,6 +163,19 @@ msgid "General Questions"
 msgstr "Ogólne pytania"
 
 #. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_7_question_1
+msgid "How did you hear about us ?"
+msgstr "Jak się o nas dowiedziałeś?"
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_0_question_2
+#: model:event.question,title:website_event_questions.event_1_question_0
+#: model:event.question,title:website_event_questions.event_5_question_0
+#: model:event.question,title:website_event_questions.event_type_data_sports_question_0
+msgid "How did you learn about this event?"
+msgstr "Jak dowiedziałeś się o tym wydarzeniu?"
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__id
@@ -148,6 +189,9 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
+"Jeśli to prawda, to pytanie zostanie zadane tylko raz, a jego wartość "
+"zostanie rozpropagowana do każdego uczestnika. Jeśli nie, to pytanie "
+"zostanie zadane każdemu uczestnikowi rezerwacji."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__write_uid
@@ -175,6 +219,16 @@ msgid "Mandatory Answer"
 msgstr "odpowiedź obowiązkowa"
 
 #. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_0_question_0
+msgid "Meal Type"
+msgstr "Rodzaj posiłku"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_0
+msgid "Mixed"
+msgstr "Mieszane"
+
+#. module: website_event_questions
 #: model_terms:ir.actions.act_window,help:website_event_questions.action_event_registration_report
 msgid "No Answers yet!"
 msgstr ""
@@ -184,6 +238,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_type_view_form_inherit_question
 msgid "Once per Order"
 msgstr ""
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_2_answer_0
+msgid "Our website"
+msgstr "Nasza witryna"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_2
+msgid "Pastafarian"
+msgstr "Pastafarianin"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__question_id
@@ -205,6 +269,7 @@ msgstr "Typ pytania"
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
 msgstr ""
+"Pytanie nie może należeć zarówno do kategorii zdarzeń, jak i do niej samej."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -216,20 +281,37 @@ msgid "Questions"
 msgstr "Pytania"
 
 #. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_1_question_0_answer_2
+#: model:event.question.answer,name:website_event_questions.event_5_question_0_answer_2
+#: model:event.question.answer,name:website_event_questions.event_type_data_sports_question_0_answer_2
+msgid "Radio Ad"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__registration_id
 msgid "Registration"
 msgstr "Rejestracja"
 
 #. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_7_question_0_answer_2
+msgid "Research"
+msgstr "Badania"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_7_question_0_answer_1
+msgid "Sales"
+msgstr "Sprzedaż"
+
+#. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_tree
 msgid "Selected Answers"
-msgstr ""
+msgstr "Wybrane odpowiedzi"
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "Wybrana odpowiedź"
 
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__simple_choice
@@ -241,6 +323,13 @@ msgstr "Wybór"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__sequence
 msgid "Sequence"
 msgstr "Sekwencja"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_1_question_0_answer_0
+#: model:event.question.answer,name:website_event_questions.event_5_question_0_answer_0
+#: model:event.question.answer,name:website_event_questions.event_type_data_sports_question_0_answer_0
+msgid "Social Media"
+msgstr "Media społecznościowe"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__specific_question_ids
@@ -260,7 +349,7 @@ msgstr "Sugerowana odpowiedź"
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "Wprowadzanie tekstu"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_text_box
@@ -270,7 +359,7 @@ msgstr "Odpowiedź testowa"
 #. module: website_event_questions
 #: model:ir.model.constraint,message:website_event_questions.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "Musi istnieć sugerowana wartość lub wartość tekstowa."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
@@ -284,12 +373,27 @@ msgid "Type"
 msgstr "Typ"
 
 #. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_1
+msgid "Vegetarian"
+msgstr "Wegetariańskie"
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_5_question_1
+msgid "What's your Hockey level?"
+msgstr ""
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_7_question_0
+msgid "Which field are you working in"
+msgstr "W jakiej dziedzinie pracujesz?"
+
+#. module: website_event_questions
 #. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
 "You cannot change the question type of a question that already has answers!"
-msgstr ""
+msgstr "Nie można zmienić typu pytania, które ma już odpowiedzi!"
 
 #. module: website_event_questions
 #. odoo-python
@@ -297,7 +401,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete a question that has already been answered by attendees."
-msgstr ""
+msgstr "Nie można usunąć pytania, na które uczestnicy już odpowiedzieli."
 
 #. module: website_event_questions
 #. odoo-python
@@ -306,9 +410,10 @@ msgstr ""
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
 msgstr ""
+"Nie można usunąć odpowiedzi, która została już wybrana przez uczestników."
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "np. \"Czy masz jakieś ograniczenia dietetyczne?\"."

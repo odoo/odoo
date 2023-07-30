@@ -11,8 +11,8 @@
 # islam abdelmaaboud <islamabdelmaaboud@gmail.com>, 2023
 # Radwan Hallak <rdwan.hlak@gmail.com>, 2023
 # Mohammed Alreshi <alreshim@hotmail.com>, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -216,6 +216,8 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"لقد وصل %s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي الصلة.\n"
+"حتى تكون منتظماً، يجب أن يحتوي قيد اليومية على بند تعليق واحد فقط. "
 
 #. module: account
 #. odoo-python
@@ -8845,7 +8847,7 @@ msgstr "بند"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "البند \"%s\" يحدد نفسه كالأصل. "
 
 #. module: account
 #. odoo-python
@@ -8855,6 +8857,8 @@ msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
 msgstr ""
+"البند \"%s\" يحدد البند \"%s\" كالأصل، ولكن يظهر قبله في التقرير. يجب أن "
+"يأتي الأصل أولاً دائماً. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
@@ -8903,7 +8907,7 @@ msgstr "تحميل المزيد من الحدود "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr ""
+msgstr "رسالة تاريخ القفل "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -13938,6 +13942,8 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
+"يتم تعيين التاريخ قبل تاريخ إقفال %(lock_type)s %(lock_date)s. سيتم احتساب "
+"قيد اليومية في %(invoice_date)s عند الترحيل. "
 
 #. module: account
 #. odoo-python
