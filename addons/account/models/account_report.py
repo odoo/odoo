@@ -19,6 +19,8 @@ FIGURE_TYPE_SELECTION_VALUES = [
     ('none', "No Formatting"),
 ]
 
+# test
+
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
 
 class AccountReport(models.Model):
