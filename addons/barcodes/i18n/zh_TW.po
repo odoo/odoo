@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
@@ -40,7 +40,9 @@ msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
 msgstr "一個條碼命名規則定義了POS如何識別和詮釋條碼"
 
 #. module: barcodes
@@ -79,12 +81,12 @@ msgstr "任何"
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 #, python-format
 msgid "Barcode"
-msgstr ""
+msgstr "條碼"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr "條碼事件混合"
+msgstr "條碼事件混入"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -132,7 +134,7 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立人員"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
@@ -175,7 +177,7 @@ msgstr "HTTP 路由"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -230,7 +232,7 @@ msgstr "規則"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
-msgstr "條碼"
+msgstr "序列號"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -263,26 +265,33 @@ msgstr "匹配模式將別名加到該條碼"
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
 msgstr "條碼模式 %(pattern)s 中存在語法錯誤：a rule can only contain one pair of braces."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
 msgstr "條碼模式 %(pattern)s 中存在語法錯誤：braces can only contain N's followed by D's."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr "條碼模式 %(pattern)s 中存在語法錯誤：empty braces."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
 msgstr "這條規則將只適用於特定編碼的條碼"
 
 #. module: barcodes
@@ -292,7 +301,10 @@ msgstr "類型"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
 msgstr "UPC碼可以轉換為EAN，前綴加個零。此設定確定UPC / EAN條碼應以一種或另一種方式自動轉換當在與其他編碼規則匹配時。"
 
 #. module: barcodes
@@ -324,7 +336,8 @@ msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
 msgstr "用於規則排序，這樣較小序列的規則最先匹配"
 
 #. module: barcodes

@@ -1,0 +1,141 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_alipay
+# 
+# Translators:
+# JH CHOI <hwangtog@gmail.com>, 2023
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~16.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_payment_method
+msgid "Account"
+msgstr "계정"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__code__alipay
+#: model:payment.provider,name:payment_alipay.payment_provider_alipay
+msgid "Alipay"
+msgstr "알리페이"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_seller_email
+msgid "Alipay Seller Email"
+msgstr "알리페이 판매자 이메일"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__code
+msgid "Code"
+msgstr "코드"
+
+#. module: payment_alipay
+#: model:payment.provider,display_as:payment_alipay.payment_provider_alipay
+msgid "Credit Card (powered by Alipay)"
+msgstr "신용 카드 (Alipay 제공)"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__standard_checkout
+msgid "Cross-border"
+msgstr "국경 간 공급"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__express_checkout
+msgid "Express Checkout (only for Chinese merchants)"
+msgstr ""
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_md5_signature_key
+msgid "MD5 Signature Key"
+msgstr "MD5 서명 키"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_merchant_partner_id
+msgid "Merchant Partner ID"
+msgstr "판매자 협력사 ID"
+
+#. module: payment_alipay
+#. odoo-python
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_provider
+msgid "Payment Provider"
+msgstr "결제대행업체"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "지불 거래"
+
+#. module: payment_alipay
+#. odoo-python
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference %(r)s or txn_id %(t)s."
+msgstr ""
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_seller_email
+msgid "The public Alipay partner email"
+msgstr ""
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_merchant_partner_id
+msgid "The public partner ID solely used to identify the account with Alipay"
+msgstr ""
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "이 결제대행업체의 기술 코드입니다."
+
+#. module: payment_alipay
+#: model_terms:ir.ui.view,arch_db:payment_alipay.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Asiapay</strong>."
+msgstr ""
+
+#. module: payment_alipay
+#: model_terms:payment.provider,auth_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been authorized."
+msgstr "귀하의 결제가 승인되었습니다."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,cancel_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been cancelled."
+msgstr "귀하의 결제가 취소되었습니다."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,pending_msg:payment_alipay.payment_provider_alipay
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "결제가 성공적으로 처리되었지만 승인 대기 중입니다."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,done_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been successfully processed. Thank you!"
+msgstr "귀하의 결제가 성공적으로 처리되었습니다. 감사합니다."
+
+#. module: payment_alipay
+#. odoo-python
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "received invalid transaction status: %s"
+msgstr ""

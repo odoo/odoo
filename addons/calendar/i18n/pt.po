@@ -1,31 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* calendar
-#
+# 
 # Translators:
-# João Carvalho <jpldcarvalho+github@gmail.com>, 2022
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
-# cafonso <cafonso62@gmail.com>, 2022
-# Luiz Fernando <lfpsgs@outlook.com>, 2022
-# Pedro Castro Silva <pedrocs@exo.pt>, 2022
-# Martin Trigaux, 2022
-# Pedro Filipe <pedro2.10@hotmail.com>, 2022
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022
-# Nuno Silva <nuno.silva@arxi.pt>, 2022
-# Manuela Silva <mmsrs@sky.com>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
-"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: calendar
@@ -500,8 +491,12 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_kanban_view
-msgid "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" title=\"Meetings\"/>"
-msgstr "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" title=\"Meetings\"/>"
+msgid ""
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
+"title=\"Meetings\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
+"title=\"Meetings\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -543,7 +538,9 @@ msgstr "<span> horas</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "<strong>The following attendees have invalid email addresses and won't receive any email notifications:</strong>"
+msgid ""
+"<strong>The following attendees have invalid email addresses and won't "
+"receive any email notifications:</strong>"
 msgstr ""
 
 #. module: calendar
@@ -582,8 +579,13 @@ msgstr "Ação Necessária"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-msgid "Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded"
-msgstr "As ações podem despoletar comportamentos específicos, como abrir uma visualização do calendário ou marcar automaticamente um documento como concluído quando é enviado um documento."
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"As ações podem despoletar comportamentos específicos, como abrir uma "
+"visualização do calendário ou marcar automaticamente um documento como "
+"concluído quando é enviado um documento."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -623,7 +625,8 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
-msgid "Additional message that would be sent with the notification for the reminder"
+msgid ""
+"Additional message that would be sent with the notification for the reminder"
 msgstr ""
 
 #. module: calendar
@@ -711,6 +714,7 @@ msgstr ""
 
 #. module: calendar
 #. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
 #: code:addons/calendar/models/calendar_event.py:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__busy
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__busy
@@ -827,18 +831,20 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
-msgid "Choose what to do with other events in the recurrence. Updating All Events is not allowed when dates or time is modified"
+msgid ""
+"Choose what to do with other events in the recurrence. Updating All Events "
+"is not allowed when dates or time is modified"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Client ID"
-msgstr ""
+msgstr "Id. de Cliente"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Client Secret"
-msgstr ""
+msgstr "Segredo do Cliente"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
@@ -864,6 +870,7 @@ msgstr "Confirmar"
 
 #. module: calendar
 #. odoo-javascript
+#: code:addons/calendar/static/src/components/calendar_provider_config/calendar_connect_provider.xml:0
 #: code:addons/calendar/static/src/components/calendar_provider_config/calendar_connect_provider.xml:0
 #, python-format
 msgid "Connect"
@@ -1233,7 +1240,7 @@ msgstr "Sexta-Feira"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "From"
-msgstr ""
+msgstr "De"
 
 #. module: calendar
 #. odoo-javascript
@@ -1309,8 +1316,12 @@ msgstr "Se estiver marcado, algumas mensagens têm um erro de entrega."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
-msgstr "Se o campo ativo for definido como falso, permitirá ocultar a informação do alarme de evento sem a remover."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Se o campo ativo for definido como falso, permitirá ocultar a informação do "
+"alarme de evento sem a remover."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
@@ -1322,7 +1333,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Information"
-msgstr ""
+msgstr "Informação"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -1463,8 +1474,10 @@ msgstr "Reunião"
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
+#: code:addons/calendar/models/calendar_event.py:0
 #, python-format
-msgid "Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
+msgid ""
+"Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
 msgstr ""
 
 #. module: calendar
@@ -1939,7 +1952,9 @@ msgstr "Data Inicial"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr "Data inicial de um evento, sem a hora se se tratar de um evento de dia inteiro"
+msgstr ""
+"Data inicial de um evento, sem a hora se se tratar de um evento de dia "
+"inteiro"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
@@ -1959,7 +1974,9 @@ msgstr "Fim"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "Data de fim de um evento, sem a hora se se tratar de um evento de dia inteiro"
+msgstr ""
+"Data de fim de um evento, sem a hora se se tratar de um evento de dia "
+"inteiro"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1969,7 +1986,7 @@ msgstr "Assunto"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
 msgid "Submit"
-msgstr ""
+msgstr "Submeter"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sun
@@ -2003,7 +2020,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Já existe um marcador com este nome!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
@@ -2050,7 +2067,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
-msgid "The ending date and time cannot be earlier than the starting date and time."
+msgid ""
+"The ending date and time cannot be earlier than the starting date and time."
 msgstr ""
 
 #. module: calendar
@@ -2129,7 +2147,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "To"
-msgstr ""
+msgstr "A"
 
 #. module: calendar
 #. odoo-python
@@ -2137,6 +2155,11 @@ msgstr ""
 #, python-format
 msgid "Today's Meetings"
 msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
+msgid "Trigger"
+msgstr "Trigger"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
@@ -2207,7 +2230,7 @@ msgstr ""
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #, python-format
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
@@ -2342,7 +2365,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "to"
-msgstr ""
+msgstr "a"
 
 #. module: calendar
 #. odoo-javascript

@@ -1,29 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-#
+# 
 # Translators:
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2022
-# Martin Trigaux, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Jiří Podhorecký, 2022
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: purchase_requisition
@@ -32,52 +26,57 @@ msgid "'Purchase Agreement - %s' % (object.name)"
 msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Agreement Deadline:</strong><br/>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Date</strong>"
 msgstr "<strong>Datum</strong>"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Description</strong>"
 msgstr "<strong>Popis</strong>"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Product UoM</strong>"
 msgstr "<strong>MJ produktu</strong>"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "<strong>Product</strong>"
+msgstr "<strong>Produkt</strong>"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Qty</strong>"
 msgstr "<strong>Množství</strong>"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Reference </strong>"
 msgstr "<strong>Reference </strong>"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Scheduled Date</strong>"
 msgstr "<strong>Plánované datum</strong>"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Scheduled Ordering Date:</strong><br/>"
 msgstr "<strong>Plánované datum objednávky:</strong><br/>"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Source:</strong><br/>"
 msgstr "<strong>Zdroj:</strong><br/>"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Vendor </strong>"
 msgstr "<strong>Dodavatel </strong>"
 
@@ -170,7 +169,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Analytická distribuce"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_search
@@ -304,8 +303,12 @@ msgstr "Potvrzeno"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Převod mezi měrnými jednotkami lze uskutečnit jen když patří do stejné kategorie. Převod bude proveden na základě vzájemných poměrů."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Převod mezi měrnými jednotkami lze uskutečnit jen když patří do stejné "
+"kategorie. Převod bude proveden na základě vzájemných poměrů."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
@@ -488,12 +491,17 @@ msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
-msgid "If the chosen vendor or if any of the products in the original PO have a blocking warning then we prevent creation of alternative PO. This is because normally these fields are cleared w/warning message within form view, but we cannot recreate that in this case."
+msgid ""
+"If the chosen vendor or if any of the products in the original PO have a "
+"blocking warning then we prevent creation of alternative PO. This is because"
+" normally these fields are cleared w/warning message within form view, but "
+"we cannot recreate that in this case."
 msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
-msgid "If this is checked, the product quantities of the original PO will be copied"
+msgid ""
+"If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
 
 #. module: purchase_requisition
@@ -671,7 +679,7 @@ msgid "POs to Confirm"
 msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Price Unit"
 msgstr "Jednotka ceny"
 
@@ -692,7 +700,7 @@ msgid "Product Variant"
 msgstr "Varianta výrobku"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Products"
 msgstr "Produkty"
@@ -792,7 +800,7 @@ msgstr "Žádosti / objednávky"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Hodnocení"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
@@ -804,7 +812,7 @@ msgid "Reference"
 msgstr "Reference"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Reference:"
 msgstr "Reference:"
 
@@ -819,7 +827,7 @@ msgid "Request for Quotations"
 msgstr "Žádost o nabídky"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Requests for Quotation Details"
 msgstr "Žádosti o podrobnosti nabídky"
 
@@ -881,8 +889,12 @@ msgstr "Číselná řada"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
-msgid "Set active to false to hide the Purchase Agreement Types without removing it."
-msgstr "Chcete-li skrýt typy kupních smluv, aniž byste je odstranili, nastavte hodnotu active na false."
+msgid ""
+"Set active to false to hide the Purchase Agreement Types without removing "
+"it."
+msgstr ""
+"Chcete-li skrýt typy kupních smluv, aniž byste je odstranili, nastavte "
+"hodnotu active na false."
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -892,7 +904,8 @@ msgstr "Nastavit množství ručně"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Zobrazit všechny záznamy, které mají následující datum akce před dneškem"
+msgstr ""
+"Zobrazit všechny záznamy, které mají následující datum akce před dneškem"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -905,7 +918,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
-msgid "Some quantities were not cleared because their status is not a RFQ status."
+msgid ""
+"Some quantities were not cleared because their status is not a RFQ status."
 msgstr ""
 
 #. module: purchase_requisition
@@ -964,7 +978,8 @@ msgstr "Podmínky"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
-msgid "The expected and scheduled delivery date where all the products are received"
+msgid ""
+"The expected and scheduled delivery date where all the products are received"
 msgstr "Očekávané a plánované datum dodání, kdy jsou přijaty všechny produkty"
 
 #. module: purchase_requisition
@@ -976,7 +991,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
-msgid "The vendor you have selected or at least one of the products you are copying from the original order has a blocking warning on it and cannot be selected to create an alternative."
+msgid ""
+"The vendor you have selected or at least one of the products you are copying"
+" from the original order has a blocking warning on it and cannot be selected"
+" to create an alternative."
 msgstr ""
 
 #. module: purchase_requisition
@@ -990,11 +1008,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid "There is already an open blanket order for this supplier. We suggest you complete this open blanket order, instead of creating a new one."
-msgstr "U tohoto dodavatele již existuje otevřená hromadná objednávka. Doporučujeme vám dokončit tuto otevřenou hromadnou objednávku, místo abyste vytvořili novou."
+msgid ""
+"There is already an open blanket order for this supplier. We suggest you "
+"complete this open blanket order, instead of creating a new one."
+msgstr ""
+"U tohoto dodavatele již existuje otevřená hromadná objednávka. Doporučujeme "
+"vám dokončit tuto otevřenou hromadnou objednávku, místo abyste vytvořili "
+"novou."
 
 #. module: purchase_requisition
 #. odoo-python
+#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
@@ -1089,7 +1113,9 @@ msgstr "Historie komunikace webstránky"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
-msgid "Whether or not this purchase order is linked to another purchase order as an alternative."
+msgid ""
+"Whether or not this purchase order is linked to another purchase order as an"
+" alternative."
 msgstr ""
 
 #. module: purchase_requisition
@@ -1114,10 +1140,13 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
-msgstr "Souhlas nemůžete potvrdit'%s' protože neexistuje žádná produktová řada."
+msgstr ""
+"Souhlas nemůžete potvrdit'%s' protože neexistuje žádná produktová řada."
 
 #. module: purchase_requisition
 #. odoo-python
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
@@ -1134,12 +1163,17 @@ msgstr "Nelze potvrdit hromadnou objednávku bez množství."
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid "You have to cancel or validate every RfQ before closing the purchase requisition."
-msgstr "Před uzavřením požadavku na nákup musíte zrušit nebo ověřit každé RfQ."
+msgid ""
+"You have to cancel or validate every RfQ before closing the purchase "
+"requisition."
+msgstr ""
+"Před uzavřením požadavku na nákup musíte zrušit nebo ověřit každé RfQ."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
-msgid "alternative request for quotations are still open, do you want to cancel them?"
+msgid ""
+"alternative request for quotations are still open, do you want to cancel "
+"them?"
 msgstr ""
 
 #. module: purchase_requisition

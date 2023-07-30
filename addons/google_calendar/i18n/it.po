@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* google_calendar
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: google_calendar
@@ -66,15 +65,28 @@ msgstr "Attivo"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "An administrator needs to configure Google Synchronization before you can use it!"
-msgstr "Un amministratore di sistema deve configurare la sincronizzazione con Google, prima di poterla usare!"
+msgid ""
+"An administrator needs to configure Google Synchronization before you can "
+"use it!"
+msgstr ""
+"Un amministratore di sistema deve configurare la sincronizzazione con "
+"Google, prima di poterla usare!"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
-msgid "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. You should check your Client ID and secret on the Google APIs plateform or try to stop and restart your calendar synchronisation."
-msgstr "Si è verificato un errore durante la generazione del token. Il tuo codice di autorizzazione potrebbe non essere valido o essere già scaduto [%s]. Dovresti controllare il tuo Client ID e il tuo secret sulla piattaforma Google APIs o provare a fermare e riavviare la sincronizzazione del calendario."
+msgid ""
+"An error occurred while generating the token. Your authorization code may be"
+" invalid or has already expired [%s]. You should check your Client ID and "
+"secret on the Google APIs plateform or try to stop and restart your calendar"
+" synchronisation."
+msgstr ""
+"Si è verificato un errore durante la generazione del token. Il tuo codice di"
+" autorizzazione potrebbe non essere valido o essere già scaduto [%s]. "
+"Dovresti controllare il tuo Client ID e il tuo secret sulla piattaforma "
+"Google APIs o provare a fermare e riavviare la sincronizzazione del "
+"calendario."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -124,6 +136,7 @@ msgstr "Impostazioni di configurazione"
 
 #. module: google_calendar
 #. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "Configuration"
@@ -181,6 +194,7 @@ msgstr "Regola per ricorrenza evento"
 
 #. module: google_calendar
 #. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #, python-format
 msgid "Google"
@@ -244,8 +258,12 @@ msgstr "ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
-msgstr "Se il campo Attivo è impostato a falso, consente di nascondere le informazioni di avviso eventi senza rimuoverle."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Se il campo Attivo è impostato a falso, consente di nascondere le "
+"informazioni di avviso eventi senza rimuoverle."
 
 #. module: google_calendar
 #. odoo-python
@@ -257,8 +275,13 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
-msgid "Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID"
-msgstr "Ultimo ID calendario che è stato sincronizzato. Se è cambiato verranno rimossi tutti i collegamenti tra l'ID google e l'ID del calendario interno in Odoo"
+msgid ""
+"Last Calendar ID who has been synchronized. If it is changed, we remove all "
+"links between GoogleID and Odoo Google Internal ID"
+msgstr ""
+"Ultimo ID calendario che è stato sincronizzato. Se è cambiato verranno "
+"rimossi tutti i collegamenti tra l'ID google e l'ID del calendario interno "
+"in Odoo"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
@@ -344,8 +367,12 @@ msgstr "Sincronizza solo i nuovi eventi"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "The Google Synchronization needs to be configured before you can use it, do you want to do it now?"
-msgstr "La sincronizzazione con Google deve essere configurata prima di essere usata, vuoi configurarla ora?"
+msgid ""
+"The Google Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
+msgstr ""
+"La sincronizzazione con Google deve essere configurata prima di essere "
+"usata, vuoi configurarla ora?"
 
 #. module: google_calendar
 #. odoo-python
@@ -366,7 +393,8 @@ msgstr ""
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
-msgstr "La sincronizzazione con Google Calendar è stata interrotta con successo."
+msgstr ""
+"La sincronizzazione con Google Calendar è stata interrotta con successo."
 
 #. module: google_calendar
 #: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
@@ -406,11 +434,16 @@ msgstr "Eventi utente presenti"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "You are about to stop the synchronization of your calendar with Google. Are you sure you want to continue?"
-msgstr "Stai per interrompere la sincronizzazione del tuo calendario con Google. Sei sicuro di voler continuare?"
+msgid ""
+"You are about to stop the synchronization of your calendar with Google. Are "
+"you sure you want to continue?"
+msgstr ""
+"Stai per interrompere la sincronizzazione del tuo calendario con Google. Sei"
+" sicuro di voler continuare?"
 
 #. module: google_calendar
 #. odoo-python
+#: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
@@ -420,5 +453,8 @@ msgstr "tempo non definito"
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
-msgid "you don't seem to have permission to modify this event on Google Calendar"
-msgstr "non sembra che tu abbia il permesso di modificare questo evento su Google Calendar"
+msgid ""
+"you don't seem to have permission to modify this event on Google Calendar"
+msgstr ""
+"non sembra che tu abbia il permesso di modificare questo evento su Google "
+"Calendar"

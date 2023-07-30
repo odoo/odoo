@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
@@ -41,7 +40,9 @@ msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
 msgstr "バーコード表現規則は、販売時点管理がどのようにバーコードを識別し解釈するかを定義します"
 
 #. module: barcodes
@@ -58,7 +59,7 @@ msgstr "エイリアス"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__always
 msgid "Always"
-msgstr "常に作成"
+msgstr "常に可能"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
@@ -80,7 +81,7 @@ msgstr "どれでも"
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 #, python-format
 msgid "Barcode"
-msgstr ""
+msgstr "バーコード"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -193,7 +194,7 @@ msgstr "最終更新日"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
 msgid "Never"
-msgstr "作成しない"
+msgstr "しない"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
@@ -231,7 +232,7 @@ msgstr "規則"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
-msgstr "付番"
+msgstr "シーケンス"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -243,7 +244,7 @@ msgstr "テーブル"
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 #, python-format
 msgid "Tap to scan"
-msgstr ""
+msgstr "タップしてスキャン"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
@@ -264,26 +265,33 @@ msgstr "一致したパターンはこのバーコードにエイリアスしま
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
 msgstr ""
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
 msgstr ""
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
 msgstr "このルールは、バーコードが指定されたエンコーディングでエンコードされている場合にのみ適用されます"
 
 #. module: barcodes
@@ -293,8 +301,13 @@ msgstr "タイプ"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
-msgstr "UPCコードは、プレフィックスとしてゼロを付けてJAN/EANに変換できます。 この設定では、あるルールと他のエンコーディングを一致させるときにUPC /EANバーコードを自動的に変換するかどうかを決定します。"
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"UPCコードは、プレフィックスとしてゼロを付けてJAN/EANに変換できます。 この設定では、あるルールと他のエンコーディングを一致させるときにUPC "
+"/EANバーコードを自動的に変換するかどうかを決定します。"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -325,7 +338,8 @@ msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
 msgstr "より小さなシーケンスのルールが最初に一致するようにルールを順序付けするために使用されます"
 
 #. module: barcodes

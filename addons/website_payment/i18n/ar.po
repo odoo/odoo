@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_payment
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Mustafa Rawi <mustafa@cubexco.com>, 2022
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2022
-# Niyas Raphy, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: website_payment
@@ -71,7 +67,7 @@ msgstr "<b>طريقة الدفع:</b> "
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">الدولة...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -105,6 +101,7 @@ msgid "Activate Payments"
 msgstr "المدفوعات النشطة "
 
 #. module: website_payment
+#: model:ir.actions.server,name:website_payment.action_activate_stripe
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
 msgstr "تفعيل Stripe "
@@ -126,9 +123,10 @@ msgstr "إضافة خيار جديد معبأ مسبقاً "
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #, python-format
 msgid "Amount"
-msgstr "المبلغ "
+msgstr "مبلغ"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
@@ -165,11 +163,6 @@ msgid "Configure %s"
 msgstr "تهيئة %s "
 
 #. module: website_payment
-#: model:ir.actions.server,name:website_payment.action_stripe_connect_account
-msgid "Connect to Stripe"
-msgstr "الاتصال بـ Stripe "
-
-#. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #: model:ir.model,name:website_payment.model_res_country
@@ -195,6 +188,7 @@ msgstr "الدولة مطلوبة. "
 
 #. module: website_payment
 #. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -394,7 +388,7 @@ msgstr "مزود الدفع "
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "معاملة السداد"
+msgstr "معاملة الدفع "
 
 #. module: website_payment
 #. odoo-python
@@ -406,7 +400,7 @@ msgstr "تم استلام التبرع بالتفاصيل التالية: "
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_payment
 msgid "Payments"
-msgstr "المدفوعات"
+msgstr "الدفعات"
 
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
@@ -471,13 +465,19 @@ msgstr "خطوة"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Stripe Connect is not available in your country, please use another payment provider."
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
 msgstr "Stripe Connect غير متاح في دولتك. يرجى استخدام مزود دفع آخر. "
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
-msgstr "يدعم معظم طرق الدفع؛ Visa، Mastercard، Maestro، Google Pay، Apple Pay، إلخ، بالإضافة إلى الرسوم المتكررة. "
+msgid ""
+"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay, etc. as well as recurring charges."
+msgstr ""
+"يدعم معظم طرق الدفع؛ Visa، Mastercard، Maestro، Google Pay، Apple Pay، إلخ، "
+"بالإضافة إلى الرسوم المتكررة. "
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body

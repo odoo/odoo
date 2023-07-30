@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mass_mailing_sms
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
-# Tony Ng, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mass_mailing_sms
@@ -48,28 +46,50 @@ msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "<span name=\"canceled_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message have been canceled and will not be sent.</span>"
-msgstr "<span name=\"canceled_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message have been canceled and will not be sent.</span>"
+msgid ""
+"<span name=\"canceled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">SMS Text Message have been canceled and will not be "
+"sent.</span>"
+msgstr ""
+"<span name=\"canceled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">SMS Text Message have been canceled and will not be "
+"sent.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message could not be sent.</span>"
-msgstr "<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">無法傳送簡訊。</span>"
+msgid ""
+"<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
+" 'sms')]}\">SMS Text Message could not be sent.</span>"
+msgstr ""
+"<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
+" 'sms')]}\">無法傳送簡訊。</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">This SMS marketing is scheduled for </span>"
-msgstr "<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">此 簡訊行銷計畫為</span>"
+msgid ""
+"<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">This SMS marketing is scheduled for </span>"
+msgstr ""
+"<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">此 簡訊行銷計畫為</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message are in queue and will be sent soon.</span>"
-msgstr "<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">簡訊在佇列中，將很快發送。</span>"
+msgid ""
+"<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">SMS Text Message are in queue and will be sent soon.</span>"
+msgstr ""
+"<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">簡訊在佇列中，將很快發送。</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message have been sent.</span>"
-msgstr "<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message have been sent.</span>"
+msgid ""
+"<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', "
+"'sms')]}\">SMS Text Message have been sent.</span>"
+msgstr ""
+"<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', "
+"'sms')]}\">SMS Text Message have been sent.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
@@ -117,6 +137,7 @@ msgid "A/B Test"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__ab_testing_mailings_sms_count
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__ab_testing_mailings_sms_count
 msgid "A/B Test Mailings SMS #"
 msgstr ""
@@ -131,7 +152,7 @@ msgstr "A/B Test: %s"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_needaction
 msgid "Action Needed"
-msgstr "需採取行動"
+msgstr "需要採取行動"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_attachment_count
@@ -166,7 +187,8 @@ msgstr "傳送簡訊"
 #. odoo-python
 #: code:addons/mass_mailing_sms/controllers/main.py:0
 #, python-format
-msgid "Blacklist through SMS Marketing unsubscribe (mailing ID: %s - model: %s)"
+msgid ""
+"Blacklist through SMS Marketing unsubscribe (mailing ID: %s - model: %s)"
 msgstr "黑名單通過簡訊行銷取消訂閱(mailing ID: %s - model: %s)"
 
 #. module: mass_mailing_sms
@@ -207,7 +229,7 @@ msgstr "CLICKED (%i)"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Campaign"
-msgstr "行銷"
+msgstr "行銷活動"
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.menu_email_campaigns
@@ -233,11 +255,12 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_code
 msgid "Code"
-msgstr "代號"
+msgstr "程式碼"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
-msgid "Come back once some SMS Mailings are sent to check out aggregated results."
+msgid ""
+"Come back once some SMS Mailings are sent to check out aggregated results."
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -263,7 +286,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立人員"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__create_date
@@ -306,7 +329,9 @@ msgstr "失敗類型"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized
-msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
 msgstr "用於存儲已清理電話號碼的欄位。説明加快搜索和比較。"
 
 #. module: mass_mailing_sms
@@ -346,7 +371,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction
@@ -361,12 +386,16 @@ msgstr "勾選代表有訊息發生傳送錯誤。"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
-msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
 msgstr "如果已清理的電話號碼在黑名單中，則該聯絡人將不會再收到來自任何列表的群發簡訊"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
-msgid "Immediately send the SMS Mailing instead of queuing up. Use at your own risk."
+msgid ""
+"Immediately send the SMS Mailing instead of queuing up. Use at your own "
+"risk."
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -377,12 +406,18 @@ msgstr "包括取消訂閱連結"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
 msgstr "指示列入黑名單的已清理電話號碼是否為手機號碼。當模型中同時存在手機和電話欄位時，有助於區分哪個號碼被列入黑名單。"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
 msgstr "指示列入黑名單的已清理電話號碼是否為電話號碼。當模型中同時存在手機和電話欄位時，有助於區分哪個號碼被列入黑名單。"
 
 #. module: mass_mailing_sms
@@ -462,7 +497,9 @@ msgstr "簡訊類型"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
-msgid "Mailing contacts allow you to separate your marketing audience from your contact directory."
+msgid ""
+"Mailing contacts allow you to separate your marketing audience from your "
+"contact directory."
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -504,7 +541,7 @@ msgstr "缺少電話號碼"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile
 msgid "Mobile"
-msgstr "手機"
+msgstr "行動電話"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_search_sms
@@ -518,7 +555,9 @@ msgstr "暫無資料！"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
-msgid "No need to import mailing lists, you can send SMS Text Messages to contacts saved in other Odoo apps."
+msgid ""
+"No need to import mailing lists, you can send SMS Text Messages to contacts "
+"saved in other Odoo apps."
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -609,13 +648,13 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "點評"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Recipients"
-msgstr "收件人"
+msgstr "接收者"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -627,7 +666,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_reporting
 msgid "Reporting"
-msgstr "報表"
+msgstr "報告"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_sms_id
@@ -764,7 +803,9 @@ msgstr "發送範例簡訊"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
-msgid "Send a sample SMS for testing purpose to the numbers below (carriage-return-separated list)."
+msgid ""
+"Send a sample SMS for testing purpose to the numbers below (carriage-return-"
+"separated list)."
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -796,7 +837,7 @@ msgstr "測試簡訊行銷"
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 #, python-format
-msgid "Test SMS could not be sent to %s:<br>%s"
+msgid "Test SMS could not be sent to %s: %s"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -817,7 +858,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/utm.py:0
 #, python-format
-msgid "The UTM medium '%s' cannot be deleted as it is used in some main functional flows, such as the SMS Marketing."
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the SMS Marketing."
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -834,12 +877,14 @@ msgstr "嘗試取消訂閱時出錯"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_form
-msgid "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+msgid ""
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr "此電話號碼已列入簡訊營銷黑名單。點擊取消黑名單。"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "This will send SMS to all recipients now. Do you still want to proceed?"
+msgid ""
+"This will send SMS to all recipients now. Do you still want to proceed?"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -853,7 +898,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Title"
-msgstr "標題"
+msgstr "稱謂"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -916,7 +961,7 @@ msgstr "有效的簡訊接收者"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__website_message_ids
 msgid "Website Messages"
-msgstr "網站訊息"
+msgstr "網站資訊"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__website_message_ids
@@ -930,7 +975,9 @@ msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
-msgid "Write an appealing SMS Text Message, define recipients and track its results."
+msgid ""
+"Write an appealing SMS Text Message, define recipients and track its "
+"results."
 msgstr ""
 
 #. module: mass_mailing_sms

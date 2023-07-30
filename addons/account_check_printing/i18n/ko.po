@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sarah Park, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"PO-Revision-Date: 2023-07-25 12:21+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_check_printing
@@ -25,7 +24,7 @@ msgstr ""
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid ": Check Number Sequence"
-msgstr ""
+msgstr " : 번호 순서 확인"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -34,7 +33,9 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid "Adjust the margins of generated checks to make it fit your printer's settings."
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
 msgstr "생성된 수표의 여백을 프린터의 설정과 일치하도록 조정하십시오"
 
 #. module: account_check_printing
@@ -90,7 +91,7 @@ msgstr "수표 위쪽 여백"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr "수표 번호는 숫자로만 구성될 수 있습니다"
+msgstr "수표 번호는 숫자로만 구성되어야 합니다"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -159,9 +160,10 @@ msgstr "표시명"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "구성 패널로 이동하기"
+msgstr "환경설정 메뉴로 이동하기"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
@@ -172,18 +174,20 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "In order to print multiple checks at once, they must belong to the same bank journal."
+msgid ""
+"In order to print multiple checks at once, they must belong to the same bank"
+" journal."
 msgstr "한 번에 여러 수표를 인쇄하려면 은행 계좌가 동일해야 합니다."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
-msgstr "분개장"
+msgstr "전표"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_move
 msgid "Journal Entry"
-msgstr "분개"
+msgstr "전표입력"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -264,12 +268,16 @@ msgstr "결제"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
+msgid ""
+"Payments to print as a checks must have 'Check' selected as payment method "
+"and not have already been reconciled"
 msgstr "수표로 지불하려면 '수표'를 선택해야 하지만 아직 조정되지 않았습니다."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Please enter the number of the first pre-printed check that you are about to print on."
+msgid ""
+"Please enter the number of the first pre-printed check that you are about to"
+" print on."
 msgstr "인쇄할 첫 번째 미리 인쇄된 수표 번호를 입력하십시오."
 
 #. module: account_check_printing
@@ -282,8 +290,13 @@ msgstr "선호하는 결제 방법"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
-msgstr "이 공급업체에 지불할 때 선호하는 결제 방법입니다. 대량 지불 건 등록을 할 경우 선호하는 지불 방법으로 공급업체 청구서를 필터하기 위해 사용됩니다. 사용 사례: 일괄 이체 시 은행 파일 생성, 점검 실행"
+msgid ""
+"Preferred payment method when paying this vendor. This is used to filter "
+"vendor bills by preferred payment method to register payments in mass. Use "
+"cases: create bank files for batch wires, check runs."
+msgstr ""
+"이 공급업체에 지불할 때 선호하는 결제 방법입니다. 대량 지불 건 등록을 할 경우 선호하는 지불 방법으로 공급업체 청구서를 필터하기 위해"
+" 사용됩니다. 사용 사례: 일괄 이체 시 은행 파일 생성, 점검 실행"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -352,7 +365,9 @@ msgstr "수표 번호 표시"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
 msgstr "레이아웃 확인에 문제가 발생했습니다. 청구서/회계 설정에서 다른 레이아웃을 선택 후 다시 시도하십시오."
 
 #. module: account_check_printing
@@ -370,18 +385,27 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
-msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
+msgid ""
+"The last check number was %s. In order to avoid a check being rejected by "
+"the bank, you can only use a greater number."
 msgstr "마지막 수표 번호는 %s. 수표가 은행에서 거절된 경우 약간 큰 번호를 사용할 수 있습니다."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
-msgstr "선택한 분개장은 수표 번호를 인쇄하도록 구성되어 있습니다. 미리 인쇄된 수표에 이미 번호가 있거나 현재 번호가 잘못되어 있으면 분개장 구성 페이지에서 수정할 수 있습니다."
+msgid ""
+"The selected journal is configured to print check numbers. If your pre-"
+"printed check paper already has numbers or if the current numbering is "
+"wrong, you can change it in the journal configuration page."
+msgstr ""
+"선택한 전표에서 수표 번호를 인쇄하도록 설정되어 있습니다. 미리 인쇄된 수표에 이미 번호가 있거나 현재 번호가 잘못되어 있으면 전표 "
+"환경설정 페이지에서 수정할 수 있습니다."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
 msgstr "이 옵션을 사용하면 여러 페이지가 한 페이지에 들어 가지 않는 경우 체크 세부 사항(스텁)을 인쇄 할 수 있습니다."
 
 #. module: account_check_printing
@@ -396,7 +420,8 @@ msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "This will allow to save on payments the number of the corresponding check."
+msgid ""
+"This will allow to save on payments the number of the corresponding check."
 msgstr "이렇게 하면 지불 수표 금액을 절약 할 수 있습니다."
 
 #. module: account_check_printing
@@ -413,5 +438,7 @@ msgstr "무효 수표"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
+msgid ""
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
 msgstr "수표 레이아웃을 선택하십시오. 선택하시려면 청구서/회계 설정에서 '수표 레이아웃'을 검색 후 설정하십시오. "

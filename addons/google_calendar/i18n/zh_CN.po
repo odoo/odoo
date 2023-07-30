@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* google_calendar
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# digitalliuzg8888, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: digitalliuzg8888, 2022\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: google_calendar
@@ -61,21 +59,29 @@ msgstr "‎（无标题）‎"
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__active
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__active
 msgid "Active"
-msgstr "启用"
+msgstr "已启用"
 
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "An administrator needs to configure Google Synchronization before you can use it!"
+msgid ""
+"An administrator needs to configure Google Synchronization before you can "
+"use it!"
 msgstr "使用前需要管理员配置 Google 同步项目!"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
-msgid "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. You should check your Client ID and secret on the Google APIs plateform or try to stop and restart your calendar synchronisation."
-msgstr "在生成令牌时发生了一个错误。您的授权码可能是无效的或已经过期[%s]。您应该在Google APIs平台上检查您的客户ID和秘密，或者尝试停止并重新启动您的日历同步。"
+msgid ""
+"An error occurred while generating the token. Your authorization code may be"
+" invalid or has already expired [%s]. You should check your Client ID and "
+"secret on the Google APIs plateform or try to stop and restart your calendar"
+" synchronisation."
+msgstr ""
+"在生成令牌时发生了一个错误。您的授权码可能是无效的或已经过期[%s]。您应该在Google "
+"APIs平台上检查您的客户ID和秘密，或者尝试停止并重新启动您的日历同步。"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -126,6 +132,7 @@ msgstr "配置设置"
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "Configuration"
 msgstr "配置"
@@ -145,7 +152,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_date
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建日期"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
@@ -173,7 +180,7 @@ msgstr "显示名称"
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "Email"
-msgstr "Email"
+msgstr "电子邮件"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_recurrence
@@ -182,6 +189,7 @@ msgstr "事件重复规则"
 
 #. module: google_calendar
 #. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #, python-format
 msgid "Google"
@@ -245,7 +253,9 @@ msgstr "ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
 msgstr "如果启用字段设为false，它将允许您隐藏提醒信息而不需要删除它。"
 
 #. module: google_calendar
@@ -258,7 +268,9 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
-msgid "Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID"
+msgid ""
+"Last Calendar ID who has been synchronized. If it is changed, we remove all "
+"links between GoogleID and Odoo Google Internal ID"
 msgstr "最后一次同步的日历ID。如果它发生改变， 将清除全部在 GoogleID 和 Odoo Google Internal ID之间的连接"
 
 #. module: google_calendar
@@ -271,7 +283,7 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_date
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "上次更新日期"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
@@ -345,7 +357,9 @@ msgstr "‎仅同步新事件‎"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "The Google Synchronization needs to be configured before you can use it, do you want to do it now?"
+msgid ""
+"The Google Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
 msgstr "使用前需要管理员配置 Google 同步项目, 您想现在配置吗 ? !"
 
 #. module: google_calendar
@@ -396,7 +410,7 @@ msgstr "用户"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
 msgid "User token"
-msgstr "用户令牌"
+msgstr "用户教程"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -407,11 +421,14 @@ msgstr "‎用户的现有事件‎"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "You are about to stop the synchronization of your calendar with Google. Are you sure you want to continue?"
+msgid ""
+"You are about to stop the synchronization of your calendar with Google. Are "
+"you sure you want to continue?"
 msgstr "您即将停止与谷歌的日历同步。您确定您要继续吗？"
 
 #. module: google_calendar
 #. odoo-python
+#: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
@@ -421,5 +438,6 @@ msgstr "未定义的时间"
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
-msgid "you don't seem to have permission to modify this event on Google Calendar"
+msgid ""
+"you don't seem to have permission to modify this event on Google Calendar"
 msgstr "您似乎没有权限在谷歌日历上修改这个事件"

@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_recruitment_survey
-#
+# 
 # Translators:
-# Ryanto The <ry.the77@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_recruitment_survey
@@ -47,6 +45,28 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Yth <t t-out=\"object.partner_id.name or 'applicant'\">[nama pelamar]</t><br><br>\n"
+"        <t>\n"
+"            Anda sudah melalui beberapa proses rekrutmen dan sekarang kami ingin Anda menjawab beberapa pertanyaan.\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t>\n"
+"                    Mulai wawancara tertulis\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Mohon jawab wawancara sebelum <t t-out=\"format_date(object.deadline)\">[tanggal deadline]</t>.<br><br>\n"
+"        </t>\n"
+"        <t>\n"
+"            We wish you good luck! Terima kasih sebelumnya untuk partisipasi Anda.\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -80,8 +100,13 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
-msgid "Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"
-msgstr "Pilih bentuk wawancara untuk posisi pekerjaan ini dan Anda akan dapat mencetak / menjawab wawancara ini dari semua pelamar yang melamar pekerjaan ini"
+msgid ""
+"Choose an interview form for this job position and you will be able to "
+"print/answer this interview from all applicants who apply for this job"
+msgstr ""
+"Pilih bentuk wawancara untuk posisi pekerjaan ini dan Anda akan dapat "
+"mencetak / menjawab wawancara ini dari semua pelamar yang melamar pekerjaan "
+"ini"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -154,7 +179,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
 msgid "Job Position"
-msgstr "Posisi Kerja"
+msgstr "Jabatan Kerja"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q6
@@ -188,7 +213,9 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
-msgid "Please answer those questions to help recruitment officers to preprocess your application."
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
 msgstr ""
 
 #. module: hr_recruitment_survey
@@ -208,12 +235,14 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid "Please summarize your education history: schools, location, diplomas, ..."
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
 msgstr ""
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid "Please tell us a bit more about yourself: what are your main activities, ..."
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
 
 #. module: hr_recruitment_survey

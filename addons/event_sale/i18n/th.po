@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_sale
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Odoo Thaidev <odoothaidev@gmail.com>, 2022
-# Wichanon Jamwutthipreecha, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event_sale
@@ -42,7 +40,9 @@ msgstr "<span class=\"o_stat_text\">การขาย</span>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-msgid "<span>Not enough seats available. All registrations were created as \"Unconfirmed\" and can be updated later on.</span>"
+msgid ""
+"<span>Not enough seats available. All registrations were created as "
+"\"Unconfirmed\" and can be updated later on.</span>"
 msgstr ""
 
 #. module: event_sale
@@ -53,7 +53,8 @@ msgstr "<span>แก้ไขการลงทะเบียนสำหรั
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket__description
 #: model:ir.model.fields,help:event_sale.field_event_type_ticket__description
-msgid "A description of the ticket that you want to communicate to your customers."
+msgid ""
+"A description of the ticket that you want to communicate to your customers."
 msgstr "คำอธิบายของทิกเก็ตที่คุณต้องการสื่อสารกับลูกค้าของคุณ"
 
 #. module: event_sale
@@ -121,13 +122,18 @@ msgstr "ยกเลิก"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
-msgid "Choose an event and it will automatically create a registration for this event."
+msgid ""
+"Choose an event and it will automatically create a registration for this "
+"event."
 msgstr "เลือกอีเวนต์และจะสร้างการลงทะเบียนสำหรับอีเวนต์นี้โดยอัตโนมัติ"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
-msgid "Choose an event ticket and it will automatically create a registration for this event ticket."
-msgstr "เลือกทิกเก็ตอีเวนต์และสร้างการลงทะเบียนสำหรับทิกเก็ตอีเวนต์นี้โดยอัตโนมัติ"
+msgid ""
+"Choose an event ticket and it will automatically create a registration for "
+"this event ticket."
+msgstr ""
+"เลือกทิกเก็ตอีเวนต์และสร้างการลงทะเบียนสำหรับทิกเก็ตอีเวนต์นี้โดยอัตโนมัติ"
 
 #. module: event_sale
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
@@ -137,7 +143,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__company_id
 msgid "Company"
-msgstr "บริษัทเดียว"
+msgstr "บริษัท"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_configurator_action
@@ -373,11 +379,6 @@ msgid "Last Updated on"
 msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__done
-msgid "Locked"
-msgstr "ล็อก"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
 msgid "Medium"
 msgstr "สื่อกลาง"
@@ -416,7 +417,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
 msgid "Ok"
-msgstr "โอเค"
+msgstr "ตกลง"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_date
@@ -469,6 +470,15 @@ msgid "Phone"
 msgstr "โทรศัพท์"
 
 #. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Please make sure all your event related lines are configured before confirming this order: \n"
+"%s"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price
 #: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
@@ -497,8 +507,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__product_id
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__product_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_template_line__product_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_template_option__product_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Product"
 msgstr "สินค้า"
@@ -523,16 +531,6 @@ msgstr "ใบเสนอราคา"
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sent
 msgid "Quotation Sent"
 msgstr "ส่งใบเสนอราคาแล้ว"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order_template_line
-msgid "Quotation Template Line"
-msgstr "ไลน์เทมเพลตใบเสนอราคา"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order_template_option
-msgid "Quotation Template Option"
-msgstr "ตัวเลือกเทมเพลตใบเสนอราคา"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form

@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-#
+# 
 # Translators:
-# Vo Thanh Thuy, 2022
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
-# Martin Trigaux, 2023
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"PO-Revision-Date: 2023-07-25 12:21+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: analytic
@@ -49,12 +46,12 @@ msgstr "<span class=\"o_stat_text\">Biên Lợi nhuận Gộp</span>"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
 msgid "Accounts"
-msgstr "Tài khoản"
+msgstr "Các tài khoản"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
 msgid "Action Needed"
-msgstr "Hành động Cần thiết"
+msgstr "Hành động cần thiết"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
@@ -62,11 +59,9 @@ msgid "Active"
 msgstr "Đang hoạt động"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
-#, python-format
-msgid "Add a line"
-msgstr "Thêm một mục"
+#: model:account.analytic.account,name:analytic.analytic_active_account
+msgid "Active account"
+msgstr ""
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
@@ -88,7 +83,7 @@ msgstr "Số lượng Tất cả Tài khoản Phân tích"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
-msgstr "Tổng tiền"
+msgstr "Số tiền"
 
 #. module: analytic
 #. odoo-javascript
@@ -105,7 +100,7 @@ msgstr "Phân tích"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
-msgstr "Tài khoản Phân tích"
+msgstr "Tài khoản phân tích"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
@@ -117,7 +112,7 @@ msgstr "Kế toán Phân tích"
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
-msgstr "Các Tài khoản Phân tích"
+msgstr "Các tài khoản phân tích"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
@@ -128,25 +123,25 @@ msgstr "Số lượng Tài khoản Phân tích"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Phân bổ KT Quản trị"
+msgstr "Phân bổ phân tích"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution_model
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 msgid "Analytic Distribution Model"
-msgstr "Mô hình Phân bổ Phân tích"
+msgstr "Mô hình phân bổ phân tích"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
-msgstr "Các Mô hình Phân bổ Phân tích"
+msgstr "Mô hình phân bổ phân tích"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Tìm kiếm phân bổ phân tích"
 
 #. module: analytic
 #. odoo-javascript
@@ -166,7 +161,7 @@ msgstr "Mục Phân tích"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Items"
-msgstr "Bút toán Phân tích"
+msgstr "Bút toán phát sinh quản trị"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -187,12 +182,12 @@ msgstr "Kết hợp Phân tích"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Plan"
-msgstr "Kế hoạch Phân tích"
+msgstr "Kế hoạch phân tích"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Khả năng Áp dụng Kế hoạch Phân tích"
+msgstr "Các ứng dụng của Kế hoạch phân tích"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
@@ -200,7 +195,7 @@ msgstr "Khả năng Áp dụng Kế hoạch Phân tích"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_tree_view
 msgid "Analytic Plans"
-msgstr "Các Kế hoạch Phân tích"
+msgstr "Kế hoạch phân tích"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
@@ -238,7 +233,7 @@ msgstr "Đã lưu trữ"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr "Đối tác Liên kết"
+msgstr "Đối tác liên quan"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_asustek
@@ -248,7 +243,7 @@ msgstr "Asustek"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số lượng Tệp đính kèm"
+msgstr "Số lượng tệp đính kèm"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
@@ -299,12 +294,12 @@ msgstr "Nhấp để thêm kế hoạch tài khoản phân tích mới."
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
 msgid "Color"
-msgstr "Màu"
+msgstr "Màu sắc"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__color
 msgid "Color Index"
-msgstr "Mã Màu"
+msgstr "Mã màu"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_commercial_marketing
@@ -332,12 +327,16 @@ msgstr ""
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_config_settings
 msgid "Config Settings"
-msgstr "Cài đặt Cấu hình"
+msgstr "Cài đặt cấu hình"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Việc chuyển đổi qua lại giữa các Đơn vị tính chỉ có thể khả dụng nếu chúng cùng loại. Việc chuyển đổi sẽ được thực hiện dựa trên tỉ lệ."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Việc chuyển đổi qua lại giữa các Đơn vị tính chỉ có thể khả dụng nếu chúng "
+"cùng loại. Việc chuyển đổi sẽ được thực hiện dựa trên tỉ lệ."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -419,7 +418,7 @@ msgstr "Delta PC"
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_departments
 msgid "Departments"
-msgstr ""
+msgstr "Phòng/Ban"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
@@ -439,7 +438,7 @@ msgstr "Desertic - Hispafuentes"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
 msgid "Display Name"
-msgstr "Tên Hiển thị"
+msgstr "Tên hiển thị"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
@@ -450,13 +449,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
 msgid "Domain"
 msgstr "Miền"
-
-#. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-#, python-format
-msgid "Editing"
-msgstr "Chỉnh sửa"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
@@ -482,7 +474,7 @@ msgstr "Nhóm theo..."
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
 msgid "Has Message"
-msgstr "Có Tin nhắn"
+msgstr "Có tin nhắn"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
@@ -518,7 +510,7 @@ msgstr ""
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_internal
 msgid "Internal"
-msgstr ""
+msgstr "Nội bộ"
 
 #. module: analytic
 #. odoo-javascript
@@ -530,7 +522,7 @@ msgstr "Không hợp lệ"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
 msgid "Is Follower"
-msgstr "Là Người theo dõi"
+msgstr "Là người theo dõi"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
@@ -539,7 +531,7 @@ msgstr "Là Người theo dõi"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__write_uid
 msgid "Last Updated by"
-msgstr "Chỉnh sửa Lần cuối bởi"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_date
@@ -548,7 +540,7 @@ msgstr "Chỉnh sửa Lần cuối bởi"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật Lần cuối vào"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: analytic
 #. odoo-javascript
@@ -579,7 +571,7 @@ msgstr "Bắt buộc"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
 msgid "Message Delivery error"
-msgstr "Lỗi Gửi Tin nhắn"
+msgstr "Lỗi gửi tin nhắn"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
@@ -634,12 +626,12 @@ msgstr "Không có kế hoạch nào"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng Hành động"
+msgstr "Số lượng hành động"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
 msgid "Number of errors"
-msgstr "Số lỗi"
+msgstr "Số lượng lỗi"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
@@ -699,12 +691,12 @@ msgstr "Siêu Phẩm của Chúng tôi"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
 msgid "Parent"
-msgstr "Mẹ"
+msgstr "Cha"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_path
 msgid "Parent Path"
-msgstr "Parent Path"
+msgstr "Tuyến cha"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_id
@@ -726,13 +718,20 @@ msgstr "Kế hoạch"
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_projects
 msgid "Projects"
-msgstr ""
+msgstr "Dự án"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
 msgstr "Số lượng"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "Quick search: %s"
+msgstr "Tìm nhanh: %s"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
@@ -774,19 +773,44 @@ msgid "Search Analytic Lines"
 msgstr "Tìm kiếm chi tiết phân tích"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "Search: Analytic Account"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
-msgid "Select a company for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)"
-msgstr "Chọn một công ty mà phân phối phân tích sẽ được sử dụng (ví dụ: tạo hóa đơn của khách hàng mới hoặc Hóa đơn bán hàng, nếu chọn công ty này, công ty sẽ được tự động chọn làm tài khoản phân tích)"
+msgid ""
+"Select a company for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this company, it "
+"will automatically take this as an analytic account)"
+msgstr ""
+"Chọn một công ty mà phân phối phân tích sẽ được sử dụng (ví dụ: tạo hóa đơn "
+"của khách hàng mới hoặc Hóa đơn bán hàng, nếu chọn công ty này, công ty sẽ "
+"được tự động chọn làm tài khoản phân tích)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
-msgid "Select a partner category for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"
-msgstr "Chọn danh mục đối tác mà phân phối phân tích sẽ được sử dụng (ví dụ: tạo Hóa đơn của khách hàng mới hoặc Hóa đơn bán hàng, nếu chọn đối tác này, đối tác sẽ được tự động chọn làm tài khoản phân tích)"
+msgid ""
+"Select a partner category for which the analytic distribution will be used "
+"(e.g. create new customer invoice or Sales order if we select this partner, "
+"it will automatically take this as an analytic account)"
+msgstr ""
+"Chọn danh mục đối tác mà phân phối phân tích sẽ được sử dụng (ví dụ: tạo Hóa"
+" đơn của khách hàng mới hoặc Hóa đơn bán hàng, nếu chọn đối tác này, đối tác"
+" sẽ được tự động chọn làm tài khoản phân tích)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
-msgid "Select a partner for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"
-msgstr "Chọn đối tác mà phân phối phân tích sẽ được sử dụng (ví dụ: tạo hóa đơn khách hàng mới hoặc Đơn đặt hàng bán hàng nếu chúng tôi chọn đối tác này, đối tác sẽ tự động coi đây là tài khoản phân tích)"
+msgid ""
+"Select a partner for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this partner, it "
+"will automatically take this as an analytic account)"
+msgstr ""
+"Chọn đối tác mà phân phối phân tích sẽ được sử dụng (ví dụ: tạo hóa đơn "
+"khách hàng mới hoặc Đơn đặt hàng bán hàng nếu chúng tôi chọn đối tác này, "
+"đối tác sẽ tự động coi đây là tài khoản phân tích)"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_spark
@@ -802,8 +826,12 @@ msgstr "Kế hoạch phụ"
 #. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 #, python-format
-msgid "The selected account belongs to another company than the one you're trying to create an analytic item for"
-msgstr "Tài khoản đã chọn thuộc về một công ty khác với công ty mà bạn đang cố gắng tạo một mục phân tích"
+msgid ""
+"The selected account belongs to another company than the one you're trying "
+"to create an analytic item for"
+msgstr ""
+"Tài khoản đã chọn thuộc về một công ty khác với công ty mà bạn đang cố gắng "
+"tạo một mục phân tích"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -829,7 +857,7 @@ msgstr "Đơn vị tính"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
 msgid "UoM Category"
-msgstr "Danh mục Đơn vị tính"
+msgstr "Danh mục đơn vị"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
@@ -839,20 +867,33 @@ msgstr "Người dùng"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 msgid "View"
-msgstr "Xem"
+msgstr "Chế độ xem"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "View all"
+msgstr "Xem tất cả"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
-msgid "You can't set a different company on your analytic account since there are some analytic items linked to it."
-msgstr "Bạn không thể chọn một công ty khác trên tài khoản phân tích vì có một số mục phân tích được liên kết với tài khoản này."
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some analytic items linked to it."
+msgstr ""
+"Bạn không thể chọn một công ty khác trên tài khoản phân tích vì có một số "
+"mục phân tích được liên kết với tài khoản này."
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_distribution_model.py:0
 #, python-format
-msgid "You defined a distribution with analytic account(s) belonging to a specific company but a model shared between companies or with a different company"
+msgid ""
+"You defined a distribution with analytic account(s) belonging to a specific "
+"company but a model shared between companies or with a different company"
 msgstr ""
 
 #. module: analytic

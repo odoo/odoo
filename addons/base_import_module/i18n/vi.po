@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import_module
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2022\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_import_module
@@ -31,6 +30,7 @@ msgid "Close"
 msgstr "Đóng"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Could not select database '%s'"
@@ -52,6 +52,7 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
@@ -64,8 +65,11 @@ msgstr "Bắt buộc khởi tạo"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
-msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr "Bắt buộc khởi tạo thậm chí nếu đã được cài đặt (sẽ cập nhật dữ liệu 'nonupdate='1')"
+msgid ""
+"Force init mode even if installed. (will update `noupdate='1'` records)"
+msgstr ""
+"Bắt buộc khởi tạo thậm chí nếu đã được cài đặt (sẽ cập nhật dữ liệu "
+"'nonupdate='1')"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
@@ -101,14 +105,9 @@ msgid "Imported Module"
 msgstr "Module đã được import"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module____last_update
-msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
@@ -118,7 +117,7 @@ msgstr "Cập nhật lần cuối vào"
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
-msgstr "Mô đun"
+msgstr "Module"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__module_file
@@ -126,6 +125,7 @@ msgid "Module .ZIP file"
 msgstr "Tập tin .ZIP của mô đun"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "No file sent."
@@ -137,12 +137,14 @@ msgid "Note: you can only import data modules (.xml files and static assets)"
 msgstr "Ghi chú: bạn chỉ có thể import module dữ liệu (file .xml)"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
 msgstr "Chỉ quản lý hệ thống mới có thể tải module lên"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only zip files are supported."
@@ -164,18 +166,21 @@ msgid "Status"
 msgstr "Trạng thái"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Studio customizations require Studio"
 msgstr "Tùy chỉnh studio yêu cầu module studio"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Tùy chỉnh studio yêu cầu ứng dụng studio"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -190,7 +195,7 @@ msgstr ""
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view
 msgid "View"
-msgstr "Xem"
+msgstr "Chế độ xem"
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__done

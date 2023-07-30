@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_sale
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_sale
@@ -65,13 +65,6 @@ msgstr ""
 #, python-format
 msgid "Back"
 msgstr "返回"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/MobileSaleOrderManagementScreen.xml:0
-#, python-format
-msgid "Back to list"
-msgstr "回到清單"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -128,9 +121,10 @@ msgstr "是否要加載連結到銷售訂單的 SN/批次？"
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Down Payment"
-msgstr ""
+msgstr "預付訂金"
 
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
@@ -212,12 +206,8 @@ msgid "Locked"
 msgstr "已鎖定"
 
 #. module: pos_sale
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
-msgid "New"
-msgstr "新增"
-
-#. module: pos_sale
 #. odoo-javascript
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Next Order List"
@@ -225,6 +215,7 @@ msgstr "下一個訂單列表"
 
 #. module: pos_sale
 #. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "No"
@@ -262,24 +253,29 @@ msgid "Order lines Transfered to Point of Sale"
 msgstr "訂單明細轉移到營業點"
 
 #. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
+msgid "POS Order"
+msgstr "POS 訂單"
+
+#. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
 msgid "Paid"
-msgstr "已支付"
+msgstr "已付款"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "POS營業點設定"
+msgstr "POS設定"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "POS訂單明細"
+msgstr "POS營業點訂單明細"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "POS營業點訂單"
+msgstr "POS訂單"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
@@ -297,12 +293,8 @@ msgid "Pos Order Count"
 msgstr "POS訂單計數"
 
 #. module: pos_sale
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
-msgid "Posted"
-msgstr "已過帳"
-
-#. module: pos_sale
 #. odoo-javascript
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Previous Order List"
@@ -337,6 +329,11 @@ msgid "Quotation/Order"
 msgstr "報價單/訂單"
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
+msgid "Related Order"
+msgstr ""
+
+#. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
@@ -345,6 +342,7 @@ msgstr "SN/批次 加載"
 
 #. module: pos_sale
 #. odoo-javascript
+#: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "SO"
@@ -429,6 +427,7 @@ msgstr "營業點進行中"
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
+#: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Set Sale Order"
 msgstr "設置銷售訂單"
@@ -444,7 +443,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
-msgid "Some of the products in your Sale Order are not available in POS, do you want to import them?"
+msgid ""
+"Some of the products in your Sale Order are not available in POS, do you "
+"want to import them?"
 msgstr "您的銷售訂單中的某些產品在 POS 中不可用，您要匯入它們嗎？"
 
 #. module: pos_sale
@@ -458,7 +459,7 @@ msgstr "來源銷售訂單項目"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "State"
-msgstr "縣市"
+msgstr "狀態"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
@@ -472,7 +473,9 @@ msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
-msgid "The rate of the currency to the currency of rate applicable at the date of the order"
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
 msgstr "貨幣匯率相對於訂單日期適用的匯率貨幣"
 
 #. module: pos_sale
@@ -509,6 +512,11 @@ msgid "Total"
 msgstr "總計"
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr "轉移"
+
+#. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
 msgid ""
 "Transfered<br/>\n"
@@ -541,6 +549,7 @@ msgstr "您想做什麼？"
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Yes"
 msgstr "是"
@@ -549,5 +558,7 @@ msgstr "是"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
-msgid "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line."
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
 msgstr ""

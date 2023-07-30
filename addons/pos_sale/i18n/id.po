@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_sale
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Abe Manyo, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_sale
@@ -66,13 +65,6 @@ msgstr ""
 #, python-format
 msgid "Back"
 msgstr "Kembali"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/MobileSaleOrderManagementScreen.xml:0
-#, python-format
-msgid "Back to list"
-msgstr "Kembali ke daftar"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -129,9 +121,10 @@ msgstr ""
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Down Payment"
-msgstr ""
+msgstr "Down Payment"
 
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
@@ -213,12 +206,8 @@ msgid "Locked"
 msgstr "Dikunci"
 
 #. module: pos_sale
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
-msgid "New"
-msgstr "Baru"
-
-#. module: pos_sale
 #. odoo-javascript
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Next Order List"
@@ -226,6 +215,7 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "No"
@@ -260,6 +250,11 @@ msgstr "Order"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
+msgid "POS Order"
 msgstr ""
 
 #. module: pos_sale
@@ -298,12 +293,8 @@ msgid "Pos Order Count"
 msgstr "Jumlah Order POS"
 
 #. module: pos_sale
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
-msgid "Posted"
-msgstr "Terekam"
-
-#. module: pos_sale
 #. odoo-javascript
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Previous Order List"
@@ -338,6 +329,11 @@ msgid "Quotation/Order"
 msgstr ""
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
+msgid "Related Order"
+msgstr ""
+
+#. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
@@ -347,6 +343,7 @@ msgstr ""
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
+#: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "SO"
 msgstr ""
@@ -354,7 +351,7 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Jumlah Sale Order"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -377,7 +374,7 @@ msgstr "Order Penjualan"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Detail Order Penjualan"
+msgstr "Baris Pesanan Penjualan"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
@@ -430,6 +427,7 @@ msgstr ""
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
+#: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Set Sale Order"
 msgstr ""
@@ -445,7 +443,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
-msgid "Some of the products in your Sale Order are not available in POS, do you want to import them?"
+msgid ""
+"Some of the products in your Sale Order are not available in POS, do you "
+"want to import them?"
 msgstr ""
 
 #. module: pos_sale
@@ -473,7 +473,9 @@ msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
-msgid "The rate of the currency to the currency of rate applicable at the date of the order"
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
 msgstr ""
 
 #. module: pos_sale
@@ -510,6 +512,11 @@ msgid "Total"
 msgstr "Total"
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Transfer"
+
+#. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
 msgid ""
 "Transfered<br/>\n"
@@ -538,6 +545,7 @@ msgstr ""
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Yes"
 msgstr "Ya"
@@ -546,5 +554,7 @@ msgstr "Ya"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
-msgid "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line."
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
 msgstr ""

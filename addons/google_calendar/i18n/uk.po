@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* google_calendar
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: google_calendar
@@ -66,15 +65,27 @@ msgstr "Активно"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "An administrator needs to configure Google Synchronization before you can use it!"
-msgstr "Адміністратор повинен налаштувати Синхронізацію Google, перш ніж користуватися нею!"
+msgid ""
+"An administrator needs to configure Google Synchronization before you can "
+"use it!"
+msgstr ""
+"Адміністратор повинен налаштувати Синхронізацію Google, перш ніж "
+"користуватися нею!"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
-msgid "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. You should check your Client ID and secret on the Google APIs plateform or try to stop and restart your calendar synchronisation."
-msgstr "Під час створення токену виникла помилка. Ваш код авторизації може бути недійсним або вже протермінований [%s]. Вам слід перевірити ваш Client ID та секретний ключ на платформі Google API або спробуйте зупинити і перезапустити вашу синхронізацію календаря."
+msgid ""
+"An error occurred while generating the token. Your authorization code may be"
+" invalid or has already expired [%s]. You should check your Client ID and "
+"secret on the Google APIs plateform or try to stop and restart your calendar"
+" synchronisation."
+msgstr ""
+"Під час створення токену виникла помилка. Ваш код авторизації може бути "
+"недійсним або вже протермінований [%s]. Вам слід перевірити ваш Client ID та"
+" секретний ключ на платформі Google API або спробуйте зупинити і "
+"перезапустити вашу синхронізацію календаря."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -124,6 +135,7 @@ msgstr "Налаштування"
 
 #. module: google_calendar
 #. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "Configuration"
@@ -181,6 +193,7 @@ msgstr "Правило повторюваної події"
 
 #. module: google_calendar
 #. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #, python-format
 msgid "Google"
@@ -244,8 +257,12 @@ msgstr "ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
-msgstr "Якщо активне поле налаштовано невірно, ви зможете приховати інформацію про сповіщення події, не видаляючи її."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Якщо активне поле налаштовано невірно, ви зможете приховати інформацію про "
+"сповіщення події, не видаляючи її."
 
 #. module: google_calendar
 #. odoo-python
@@ -257,8 +274,12 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
-msgid "Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID"
-msgstr "ID останнього календаря, який був синхронізований. Якщо він буде змінений, ми видалимо всі посилання між GoogleID і Odoo Google Internal ID"
+msgid ""
+"Last Calendar ID who has been synchronized. If it is changed, we remove all "
+"links between GoogleID and Odoo Google Internal ID"
+msgstr ""
+"ID останнього календаря, який був синхронізований. Якщо він буде змінений, "
+"ми видалимо всі посилання між GoogleID і Odoo Google Internal ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
@@ -344,8 +365,12 @@ msgstr "Синхронізувати лише нові події"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "The Google Synchronization needs to be configured before you can use it, do you want to do it now?"
-msgstr "Синхронізацію Google потрібно налаштувати, перш ніж використовувати її, чи хочете ви це зробити зараз?"
+msgid ""
+"The Google Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
+msgstr ""
+"Синхронізацію Google потрібно налаштувати, перш ніж використовувати її, чи "
+"хочете ви це зробити зараз?"
 
 #. module: google_calendar
 #. odoo-python
@@ -406,11 +431,16 @@ msgstr "Існуючі події користувача"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "You are about to stop the synchronization of your calendar with Google. Are you sure you want to continue?"
-msgstr "Ви збираєтеся припинити синхронізацію свого календаря з Google. Ви впевнені, що хочете продовжити?"
+msgid ""
+"You are about to stop the synchronization of your calendar with Google. Are "
+"you sure you want to continue?"
+msgstr ""
+"Ви збираєтеся припинити синхронізацію свого календаря з Google. Ви впевнені,"
+" що хочете продовжити?"
 
 #. module: google_calendar
 #. odoo-python
+#: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
@@ -420,5 +450,6 @@ msgstr "невизначений час"
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
-msgid "you don't seem to have permission to modify this event on Google Calendar"
+msgid ""
+"you don't seem to have permission to modify this event on Google Calendar"
 msgstr "схоже, у вас немає дозволу змінювати цю подію в Google календарі"

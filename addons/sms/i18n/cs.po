@@ -1,28 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sms
-#
+# 
 # Translators:
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Martin Trigaux, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Jiří Podhorecký, 2022
+# Jiří Podhorecký, 2023
+# Wil Odoo, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
 "Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: sms
@@ -53,7 +49,8 @@ msgstr "%sneplatní příjemci "
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
-msgid "%s out of the %s selected SMS Text Messages have successfully been resent."
+msgid ""
+"%s out of the %s selected SMS Text Messages have successfully been resent."
 msgstr ""
 
 #. module: sms
@@ -77,7 +74,9 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', False)]}\">No records</span>"
+msgid ""
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">No records</span>"
 msgstr ""
 
 #. module: sms
@@ -106,7 +105,9 @@ msgstr "Akce k provedení"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
-msgid "Add a contextual action on the related model to open a sms composer with this template"
+msgid ""
+"Add a contextual action on the related model to open a sms composer with "
+"this template"
 msgstr ""
 
 #. module: sms
@@ -124,7 +125,9 @@ msgstr "Vztahuje se na"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
-msgid "Are you sure you want to reset these sms templates to their original configuration? Changes and translations will be lost."
+msgid ""
+"Are you sure you want to reset these sms templates to their original "
+"configuration? Changes and translations will be lost."
 msgstr ""
 
 #. module: sms
@@ -329,7 +332,7 @@ msgstr "E-mailové vlákno"
 #: code:addons/sms/static/src/components/phone_field/phone_field.js:0
 #, python-format
 msgid "Enable SMS"
-msgstr ""
+msgstr "Povolit SMS"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -353,12 +356,17 @@ msgstr "Typ poruchy"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized
-msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
-msgstr "Pole slouží k ukládání sanitovaného telefonního čísla. Pomáhá urychlit vyhledávání a srovnávání."
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
+msgstr ""
+"Pole slouží k ukládání sanitovaného telefonního čísla. Pomáhá urychlit "
+"vyhledávání a srovnávání."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
-msgid "File from where the template originates. Used to reset broken template."
+msgid ""
+"File from where the template originates. Used to reset broken template."
 msgstr ""
 
 #. module: sms
@@ -444,8 +452,8 @@ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 #: model:ir.model.fields,help:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_request__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_note_note__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_phone_blacklist__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_product_pricelist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_product_template__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_rating_mixin__message_has_sms_error
@@ -457,8 +465,12 @@ msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
-msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
-msgstr "Pokud je ověřené telefonní číslo na černé listině, kontakt již nebude dostávat hromadné zprávy SMS ze žádného seznamu"
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Pokud je ověřené telefonní číslo na černé listině, kontakt již nebude "
+"dostávat hromadné zprávy SMS ze žádného seznamu"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -472,18 +484,31 @@ msgstr "Ve frontě"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__mobile_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Označuje, zda je ověřené telefonní číslo na černé listině číslo mobilního telefonu. Pomáhá rozlišit, které číslo je na černé listině, když je v modelu pole pro mobil i telefon."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Označuje, zda je ověřené telefonní číslo na černé listině číslo mobilního "
+"telefonu. Pomáhá rozlišit, které číslo je na černé listině, když je v modelu"
+" pole pro mobil i telefon."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Označuje, zda je ověřené telefonní číslo na černé listině telefonním číslem. Pomáhá rozlišit, které číslo je na černé listině, když je v modelu pole pro mobil i telefon."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Označuje, zda je ověřené telefonní číslo na černé listině telefonním číslem."
+" Pomáhá rozlišit, které číslo je na černé listině, když je v modelu pole pro"
+" mobil i telefon."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
-msgstr "Označuje, zda se sestavované SMS zaměřuje na jednoho konkrétního příjemce."
+msgstr ""
+"Označuje, zda se sestavované SMS zaměřuje na jednoho konkrétního příjemce."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
@@ -571,8 +596,12 @@ msgstr "Oznámení zpráv"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__message_type
 #: model:ir.model.fields,help:sms.field_mail_message__message_type
-msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
-msgstr "Druh zprávy: 'E-mail' pro e-mailové zprávy, 'Upozornění' pro zprávy systému, 'Komentář' pro ostatní zprávy, jako odpovědi uživatelů."
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr ""
+"Druh zprávy: 'E-mail' pro e-mailové zprávy, 'Upozornění' pro zprávy systému,"
+" 'Komentář' pro ostatní zprávy, jako odpovědi uživatelů."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_ids
@@ -642,18 +671,30 @@ msgstr "Počet zpráv s chybou při doručení"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
-msgid "Number of recipients that will receive the SMS if sent in mass mode, without applying the Active Domain value"
-msgstr "Počet příjemců, kteří obdrží SMS, pokud je odeslána v hromadném režimu bez použití hodnoty Active Domain."
+msgid ""
+"Number of recipients that will receive the SMS if sent in mass mode, without"
+" applying the Active Domain value"
+msgstr ""
+"Počet příjemců, kteří obdrží SMS, pokud je odeslána v hromadném režimu bez "
+"použití hodnoty Active Domain."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "Odhlášené"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
-msgid "Optional translation language (ISO code) to select when sending out an email. If not set, the english version will be used. This should usually be a placeholder expression that provides the appropriate language, e.g. {{ object.partner_id.lang }}."
-msgstr "Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání e-mailu. Pokud není nastavena, bude použita anglická verze. To by měl být obvykle zástupný výraz, který poskytuje vhodný jazyk, např. {{object.partner_id.lang}}."
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání "
+"e-mailu. Pokud není nastavena, bude použita anglická verze. To by měl být "
+"obvykle zástupný výraz, který poskytuje vhodný jazyk, např. "
+"{{object.partner_id.lang}}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -682,7 +723,9 @@ msgstr "Telefonní číslo"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf
-msgid "Phone number of the recipient. If changed, it will be recorded on recipient's profile."
+msgid ""
+"Phone number of the recipient. If changed, it will be recorded on "
+"recipient's profile."
 msgstr ""
 
 #. module: sms
@@ -723,7 +766,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Hodnocení"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -863,8 +906,8 @@ msgstr "SMS API"
 #: model:ir.model.fields,field_description:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_request__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_note_note__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_phone_blacklist__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_product_pricelist__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_product_product__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_product_template__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_rating_mixin__message_has_sms_error
@@ -892,6 +935,7 @@ msgstr "Náhled SMS"
 
 #. module: sms
 #. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
 msgid "SMS Pricing"
@@ -1075,8 +1119,12 @@ msgstr "Akce postranní lišty"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sidebar_action_id
-msgid "Sidebar action to make this template available on records of the related document model"
-msgstr "Akce postranní lišty pro zpřístupnení této šablony u záznamů příslušného dokumentového modelu"
+msgid ""
+"Sidebar action to make this template available on records of the related "
+"document model"
+msgstr ""
+"Akce postranní lišty pro zpřístupnení této šablony u záznamů příslušného "
+"dokumentového modelu"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
@@ -1159,8 +1207,11 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
-msgid "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr "Toto telefonní číslo je pro SMS Marketing na černé listině. Kliknutím zrušíte seznam zakázaných položek."
+msgid ""
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+msgstr ""
+"Toto telefonní číslo je pro SMS Marketing na černé listině. Kliknutím "
+"zrušíte seznam zakázaných položek."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -1263,8 +1314,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.js:0
 #, python-format
-msgid "Your SMS Text Message must include at least one non-whitespace character"
-msgstr "Vaše textová zpráva SMS musí obsahovat alespoň jeden znak, který je číslicí nebo písmenem."
+msgid ""
+"Your SMS Text Message must include at least one non-whitespace character"
+msgstr ""
+"Vaše textová zpráva SMS musí obsahovat alespoň jeden znak, který je číslicí "
+"nebo písmenem."
 
 #. module: sms
 #. odoo-javascript
@@ -1300,7 +1354,9 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
-msgid "recipients have an invalid phone number and will not receive this text message."
+msgid ""
+"recipients have an invalid phone number and will not receive this text "
+"message."
 msgstr ""
 
 #. module: sms

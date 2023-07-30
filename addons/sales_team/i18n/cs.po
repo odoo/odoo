@@ -1,29 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-#
+# 
 # Translators:
-# Jakub Snášel <jakub@potisk-tricek.cz>, 2022
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Jiří Podhorecký, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: sales_team
@@ -76,28 +69,35 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid "Add members to automatically assign their documents to this sales team."
+msgid ""
+"Add members to automatically assign their documents to this sales team."
 msgstr ""
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
-msgid "Adding %(user_name)s in this team would remove him/her from its current team %(team_name)s."
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current team"
+" %(team_name)s."
 msgstr ""
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 #, python-format
-msgid "Adding %(user_name)s in this team would remove him/her from its current teams %(team_names)s."
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current "
+"teams %(team_names)s."
 msgstr ""
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
-msgid "Adding %(user_names)s in this team would remove them from their current teams (%(team_names)s)."
+msgid ""
+"Adding %(user_names)s in this team would remove them from their current "
+"teams (%(team_names)s)."
 msgstr ""
 
 #. module: sales_team
@@ -250,13 +250,18 @@ msgstr "Oblíbení členové"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid "Favorite teams to display them in the dashboard and access them easily."
+msgid ""
+"Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Follow this salesteam to automatically track the events associated to users of this team."
-msgstr "Odebírejte zprávy obchodního týmu. Automaticky budete mít přehled o událostech spojených s členy tohoto týmu."
+msgid ""
+"Follow this salesteam to automatically track the events associated to users "
+"of this team."
+msgstr ""
+"Odebírejte zprávy obchodního týmu. Automaticky budete mít přehled o "
+"událostech spojených s členy tohoto týmu."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -296,7 +301,9 @@ msgstr "ID"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__is_membership_multi
-msgid "If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team."
+msgid ""
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
 msgstr ""
 
 #. module: sales_team
@@ -314,12 +321,18 @@ msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,help:sales_team.field_res_users__team_id
-msgid "If set, this Sales Team will be used for sales and assignments related to this partner"
-msgstr "Pokud je nastaveno, bude tento prodejní tým použit pro prodej a úkoly související s tímto partnerem"
+msgid ""
+"If set, this Sales Team will be used for sales and assignments related to "
+"this partner"
+msgstr ""
+"Pokud je nastaveno, bude tento prodejní tým použit pro prodej a úkoly "
+"související s tímto partnerem"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
-msgid "If the active field is set to false, it will allow you to hide the Sales Team without removing it."
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
 msgstr ""
 
 #. module: sales_team
@@ -359,7 +372,9 @@ msgstr "Naposled upraveno"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
-msgid "Main user sales team. Used notably for pipeline, or to set sales team in invoicing or subscription."
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
 msgstr ""
 
 #. module: sales_team
@@ -463,7 +478,7 @@ msgstr "Produkt"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__rating_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Hodnocení"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -566,7 +581,7 @@ msgstr "Název tagu"
 #. module: sales_team
 #: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Název značky již existuje!"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
@@ -613,14 +628,18 @@ msgstr "Výchozí společnost pro tohoto uživatele."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
-msgid "Those represent the different categories of things you have to do (e.g. \"Call\" or \"Prepare meeting\")."
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
 msgstr ""
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
-msgid "To add a Salesperson into multiple Teams, activate the Multi-Team option in settings."
+msgid ""
+"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
+"settings."
 msgstr ""
 
 #. module: sales_team
@@ -630,7 +649,8 @@ msgstr "Tréning"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
-msgid "UX: Give users not to add in the currently chosen team to avoid duplicates"
+msgid ""
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
 
 #. module: sales_team
@@ -642,13 +662,15 @@ msgstr ""
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
+#: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
 msgstr "Nedefinovaný grafický model pro prodejní tým:%s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid "Use Sales Teams to organize your sales departments and draw up reports."
+msgid ""
+"Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
 
 #. module: sales_team
@@ -661,7 +683,9 @@ msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid "Use Tags to manage and track your Opportunities (product structure, sales type, ...)"
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
 msgstr ""
 
 #. module: sales_team
@@ -708,7 +732,9 @@ msgstr "Webstránka"
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 #, python-format
-msgid "You are trying to create duplicate membership(s). We found that %(duplicates)s already exist(s)."
+msgid ""
+"You are trying to create duplicate membership(s). We found that "
+"%(duplicates)s already exist(s)."
 msgstr ""
 
 #. module: sales_team
@@ -728,8 +754,11 @@ msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid "the user will have access to all records of everyone in the sales application."
-msgstr "uživatel bude mít přístup ke všem záznamům kohokoli v aplikaci prodejů."
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+"uživatel bude mít přístup ke všem záznamům kohokoli v aplikaci prodejů."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
@@ -738,5 +767,9 @@ msgstr "uživatel bude mít přístup ke svým datum v aplikaci prodejů."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
-msgid "the user will have an access to the sales configuration as well as statistic reports."
-msgstr "uživatel bude mít přístup k nastavení prodeje stejně jako ke statistickým zprávám"
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr ""
+"uživatel bude mít přístup k nastavení prodeje stejně jako ke statistickým "
+"zprávám"

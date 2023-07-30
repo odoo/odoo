@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product
-#
+# 
 # Translators:
-# Bohdan Lisnenko, 2022
-# Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: product
@@ -59,6 +57,7 @@ msgstr "%s %% знижка"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "%s (copy)"
@@ -87,7 +86,7 @@ msgstr "'Пакування товарів- %s' % (object.name)"
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
-msgstr ""
+msgstr "- Штрих-код \"%s\" вже призначено товару: %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -139,8 +138,12 @@ msgstr "4 x 7 з ціною"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>"
-msgstr "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>"
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
@@ -198,26 +201,32 @@ msgid ""
 "                        to the loss of their possible customizations."
 msgstr ""
 "<strong>Увага</strong>: додавання або видалення атрибутів\n"
-"                        буде видаляти та відтворювати існуючі варіанти та ліди\n"
+"                        буде видаляти та відтворювати існуючі варіанти та призведе\n"
 "                     до втрати їх можливого налаштування."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "Штрих-код може бути призначений лише одній упаковці."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
 #: model:ir.model.fields,help:product.field_product_template__description_sale
-msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note"
-msgstr "Опис товару, який ви хочете повідомити своїм клієнтам. Цей опис буде скопійовано до кожного замовлення на продаж, замовлення на доставку та рахунки-фактури клієнта/сторно"
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sales Order, Delivery Order and "
+"Customer Invoice/Credit Note"
+msgstr ""
+"Опис товару, який ви хочете повідомити своїм клієнтам. Цей опис буде "
+"скопійовано до кожного замовлення на продаж, замовлення на доставку та "
+"рахунки-фактури клієнта/сторно"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "Упаковка вже викорстовує штрих-код"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -225,13 +234,15 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"Ціна – це набір продажних цін або правил для обчислення ціни рядків замовлення на продаж на основі товарів, категорій товарів, дат і замовлених кількостей.\n"
+"            Це ідеальний інструмент для обробки кількох цін, сезонних знижок тощо."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 #, python-format
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "Товар вже викорстовує штрих-код"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
@@ -241,8 +252,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Товар, що зберігається, - це товар, яким ви керуєте на складі. Необхідно встановити додаток Склад.\n"
-"Витратний товар - це товар, для якого склад не керується.\n"
+"Товар, що зберігається - це товар, яким ви керуєте на складі. Необхідно встановити додаток Склад.\n"
+"Витратний товар - це товар, по якому немає складських проводок.\n"
 "Послуга - це нематеріальний товар, який ви надаєте."
 
 #. module: product
@@ -251,6 +262,7 @@ msgid "Acoustic Bloc Screens"
 msgstr "Екрани акустичного блоку"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
@@ -271,27 +283,31 @@ msgstr "Активно"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr ""
+msgstr "Активні товари"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_template__activity_ids
 msgid "Activities"
 msgstr "Дії"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Оформлення виключення дії"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_state
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
 #: model:ir.model.fields,field_description:product.field_product_template__activity_state
 msgid "Activity State"
 msgstr "Стан дії"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
@@ -306,7 +322,7 @@ msgstr "Додати кількість"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
-msgid "Additional Product Tag"
+msgid "Additional Product Tags"
 msgstr ""
 
 #. module: product
@@ -323,12 +339,12 @@ msgstr "Правила розширених цін (знижки, формули
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Усі теги товару"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "Усі варіанти товару використовують цей тег"
 
 #. module: product
 #. odoo-python
@@ -342,7 +358,9 @@ msgstr "Всі товари"
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
-msgstr "Дозвольте користувачам вводити спеціальні значення для цього значення атрибута"
+msgstr ""
+"Дозвольте користувачам вводити спеціальні значення для цього значення "
+"атрибута"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
@@ -393,10 +411,13 @@ msgstr "Присвоює пріоритет списку постачальни�
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
-msgid "At most %s quantities can be displayed simultaneously. Remove a selected quantity to add others."
+msgid ""
+"At most %s quantities can be displayed simultaneously. Remove a selected "
+"quantity to add others."
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
 msgid "Attachment Count"
@@ -462,8 +483,13 @@ msgstr "Штрих-код"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__barcode
-msgid "Barcode used for packaging identification. Scan this packaging barcode from a transfer in the Barcode app to move all the contained units"
-msgstr "Штрих-код використовується для ідентифікації пакування. Відскануйте цей штрих-код пакування з переміщення у модулі Штрих-код у переміщеннях усіх одиниць, які містяться"
+msgid ""
+"Barcode used for packaging identification. Scan this packaging barcode from "
+"a transfer in the Barcode app to move all the contained units"
+msgstr ""
+"Штрих-код використовується для ідентифікації пакування. Відскануйте цей "
+"штрих-код пакування з переміщення у модулі Штрих-код у переміщеннях усіх "
+"одиниць, які містяться"
 
 #. module: product
 #. odoo-python
@@ -474,6 +500,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Штрих-код вже призначено:\n"
+"\n"
+"%s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -662,8 +691,12 @@ msgstr "Витратний"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
-msgid "Consumables are physical products for which you don't manage the inventory level: they are always available."
-msgstr "Витратні матеріали – це фізичні товари, для яких ви не керуєте рівнем запасів: вони завжди доступні."
+msgid ""
+"Consumables are physical products for which you don't manage the inventory "
+"level: they are always available."
+msgstr ""
+"Витратні матеріали – це фізичні товари, для яких ви не керуєте рівнем "
+"запасів: вони завжди доступні."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -705,13 +738,13 @@ msgstr "Кутовий стіл з правим сидінням"
 #: model:ir.model.fields,field_description:product.field_product_template__standard_price
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__standard_price
 msgid "Cost"
-msgstr "Вартість"
+msgstr "Собівартість"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr "Валюта вартості"
+msgstr "Валюта собівартості"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -832,19 +865,26 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "Стандартна одиниця вимірювання, що використовується для всіх складських операцій."
+msgstr ""
+"Стандартна одиниця вимірювання, що використовується для всіх складських "
+"операцій."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 #: model:ir.model.fields,help:product.field_product_template__uom_po_id
-msgid "Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure."
-msgstr "Одиниця вимірювання за замовчуванням, що використовується для замовлень на купівлю. Вона повинна бути в тій же категорії, що й одиниця вимірювання за замовчуванням."
+msgid ""
+"Default unit of measure used for purchase orders. It must be in the same "
+"category as the default unit of measure."
+msgstr ""
+"Одиниця вимірювання за замовчуванням, що використовується для замовлень на "
+"купівлю. Вона повинна бути в тій же категорії, що й одиниця вимірювання за "
+"замовчуванням."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Визначіть новий тег"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1036,8 +1076,12 @@ msgstr "Додаткова плата"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
-msgid "Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr "Дотакова ціна для варіанту з цим значенням атрибуту на продажній ціні. Напр. 200 додаткова ціна, 1000 + 200 = 1200."
+msgid ""
+"Extra price for the variant with this attribute value on sale price. eg. 200"
+" price extra, 1000 + 200 = 1200."
+msgstr ""
+"Дотакова ціна для варіанту з цим значенням атрибуту на продажній ціні. Напр."
+" 200 додаткова ціна, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__priority
@@ -1063,22 +1107,25 @@ msgid "Flipover"
 msgstr "Перевернути"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_follower_ids
 #: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_follower_ids
 msgid "Followers"
 msgstr "Підписники"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Підписники (Партнери)"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Іконка зі шрифтом Font awesome, напр. fa-tasks"
+msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -1160,6 +1207,7 @@ msgid "HTML Color Index"
 msgstr "Індекс HTML кольорів"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__has_message
 #: model:ir.model.fields,field_description:product.field_product_product__has_message
 #: model:ir.model.fields,field_description:product.field_product_template__has_message
 msgid "Has Message"
@@ -1168,8 +1216,12 @@ msgstr "Є повідомлення"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__html_color
-msgid "Here you can set a specific HTML color index (e.g. #ff0000) to display the color if the attribute type is 'Color'."
-msgstr "Тут ви можете встановити кокретний індекс кольору HTML (напр., #ff0000), щоби відобразити колір, якщо тип атрибуту 'Колір'."
+msgid ""
+"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
+"color if the attribute type is 'Color'."
+msgstr ""
+"Тут ви можете встановити кокретний індекс кольору HTML (напр., #ff0000), "
+"щоби відобразити колір, якщо тип атрибуту 'Колір'."
 
 #. module: product
 #: model:product.template,name:product.expense_hotel_product_template
@@ -1196,24 +1248,28 @@ msgid "ID"
 msgstr "ID"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_icon
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_icon
 msgid "Icon"
 msgstr "Значок"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Іконка для визначення виключення дії."
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__message_needaction
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__message_has_error
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
@@ -1221,18 +1277,24 @@ msgstr "Якщо позначено, деякі повідомлення маю�
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
-msgid "If not set, the vendor price will apply to all variants of this product."
-msgstr "Якщо не встановлено, ціна постачальника буде застосовуватися до всіх варіантів цього товару."
+msgid ""
+"If not set, the vendor price will apply to all variants of this product."
+msgstr ""
+"Якщо не встановлено, ціна постачальника буде застосовуватися до всіх "
+"варіантів цього товару."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
-msgid "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr "Якщо не вибрано, це дозволить вам приховати прайс-лист без його видалення."
+msgid ""
+"If unchecked, it will allow you to hide the pricelist without removing it."
+msgstr ""
+"Якщо не вибрано, це дозволить вам приховати прайс-лист без його видалення."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__active
 #: model:ir.model.fields,help:product.field_product_template__active
-msgid "If unchecked, it will allow you to hide the product without removing it."
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
 msgstr "Якщо не вибрано, це дозволить вам сховати правило без його видалення."
 
 #. module: product
@@ -1315,7 +1377,8 @@ msgstr "Внутрішні посилання"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
 msgid "International Article Number used for product identification."
-msgstr "Міжнародний номер статті, що використовується для ідентифікації товару."
+msgstr ""
+"Міжнародний номер статті, що використовується для ідентифікації товару."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1323,6 +1386,7 @@ msgid "Inventory"
 msgstr "Склад"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template__message_is_follower
 msgid "Is Follower"
@@ -1414,8 +1478,14 @@ msgstr "Останні дії"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
-msgid "Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
-msgstr "Час проведення в дні між підтвердженням замовлення на купівлю та отримання товару на вашому складі. Використовується планувальником для автоматичного обчислення планування замовлення на придбання."
+msgid ""
+"Lead time in days between the confirmation of the purchase order and the "
+"receipt of the products in your warehouse. Used by the scheduler for "
+"automatic computation of the purchase order planning."
+msgstr ""
+"Час проведення в дні між підтвердженням замовлення на купівлю та отримання "
+"товару на вашому складі. Використовується планувальником для автоматичного "
+"обчислення планування замовлення на придбання."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1441,13 +1511,21 @@ msgstr "Логістика"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "Looking for a custom bamboo stain to match existing furniture? Contact us for a quote."
-msgstr "Шукаєте бамбуковий барвник на замовлення, щоб відповідати існуючим меблям? Зв'яжіться з нами для отримання пропозиції."
+msgid ""
+"Looking for a custom bamboo stain to match existing furniture? Contact us "
+"for a quote."
+msgstr ""
+"Шукаєте бамбуковий барвник на замовлення, щоб відповідати існуючим меблям? "
+"Зв'яжіться з нами для отримання пропозиції."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
-msgid "Make this attribute value not compatible with other values of the product or some attribute values of optional and accessory products."
-msgstr "Зробіть цей атрибут невираховуваним з іншими значеннями товару або деякими значеннями атрибуту додаткових товарів та аксесуарів."
+msgid ""
+"Make this attribute value not compatible with other values of the product or"
+" some attribute values of optional and accessory products."
+msgstr ""
+"Зробіть цей атрибут невираховуваним з іншими значеннями товару або деякими "
+"значеннями атрибуту додаткових товарів та аксесуарів."
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1475,12 +1553,14 @@ msgid "Max. Price Margin"
 msgstr "Максимальна маржа ціни"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error
 msgid "Message Delivery error"
 msgstr "Помилка доставлення повідомлення"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_ids
 #: model:ir.model.fields,field_description:product.field_product_product__message_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_ids
 msgid "Messages"
@@ -1516,6 +1596,7 @@ msgstr ""
 "Розширені правила: дозволяє правила ціни для прайс-листів."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__my_activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_product__my_activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__my_activity_date_deadline
 msgid "My Activity Deadline"
@@ -1526,6 +1607,7 @@ msgstr "Дедлайн моєї дії"
 #: model:ir.model.fields,field_description:product.field_product_category__name
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__name
 #: model:ir.model.fields,field_description:product.field_product_product__name
+#: model:ir.model.fields,field_description:product.field_product_tag__name
 #: model:ir.model.fields,field_description:product.field_product_template__name
 msgid "Name"
 msgstr "Назва"
@@ -1536,24 +1618,28 @@ msgid "Never (option)"
 msgstr "Ніколи (опціонально)"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Наступна подія календаря дій"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Дедлайн наступної дії"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_summary
 #: model:ir.model.fields,field_description:product.field_product_product__activity_summary
 #: model:ir.model.fields,field_description:product.field_product_template__activity_summary
 msgid "Next Activity Summary"
 msgstr "Підсумок наступної дії"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
@@ -1563,8 +1649,12 @@ msgstr "Тип наступної дії"
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
-msgid "No product to print, if the product is archived please unarchive it before printing its label."
-msgstr "Немає товару для друку. Якщо товар заархівовано, розархівуйте його перед друком етикетки."
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"Немає товару для друку. Якщо товар заархівовано, розархівуйте його перед "
+"друком етикетки."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -1590,24 +1680,28 @@ msgid "Number Related Products"
 msgstr "Кількість пов'язаних товарів"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Кількість дій"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
 msgid "Number of errors"
 msgstr "Кількість помилок"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "Кількість повідомлень, які потебують дії"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
 msgid "Number of messages with delivery error"
@@ -1643,14 +1737,18 @@ msgstr "Офісна лампа"
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
-msgid "On the product %(product)s you cannot associate the value %(value)s with the attribute %(attribute)s because they do not match."
+msgid ""
+"On the product %(product)s you cannot associate the value %(value)s with the"
+" attribute %(attribute)s because they do not match."
 msgstr ""
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
-msgid "On the product %(product)s you cannot transform the attribute %(attribute_src)s into the attribute %(attribute_dest)s."
+msgid ""
+"On the product %(product)s you cannot transform the attribute "
+"%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
 
 #. module: product
@@ -1717,7 +1815,8 @@ msgstr "Вкажіть товар, для якого потрібно засто
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
-msgid "Please specify the product variant for which this rule should be applied"
+msgid ""
+"Please specify the product variant for which this rule should be applied"
 msgstr "Визначте варіант товару для якого це правило потрібно застосувати."
 
 #. module: product
@@ -1727,8 +1826,12 @@ msgstr "Фунти"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "Press a button and watch your desk glide effortlessly from sitting to standing height in seconds."
-msgstr "Натисніть кнопку і подивіться, як ваш стіл без зусиль переміщається з висоти сидіння до стоячої висоти за секунди."
+msgid ""
+"Press a button and watch your desk glide effortlessly from sitting to "
+"standing height in seconds."
+msgstr ""
+"Натисніть кнопку і подивіться, як ваш стіл без зусиль переміщається з висоти"
+" сидіння до стоячої висоти за секунди."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -1858,6 +1961,7 @@ msgstr "Ціноутворення"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Print"
 msgstr "Друк"
@@ -1983,11 +2087,6 @@ msgid "Product Packagings"
 msgstr "Пакування товару"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
-msgid "Product Product"
-msgstr ""
-
-#. module: product
 #: model:ir.model,name:product.model_product_tag
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Tag"
@@ -1995,8 +2094,6 @@ msgstr "Тег товару"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
-#: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
-#: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
 msgstr "Теги товару"
@@ -2004,7 +2101,6 @@ msgstr "Теги товару"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_tmpl_id
-#: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_tmpl_id
@@ -2028,9 +2124,15 @@ msgid "Product Template Attribute Value"
 msgstr "Значення атрибуту шаблону товару"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
+#: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Теги шаблону товару"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
+msgid "Product Templates"
+msgstr "Шаблони товару"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
@@ -2061,6 +2163,7 @@ msgstr "Одиниця вимірювання товару"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Variant"
 msgstr "Варіант товару"
 
@@ -2075,6 +2178,7 @@ msgstr "Значення варіанта товару"
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_variant_action
+#: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
 msgid "Product Variants"
@@ -2161,7 +2265,7 @@ msgstr "Одиниця купівлі"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Quantities"
-msgstr ""
+msgstr "Величини"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -2198,8 +2302,12 @@ msgstr "Референс"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
-msgid "Register the prices requested by your vendors for each product, based on the quantity and the period."
-msgstr "Зареєструйте ціни ваших постачальників для кожного товару на основі кількості та періоду."
+msgid ""
+"Register the prices requested by your vendors for each product, based on the"
+" quantity and the period."
+msgstr ""
+"Зареєструйте ціни ваших постачальників для кожного товару на основі "
+"кількості та періоду."
 
 #. module: product
 #. odoo-python
@@ -2222,6 +2330,7 @@ msgid "Remove quantity"
 msgstr "Вилучити кількості"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_user_id
 msgid "Responsible User"
@@ -2329,23 +2438,40 @@ msgstr "Показати загальну ціну та знижку клієн�
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
-msgid "Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."
-msgstr "Укажіть категорію товару, якщо це правило застосовується лише до товарів, що належать до цієї категорії, або до дочірніх категорій. Не зберігайте в іншому місці."
+msgid ""
+"Specify a product category if this rule only applies to products belonging "
+"to this category or its children categories. Keep empty otherwise."
+msgstr ""
+"Укажіть категорію товару, якщо це правило застосовується лише до товарів, що"
+" належать до цієї категорії, або до дочірніх категорій. Не зберігайте в "
+"іншому місці."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
-msgid "Specify a product if this rule only applies to one product. Keep empty otherwise."
-msgstr "Вкажіть товар, якщо це правило застосовується тільки до одного товару. Не зберігайте в іншому місці."
+msgid ""
+"Specify a product if this rule only applies to one product. Keep empty "
+"otherwise."
+msgstr ""
+"Вкажіть товар, якщо це правило застосовується тільки до одного товару. Не "
+"зберігайте в іншому місці."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
-msgid "Specify a template if this rule only applies to one product template. Keep empty otherwise."
-msgstr "Вкажіть шаблон, якщо це правило застосовується тільки до одного шаблону товару. Не зберігайте в іншому місці.  "
+msgid ""
+"Specify a template if this rule only applies to one product template. Keep "
+"empty otherwise."
+msgstr ""
+"Вкажіть шаблон, якщо це правило застосовується тільки до одного шаблону "
+"товару. Не зберігайте в іншому місці.  "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
-msgid "Specify the fixed amount to add or subtract (if negative) to the amount calculated with the discount."
+msgid ""
+"Specify the fixed amount to add or subtract (if negative) to the amount "
+"calculated with the discount."
 msgstr ""
+"Укажіть фіксовану суму, яку потрібно додати або відняти (якщо від’ємна) до "
+"суми, розрахованої зі знижкою."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2378,6 +2504,7 @@ msgstr ""
 "Значення, що відображається, залежить від часового поясу, встановленого у ваших налаштуваннях."
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_state
 #: model:ir.model.fields,help:product.field_product_product__activity_state
 #: model:ir.model.fields,help:product.field_product_template__activity_state
 msgid ""
@@ -2407,16 +2534,12 @@ msgid "Supplier Pricelist"
 msgstr "Прайс-лист постачальника"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_tag__name
-msgid "Tag Name"
-msgstr "Назва тегу"
-
-#. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Такий тег уже існує!"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Tags"
 msgstr "Мітки"
@@ -2424,7 +2547,7 @@ msgstr "Мітки"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr ""
+msgstr "Теги використовуються для пошуку товару за певною темою."
 
 #. module: product
 #. odoo-python
@@ -2445,25 +2568,37 @@ msgstr "Тип цього товару не відповідає детальн�
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
-msgid "The attribute %(attribute)s must have at least one value for the product %(product)s."
+msgid ""
+"The attribute %(attribute)s must have at least one value for the product "
+"%(product)s."
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
-msgid "The attribute cannot be changed once the value is used on at least one product."
-msgstr "Атрибут неможливо змінити, якщо значення використовується принаймні на одному товарі."
+msgid ""
+"The attribute cannot be changed once the value is used on at least one "
+"product."
+msgstr ""
+"Атрибут неможливо змінити, якщо значення використовується принаймні на "
+"одному товарі."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "The computed price is expressed in the default Unit of Measure of the product."
+msgid ""
+"The computed price is expressed in the default Unit of Measure of the "
+"product."
 msgstr "Обчислена ціна виражається в одиниці виміру за замовчуванням товару."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
-msgid "The default Unit of Measure and the purchase Unit of Measure must be in the same category."
-msgstr "Одиниця виміру за замовчуванням і одиниця виміру купівлі повинні бути в одній категорії."
+msgid ""
+"The default Unit of Measure and the purchase Unit of Measure must be in the "
+"same category."
+msgstr ""
+"Одиниця виміру за замовчуванням і одиниця виміру купівлі повинні бути в "
+"одній категорії."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
@@ -2479,8 +2614,11 @@ msgstr "Перший в послідовності встановлений за
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "The minimum height is 65 cm, and for standing work the maximum height position is 125 cm."
-msgstr "Мінімальна висота 65 см, а для роботи стоячи максимальна висота 125 см."
+msgid ""
+"The minimum height is 65 cm, and for standing work the maximum height "
+"position is 125 cm."
+msgstr ""
+"Мінімальна висота 65 см, а для роботи стоячи максимальна висота 125 см."
 
 #. module: product
 #. odoo-python
@@ -2491,15 +2629,25 @@ msgstr "Мінімальна маржа повинна бути нижчою з�
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
-msgid "The number of products under this category (Does not consider the children categories)"
+msgid ""
+"The number of products under this category (Does not consider the children "
+"categories)"
 msgstr "Номер товарів під цією категорією (Не враховує дочірні категорії)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
-msgid "The number of variants to generate is too high. You should either not generate variants for each combination or generate them on demand from the sales order. To do so, open the form view of attributes and change the mode of *Create Variants*."
-msgstr "Кількість варіантів для створення занадто висока. Ви не повинні генерувати варіанти для кожної комбінації або генерувати їх за запитом із замовлення на продаж. Для цього відкрийте перегляд форми атрибутів і змініть режим *Створити варіанти*."
+msgid ""
+"The number of variants to generate is too high. You should either not "
+"generate variants for each combination or generate them on demand from the "
+"sales order. To do so, open the form view of attributes and change the mode "
+"of *Create Variants*."
+msgstr ""
+"Кількість варіантів для створення занадто висока. Ви не повинні генерувати "
+"варіанти для кожної комбінації або генерувати їх за запитом із замовлення на"
+" продаж. Для цього відкрийте перегляд форми атрибутів і змініть режим "
+"*Створити варіанти*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -2515,19 +2663,38 @@ msgstr "Шаблон товару архівується, тому комбін�
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
-msgid "The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise."
-msgstr "Кількість для купівлі від цього постачальника, щоб скористатися ціною, вираженою в одиниці вимірювання постачальника товару, якщо такої немає, в одиниці вимірювання товару за замовчуванням."
+msgid ""
+"The quantity to purchase from this vendor to benefit from the price, "
+"expressed in the vendor Product Unit of Measure if not any, in the default "
+"unit of measure of the product otherwise."
+msgstr ""
+"Кількість для купівлі від цього постачальника, щоб скористатися ціною, "
+"вираженою в одиниці вимірювання постачальника товару, якщо такої немає, в "
+"одиниці вимірювання товару за замовчуванням."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "Метод округлення має бути строго позитивним."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
-msgid "The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices."
-msgstr "Ціна продажу керується із шаблону товару. Натисніть кнопку \"Налаштувати варіанти\", щоби встановити додаткові ціни атрибутів."
+msgid ""
+"The sale price is managed from the product template. Click on the 'Configure"
+" Variants' button to set the extra attribute prices."
+msgstr ""
+"Ціна продажу керується із шаблону товару. Натисніть кнопку \"Налаштувати "
+"варіанти\", щоби встановити додаткові ціни атрибутів."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
-msgid "The value %(value)s is not defined for the attribute %(attribute)s on the product %(product)s."
+msgid ""
+"The value %(value)s is not defined for the attribute %(attribute)s on the "
+"product %(product)s."
 msgstr ""
 
 #. module: product
@@ -2555,8 +2722,14 @@ msgstr "Немає можливої комбінації."
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
-msgid "This configuration of product attributes, values, and exclusions would lead to no possible variant. Please archive or delete your product directly if intended."
-msgstr "Така конфігурація атрибутів, значень та виключень товару не призведе до відсутності можливого варіанту. Будь ласка, заархівуйте або видаліть свій товар безпосередньо, якщо це передбачено."
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Така конфігурація атрибутів, значень та виключень товару не призведе до "
+"відсутності можливого варіанту. Будь ласка, заархівуйте або видаліть свій "
+"товар безпосередньо, якщо це передбачено."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2576,8 +2749,12 @@ msgstr "Ця примітка призначена лише для внутрі�
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
-msgid "This pricelist will be used, instead of the default one, for sales to the current partner"
-msgstr "Цей прайс-лист використовуватиметься не за замовчуванням для продажу поточному партнеру"
+msgid ""
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
+msgstr ""
+"Цей прайс-лист використовуватиметься не за замовчуванням для продажу "
+"поточному партнеру"
 
 #. module: product
 #. odoo-python
@@ -2594,13 +2771,21 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
-msgid "This vendor's product code will be used when printing a request for quotation. Keep empty to use the internal one."
-msgstr "Код товару цього постачальника буде використаний при друку запиту на комерційну пропозицію. Зберігайте порожнім, щоб використовувати внутрішній."
+msgid ""
+"This vendor's product code will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Код товару цього постачальника буде використаний при друку запиту на "
+"комерційну пропозицію. Зберігайте порожнім, щоб використовувати внутрішній."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
-msgid "This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one."
-msgstr "Назва товару цього постачальника буде використана при друку запиту на комерційну пропозицію. Зберігайте порожньою, щоби використовувати внутрішню."
+msgid ""
+"This vendor's product name will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Назва товару цього постачальника буде використана при друку запиту на "
+"комерційну пропозицію. Зберігайте порожньою, щоби використовувати внутрішню."
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
@@ -2624,6 +2809,7 @@ msgid "Type"
 msgstr "Тип"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
@@ -2635,6 +2821,12 @@ msgstr "Тип дії виключення на записі."
 #, python-format
 msgid "Unable to find report template for %s format"
 msgstr "Не вдалося знайти шаблон звіту для формату %s"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+msgid "Unit"
+msgstr "Одиниці"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2681,7 +2873,7 @@ msgstr "Використовується на товарах"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Username"
-msgstr ""
+msgstr "Ім'я користувач"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
@@ -2888,8 +3080,11 @@ msgstr "Попередження"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "We pay special attention to detail, which is why our desks are of a superior quality."
-msgstr "Ми приділяємо особливу увагу деталям, тому наші столи мають найвищу якість."
+msgid ""
+"We pay special attention to detail, which is why our desks are of a superior"
+" quality."
+msgstr ""
+"Ми приділяємо особливу увагу деталям, тому наші столи мають найвищу якість."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -2917,13 +3112,15 @@ msgstr "Білий"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Напишіть дату"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/res_config_settings.py:0
 #, python-format
-msgid "You are deactivating the pricelist feature. Every active pricelist will be archived."
+msgid ""
+"You are deactivating the pricelist feature. Every active pricelist will be "
+"archived."
 msgstr ""
 
 #. module: product
@@ -2949,15 +3146,22 @@ msgstr "Ви можете застосувати націнку, встанов�
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
-msgid "You can assign pricelists to your customers or select one when creating a new sales quotation."
-msgstr "Ви можете призначити прайс-листи своїм клієнтам або вибрати один із них при створенні нової комерційної пропозиції продажу."
+msgid ""
+"You can assign pricelists to your customers or select one when creating a "
+"new sales quotation."
+msgstr ""
+"Ви можете призначити прайс-листи своїм клієнтам або вибрати один із них при "
+"створенні нової комерційної пропозиції продажу."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
-msgid "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr "Ви не можете призначити головний прайс-лист як інший прайс-лист в елементі прайс-листа"
+msgid ""
+"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+msgstr ""
+"Ви не можете призначити головний прайс-лист як інший прайс-лист в елементі "
+"прайс-листа"
 
 #. module: product
 #. odoo-python
@@ -2972,21 +3176,27 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
-msgid "You cannot change the attribute of the value %(value)s because it is used on the following products: %(products)s"
+msgid ""
+"You cannot change the attribute of the value %(value)s because it is used on"
+" the following products: %(products)s"
 msgstr ""
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
-msgid "You cannot change the product of the value %(value)s set on product %(product)s."
+msgid ""
+"You cannot change the product of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
-msgid "You cannot change the value of the value %(value)s set on product %(product)s."
+msgid ""
+"You cannot change the value of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
 
 #. module: product
@@ -2998,15 +3208,21 @@ msgstr "Ви не можете створювати рекурсивні кат�
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
-msgid "You cannot create two values with the same name for the same attribute."
-msgstr "Ви не можете створити два значення з однаковою назвою для того ж атрибуту."
+msgid ""
+"You cannot create two values with the same name for the same attribute."
+msgstr ""
+"Ви не можете створити два значення з однаковою назвою для того ж атрибуту."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #, python-format
-msgid "You cannot define the decimal precision of 'Account' as greater than the rounding factor of the company's main currency"
-msgstr "Ви не можете визначити десяткову точність \"рахунку\" як більшу, ніж округлення основної валюти компанії"
+msgid ""
+"You cannot define the decimal precision of 'Account' as greater than the "
+"rounding factor of the company's main currency"
+msgstr ""
+"Ви не можете визначити десяткову точність \"рахунку\" як більшу, ніж "
+"округлення основної валюти компанії"
 
 #. module: product
 #. odoo-python
@@ -3038,8 +3254,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
-msgid "You cannot delete this product category, it is the default generic category."
-msgstr "Ви не можете видалити цю категорію товару, це загальна категорія за замовчуванням."
+msgid ""
+"You cannot delete this product category, it is the default generic category."
+msgstr ""
+"Ви не можете видалити цю категорію товару, це загальна категорія за "
+"замовчуванням."
 
 #. module: product
 #. odoo-python
@@ -3061,21 +3280,30 @@ msgstr ""
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
-msgstr "Ви не можете видалити значення %s, тому що воно використовувалося на деяких товарах."
+msgstr ""
+"Ви не можете видалити значення %s, тому що воно використовувалося на деяких "
+"товарах."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
-msgid "You cannot move the attribute %(attribute)s from the product %(product_src)s to the product %(product_dest)s."
+msgid ""
+"You cannot move the attribute %(attribute)s from the product %(product_src)s"
+" to the product %(product_dest)s."
 msgstr ""
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
+#: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
-msgid "You cannot update related variants from the values. Please update related values from the variants."
-msgstr "Ви не можете оновити пов'язані варіанти зі значень. Оновіть пов'язані значення з варіантів."
+msgid ""
+"You cannot update related variants from the values. Please update related "
+"values from the variants."
+msgstr ""
+"Ви не можете оновити пов'язані варіанти зі значень. Оновіть пов'язані "
+"значення з варіантів."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action

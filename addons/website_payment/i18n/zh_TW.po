@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_payment
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Benson <Benson.Dr@Gmail.com>, 2023
+# Wil Odoo, 2023
 # Tony Ng, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
 "Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_payment
@@ -77,7 +76,7 @@ msgid ""
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
 "<strong>找不到合適的付款方式.</strong><br/>\n"
-"                                如果您認為這是一個異常狀況，請聯繫網站管理員"
+"                                如果您認為這是一個錯誤，請聯繫網站管理員"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -102,16 +101,17 @@ msgid "Activate Payments"
 msgstr ""
 
 #. module: website_payment
+#: model:ir.actions.server,name:website_payment.action_activate_stripe
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
-msgstr ""
+msgstr "啟用 Stripe"
 
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
 #, python-format
 msgid "Add a description here"
-msgstr "在這兒添加說明"
+msgstr "在這兒增加說明"
 
 #. module: website_payment
 #. odoo-javascript
@@ -123,9 +123,10 @@ msgstr "添加新的預設選項"
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #, python-format
 msgid "Amount"
-msgstr "總額"
+msgstr "金額"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
@@ -162,11 +163,6 @@ msgid "Configure %s"
 msgstr ""
 
 #. module: website_payment
-#: model:ir.actions.server,name:website_payment.action_stripe_connect_account
-msgid "Connect to Stripe"
-msgstr ""
-
-#. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #: model:ir.model,name:website_payment.model_res_country
@@ -192,6 +188,7 @@ msgstr "必須填寫國家。"
 
 #. module: website_payment
 #. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -261,7 +258,7 @@ msgstr "捐贈通知"
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Email"
-msgstr "Email"
+msgstr "電郵"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
@@ -312,7 +309,7 @@ msgstr "為捐贈"
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
 #: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr ""
+msgstr "是支援 Stripe 國家/地區"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
@@ -339,7 +336,7 @@ msgstr "最低"
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Name"
-msgstr "名稱"
+msgstr "名称"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
@@ -403,7 +400,7 @@ msgstr "收到的捐贈款項，詳情如下："
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_payment
 msgid "Payments"
-msgstr "收付款"
+msgstr "付款"
 
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
@@ -468,12 +465,16 @@ msgstr "跳號"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Stripe Connect is not available in your country, please use another payment provider."
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
 msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
+msgid ""
+"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay, etc. as well as recurring charges."
 msgstr ""
 
 #. module: website_payment

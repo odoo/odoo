@@ -1,31 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* web_editor
-#
+# 
 # Translators:
-# Trần Hà <tranthuha13590@gmail.com>, 2022
-# Thin Tran <trvathin@gmail.com>, 2022
-# Duy BQ <duybq86@gmail.com>, 2022
 # Martin Trigaux, 2023
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "%spx"
@@ -47,30 +44,36 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
-msgid "'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."
-msgstr "'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."
+msgid ""
+"'Alt tag' specifies an alternate text for an image, if the image cannot be "
+"displayed (slow connection, missing image, screen reader ...)."
+msgstr ""
+"'Alt tag' specifies an alternate text for an image, if the image cannot be "
+"displayed (slow connection, missing image, screen reader ...)."
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
 msgid "'Title tag' is shown as a tooltip when you hover the picture."
-msgstr "'Tiêu đề Thẻ' được hiển thị dưới dạng chú giải công cụ khi bạn di chuột qua ảnh."
+msgstr ""
+"'Tiêu đề Thẻ' được hiển thị dưới dạng chú giải công cụ khi bạn di chuột qua "
+"ảnh."
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #, python-format
 msgid "(ALT Tag)"
 msgstr "(ALT Tag)"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #, python-format
 msgid "(TITLE Tag)"
 msgstr "(TITLE Tag)"
@@ -247,8 +250,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/common/ace.js:0
 #, python-format
-msgid "A server error occured. Please check you correctly signed in and that the file you are saving is correctly formatted."
-msgstr "Đã xảy ra lỗi máy chủ. Vui lòng kiểm tra xem bạn đã đăng nhập chính xác hay chưa và file bạn đang lưu được định dạng đúng."
+msgid ""
+"A server error occured. Please check you correctly signed in and that the "
+"file you are saving is correctly formatted."
+msgstr ""
+"Đã xảy ra lỗi máy chủ. Vui lòng kiểm tra xem bạn đã đăng nhập chính xác hay "
+"chưa và file bạn đang lưu được định dạng đúng."
 
 #. module: web_editor
 #. odoo-javascript
@@ -320,6 +327,13 @@ msgstr ""
 #, python-format
 msgid "Add a link"
 msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Add an emoji"
+msgstr "Thêm biểu tượng cảm xúc"
 
 #. module: web_editor
 #. odoo-javascript
@@ -404,6 +418,13 @@ msgid "Alt tag"
 msgstr ""
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/file_selector.js:0
+#, python-format
+msgid "An error occurred while fetching the entered URL."
+msgstr ""
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 msgid "Angle"
 msgstr ""
@@ -426,9 +447,10 @@ msgstr "Nặc danh"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Apply"
-msgstr "Áp dụng"
+msgstr "Ứng tuyển"
 
 #. module: web_editor
 #. odoo-javascript
@@ -459,15 +481,16 @@ msgstr "Assets Utils"
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_attachment
 msgid "Attachment"
-msgstr "Đính kèm"
+msgstr "Tệp đính kèm"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
-msgstr "URL Đính kèm"
+msgstr "URL tệp đính kèm"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Autoconvert to relative link"
@@ -511,9 +534,51 @@ msgid "Background Shapes"
 msgstr ""
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Banner"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Banner Danger"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Banner Info"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Banner Success"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Banner Warning"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Banners"
+msgstr ""
+
+#. module: web_editor
 #: model:ir.model,name:web_editor.model_base
 msgid "Base"
-msgstr "Cơ bản"
+msgstr "Cơ sở"
 
 #. module: web_editor
 #. odoo-javascript
@@ -546,7 +611,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Block"
-msgstr "Khoá"
+msgstr "Chặn"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -566,7 +631,7 @@ msgstr "Làm mờ"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Bold"
-msgstr "In Đậm"
+msgstr "In đậm"
 
 #. module: web_editor
 #. odoo-javascript
@@ -622,6 +687,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Button"
 msgstr "Nút"
@@ -635,6 +703,7 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -655,13 +724,6 @@ msgstr "Trung tâm"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.js:0
-#, python-format
-msgid "Change media description and tooltip"
-msgstr "Thay đổi mô tả và tooltip của media"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Checklist"
@@ -677,6 +739,7 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/upload_progress_toast/upload_progress_toast.xml:0
+#: code:addons/web_editor/static/src/xml/ace.xml:0
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Close"
@@ -707,6 +770,7 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_color_widget
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -723,7 +787,7 @@ msgstr "Bộ lọc màu"
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Colors"
-msgstr "Màu"
+msgstr "Màu sắc"
 
 #. module: web_editor
 #. odoo-javascript
@@ -765,13 +829,6 @@ msgid "Confirmation"
 msgstr "Xác nhận"
 
 #. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
-#, python-format
-msgid "Content conflict"
-msgstr ""
-
-#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Contrast"
 msgstr "Contrast"
@@ -796,13 +853,6 @@ msgstr ""
 #, python-format
 msgid "Convert into 4 columns"
 msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "Copy Link"
-msgstr "Copy Link"
 
 #. module: web_editor
 #. odoo-javascript
@@ -873,6 +923,7 @@ msgstr "Cắt ảnh"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/link.js:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
@@ -905,6 +956,8 @@ msgstr "Vượt qua"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
 msgid "Default"
@@ -912,6 +965,7 @@ msgstr "Mặc định"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Default + Rounded"
@@ -924,6 +978,7 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Delete"
@@ -938,8 +993,8 @@ msgstr "Xóa %s"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #: code:addons/web_editor/static/src/xml/editor.xml:0
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
 msgid "Description"
@@ -953,8 +1008,10 @@ msgstr "Thiết bị"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/media_dialog.xml:0
-#: code:addons/web_editor/static/src/js/wysiwyg/dialog.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
 #, python-format
@@ -964,7 +1021,7 @@ msgstr "Huỷ bỏ"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
 msgid "Discard record"
-msgstr "Hủy bản ghi"
+msgstr "Hủy tập dữ liệu"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__display_name
@@ -1009,6 +1066,7 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Duplicate Container"
 msgstr "Nhân bản Khung chứa"
@@ -1045,13 +1103,6 @@ msgid "EarlyBird"
 msgstr "EarlyBird"
 
 #. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "Edit Link"
-msgstr ""
-
-#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Edit image"
 msgstr "Sửa ảnh"
@@ -1067,8 +1118,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
-msgid "Editing a built-in file through this editor is not advised, as it will prevent it from being updated during future App upgrades."
-msgstr "Editing a built-in file through this editor is not advised, as it will prevent it from being updated during future App upgrades."
+msgid ""
+"Editing a built-in file through this editor is not advised, as it will "
+"prevent it from being updated during future App upgrades."
+msgstr ""
+"Editing a built-in file through this editor is not advised, as it will "
+"prevent it from being updated during future App upgrades."
 
 #. module: web_editor
 #. odoo-javascript
@@ -1100,10 +1155,24 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Emoji"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Empty quote"
 msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/file_selector.js:0
+#, python-format
+msgid "Error"
+msgstr "Lỗi"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1142,12 +1211,14 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Fill"
 msgstr "Điền vào"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Fill + Rounded"
@@ -1163,6 +1234,7 @@ msgstr "Fill Color"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/ace.xml:0
+#: code:addons/web_editor/static/src/xml/ace.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Filter"
@@ -1176,13 +1248,14 @@ msgstr "First Panel"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Flat"
 msgstr "Mặt bằng"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop.js:0
 #, python-format
 msgid "Flexible"
 msgstr "Linh hoạt"
@@ -1235,10 +1308,23 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #: code:addons/web_editor/static/src/xml/ace.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Format"
 msgstr "Định dạng"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+#, python-format
+msgid "Full screen"
+msgstr "Toàn màn hình"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1266,11 +1352,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
-msgid "Get the perfect image by searching in our library of copyright free photos and illustrations."
+msgid ""
+"Get the perfect image by searching in our library of copyright free photos "
+"and illustrations."
 msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Gradient"
@@ -1279,7 +1368,7 @@ msgstr ""
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "Định tuyến HTTP"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1326,6 +1415,7 @@ msgstr "Tiêu đề 6"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Heading 1"
 msgstr ""
@@ -1333,12 +1423,14 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Heading 2"
 msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Heading 3"
@@ -1473,15 +1565,23 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
-msgid "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
-msgstr "Nếu bạn hủy các chỉnh sửa hiện tại, tất cả các thay đổi chưa được lưu sẽ bị mất. Bạn có thể hủy để quay lại chế độ chỉnh sửa."
+msgid ""
+"If you discard the current edits, all unsaved changes will be lost. You can "
+"cancel to return to edit mode."
+msgstr ""
+"Nếu bạn hủy các chỉnh sửa hiện tại, tất cả các thay đổi chưa được lưu sẽ bị "
+"mất. Bạn có thể hủy để quay lại chế độ chỉnh sửa."
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/common/ace.js:0
 #, python-format
-msgid "If you reset this file, all your customizations will be lost as it will be reverted to the default file."
-msgstr "Nếu bạn cài lại file này, tất cả các tùy chỉnh của bạn sẽ bị mất vì nó sẽ bị đảo lại như file mặc định."
+msgid ""
+"If you reset this file, all your customizations will be lost as it will be "
+"reverted to the default file."
+msgstr ""
+"Nếu bạn cài lại file này, tất cả các tùy chỉnh của bạn sẽ bị mất vì nó sẽ bị"
+" đảo lại như file mặc định."
 
 #. module: web_editor
 #. odoo-javascript
@@ -1542,6 +1642,13 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Insert a danger banner section"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Insert a horizontal rule separator"
@@ -1563,6 +1670,13 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Insert a success banner section"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Insert a table"
@@ -1577,6 +1691,13 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Insert a warning banner section"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Insert above"
@@ -1587,6 +1708,13 @@ msgstr ""
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
 msgid "Insert an image"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Insert an info banner section"
 msgstr ""
 
 #. module: web_editor
@@ -1699,11 +1827,12 @@ msgstr "JS file: %s"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Label"
-msgstr ""
+msgstr "Nhãn"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Large"
@@ -1712,7 +1841,7 @@ msgstr "Rộng"
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__write_date
@@ -1766,7 +1895,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Link Style"
-msgstr ""
+msgstr "Link Style"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1777,13 +1906,7 @@ msgstr "Liên kết được sao chép vào khay nhớ tạm."
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link.js:0
-#, python-format
-msgid "Link to"
-msgstr "Liên kết đến"
-
-#. module: web_editor
-#. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
@@ -1831,18 +1954,22 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
 msgid "Media"
-msgstr "Phương tiện"
+msgstr "Truyền thông"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Medium"
-msgstr "Kênh trung gian"
+msgstr "Phương tiện"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1907,6 +2034,8 @@ msgstr "Tên"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
 msgid "Navigation"
@@ -1977,15 +2106,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "None"
-msgstr "Không "
+msgstr "Không"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Normal"
-msgstr "Thông thường"
+msgstr "Bình thường"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2023,12 +2153,6 @@ msgstr "Only Views"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "Open in a new tab"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
@@ -2045,7 +2169,7 @@ msgstr "Tối ưu hóa"
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_ir_attachment__original_id
 msgid "Original (unoptimized, unresized) attachment"
-msgstr "Tệp đính kèm gốc (chưa tối ưu hóa, chưa định kích thước)"
+msgstr "Tệp đính kèm gốc (chưa tối ưu hóa, chưa chỉnh lại kích thước)"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -2055,12 +2179,14 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Outline"
 msgstr "Mục lục"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Outline + Rounded"
@@ -2069,7 +2195,7 @@ msgstr "Outline + Rounded"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Padding"
-msgstr "Padding"
+msgstr "Bổ sung"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2111,6 +2237,8 @@ msgstr "Vị trí"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/video_selector.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Preview"
@@ -2258,6 +2386,7 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Remove Block"
 msgstr "Gỡ Khối"
@@ -2267,13 +2396,6 @@ msgstr "Gỡ Khối"
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Remove Current"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "Remove Link"
 msgstr ""
 
 #. module: web_editor
@@ -2342,9 +2464,10 @@ msgstr "Đặt lại"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Reset Image"
-msgstr "Đặt lại ảnh"
+msgstr "Đặt lại hình ảnh"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -2452,8 +2575,9 @@ msgstr "Bão hòa"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/dialog.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #: code:addons/web_editor/static/src/xml/ace.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
 #, python-format
 msgid "Save"
@@ -2476,7 +2600,7 @@ msgstr ""
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
 msgid "Save record"
-msgstr "Lưu bản ghi"
+msgstr "Lưu tập dữ liệu"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2549,10 +2673,11 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
 #, python-format
 msgid "Separator"
-msgstr "Phần ngăn cách"
+msgstr "Phân cách"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -2620,6 +2745,11 @@ msgid "Show optimized images"
 msgstr "Show optimized images"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Show/Hide on Mobile"
+msgstr "Hiển / Ẩn trên Di động"
+
+#. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
@@ -2630,11 +2760,12 @@ msgstr "Chữ ký"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
 msgid "Size"
-msgstr "Kích thước"
+msgstr "Quy mô"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -2664,6 +2795,7 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Small"
@@ -2700,7 +2832,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
-msgid "Someone with escalated rights previously modified this area, you are therefore not able to modify it yourself."
+msgid ""
+"Someone with escalated rights previously modified this area, you are "
+"therefore not able to modify it yourself."
 msgstr ""
 
 #. module: web_editor
@@ -2711,6 +2845,16 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
 msgid "Structure"
@@ -2718,6 +2862,7 @@ msgstr "Cấu trúc lương"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
@@ -2750,7 +2895,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Table"
-msgstr "Bảng"
+msgstr "Bàn"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2769,6 +2914,7 @@ msgstr "Template ID: %s"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Text"
@@ -2820,7 +2966,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/web_editor/controllers/main.py:0
 #, python-format
-msgid "The document was already saved from someone with a different history for model %r, field %r with id %r."
+msgid ""
+"The document was already saved from someone with a different history for "
+"model %r, field %r with id %r."
 msgstr ""
 
 #. module: web_editor
@@ -2846,11 +2994,11 @@ msgstr "The provided url is not valid"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/conflict_dialog.xml:0
 #, python-format
 msgid ""
 "The version from the database will be used.\n"
-"                    If you need to keep your changes, copy the content below and edit the new document."
+"                            If you need to keep your changes, copy the content below and edit the new document."
 msgstr ""
 
 #. module: web_editor
@@ -2869,7 +3017,7 @@ msgstr "Mà sắc Theme"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/conflict_dialog.xml:0
 #, python-format
 msgid "There is a conflict between your version and the one in the database."
 msgstr ""
@@ -2911,20 +3059,25 @@ msgstr "This file is attached to the current record."
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop.js:0
 #, python-format
 msgid "This image is an external image"
 msgstr "This image is an external image"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop.js:0
 #, python-format
-msgid "This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo."
-msgstr "This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo."
+msgid ""
+"This type of image is not supported for cropping.<br/>If you want to crop "
+"it, please first download it from the original source and upload it in Odoo."
+msgstr ""
+"This type of image is not supported for cropping.<br/>If you want to crop "
+"it, please first download it from the original source and upload it in Odoo."
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Title"
@@ -2939,14 +3092,20 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
-msgid "To make changes, drop this block and use the new options in the last version."
-msgstr "To make changes, drop this block and use the new options in the last version."
+msgid ""
+"To make changes, drop this block and use the new options in the last "
+"version."
+msgstr ""
+"To make changes, drop this block and use the new options in the last "
+"version."
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid "To save a snippet, we need to save all your previous modifications and reload the page."
+msgid ""
+"To save a snippet, we need to save all your previous modifications and "
+"reload the page."
 msgstr ""
 
 #. module: web_editor
@@ -2971,6 +3130,7 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Toggle checklist"
 msgstr ""
@@ -2991,6 +3151,7 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Toggle ordered list"
@@ -3013,13 +3174,14 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Toggle unordered list"
 msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
 msgid "Tooltip"
@@ -3051,6 +3213,7 @@ msgstr "Chuyển đổi hình ảnh (nhấp hai lần để thiết lập lại 
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/backend.xml:0
 #: code:addons/web_editor/static/src/xml/backend.xml:0
 #, python-format
 msgid "Translate"
@@ -3169,7 +3332,7 @@ msgstr "Videos are muted when autoplay is enabled"
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_ui_view
 msgid "View"
-msgstr "Xem"
+msgstr "Chế độ xem"
 
 #. module: web_editor
 #. odoo-javascript
@@ -3192,9 +3355,11 @@ msgstr "Walden"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/conflict_dialog.xml:0
 #, python-format
-msgid "Warning: after closing this dialog, the version you were working on will be discarded and will never be available anymore."
+msgid ""
+"Warning: after closing this dialog, the version you were working on will be "
+"discarded and will never be available anymore."
 msgstr ""
 
 #. module: web_editor
@@ -3215,6 +3380,9 @@ msgstr "Web Editor Converter Test"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
 msgid "Widgets"
 msgstr ""
@@ -3222,7 +3390,6 @@ msgstr ""
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
-#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Width"
 msgstr "Chiều rộng"
 
@@ -3238,10 +3405,11 @@ msgstr "Viết gì đó..."
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "XL"
-msgstr ""
+msgstr "XL"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/ace.xml:0
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "XML (HTML)"
@@ -3263,15 +3431,21 @@ msgstr "Có"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/document_selector.xml:0
 #, python-format
-msgid "You can upload documents with the button located in the top left of the screen."
-msgstr "You can upload documents with the button located in the top left of the screen."
+msgid ""
+"You can upload documents with the button located in the top left of the "
+"screen."
+msgstr ""
+"You can upload documents with the button located in the top left of the "
+"screen."
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
-msgid "You can upload images with the button located in the top left of the screen."
-msgstr "You can upload images with the button located in the top left of the screen."
+msgid ""
+"You can upload images with the button located in the top left of the screen."
+msgstr ""
+"You can upload images with the button located in the top left of the screen."
 
 #. module: web_editor
 #. odoo-python

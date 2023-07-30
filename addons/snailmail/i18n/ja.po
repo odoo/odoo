@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Andy Yiu, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Andy Yiu, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: snailmail
@@ -37,7 +35,7 @@ msgstr "表紙をつける"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Address"
-msgstr "アドレス"
+msgstr "住所"
 
 #. module: snailmail
 #. odoo-javascript
@@ -70,7 +68,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
 msgid "Attachment"
-msgstr "添付"
+msgstr "添付ファイル"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_fname
@@ -97,6 +95,7 @@ msgstr "両面"
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
 msgid "Buy credits"
 msgstr "クレジットを購入"
@@ -109,7 +108,7 @@ msgstr ""
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Cancel"
-msgstr "取消"
+msgstr "キャンセル"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
@@ -142,7 +141,7 @@ msgstr "取消済"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__city
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "City"
-msgstr "市区町村"
+msgstr "市"
 
 #. module: snailmail
 #. odoo-javascript
@@ -154,7 +153,6 @@ msgid "Close"
 msgstr "閉じる"
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
 msgstr "色"
@@ -341,7 +339,9 @@ msgstr "メッセージ通知"
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
 #: model:ir.model.fields,help:snailmail.field_mail_message__message_type
-msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
 msgstr "メッセージの種類：電子メールメッセージのメール、システムメッセージの通知、ユーザ返信など他のメッセージのコメント"
 
 #. module: snailmail
@@ -464,7 +464,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
 msgid "Snailmail"
-msgstr "Snailmail"
+msgstr "かたつむり郵便"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
+msgid "Snailmail Color"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
@@ -536,12 +541,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "State"
-msgstr "都道府県/州"
+msgstr "都道府県・州"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
 msgid "Status"
-msgstr "ステータス"
+msgstr "状態"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street
@@ -581,7 +586,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid "The attachment of the letter could not be sent. Please check its content and contact the support if the problem persists."
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
 msgstr ""
 
 #. module: snailmail
@@ -595,13 +602,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
-msgid "The country to which you want to send the letter is not supported by our service."
+msgid ""
+"The country to which you want to send the letter is not supported by our "
+"service."
 msgstr ""
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "The customer address is not complete. Update the address here and re-send the letter."
-msgstr "顧客の住所に不備があります。こちらから住所を更新して、レターを再送信してください。"
+msgid ""
+"The customer address is not complete. Update the address here and re-send "
+"the letter."
+msgstr "顧客の住所はまだ完成されていません。こちらから住所を更新して、再度手紙を送ってください。"
 
 #. module: snailmail
 #. odoo-python
@@ -614,7 +625,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
-msgid "The letter could not be sent due to insufficient credits on your IAP account."
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
 msgstr ""
 
 #. module: snailmail
@@ -655,14 +668,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid "You don't have an IAP account registered for this service.<br>Please go to <a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
+msgid ""
+"You don't have an IAP account registered for this service.<br>Please go to "
+"<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid "You don't have enough credits to perform this operation.<br>Please go to your <a href=%s target=\"new\">iap account</a>."
+msgid ""
+"You don't have enough credits to perform this operation.<br>Please go to "
+"your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
 
 #. module: snailmail

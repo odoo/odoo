@@ -1,31 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-#
+# 
 # Translators:
-# Diogo Fonseca <dsf@thinkopensolutions.pt>, 2022
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
-# Nuno Silva <nuno.silva@arxi.pt>, 2022
-# Manuela Silva <mmsrs@sky.com>, 2022
-# Martin Trigaux, 2022
-# José Gomes <jg@opencloud.pro>, 2022
-# Vitor Fernandes <vmlf01@gmail.com>, 2022
-# Pedro Castro Silva <pedrocs@exo.pt>, 2022
-# Pedro Filipe <pedro2.10@hotmail.com>, 2022
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
-"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: snailmail
@@ -104,6 +95,7 @@ msgstr ""
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
 msgid "Buy credits"
 msgstr "Comprar créditos"
@@ -161,7 +153,6 @@ msgid "Close"
 msgstr "Fechar"
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
 msgstr "Cor"
@@ -348,8 +339,13 @@ msgstr "Notificações de Mensagem"
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
 #: model:ir.model.fields,help:snailmail.field_mail_message__message_type
-msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
-msgstr "Tipo de mensagem: e-mail para mensagens de e-mail, notificação para mensagens do sistema e comentário para outros tipos como respostas de usuário."
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr ""
+"Tipo de mensagem: e-mail para mensagens de e-mail, notificação para "
+"mensagens do sistema e comentário para outros tipos como respostas de "
+"usuário."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -474,6 +470,11 @@ msgid "Snailmail"
 msgstr ""
 
 #. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
+msgid "Snailmail Color"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
 msgstr ""
@@ -588,7 +589,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid "The attachment of the letter could not be sent. Please check its content and contact the support if the problem persists."
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
 msgstr ""
 
 #. module: snailmail
@@ -602,12 +605,16 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
-msgid "The country to which you want to send the letter is not supported by our service."
+msgid ""
+"The country to which you want to send the letter is not supported by our "
+"service."
 msgstr ""
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "The customer address is not complete. Update the address here and re-send the letter."
+msgid ""
+"The customer address is not complete. Update the address here and re-send "
+"the letter."
 msgstr ""
 
 #. module: snailmail
@@ -621,7 +628,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
-msgid "The letter could not be sent due to insufficient credits on your IAP account."
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
 msgstr ""
 
 #. module: snailmail
@@ -662,14 +671,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid "You don't have an IAP account registered for this service.<br>Please go to <a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
+msgid ""
+"You don't have an IAP account registered for this service.<br>Please go to "
+"<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid "You don't have enough credits to perform this operation.<br>Please go to your <a href=%s target=\"new\">iap account</a>."
+msgid ""
+"You don't have enough credits to perform this operation.<br>Please go to "
+"your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
 
 #. module: snailmail

@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Noma Yuki, 2022
-# 江口和志 <sandwhale1010@gmail.com>, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: portal
@@ -78,7 +75,9 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
-msgid "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
+msgid ""
+"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 msgstr ""
 
 #. module: portal
@@ -94,7 +93,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">国...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -103,7 +102,10 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
-msgid "<small class=\"form-text text-muted\">Changing company name or VAT number is not allowed once document(s) have been issued for your account. <br/>Please contact us directly for this operation.</small>"
+msgid ""
+"<small class=\"form-text text-muted\">Changing company name or VAT number is"
+" not allowed once document(s) have been issued for your account. <br/>Please"
+" contact us directly for this operation.</small>"
 msgstr ""
 
 #. module: portal
@@ -213,10 +215,10 @@ msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "API Key Ready"
-msgstr ""
+msgstr "APIキーが準備できました"
 
 #. module: portal
 #. odoo-javascript
@@ -246,7 +248,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
-msgstr "メモ追加"
+msgstr "メモを追加"
 
 #. module: portal
 #. odoo-javascript
@@ -276,13 +278,6 @@ msgid "Already Registered"
 msgstr ""
 
 #. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "添付ファイルごとにアクセストークンを提供する必要があります。"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
 msgstr ""
@@ -296,12 +291,13 @@ msgstr "アバター"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #, python-format
 msgid "Cancel"
-msgstr "取消"
+msgstr "キャンセル"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -313,17 +309,22 @@ msgstr "パスワード変更"
 #: code:addons/portal/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 #, python-format
-msgid "Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
-msgstr "あなたのアカウントに請求書が発行された後は、VAT番号の変更は許可されません。 この操作については、直接お問い合わせください。"
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr "アカウントに書類を発行されると、VAT番号の変更はできなくなります。変更したい場合は直接当社にご連絡ください。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
-msgid "Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
-msgstr "アカウントにドキュメントが発行された後は、会社名を変更することはできません。この操作については、直接お問い合わせください。"
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr "アカウントに書類を発行されると、会社名の変更はできなくなります。変更したい場合は直接当社にご連絡ください。"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Check failed"
 msgstr "チェック失敗"
@@ -331,7 +332,7 @@ msgstr "チェック失敗"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "City"
-msgstr "市区町村"
+msgstr "市"
 
 #. module: portal
 #. odoo-javascript
@@ -342,7 +343,7 @@ msgstr "ドキュメントを表示するには、ここをクリックしてく
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
@@ -361,7 +362,7 @@ msgstr "コンフィグ設定"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Confirm"
 msgstr "確認"
@@ -377,7 +378,7 @@ msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Confirm Password"
 msgstr "パスワードを確認"
@@ -428,14 +429,18 @@ msgstr "作成日"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Currently available to everyone viewing this document, click to restrict to internal employees."
+msgid ""
+"Currently available to everyone viewing this document, click to restrict to "
+"internal employees."
 msgstr "現在、このドキュメントを閲覧しているすべての人が利用できます。クリックすると、社内の従業員に限定できます。"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Currently restricted to internal employees, click to make it available to everyone viewing this document."
+msgid ""
+"Currently restricted to internal employees, click to make it available to "
+"everyone viewing this document."
 msgstr "現在、社内の従業員に制限されています。クリックすると、このドキュメントを表示するすべての人が利用できます。"
 
 #. module: portal
@@ -498,7 +503,7 @@ msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Discard"
 msgstr "破棄"
@@ -513,7 +518,7 @@ msgstr "表示名"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Documents"
-msgstr "ドキュメント"
+msgstr "書類"
 
 #. module: portal
 #. odoo-javascript
@@ -533,7 +538,7 @@ msgstr "今日が期限"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Email"
-msgstr "Eメール"
+msgstr "メール"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -637,7 +642,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__ko
 msgid "Invalid"
-msgstr ""
+msgstr "無効"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -719,6 +724,21 @@ msgid "Link"
 msgstr "リンク"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/js/portal_security.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, python-format
+msgid "Log out from all devices"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/js/portal_security.js:0
+#, python-format
+msgid "Log out from all devices?"
+msgstr ""
+
+#. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
 msgstr "メッセージ"
@@ -727,7 +747,9 @@ msgstr "メッセージ"
 #. odoo-python
 #: code:addons/portal/models/mail_thread.py:0
 #, python-format
-msgid "Model %(model_name)s does not support token signature, as it does not have %(field_name)s field."
+msgid ""
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
 msgstr "モデル%(model_name)s は%(field_name)sフィールドが無いためトークン署名をサポートしていません。"
 
 #. module: portal
@@ -751,7 +773,7 @@ msgstr "キーを指定してください"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #, python-format
 msgid "New API Key"
@@ -765,10 +787,11 @@ msgstr "新しいパスワード:"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
-msgstr "次"
+msgstr "次へ"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
@@ -778,7 +801,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
-msgstr "ノート"
+msgstr "メモ"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -877,20 +900,23 @@ msgstr "前へ"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Previous"
-msgstr "前"
+msgstr "前へ"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal_chatter.js:0
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Published on %s"
-msgstr " %sに公開済"
+msgid "Published on"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "Put my email and phone in a block list to make sure I'm never contacted again"
+msgid ""
+"Put my email and phone in a block list to make sure I'm never contacted "
+"again"
 msgstr ""
 
 #. module: portal
@@ -930,6 +956,11 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Revoke All Sessions"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Scope"
 msgstr "スコープ"
 
@@ -945,7 +976,7 @@ msgstr "セキュリティ"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Security Control"
 msgstr "セキュリティ管理"
@@ -983,7 +1014,7 @@ msgstr "ドキュメント共有"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
 msgid "Show As Optional Inherit"
-msgstr "任意の継承として表示"
+msgstr "オプション継承として表示"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_sign_in
@@ -994,7 +1025,9 @@ msgstr "サインイン"
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
-msgid "Some fields are required. Please make sure to write a message or attach a document"
+msgid ""
+"Some fields are required. Please make sure to write a message or attach a "
+"document"
 msgstr ""
 
 #. module: portal
@@ -1012,7 +1045,7 @@ msgstr "州/都道府県"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
 msgid "Status"
-msgstr "ステータス"
+msgstr "状態"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -1024,7 +1057,7 @@ msgstr "町名番地"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr "ありがとう!"
+msgstr "ありがとうございます!"
 
 #. module: portal
 #. odoo-python
@@ -1037,21 +1070,16 @@ msgstr "添付の %sはメッセージに紐づいているため削除できま
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The attachment %s cannot be removed because it is not in a pending state."
+msgid ""
+"The attachment %s cannot be removed because it is not in a pending state."
 msgstr "添付の %s はペンディング状況に無いため削除できません。"
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "The attachment %s does not exist or you do not have the rights to access it."
-msgstr "添付の %s は存在しないか、アクセス権がありません。"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The attachment does not exist or you do not have the rights to access it."
+msgid ""
+"The attachment does not exist or you do not have the rights to access it."
 msgstr "添付ファイルが存在しないか、添付ファイルにアクセスする権限がありません。"
 
 #. module: portal
@@ -1072,7 +1100,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The document does not exist or you do not have the rights to access it."
+msgid ""
+"The document does not exist or you do not have the rights to access it."
 msgstr "ドキュメントが存在しないか、ドキュメントにアクセスする権限がありません。"
 
 #. module: portal
@@ -1093,7 +1122,8 @@ msgstr "新しいパスワードとその確認は同一でなければなりま
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The old password you provided is incorrect, your password was not changed."
+msgid ""
+"The old password you provided is incorrect, your password was not changed."
 msgstr "入力した古いパスワードが間違っています。パスワードは変更されていません。"
 
 #. module: portal
@@ -1114,7 +1144,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
-msgid "The template \"Portal: new user\" not found for sending email to the portal user."
+msgid ""
+"The template \"Portal: new user\" not found for sending email to the portal "
+"user."
 msgstr ""
 
 #. module: portal
@@ -1138,12 +1170,15 @@ msgstr "こちらは顧客ポータルのプレビューです。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This partner is linked to an internal User and already has access to the Portal."
+msgid ""
+"This partner is linked to an internal User and already has access to the "
+"Portal."
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This text is included at the end of the email sent to new portal users."
+msgid ""
+"This text is included at the end of the email sent to new portal users."
 msgstr ""
 
 #. module: portal
@@ -1155,6 +1190,13 @@ msgstr "このテキストは、ポータルの新しいユーザーに送信さ
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
 msgstr "フィルターを切り替える"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Type in your password to confirm :"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1227,15 +1269,15 @@ msgstr "表示"
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_pricelist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_rating_mixin__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
-msgstr "ウェブサイトメッセージ"
+msgstr "サイトメッセージ"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
@@ -1266,15 +1308,15 @@ msgstr "ウェブサイトメッセージ"
 #: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_pricelist__website_message_ids
 #: model:ir.model.fields,help:portal.field_product_product__website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_rating_mixin__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "ウェブサイトコミュニケーション履歴"
+msgstr "サイト通信履歴"
 
 #. module: portal
 #. odoo-javascript
@@ -1308,7 +1350,17 @@ msgid "Wrong password."
 msgstr ""
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"You are about to log out from all devices that currently have access to this"
+" user's account."
+msgstr ""
+
+#. module: portal
 #. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
@@ -1410,7 +1462,10 @@ msgid "odoo"
 msgstr "odoo"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, python-format
 msgid "password"
 msgstr "パスワード"
 

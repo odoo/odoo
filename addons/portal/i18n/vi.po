@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: portal
@@ -68,7 +66,7 @@ msgstr "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Edit"
+msgstr "<i class=\"fa fa-pencil\"/> Chỉnh sửa"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -77,7 +75,9 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
-msgid "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
+msgid ""
+"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 msgstr ""
 
 #. module: portal
@@ -102,7 +102,10 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
-msgid "<small class=\"form-text text-muted\">Changing company name or VAT number is not allowed once document(s) have been issued for your account. <br/>Please contact us directly for this operation.</small>"
+msgid ""
+"<small class=\"form-text text-muted\">Changing company name or VAT number is"
+" not allowed once document(s) have been issued for your account. <br/>Please"
+" contact us directly for this operation.</small>"
 msgstr ""
 
 #. module: portal
@@ -212,7 +215,7 @@ msgstr "Mô tả Khóa API"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "API Key Ready"
 msgstr ""
@@ -275,13 +278,6 @@ msgid "Already Registered"
 msgstr ""
 
 #. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "An access token must be provided for each attachment."
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
 msgstr ""
@@ -295,7 +291,8 @@ msgstr "Ảnh đại diện"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #, python-format
@@ -305,24 +302,33 @@ msgstr "Hủy"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Change Password"
-msgstr "Đổi mật khẩu"
+msgstr "Thay đổi Mật khẩu"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 #, python-format
-msgid "Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
-msgstr "Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
-msgid "Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
-msgstr "Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Check failed"
 msgstr "Check failed"
@@ -341,7 +347,7 @@ msgstr "Nhấp vào đây để xem tài liệu của bạn."
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
@@ -351,16 +357,16 @@ msgstr "Đóng"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Company Name"
-msgstr "Tên Công ty"
+msgstr "Tên công ty"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_config_settings
 msgid "Config Settings"
-msgstr "Cấu hình"
+msgstr "Cài đặt cấu hình"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Confirm"
 msgstr "Xác nhận"
@@ -376,10 +382,10 @@ msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Confirm Password"
-msgstr "Xác nhận mật khẩu"
+msgstr "Xác nhận Mật khẩu"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -427,15 +433,23 @@ msgstr "Được tạo vào"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Currently available to everyone viewing this document, click to restrict to internal employees."
-msgstr "Currently available to everyone viewing this document, click to restrict to internal employees."
+msgid ""
+"Currently available to everyone viewing this document, click to restrict to "
+"internal employees."
+msgstr ""
+"Currently available to everyone viewing this document, click to restrict to "
+"internal employees."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Currently restricted to internal employees, click to make it available to everyone viewing this document."
-msgstr "Currently restricted to internal employees, click to make it available to everyone viewing this document."
+msgid ""
+"Currently restricted to internal employees, click to make it available to "
+"everyone viewing this document."
+msgstr ""
+"Currently restricted to internal employees, click to make it available to "
+"everyone viewing this document."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
@@ -445,7 +459,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
-msgstr "Đường dẫn cổng thông tin khách hàng"
+msgstr "URL cổng thông tin khách hàng"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
@@ -497,7 +511,7 @@ msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Discard"
 msgstr "Huỷ bỏ"
@@ -542,7 +556,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "Luồng Email"
+msgstr "Luồng email"
 
 #. module: portal
 #. odoo-javascript
@@ -563,7 +577,7 @@ msgstr "Nhập mô tả và mục đích của khóa."
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Forgot password?"
-msgstr "Quên mật khẩu?"
+msgstr "Bạn quên mật khẩu?"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -584,7 +598,7 @@ msgstr "Grant portal access"
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "Định tuyến HTTP"
 
 #. module: portal
 #. odoo-javascript
@@ -624,7 +638,7 @@ msgstr "Ghi chú nội bộ"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Internal User"
-msgstr "Người sử dụng nội bộ"
+msgstr "Người dùng Nội bộ"
 
 #. module: portal
 #. odoo-javascript
@@ -691,7 +705,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_date
@@ -718,16 +732,35 @@ msgid "Link"
 msgstr "Liên kết"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/js/portal_security.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, python-format
+msgid "Log out from all devices"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/js/portal_security.js:0
+#, python-format
+msgid "Log out from all devices?"
+msgstr ""
+
+#. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
-msgstr "Thông báo"
+msgstr "Tin nhắn"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/models/mail_thread.py:0
 #, python-format
-msgid "Model %(model_name)s does not support token signature, as it does not have %(field_name)s field."
-msgstr "Model %(model_name)s does not support token signature, as it does not have %(field_name)s field."
+msgid ""
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
+msgstr ""
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
 
 #. module: portal
 #. odoo-python
@@ -750,7 +783,7 @@ msgstr "Tên khóa của bạn"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #, python-format
 msgid "New API Key"
@@ -764,10 +797,11 @@ msgstr "New Password:"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
-msgstr "Kế tiếp"
+msgstr "Tiếp theo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
@@ -876,20 +910,23 @@ msgstr "Trước"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Previous"
 msgstr "Trước đó"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal_chatter.js:0
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Published on %s"
-msgstr "Xuất bản ngày %s"
+msgid "Published on"
+msgstr "Published on"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "Put my email and phone in a block list to make sure I'm never contacted again"
+msgid ""
+"Put my email and phone in a block list to make sure I'm never contacted "
+"again"
 msgstr ""
 
 #. module: portal
@@ -929,6 +966,11 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Revoke All Sessions"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Scope"
 msgstr "Phạm vi"
 
@@ -944,7 +986,7 @@ msgstr "Bảo mật"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Security Control"
 msgstr "Kiểm soát an ninh"
@@ -952,7 +994,7 @@ msgstr "Kiểm soát an ninh"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
 msgid "Security Token"
-msgstr "Mã bảo mật"
+msgstr "Token bảo mật"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -994,7 +1036,9 @@ msgstr "Đăng nhập"
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
-msgid "Some fields are required. Please make sure to write a message or attach a document"
+msgid ""
+"Some fields are required. Please make sure to write a message or attach a "
+"document"
 msgstr ""
 
 #. module: portal
@@ -1017,7 +1061,7 @@ msgstr "Trạng thái"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Street"
-msgstr "Địa chỉ"
+msgstr "Đường"
 
 #. module: portal
 #. odoo-javascript
@@ -1031,28 +1075,26 @@ msgstr "Cảm ơn bạn!"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
-msgstr "The attachment %s cannot be removed because it is linked to a message."
+msgstr ""
+"The attachment %s cannot be removed because it is linked to a message."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The attachment %s cannot be removed because it is not in a pending state."
-msgstr "The attachment %s cannot be removed because it is not in a pending state."
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "The attachment %s does not exist or you do not have the rights to access it."
-msgstr "The attachment %s does not exist or you do not have the rights to access it."
+msgid ""
+"The attachment %s cannot be removed because it is not in a pending state."
+msgstr ""
+"The attachment %s cannot be removed because it is not in a pending state."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The attachment does not exist or you do not have the rights to access it."
-msgstr "The attachment does not exist or you do not have the rights to access it."
+msgid ""
+"The attachment does not exist or you do not have the rights to access it."
+msgstr ""
+"The attachment does not exist or you do not have the rights to access it."
 
 #. module: portal
 #. odoo-python
@@ -1072,8 +1114,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The document does not exist or you do not have the rights to access it."
-msgstr "The document does not exist or you do not have the rights to access it."
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr ""
+"The document does not exist or you do not have the rights to access it."
 
 #. module: portal
 #. odoo-javascript
@@ -1093,7 +1137,8 @@ msgstr "Mật khẩu mới và xác nhận mật khẩu phải giống hệt nha
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The old password you provided is incorrect, your password was not changed."
+msgid ""
+"The old password you provided is incorrect, your password was not changed."
 msgstr "Mật khẩu cũ không hợp lệ, mật khẩu của bạn vẫn chưa được đổi."
 
 #. module: portal
@@ -1114,7 +1159,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
-msgid "The template \"Portal: new user\" not found for sending email to the portal user."
+msgid ""
+"The template \"Portal: new user\" not found for sending email to the portal "
+"user."
 msgstr ""
 
 #. module: portal
@@ -1138,23 +1185,34 @@ msgstr "This is a preview of the customer portal."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This partner is linked to an internal User and already has access to the Portal."
+msgid ""
+"This partner is linked to an internal User and already has access to the "
+"Portal."
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This text is included at the end of the email sent to new portal users."
+msgid ""
+"This text is included at the end of the email sent to new portal users."
 msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr "Nội dung này sẽ được bao gồm trong email gửi cho người dùng portal mới."
+msgstr ""
+"Nội dung này sẽ được bao gồm trong email gửi cho người dùng portal mới."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
 msgstr "Toggle filters"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Type in your password to confirm :"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1189,7 +1247,7 @@ msgstr "Verify New Password:"
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
 msgid "View"
-msgstr "Xem"
+msgstr "Chế độ xem"
 
 #. module: portal
 #. odoo-javascript
@@ -1227,15 +1285,15 @@ msgstr "Hiện"
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_pricelist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_rating_mixin__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
-msgstr "Thông báo Website"
+msgstr "Thông báo trên trang web"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
@@ -1266,15 +1324,15 @@ msgstr "Thông báo Website"
 #: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_pricelist__website_message_ids
 #: model:ir.model.fields,help:portal.field_product_product__website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_rating_mixin__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "Lịch sử thông tin liên lạc website"
+msgstr "Lịch sử trao đổi qua trang web"
 
 #. module: portal
 #. odoo-javascript
@@ -1286,7 +1344,7 @@ msgstr "Chìa khóa này để làm gì?"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
 msgid "Wizard"
-msgstr "Hướng dẫn"
+msgstr "Công cụ"
 
 #. module: portal
 #. odoo-javascript
@@ -1308,7 +1366,17 @@ msgid "Wrong password."
 msgstr ""
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"You are about to log out from all devices that currently have access to this"
+" user's account."
+msgstr ""
+
+#. module: portal
 #. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
@@ -1410,7 +1478,10 @@ msgid "odoo"
 msgstr "odoo"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, python-format
 msgid "password"
 msgstr "password"
 

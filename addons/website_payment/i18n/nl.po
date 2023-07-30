@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_payment
-#
+# 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Jolien De Paepe, 2023
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_payment
@@ -69,7 +67,7 @@ msgstr "<b>Betaalmethode:</b>"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">Land...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -103,9 +101,10 @@ msgid "Activate Payments"
 msgstr "Betalingen activeren"
 
 #. module: website_payment
+#: model:ir.actions.server,name:website_payment.action_activate_stripe
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
-msgstr "Stripe activeren"
+msgstr "Activeer Stripe"
 
 #. module: website_payment
 #. odoo-javascript
@@ -123,6 +122,7 @@ msgstr "Nieuwe vooraf ingevulde optie toevoegen"
 
 #. module: website_payment
 #. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #, python-format
 msgid "Amount"
@@ -163,11 +163,6 @@ msgid "Configure %s"
 msgstr "Configureer %s"
 
 #. module: website_payment
-#: model:ir.actions.server,name:website_payment.action_stripe_connect_account
-msgid "Connect to Stripe"
-msgstr "Verbinding maken met Stripe"
-
-#. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #: model:ir.model,name:website_payment.model_res_country
@@ -193,6 +188,7 @@ msgstr "Land is verplicht."
 
 #. module: website_payment
 #. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -302,7 +298,7 @@ msgstr "Eerste provider label"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Input"
-msgstr "Invoer"
+msgstr "Ontvangst"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_payment__is_donation
@@ -387,7 +383,7 @@ msgstr "Betalingsdetails"
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_provider
 msgid "Payment Provider"
-msgstr "Betalingsprovider"
+msgstr "Betaalprovider"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_transaction
@@ -469,13 +465,21 @@ msgstr "Stap"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Stripe Connect is not available in your country, please use another payment provider."
-msgstr "Stripe Connect is niet beschikbaar in jouw land. Gebruik een andere betalingsprovider."
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
+msgstr ""
+"Stripe Connect is niet beschikbaar in jouw land. Gebruik een andere "
+"betaalprovider."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
-msgstr "Ondersteunt de meeste betalingsmethoden; Visa, Mastercard, Maestro, Google Pay, Apple Pay, enz., evenals terugkerende lasten."
+msgid ""
+"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay, etc. as well as recurring charges."
+msgstr ""
+"Ondersteunt de meeste betaalmethoden; Visa, Mastercard, Maestro, Google Pay,"
+" Apple Pay, enz., evenals terugkerende lasten."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -499,7 +503,7 @@ msgstr "Er valt niets te betalen."
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Validation Error"
-msgstr "Bevestigingsfoutmelding"
+msgstr "Bevestiging fout"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form

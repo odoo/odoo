@@ -1,27 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_timesheet
-#
+# 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2022
-# Martin Trigaux, 2022
-# Niyas Raphy, 2022
-# MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2023
+# Wil Odoo, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/sale_order.py:0
+#, python-format
+msgid ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    No activities found. Let's start a new one!\n"
+"                </p><p>\n"
+"                    Track your working hours by projects every day and invoice this time to your customers.\n"
+"                </p>\n"
+"            "
+msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
@@ -56,8 +67,12 @@ msgstr "طلبات المرشح "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__billable_percentage
-msgid "% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit."
-msgstr "نسبة الجداول الزمنية القابلة للفوترة مقارنة بإجمالي عدد الجداول الزمنية المرتبطة بـ AA المشروع، مقربة إلى الوحدة. "
+msgid ""
+"% of timesheets that are billable compared to the total number of timesheets"
+" linked to the AA of the project, rounded to the unit."
+msgstr ""
+"نسبة الجداول الزمنية القابلة للفوترة مقارنة بإجمالي عدد الجداول الزمنية "
+"المرتبطة بـ AA المشروع، مقربة إلى الوحدة. "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -77,9 +92,14 @@ msgid ", leading to a"
 msgstr "، مما يؤدي إلى "
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
+msgid "- Timesheet product"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Invoice</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">فاتورة</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
@@ -90,7 +110,7 @@ msgstr "<span class=\"o_stat_text\">مسجل</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">المبيعات ترتيب</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -120,14 +140,14 @@ msgstr "<u>الربحية</u> "
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "<u>Sales</u>"
-msgstr ""
+msgstr "<u>المبيعات</u> "
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
 msgid "About us"
-msgstr "من نحن"
+msgstr "من نحن "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -138,6 +158,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"حسب تهيئة المنتج، يمكن حساب الكمية التي تم توصيلها تلقائياً بإحدى الطرق التالية:\n"
+"  - يدوياً: تُحسب الكمية يدوياً في البند\n"
+"  - تحليلياً من النفقات: تكون الكمية هي مجموع الكمية من النفقات المُرحلة\n"
+"  - الجداول الزمنية: تكون الكمية هي مجموع الساعات المستغرقة لإجراء المهام المرتبطة ببند المبيعات\n"
+"  - حركات المخزون: تأتي الكمية من عمليات الانتقاء المؤكدة\n"
 
 #. module: sale_timesheet
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
@@ -158,8 +183,12 @@ msgstr "المبلغ بانتظار الفوترة "
 #. module: sale_timesheet
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_create_sale_order_line_unique_employee_per_wizard
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_sale_line_employee_map_uniqueness_employee
-msgid "An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again."
-msgstr "لا يمكن تحديد الموظف أكثر من مرة في التخطيط. يرجى إزالة النسخة (النسخ) ثم حاول مجدداً. "
+msgid ""
+"An employee cannot be selected more than once in the mapping. Please remove "
+"duplicate(s) and try again."
+msgstr ""
+"لا يمكن تحديد الموظف أكثر من مرة في التخطيط. يرجى إزالة النسخة (النسخ) ثم "
+"حاول مجدداً. "
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -405,13 +434,13 @@ msgstr "أيام متبقية) "
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "Delivered"
-msgstr ""
+msgstr "تم التوصيل "
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 msgid "Discard"
-msgstr ""
+msgstr "إهمال "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_create_order
@@ -432,6 +461,7 @@ msgid "Draft Invoice"
 msgstr "مسودة فاتورة"
 
 #. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_hr_employee
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__employee_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__employee_id
 msgid "Employee"
@@ -451,6 +481,11 @@ msgstr "الموظف الذي له جداول زمنية في المشروع. "
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
 msgid "End Date"
 msgstr "تاريخ الانتهاء"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__existing_employee_ids
+msgid "Existing Employee"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -525,6 +560,7 @@ msgstr "فاتورة العلومات "
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
+#: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/models/account.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_id
@@ -543,29 +579,45 @@ msgstr "سياسة الفاتورة "
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
-msgid "Invoice based on timesheets (delivered quantity) on projects or tasks you'll create later on."
-msgstr "قم بالفوترة بناءً على الجداول الزمنية (الكميات التي قد تم توصيلها) في المشاريع أو المهام التي ستقوم بإنشائها لاحقاً. "
+msgid ""
+"Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
+" create later on."
+msgstr ""
+"قم بالفوترة بناءً على الجداول الزمنية (الكميات التي قد تم توصيلها) في "
+"المشاريع أو المهام التي ستقوم بإنشائها لاحقاً. "
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
-msgid "Invoice based on timesheets (delivered quantity), and create a project for the order with a task for each sales order line to track the time spent."
-msgstr "قم بالفوترة بناءً على الجداول الزمنية (الكمية التي قد تم إيصالها)، ثم أنشئ مشروعاً للأمر مع مهمة لكل بند أمر بيع لتتبع الوقت المقضي. "
+msgid ""
+"Invoice based on timesheets (delivered quantity), and create a project for "
+"the order with a task for each sales order line to track the time spent."
+msgstr ""
+"قم بالفوترة بناءً على الجداول الزمنية (الكمية التي قد تم إيصالها)، ثم أنشئ "
+"مشروعاً للأمر مع مهمة لكل بند أمر بيع لتتبع الوقت المقضي. "
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
-msgid "Invoice based on timesheets (delivered quantity), and create a task in an existing project to track the time spent."
-msgstr "قم بالفوترة بناءً على الجداول الزمنية (الكمية التي قد تم إيصالها)، ثم أنشئ مهمة في مشروع موجود بالفعل لتتبع الوقت المقضي. "
+msgid ""
+"Invoice based on timesheets (delivered quantity), and create a task in an "
+"existing project to track the time spent."
+msgstr ""
+"قم بالفوترة بناءً على الجداول الزمنية (الكمية التي قد تم إيصالها)، ثم أنشئ "
+"مهمة في مشروع موجود بالفعل لتتبع الوقت المقضي. "
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
-msgid "Invoice based on timesheets (delivered quantity), and create an empty project for the order to track the time spent."
-msgstr "قم بالفوترة بناءً على الجداول الزمنية (الكمية التي قد تم إيصالها)، ثم أنشئ مشروعاً فارغاً للأمر لتتبع الوقت المقضي. "
+msgid ""
+"Invoice based on timesheets (delivered quantity), and create an empty "
+"project for the order to track the time spent."
+msgstr ""
+"قم بالفوترة بناءً على الجداول الزمنية (الكمية التي قد تم إيصالها)، ثم أنشئ "
+"مشروعاً فارغاً للأمر لتتبع الوقت المقضي. "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -674,10 +726,13 @@ msgid "Margin"
 msgstr "الهامش"
 
 #. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+#, python-format
 msgid "Materials"
 msgstr "المواد"
 
@@ -700,11 +755,6 @@ msgstr "لا توجد فاتورة "
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "No Sales Order"
 msgstr "لا يوجد أمر مبيعات"
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
-msgid "No Sales Order Item"
-msgstr "لا يوجد عنصر لأمر البيع "
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
@@ -736,12 +786,17 @@ msgstr "غير قابلة للفوترة"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_tree_inherit
 msgid "Non-billable"
-msgstr ""
+msgstr "غير قابل للفوترة "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Hours"
 msgstr "ساعات غير قابلة للفوترة"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Not Billed"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -769,15 +824,23 @@ msgstr "عدد الجداول الزمنية "
 #: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
-msgid "Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."
-msgstr "وحدها الجداول الزمنية التي لم تتم فوترتها بعد (وتصديقها، إذا انطبق الأمر) من هذه الفترة ستتم فوترتها. إذا لم تتم الإشارة إلى الفترة، ستتم فوترة كافة الجداول الزمنية التي لم تتم فوترتها بعد (وتصديقها، إذا انطبق الأمر) دون تمييز. "
+msgid ""
+"Only timesheets not yet invoiced (and validated, if applicable) from this "
+"period will be invoiced. If the period is not indicated, all timesheets not "
+"yet invoiced (and validated, if applicable) will be invoiced without "
+"distinction."
+msgstr ""
+"وحدها الجداول الزمنية التي لم تتم فوترتها بعد (وتصديقها، إذا انطبق الأمر) من"
+" هذه الفترة ستتم فوترتها. إذا لم تتم الإشارة إلى الفترة، ستتم فوترة كافة "
+"الجداول الزمنية التي لم تتم فوترتها بعد (وتصديقها، إذا انطبق الأمر) دون "
+"تمييز. "
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "هذه العملية غير مدعومة "
+msgstr "العملية غير مدعومة "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__order_id
@@ -813,8 +876,12 @@ msgstr "خدمتنا"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_upsell_threshold
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__service_upsell_threshold
-msgid "Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered."
-msgstr "نسبة الوقت المقضي مقارنة بالكمية المدفوعة مسبقاً التي يجب الوصول إليها حتى يتم تشغيل نشاط فرصة الارتقاء بالصفقة. "
+msgid ""
+"Percentage of time delivered compared to the prepaid amount that must be "
+"reached for the upselling opportunity activity to be triggered."
+msgstr ""
+"نسبة الوقت المقضي مقارنة بالكمية المدفوعة مسبقاً التي يجب الوصول إليها حتى "
+"يتم تشغيل نشاط فرصة الارتقاء بالصفقة. "
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -841,8 +908,12 @@ msgstr "متغير المنتج "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__product_id
-msgid "Product of the sales order item. Must be a service invoiced based on timesheets on tasks."
-msgstr "منتج عنصر أمر المبيعات. يجب أن يكون خدمة مفوترة حسب الجداول الزمنية المسجلة في المهام. "
+msgid ""
+"Product of the sales order item. Must be a service invoiced based on "
+"timesheets on tasks."
+msgstr ""
+"منتج عنصر أمر المبيعات. يجب أن يكون خدمة مفوترة حسب الجداول الزمنية المسجلة "
+"في المهام. "
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -939,8 +1010,15 @@ msgstr "متبقية) "
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
-msgid "Review your timesheets by billing type and make sure your time is billable."
-msgstr "قم بمراجعة جداولك الزمنية حسب نوع الفوترة وتأكد من أن وقتك قابل للفوترة. "
+msgid ""
+"Review your timesheets by billing type and make sure your time is billable."
+msgstr ""
+"قم بمراجعة جداولك الزمنية حسب نوع الفوترة وتأكد من أن وقتك قابل للفوترة. "
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
+msgid "S0001"
+msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
@@ -967,6 +1045,7 @@ msgstr "فاتورة الدفعة المقدمة للمبيعات"
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
+#: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model,name:sale_timesheet.model_sale_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__sale_order_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
@@ -980,6 +1059,7 @@ msgstr "أمر البيع"
 
 #. module: sale_timesheet
 #. odoo-python
+#: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__so_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
@@ -995,7 +1075,7 @@ msgstr "عنصر أمر المبيعات"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "Sales Order Items"
-msgstr ""
+msgstr "عناصر أمر البيع "
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -1020,13 +1100,18 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
-msgid "Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable."
-msgstr "عنصر أمر البيع الذي ستتم إضافة الوقت المقضي إليه حتى تتم فوترته إلى عميلك. قم بإزالة عنصر أمر البيع لقيد الجداول الزمنية حتى يصبح غير قابل للفوترة. "
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
+msgstr ""
+"عنصر أمر البيع الذي ستتم إضافة الوقت المقضي إليه حتى تتم فوترته إلى عميلك. "
+"قم بإزالة عنصر أمر البيع لقيد الجداول الزمنية حتى يصبح غير قابل للفوترة. "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "أمر البيع الذي يرتبط به هذا المشروع. "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
@@ -1060,6 +1145,11 @@ msgid "Select a non billable project on which tasks can be created."
 msgstr "قم بتحديد مشروع غير قابل للفوترة يمكن إنشاء المهام عليه. "
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form_simplified_inherit
+msgid "Select who to bill..."
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Sell services and invoice time spent"
 msgstr "قم ببيع الخدمات وفوترة الوقت المقضي "
@@ -1089,19 +1179,29 @@ msgstr "نسبة الحد الأدنى للارتقاء بالصفقة للخد�
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheets"
-msgstr ""
+msgstr "الخدمة في الجداول الزمنية "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__timesheet_product_id
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__timesheet_product_id
-msgid "Service that will be used by default when invoicing the time spent on a task. It can be modified on each task individually by selecting a specific sales order item."
-msgstr "الخدمة التي سيتم اسخدامها افتراضياً عند فوترة الوقت المقضي في مهمة ما. يمكن تعديله في كل مهمة على حدة عن طريق تحديد عنصر أمر بيع محدد. "
+msgid ""
+"Service that will be used by default when invoicing the time spent on a "
+"task. It can be modified on each task individually by selecting a specific "
+"sales order item."
+msgstr ""
+"الخدمة التي سيتم اسخدامها افتراضياً عند فوترة الوقت المقضي في مهمة ما. يمكن "
+"تعديله في كل مهمة على حدة عن طريق تحديد عنصر أمر بيع محدد. "
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
 #: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
 msgstr "الخدمات"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__show_hours_recorded_button
+msgid "Show Hours Recorded Button"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1111,7 +1211,7 @@ msgstr "المبيعات "
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
 msgid "Start Date"
-msgstr "تاريخ البداية"
+msgstr "تاريخ البدء "
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -1136,13 +1236,18 @@ msgstr "المهام"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "تحليل المهام"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
 #, python-format
-msgid "The %s product is required by the Timesheets app and cannot be archived nor deleted."
+msgid ""
+"The %s product is required by the Timesheets app and cannot be archived nor "
+"deleted."
 msgstr "يتطلب تطبيق الجداول الزمنية وجود المنتج %s ولا يمكن فوترته أو حذفه. "
 
 #. module: sale_timesheet
@@ -1179,8 +1284,12 @@ msgstr "المشروع مرتبط بالفعل بعنصر أمر مبيعات."
 #. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
-msgid "The sales order cannot be created because some timesheets of this project are already linked to another sales order."
-msgstr "لا يمكن إنشاء أمر المبيعات لأن بعض الجداول الزمنية لهذا المشروع مرتبطة بالفعل بأمر مبيعات آخر. "
+msgid ""
+"The sales order cannot be created because some timesheets of this project "
+"are already linked to another sales order."
+msgstr ""
+"لا يمكن إنشاء أمر المبيعات لأن بعض الجداول الزمنية لهذا المشروع مرتبطة "
+"بالفعل بأمر مبيعات آخر. "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1192,13 +1301,30 @@ msgstr "ينبغي أن يحتوي أمر المبيعات المحدد على �
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__pricing_type
-msgid "The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority."
-msgstr "خاصية سعر المهمة مثالية عندما ترغب في فوترة عدة خدمات لعدة عملاء بأسعار مختلفة. خاصية السعر الثابت مثالية إذا كنت تقوم بفوترة الخدمة بسعر ثابت حسب الساعات أو الأيام المقضية بغض النظر عن الموظف الذي قام بالخدمة. يفضل استخدام سعر الموظف إذا كان موظفوك يؤدون نفس الخدمة بأسعار مختلفة. على سبيل المثال، الاستشاريين المبتدئين وذوي الخبرة يقدمون ذات الخدمة (=استشارة) بأسعار مختلفة بسبب مدى أقدميتهم. "
+msgid ""
+"The task rate is perfect if you would like to bill different services to "
+"different customers at different rates. The fixed rate is perfect if you "
+"bill a service at a fixed rate per hour or day worked regardless of the "
+"employee who performed it. The employee rate is preferable if your employees"
+" deliver the same service at a different rate. For instance, junior and "
+"senior consultants would deliver the same service (= consultancy), but at a "
+"different rate because of their level of seniority."
+msgstr ""
+"خاصية سعر المهمة مثالية عندما ترغب في فوترة عدة خدمات لعدة عملاء بأسعار "
+"مختلفة. خاصية السعر الثابت مثالية إذا كنت تقوم بفوترة الخدمة بسعر ثابت حسب "
+"الساعات أو الأيام المقضية بغض النظر عن الموظف الذي قام بالخدمة. يفضل استخدام"
+" سعر الموظف إذا كان موظفوك يؤدون نفس الخدمة بأسعار مختلفة. على سبيل المثال، "
+"الاستشاريين المبتدئين وذوي الخبرة يقدمون ذات الخدمة (=استشارة) بأسعار مختلفة"
+" بسبب مدى أقدميتهم. "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
-msgid "This cost overrides the employee's default employee hourly wage in employee's HR Settings"
-msgstr "تتخطى هذه التكلفة تكلفة الأجر بالساعة الافتراضية للموظف في إعدادات الموارد البشرية للموظف "
+msgid ""
+"This cost overrides the employee's default employee hourly wage in "
+"employee's HR Settings"
+msgstr ""
+"تتخطى هذه التكلفة تكلفة الأجر بالساعة الافتراضية للموظف في إعدادات الموارد "
+"البشرية للموظف "
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -1224,7 +1350,7 @@ msgstr "الحد الأدنى "
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Time Billing"
-msgstr ""
+msgstr "فوترة الوقت "
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -1337,12 +1463,12 @@ msgstr "الجداول الزمنية (غير قابلة للفوترة) "
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
 msgid "Timesheets Analysis"
-msgstr "سجل النشاط التحليلات"
+msgstr "تحليل الجداول الزمنية "
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr "سجل النشاط التحليلات التقرير"
+msgstr "تقرير تحليل الجداول الزمنية "
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
@@ -1390,16 +1516,23 @@ msgstr "الجداول الزمنية التي يتم اعتبارها عند ف
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__amount_to_invoice
-msgid "Total amount to invoice on the sales order, including all items (services, storables, expenses, ...)"
-msgstr "إجمالي المبلغ المراد فوترته في أمر المبيعات، شامل كافة العناصر (الخدمات، والمنتجات المخزنة، والنفقات،...) "
+msgid ""
+"Total amount to invoice on the sales order, including all items (services, "
+"storables, expenses, ...)"
+msgstr ""
+"إجمالي المبلغ المراد فوترته في أمر المبيعات، شامل كافة العناصر (الخدمات، "
+"والمنتجات المخزنة، والنفقات،...) "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration
 #: model:ir.model.fields,help:sale_timesheet.field_account_move__timesheet_total_duration
 #: model:ir.model.fields,help:sale_timesheet.field_account_payment__timesheet_total_duration
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_total_duration
-msgid "Total recorded duration, expressed in the encoding UoM, and rounded to the unit"
-msgstr "إجمالي المدة المسجلة، معبر عنها بوحدة قياس الترميز، ومقربة إلى الوحدة "
+msgid ""
+"Total recorded duration, expressed in the encoding UoM, and rounded to the "
+"unit"
+msgstr ""
+"إجمالي المدة المسجلة، معبر عنها بوحدة قياس الترميز، ومقربة إلى الوحدة "
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1415,7 +1548,9 @@ msgstr "تتبع الخدمة"
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
-msgid "Track your working hours by projects every day and invoice this time to your customers."
+msgid ""
+"Track your working hours by projects every day and invoice this time to your"
+" customers."
 msgstr "تتبع ساعات عملك في كل مشروع كل يوم وقم بفوترة هذا الوقت لعملائك. "
 
 #. module: sale_timesheet
@@ -1499,14 +1634,20 @@ msgstr "لا يمكن تطبيق هذا الإجراء إلا من مشروع."
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
-msgid "You cannot link a billable project to a sales order item that comes from an expense or a vendor bill."
-msgstr "لا يمكنك ربط مشروع قابل للفوترة بعنصر أمر بيع  يأتي من نفقة أو فاتورة مورّد. "
+msgid ""
+"You cannot link a billable project to a sales order item that comes from an "
+"expense or a vendor bill."
+msgstr ""
+"لا يمكنك ربط مشروع قابل للفوترة بعنصر أمر بيع  يأتي من نفقة أو فاتورة مورّد."
+" "
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
-msgid "You cannot link a billable project to a sales order item that is not a service."
+msgid ""
+"You cannot link a billable project to a sales order item that is not a "
+"service."
 msgstr "لا يمكنك ربط مشروع قابل للفوترة بعنصر أمر بيع  ليس خدمة. "
 
 #. module: sale_timesheet
@@ -1528,14 +1669,14 @@ msgstr "لا يمكنك إزالة جداول زمنية قد تمت فوترت�
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "days"
-msgstr "يوم"
+msgstr "أيام "
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/sale_order.py:0
 #, python-format
 msgid "days remaining"
-msgstr ""
+msgstr "أيام متبقية "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1559,4 +1700,4 @@ msgstr "من الساعات المباعة. "
 #: code:addons/sale_timesheet/models/sale_order.py:0
 #, python-format
 msgid "remaining"
-msgstr ""
+msgstr "متبقي "

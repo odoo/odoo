@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* gamification
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# 江口和志 <sandwhale1010@gmail.com>, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"POT-Creation-Date: 2023-05-30 05:11+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: gamification
@@ -101,17 +99,23 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" aria-label=\"Goal in Progress\"/>"
+msgid ""
+"<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
+"aria-label=\"Goal in Progress\"/>"
 msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal Failed\" aria-label=\"Goal Failed\"/>"
+msgid ""
+"<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal "
+"Failed\" aria-label=\"Goal Failed\"/>"
 msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal Reached\" aria-label=\"Goal Reached\"/>"
+msgid ""
+"<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal "
+"Reached\" aria-label=\"Goal Reached\"/>"
 msgstr ""
 
 #. module: gamification
@@ -421,7 +425,7 @@ msgid ""
 "                It can be deserved automatically when some conditions are met or manually by users.\n"
 "                Some badges are harder than others to get with specific conditions."
 msgstr ""
-"バッジは、報奨の印としてユーザに与えられる記号的トークンである。\n"
+"バッジは、報奨の印としてユーザに与えられる記号的トークンです。\n"
 "                いくつかの条件が満たされた場合やユーザーが手動で行う場合、自動的に発行される可能性があります。\n"
 "                一部のバッジは他のバッジよりも特定の条件で入手するのが難しいものがあります。"
 
@@ -436,7 +440,9 @@ msgstr ""
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal__definition_condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__condition
-msgid "A goal is considered as completed when the current value is compared to the value to reach"
+msgid ""
+"A goal is considered as completed when the current value is compared to the "
+"value to reach"
 msgstr "現在の値と到達する値を比較した場合、目標は完了したと見なされます"
 
 #. module: gamification
@@ -476,7 +482,7 @@ msgstr "要アクション"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
 msgid "Active"
-msgstr "有効"
+msgstr "有効化"
 
 #. module: gamification
 #. odoo-python
@@ -490,7 +496,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
-msgstr "高度オプション"
+msgstr "詳細オプション"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth
@@ -592,8 +598,14 @@ msgstr "バッジ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-msgid "Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed."
-msgstr "チャレンジが終了すると、バッジが付与されます。 これは、実行期間の終了時(例：毎月のチャレンジの場合は月末)、チャレンジの終了日(期間が設定されていない場合)またはチャレンジが手動で終了したときのいずれかです。"
+msgid ""
+"Badges are granted when a challenge is finished. This is either at the end "
+"of a running period (eg: end of the month for a monthly challenge), at the "
+"end date of a challenge (if no periodicity is set) or when the challenge is "
+"manually closed."
+msgstr ""
+"チャレンジが終了すると、バッジが付与されます。 "
+"これは、実行期間の終了時(例：毎月のチャレンジの場合は月末)、チャレンジの終了日(期間が設定されていない場合)またはチャレンジが手動で終了したときのいずれかです。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
@@ -631,7 +643,7 @@ msgstr "開始された目標の設定を変更することはできません"
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Cancel"
-msgstr "取消"
+msgstr "キャンセル"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__canceled
@@ -641,7 +653,7 @@ msgstr "取消済"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Category"
-msgstr "カテゴリ"
+msgstr "カテゴリー"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__challenge_id
@@ -668,7 +680,9 @@ msgstr "チャレンジ名称"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__challenge_id
-msgid "Challenge that generated the goal, assign challenge to users to generate goals with a value in this field."
+msgid ""
+"Challenge that generated the goal, assign challenge to users to generate "
+"goals with a value in this field."
 msgstr "目標を生成したチャレンジは、このフィールドの値を使用して目標を生成し、ユーザーにチャレンジを割り当てます。"
 
 #. module: gamification
@@ -767,8 +781,13 @@ msgstr "新しいランクを作成しましょう。"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.action_new_simplified_res_users
-msgid "Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system."
-msgstr "システムに接続するユーザを作成し、そして管理します。ユーザは非活性化され、彼らがシステムに接続すべきでない一定の期間が置かれます。あなたは彼らがシステムで使うことを必要とするアプリケーションに特定のアクセスを与えるためにグループを割り当てることができます。"
+msgid ""
+"Create and manage users that will connect to the system. Users can be "
+"deactivated should there be a period of time during which they will/should "
+"not connect to the system. You can assign them groups in order to give them "
+"specific access to the applications they need to use in the system."
+msgstr ""
+"システムに接続するユーザを作成し、そして管理します。ユーザは非活性化され、彼らがシステムに接続すべきでない一定の期間が置かれます。あなたは彼らがシステムで使うことを必要とするアプリケーションに特定のアクセスを与えるためにグループを割り当てることができます。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_uid
@@ -801,7 +820,7 @@ msgstr "作成日"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__current
 msgid "Current"
-msgstr "現在"
+msgstr "流動"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__current
@@ -822,7 +841,7 @@ msgstr "データ"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Date"
-msgstr ""
+msgstr "日付"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_date_id
@@ -832,7 +851,9 @@ msgstr "日付フィールド"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__computation_mode
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__computation_mode
-msgid "Define how the goals will be computed. The result of the operation will be stored in the field 'Current'."
+msgid ""
+"Define how the goals will be computed. The result of the operation will be "
+"stored in the field 'Current'."
 msgstr ""
 
 #. module: gamification
@@ -857,7 +878,8 @@ msgstr "表示モードに応じて、レポートは個別か、共有になり
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-msgid "Describe the challenge: what is does, who it targets, why it matters..."
+msgid ""
+"Describe the challenge: what is does, who it targets, why it matters..."
 msgstr "挑戦の説明：何がどうなんでしょう、それが誰をターゲットにしているのか、なぜ重要なのですか..."
 
 #. module: gamification
@@ -911,8 +933,13 @@ msgstr "ドクター"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__domain
-msgid "Domain for filtering records. General rule, not user depending, e.g. [('state', '=', 'done')]. The expression can contain reference to 'user' which is a browse record of the current user if not in batch mode."
-msgstr "レコードをフィルタリングするためのドメイン。 一般的なルールであり、ユーザーに依存するものではありません。 [('state', '=', 'done')]。 式には、バッチモードでない場合は現在のユーザーの参照レコードである 'user'への参照を含めることができます。"
+msgid ""
+"Domain for filtering records. General rule, not user depending, e.g. "
+"[('state', '=', 'done')]. The expression can contain reference to 'user' "
+"which is a browse record of the current user if not in batch mode."
+msgstr ""
+"レコードをフィルタリングするためのドメイン。 一般的なルールであり、ユーザーに依存するものではありません。 [('state', '=', "
+"'done')]。 式には、バッチモードでない場合は現在のユーザーの参照レコードである 'user'への参照を含めることができます。"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
@@ -925,7 +952,7 @@ msgstr "完了"
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__draft
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Draft"
-msgstr "ドラフト"
+msgstr "下書き"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_newbie
@@ -1019,7 +1046,7 @@ msgstr "フォーラムバッジレベル"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "From"
-msgstr "開始日"
+msgstr "from"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__full_suffix
@@ -1029,7 +1056,7 @@ msgstr "完全な接尾辞"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__gain
 msgid "Gain"
-msgstr ""
+msgstr "収益"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
@@ -1284,13 +1311,13 @@ msgstr "最大値が設定されている場合"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
+msgstr "チェックした場合は、新しいメッセージに注意が必要です。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1920
@@ -1302,25 +1329,25 @@ msgstr "画像"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1024
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1024
 msgid "Image 1024"
-msgstr "イメージ 1024"
+msgstr "画像1024"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_128
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_128
 msgid "Image 128"
-msgstr "イメージ 128"
+msgstr "画像128"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_256
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_256
 msgid "Image 256"
-msgstr "イメージ 256"
+msgstr "画像256"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_512
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_512
 msgid "Image 512"
-msgstr "イメージ 512"
+msgstr "画像512"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__inprogress
@@ -1329,18 +1356,28 @@ msgstr "進行中"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
-msgid "In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain."
-msgstr "バッチモードでは、ドメインはグローバルに評価されます。 有効になっている場合は、上記のフィルタドメインでキーワード 'user'を使用しないでください。"
+msgid ""
+"In batch mode, the domain is evaluated globally. If enabled, do not use "
+"keyword 'user' in above filter domain."
+msgstr ""
+"バッチモードでは、ドメインはグローバルに評価されます。 有効になっている場合は、上記のフィルタドメインでキーワード 'user'を使用しないでください。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
-msgid "In batch mode, this indicates which field distinguishes one user from the other, e.g. user_id, partner_id..."
+msgid ""
+"In batch mode, this indicates which field distinguishes one user from the "
+"other, e.g. user_id, partner_id..."
 msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
-msgid "In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in challenge). Ignored in case of non-manual goal or goal not linked to a challenge."
-msgstr "手動のゴールの場合、(チャレンジで定義されている)目標がしばらく更新されていないというリマインダが送信されます。 チャレンジにリンクされていない非手動ゴールまたはゴールの場合は無視されます。"
+msgid ""
+"In case of manual goal, reminders are sent if the goal as not been updated "
+"for a while (defined in challenge). Ignored in case of non-manual goal or "
+"goal not linked to a challenge."
+msgstr ""
+"手動のゴールの場合、(チャレンジで定義されている)目標がしばらく更新されていないというリマインダが送信されます。 "
+"チャレンジにリンクされていない非手動ゴールまたはゴールの場合は無視されます。"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__inprogress
@@ -1455,7 +1492,7 @@ msgstr "項目リスト"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__line_ids
 msgid "Lines"
-msgstr "明細"
+msgstr "行"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__line_ids
@@ -1465,7 +1502,7 @@ msgstr "設定される目標のリスト"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Manual"
-msgstr ""
+msgstr "手動"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_master
@@ -1560,7 +1597,7 @@ msgstr "名称"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__never
 msgid "Never"
-msgstr "作成しない"
+msgstr "しない"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__remind_update_delay
@@ -1626,7 +1663,9 @@ msgstr "誰も、挑戦によって割り当てられたものではありませ
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
-msgid "Nobody has succeeded to reach every goal, no badge is rewarded for this challenge."
+msgid ""
+"Nobody has succeeded to reach every goal, no badge is rewarded for this "
+"challenge."
 msgstr ""
 
 #. module: gamification
@@ -1639,7 +1678,7 @@ msgstr "誰も特別なバッジを受け取るために必要な条件に達し
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__once
 msgid "Non recurring"
-msgstr "繰り返し無し"
+msgstr "非定期"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__remind_update_delay
@@ -1655,7 +1694,7 @@ msgstr "通知メッセージ"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction_counter
 msgid "Number of Actions"
-msgstr "アクションの数"
+msgstr "アクション数"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error_counter
@@ -1667,13 +1706,13 @@ msgstr "エラー数"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "アクションが必要なメッセージの数"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "配信エラーのメッセージ数"
+msgstr "配信エラーが発生されたメッセージ数"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_users_count
@@ -1734,7 +1773,9 @@ msgstr "期間"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__period
-msgid "Period of automatic goal assignment. If none is selected, should be launched manually."
+msgid ""
+"Period of automatic goal assignment. If none is selected, should be launched"
+" manually."
 msgstr ""
 
 #. module: gamification
@@ -1764,8 +1805,12 @@ msgstr "Pythonコード"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__compute_code
-msgid "Python code to be executed for each user. 'result' should contains the new current value. Evaluated user can be access through object.user_id."
-msgstr "各ユーザーに対して実行されるPythonコード。 'result'に新しい現在値が含まれているはずです。 評価されたユーザーは、object.user_idを介してアクセスできます。"
+msgid ""
+"Python code to be executed for each user. 'result' should contains the new "
+"current value. Evaluated user can be access through object.user_id."
+msgstr ""
+"各ユーザーに対して実行されるPythonコード。 'result'に新しい現在値が含まれているはずです。 "
+"評価されたユーザーは、object.user_idを介してアクセスできます。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__rank_id
@@ -1862,7 +1907,7 @@ msgstr "遅延リマインド "
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reminders for Manual Goals"
-msgstr "手作業のゴールのリマインダー"
+msgstr "手作業のゴールのリマインダ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_frequency
@@ -1910,7 +1955,9 @@ msgstr "報奨"
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
-msgid "Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s."
+msgid ""
+"Reward (badge %(badge_name)s) for every succeeding user was sent to "
+"%(users)s."
 msgstr ""
 
 #. module: gamification
@@ -1941,7 +1988,7 @@ msgstr "課題・目標に対する褒章"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Running"
-msgstr "契約実行中"
+msgstr "実行中"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1985,7 +2032,9 @@ msgstr "追跡を検索"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
-msgid "Security rules to define who is allowed to manually grant badges. Not enforced for administrator."
+msgid ""
+"Security rules to define who is allowed to manually grant badges. Not "
+"enforced for administrator."
 msgstr "バッジの手動付与を許可するユーザを定義するセキュリティルール。 管理者には適用されません。"
 
 #. module: gamification
@@ -2026,7 +2075,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
 msgid "Sequence"
-msgstr "付番"
+msgstr "シーケンス"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
@@ -2071,7 +2120,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref
 msgid "Source"
-msgstr ""
+msgstr "情報源"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref_model_name
@@ -2083,7 +2132,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
-msgid "Special rewards were sent to the top competing users. The ranking for this challenge is:"
+msgid ""
+"Special rewards were sent to the top competing users. The ranking for this "
+"challenge is:"
 msgstr ""
 
 #. module: gamification
@@ -2108,7 +2159,7 @@ msgstr "開始目標"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr "ステータス"
+msgstr "都道府県・州"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -2156,6 +2207,7 @@ msgstr "目標：より小さい"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/tests/test_karma_tracking.py:0
+#: code:addons/gamification/tests/test_karma_tracking.py:0
 #, python-format
 msgid "Test Reason"
 msgstr ""
@@ -2186,12 +2238,16 @@ msgstr "評価期間に使用する日付"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__end_date
-msgid "The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."
+msgid ""
+"The day a new challenge will be automatically closed. If no periodicity is "
+"set, will use this date as the goal end date."
 msgstr "新しいチャレンジは自動的に閉鎖されます。 周期性が設定されていない場合は、この日付を目標終了日として使用します。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
-msgid "The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."
+msgid ""
+"The day a new challenge will be automatically started. If no periodicity is "
+"set, will use this date as the goal start date."
 msgstr "新しいチャレンジが自動的に開始される日。 周期性が設定されていない場合は、この日付を目標開始日として使用します。"
 
 #. module: gamification
@@ -2209,7 +2265,9 @@ msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
-msgid "The field name on the user profile (res.users) containing the value for res_id for action."
+msgid ""
+"The field name on the user profile (res.users) containing the value for "
+"res_id for action."
 msgstr "アクションのres_idの値を含むユーザプロファイル(res.users) のフィールド名。"
 
 #. module: gamification
@@ -2239,7 +2297,8 @@ msgstr "より低い程良い"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max_number
-msgid "The maximum number of time this badge can be sent per month per person."
+msgid ""
+"The maximum number of time this badge can be sent per month per person."
 msgstr "このバッジを1人1ヶ月に送信できる最大回数。"
 
 #. module: gamification
@@ -2264,12 +2323,15 @@ msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__remind_update_delay
-msgid "The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."
+msgid ""
+"The number of days after which the user assigned to a manual goal will be "
+"reminded. Never reminded if no value is specified."
 msgstr "ユーザーが手動のゴールに割り当てられてからの経過日数を通知します。 値が指定されていない場合はリマインドしません。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_this_month
-msgid "The number of time the current user has received this badge this month."
+msgid ""
+"The number of time the current user has received this badge this month."
 msgstr "今月のこのバッジを現在のユーザーが受け取った時間。"
 
 #. module: gamification
@@ -2316,13 +2378,20 @@ msgstr "目標と現在の値の単位"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
-msgid "The users that have succeeded these goals will receive automatically the badge."
+msgid ""
+"The users that have succeeded these goals will receive automatically the "
+"badge."
 msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
-msgid "The value to compare with the distinctive field. The expression can contain reference to 'user' which is a browse record of the current user, e.g. user.id, user.partner_id.id..."
-msgstr "識別フィールドと比較する値。 式は、現在のユーザのブラウズ記録である'user' への参照を含むことができる。 user.id、user.partner_id.id ..."
+msgid ""
+"The value to compare with the distinctive field. The expression can contain "
+"reference to 'user' which is a browse record of the current user, e.g. "
+"user.id, user.partner_id.id..."
+msgstr ""
+"識別フィールドと比較する値。 式は、現在のユーザのブラウズ記録である'user' への参照を含むことができる。 "
+"user.id、user.partner_id.id ..."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -2455,8 +2524,11 @@ msgstr "誰に報酬を与えたいですか？"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__reward_realtime
-msgid "With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge."
-msgstr "このオプションを有効にすると、ユーザは1回だけバッジを受け取ることができます。 トップ3のバッジはチャレンジの終わりにしかまだ報奨がありません。"
+msgid ""
+"With this option enabled, a user can receive a badge only once. The top 3 "
+"badges are still rewarded only at the end of the challenge."
+msgstr ""
+"このオプションを有効にすると、ユーザは1回だけバッジを受け取ることができます。 トップ3のバッジはチャレンジの終わりにしかまだ報奨がありません。"
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_idea
@@ -2557,7 +2629,9 @@ msgstr "日"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
-msgid "e.g. A Master Chief knows quite everything on the forum! You cannot beat him!"
+msgid ""
+"e.g. A Master Chief knows quite everything on the forum! You cannot beat "
+"him!"
 msgstr "例：マスターチーフはフォーラムで何でも知っています！ あなたは彼を倒すことはできません！"
 
 #. module: gamification

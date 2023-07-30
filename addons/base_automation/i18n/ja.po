@@ -1,38 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_automation
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Andy Yiu, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Andy Yiu, 2022\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid "A code server action can be executed from the website, using a dedicated controller. The address is <base>/website/action/<website_path>. Set this field as True to allow users to run this action. If it is set to False the action cannot be run through the website."
-msgstr "コード・サーバー・アクションは、専用コントローラーを使用してWebサイトから実行できます。 アドレスは<base>/website/action/<website_path>です。ユーザーがこの操作を実行できるようにするには、このフィールドをTrueに設定します。 Falseに設定されている場合は、Webサイトでアクションを実行することはできません。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -57,7 +51,7 @@ msgstr "アクションタイプ"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
 msgid "Active"
-msgstr "有効"
+msgstr "有効化"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
@@ -102,14 +96,7 @@ msgid "Automation"
 msgstr "自動化"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "ウェブサイトで使用可"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
-#: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
-#: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "基本アクションルール：チェックして実行する"
 
@@ -150,17 +137,10 @@ msgstr "子アクション"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__child_ids
-msgid "Child server actions that will be executed. Note that the last return returned action value will be used as global return value."
-msgstr "実行される子サーバー・アクション。最後のリターンは、アクション値は、グローバル戻り値として返され使用されることに注意してください。"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
 msgid ""
-"Choose method for SMS sending:\n"
-"SMS: mass SMS\n"
-"Post as Message: log on document\n"
-"Post as Note: mass SMS with archives"
-msgstr ""
+"Child server actions that will be executed. Note that the last return "
+"returned action value will be used as global return value."
+msgstr "実行される子サーバー・アクション。最後のリターンは、アクション値は、グローバル戻り値として返され使用されることに注意してください。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -170,6 +150,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"Eメール送信方法を選ぶ：\n"
+"Eメール：直接メールを送信する\n"
+"メッセージとして投稿：ドキュメントへ投稿しフォロワーに通知する\n"
+"メモとして投稿：ドキュメントにメモをログ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -193,11 +177,14 @@ msgid ""
 "        You can put a negative number if you need a delay before the\n"
 "        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"トリガー日以降の遅延。\n"
+"　　トリガー日の15分前にリマインダを送信するなど、トリガー日よ　　　　　　　　　\n"
+"りも前に遅延が必要な場合は、負の数を入力することができます。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
 msgid "Delay after trigger date"
-msgstr "トリガ日後待ち時間"
+msgstr "トリガー日後待ち時間"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
@@ -205,14 +192,14 @@ msgid "Delay type"
 msgstr "遅延タイプ"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
 msgstr "アクションの無効化"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -238,7 +225,7 @@ msgid "Due type"
 msgstr "期限タイプ"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
@@ -250,9 +237,12 @@ msgid "Email Template"
 msgstr "メールテンプレート"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid "Email, followers or activities action types cannot be used when deleting records."
+msgid ""
+"Email, followers or activities action types cannot be used when deleting "
+"records."
 msgstr ""
 
 #. module: base_automation
@@ -266,9 +256,11 @@ msgid "Fields that trigger the onchange."
 msgstr "変更があると発動する動作をトリガーするフィールド。"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid "Form Modification based actions can only be used with code action type."
+msgid ""
+"Form Modification based actions can only be used with code action type."
 msgstr ""
 
 #. module: base_automation
@@ -293,18 +285,17 @@ msgstr "XMLファイルで定義されている場合、アクションのID"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
-msgid "If present, this condition must be satisfied before executing the action rule."
+msgid ""
+"If present, this condition must be satisfied before executing the action "
+"rule."
 msgstr "存在する場合、この条件は、アクションルールを実行する前に満たされなければなりません。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
-msgid "If present, this condition must be satisfied before the update of the record."
+msgid ""
+"If present, this condition must be satisfied before the update of the "
+"record."
 msgstr "存在する場合、この条件は、レコードの更新前に満たされなければなりません。"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
-msgid "Last Modified on"
-msgstr "最終更新日"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -348,7 +339,9 @@ msgstr "モデル名"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__crud_model_id
-msgid "Model for record creation / update. Set this field only to specify a different model than the base model."
+msgid ""
+"Model for record creation / update. Set this field only to specify a "
+"different model than the base model."
 msgstr "レコード作成/更新のためのモデル。ベースモデルとは異なるモデルを指定するだけで、このフィールドを設定します。"
 
 #. module: base_automation
@@ -364,12 +357,14 @@ msgstr "月"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
 msgid "Note"
-msgstr "ノート"
+msgstr "メモ"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid "Note that this action can be triggered up to %d minutes after its schedule."
+msgid ""
+"Note that this action can be triggered up to %d minutes after its schedule."
 msgstr ""
 
 #. module: base_automation
@@ -399,12 +394,16 @@ msgstr "更新時"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__help
-msgid "Optional help text for the users with a description of the target view, such as its usage and purpose."
+msgid ""
+"Optional help text for the users with a description of the target view, such"
+" as its usage and purpose."
 msgstr "ユーザのために、用途や目的といった目的となるビューの説明を伴った任意のヘルプテキスト"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__link_field_id
-msgid "Provide the field used to link the newly created record on the record used by the server action."
+msgid ""
+"Provide the field used to link the newly created record on the record used "
+"by the server action."
 msgstr "サーバーアクションで使用されるレコードに新しく作成されたレコードをリンクするために使用されるフィールドを指定します。"
 
 #. module: base_automation
@@ -418,29 +417,19 @@ msgid "Responsible"
 msgstr "担当者"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
-msgid "SMS Template"
-msgstr "SMSテンプレート"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
-msgid "Send as (SMS)"
-msgstr ""
+msgstr "以下として送信："
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
-msgstr "付番"
+msgstr "シーケンス"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "サーバアクション"
+msgstr "サーバーアクション"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
@@ -449,7 +438,9 @@ msgstr "サーバアクション"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__binding_model_id
-msgid "Setting a value makes this action available in the sidebar for the given model."
+msgid ""
+"Setting a value makes this action available in the sidebar for the given "
+"model."
 msgstr "値を設定すると、特定のモデルのサイドバーでこのアクションを使用できるようになります。"
 
 #. module: base_automation
@@ -460,12 +451,12 @@ msgstr "新しい自動化をセットアップする"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "受信者を登録する"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
 msgid "Summary"
-msgstr "サマリ"
+msgstr "概要"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
@@ -478,29 +469,29 @@ msgid "Target Model Name"
 msgstr "対象モデル名"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%(state_value)s\" action type"
+msgid ""
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
 msgstr " \"%(trigger_value)s\" %(trigger_label)s は \"%(state_value)s\" 動作タイプとのみ使えます"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
-msgid "The action will be triggered if and only if one of these fields is updated. If empty, all fields are watched."
-msgstr ""
+msgid ""
+"The action will be triggered if and only if one of these fields is updated. "
+"If empty, all fields are watched."
+msgstr "これらのフィールドのいずれかが更新された場合にのみ、アクションがトリガーされる。空の場合、すべてのフィールドが監視されます。"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "ウェブサイトを通じてサーバーアクションにアクセスするための完全なURL。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -510,7 +501,7 @@ msgstr "トリガー"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
 msgid "Trigger Date"
-msgstr "トリガ日"
+msgstr "トリガー日"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
@@ -531,6 +522,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"サーバーアクションのタイプ。以下の値が利用可能です：\n"
+"- 「Pythonコードの実行」：Pythonコードブロックが実行されます\n"
+"- 「新規記録の作成」： 新しい値で新しいレコードを作成します\n"
+"- 「記録のアップデート」： 記録の値を更新します\n"
+"- 「複数のアクションを実行」： 他の複数のサーバーアクションをトリガーするアクションを定義します。\n"
+"- 「メール送信」： メッセージやメモの投稿やメールを送信します。\n"
+"- 「フォロワーを追加」：記録にフォロワーを追加します (ディスカッション)\n"
+"- 「次のアクティビティを作成」：アクティビティを作成します（ディスカッション）\n"
+"- 「SMSテキストメッセージを送信」：SMSを送信し、ドキュメントに記録します（SMS）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -541,8 +541,13 @@ msgstr "用途"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
-msgid "Use 'Specific User' to always assign the same user on the next activity. Use 'Generic User From Record' to specify the field name of the user to choose on the record."
-msgstr "'特定のユーザー'を使用して、次のアクティビティで常に同じユーザーを割り当てます。 'Generic User From Record'を使用して、レコードで選択するユーザーのフィールド名を指定します。"
+msgid ""
+"Use 'Specific User' to always assign the same user on the next activity. Use"
+" 'Generic User From Record' to specify the field name of the user to choose "
+"on the record."
+msgstr ""
+"'特定のユーザー'を使用して、次のアクティビティで常に同じユーザーを割り当てます。 'Generic User From "
+"Record'を使用して、レコードで選択するユーザーのフィールド名を指定します。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -559,10 +564,10 @@ msgid ""
 "                trigger an automatic reminder email."
 msgstr ""
 "自動アクションを利用して様々な画面の挙動を自動的にトリガーします\n"
-"                例：特定のユーザーによって発生したリードを特定の営業チーム\n"
+"                例：特定のユーザーによって発生したリードを特定の販売チーム\n"
 "                に自動的に設定することができます。\n"
-"                あるいはは14日後もステータスが保留になっている場合は\n"
-"                自動リマインダーメールをトリガーすることもできます。"
+"                あるいは14日後も案件のステータスが保留になっている場合は\n"
+"                自動リマインダメールをトリガーすることもできます。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
@@ -575,29 +580,25 @@ msgid "Value Mapping"
 msgstr "値マッピング"
 
 #. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
 msgstr "警告"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "ウェブサイトのパス"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "ウェブサイトのURL"
-
-#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
-msgid "When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days."
+msgid ""
+"When calculating a day-based timed condition, it is possible to use a "
+"calendar to compute the date based on working days."
 msgstr "日ベースのタイミング条件を計算する場合、営業日に基づいて日付を計算するために、カレンダーを使用することが可能です。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
-msgid "When dealing with multiple actions, the execution order is based on the sequence. Low number means high priority."
+msgid ""
+"When dealing with multiple actions, the execution order is based on the "
+"sequence. Low number means high priority."
 msgstr "複数のアクションを扱う場合、実行順序は、シーケンスに基づいています。数値が小さいほどが高い優先順位を意味します。"
 
 #. module: base_automation
@@ -606,6 +607,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"いつその条件をトリガーするのか。\n"
+"　　　　存在する場合、スケジューラによって確認されます。空の場合は、作成時と更新時に確認されます。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -614,25 +617,32 @@ msgstr "チェックを外すと、ルールが隠され、実行できません
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
-msgid "Write Python code that the action will execute. Some variables are available for use; help about python expression is given in the help tab."
-msgstr "アクションが実行するPythonコードを記述します。一部の変数を使用できます; Pythonの表現に関するヘルプは、ヘルプタブに表示されます。"
+msgid ""
+"Write Python code that the action will execute. Some variables are available"
+" for use; help about python expression is given in the help tab."
+msgstr ""
+"アクションが実行するPythonコードを記述します。一部の変数を使用できます; Pythonの表現に関するヘルプは、ヘルプタブに表示されます。"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
-msgid "You can ask an administrator to disable or correct this automated action."
+msgid ""
+"You can ask an administrator to disable or correct this automated action."
 msgstr "この自動化されたアクションを無効にするか修正するように管理者に依頼できます。"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr "この自動化されたアクションを無効にするか、編集して問題を解決できます。"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid "You cannot send an email, add followers or create an activity for a deleted record.  It simply does not work."
+msgid ""
+"You cannot send an email, add followers or create an activity for a deleted "
+"record.  It simply does not work."
 msgstr ""

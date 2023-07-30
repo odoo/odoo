@@ -1,28 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr
-#
+# 
 # Translators:
-# Noma Yuki, 2022
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
-# Shigekazu N. <shigekazu.noka@gmail.com>, 2022
-# Andy Yiu, 2023
-# Martin Trigaux, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr
@@ -114,7 +108,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
-msgid "<b>Congratulations!</b> May I recommend you to setup an <a href=\"%s\">onboarding plan?</a>"
+msgid ""
+"<b>Congratulations!</b> May I recommend you to setup an <a "
+"href=\"%s\">onboarding plan?</a>"
 msgstr "<b>おめでとうございます!</b> 必要な<a href=\"%s\">入社手続き</a>があれば手配しましょう。"
 
 #. module: hr
@@ -124,22 +120,37 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<small role=\"img\" class=\"fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_present')]}\" aria-label=\"Present\" title=\"Present\"/>"
+msgid ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle text-success o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_present')]}\" aria-label=\"Present\" title=\"Present\"/>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<small role=\"img\" class=\"fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\"/>"
+msgid ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle text-warning o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_to_define')]}\" aria-label=\"To define\" title=\"To define\" "
+"name=\"presence_to_define\"/>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\"/>"
+msgid ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
+"name=\"presence_absent\"/>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\"/>"
+msgid ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle-o text-success o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_absent_active')]}\" aria-label=\"Present but not active\" "
+"title=\"Present but not active\" name=\"presence_absent_active\"/>"
 msgstr ""
 
 #. module: hr
@@ -187,12 +198,15 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses (comma-separated)</span>"
+msgid ""
+"<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses (comma-separated)</span>"
 msgstr "<span class=\"flex-shrink-0 ml8 me-2\">IPアドレス(カンマ区切り)</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "<span class=\"flex-shrink-0 ml8 me-2\">Minimum number of emails to send</span>"
+msgid ""
+"<span class=\"flex-shrink-0 ml8 me-2\">Minimum number of emails to "
+"send</span>"
 msgstr "<span class=\"flex-shrink-0 ml8 me-2\">最小送信メール数</span>"
 
 #. module: hr
@@ -202,12 +216,16 @@ msgstr "<span class=\"fw-bolder\">レポート</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">Close Activities</span>"
+msgid ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Close "
+"Activities</span>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed Reason</span>"
+msgid ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed "
+"Reason</span>"
 msgstr ""
 
 #. module: hr
@@ -230,11 +248,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "<span class=\"o_stat_text\">Connected Since</span>"
 msgstr "<span class=\"o_stat_text\">接続中</span>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
-msgid "<span class=\"o_stat_text\">Contacts</span>"
-msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
@@ -338,7 +351,7 @@ msgstr "要アクション"
 #: model:ir.model.fields,field_description:hr.field_hr_plan__active
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__active
 msgid "Active"
-msgstr "有効"
+msgstr "有効化"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
@@ -362,7 +375,7 @@ msgstr "活動"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
 #: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "例外の活動を示す文字装飾"
+msgstr "例外活動文字装飾"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan
@@ -432,10 +445,9 @@ msgid "Additional languages"
 msgstr "他に話せる言語"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
-#: model:ir.model.fields,field_description:hr.field_res_users__address_home_id
-msgid "Address"
-msgstr "アドレス"
+#: model:hr.department,name:hr.dep_administration
+msgid "Administration"
+msgstr "管理"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -469,12 +481,6 @@ msgid "Alias Contact Security"
 msgstr "エイリアス連絡先セキュリティ"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__lang
-#: model:ir.model.fields,help:hr.field_res_users__private_lang
-msgid "All the emails and documents sent to this contact will be translated in this language."
-msgstr "この連絡先に送信されるすべての電子メールとドキュメントは、この言語に翻訳されます。"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Allow employees to update their own data"
 msgstr "自分の従業員情報を更新することを許可"
@@ -500,11 +506,6 @@ msgstr "適用"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Approvers"
 msgstr "承認者"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
-msgid "Archive Private Address"
-msgstr "個人住所アーカイブ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -555,7 +556,7 @@ msgstr "添付数"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Attendance"
-msgstr "勤怠"
+msgstr "出席"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -690,7 +691,7 @@ msgstr "基本社員"
 #: code:addons/hr/static/src/components/background_image/background_image.xml:0
 #, python-format
 msgid "Binary file"
-msgstr ""
+msgstr "バイナリファイル"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__can_edit
@@ -701,7 +702,7 @@ msgstr "編集することができます"
 #: model_terms:ir.ui.view,arch_db:hr.plan_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
 msgid "Cancel"
-msgstr "取消"
+msgstr "キャンセル"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -744,8 +745,9 @@ msgstr "個人基本情報"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "City"
-msgstr "市区町村"
+msgstr "市"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
@@ -761,7 +763,7 @@ msgstr "コーチ"
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Coach of employee %s is not set."
-msgstr "従業員の %s さんのコーチが定められていません。"
+msgstr "従業員 %s のコーチが設定されていません。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
@@ -874,6 +876,7 @@ msgstr "契約社員"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Country"
 msgstr "国"
 
@@ -1106,7 +1109,7 @@ msgstr "破棄"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Discover our products."
-msgstr "当社製品について"
+msgstr "当社プロダクトのご紹介。"
 
 #. module: hr
 #: model:ir.model,name:hr.model_discuss_channel
@@ -1144,6 +1147,11 @@ msgstr "ドクター"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
 msgid "Driving License"
 msgstr "運転免許証"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__due_date
+msgid "Due Date"
+msgstr "支払期限"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1187,7 +1195,7 @@ msgstr "教育"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Email"
-msgstr "Eメール"
+msgstr "メール"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
@@ -1347,7 +1355,7 @@ msgstr "従業員タグ"
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Employment Type"
-msgstr ""
+msgstr "雇用タイプ"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_contract_type_action
@@ -1359,12 +1367,6 @@ msgstr "雇用タイプ"
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Enrich employee profiles with skills and resumes"
 msgstr "スキルと履歴情報を従業員のプロフィールに追加"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
-#: model:ir.model.fields,help:hr.field_res_users__address_home_id
-msgid "Enter here the private address of the employee, not the one linked to your company."
-msgstr "ここに従業員個人の住所を記入します。会社の住所ではありません。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1379,7 +1381,8 @@ msgstr "様々な業種の知識を拡大しよう"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
-msgid "Expected number of employees for this job position after new recruitment."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr "新規求人後の求職者の予想人員数。"
 
 #. module: hr
@@ -1445,7 +1448,9 @@ msgstr "Font awesomeのアイコン 例. fa-tasks"
 #. odoo-python
 #: code:addons/hr/models/discuss_channel.py:0
 #, python-format
-msgid "For %(channels)s, channel_type should be 'channel' to have the department auto-subscription."
+msgid ""
+"For %(channels)s, channel_type should be 'channel' to have the department "
+"auto-subscription."
 msgstr ""
 
 #. module: hr
@@ -1465,9 +1470,14 @@ msgid "Fruit, coffee and <br>snacks provided."
 msgstr "フルーツ、コーヒー、<br>スナックが提供されます。"
 
 #. module: hr
+#: model:hr.contract.type,name:hr.contract_type_full_time
+msgid "Full-Time"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
-msgstr "将来の活動"
+msgstr "今後の活動"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
@@ -1588,7 +1598,7 @@ msgstr "人事部ステータス"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
-msgstr "人材"
+msgstr "人事"
 
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
@@ -1633,7 +1643,7 @@ msgstr "アイコン"
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
 #: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "例外的なアクティビティを示唆するアイコン"
+msgstr "例外活動を示すアイコン"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
@@ -1647,7 +1657,7 @@ msgstr "識別番号"
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
+msgstr "チェックした場合は、新しいメッセージに注意が必要です。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
@@ -1655,11 +1665,13 @@ msgstr "チェックされている場合は、新しいメッセージに注意
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
-msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
 msgstr "アクティブ項目をFalse にセットすると、リソースレコードは削除することなく非表示にできます。"
 
 #. module: hr
@@ -1677,26 +1689,26 @@ msgstr "画像"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1024
 msgid "Image 1024"
-msgstr "イメージ 1024"
+msgstr "画像1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__image_128
 msgid "Image 128"
-msgstr "イメージ 128"
+msgstr "画像128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_256
 msgid "Image 256"
-msgstr "イメージ 256"
+msgstr "画像256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
 msgid "Image 512"
-msgstr "イメージ 512"
+msgstr "画像512"
 
 #. module: hr
 #. odoo-python
@@ -1717,6 +1729,11 @@ msgstr "臨時雇用"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_is_follower
 msgid "Is Follower"
 msgstr "フォロー中　"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
+msgid "Is Manager"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
@@ -1776,7 +1793,7 @@ msgstr "採用情報"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__lang
 msgid "Lang"
-msgstr ""
+msgstr "Lang"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1888,19 +1905,37 @@ msgid "Location Number"
 msgstr "ロケーション番号"
 
 #. module: hr
+#: model:hr.department,name:hr.dep_rd_ltp
+msgid "Long Term Projects"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
-msgid "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+msgid ""
+"Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
+"Lorem Ipsum has been the industry's standard dummy text ever since the "
+"1500s, when an unknown printer took a galley of type and scrambled it to "
+"make a type specimen book. It has survived not only five centuries, but also"
+" the leap into electronic typesetting, remaining essentially unchanged. It "
+"was popularised in the 1960s with the release of Letraset sheets containing "
+"Lorem Ipsum passages, and more recently with desktop publishing software "
+"like Aldus PageMaker including versions of Lorem Ipsum."
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "主な添付"
+msgstr "主要添付"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__male
 msgid "Male"
 msgstr "男"
+
+#. module: hr
+#: model:hr.department,name:hr.dep_management
+msgid "Management"
+msgstr "マネジメント"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
@@ -2007,7 +2042,7 @@ msgstr "必須"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "活動の締切"
+msgstr "活動期限"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -2053,6 +2088,12 @@ msgid "Negotiate and contract"
 msgstr "交渉と契約"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_pivot
+msgid "New Employees Over Time"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
@@ -2068,7 +2109,7 @@ msgstr "次の活動期限"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
 #: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_summary
 msgid "Next Activity Summary"
-msgstr "次の活動サマリ"
+msgstr "次の活動概要"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
@@ -2091,6 +2132,16 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
 msgstr "歓迎"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
+msgid "No Tags found ! Let's create one"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "No Work Locations found ! Let's create one"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2118,7 +2169,8 @@ msgstr "アクティビティ%sにユーザーはアサインされていませ�
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "No waste of time in enterprise processes, real responsibilities and autonomy"
+msgid ""
+"No waste of time in enterprise processes, real responsibilities and autonomy"
 msgstr "企業プロセス、真の責任、自律性に無駄はありません"
 
 #. module: hr
@@ -2130,7 +2182,7 @@ msgstr "利用不可"
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__note
 msgid "Note"
-msgstr "ノート"
+msgstr "メモ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__notes
@@ -2143,7 +2195,7 @@ msgstr "ノート"
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_needaction_counter
 msgid "Number of Actions"
-msgstr "アクションの数"
+msgstr "アクション数"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
@@ -2166,7 +2218,8 @@ msgstr "エラー数"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
-msgid "Number of hired employees for this job position during recruitment phase."
+msgid ""
+"Number of hired employees for this job position during recruitment phase."
 msgstr "採用フェーズ中にこの職種で雇用された従業員の数。"
 
 #. module: hr
@@ -2175,7 +2228,7 @@ msgstr "採用フェーズ中にこの職種で雇用された従業員の数。
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "アクションが必要なメッセージの数"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
@@ -2183,19 +2236,12 @@ msgstr "アクションを必要とするメッセージの数"
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "配信エラーのメッセージ数"
+msgstr "配信エラーが発生されたメッセージ数"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
 msgstr "募集予定の新規入社の数。"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__related_contacts_count
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contacts_count
-#: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contacts_count
-msgid "Number of related contacts"
-msgstr ""
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
@@ -2228,6 +2274,13 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
 msgid "On/Offboarding Plans"
 msgstr "入社/退社手続き"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/web/thread_actions.js:0
+#, python-format
+msgid "Open Profile"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -2273,7 +2326,10 @@ msgstr "PINコード"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
 #: model:ir.model.fields,help:hr.field_res_users__pin
-msgid "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application."
+msgid ""
+"PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if"
+" enabled in Configuration) and to change the cashier in the Point of Sale "
+"application."
 msgstr ""
 
 #. module: hr
@@ -2287,10 +2343,15 @@ msgid "Parent Path"
 msgstr "親パス"
 
 #. module: hr
+#: model:hr.contract.type,name:hr.contract_type_part_time
+msgid "Part-Time"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,help:hr.field_hr_employee_public__user_partner_id
 msgid "Partner-related data of the user"
-msgstr "ユーザの取引先関連データ"
+msgstr "ユーザのパートナー関連データ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2301,7 +2362,7 @@ msgstr "ユーザの取引先関連データ"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Passion for software products"
-msgstr "ソフトウェア製品に対する情熱"
+msgstr "ソフトウェアプロダクトに対する情熱"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
@@ -2312,7 +2373,7 @@ msgstr "旅券番号"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Payroll"
-msgstr "給与"
+msgstr "給与計算"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2481,6 +2542,7 @@ msgstr "バッジ印刷"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Address"
 msgstr "個人アドレス"
 
@@ -2490,6 +2552,7 @@ msgid "Private Car Plate"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_city
 #: model:ir.model.fields,field_description:hr.field_res_users__private_city
 msgid "Private City"
 msgstr ""
@@ -2500,6 +2563,7 @@ msgid "Private Contact"
 msgstr "プライベート連絡先"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_country_id
 #: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
 msgid "Private Country"
 msgstr ""
@@ -2517,29 +2581,38 @@ msgid "Private Information"
 msgstr "個人情報"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__phone
-#: model:ir.model.fields,field_description:hr.field_res_users__employee_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__private_phone
 msgid "Private Phone"
 msgstr "個人電話番号"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_state_id
 #: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
 msgid "Private State"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_street
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street
 msgid "Private Street"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_street2
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street2
 msgid "Private Street2"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_zip
 #: model:ir.model.fields,field_description:hr.field_res_users__private_zip
 msgid "Private Zip"
+msgstr ""
+
+#. module: hr
+#: model:hr.department,name:hr.dep_ps
+msgid "Professional Services"
 msgstr ""
 
 #. module: hr
@@ -2557,6 +2630,11 @@ msgstr "公務員"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Qualify the customer needs"
 msgstr "顧客ニーズの審査"
+
+#. module: hr
+#: model:hr.department,name:hr.dep_rd_be
+msgid "R&D USA"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
@@ -2583,7 +2661,7 @@ msgstr "理由"
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
-msgstr "採用"
+msgstr "求人"
 
 #. module: hr
 #. odoo-python
@@ -2592,20 +2670,6 @@ msgstr "採用"
 #, python-format
 msgid "Register Departure"
 msgstr "退職届け"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
-msgid "Related Contact"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee_base.py:0
-#, python-format
-msgid "Related Contacts"
-msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -2646,6 +2710,11 @@ msgstr "レポーティング"
 #: model:ir.model.fields,field_description:hr.field_hr_job__requirements
 msgid "Requirements"
 msgstr "必要事項"
+
+#. module: hr
+#: model:hr.department,name:hr.dep_rd
+msgid "Research & Development"
+msgstr "研究開発"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
@@ -2690,7 +2759,7 @@ msgstr "担当者"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_user_id
 msgid "Responsible User"
-msgstr "担当者"
+msgstr "担当ユーザ"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_retired
@@ -2706,6 +2775,11 @@ msgstr "社会保険番号"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 msgid "SSN No"
 msgstr "社会保障番号"
+
+#. module: hr
+#: model:hr.department,name:hr.dep_sales
+msgid "Sales"
+msgstr "販売"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
@@ -2725,6 +2799,11 @@ msgid "School"
 msgstr "学校名"
 
 #. module: hr
+#: model:hr.contract.type,name:hr.contract_type_seasonal
+msgid "Seasonal"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
 #: model:ir.model.fields,help:hr.field_hr_employee_base__coach_id
 #: model:ir.model.fields,help:hr.field_hr_employee_public__coach_id
@@ -2741,7 +2820,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
 #: model:ir.model.fields,field_description:hr.field_hr_job__sequence
 msgid "Sequence"
-msgstr "付番"
+msgstr "シーケンス"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2752,7 +2831,7 @@ msgstr "会社のデフォルトスケジュールを設定して、従業員の
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
 msgid "Settings"
-msgstr "管理設定"
+msgstr "設定"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__show_hr_icon_display
@@ -2817,15 +2896,21 @@ msgid "Spouse Complete Name"
 msgstr "配偶者の氏名"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Start Date"
+msgstr "開始日"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "State"
-msgstr "都道府県/州"
+msgstr "都道府県・州"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Status"
-msgstr "ステータス"
+msgstr "状態"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_state
@@ -2836,10 +2921,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"活動に基づく状態\n"
-"延滞：期限は既に過ぎました\n"
-"当日：活動日は本日です\n"
-"予定：将来の活動。"
+"活動に基づいての状態\n"
+"延滞: 期限は既に過ぎました\n"
+"当日: 活動日は本日です\n"
+"予定: 将来の活動。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan__steps_count
@@ -2848,11 +2933,13 @@ msgstr "ステップ数"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Street 2..."
 msgstr "町名番地2…"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Street..."
 msgstr "町名番地…"
 
@@ -2876,7 +2963,7 @@ msgstr "学生"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
 #: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__summary
 msgid "Summary"
-msgstr "サマリ"
+msgstr "概要"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
@@ -2886,7 +2973,7 @@ msgstr "タグ名"
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "タグ名がすでに存在します！"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
@@ -2929,7 +3016,9 @@ msgstr "派遣社員"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
-msgid "The Badge ID must be unique, this one is already assigned to another employee."
+msgid ""
+"The Badge ID must be unique, this one is already assigned to another "
+"employee."
 msgstr "バッジIDは一意でなければなりません。これは既に別の従業員に割り当てられています。"
 
 #. module: hr
@@ -2956,15 +3045,13 @@ msgid "The employee %s should be linked to a user."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
-#: model:ir.model.fields,field_description:hr.field_res_users__is_address_home_a_company
-msgid "The employee address has a company linked"
-msgstr "会社に紐付く従業員の住所"
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__employee_type
 #: model:ir.model.fields,help:hr.field_res_users__employee_type
-msgid "The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract History. Only Employee type is supposed to be under contract and will have a Contract History."
+msgid ""
+"The employee type. Although the primary purpose may seem to categorize "
+"employees, this field has also an impact in the Contract History. Only "
+"Employee type is supposed to be under contract and will have a Contract "
+"History."
 msgstr ""
 
 #. module: hr
@@ -2983,7 +3070,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
-msgid "The fields \"%s\" you try to read is not available on the public employee profile."
+msgid ""
+"The fields \"%s\" you try to read is not available on the public employee "
+"profile."
 msgstr "あなたが参照しようとした\"%s\"フィールドはパブリックな従業員プロフィールにはありません。"
 
 #. module: hr
@@ -3033,7 +3122,9 @@ msgstr "ユーザーは、従業員によって作成されたドキュメント
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
-msgid "The user will have access to the human resources configuration as well as statistic reports."
+msgid ""
+"The user will have access to the human resources configuration as well as "
+"statistic reports."
 msgstr "ユーザーは、統計レポートと同様に、人材コンフィグレーションにアクセスすることができます。"
 
 #. module: hr
@@ -3054,7 +3145,9 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
 #: model:ir.model.fields,help:hr.field_hr_employee_base__tz
 #: model:ir.model.fields,help:hr.field_hr_employee_public__tz
-msgid "This field is used in order to define in which timezone the resources will work."
+msgid ""
+"This field is used in order to define in which timezone the resources will "
+"work."
 msgstr "このフィールドは、その人材が勤務するタイムゾーンを定義するために、用いられます。"
 
 #. module: hr
@@ -3062,7 +3155,7 @@ msgstr "このフィールドは、その人材が勤務するタイムゾーン
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__tz
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__tz
 msgid "Timezone"
-msgstr "タイムゾーン"
+msgstr "時間帯"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__to_define
@@ -3075,7 +3168,10 @@ msgstr "定義する"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
-msgid "To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead."
+msgid ""
+"To avoid multi company issues (losing the access to your previous contracts,"
+" leaves, ...), you should create another employee in the new company "
+"instead."
 msgstr ""
 
 #. module: hr
@@ -3121,7 +3217,7 @@ msgstr "トレーニング"
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
 #: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "記録上の例外アクティビティのタイプ。"
+msgstr "記録上の例外活動の種類。"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
@@ -3136,6 +3232,11 @@ msgstr "未決定"
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "未読メッセージ"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
+msgid "Use tags to categorize your Employees."
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -3221,7 +3322,9 @@ msgstr "この職の素晴らしい点"
 #: model:ir.model.fields,help:hr.field_hr_employee__member_of_department
 #: model:ir.model.fields,help:hr.field_hr_employee_base__member_of_department
 #: model:ir.model.fields,help:hr.field_hr_employee_public__member_of_department
-msgid "Whether the employee is a member of the active user's department or one of it's child department."
+msgid ""
+"Whether the employee is a member of the active user's department or one of "
+"it's child department."
 msgstr ""
 
 #. module: hr
@@ -3262,6 +3365,7 @@ msgstr "職場アドレス"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_contact_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_contact_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_contact_id
+#: model:ir.model.fields,field_description:hr.field_res_users__work_contact_id
 msgid "Work Contact"
 msgstr ""
 
@@ -3297,6 +3401,13 @@ msgstr "勤務場所"
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
 msgstr "勤務場所"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid ""
+"Work Locations are used to define more precisely where your employee is "
+"located everyday."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
@@ -3348,10 +3459,17 @@ msgid "Working Hours"
 msgstr "労働時間"
 
 #. module: hr
+#: model:ir.ui.menu,name:hr.menu_resource_calendar_view
+msgid "Working Schedules"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 #, python-format
-msgid "You are only allowed to update your preferences. Please contact a HR officer to update other information."
+msgid ""
+"You are only allowed to update your preferences. Please contact a HR officer"
+" to update other information."
 msgstr ""
 "自己更新が許可されているのはプリファレンス情報のみです。\n"
 "その他の情報を更新するには人事部にお問い合わせください。"
@@ -3411,6 +3529,7 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "ZIP"
 msgstr "郵便番号"
 

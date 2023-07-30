@@ -1,43 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* link_tracker
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"클릭\" role=\"이미지\"/>"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "<span class=\"o_stat_text\">Visit Page</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">페이지 방문</span>"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__absolute_url
 msgid "Absolute URL"
-msgstr ""
+msgstr "절대 URL"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__label
 msgid "Button label"
-msgstr ""
+msgstr "버튼 라벨"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__campaign_id
@@ -98,9 +98,10 @@ msgstr "작성일자"
 #. module: link_tracker
 #. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
+#: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
 msgid "Creating a Link Tracker without URL is not possible"
-msgstr ""
+msgstr "URL 없이 링크 추적기를 생성할 수 없습니다"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__display_name
@@ -184,8 +185,10 @@ msgstr "링크 추적기 코드"
 #. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
-msgid "Link Tracker values (URL, campaign, medium and source) must be unique (%s, %s, %s, %s)."
-msgstr ""
+msgid ""
+"Link Tracker values (URL, campaign, medium and source) must be unique (%s, "
+"%s, %s, %s)."
+msgstr "링크 추적기 값(URL, 캠페인, 매체 및 소스)은 고유해야 합니다  (%s, %s, %s, %s)."
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_graph
@@ -202,7 +205,7 @@ msgstr "링크 클릭"
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr ""
+msgstr "메일 렌더링 혼합"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
@@ -264,8 +267,11 @@ msgstr "대상 URL"
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__campaign_id
 #: model:ir.model.fields,help:link_tracker.field_link_tracker_click__campaign_id
-msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
-msgstr "이것은 다른 캠페인 활동을 추적할 때 도움을 주는 이름입니다.  예시 : Fall_Drive, Christmas_Special"
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"이것은 다른 캠페인 활동을 추적할 때 도움을 주는 이름입니다.  예시 : Fall_Drive, Christmas_Special"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
@@ -274,7 +280,9 @@ msgstr "이것은 배송 방법입니다. 예시 : 엽서, 이메일 또는 배�
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
-msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
 msgstr "이것은 링크의 소스입니다. 예시 : 검색엔진, 다른 도메인 또는 이메일 목록의 이름"
 
 #. module: link_tracker
@@ -290,7 +298,9 @@ msgstr "추적 URL"
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action_campaign
-msgid "Trackers are used to collect count stat about click on links and generate short URLs."
+msgid ""
+"Trackers are used to collect count stat about click on links and generate "
+"short URLs."
 msgstr "추적기는 링크 클릭에 대한 통계를 수집하고 짧은 URL을 생성하는 데 사용됩니다."
 
 #. module: link_tracker

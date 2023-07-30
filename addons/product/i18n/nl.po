@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product
@@ -59,6 +57,7 @@ msgstr "%s %% korting"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "%s (copy)"
@@ -69,7 +68,7 @@ msgstr "%s (kopie)"
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s: end date (%s) should be greater than start date (%s)"
-msgstr ""
+msgstr "%s: einddatum (%s) moet later zijn dan de startdatum (%s)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
@@ -110,7 +109,7 @@ msgstr "1 jaar"
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs."
-msgstr "160x80cm, met grote poten"
+msgstr "160x80cm, met grote poten."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
@@ -139,8 +138,12 @@ msgstr "4 x 7 met prijs"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>"
-msgstr "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>"
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
@@ -157,6 +160,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        Extra prijzen\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        Extra prijs\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -176,7 +185,8 @@ msgstr "<span>%</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr "<span>Alle algemene instellingen voor dit product zijn beheerd op </span>"
+msgstr ""
+"<span>Alle algemene instellingen voor dit product zijn beheerd op </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -189,6 +199,8 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                here to set up the feature."
 msgstr ""
+"<strong>Bewaar</strong> deze pagina en kom hier terug\n"
+"                                om de functie in te stellen."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -208,8 +220,14 @@ msgstr "Een barcode kan slechts aan één verpakking worden toegekend."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
 #: model:ir.model.fields,help:product.field_product_template__description_sale
-msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note"
-msgstr "Een omschrijving van het product die je wilt delen met je klanten. Deze omschrijving wordt gekopieerd naar elke verkooporder, leveringsbon en factuur/creditfactuur"
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sales Order, Delivery Order and "
+"Customer Invoice/Credit Note"
+msgstr ""
+"Een omschrijving van het product die je wilt delen met je klanten. Deze "
+"omschrijving wordt gekopieerd naar elke verkooporder, leveringsbon en "
+"factuur/creditfactuur"
 
 #. module: product
 #. odoo-python
@@ -242,9 +260,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Een voorraad product is een product waarvan je voorraad beheerd. De voorraad app moet geïnstalleerd worden.\n"
+"Een voorraadproduct is een product waarvan je de voorraad beheerd. De voorraad app moet geïnstalleerd zijn.\n"
 "Een verbruiksproduct, is een product waarvoor geen voorraad wordt bijgehouden.\n"
-"Een dienst is een immateriëel product dat je verkoopt."
+"Een dienst is een immaterieel product dat je verkoopt."
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -252,6 +270,7 @@ msgid "Acoustic Bloc Screens"
 msgstr "Akoestische blokschermen"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
@@ -275,24 +294,28 @@ msgid "Active Products"
 msgstr "Beschikbare producten"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_template__activity_ids
 msgid "Activities"
 msgstr "Activiteiten"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Activiteit uitzondering decoratie"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_state
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
 #: model:ir.model.fields,field_description:product.field_product_template__activity_state
 msgid "Activity State"
 msgstr "Activiteitsfase"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
@@ -307,8 +330,8 @@ msgstr "Voeg hoeveelheid toe"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
-msgid "Additional Product Tag"
-msgstr "Bijkomend productlabel"
+msgid "Additional Product Tags"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -394,10 +417,15 @@ msgstr "Wijs de prioriteit toe aan de lijst van de productleverancier."
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
-msgid "At most %s quantities can be displayed simultaneously. Remove a selected quantity to add others."
+msgid ""
+"At most %s quantities can be displayed simultaneously. Remove a selected "
+"quantity to add others."
 msgstr ""
+"Er kunnen maximaal %s aantallen tegelijk worden weergegeven. Verwijder een "
+"geselecteerde hoeveelheid om andere toe te voegen."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
 msgid "Attachment Count"
@@ -463,8 +491,13 @@ msgstr "Barcode"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__barcode
-msgid "Barcode used for packaging identification. Scan this packaging barcode from a transfer in the Barcode app to move all the contained units"
-msgstr "Barcode gebruikt voor identificatie van de verpakking. Scan deze verpakkingsbarcode van een overdracht in de Barcode-app om alle aanwezige stuks te verplaatsen"
+msgid ""
+"Barcode used for packaging identification. Scan this packaging barcode from "
+"a transfer in the Barcode app to move all the contained units"
+msgstr ""
+"Barcode gebruikt voor identificatie van de verpakking. Scan deze "
+"verpakkingsbarcode van een overdracht in de Barcode-app om alle aanwezige "
+"stuks te verplaatsen"
 
 #. module: product
 #. odoo-python
@@ -487,6 +520,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"Basisprijs voor de berekening.\n"
+"Verkooppprijs: De basisprijs zal de verkoopprijs zijn. \n"
+"Kostprijs: De basisprijs zal de kostprijs zijn. \n"
+"Andere prijslijst: Berekening van de basisprijs op basis van een andere prijslijst."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -666,8 +703,12 @@ msgstr "Verbruiksartikel"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
-msgid "Consumables are physical products for which you don't manage the inventory level: they are always available."
-msgstr "Verbruiksartikelen zijn fysieke producten waarvan je het voorraadniveau niet beheert: ze zijn altijd beschikbaar."
+msgid ""
+"Consumables are physical products for which you don't manage the inventory "
+"level: they are always available."
+msgstr ""
+"Verbruiksartikelen zijn fysieke producten waarvan je het voorraadniveau niet"
+" beheert: ze zijn altijd beschikbaar."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -677,7 +718,7 @@ msgstr "Contact"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Contact Us"
-msgstr "Contact"
+msgstr "Ons contacteren"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
@@ -829,7 +870,7 @@ msgstr "Aantal decimalen"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %s pricelist"
-msgstr ""
+msgstr "Standaard prijslijst %s "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -842,8 +883,12 @@ msgstr "Standaard maateenheid gebruikt voor alle voorraadbewegingen."
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 #: model:ir.model.fields,help:product.field_product_template__uom_po_id
-msgid "Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure."
-msgstr "Standaard maateenheid voor gebruik in inkooporders. Deze moet in dezelfde categorie liggen als de standaard maateenheid."
+msgid ""
+"Default unit of measure used for purchase orders. It must be in the same "
+"category as the default unit of measure."
+msgstr ""
+"Standaard maateenheid voor gebruik in inkooporders. Deze moet in dezelfde "
+"categorie liggen als de standaard maateenheid."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
@@ -890,7 +935,7 @@ msgstr "Bureaucombinatie, zwart-bruin: stoel + bureau + lade."
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
 #: model:ir.model.fields,help:product.field_product_attribute_value__sequence
 msgid "Determine the display order"
-msgstr "Bepaal de weergavevolgorde"
+msgstr "Bepaal de weergave volgorde"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -965,7 +1010,7 @@ msgstr "Lade"
 #. module: product
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Drawer Black"
-msgstr "Lade zwart"
+msgstr "Zwarte lade"
 
 #. module: product
 #: model_terms:product.template,description:product.product_product_27_product_template
@@ -990,7 +1035,9 @@ msgstr "Dynamisch"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr "Elke waarde moet slechts eenmaal per kenmerk per product worden gedefinieerd."
+msgstr ""
+"Elke waarde moet slechts eenmaal per kenmerk per product worden "
+"gedefinieerd."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -1040,8 +1087,12 @@ msgstr "Extra kosten"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
-msgid "Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr "Extra prijs: Extra prijs voor de variant met deze kenmerk waarde, bovenop de verkoopprijs. Bijvoorbeeld: 200 extra prijs. 1000 + 200 = 1200."
+msgid ""
+"Extra price for the variant with this attribute value on sale price. eg. 200"
+" price extra, 1000 + 200 = 1200."
+msgstr ""
+"Extra prijs: Extra prijs voor de variant met deze kenmerk waarde, bovenop de"
+" verkoopprijs. Bijvoorbeeld: 200 extra prijs. 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__priority
@@ -1067,18 +1118,21 @@ msgid "Flipover"
 msgstr "Flipover"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_follower_ids
 #: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_follower_ids
 msgid "Followers"
 msgstr "Volgers"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Volgers (Relaties)"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
@@ -1164,6 +1218,7 @@ msgid "HTML Color Index"
 msgstr "HTML kleurindex"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__has_message
 #: model:ir.model.fields,field_description:product.field_product_product__has_message
 #: model:ir.model.fields,field_description:product.field_product_template__has_message
 msgid "Has Message"
@@ -1172,8 +1227,12 @@ msgstr "Heeft bericht"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__html_color
-msgid "Here you can set a specific HTML color index (e.g. #ff0000) to display the color if the attribute type is 'Color'."
-msgstr "Hier kun je een specifieke HTML-kleurenindex instellen (bijvoorbeeld #ff0000) om de kleur weer te geven als het kenmerktype 'Kleur' is."
+msgid ""
+"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
+"color if the attribute type is 'Color'."
+msgstr ""
+"Hier kun je een specifieke HTML-kleurenindex instellen (bijvoorbeeld "
+"#ff0000) om de kleur weer te geven als het kenmerktype 'Kleur' is."
 
 #. module: product
 #: model:product.template,name:product.expense_hotel_product_template
@@ -1200,44 +1259,57 @@ msgid "ID"
 msgstr "ID"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_icon
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_icon
 msgid "Icon"
 msgstr "Icoon"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Icoon om uitzondering op activiteit aan te geven."
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__message_needaction
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__message_has_error
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Indien aangevinkt hebben sommige leveringen een fout."
+msgstr "Indien aangevinkt hebben sommige berichten een leveringsfout."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
-msgid "If not set, the vendor price will apply to all variants of this product."
-msgstr "Indien niet ingesteld zal de leveranciersprijs van toepassingen zijn op alle varianten van dit product."
+msgid ""
+"If not set, the vendor price will apply to all variants of this product."
+msgstr ""
+"Indien niet ingesteld zal de leveranciersprijs van toepassingen zijn op alle"
+" varianten van dit product."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
-msgid "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr "Indien niet aangevinkt, kun je de prijslijst verbergen, zonder deze te wissen."
+msgid ""
+"If unchecked, it will allow you to hide the pricelist without removing it."
+msgstr ""
+"Indien niet aangevinkt, kun je de prijslijst verbergen, zonder deze te "
+"wissen."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__active
 #: model:ir.model.fields,help:product.field_product_template__active
-msgid "If unchecked, it will allow you to hide the product without removing it."
-msgstr "Indien niet aangevinkt, heb je de mogelijkheid om dit product te verbergen, zonder deze te verwijderen."
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr ""
+"Indien niet aangevinkt, heb je de mogelijkheid om dit product te verbergen, "
+"zonder deze te verwijderen."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_1920
@@ -1327,6 +1399,7 @@ msgid "Inventory"
 msgstr "Voorraad"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template__message_is_follower
 msgid "Is Follower"
@@ -1418,8 +1491,14 @@ msgstr "Te late activiteiten"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
-msgid "Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
-msgstr "Levertijd in dagen tussen de bevestiging van de inkooporder en de ontvangst van de producten in het magazijn. Dit wordt gebruikt door de planner voor het automatisch berekenen van de inkoopplanning."
+msgid ""
+"Lead time in days between the confirmation of the purchase order and the "
+"receipt of the products in your warehouse. Used by the scheduler for "
+"automatic computation of the purchase order planning."
+msgstr ""
+"Levertijd in dagen tussen de bevestiging van de inkooporder en de ontvangst "
+"van de producten in het magazijn. Dit wordt gebruikt door de planner voor "
+"het automatisch berekenen van de inkoopplanning."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1445,13 +1524,22 @@ msgstr "Logistiek"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "Looking for a custom bamboo stain to match existing furniture? Contact us for a quote."
-msgstr "Op zoek naar een bamboebeits op maat die past bij bestaande meubels? Neem contact met ons op voor een offerte."
+msgid ""
+"Looking for a custom bamboo stain to match existing furniture? Contact us "
+"for a quote."
+msgstr ""
+"Op zoek naar een bamboebeits op maat die past bij bestaande meubels? Neem "
+"contact met ons op voor een offerte."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
-msgid "Make this attribute value not compatible with other values of the product or some attribute values of optional and accessory products."
-msgstr "Zorg ervoor dat deze kenmerkwaarde niet compatibel is met andere waarden van het product of een aantal kenmerkwaarden van optionele en accessoire producten."
+msgid ""
+"Make this attribute value not compatible with other values of the product or"
+" some attribute values of optional and accessory products."
+msgstr ""
+"Zorg ervoor dat deze kenmerkwaarde niet compatibel is met andere waarden van"
+" het product of een aantal kenmerkwaarden van optionele en accessoire "
+"producten."
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1479,12 +1567,14 @@ msgid "Max. Price Margin"
 msgstr "Max. prijsmarge"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error
 msgid "Message Delivery error"
 msgstr "Bericht afleverfout"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_ids
 #: model:ir.model.fields,field_description:product.field_product_product__message_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_ids
 msgid "Messages"
@@ -1520,6 +1610,7 @@ msgstr ""
 "Geavanceerde regels: activeert geavanceerde prijsregels voor prijslijsten."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__my_activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_product__my_activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__my_activity_date_deadline
 msgid "My Activity Deadline"
@@ -1530,6 +1621,7 @@ msgstr "Mijn activiteit deadline"
 #: model:ir.model.fields,field_description:product.field_product_category__name
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__name
 #: model:ir.model.fields,field_description:product.field_product_product__name
+#: model:ir.model.fields,field_description:product.field_product_tag__name
 #: model:ir.model.fields,field_description:product.field_product_template__name
 msgid "Name"
 msgstr "Naam"
@@ -1540,24 +1632,28 @@ msgid "Never (option)"
 msgstr "Nooit (optie)"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Volgende activiteitenkalender Evenement"
+msgstr "Volgende activiteitenafspraak"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Volgende activiteit deadline"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_summary
 #: model:ir.model.fields,field_description:product.field_product_product__activity_summary
 #: model:ir.model.fields,field_description:product.field_product_template__activity_summary
 msgid "Next Activity Summary"
-msgstr "Omschrijving volgende actie"
+msgstr "Volgende activiteit overzicht"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
@@ -1567,8 +1663,12 @@ msgstr "Volgende activiteit type"
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
-msgid "No product to print, if the product is archived please unarchive it before printing its label."
-msgstr "Geen product om af te drukken. Als het product is gearchiveerd, verwijder het dan uit het archief voordat je het label afdrukt."
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"Geen product om af te drukken. Als het product is gearchiveerd, verwijder "
+"het dan uit het archief voordat je het label afdrukt."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -1594,24 +1694,28 @@ msgid "Number Related Products"
 msgstr "Nummer gerelateerde producten"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Aantal acties"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
 msgid "Number of errors"
 msgstr "Aantal fouten"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "Aantal berichten die actie vereisen"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
 msgid "Number of messages with delivery error"
@@ -1647,15 +1751,23 @@ msgstr "Kantoorlamp"
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
-msgid "On the product %(product)s you cannot associate the value %(value)s with the attribute %(attribute)s because they do not match."
+msgid ""
+"On the product %(product)s you cannot associate the value %(value)s with the"
+" attribute %(attribute)s because they do not match."
 msgstr ""
+"Op het product %(product)s, kan je de waarde %(value)s niet koppelen aan het"
+" kenmerk %(attribute)s omdat deze niet overeenkomen."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
-msgid "On the product %(product)s you cannot transform the attribute %(attribute_src)s into the attribute %(attribute_dest)s."
+msgid ""
+"On the product %(product)s you cannot transform the attribute "
+"%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"Op het product %(product)s, kan je het kenmerk %(attribute_src)s niet in het"
+" kenmerk %(attribute_dest)s veranderen."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -1694,14 +1806,14 @@ msgstr "Percentage prijs"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr "Pillen"
+msgstr "Vierkante selectievakjes"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number."
-msgstr ""
+msgstr "Voer een positief geheel getal in."
 
 #. module: product
 #. odoo-python
@@ -1721,7 +1833,8 @@ msgstr "Geef het product aan waarvoor deze regel moet worden toegepast"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
-msgid "Please specify the product variant for which this rule should be applied"
+msgid ""
+"Please specify the product variant for which this rule should be applied"
 msgstr "Geef de productvariant op waarvoor deze regel moet worden toegepast"
 
 #. module: product
@@ -1731,8 +1844,12 @@ msgstr "Ponden"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "Press a button and watch your desk glide effortlessly from sitting to standing height in seconds."
-msgstr "Druk op een knop en zie hoe het bureau in enkele seconden moeiteloos van zit- naar stahoogte glijdt."
+msgid ""
+"Press a button and watch your desk glide effortlessly from sitting to "
+"standing height in seconds."
+msgstr ""
+"Druk op een knop en zie hoe het bureau in enkele seconden moeiteloos van "
+"zit- naar stahoogte glijdt."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -1862,6 +1979,7 @@ msgstr "Prijzen"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Print"
 msgstr "Afdrukken"
@@ -1987,20 +2105,13 @@ msgid "Product Packagings"
 msgstr "Productverpakkingen"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
-msgid "Product Product"
-msgstr "Product Product"
-
-#. module: product
 #: model:ir.model,name:product.model_product_tag
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Tag"
-msgstr "Productlabel"
+msgstr "Productlabel:"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
-#: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
-#: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
 msgstr "Productlabels"
@@ -2008,7 +2119,6 @@ msgstr "Productlabels"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_tmpl_id
-#: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_tmpl_id
@@ -2032,14 +2142,20 @@ msgid "Product Template Attribute Value"
 msgstr "Productsjabloon kenmerk waarde"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
+#: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 msgid "Product Template Tags"
 msgstr "Productsjabloonlabels"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
+msgid "Product Templates"
+msgstr "Productsjablonen"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr "Productsjabloon"
+msgstr "Product sjabloon"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
@@ -2065,6 +2181,7 @@ msgstr "Maateenheid product"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Variant"
 msgstr "Productvariant"
 
@@ -2079,6 +2196,7 @@ msgstr "Productvariantwaardes"
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_variant_action
+#: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
 msgid "Product Variants"
@@ -2165,25 +2283,25 @@ msgstr "Inkoopmaateenheid"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Quantities"
-msgstr ""
+msgstr "Aantallen"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Quantities (Price)"
-msgstr ""
+msgstr "Aantallen (Prijs)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "Reeds beschikbare hoeveelheid (%s)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2198,12 +2316,16 @@ msgstr "Keuzerondje"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
 msgid "Reference"
-msgstr "Referentie"
+msgstr "Verwijzing"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
-msgid "Register the prices requested by your vendors for each product, based on the quantity and the period."
-msgstr "Registreer de prijzen die door je leveranciers worden gevraagd voor elk product, op basis van de hoeveelheid en de periode."
+msgid ""
+"Register the prices requested by your vendors for each product, based on the"
+" quantity and the period."
+msgstr ""
+"Registreer de prijzen die door je leveranciers worden gevraagd voor elk "
+"product, op basis van de hoeveelheid en de periode."
 
 #. module: product
 #. odoo-python
@@ -2226,6 +2348,7 @@ msgid "Remove quantity"
 msgstr "Verwijder hoeveelheid"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_user_id
 msgid "Responsible User"
@@ -2333,23 +2456,39 @@ msgstr "Toon prijs & korting aan klant"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
-msgid "Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."
-msgstr "Specificeer een productcategorie als deze regel van toepassing is op producten behorende tot deze categorie. Laat anders leeg."
+msgid ""
+"Specify a product category if this rule only applies to products belonging "
+"to this category or its children categories. Keep empty otherwise."
+msgstr ""
+"Specificeer een productcategorie als deze regel van toepassing is op "
+"producten behorende tot deze categorie. Laat anders leeg."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
-msgid "Specify a product if this rule only applies to one product. Keep empty otherwise."
-msgstr "Specificeer een product als deze regel van toepassing is op één product. Laat anders leeg."
+msgid ""
+"Specify a product if this rule only applies to one product. Keep empty "
+"otherwise."
+msgstr ""
+"Specificeer een product als deze regel van toepassing is op één product. "
+"Laat anders leeg."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
-msgid "Specify a template if this rule only applies to one product template. Keep empty otherwise."
-msgstr "Specificeer een sjabloon als deze regel van toepassing is op één productsjabloon. Laat anders leeg."
+msgid ""
+"Specify a template if this rule only applies to one product template. Keep "
+"empty otherwise."
+msgstr ""
+"Specificeer een sjabloon als deze regel van toepassing is op één "
+"productsjabloon. Laat anders leeg."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
-msgid "Specify the fixed amount to add or subtract (if negative) to the amount calculated with the discount."
-msgstr "Specificeer het vaste bedrag dat moeten worden opgeteld bij (of afgetrokken van, indien negatief) het bedrag berekend met de korting."
+msgid ""
+"Specify the fixed amount to add or subtract (if negative) to the amount "
+"calculated with the discount."
+msgstr ""
+"Specificeer het vaste bedrag dat moeten worden opgeteld bij (of afgetrokken "
+"van, indien negatief) het bedrag berekend met de korting."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2365,7 +2504,7 @@ msgstr "Specificeer het minimale marge bedrag over de basisprijs."
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_start
 msgid "Start Date"
-msgstr "Startdatum"
+msgstr "Begindatum"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
@@ -2382,6 +2521,7 @@ msgstr ""
 "De weergegeven waarde is afhankelijk van de tijdzone die is ingesteld in je voorkeuren."
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_state
 #: model:ir.model.fields,help:product.field_product_product__activity_state
 #: model:ir.model.fields,help:product.field_product_template__activity_state
 msgid ""
@@ -2411,16 +2551,12 @@ msgid "Supplier Pricelist"
 msgstr "Prijslijst leverancier"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_tag__name
-msgid "Tag Name"
-msgstr "Labelnaam"
-
-#. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Labelnaam bestaat al!"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Tags"
 msgstr "Labels"
@@ -2428,7 +2564,8 @@ msgstr "Labels"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr "Labels worden gebruikt om een product te zoeken voor een bepaald thema."
+msgstr ""
+"Labels worden gebruikt om een product te zoeken voor een bepaald thema."
 
 #. module: product
 #. odoo-python
@@ -2449,25 +2586,41 @@ msgstr "Het productsoort komt niet overeen met het gedetailleerde soort"
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
-msgid "The attribute %(attribute)s must have at least one value for the product %(product)s."
+msgid ""
+"The attribute %(attribute)s must have at least one value for the product "
+"%(product)s."
 msgstr ""
+"Het kenmerkt %(attribute)s moet ten minste één waarde hebben voor het "
+"product %(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
-msgid "The attribute cannot be changed once the value is used on at least one product."
-msgstr "Het kenmerk kan niet worden gewijzigd nadat de waarde voor ten minste één product is gebruikt."
+msgid ""
+"The attribute cannot be changed once the value is used on at least one "
+"product."
+msgstr ""
+"Het kenmerk kan niet worden gewijzigd nadat de waarde voor ten minste één "
+"product is gebruikt."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "The computed price is expressed in the default Unit of Measure of the product."
-msgstr "De berekende prijs wordt uitgedrukt in de standaard maateenheid van het product."
+msgid ""
+"The computed price is expressed in the default Unit of Measure of the "
+"product."
+msgstr ""
+"De berekende prijs wordt uitgedrukt in de standaard maateenheid van het "
+"product."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
-msgid "The default Unit of Measure and the purchase Unit of Measure must be in the same category."
-msgstr "De standaard maateenheid en de inkoopmaateenheid moeten in dezelfde categorie vallen."
+msgid ""
+"The default Unit of Measure and the purchase Unit of Measure must be in the "
+"same category."
+msgstr ""
+"De standaard maateenheid en de inkoopmaateenheid moeten in dezelfde "
+"categorie vallen."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
@@ -2483,8 +2636,12 @@ msgstr "De eerste in de reeks is de standaard."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "The minimum height is 65 cm, and for standing work the maximum height position is 125 cm."
-msgstr "De minimale hoogte is 65 cm en voor staand werken is de maximale hoogtepositie 125 cm."
+msgid ""
+"The minimum height is 65 cm, and for standing work the maximum height "
+"position is 125 cm."
+msgstr ""
+"De minimale hoogte is 65 cm en voor staand werken is de maximale "
+"hoogtepositie 125 cm."
 
 #. module: product
 #. odoo-python
@@ -2495,15 +2652,26 @@ msgstr "De minimum marge moet lager zijn dan de maximale marge."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
-msgid "The number of products under this category (Does not consider the children categories)"
-msgstr "Het aantal producten in deze categorie (zonder de onderliggende categorieën)"
+msgid ""
+"The number of products under this category (Does not consider the children "
+"categories)"
+msgstr ""
+"Het aantal producten in deze categorie (zonder de onderliggende categorieën)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
-msgid "The number of variants to generate is too high. You should either not generate variants for each combination or generate them on demand from the sales order. To do so, open the form view of attributes and change the mode of *Create Variants*."
-msgstr "Het aantal te genereren varianten is te hoog. Je moet ofwel geen varianten voor elke combinatie genereren of deze op verzoek genereren via de verkooporder. Open hiervoor de formulierweergave van kenmerken en wijzig de modus *Varianten aanmaken*."
+msgid ""
+"The number of variants to generate is too high. You should either not "
+"generate variants for each combination or generate them on demand from the "
+"sales order. To do so, open the form view of attributes and change the mode "
+"of *Create Variants*."
+msgstr ""
+"Het aantal te genereren varianten is te hoog. Je moet ofwel geen varianten "
+"voor elke combinatie genereren of deze op verzoek genereren via de "
+"verkooporder. Open hiervoor de formulierweergave van kenmerken en wijzig de "
+"modus *Varianten aanmaken*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -2515,24 +2683,46 @@ msgstr "De prijs om een product te kopen"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The product template is archived so no combination is possible."
-msgstr "Het  productsjabloon is gearchiveerd, dus er is geen combinatie mogelijk."
+msgstr ""
+"Het  productsjabloon is gearchiveerd, dus er is geen combinatie mogelijk."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
-msgid "The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise."
-msgstr "De hoeveelheid in te kopen van deze leverancier om van de prijs te profiteren, uitgedrukt in de eventuele producteenheid van de leverancier, anders in de standaard maateenheid van het product."
+msgid ""
+"The quantity to purchase from this vendor to benefit from the price, "
+"expressed in the vendor Product Unit of Measure if not any, in the default "
+"unit of measure of the product otherwise."
+msgstr ""
+"De hoeveelheid in te kopen van deze leverancier om van de prijs te "
+"profiteren, uitgedrukt in de eventuele producteenheid van de leverancier, "
+"anders in de standaard maateenheid van het product."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "De afrondingsmethode moet altijd positief zijn."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
-msgid "The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices."
-msgstr "De verkoopprijs wordt beheert in het product sjabloon. Klik op de 'Varianten instellen\" knop om de kenmerk prijzen in te stellen."
+msgid ""
+"The sale price is managed from the product template. Click on the 'Configure"
+" Variants' button to set the extra attribute prices."
+msgstr ""
+"De verkoopprijs wordt beheert in het product sjabloon. Klik op de 'Varianten"
+" instellen\" knop om de kenmerk prijzen in te stellen."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
-msgid "The value %(value)s is not defined for the attribute %(attribute)s on the product %(product)s."
+msgid ""
+"The value %(value)s is not defined for the attribute %(attribute)s on the "
+"product %(product)s."
 msgstr ""
+"De waarde %(value)s is niet bepaald voor het kenmerk %(attribute)s op het "
+"product %(product)s."
 
 #. module: product
 #. odoo-python
@@ -2559,8 +2749,14 @@ msgstr "Er is geen resterende combinatie mogelijk."
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
-msgid "This configuration of product attributes, values, and exclusions would lead to no possible variant. Please archive or delete your product directly if intended."
-msgstr "Deze configuratie van productkenmerken, waarden en uitsluitingen zou niet leiden tot een mogelijke variant. Archiveer of verwijder je product indien gewenst rechtstreeks."
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Deze configuratie van productkenmerken, waarden en uitsluitingen zou niet "
+"leiden tot een mogelijke variant. Archiveer of verwijder je product indien "
+"gewenst rechtstreeks."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2580,8 +2776,12 @@ msgstr "Deze notitie is enkel voor interne doeleinden."
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
-msgid "This pricelist will be used, instead of the default one, for sales to the current partner"
-msgstr "Deze prijslijst wordt gebruikt i.p.v. de standaard prijslijst bij verkopen aan de huidige relatie"
+msgid ""
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
+msgstr ""
+"Deze prijslijst wordt gebruikt i.p.v. de standaard prijslijst bij verkopen "
+"aan de huidige relatie"
 
 #. module: product
 #. odoo-python
@@ -2598,13 +2798,21 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
-msgid "This vendor's product code will be used when printing a request for quotation. Keep empty to use the internal one."
-msgstr "Deze leverancier productcode wordt gebruikt bij het afdrukken van een offerte aanvraag. Laat dit leeg om een interne productcode te gebruiken."
+msgid ""
+"This vendor's product code will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Deze leverancier productcode wordt gebruikt bij het afdrukken van een "
+"offerte aanvraag. Laat dit leeg om een interne productcode te gebruiken."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
-msgid "This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one."
-msgstr "Deze leverancier productnaam wordt gebruikt bij het afdrukken van een offerteaanvraag. Laat dit leeg om een interne productcode te gebruiken."
+msgid ""
+"This vendor's product name will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Deze leverancier productnaam wordt gebruikt bij het afdrukken van een "
+"offerteaanvraag. Laat dit leeg om een interne productcode te gebruiken."
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
@@ -2628,10 +2836,11 @@ msgid "Type"
 msgstr "Soort"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type van activiteit uitzondering op record."
+msgstr "Type van de geregistreerde uitzonderingsactiviteit."
 
 #. module: product
 #. odoo-python
@@ -2639,6 +2848,12 @@ msgstr "Type van activiteit uitzondering op record."
 #, python-format
 msgid "Unable to find report template for %s format"
 msgstr "Kan rapportsjabloon voor %s-indeling niet vinden"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+msgid "Unit"
+msgstr "Eenheid"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2685,7 +2900,7 @@ msgstr "Gebruikt op producten"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Username"
-msgstr ""
+msgstr "Gebruikersnaam"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
@@ -2723,6 +2938,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Waarde van het product (automatisch berekend in AVCO).\n"
+"        Wordt gebruikt om het product te waarderen wanneer de aankoopkosten niet gekend zijn (bv. voorraadaanpassing).\n"
+"        Wordt gebruikt om marges op verkooporders te berekenen."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -2892,8 +3110,12 @@ msgstr "Waarschuwingen"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "We pay special attention to detail, which is why our desks are of a superior quality."
-msgstr "We besteden speciale aandacht aan details, daarom zijn onze bureaus van superieure kwaliteit."
+msgid ""
+"We pay special attention to detail, which is why our desks are of a superior"
+" quality."
+msgstr ""
+"We besteden speciale aandacht aan details, daarom zijn onze bureaus van "
+"superieure kwaliteit."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -2921,14 +3143,18 @@ msgstr "Wit"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Schrijfdatum"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/res_config_settings.py:0
 #, python-format
-msgid "You are deactivating the pricelist feature. Every active pricelist will be archived."
+msgid ""
+"You are deactivating the pricelist feature. Every active pricelist will be "
+"archived."
 msgstr ""
+"Je staat op het punt de prijslijst-functie te deactiveren. Elke actieve "
+"prijslijst wordt gearchiveerd."
 
 #. module: product
 #. odoo-python
@@ -2949,19 +3175,27 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr "Je kunt een opslag toepassen door een negatieve korting in te stellen."
+msgstr ""
+"Je kunt een opslag toepassen door een negatieve korting in te stellen."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
-msgid "You can assign pricelists to your customers or select one when creating a new sales quotation."
-msgstr "Je kunt prijslijsten toewijzen aan klanten of een prijslijst kiezen wanneer je een nieuwe offerte aanmaakt."
+msgid ""
+"You can assign pricelists to your customers or select one when creating a "
+"new sales quotation."
+msgstr ""
+"Je kunt prijslijsten toewijzen aan klanten of een prijslijst kiezen wanneer "
+"je een nieuwe offerte aanmaakt."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
-msgid "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr "Je kunt de hoofd prijslijst niet toewijzen als andere prijslijst in een prijslijst item"
+msgid ""
+"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+msgstr ""
+"Je kunt de hoofd prijslijst niet toewijzen als andere prijslijst in een "
+"prijslijst item"
 
 #. module: product
 #. odoo-python
@@ -2971,27 +3205,41 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Je kan de Variant Aanmaakmodus van het kenmerk %(attribute)s niet veranderen, omdat het wordt gebruikt voor de volgende producten:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
-msgid "You cannot change the attribute of the value %(value)s because it is used on the following products: %(products)s"
+msgid ""
+"You cannot change the attribute of the value %(value)s because it is used on"
+" the following products: %(products)s"
 msgstr ""
+"Je kan het kenmerk van de waarde %(value)s niet veranderen omdat het wordt "
+"gebruikt op de volgende producten: %(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
-msgid "You cannot change the product of the value %(value)s set on product %(product)s."
+msgid ""
+"You cannot change the product of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
+"Je kan het product van de waarde %(value)s dat ingesteld is op het product "
+"%(product)s niet veranderen."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
-msgid "You cannot change the value of the value %(value)s set on product %(product)s."
+msgid ""
+"You cannot change the value of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
+"Je kan de waarde van de waarde %(value)s die is ingesteld op het product "
+"%(product)s niet veranderen."
 
 #. module: product
 #. odoo-python
@@ -3002,15 +3250,21 @@ msgstr "Je kunt geen recursieve categorieën aanmaken."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
-msgid "You cannot create two values with the same name for the same attribute."
-msgstr "Je kunt geen twee waarden met dezelfde naam voor hetzelfde kenmerk maken."
+msgid ""
+"You cannot create two values with the same name for the same attribute."
+msgstr ""
+"Je kunt geen twee waarden met dezelfde naam voor hetzelfde kenmerk maken."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #, python-format
-msgid "You cannot define the decimal precision of 'Account' as greater than the rounding factor of the company's main currency"
-msgstr "Fout! Het is niet mogelijk om een decimale nauwkeurigheid van een 'rekening' groter in te stellen dan de afronding van de bedrijfsvaluta."
+msgid ""
+"You cannot define the decimal precision of 'Account' as greater than the "
+"rounding factor of the company's main currency"
+msgstr ""
+"Fout! Het is niet mogelijk om een decimale nauwkeurigheid van een 'rekening'"
+" groter in te stellen dan de afronding van de bedrijfsvaluta."
 
 #. module: product
 #. odoo-python
@@ -3027,6 +3281,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Je kan het kenmerk %(attribute)s niet verwijderen omdat het wordt gebruikt op de volgende producten:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3037,13 +3293,19 @@ msgid ""
 "%(products)s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"Je kan de waarde %(value)s niet verwijderen omdat het wordt gebruikt in de volgende producten:\n"
+"%(products)s\n"
+" Als de waarde in het verleden aan een product is gekoppeld, kan je deze niet verwijderen."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
-msgid "You cannot delete this product category, it is the default generic category."
-msgstr "Je kunt deze productcategorie niet verwijderen, dit is de standaard algemene categorie."
+msgid ""
+"You cannot delete this product category, it is the default generic category."
+msgstr ""
+"Je kunt deze productcategorie niet verwijderen, dit is de standaard algemene"
+" categorie."
 
 #. module: product
 #. odoo-python
@@ -3065,21 +3327,32 @@ msgstr ""
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
-msgstr "Je kan waarde %s niet verwijderen omdat deze in sommige producten is gebruikt."
+msgstr ""
+"Je kunt waarde %s niet verwijderen omdat deze in sommige producten is "
+"gebruikt."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
-msgid "You cannot move the attribute %(attribute)s from the product %(product_src)s to the product %(product_dest)s."
+msgid ""
+"You cannot move the attribute %(attribute)s from the product %(product_src)s"
+" to the product %(product_dest)s."
 msgstr ""
+"Je kan het kenmerk %(attribute)s niet verplaatsen van product "
+"%(product_src)s naar product %(product_dest)s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
+#: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
-msgid "You cannot update related variants from the values. Please update related values from the variants."
-msgstr "Je kunt gerelateerde varianten niet bijwerken vanuit de waarden. Werk gerelateerde waarden van de varianten bij."
+msgid ""
+"You cannot update related variants from the values. Please update related "
+"values from the variants."
+msgstr ""
+"Je kunt gerelateerde varianten niet bijwerken vanuit de waarden. Werk "
+"gerelateerde waarden van de varianten bij."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -3122,7 +3395,7 @@ msgstr ""
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "You must leave at least one quantity."
-msgstr ""
+msgstr "Je moet ten minste één hoeveelheid achterlaten."
 
 #. module: product
 #. odoo-python
@@ -3183,4 +3456,4 @@ msgstr "het productsjabloon."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
-msgstr "t/m"
+msgstr "aan"

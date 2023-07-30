@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: barcodes
@@ -42,8 +41,12 @@ msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
-msgstr "Номенклатура штрих-кодів визначає, як точка продажу буде їх ідентифікувати та зчитувати "
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr ""
+"Номенклатура штрих-кодів визначає, як точка продажу буде їх ідентифікувати "
+"та зчитувати "
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -81,7 +84,7 @@ msgstr "Будь-який"
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 #, python-format
 msgid "Barcode"
-msgstr ""
+msgstr "Штрих-код"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -244,7 +247,7 @@ msgstr "Столи"
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 #, python-format
 msgid "Tap to scan"
-msgstr ""
+msgstr "Натисніть, щоб сканувати"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
@@ -265,27 +268,40 @@ msgstr "Відповідний шаблон буде призначено як �
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
-msgstr "У шаблоні штрих-коду синтаксична помилка%(pattern)s: правило може містити лише одну пару дужок."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+"У шаблоні штрих-коду синтаксична помилка%(pattern)s: правило може містити "
+"лише одну пару дужок."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
-msgstr "У шаблоні штрих-коду синтаксична помилка %(pattern)s: дужки можуть містити лише N після яких стоять D."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+"У шаблоні штрих-коду синтаксична помилка %(pattern)s: дужки можуть містити "
+"лише N після яких стоять D."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr "У шаблоні штрих-коду є помилка %(pattern)s: порожні дужки."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
-msgstr "Дане правило діятиме, тільки якщо штрих-код закодовано точно зазначеним кодуванням"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+"Дане правило діятиме, тільки якщо штрих-код закодовано точно зазначеним "
+"кодуванням"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -294,8 +310,14 @@ msgstr "Тип"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
-msgstr "UPC коди можна конвертувати у EAN, дописуючи нулі спочатку. Це налаштування вказує, чи конвертувати автоматично UPC/EAN штрих-коди в тому чи іншому напрямку під час пошуку правила для відповідного кодування."
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"UPC коди можна конвертувати у EAN, дописуючи нулі спочатку. Це налаштування "
+"вказує, чи конвертувати автоматично UPC/EAN штрих-коди в тому чи іншому "
+"напрямку під час пошуку правила для відповідного кодування."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -326,8 +348,11 @@ msgstr "Невідома команда штрих-коду"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
-msgstr "Використовується для впорядкування правил. Правила з меншим значенням будуть відображатися першими."
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+"Використовується для впорядкування правил. Правила з меншим значенням будуть"
+" відображатися першими."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned

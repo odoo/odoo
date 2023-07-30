@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* google_calendar
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_calendar
@@ -66,15 +65,27 @@ msgstr "Actief"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "An administrator needs to configure Google Synchronization before you can use it!"
-msgstr "Een administrator moet Google Synchronisatie configureren voor je het kan gebruiken!"
+msgid ""
+"An administrator needs to configure Google Synchronization before you can "
+"use it!"
+msgstr ""
+"Een administrator moet Google Synchronisatie configureren voor je het kan "
+"gebruiken!"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
-msgid "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. You should check your Client ID and secret on the Google APIs plateform or try to stop and restart your calendar synchronisation."
-msgstr "Er is een fout opgetreden bij het genereren van het token. Je autorisatiecode is mogelijk ongeldig of is al verlopen [%s]. Je moet je client-ID en geheim controleren op het platform van Google API's of proberen je agendasynchronisatie te stoppen en opnieuw te starten."
+msgid ""
+"An error occurred while generating the token. Your authorization code may be"
+" invalid or has already expired [%s]. You should check your Client ID and "
+"secret on the Google APIs plateform or try to stop and restart your calendar"
+" synchronisation."
+msgstr ""
+"Er is een fout opgetreden bij het genereren van het token. Je "
+"autorisatiecode is mogelijk ongeldig of is al verlopen [%s]. Je moet je "
+"client-ID en geheim controleren op het platform van Google API's of proberen"
+" je agendasynchronisatie te stoppen en opnieuw te starten."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -84,7 +95,7 @@ msgstr "Agenda deelnemer informatie"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr "Agenda-afspraak"
+msgstr "Agenda gebeurtenis"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_cal_id
@@ -124,6 +135,7 @@ msgstr "Configuratie instellingen"
 
 #. module: google_calendar
 #. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "Configuration"
@@ -181,6 +193,7 @@ msgstr "Afspraak terugkeerpatroon"
 
 #. module: google_calendar
 #. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #, python-format
 msgid "Google"
@@ -244,21 +257,29 @@ msgstr "ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
-msgstr "Als het actief veld niet is aangevinkt, heb je de mogelijkheid om het evenement alarm te verbergen zonder deze te verwijderen."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Als het actief veld niet is aangevinkt, heb je de mogelijkheid om het "
+"afspraakalarm te verbergen zonder deze te verwijderen."
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "It will not be synced as long at it is not updated."
-msgstr ""
+msgstr "Het wordt niet gesynchroniseerd zolang het niet bijgewerkt is."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
-msgid "Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID"
-msgstr "Laatste agenda ID dat is gesynchroniseerd. Als dit veranderd is verwijderen we alle links tussen het Google ID en Odoo Google intern ID"
+msgid ""
+"Last Calendar ID who has been synchronized. If it is changed, we remove all "
+"links between GoogleID and Odoo Google Internal ID"
+msgstr ""
+"Laatste agenda ID dat is gesynchroniseerd. Als dit veranderd is verwijderen "
+"we alle links tussen het Google ID en Odoo Google intern ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
@@ -344,8 +365,12 @@ msgstr "Synchroniseer alleen nieuwe afspraken."
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "The Google Synchronization needs to be configured before you can use it, do you want to do it now?"
-msgstr "De Google synchronisatie moet geconfigureerd worden voordat je deze kan gebruiken. Wil je dit nu doen?"
+msgid ""
+"The Google Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
+msgstr ""
+"De Google synchronisatie moet geconfigureerd worden voordat je deze kan "
+"gebruiken. Wil je dit nu doen?"
 
 #. module: google_calendar
 #. odoo-python
@@ -360,6 +385,7 @@ msgstr "Het account voor de Google agenda-service is niet geconfigureerd."
 #, python-format
 msgid "The following event could not be synced with Google Calendar."
 msgstr ""
+"Het volgende evenement kon niet worden gesynchroniseerd in Google Agenda."
 
 #. module: google_calendar
 #. odoo-javascript
@@ -376,7 +402,9 @@ msgstr "De gebruiker heeft al een Google-account"
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr "Dit heeft alleen gevolgen voor afspraken waarvan de gebruiker de eigenaar is."
+msgstr ""
+"Dit heeft alleen gevolgen voor afspraken waarvan de gebruiker de eigenaar "
+"is."
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token_validity
@@ -406,11 +434,16 @@ msgstr "Bestaande afspraken van de gebruiker."
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "You are about to stop the synchronization of your calendar with Google. Are you sure you want to continue?"
-msgstr "Je staat op het punt de synchronisatie van je agenda met Google te stoppen. Weet je zeker dat je door wilt gaan?"
+msgid ""
+"You are about to stop the synchronization of your calendar with Google. Are "
+"you sure you want to continue?"
+msgstr ""
+"Je staat op het punt de synchronisatie van je agenda met Google te stoppen. "
+"Weet je zeker dat je door wilt gaan?"
 
 #. module: google_calendar
 #. odoo-python
+#: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
@@ -420,5 +453,8 @@ msgstr "ongedefinieerde tijd"
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
-msgid "you don't seem to have permission to modify this event on Google Calendar"
-msgstr "je lijkt geen toestemming te hebben om deze afspraak in Google Agenda te wijzigen"
+msgid ""
+"you don't seem to have permission to modify this event on Google Calendar"
+msgstr ""
+"je lijkt geen toestemming te hebben om deze afspraak in Google Agenda te "
+"wijzigen"

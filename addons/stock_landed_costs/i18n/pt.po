@@ -1,33 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_landed_costs
-#
+# 
 # Translators:
-# Luiz Fernando <lfpsgs@outlook.com>, 2022
-# Manuela Silva <mmsrs@sky.com>, 2022
-# Pedro Castro Silva <pedrocs@exo.pt>, 2022
-# Pedro Filipe <pedro2.10@hotmail.com>, 2022
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
-# Nuno Silva <nuno.silva@arxi.pt>, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2022\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
-"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock_landed_costs
 #. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid " already out"
@@ -185,7 +181,9 @@ msgstr "Linhas de Custo"
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
-msgid "Cost and adjustments lines do not match. You should maybe recompute the landed costs."
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
 msgstr ""
 
 #. module: stock_landed_costs
@@ -345,7 +343,9 @@ msgstr "Se estiver marcado, algumas mensagens têm um erro de entrega."
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
-msgid "Indicates whether the product is a landed cost: when receiving a vendor bill, you can allocate this cost on preceding receipts."
+msgid ""
+"Indicates whether the product is a landed cost: when receiving a vendor "
+"bill, you can allocate this cost on preceding receipts."
 msgstr ""
 
 #. module: stock_landed_costs
@@ -421,7 +421,9 @@ msgstr "Custo de Entrega Validado"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
-msgid "Landed costs allow you to include additional costs (shipment, insurance, customs duties, etc) into the cost of the product."
+msgid ""
+"Landed costs allow you to include additional costs (shipment, insurance, "
+"customs duties, etc) into the cost of the product."
 msgstr ""
 
 #. module: stock_landed_costs
@@ -471,6 +473,8 @@ msgstr "Nome"
 
 #. module: stock_landed_costs
 #. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "New"
@@ -582,7 +586,7 @@ msgstr "Quantidade"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Classificações"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
@@ -678,8 +682,12 @@ msgstr "Validar"
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
-msgid "Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them"
-msgstr "Custos de entrega validados não podem ser cancelados, mas pode criar custos de entrega negativos para os reverter."
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr ""
+"Custos de entrega validados não podem ser cancelados, mas pode criar custos "
+"de entrega negativos para os reverter."
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
@@ -721,12 +729,16 @@ msgstr "Peso"
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
-msgid "You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method."
+msgid ""
+"You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
+"applied for products with FIFO or average costing method."
 msgstr ""
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
 #, python-format
-msgid "You cannot change the product type or disable landed cost option because the product is used in an account move line."
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
 msgstr ""

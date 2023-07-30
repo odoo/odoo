@@ -1,25 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_timesheet
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
-# Wichanon Jamwutthipreecha, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2023\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/sale_order.py:0
+#, python-format
+msgid ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    No activities found. Let's start a new one!\n"
+"                </p><p>\n"
+"                    Track your working hours by projects every day and invoice this time to your customers.\n"
+"                </p>\n"
+"            "
+msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
@@ -54,8 +66,13 @@ msgstr "คำสั่งผู้สมัคร"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__billable_percentage
-msgid "% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit."
-msgstr "% ของใบบันทึกเวลาที่เรียกเก็บเงินได้เมื่อเปรียบเทียบกับจำนวนใบบันทึกเวลาทั้งหมดที่เชื่อมโยงกับ AA ของโปรเจกต์ โดยปัดเศษเป็นหน่วย"
+msgid ""
+"% of timesheets that are billable compared to the total number of timesheets"
+" linked to the AA of the project, rounded to the unit."
+msgstr ""
+"% "
+"ของใบบันทึกเวลาที่เรียกเก็บเงินได้เมื่อเปรียบเทียบกับจำนวนใบบันทึกเวลาทั้งหมดที่เชื่อมโยงกับ"
+" AA ของโปรเจกต์ โดยปัดเศษเป็นหน่วย"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -73,6 +90,11 @@ msgstr ", สำหรับรายได้ของ"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid ", leading to a"
 msgstr ", นำไปสู่"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
+msgid "- Timesheet product"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -156,8 +178,12 @@ msgstr "จำนวนที่จะออกใบ้แจ้งหนี้
 #. module: sale_timesheet
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_create_sale_order_line_unique_employee_per_wizard
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_sale_line_employee_map_uniqueness_employee
-msgid "An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again."
-msgstr "ไม่สามารถเลือกพนักงานได้มากกว่าหนึ่งครั้งในแผนผัง โปรดลบรายการที่ซ้ำกันและลองใหม่อีกครั้ง"
+msgid ""
+"An employee cannot be selected more than once in the mapping. Please remove "
+"duplicate(s) and try again."
+msgstr ""
+"ไม่สามารถเลือกพนักงานได้มากกว่าหนึ่งครั้งในแผนผัง "
+"โปรดลบรายการที่ซ้ำกันและลองใหม่อีกครั้ง"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -283,7 +309,7 @@ msgstr "พาร์ทเนอร์ทางการค้า"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__company_id
 msgid "Company"
-msgstr "บริษัทเดียว"
+msgstr "บริษัท"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_config_settings
@@ -403,13 +429,13 @@ msgstr "วันคงเหลือ)"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "Delivered"
-msgstr ""
+msgstr "จัดส่งแล้ว"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 msgid "Discard"
-msgstr ""
+msgstr "ละทิ้ง"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_create_order
@@ -430,6 +456,7 @@ msgid "Draft Invoice"
 msgstr "ใบแจ้งหนี้ฉบับร่าง"
 
 #. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_hr_employee
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__employee_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__employee_id
 msgid "Employee"
@@ -449,6 +476,11 @@ msgstr "พนักงานที่มีใบบันทึกเวลา
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
 msgid "End Date"
 msgstr "วันที่สิ้นสุด"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__existing_employee_ids
+msgid "Existing Employee"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -523,6 +555,7 @@ msgstr "ข้อมูลใบเสนอราคา"
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
+#: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/models/account.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_id
@@ -541,29 +574,45 @@ msgstr "นโยบายการออกใบแจ้งหนี้"
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
-msgid "Invoice based on timesheets (delivered quantity) on projects or tasks you'll create later on."
-msgstr "ใบแจ้งหนี้ตามใบบันทึกเวลา (จำนวนที่จัดส่ง) ของโปรเจกต์หรืองานที่คุณจะสร้างขึ้นในภายหลัง"
+msgid ""
+"Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
+" create later on."
+msgstr ""
+"ใบแจ้งหนี้ตามใบบันทึกเวลา (จำนวนที่จัดส่ง) "
+"ของโปรเจกต์หรืองานที่คุณจะสร้างขึ้นในภายหลัง"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
-msgid "Invoice based on timesheets (delivered quantity), and create a project for the order with a task for each sales order line to track the time spent."
-msgstr "ใบแจ้งหนี้ตามใบบันทึกเวลา (จำนวนที่จัดส่ง) และสร้างโปรเจกต์สำหรับคำสั่งที่มีงานสำหรับไลน์คำสั่งขายแต่ละรายการเพื่อติดตามเวลาที่ใช้"
+msgid ""
+"Invoice based on timesheets (delivered quantity), and create a project for "
+"the order with a task for each sales order line to track the time spent."
+msgstr ""
+"ใบแจ้งหนี้ตามใบบันทึกเวลา (จำนวนที่จัดส่ง) "
+"และสร้างโปรเจกต์สำหรับคำสั่งที่มีงานสำหรับไลน์คำสั่งขายแต่ละรายการเพื่อติดตามเวลาที่ใช้"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
-msgid "Invoice based on timesheets (delivered quantity), and create a task in an existing project to track the time spent."
-msgstr "ออกใบแจ้งหนี้ตามใบบันทึกเวลา (จำนวนที่จัดส่ง) และสร้างงานในโปรเจกต์ที่มีอยู่เพื่อติดตามเวลาที่ใช้ไป"
+msgid ""
+"Invoice based on timesheets (delivered quantity), and create a task in an "
+"existing project to track the time spent."
+msgstr ""
+"ออกใบแจ้งหนี้ตามใบบันทึกเวลา (จำนวนที่จัดส่ง) "
+"และสร้างงานในโปรเจกต์ที่มีอยู่เพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
-msgid "Invoice based on timesheets (delivered quantity), and create an empty project for the order to track the time spent."
-msgstr "ใบแจ้งหนี้ตามใบบันทึกเวลา (จำนวนที่จัดส่ง) และสร้างโปรเจกต์ที่ว่างสำหรับคำสั่งเพื่อติดตามเวลาที่ใช้ไป"
+msgid ""
+"Invoice based on timesheets (delivered quantity), and create an empty "
+"project for the order to track the time spent."
+msgstr ""
+"ใบแจ้งหนี้ตามใบบันทึกเวลา (จำนวนที่จัดส่ง) "
+"และสร้างโปรเจกต์ที่ว่างสำหรับคำสั่งเพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -579,7 +628,7 @@ msgstr "ออกใบแจ้งหนี้เวลาและวัสด
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "Invoiced"
-msgstr "แจ้งหนี้แล้ว"
+msgstr "ออกใบแจ้งหนี้แล้ว"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -669,13 +718,16 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__margin
 msgid "Margin"
-msgstr "อัตราส่วน"
+msgstr "กำไร"
 
 #. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+#, python-format
 msgid "Materials"
 msgstr "วัสดุ"
 
@@ -697,11 +749,6 @@ msgstr "ไม่แจ้งหนี้"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "No Sales Order"
-msgstr ""
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
-msgid "No Sales Order Item"
 msgstr ""
 
 #. module: sale_timesheet
@@ -742,6 +789,11 @@ msgid "Non-billable Hours"
 msgstr ""
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Not Billed"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
 msgid "Number of hours spent multiplied by the unit price per hour/day."
 msgstr ""
@@ -767,8 +819,16 @@ msgstr "จำนวนใบบันทึกเวลา"
 #: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
-msgid "Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."
-msgstr "เฉพาะใบบันทึกเวลาที่ยังไม่ได้ออกใบแจ้งหนี้ (และผ่านการตรวจสอบ หากมี) จากช่วงเวลานี้เท่านั้นที่จะถูกออกใบแจ้งหนี้ หากไม่มีการระบุช่วงเวลา ใบบันทึกเวลาทั้งหมดที่ยังไม่ได้ออกใบแจ้งหนี้ (และผ่านการตรวจสอบ หากมี) จะถูกออกใบแจ้งหนี้โดยไม่มีส่วนต่าง"
+msgid ""
+"Only timesheets not yet invoiced (and validated, if applicable) from this "
+"period will be invoiced. If the period is not indicated, all timesheets not "
+"yet invoiced (and validated, if applicable) will be invoiced without "
+"distinction."
+msgstr ""
+"เฉพาะใบบันทึกเวลาที่ยังไม่ได้ออกใบแจ้งหนี้ (และผ่านการตรวจสอบ หากมี) "
+"จากช่วงเวลานี้เท่านั้นที่จะถูกออกใบแจ้งหนี้ หากไม่มีการระบุช่วงเวลา "
+"ใบบันทึกเวลาทั้งหมดที่ยังไม่ได้ออกใบแจ้งหนี้ (และผ่านการตรวจสอบ หากมี) "
+"จะถูกออกใบแจ้งหนี้โดยไม่มีส่วนต่าง"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -811,8 +871,11 @@ msgstr "บริการของเรา"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_upsell_threshold
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__service_upsell_threshold
-msgid "Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered."
-msgstr "เปอร์เซ็นต์ของเวลาที่จัดส่งเมื่อเปรียบเทียบกับจำนวนเงินที่ชำระล่วงหน้าซึ่งจะต้องมีพอสำหรับกิจกรรมโอกาสการขายต่อยอดที่จะถูกเรียกใช้"
+msgid ""
+"Percentage of time delivered compared to the prepaid amount that must be "
+"reached for the upselling opportunity activity to be triggered."
+msgstr ""
+"เปอร์เซ็นต์ของเวลาที่จัดส่งเมื่อเปรียบเทียบกับจำนวนเงินที่ชำระล่วงหน้าซึ่งจะต้องมีพอสำหรับกิจกรรมโอกาสการขายต่อยอดที่จะถูกเรียกใช้"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -839,8 +902,11 @@ msgstr "ตัวแปรสินค้า"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__product_id
-msgid "Product of the sales order item. Must be a service invoiced based on timesheets on tasks."
-msgstr "สินค้าของรายการคำสั่งขาย ต้องเป็นบริการที่ออกใบแจ้งหนี้ตามใบบันทึกเวลางาน"
+msgid ""
+"Product of the sales order item. Must be a service invoiced based on "
+"timesheets on tasks."
+msgstr ""
+"สินค้าของรายการคำสั่งขาย ต้องเป็นบริการที่ออกใบแจ้งหนี้ตามใบบันทึกเวลางาน"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -937,15 +1003,23 @@ msgstr "คงเหลือ)"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
-msgid "Review your timesheets by billing type and make sure your time is billable."
-msgstr "ตรวจสอบใบบันทึกเวลาของคุณตามประเภทการเรียกเก็บเงิน และตรวจสอบให้แน่ใจว่าเวลาของคุณสามารถเรียกเก็บเงินได้"
+msgid ""
+"Review your timesheets by billing type and make sure your time is billable."
+msgstr ""
+"ตรวจสอบใบบันทึกเวลาของคุณตามประเภทการเรียกเก็บเงิน "
+"และตรวจสอบให้แน่ใจว่าเวลาของคุณสามารถเรียกเก็บเงินได้"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
+msgid "S0001"
+msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "Sale Order"
-msgstr ""
+msgstr "คำสั่งขาย"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__so_analytic_account_id
@@ -965,6 +1039,7 @@ msgstr "ใบแจ้งหนี้การชำระเงินการ
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
+#: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model,name:sale_timesheet.model_sale_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__sale_order_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
@@ -978,6 +1053,7 @@ msgstr "คำสั่งขาย"
 
 #. module: sale_timesheet
 #. odoo-python
+#: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__so_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
@@ -993,7 +1069,7 @@ msgstr "รายการคำสั่งขาย"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "Sales Order Items"
-msgstr ""
+msgstr "รายการคำสั่งขาย"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -1015,13 +1091,16 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
-msgid "Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable."
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "คำสั่งขายที่เชื่อมโยงโปรเจกต์"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
@@ -1053,6 +1132,11 @@ msgstr "ค้นหาในรายการคำสั่งขาย"
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
 msgstr "เลือกโปรเจกต์ที่เรียกเก็บเงินไม่ได้ซึ่งสามารถสร้างงานได้"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form_simplified_inherit
+msgid "Select who to bill..."
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1089,7 +1173,10 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__timesheet_product_id
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__timesheet_product_id
-msgid "Service that will be used by default when invoicing the time spent on a task. It can be modified on each task individually by selecting a specific sales order item."
+msgid ""
+"Service that will be used by default when invoicing the time spent on a "
+"task. It can be modified on each task individually by selecting a specific "
+"sales order item."
 msgstr ""
 
 #. module: sale_timesheet
@@ -1097,6 +1184,11 @@ msgstr ""
 #: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
 msgstr "บริการ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__show_hours_recorded_button
+msgid "Show Hours Recorded Button"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1131,14 +1223,20 @@ msgstr "งาน"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "วิเคราะห์งาน"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
 #, python-format
-msgid "The %s product is required by the Timesheets app and cannot be archived nor deleted."
-msgstr "%s สินค้าที่จำเป็นสำหรับแอประบบบันทึกเวลาและไม่สามารถเก็บถาวรหรือลบได้"
+msgid ""
+"The %s product is required by the Timesheets app and cannot be archived nor "
+"deleted."
+msgstr ""
+"%s สินค้าที่จำเป็นสำหรับแอประบบบันทึกเวลาและไม่สามารถเก็บถาวรหรือลบได้"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1174,8 +1272,11 @@ msgstr "โปรเจกต์ที่เชื่อมโยงกับร
 #. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
-msgid "The sales order cannot be created because some timesheets of this project are already linked to another sales order."
-msgstr "ไม่สามารถสร้างคำสั่งขายได้เนื่องจากใบบันทึกเวลาบางรายการของโปรเจกต์นี้เชื่อมโยงกับคำสั่งขายอื่นแล้ว"
+msgid ""
+"The sales order cannot be created because some timesheets of this project "
+"are already linked to another sales order."
+msgstr ""
+"ไม่สามารถสร้างคำสั่งขายได้เนื่องจากใบบันทึกเวลาบางรายการของโปรเจกต์นี้เชื่อมโยงกับคำสั่งขายอื่นแล้ว"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1187,12 +1288,27 @@ msgstr "คำสั่งขายที่เลือกควรมีบา
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__pricing_type
-msgid "The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority."
-msgstr "อัตรางานนั้นสมบูรณ์แบบถ้าคุณต้องการเรียกเก็บเงินบริการต่าง ๆ ให้กับลูกค้าที่แตกต่างกันในอัตราที่ต่างกัน อัตราคงที่จะสมบูรณ์แบบถ้าคุณเรียกเก็บเงินค่าบริการในอัตราคงที่ต่อชั่วโมงหรือต่อวันโดยไม่คำนึงถึงพนักงานที่ดำเนินการ อัตราพนักงานจะสำคัญถ้าพนักงานของคุณให้บริการเดียวกันในอัตราที่แตกต่างกัน ตัวอย่างเช่น ที่ปรึกษาระดับเริ่มต้นและอาวุโสจะให้บริการเดียวกัน (= การให้คำปรึกษา) แต่ในอัตราที่แตกต่างกันเนื่องจากระดับความอาวุโส"
+msgid ""
+"The task rate is perfect if you would like to bill different services to "
+"different customers at different rates. The fixed rate is perfect if you "
+"bill a service at a fixed rate per hour or day worked regardless of the "
+"employee who performed it. The employee rate is preferable if your employees"
+" deliver the same service at a different rate. For instance, junior and "
+"senior consultants would deliver the same service (= consultancy), but at a "
+"different rate because of their level of seniority."
+msgstr ""
+"อัตรางานนั้นสมบูรณ์แบบถ้าคุณต้องการเรียกเก็บเงินบริการต่าง ๆ "
+"ให้กับลูกค้าที่แตกต่างกันในอัตราที่ต่างกัน "
+"อัตราคงที่จะสมบูรณ์แบบถ้าคุณเรียกเก็บเงินค่าบริการในอัตราคงที่ต่อชั่วโมงหรือต่อวันโดยไม่คำนึงถึงพนักงานที่ดำเนินการ"
+" อัตราพนักงานจะสำคัญถ้าพนักงานของคุณให้บริการเดียวกันในอัตราที่แตกต่างกัน "
+"ตัวอย่างเช่น ที่ปรึกษาระดับเริ่มต้นและอาวุโสจะให้บริการเดียวกัน (= "
+"การให้คำปรึกษา) แต่ในอัตราที่แตกต่างกันเนื่องจากระดับความอาวุโส"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
-msgid "This cost overrides the employee's default employee hourly wage in employee's HR Settings"
+msgid ""
+"This cost overrides the employee's default employee hourly wage in "
+"employee's HR Settings"
 msgstr ""
 
 #. module: sale_timesheet
@@ -1219,7 +1335,7 @@ msgstr "เกณฑ์"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Time Billing"
-msgstr ""
+msgstr "เวลาออกบิล"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -1385,15 +1501,21 @@ msgstr "ใบบันทึกเวลาที่ใช้ไปเพื่
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__amount_to_invoice
-msgid "Total amount to invoice on the sales order, including all items (services, storables, expenses, ...)"
-msgstr "ยอดรวมในการออกใบแจ้งหนี้ในคำสั่งขาย รวมถึงรายการทั้งหมด (บริการ สินค้าที่สามารถเก็บได้ ค่าใช้จ่าย ...)"
+msgid ""
+"Total amount to invoice on the sales order, including all items (services, "
+"storables, expenses, ...)"
+msgstr ""
+"ยอดรวมในการออกใบแจ้งหนี้ในคำสั่งขาย รวมถึงรายการทั้งหมด (บริการ "
+"สินค้าที่สามารถเก็บได้ ค่าใช้จ่าย ...)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration
 #: model:ir.model.fields,help:sale_timesheet.field_account_move__timesheet_total_duration
 #: model:ir.model.fields,help:sale_timesheet.field_account_payment__timesheet_total_duration
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_total_duration
-msgid "Total recorded duration, expressed in the encoding UoM, and rounded to the unit"
+msgid ""
+"Total recorded duration, expressed in the encoding UoM, and rounded to the "
+"unit"
 msgstr "ระยะเวลาที่บันทึกไว้ทั้งหมด แสดงในการเข้ารหัส UoM และปัดเศษเป็นหน่วย"
 
 #. module: sale_timesheet
@@ -1410,8 +1532,12 @@ msgstr "ติดตามบริการ"
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
-msgid "Track your working hours by projects every day and invoice this time to your customers."
-msgstr "ติดตามชั่วโมงทำงานของคุณตามโปรเจกต์ทุกวัน และออกใบแจ้งหนี้ตามเวลานี้ให้กับลูกค้าของคุณ"
+msgid ""
+"Track your working hours by projects every day and invoice this time to your"
+" customers."
+msgstr ""
+"ติดตามชั่วโมงทำงานของคุณตามโปรเจกต์ทุกวัน "
+"และออกใบแจ้งหนี้ตามเวลานี้ให้กับลูกค้าของคุณ"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
@@ -1494,15 +1620,21 @@ msgstr "คุณสามารถใช้การดำเนินการ
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
-msgid "You cannot link a billable project to a sales order item that comes from an expense or a vendor bill."
-msgstr "คุณไม่สามารถเชื่อมโยงโปรเจกต์ที่เรียกเก็บเงินได้กับรายการคำสั่งขายที่มาจากค่าใช้จ่ายหรือใบเรียกเก็บเงินของผู้จัดจำหน่าย"
+msgid ""
+"You cannot link a billable project to a sales order item that comes from an "
+"expense or a vendor bill."
+msgstr ""
+"คุณไม่สามารถเชื่อมโยงโปรเจกต์ที่เรียกเก็บเงินได้กับรายการคำสั่งขายที่มาจากค่าใช้จ่ายหรือใบเรียกเก็บเงินของผู้จัดจำหน่าย"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
-msgid "You cannot link a billable project to a sales order item that is not a service."
-msgstr "คุณไม่สามารถเชื่อมโยงโปรเจกต์ที่เรียกเก็บเงินกับรายการคำสั่งขายที่ไม่ใช่บริการได้"
+msgid ""
+"You cannot link a billable project to a sales order item that is not a "
+"service."
+msgstr ""
+"คุณไม่สามารถเชื่อมโยงโปรเจกต์ที่เรียกเก็บเงินกับรายการคำสั่งขายที่ไม่ใช่บริการได้"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1554,4 +1686,4 @@ msgstr ""
 #: code:addons/sale_timesheet/models/sale_order.py:0
 #, python-format
 msgid "remaining"
-msgstr ""
+msgstr "คงเหลือ"

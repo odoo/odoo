@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sarah Park, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
@@ -42,7 +41,9 @@ msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
 msgstr "바코드 명칭을 통해 POS에서 바코드를 식별하고 해석하는 방법을 정의합니다."
 
 #. module: barcodes
@@ -81,7 +82,7 @@ msgstr "또는"
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 #, python-format
 msgid "Barcode"
-msgstr ""
+msgstr "바코드"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -217,7 +218,7 @@ msgstr ""
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 #, python-format
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "다시 스캔하세요!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -244,7 +245,7 @@ msgstr "표"
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 #, python-format
 msgid "Tap to scan"
-msgstr ""
+msgstr "탭하여 스캔"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
@@ -265,26 +266,33 @@ msgstr "일치하는 패턴이 이 바코드의 별칭이 됩니다."
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
-msgstr "바코드 패턴 %(pattern)s에 구문 오류가 있습니다: 괄호는 한 쌍만 포함할 수 있습니다. "
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr "바코드 규칙 %(pattern)s에 구문 오류가 있습니다: 괄호는 한 쌍만 포함할 수 있습니다. "
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
 msgstr "바코드 규칙 %(pattern)s에 구문 오류가 있습니다: 괄호 내 N 다음에는 D 가 반드시 포함되어야 합니다."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr "바코드 규칙 %(pattern)s에 구문 오류가 있습니다: 괄호 내용이 없습니다."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
 msgstr "이 규칙은 바코드가 지정된 인코딩으로 인코딩된 경우에만 적용됩니다."
 
 #. module: barcodes
@@ -294,8 +302,13 @@ msgstr "유형"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
-msgstr "UPC 코드 앞에 0을 붙여 EAN로 변환 할 수 있습니다. 이 설정은 규칙을 다른 인코딩과 일치 시키려고 할 때 UPC/EAN 바코드가 한 방향으로 또는 다른 방식으로 자동 변환되어야 하는지 여부를 결정합니다."
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"UPC 코드 앞에 0을 붙여 EAN로 변환 할 수 있습니다. 이 설정은 규칙을 다른 인코딩과 일치 시키려고 할 때 UPC/EAN 바코드가"
+" 한 방향으로 또는 다른 방식으로 자동 변환되어야 하는지 여부를 결정합니다."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -326,7 +339,8 @@ msgstr "알 수 없는 바코드 명령"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
 msgstr "작은 순서로 일치하는 것이 우선하도록 규칙을 정렬하는 데 사용됩니다."
 
 #. module: barcodes

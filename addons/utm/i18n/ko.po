@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* utm
-#
+# 
 # Translators:
-# JH CHOI <hwangtog@gmail.com>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: utm
@@ -25,25 +24,25 @@ msgstr ""
 #: code:addons/utm/models/utm_source.py:0
 #, python-format
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
-msgstr ""
+msgstr "%(content)s (%(model_description)s, %(create_date)s에 생성됨)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__active
 #: model:ir.model.fields,field_description:utm.field_utm_medium__active
 msgid "Active"
-msgstr "활성"
+msgstr "활성화"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_campaign__is_auto_campaign
 msgid "Allows us to filter relevant Campaigns"
-msgstr ""
+msgstr "관련 캠페인에 필터를 할 수 있습니다."
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Approval-based Flow"
-msgstr ""
+msgstr "결재 기반 플로우"
 
 #. module: utm
 #. odoo-javascript
@@ -55,7 +54,7 @@ msgstr "결재 완료"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "보관"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
@@ -67,19 +66,19 @@ msgstr "보관됨"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Assign tags to your campaigns to organize, filter and track them."
-msgstr ""
+msgstr "캠페인에 태그를 두어 캠페인을 체계화하고 필터링 및 추적하십시오."
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Audience-driven Flow"
-msgstr ""
+msgstr "잠재 고객 중심 플로우"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__is_auto_campaign
 msgid "Automatically Generated Campaign"
-msgstr ""
+msgstr "자동 생성 캠페인"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
@@ -89,7 +88,7 @@ msgstr "캠페인"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__name
 msgid "Campaign Identifier"
-msgstr ""
+msgstr "캠페인 식별 기호"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__title
@@ -118,13 +117,15 @@ msgstr "캠페인"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
-msgid "Campaigns are used to centralize your marketing efforts and track their results."
-msgstr ""
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
+msgstr "캠페인은 마케팅 활동을 한 방향으로 집중시키고 그 결과를 추적하는 데 사용됩니다."
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Campaigns that are assigned to me"
-msgstr ""
+msgstr "나에게 배정된 캠페인"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
@@ -136,7 +137,7 @@ msgstr "크리스마스 스페셜"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Collect ideas, design creative content and publish it once reviewed."
-msgstr ""
+msgstr "아이디어를 모으고, 창의적인 콘텐츠를 디자인한 후 수정을 거쳐 게시하세요."
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__color
@@ -154,12 +155,12 @@ msgstr "저작권"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
 msgid "Create a Medium"
-msgstr ""
+msgstr "매체 만들기"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Create a Tag"
-msgstr ""
+msgstr "태그 만들기"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
@@ -194,7 +195,7 @@ msgstr "작성일자"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Creative Flow"
-msgstr ""
+msgstr "창의적인 플로우"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
@@ -213,10 +214,11 @@ msgstr "배포하다"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Deployed"
-msgstr ""
+msgstr "배포됨"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_2
 #, python-format
@@ -235,6 +237,8 @@ msgstr "표시명"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Done"
 msgstr "완료"
@@ -242,7 +246,7 @@ msgstr "완료"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Edit"
-msgstr "편집하기"
+msgstr "편집"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
@@ -259,21 +263,23 @@ msgstr "이메일 캠페인 - 서비스"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Event-driven Flow"
-msgstr ""
+msgstr "행사 중심 플로우"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Gather Data"
-msgstr ""
+msgstr "데이터 수집"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
-msgid "Gather data, build a recipient list and write content based on your Marketing target."
-msgstr ""
+msgid ""
+"Gather data, build a recipient list and write content based on your "
+"Marketing target."
+msgstr "데이터를 수집하고, 수신자 목록을 작성하고, 마케팅 목표에 따라 콘텐츠를 작성하세요."
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
@@ -296,6 +302,7 @@ msgstr "ID"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Ideas"
@@ -336,7 +343,7 @@ msgstr "링크 추적기"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "List-Building"
-msgstr ""
+msgstr "목록 작성"
 
 #. module: utm
 #: model:utm.tag,name:utm.utm_tag_1
@@ -364,7 +371,7 @@ msgstr "매체"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "My Campaigns"
-msgstr ""
+msgstr "내 캠페인"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
@@ -382,28 +389,30 @@ msgstr "신규"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
 msgid "No Sources yet!"
-msgstr ""
+msgstr "아직 소스가 없습니다!"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Pre-Launch"
-msgstr ""
+msgstr "사전 출시"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Prepare Campaigns and get them approved before making them go live."
-msgstr ""
+msgstr "캠페인을 준비하고 승인이 완료되면 게시하세요."
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
-msgid "Prepare your Campaign, test it with part of your audience and deploy it fully afterwards."
-msgstr ""
+msgid ""
+"Prepare your Campaign, test it with part of your audience and deploy it "
+"fully afterwards."
+msgstr "캠페인을 준비하고, 일부 잠재 고객들을 대상으로 테스트한 후 공식적으로 배포하세요."
 
 #. module: utm
 #. odoo-javascript
@@ -421,10 +430,11 @@ msgstr "담당자"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Restore"
-msgstr ""
+msgstr "복원"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Review"
@@ -455,12 +465,14 @@ msgstr "UTM 매체 검색"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Send"
 msgstr "보내기"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_3
 #, python-format
@@ -477,14 +489,14 @@ msgstr "순서"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Soft-Launch"
-msgstr ""
+msgstr "소프트 런칭"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Soft-Launch Flow"
-msgstr ""
+msgstr "소프트 런칭 플로우"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
@@ -520,18 +532,22 @@ msgstr "단계"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
-msgid "Stages allow you to organize your workflow  (e.g. plan, design, in progress, done, …)."
-msgstr ""
+msgid ""
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress,"
+" done, …)."
+msgstr "단계별로 작업 순서를 구성할 수 있습니다(예. 계획, 디자인, 진행, 완료 등)."
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
-msgid "Tag color. No color means no display in kanban to distinguish internal tags from public categorization tags."
-msgstr ""
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
+msgstr "태그 색상. 색상을 설정하지 않으면 칸반에 내부 태그와 공개 분류 태그를 구분하기 위한 색상이 표시되지 않습니다."
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "태그명이 이미 존재합니다!"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
@@ -543,15 +559,17 @@ msgstr "태그"
 #. odoo-python
 #: code:addons/utm/models/utm_medium.py:0
 #, python-format
-msgid "The UTM medium '%s' cannot be deleted as it is used in some main functional flows, such as the recruitment and the mass mailing."
-msgstr ""
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the recruitment and the mass mailing."
+msgstr "UTM 매체 '%s'는 채용 및 이메일 마케팅과 같은 일부 주요 기능 프로세스에서 사용되므로 삭제할 수 없습니다."
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
 msgid "The name must be unique"
-msgstr ""
+msgstr "이름은 고유해야 합니다"
 
 #. module: utm
 #. odoo-javascript
@@ -565,12 +583,15 @@ msgstr "이번 달"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "This Week"
-msgstr "금주"
+msgstr "이번 주"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
-msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
-msgstr "이것은 다른 캠페인 활동을 추적할 때 도움을 주는 이름입니다.  예시 : Fall_Drive, Christmas_Special"
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"이것은 다른 캠페인 활동을 추적할 때 도움을 주는 이름입니다.  예시 : Fall_Drive, Christmas_Special"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
@@ -579,7 +600,9 @@ msgstr "이것은 배송 방법입니다. 예시 : 엽서, 이메일 또는 배�
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
-msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
 msgstr "이것은 링크의 소스입니다. 예시 : 검색엔진, 다른 도메인 또는 이메일 목록의 이름"
 
 #. module: utm
@@ -587,14 +610,16 @@ msgstr "이것은 링크의 소스입니다. 예시 : 검색엔진, 다른 도�
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "To be Approved"
-msgstr ""
+msgstr "승인 예정"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
-msgid "Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely content."
-msgstr ""
+msgid ""
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely"
+" content."
+msgstr "다가오는 행사(예. 크리스마스, 블랙 프라이데이 등)를 추적하고 시기에 적절한 콘텐츠를 게시하세요."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
@@ -615,8 +640,10 @@ msgstr "UTM 매체"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "UTM Mediums track the mean that was used to attract traffic (e.g. \"Website\", \"Twitter\", ...)."
-msgstr ""
+msgid ""
+"UTM Mediums track the mean that was used to attract traffic (e.g. "
+"\"Website\", \"Twitter\", ...)."
+msgstr "UTM 매체는 트래픽을 유도하는 데 사용된 수단(예. \"웹사이트\", \"트위터\" 등)을 추적합니다."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
@@ -631,12 +658,14 @@ msgstr "UTM 소스"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source_mixin
 msgid "UTM Source Mixin"
-msgstr ""
+msgstr "UTM 소스 혼합"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", ...)."
-msgstr ""
+msgid ""
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
+"...)."
+msgstr "UTM 소스는 트래픽의 출처(예. \"5월 뉴스레터\", \"\", ...)를 추적합니다."
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage
@@ -658,25 +687,25 @@ msgstr "UTMs"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Campaigns"
-msgstr ""
+msgstr "내 캠페인에 사용하기"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
 msgid "e.g. \"Brainstorming\""
-msgstr ""
+msgstr "예. \"브레인스토밍\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "e.g. \"Christmas Mailing\""
-msgstr ""
+msgstr "예. \"크리스마스 메일\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "e.g. \"Email\""
-msgstr ""
+msgstr "예. \"이메일\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
 msgid "e.g. Black Friday"
-msgstr ""
+msgstr "예. 블랙 프라이데이"

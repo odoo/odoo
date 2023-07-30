@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sarah Park, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sarah Park, 2022\n"
+"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: snailmail
@@ -96,6 +95,7 @@ msgstr "양쪽"
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
 msgid "Buy credits"
 msgstr "크레딧 구매하기"
@@ -150,10 +150,9 @@ msgstr "시/군/구"
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 #, python-format
 msgid "Close"
-msgstr "닫기"
+msgstr "마감"
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
 msgstr "색상"
@@ -307,14 +306,14 @@ msgstr "최근 갱신 일자"
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__letter_ids
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__letter_id
 msgid "Letter"
-msgstr "편지"
+msgstr "서신"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Letter sent by post with Snailmail"
-msgstr "Snailmail과 함께 우편으로 보낸 편지"
+msgstr "일반 우편을 통해 발송된 서신"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
@@ -340,8 +339,10 @@ msgstr "메시지 알림"
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
 #: model:ir.model.fields,help:snailmail.field_mail_message__message_type
-msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
-msgstr "메시지 유형: 이메일 메시지를 위한 이메일, 시스템 메시지를 위한 알림, 사용자 댓글과 같은 기타 메시지에 대한 의견"
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr "메시지 유형: 이메일 메시지를 위한 이메일, 시스템 메시지를 위한 알림, 사용자 댓글과 같이 기타 메시지에 대한 코멘트"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -396,7 +397,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
 msgid "Partner"
-msgstr "파트너"
+msgstr "협력사"
 
 #. module: snailmail
 #. odoo-python
@@ -420,7 +421,7 @@ msgstr "컬러로 인쇄"
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
 msgid "Re-send letter"
-msgstr "편지를 다시 보내기"
+msgstr "서신 재발송"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -466,7 +467,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
 msgid "Snailmail"
-msgstr "Snailmail"
+msgstr "일반 우편"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
+msgid "Snailmail Color"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
@@ -489,13 +495,13 @@ msgstr ""
 #: model:ir.model,name:snailmail.model_snailmail_letter
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__letter_id
 msgid "Snailmail Letter"
-msgstr "Snailmail 편지"
+msgstr "일반 우편"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.action_mail_letters
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 msgid "Snailmail Letters"
-msgstr "Snailmail 편지"
+msgstr "일반 우편"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_fields
@@ -531,7 +537,7 @@ msgstr "오류가 있는 Snailmail 메시지"
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 msgid "Snailmail: process letters queue"
-msgstr "Snailmail : 편지 대기중"
+msgstr "일반 우편: 대기열 진행"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
@@ -583,7 +589,9 @@ msgstr "수신자의 주소가 완전하지 않습니다"
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid "The attachment of the letter could not be sent. Please check its content and contact the support if the problem persists."
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
 msgstr "편지를 첨부할 수 없습니다. 문제가 지속되면 내용을 확인하고 지원 센터에 문의하십시오."
 
 #. module: snailmail
@@ -597,12 +605,16 @@ msgstr "협력사의 국가는 Snailmail에 포함되지 않습니다."
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
-msgid "The country to which you want to send the letter is not supported by our service."
+msgid ""
+"The country to which you want to send the letter is not supported by our "
+"service."
 msgstr ""
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "The customer address is not complete. Update the address here and re-send the letter."
+msgid ""
+"The customer address is not complete. Update the address here and re-send "
+"the letter."
 msgstr "고객 주소가 완전하지 않습니다. 여기에서 주소를 업데이트하고 편지를 다시 보내십시오."
 
 #. module: snailmail
@@ -616,7 +628,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
-msgid "The letter could not be sent due to insufficient credits on your IAP account."
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
 msgstr ""
 
 #. module: snailmail
@@ -660,15 +674,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid "You don't have an IAP account registered for this service.<br>Please go to <a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
-msgstr "이 서비스에 등록된 IAP 계정이 없습니다. <br>무료 크레딧을 받으려면 <a href=%s target=\"new\">iap.odoo.com</a>을 방문하세요."
+msgid ""
+"You don't have an IAP account registered for this service.<br>Please go to "
+"<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
+msgstr ""
+"이 서비스에 등록된 IAP 계정이 없습니다. <br>무료 크레딧을 받으려면 <a href=%s "
+"target=\"new\">iap.odoo.com</a>을 방문하세요."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid "You don't have enough credits to perform this operation.<br>Please go to your <a href=%s target=\"new\">iap account</a>."
-msgstr "이 작업을 수행할 수 있는 크레딧이 부족합니다. <br><a href=%s target=\"new\">iap 계정</a>으로 가주세요."
+msgid ""
+"You don't have enough credits to perform this operation.<br>Please go to "
+"your <a href=%s target=\"new\">iap account</a>."
+msgstr ""
+"이 작업을 수행할 수 있는 크레딧이 부족합니다. <br><a href=%s target=\"new\">iap 계정</a>으로 가주세요."
 
 #. module: snailmail
 #. odoo-javascript

@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_fleet
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Larissa Manderfeld, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_fleet
@@ -40,7 +39,9 @@ msgstr "Dateianhänge"
 #: code:addons/hr_fleet/models/employee.py:0
 #, python-format
 msgid "Cannot remove address from employees with linked cars."
-msgstr "Die Adresse von Mitarbeitern mit verknüpften Fahrzeugen kann nicht entfernt werden."
+msgstr ""
+"Die Adresse von Mitarbeitern mit verknüpften Fahrzeugen kann nicht entfernt "
+"werden."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
@@ -66,7 +67,7 @@ msgstr "Aktueller Fahrer (Mitarbeiter)"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr "Abreise Wizard"
+msgstr "Austrittassistent"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
@@ -86,7 +87,7 @@ msgstr "Fahrer (Mitarbeiter)"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
 msgid "Drivers history on a vehicle"
-msgstr "Fahrerhistorie an einem Fahrzeug"
+msgstr "Fahrerhistorie eines Fahrzeugs"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee
@@ -99,12 +100,12 @@ msgstr "Mitarbeiter"
 #: code:addons/hr_fleet/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Employee %s is not linked to a vehicle."
-msgstr ""
+msgstr "Mitarbeiter %s ist mit keinem Fahrzeug verknüpft."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
 msgid "Employee Name"
-msgstr "Mitarbeitername"
+msgstr "Name des Mitarbeiters"
 
 #. module: hr_fleet
 #. odoo-python
@@ -112,11 +113,12 @@ msgstr "Mitarbeitername"
 #, python-format
 msgid "Employee's vehicle %s is not linked to a fleet manager."
 msgstr ""
+"Das Fahrzeug %s des Mitarbeiters ist mit keinem Fuhrparkmanager verknüpft."
 
 #. module: hr_fleet
 #: model:ir.model.fields.selection,name:hr_fleet.selection__hr_plan_activity_type__responsible__fleet_manager
 msgid "Fleet Manager"
-msgstr ""
+msgstr "Fuhrpark-Manager"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
@@ -131,14 +133,14 @@ msgstr "Zukünftiger Fahrer (Mitarbeiter)"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__license_plate
 msgid "License Plate"
-msgstr "Kennzeichen"
+msgstr "Amtliches Kennzeichen"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__mobility_card
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__mobility_card
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__mobility_card
 msgid "Mobility Card"
-msgstr "Mobilitätskarte"
+msgstr "Mobility Card"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
@@ -148,12 +150,12 @@ msgstr "Anzahl der Anhänge"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
-msgstr "Tachostände für ein Fahrzeug"
+msgstr "Fahrtenbuch für ein Fahrzeug"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_plan_activity_type
 msgid "Plan activity type"
-msgstr ""
+msgstr "Aktivitätstyp planen"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
@@ -175,7 +177,7 @@ msgstr "Firmenwagen freigeben"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_plan_activity_type__responsible
 msgid "Responsible"
-msgstr ""
+msgstr "Verantwortlich"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
