@@ -47,8 +47,9 @@ class StockLot(models.Model):
                 lot.alert_date = False
             elif lot.expiration_date:
                 # when create
-                if lot.product_id != lot._origin.product_id or\
-                   (not lot.use_date and not lot.removal_date and not lot.alert_date):
+                if lot.product_id != lot._origin.product_id or \
+                   (not lot.use_date and not lot.removal_date and not lot.alert_date) or \
+                   (lot.expiration_date and not lot._origin.expiration_date):
                     product_tmpl = lot.product_id.product_tmpl_id
                     lot.use_date = lot.expiration_date - datetime.timedelta(days=product_tmpl.use_time)
                     lot.removal_date = lot.expiration_date - datetime.timedelta(days=product_tmpl.removal_time)
@@ -56,9 +57,9 @@ class StockLot(models.Model):
                 # when change
                 elif lot._origin.expiration_date:
                     time_delta = lot.expiration_date - lot._origin.expiration_date
-                    lot.use_date = lot.use_date and lot.use_date + time_delta
-                    lot.removal_date = lot.removal_date and lot.removal_date + time_delta
-                    lot.alert_date = lot.alert_date and lot.alert_date + time_delta
+                    lot.use_date = lot._origin.use_date and lot._origin.use_date + time_delta
+                    lot.removal_date = lot._origin.removal_date and lot._origin.removal_date + time_delta
+                    lot.alert_date = lot._origin.alert_date and lot._origin.alert_date + time_delta
 
     @api.model
     def _alert_date_exceeded(self):
