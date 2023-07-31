@@ -105,8 +105,8 @@ export function useSuggestion() {
             self.fetch.rpcFunction = undefined;
             await func();
             self.fetch.inProgress = false;
-            if (self.fetch.nextMentionRpcFunction) {
-                self.process(self.fetch.nextMentionRpcFunction);
+            if (self.fetch.rpcFunction) {
+                self.process(self.fetch.rpcFunction);
             }
         },
         search: {
