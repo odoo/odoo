@@ -11,6 +11,7 @@ from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery as WebsiteSaleDeliveryController
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 @tagged('post_install', '-at_install')
@@ -107,31 +108,6 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             'state': self.user_demo.partner_id.state_id.code,
         }
 
-    def _make_json_rpc_request(self, url, data=None):
-        """ Make a JSON-RPC request to the provided URL.
-
-        :param str url: The URL to make the request to
-        :param dict data: The data to be send in the request body in JSON-RPC 2.0 format
-        :return dict: The result of the JSON-RPC request
-        """
-        rpc_request = {
-            "jsonrpc": "2.0",
-            "method": "call",
-             "id": str(uuid4()),
-            "params": data,
-        }
-
-        result = self.url_open(
-            url,
-            data=json.dumps(rpc_request).encode(),
-            headers={"Content-Type": "application/json"},
-        )
-
-        if not result.ok:
-            return {}
-
-        return result.json().get("result", {})
-
     def test_express_checkout_public_user_shipping_address_change(self):
         """ Test that when using express checkout as a public user and selecting a shipping address,
             a new partner is created if the partner of the SO is the public partner.
@@ -143,10 +119,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
         ):
-            self._make_json_rpc_request(
+            self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_shipping_route
-                ), data={
+                ), params={
                     'partial_shipping_address': dict(self.express_checkout_anonymized_shipping_values)
                 }
             )
@@ -175,18 +151,18 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
         ):
-            self._make_json_rpc_request(
+            self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_shipping_route
-                ), data={
+                ), params={
                     'partial_shipping_address': dict(self.express_checkout_anonymized_shipping_values)
                 }
             )
             new_partner = self.sale_order.partner_shipping_id
-            self._make_json_rpc_request(
+            self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_shipping_route
-                ), data={
+                ), params={
                     'partial_shipping_address': dict(self.express_checkout_anonymized_shipping_values_2)
                 }
             )
@@ -213,10 +189,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
         ):
-            self._make_json_rpc_request(
+            self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_shipping_route
-                ), data={
+                ), params={
                     'partial_shipping_address': dict(self.express_checkout_anonymized_shipping_values)
                 }
             )
@@ -235,10 +211,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
         ):
-            self._make_json_rpc_request(
+            self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_shipping_route
-                ), data={
+                ), params={
                     'partial_shipping_address': dict(self.express_checkout_anonymized_shipping_values)
                 }
             )
@@ -269,18 +245,18 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
         ):
-            self._make_json_rpc_request(
+            self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_shipping_route
-                ), data={
+                ), params={
                     'partial_shipping_address': dict(self.express_checkout_anonymized_shipping_values)
                 }
             )
             new_partner = self.sale_order.partner_shipping_id
-            self._make_json_rpc_request(
+            self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_shipping_route
-                ), data={
+                ), params={
                     'partial_shipping_address': dict(self.express_checkout_anonymized_shipping_values_2)
                 }
             )
@@ -325,16 +301,16 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
         ):
-            shipping_options = self._make_json_rpc_request(
+            shipping_options = self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_shipping_route
-                ), data={
+                ), params={
                     'partial_shipping_address': dict(self.express_checkout_anonymized_demo_shipping_values)
                 }
             )
             self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
 
-            self._make_json_rpc_request(urls.url_join(self.base_url(), '/shop/express'), data={
+            self.make_jsonrpc_request(urls.url_join(self.base_url(), WebsiteSale._express_checkout_route), params={
                 'billing_address': dict(self.express_checkout_billing_values),
                 'shipping_address': dict(self.express_checkout_demo_shipping_values),
                 'shipping_option': shipping_options[0],
@@ -355,10 +331,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
         ):
             # Won't create a new partner because the partial information are the same the an
             # exisiting partner linked to the SO
-            shipping_options = self._make_json_rpc_request(
+            shipping_options = self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_shipping_route
-                ), data={
+                ), params={
                     'partial_shipping_address': dict(self.express_checkout_anonymized_demo_shipping_values)
                 }
             )
@@ -366,11 +342,11 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
 
             # Will create a new partner because the complete shipping information are different than
             # the partner actually selected.
-            self._make_json_rpc_request(
+            self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_route
-                ), data={
+                ), params={
                     'billing_address': dict(self.express_checkout_billing_values),
                     'shipping_address': dict(self.express_checkout_demo_shipping_values_2),
                     'shipping_option': shipping_options[0],

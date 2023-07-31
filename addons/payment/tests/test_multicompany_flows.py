@@ -128,6 +128,6 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
 
         # Archive token in company A
         url = self._build_url('/payment/archive_token')
-        self._make_json_rpc_request(url, {'token_id': token.id})
+        self.make_jsonrpc_request(url, {'token_id': token.id})
 
         self.assertFalse(token.active)

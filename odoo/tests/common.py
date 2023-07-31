@@ -1610,6 +1610,12 @@ class Transport(xmlrpclib.Transport):
         return super().request(*args, **kwargs)
 
 
+class JsonRpcException(Exception):
+    def __init__(self, code, message):
+        super().__init__(message)
+        self.code = code
+
+
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
     registry_test_mode = True
@@ -1811,6 +1817,34 @@ class HttpCase(TransactionCase):
         def route_profiler(request):
             return sup.profile(description=request.httprequest.full_path)
         return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
+
+    def make_jsonrpc_request(self, route, params=None, headers=None):
+        """Make a JSON-RPC request to the server.
+
+        :param str route: the route to request
+        :param dict params: the parameters to send
+        :raises requests.HTTPError: if one occurred
+        :raises JsonRpcException: if the response contains an error
+        :return: The 'result' key from the response if any.
+        """
+        data = json.dumps({
+            'id': 0,
+            'jsonrpc': '2.0',
+            'method': 'call',
+            'params': params,
+        }).encode()
+        headers = headers or {}
+        headers['Content-Type'] = 'application/json'
+        response = self.url_open(route, data, headers=headers)
+        response.raise_for_status()
+        decoded_response = response.json()
+        if 'result' in decoded_response:
+            return decoded_response['result']
+        if 'error' in decoded_response:
+            raise JsonRpcException(
+                code=decoded_response['error']['code'],
+                message=decoded_response['error']['data']['name']
+            )
 
 
 def no_retry(arg):

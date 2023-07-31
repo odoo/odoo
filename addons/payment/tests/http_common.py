@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from contextlib import contextmanager
 from uuid import uuid4
 
 from lxml import etree, objectify
 from werkzeug import urls
 
-from odoo.tests import HttpCase
+from odoo.tests import HttpCase, JsonRpcException
 
 from odoo.addons.payment.tests.common import PaymentCommon
 
@@ -69,20 +70,11 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         """
         return self.opener.post(url, json=data)
 
-    def _make_json_rpc_request(self, url, data=None):
-        """ Make a JSON-RPC request to the provided URL.
-
-        :param str url: The URL to make the request to
-        :param dict data: The data to be send in the request body in JSON-RPC 2.0 format
-        :return: The response of the request
-        :rtype: :class:`requests.models.Response`
-        """
-        return self.opener.post(url, json={
-            'jsonrpc': '2.0',
-            'method': 'call',
-            'id': str(uuid4()),
-            'params': data,
-        })
+    @contextmanager
+    def _assertNotFound(self):
+        with self.assertRaises(JsonRpcException) as cm:
+            yield
+        self.assertEqual(cm.exception.code, 404)
 
     def _get_tx_context(self, response, form_name):
         """Extracts txContext & other form info (provider & token ids)
@@ -226,15 +218,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         """
         uri = '/payment/transaction'
         url = self._build_url(uri)
-        response = self._make_json_rpc_request(url, route_kwargs)
-        self.assertEqual(response.status_code, 200)  # Check the request went through.
-
-        return response
+        return self.make_jsonrpc_request(url, route_kwargs)
 
     def _get_processing_values(self, **route_kwargs):
-        response = self._portal_transaction(**route_kwargs)
-
-        self.assertEqual(response.status_code, 200)
-
-        resp_content = json.loads(response.content)
-        return resp_content['result']
+        return self._portal_transaction(**route_kwargs)

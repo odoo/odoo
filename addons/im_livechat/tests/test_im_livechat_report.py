@@ -7,31 +7,30 @@ from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 
 
 class TestImLivechatReport(TestImLivechatCommon):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.env['discuss.channel'].search([('livechat_channel_id', '!=', False)]).unlink()
+    def setUp(self):
+        super().setUp()
+        self.env['discuss.channel'].search([('livechat_channel_id', '!=', False)]).unlink()
 
         def _compute_available_operator_ids(channel_self):
             for record in channel_self:
-                record.available_operator_ids = cls.operators
+                record.available_operator_ids = self.operators
 
-        with patch.object(type(cls.env['im_livechat.channel']), '_compute_available_operator_ids', _compute_available_operator_ids):
-            channel_id = cls.livechat_channel._open_livechat_discuss_channel('Anonymous')['id']
+        with patch.object(type(self.env['im_livechat.channel']), '_compute_available_operator_ids', _compute_available_operator_ids):
+            channel_id = self.make_jsonrpc_request("/im_livechat/get_session", {'anonymous_name': 'Anonymous', 'channel_id': self.livechat_channel.id})['id']
 
-        channel = cls.env['discuss.channel'].browse(channel_id)
-        cls.operator = channel.livechat_operator_id
+        channel = self.env['discuss.channel'].browse(channel_id)
+        self.operator = channel.livechat_operator_id
 
-        cls._create_message(channel, cls.visitor_user.partner_id, '2023-03-17 06:05:54')
-        cls._create_message(channel, cls.operator, '2023-03-17 08:15:54')
-        cls._create_message(channel, cls.operator, '2023-03-17 08:45:54')
+        self._create_message(channel, self.visitor_user.partner_id, '2023-03-17 06:05:54')
+        self._create_message(channel, self.operator, '2023-03-17 08:15:54')
+        self._create_message(channel, self.operator, '2023-03-17 08:45:54')
 
         # message with the same record id, but with a different model
         # should not be taken into account for statistics
-        partner_message = cls._create_message(channel, cls.operator, '2023-03-17 05:05:54')
-        partner_message |= cls._create_message(channel, cls.operator, '2023-03-17 09:15:54')
+        partner_message = self._create_message(channel, self.operator, '2023-03-17 05:05:54')
+        partner_message |= self._create_message(channel, self.operator, '2023-03-17 09:15:54')
         partner_message.model = 'res.partner'
-        cls.env['mail.message'].flush_model()
+        self.env['mail.message'].flush_model()
 
     def test_im_livechat_report_channel(self):
         report = self.env['im_livechat.report.channel'].search([('livechat_channel_id', '=', self.livechat_channel.id)])
