@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import threading
+
 from contextlib import contextmanager
 from unittest.mock import patch
 
@@ -336,6 +338,21 @@ class MockSmtplibCase:
             self.connect_mocked = connect_mocked
             self.find_mail_server_mocked = find_mail_server_mocked
             yield
+
+    def _build_email(self, mail_from, return_path=None, **kwargs):
+        return self.env['ir.mail_server'].build_email(
+            body=kwargs.pop('body', 'body'),
+            email_from=mail_from,
+            email_to='dest@example-é.com',
+            headers={'Return-Path': return_path} if return_path else None,
+            subject='subject',
+            **kwargs,
+        )
+
+    def _send_email(self, msg, smtp_session):
+        with patch.object(threading.current_thread(), 'testing', False):
+            self.env['ir.mail_server'].send_email(msg, smtp_session=smtp_session)
+        return smtp_session.messages.pop()
 
     def assert_email_sent_smtp(self, smtp_from=None, smtp_to_list=None, message_from=None, from_filter=None, emails_count=1):
         """Check that the given email has been sent.
