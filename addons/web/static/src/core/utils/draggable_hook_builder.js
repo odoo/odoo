@@ -95,6 +95,7 @@ const DEFAULT_DEFAULT_PARAMS = {
     },
     delay: 0,
     tolerance: 10,
+    touch_delay: 300,
 };
 const LEFT_CLICK = 0;
 const MANDATORY_PARAMS = ["ref"];
@@ -651,6 +652,8 @@ export function makeDraggableHook(hookParams) {
             const onPointerDown = (ev) => {
                 updatePointerPosition(ev);
 
+                const initiationDelay = ev.pointerType === "touch" ? ctx.touch_delay : ctx.delay;
+
                 // A drag sequence can still be in progress if the pointerup occurred
                 // outside of the window.
                 dragEnd(null);
@@ -679,8 +682,11 @@ export function makeDraggableHook(hookParams) {
                     target.releasePointerCapture(pointerId);
                 }
 
-                if (ctx.delay) {
+                if (initiationDelay) {
                     if (hasTouch()) {
+                        if (ev.pointerType === "touch") {
+                            dom.addClass(target.closest(ctx.elementSelector), "o_touch_bounce");
+                        }
                         if (isBrowserFirefox()) {
                             // On Firefox mobile, long-touch events trigger an unpreventable
                             // context menu to appear. To prevent this, all linkes are removed
@@ -714,7 +720,7 @@ export function makeDraggableHook(hookParams) {
                             // Note that the timeout is cleared in dragEnd
                             dragEnd(null);
                         }
-                    }, ctx.delay);
+                    }, initiationDelay);
                     cleanup.add(() => browser.clearTimeout(ctx.current.timeout));
                 } else {
                     willStartDrag(target);
@@ -927,6 +933,7 @@ export function makeDraggableHook(hookParams) {
 
                     // Delay & tolerance
                     ctx.delay = actualParams.delay;
+                    ctx.touch_delay = actualParams.delay || actualParams.touch_delay;
                     ctx.tolerance = actualParams.tolerance;
 
                     callBuildHandler("onComputeParams", { params: actualParams });
