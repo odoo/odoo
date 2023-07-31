@@ -1,6 +1,7 @@
 /** @odoo-module */
 import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 /**
  * @props {models.Order} order
@@ -29,7 +30,7 @@ export class SaleOrderRow extends Component {
         return this.order.name;
     }
     get date() {
-        return moment(this.order.date_order).format("YYYY-MM-DD hh:mm A");
+        return deserializeDateTime(this.order.date_order).toFormat("yyyy-MM-dd HH:mm a");
     }
     get partner() {
         const partner = this.order.partner_id;

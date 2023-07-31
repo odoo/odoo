@@ -89,7 +89,7 @@ QUnit.module("test_mail", {}, function () {
     });
 
     var activityDateFormat = function (date) {
-        return date.toLocaleDateString(moment().locale(), { day: "numeric", month: "short" });
+        return DateTime.now().toLocaleString({ day: "numeric", month: "short" });
     };
 
     QUnit.test("activity view: simple activity rendering", async function (assert) {

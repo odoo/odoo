@@ -297,6 +297,7 @@ export function formatDateTime(value, options = {}) {
 /**
  * Formats the given DateTime to the server date format.
  * @param {DateTime} value
+ * @returns {string} 
  */
 export function serializeDate(value) {
     if (!dateCache.has(value)) {
@@ -308,6 +309,7 @@ export function serializeDate(value) {
 /**
  * Formats the given DateTime to the server datetime format.
  * @param {DateTime} value
+ * @returns {string} 
  */
 export function serializeDateTime(value) {
     if (!dateTimeCache.has(value)) {

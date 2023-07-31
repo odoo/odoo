@@ -6,6 +6,8 @@ import { registry } from "@web/core/registry";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeMockServer } from "@web/../tests/helpers/mock_server";
 import core from "@web/legacy/js/services/core";
+import { serializeDateTime, serializeDate } from "@web/core/l10n/dates";
+const { DateTime } = luxon;
 
 const modelDefinitionsPromise = new Promise((resolve) => {
     QUnit.begin(() => resolve(getModelDefinitions()));
@@ -56,8 +58,8 @@ async function getModelDefinitions() {
             if (["date", "datetime"].includes(field.type) && !field.default) {
                 const defaultFieldValue =
                     field.type === "date"
-                        ? () => moment.utc().format("YYYY-MM-DD")
-                        : () => moment.utc().format("YYYY-MM-DD HH:mm:ss");
+                        ? () => serializeDate(DateTime.utc())
+                        : () => serializeDateTime(DateTime.utc());
                 field.default = defaultFieldValue;
             } else if (fname === "active" && !("default" in field)) {
                 // records are active by default.

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import time from '@web/legacy/js/core/time';
 import publicWidget from '@web/legacy/js/public/public_widget';
+import { parseDate } from '@web/core/l10n/dates';
 
 publicWidget.registry.ProjectRatingImage = publicWidget.Widget.extend({
     selector: '.o_portal_project_rating .o_rating_image',
@@ -18,8 +18,8 @@ publicWidget.registry.ProjectRatingImage = publicWidget.Widget.extend({
                 var $elem = $(this);
                 var id = $elem.data('id');
                 var ratingDate = $elem.data('rating-date');
-                var baseDate = time.auto_str_to_date(ratingDate);
-                var duration = moment(baseDate).fromNow();
+                var baseDate = parseDate(ratingDate);
+                var duration = baseDate.toRelative();
                 var $rating = $('#rating_' + id);
                 $rating.find('.rating_timeduration').text(duration);
                 return $rating.html();
