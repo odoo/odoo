@@ -50,7 +50,12 @@ paymentExpressCheckoutForm.include({
      * @return {Promise}
      */
     async _prepareExpressCheckoutForm(providerData) {
-        if (providerData.providerCode !== 'stripe') {
+        /*
+         * When applying a coupon, the amount can be totally covered, with nothing left to pay. In
+         * that case, the check is whether the variable is defined because the server doesn't send
+         * the value when it equals '0'.
+         */
+        if (providerData.providerCode !== 'stripe' || !this.txContext.amount) {
             return this._super(...arguments);
         }
 
