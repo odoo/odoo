@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import session from "web.session";
 import { Colorpicker } from "@web/core/colorpicker/colorpicker";
 import customColors from "@web_editor/js/editor/custom_colors";
 import weUtils from "@web_editor/js/common/utils";
@@ -9,8 +8,6 @@ import {
     normalizeCSSColor,
     convertCSSColorToRgba,
 } from '@web/core/utils/colors';
-
-
 import {
     Component,
     useRef,
@@ -20,30 +17,7 @@ import {
     onWillUpdateProps,
 } from "@odoo/owl";
 
-
-
-let colorpickerArch;
-let colorpickerTemplateProm;
-
 export class ColorPalette extends Component {
-     /**
-      * Load ColorPalette dependencies. This allows to load them without
-      * instantiating the widget itself.
-      *
-      * @static
-      */
-    static async loadDependencies(getTemplate) {
-        // Public user using the editor may have a colorpalette but with
-        // the default wysiwyg ones.
-        if (!session.is_website_user) {
-            // We can call the colorPalette multiple times but only need 1 rpc
-            if (!colorpickerTemplateProm && !colorpickerArch) {
-                colorpickerTemplateProm = getTemplate().then(arch => colorpickerArch = arch);
-
-            }
-            return colorpickerTemplateProm;
-        }
-    }
     static template = 'web_editor.ColorPalette';
     static props = {
         document: { type: true, optional: true },
@@ -97,7 +71,7 @@ export class ColorPalette extends Component {
         this.init();
         onWillStart(async () => {
             if (this.props.getTemplate) {
-                await ColorPalette.loadDependencies(this.props.getTemplate);
+                this.colorpickerTemplate = await this.props.getTemplate();
             }
         });
         onMounted(async () => {
@@ -196,8 +170,8 @@ export class ColorPalette extends Component {
         const switchPaneButtons = this.el.querySelectorAll('.o_we_colorpicker_switch_pane_btn');
 
         let colorpickerEl;
-        if (colorpickerArch) {
-            colorpickerEl = $(colorpickerArch)[0];
+        if (this.colorpickerTemplate) {
+            colorpickerEl = $(this.colorpickerTemplate)[0];
         } else {
             colorpickerEl = document.createElement("colorpicker");
             const sectionEl = document.createElement('DIV');

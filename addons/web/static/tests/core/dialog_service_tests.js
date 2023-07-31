@@ -230,7 +230,7 @@ QUnit.test("dialog component crashes", async (assert) => {
     });
 
     const rpc = makeFakeRPCService();
-    serviceRegistry.add("rpc", rpc);
+    serviceRegistry.add("rpc", rpc, { force: true });
     serviceRegistry.add("notification", notificationService);
     serviceRegistry.add("error", errorService);
 

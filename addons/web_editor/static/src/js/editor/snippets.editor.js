@@ -7,7 +7,6 @@ import dom from "@web/legacy/js/core/dom";
 import { Markup, confine } from "@web/legacy/js/core/utils";
 import Widget from "@web/legacy/js/core/widget";
 import options from "@web_editor/js/editor/snippets.options";
-import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import SmoothScrollOnDrag from "@web_editor/js/editor/smooth_scroll_on_drag";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
@@ -1774,13 +1773,7 @@ var SnippetsMenu = Widget.extend({
         // widget have huge chances of being used by the user (clicking on any
         // text will load it). The colorpalette itself will do the actual
         // waiting of the loading completion.
-        ColorPalette.loadDependencies(() => {
-            return this._rpc({
-                model: 'ir.ui.view',
-                method: 'render_public_asset',
-                args: ['web_editor.colorpicker', {}],
-            });
-        });
+        this.options.wysiwyg.getColorpickerTemplate();
         return this._super(...arguments);
     },
     /**
