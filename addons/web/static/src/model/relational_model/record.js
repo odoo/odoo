@@ -133,11 +133,11 @@ export class Record extends DataPoint {
         return this.model.mutex.exec(() => this._toggleArchive(true));
     }
 
-    async checkValidity() {
+    async checkValidity({ displayNotification } = {}) {
         if (!this._urgentSave) {
             await this.model._askChanges();
         }
-        return this._checkValidity();
+        return this._checkValidity({ displayNotification });
     }
 
     delete() {
@@ -206,21 +206,6 @@ export class Record extends DataPoint {
             throw new Error("Record.load() does not accept arguments");
         }
         return this.model.mutex.exec(() => this._load());
-    }
-
-    openInvalidFieldsNotification() {
-        if (this._invalidFields.size) {
-            const items = [...this._invalidFields].map((fieldName) => {
-                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
-            }, this);
-            this._closeInvalidFieldsNotification = this.model.notification.add(
-                markup(`<ul>${items.join("")}</ul>`),
-                {
-                    title: _t("Invalid fields: "),
-                    type: "danger",
-                }
-            );
-        }
     }
 
     async save(options) {
@@ -321,7 +306,7 @@ export class Record extends DataPoint {
         this._setEvalContext();
     }
 
-    _checkValidity({ silent } = {}) {
+    _checkValidity({ silent, displayNotification } = {}) {
         const unsetRequiredFields = [];
         for (const fieldName in this.activeFields) {
             const fieldType = this.fields[fieldName].type;
@@ -364,7 +349,20 @@ export class Record extends DataPoint {
             this._unsetRequiredFields.add(fieldName);
             this._setInvalidField(fieldName);
         }
-        return !this._invalidFields.size;
+        const isValid = !this._invalidFields.size;
+        if (!isValid && displayNotification) {
+            const items = [...this._invalidFields].map((fieldName) => {
+                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
+            }, this);
+            this._closeInvalidFieldsNotification = this.model.notification.add(
+                markup(`<ul>${items.join("")}</ul>`),
+                {
+                    title: _t("Invalid fields: "),
+                    type: "danger",
+                }
+            );
+        }
+        return isValid;
     }
 
     _computeDataContext() {
@@ -791,8 +789,7 @@ export class Record extends DataPoint {
                 this.data[fieldName]._abandonRecords();
             }
         }
-        if (!this._checkValidity()) {
-            this.openInvalidFieldsNotification();
+        if (!this._checkValidity({ displayNotification: true })) {
             return false;
         }
         const changes = this._getChanges();
