@@ -308,7 +308,7 @@ class AccountEdiFormat(models.Model):
                 params={'recipient_codice_fiscale': proxy_user.company_id.l10n_it_codice_fiscale})
         except AccountEdiProxyError as e:
             res = {}
-            _logger.error('Error while receiving file from SdiCoop: %s', e)
+            _logger.warning('Error while receiving file from SdiCoop: %s', e)
 
         retrigger = False
         proxy_acks = []
@@ -329,7 +329,7 @@ class AccountEdiFormat(models.Model):
                     proxy_user._get_server_url() + '/api/l10n_it_edi/1/ack',
                     params={'transaction_ids': proxy_acks})
             except AccountEdiProxyError as e:
-                _logger.error('Error while receiving file from SdiCoop: %s', e)
+                _logger.warning('Error while receiving file from SdiCoop: %s', e)
 
         if retrigger:
             _logger.info('Retriggering "Receive invoices from the exchange system"...')
