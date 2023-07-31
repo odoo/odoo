@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 import { useService, useBus } from '@web/core/utils/hooks';
-import { AceEditorAdapterComponent } from '../../components/ace_editor/ace_editor';
+import { AceEditorWrapper } from '../../components/ace_editor/ace_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
 import { unslugHtmlDataObject } from '../../services/website_service';
@@ -519,7 +519,7 @@ WebsitePreview.components = {
     WebsiteEditorComponent,
     BlockPreview,
     WebsiteTranslator,
-    AceEditorAdapterComponent,
+    AceEditorWrapper,
 };
 
 registry.category('actions').add('website_preview', WebsitePreview);
