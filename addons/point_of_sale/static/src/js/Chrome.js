@@ -320,7 +320,12 @@ export class Chrome extends Component {
         );
     }
     get showCashMoveButton() {
-        return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control;
+        return (
+            this.env.pos &&
+            this.env.pos.config &&
+            this.env.pos.config.cash_control &&
+            this.env.pos.config.has_cash_move_permission
+        );
     }
     /**
      * Unmounts the tempScreen on error and dispatches the error in a separate
