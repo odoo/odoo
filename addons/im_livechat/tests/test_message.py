@@ -4,13 +4,14 @@
 from markupsafe import Markup
 
 from odoo import Command
-from odoo.tests.common import users, tagged, TransactionCase
+from odoo.tests.common import users, tagged, HttpCase
 
 
 @tagged('post_install', '-at_install')
-class TestImLivechatMessage(TransactionCase):
+class TestImLivechatMessage(HttpCase):
     def setUp(self):
         super().setUp()
+        self.password = 'Pl1bhD@2!kXZ'
         self.users = self.env['res.users'].create([
             {
                 'email': 'e.e@example.com',
@@ -21,14 +22,20 @@ class TestImLivechatMessage(TransactionCase):
                 'odoobot_state': 'disabled',
                 'signature': '--\nErnest',
             },
-            {'name': 'test1', 'login': 'test1', 'email': 'test1@example.com'},
+            {'name': 'test1', 'login': 'test1', 'password': self.password, 'email': 'test1@example.com'},
         ])
 
     @users('emp')
     def test_message_format(self):
         im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env['bus.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
-        channel_livechat_1 = self.env['discuss.channel'].browse(im_livechat_channel._open_livechat_discuss_channel(anonymous_name='anon 1', previous_operator_id=self.users[0].partner_id.id, user_id=self.users[1].id, country_id=self.env.ref('base.in').id)['id'])
+        self.authenticate(self.users[1].login, self.password)
+        channel_livechat_1 = self.env['discuss.channel'].browse(self.make_jsonrpc_request("/im_livechat/get_session", {
+            'anonymous_name': 'anon 1',
+            'previous_operator_id': self.users[0].partner_id.id,
+            'country_id': self.env.ref('base.in').id,
+            'channel_id': im_livechat_channel.id,
+        })['id'])
         record_rating = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('discuss.channel').id,
             'res_id': channel_livechat_1.id,

@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
-from odoo.tests import tagged
+from odoo.tests import tagged, JsonRpcException
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.controllers.portal import PaymentPortal
@@ -287,22 +287,19 @@ class TestFlows(PaymentHttpCommon):
             'landing_route': 'whatever',
         })
         # Transaction step with a wrong flow --> UserError
-        with mute_logger('odoo.http'):
-            response = self._portal_transaction(**transaction_values)
-        self.assertIn(
-            "odoo.exceptions.UserError: The payment should either be direct, with redirection, or made by a token.",
-            response.text)
+        with mute_logger("odoo.http"), self.assertRaises(
+            JsonRpcException,
+            msg='odoo.exceptions.UserError: The payment should either be direct, with redirection, or made by a token.',
+        ):
+            self._portal_transaction(**transaction_values)
 
     def test_transaction_wrong_token(self):
         route_values = self._prepare_pay_values()
         route_values['access_token'] = "abcde"
 
         # Transaction step with a wrong access token --> ValidationError
-        with mute_logger('odoo.http'):
-            response = self._portal_transaction(**route_values)
-        self.assertIn(
-            "odoo.exceptions.ValidationError: The access token is invalid.",
-            response.text)
+        with mute_logger('odoo.http'), self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError: The access token is invalid.'):
+            self._portal_transaction(**route_values)
 
     def test_access_disabled_providers_tokens(self):
         self.partner = self.portal_partner

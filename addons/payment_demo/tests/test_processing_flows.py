@@ -20,5 +20,5 @@ class TestProcessingFlows(PaymentDemoCommon, PaymentHttpCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._handle_notification_data'
         ) as handle_notification_data_mock:
-            self._make_json_rpc_request(url, data=self.notification_data)
+            self.make_jsonrpc_request(url, params=self.notification_data)
         self.assertEqual(handle_notification_data_mock.call_count, 1)
