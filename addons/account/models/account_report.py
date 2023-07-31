@@ -16,7 +16,6 @@ FIGURE_TYPE_SELECTION_VALUES = [
     ('datetime', "Datetime"),
     ('boolean', 'Boolean'),
     ('string', 'String'),
-    ('none', "No Formatting"),
 ]
 
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
