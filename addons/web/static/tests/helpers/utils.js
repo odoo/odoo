@@ -848,7 +848,7 @@ export async function dragAndDrop(from, to, position) {
  *
  * @param {Element | string} from
  */
-export async function drag(from) {
+export async function drag(from, pointerType = "mouse") {
     const assertIsDragging = (fn, endDrag) => {
         return {
             async [fn.name](...args) {
@@ -961,6 +961,7 @@ export async function drag(from) {
 
     // Pointer down on main target
     await triggerEvent(source, null, "pointerdown", {
+        pointerType,
         clientX: sourceRect.x + sourceRect.width / 2,
         clientY: sourceRect.y + sourceRect.height / 2,
     });

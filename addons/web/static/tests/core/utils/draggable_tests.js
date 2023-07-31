@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
-import { drag, dragAndDrop, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
+import { drag, dragAndDrop, getFixture, mount, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { useDraggable } from "@web/core/utils/draggable";
+import { browser } from "@web/core/browser/browser";
 
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
 
@@ -212,5 +213,102 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         await dragAndDrop(".item:first-child .ignored", ".item:nth-child(2)");
 
         assert.verifySteps([]);
+    });
+
+    QUnit.test("Dragging element with touch event", async (assert) => {
+        assert.expect(10);
+
+        patchWithCleanup(browser, {
+            matchMedia: (media) => {
+                if (media === "(pointer:coarse)") {
+                    return { matches: true };
+                } else {
+                    this._super();
+                }
+            },
+            setTimeout: (fn, delay) => {
+                assert.strictEqual(delay, 300, "touch drag has a default 300ms initiation delay");
+                fn();
+            }
+        });
+
+        class List extends Component {
+            setup() {
+                useDraggable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    onDragStart({ element }) {
+                        assert.step("start");
+                        assert.hasClass(element, "o_touch_bounce", "element has the animation class applied");
+                    },
+                    onDrag() {
+                        assert.step("drag");
+                    },
+                    onDragEnd() {
+                        assert.step("end");
+                    },
+                    async onDrop({ element }) {
+                        assert.step("drop");
+                        await nextTick();
+                        assert.doesNotHaveClass(element, "o_touch_bounce", "element no longer has the animation class applied");
+                    },
+                });
+            }
+        }
+
+        List.template = xml`
+            <div t-ref="root" class="root">
+                <ul class="list">
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                </ul>
+            </div>`;
+
+        await mount(List, target);
+        assert.verifySteps([]);
+
+        const { drop, moveTo } = await drag(".item:first-child", "touch");
+        await moveTo(".item:nth-child(2)");
+        assert.hasClass(target.querySelector(".item"), "o_dragged");
+
+        await drop();
+        assert.verifySteps(["start", "drag", "drop", "end"]);
+    });
+
+    QUnit.test("Dragging element with touch event: initiation delay can be overrided", async (assert) => {
+        patchWithCleanup(browser, {
+            matchMedia: (media) => {
+                if (media === "(pointer:coarse)") {
+                    return { matches: true };
+                } else {
+                    this._super();
+                }
+            },
+            setTimeout: (fn, delay) => {
+                assert.strictEqual(delay, 1000, "touch drag has the custom initiation delay");
+                fn();
+            }
+        });
+
+        class List extends Component {
+            setup() {
+                useDraggable({
+                    ref: useRef("root"),
+                    delay: 1000,
+                    elements: ".item",
+                });
+            }
+        }
+
+        List.template = xml`
+            <div t-ref="root" class="root">
+                <ul class="list">
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                </ul>
+            </div>`;
+
+        await mount(List, target);
+        const { drop, moveTo } = await drag(".item:first-child", "touch");
+        await moveTo(".item:nth-child(2)");
+        await drop();
     });
 });
