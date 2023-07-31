@@ -192,7 +192,7 @@
                                 <field name="amount_tax"
                                     attrs="{'invisible': [('product_has_tax', '=', False)]}"/>
                             </div>
-                            <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_user"/>
+                            <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_user" options="{'no_create': True}" />
                             <label id="lo" for="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
                             <div id="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}">
                                 <field name="payment_mode" widget="radio"/>
