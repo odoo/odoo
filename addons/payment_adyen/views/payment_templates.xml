@@ -13,6 +13,12 @@
         </xpath>
     </template>
 
+    <template id="payment_form" inherit_id="payment.form">
+        <xpath expr="." position="inside">
+            <t t-call="payment_adyen.sdk_assets"/>
+        </xpath>
+    </template>
+
     <template id="sdk_assets">
         <script src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.js"
              integrity="sha384-xEeOeJS9noqG6GBdLeyfdybymyC6T4EG+kKvvii2xJkChmwENEgCTpP+XvET9NDG"

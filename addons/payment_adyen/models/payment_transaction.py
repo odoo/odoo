@@ -9,7 +9,7 @@ from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import utils as adyen_utils
-from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS, RESULT_CODES_MAPPING
+from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS, RESULT_CODES_MAPPING, PAYMENT_METHODS_MAPPING
 
 _logger = logging.getLogger(__name__)
 
@@ -386,6 +386,18 @@ class PaymentTransaction(models.Model):
         # Handle the payment state
         payment_state = notification_data.get('resultCode')
         refusal_reason = notification_data.get('refusalReason') or notification_data.get('reason')
+        if not self.payment_method_id:
+            payment_method_code = notification_data.get('paymentMethod', '')
+            if isinstance(payment_method_code, dict): #if not webhook
+                payment_method_code_type = payment_method_code.get('type')
+                if payment_method_code_type == 'scheme': # if type card get brand
+                    payment_method_code_type = payment_method_code.get('brand')
+                payment_method_code = payment_method_code_type
+
+            payment_method = self.env['payment.method']._get_from_code(
+                payment_method_code, mapping=PAYMENT_METHODS_MAPPING
+            )
+            self.payment_method_id = payment_method
         if not payment_state:
             raise ValidationError("Adyen: " + _("Received data with missing payment state."))
 
@@ -393,7 +405,7 @@ class PaymentTransaction(models.Model):
             self._set_pending()
         elif payment_state in RESULT_CODES_MAPPING['done']:
             additional_data = notification_data.get('additionalData', {})
-            has_token_data = 'recurring.storedPaymentMethodId' in additional_data
+            has_token_data = 'recurring.recurringDetailReference' in additional_data
             if self.tokenize and has_token_data:
                 self._adyen_tokenize_from_notification_data(notification_data)
 
@@ -467,7 +479,8 @@ class PaymentTransaction(models.Model):
             'provider_id': self.provider_id.id,
             'payment_details': additional_data.get('cardSummary'),
             'partner_id': self.partner_id.id,
-            'provider_ref': additional_data['recurring.storedPaymentMethodId'],
+            'provider_ref': additional_data['recurring.recurringDetailReference'],
+            'payment_method_id': self.payment_method_id.id,
             'adyen_shopper_reference': additional_data['recurring.shopperReference'],
             'verified': True,  # The payment is authorized, so the payment method is valid
         })

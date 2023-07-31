@@ -186,10 +186,13 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
 
         // Prepare the inline form of the selected payment option.
         const providerCode = this._getProviderCode(radio);
+        const paymentProviderId = this._getProviderId(radio);
         const paymentOptionId = this._getPaymentOptionId(radio);
         const paymentMethodCode = this._getPaymentMethodCode(radio);
         const flow = this._getPaymentFlow(radio);
-        await this._prepareInlineForm(providerCode, paymentOptionId, paymentMethodCode, flow);
+        await this._prepareInlineForm(
+            providerCode, paymentProviderId, paymentOptionId, paymentMethodCode, flow
+        );
 
         // Display the prepared inline form if it is not empty.
         const inlineForm = this._getInlineForm(radio);
@@ -206,12 +209,15 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      *
      * @private
      * @param {string} providerCode - The code of the selected payment option's provider.
+     * @param {number} paymentProviderId; - The id of the provider.
      * @param {number} paymentOptionId - The id of the selected payment option.
      * @param {string} paymentMethodCode - The code of the selected payment method, if any.
      * @param {string} flow - The payment flow of the selected payment option.
      * @return {void}
      */
-    async _prepareInlineForm(providerCode, paymentOptionId, paymentMethodCode, flow) {},
+    async _prepareInlineForm(
+        providerCode, paymentProviderId, paymentOptionId, paymentMethodCode, flow
+    ) {},
 
     /**
      * Collapse all inline forms of the current widget.
@@ -236,6 +242,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     _displayErrorDialog(title, description = '', error = '') {
         const checkedRadios = this.$('input[name="o_payment_radio"]:checked');
+        this._enableButton();
         return new Dialog(null, {
             title: sprintf(_t("Error: %s"), title),
             size: 'medium',

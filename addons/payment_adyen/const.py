@@ -35,3 +35,12 @@ RESULT_CODES_MAPPING = {
     'error': ('Error',),
     'refused': ('Refused',),
 }
+
+# Mapping of payment method codes that differs from adyen codes.
+PAYMENT_METHODS_MAPPING = {
+    'mastercard': 'mc',
+    'apple_pay': 'applepay',
+    'unionpay': 'cup',
+    'bancontact': 'bcmc',
+    'sepa_debit': 'sepadirectdebit',
+}

@@ -115,29 +115,29 @@ class PaymentPortal(portal.CustomerPortal):
         )
         # if provider_id in providers_sudo.ids:  # Only keep the desired provider if it's suitable TODO ANV re-implement
         #     providers_sudo = providers_sudo.browse(provider_id)
-        # tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
-        #     providers_sudo.ids, partner_sudo.id
-        # )  # In sudo mode to be able to read tokens of other partners. TODO ANV re-implement
-        # TODO remove me
-        request.env['payment.token'].sudo().search([]).unlink()
-        demo_provider = request.env['payment.provider'].search([('code', '=', 'demo')], limit=1)
-        stripe_provider = request.env['payment.provider'].search([('code', '=', 'stripe')], limit=1)
-        token_1 = request.env['payment.token'].sudo().create({
-            'provider_id': demo_provider.id,
-            'payment_method_id': demo_provider.payment_method_ids[0].id,
-            'payment_details': 'some bullshit test data',
-            'partner_id': partner_sudo.id,
-            'provider_ref': 'nope',
-        })
-        token_2 = request.env['payment.token'].sudo().create({
-            'provider_id': stripe_provider.id,
-            'payment_method_id': stripe_provider.payment_method_ids[0].id,
-            'payment_details': '1234',
-            'partner_id': partner_sudo.id,
-            'provider_ref': 'nope',
-        })
-        # TODO remove me
-        tokens_sudo = request.env['payment.token'].sudo().search([])
+        tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
+            providers_sudo.ids, partner_sudo.id
+        )  # In sudo mode to be able to read tokens of other partners. TODO ANV re-implement
+        # # TODO remove me
+        # request.env['payment.token'].sudo().search([]).unlink()
+        # demo_provider = request.env['payment.provider'].search([('code', '=', 'demo')], limit=1)
+        # stripe_provider = request.env['payment.provider'].search([('code', '=', 'stripe')], limit=1)
+        # token_1 = request.env['payment.token'].sudo().create({
+        #     'provider_id': demo_provider.id,
+        #     'payment_method_id': demo_provider.payment_method_ids.id,
+        #     'payment_details': 'some bullshit test data',
+        #     'partner_id': partner_sudo.id,
+        #     'provider_ref': 'nope',
+        # })
+        # token_2 = request.env['payment.token'].sudo().create({
+        #     'provider_id': stripe_provider.id,
+        #     'payment_method_id': stripe_provider.payment_method_ids[0].id,
+        #     'payment_details': '1234',
+        #     'partner_id': partner_sudo.id,
+        #     'provider_ref': 'nope',
+        # })
+        # # TODO remove me
+        # tokens_sudo = request.env['payment.token'].sudo().search([])
 
         # Make sure that the partner's company matches the company passed as parameter.
         company_mismatch = not PaymentPortal._can_partner_pay_in_company(partner_sudo, company)

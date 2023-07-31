@@ -16,7 +16,7 @@ from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import utils as adyen_utils
-from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS
+from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS, PAYMENT_METHODS_MAPPING
 
 _logger = logging.getLogger(__name__)
 
@@ -40,13 +40,16 @@ class AdyenController(http.Controller):
         }
 
     @http.route('/payment/adyen/payment_methods', type='json', auth='public')
-    def adyen_payment_methods(self, provider_id, amount=None, currency_id=None, partner_id=None):
+    def adyen_payment_methods(
+            self, provider_id, amount=None, currency_id=None, partner_id=None, payment_method_code=None
+    ):
         """ Query the available payment methods based on the transaction context.
 
         :param int provider_id: The provider handling the transaction, as a `payment.provider` id
         :param float amount: The transaction amount
         :param int currency_id: The transaction currency, as a `res.currency` id
         :param int partner_id: The partner making the transaction, as a `res.partner` id
+        :param int paymentMethodCode: Map the code to adyen specific
         :return: The JSON-formatted content of the response
         :rtype: dict
         """
@@ -79,7 +82,8 @@ class AdyenController(http.Controller):
             method='POST'
         )
         _logger.info("paymentMethods request response:\n%s", pprint.pformat(response_content))
-        return response_content
+        adyen_code = PAYMENT_METHODS_MAPPING.get(payment_method_code, payment_method_code)
+        return {'paymentMethodsResult': response_content, 'adyenCode': adyen_code}
 
     @http.route('/payment/adyen/payments', type='json', auth='public')
     def adyen_payments(
