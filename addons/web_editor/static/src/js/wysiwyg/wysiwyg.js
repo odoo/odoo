@@ -1974,7 +1974,7 @@ export class Wysiwyg extends Component {
             const range = new Range();
             range.setStart(first, 0);
             range.setEnd(...endPos(last));
-            sel.addRange(range);
+            sel.addRange(getDeepRange(this.odooEditor.editable, { range }));
         }
 
         const hexColor = this._colorToHex(color);
