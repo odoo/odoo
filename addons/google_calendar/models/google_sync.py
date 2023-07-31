@@ -310,7 +310,7 @@ class GoogleSync(models.AbstractModel):
                      email not in [partner.email_normalized for partner in partners]]
         if remaining:
             partners += self.env['mail.thread']._mail_find_partner_from_emails(remaining, records=self, force_create=True, extra_domain=[('type', '!=', 'private')])
-        unsorted_partners = self.env['res.partner'].browse([p.id for p in partners])
+        unsorted_partners = self.env['res.partner'].browse([p.id for p in partners if p.id])
         # partners needs to be sorted according to the emails order provided by google
         k = {value: idx for idx, value in enumerate(emails)}
         result = unsorted_partners.sorted(key=lambda p: k.get(p.email_normalized, -1))
