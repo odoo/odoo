@@ -45,6 +45,7 @@ import {
     getCursorDirection,
     firstLeaf,
     lastLeaf,
+    getAdjacents,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -352,37 +353,49 @@ export const editorCommands = {
     // Change tags
     setTag(editor, tagName) {
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
-        const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
-        const deepestSelectedBlocks = selectedBlocks.filter(block => (
-            !descendants(block).some(descendant => selectedBlocks.includes(descendant))
+        // Get unique nodes in a specified range,
+        // includes inline nodes when the parent is a 'DIV' or 'TD'
+        // otherwise, consider the closest block node.
+        const selectedNodes = [...new Set(getTraversedNodes(editor.editable, range).map((node) => {
+            const block = closestBlock(node);
+            const ancestor = ancestors(node, block);
+            const closestEl = ancestor[ancestor.length - 2] || node;
+            return (block.nodeName === 'DIV' || block.nodeName === 'TD') ? closestEl : block;
+        }))];
+        const deepestSelectedNodes = selectedNodes.filter(node => (
+            !descendants(node).some(descendant => selectedNodes.includes(descendant))
         ));
         const [startContainer, startOffset, endContainer, endOffset] = [firstLeaf(range.startContainer), range.startOffset, lastLeaf(range.endContainer), range.endOffset];
-        for (const block of deepestSelectedBlocks) {
+        for (const node of deepestSelectedNodes) {
             if (
                 ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(
-                    block.nodeName,
+                    node.nodeName
                 )
             ) {
-                const inLI = block.closest('li');
+                const inLI = node.closest('li');
                 if (inLI && tagName === "P") {
                     inLI.oToggleList(0);
                 } else {
-                    block.classList.remove('h1', 'h2', 'h3', 'h4', 'h5', 'h6');
-                    setTagName(block, tagName);
+                    node.classList.remove('h1', 'h2', 'h3', 'h4', 'h5', 'h6');
+                    setTagName(node, tagName);
                 }
-            } else {
-                // eg do not change a <div> into a h1: insert the h1
+            } else if (node.parentNode.nodeName !== tagName.toUpperCase()) {
+                // for multiple inline nodes into h1: insert all the adjacents
+                // inline nodes into h1 or if the node is block: insert the h1
                 // into it instead.
+                const inlineNodes = getAdjacents(node, n => !isBlock(n));
                 const newBlock = editor.document.createElement(tagName);
-                const children = [...block.childNodes];
-                block.insertBefore(newBlock, block.firstChild);
-                children.forEach(child => newBlock.appendChild(child));
+                node.parentNode.insertBefore(newBlock, node);
+                if (inlineNodes.length) {
+                    inlineNodes.forEach(n => newBlock.appendChild(n));
+                } else {
+                    const children = [...node.childNodes];
+                    node.insertBefore(newBlock, node.firstChild);
+                    children.forEach(child => newBlock.appendChild(child));
+                }
             }
         }
-        const newRange = new Range();
-        newRange.setStart(startContainer,startOffset);
-        newRange.setEnd(endContainer,endOffset);
-        getDeepRange(editor.editable, { range: newRange, select: true, });
+        setSelection(startContainer, startOffset, endContainer, endOffset);
         editor.historyStep();
     },
 

@@ -961,6 +961,13 @@ describe('setTagName', () => {
                 contentAfter: '<h1 class="text-uppercase">[abcd]</h1>',
             });
         });
+        it('should turn a inline elements within a div into a heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div><font style="color: red;">a[b</font><span style="font-size: 12px;">c]d</span><font style="color: red;">ef</font><p>gh</p><font style="color: red;">ij</font><span style="font-size: 12px;">kl</span></div>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<div><h1><font style="color: red;">a[b</font><span style="font-size: 12px;">c]d</span><font style="color: red;">ef</font></h1><p>gh</p><font style="color: red;">ij</font><span style="font-size: 12px;">kl</span></div>',
+            });
+        });
     });
     describe('to heading 2', () => {
         it('should turn a heading 1 into a heading 2', async () => {
@@ -1003,6 +1010,13 @@ describe('setTagName', () => {
                 contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
                 stepFunction: editor => editor.execCommand('setTag', 'h2'),
                 contentAfter: '<table><tbody><tr><td><h2>[a</h2></td><td><h2>b</h2></td><td><h2>c]</h2></td></tr></tbody></table>',
+            });
+        });
+        it('should turn a inline elements within a div into a heading 2', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div><font style="color: red;">ab</font><span style="font-size: 12px;">cd</span><font style="color: red;">ef</font><p>gh</p><font style="color: red;">[ij</font><span style="font-size: 12px;">k]l</span></div>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<div><font style="color: red;">ab</font><span style="font-size: 12px;">cd</span><font style="color: red;">ef</font><p>gh</p><h2><font style="color: red;">[ij</font><span style="font-size: 12px;">k]l</span></h2></div>',
             });
         });
     });
