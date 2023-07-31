@@ -115,6 +115,7 @@ class Company(models.Model):
                 'code': new_code,
                 'user_type_id': sales_tax_accounts[0].user_type_id.id,
                 'company_id': self.id,
+                'tag_ids': [(4, tag.id, 0) for tag in sales_tax_accounts[0].tag_ids],
                 })
             self.env['ir.model.data'].create({
                 'name': f'oss_tax_account_company_{self.id}',
