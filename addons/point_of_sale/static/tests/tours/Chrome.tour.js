@@ -10,6 +10,8 @@ import Tour from "web_tour.tour";
 
 startSteps();
 
+Chrome.check.isCashMoveButtonShown();
+
 // Order 1 is at Product Screen
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
