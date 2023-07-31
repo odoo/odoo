@@ -1565,14 +1565,7 @@ class WebsiteSale(http.Controller):
            did go to a payment.provider website but closed the tab without
            paying / canceling
         """
-        carrier_id = post.get('carrier_id')
-        if carrier_id:
-            carrier_id = int(carrier_id)
         order = request.website.sale_get_order()
-        if order:
-            order._check_carrier_quotation(force_carrier_id=carrier_id)
-            if carrier_id:
-                return request.redirect("/shop/payment")
 
         redirection = self.checkout_redirection(order) or self.checkout_check_address(order)
         if redirection:
