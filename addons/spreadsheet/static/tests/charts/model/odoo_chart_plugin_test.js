@@ -430,4 +430,40 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             assert.deepEqual(chartDataSource.getData(), { datasets: [], labels: [] });
         }
     );
+
+    QUnit.test("Line chart to support cumulative data", async (assert) => {
+        const { model } = await createSpreadsheetWithChart({ type: "odoo_line" });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        const definition = model.getters.getChartDefinition(chartId);
+        await waitForDataSourcesLoaded(model);
+        assert.deepEqual(
+            model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+            [1, 3]
+        );
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...definition,
+                cumulative: true,
+            },
+            id: chartId,
+            sheetId,
+        });
+        assert.deepEqual(
+            model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+            [1, 4]
+        );
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...definition,
+                cumulative: false,
+            },
+            id: chartId,
+            sheetId,
+        });
+        assert.deepEqual(
+            model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+            [1, 3]
+        );
+    });
 });
