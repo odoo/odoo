@@ -356,3 +356,12 @@ class TestProjectSubtasks(TestProjectCommon):
             self.assertEqual(parent_id, task.id, "The key should be the common ancestor")
             self.assertEqual(set(subtask_ids), set(all_subtasks.ids),
                              "All subtasks linked to the common ancestor should be returned by _get_subtask_ids_per_task_id method")
+
+    def test_subtask_copy_followers(self):
+        """ This test will check that a task will propagate its followers to its subtasks """
+        task_form = Form(self.task_1.with_context({'tracking_disable': True}))
+        with task_form.child_ids.new() as child_task_form:
+            child_task_form.name = 'Child Task'
+            child_task_form.project_id = task_form.project_id
+        task = task_form.save()
+        self.assertEqual(task.message_follower_ids.mapped('email'), task.child_ids[0].message_follower_ids.mapped('email'), "The parent and child message_follower_ids should have the same emails")
