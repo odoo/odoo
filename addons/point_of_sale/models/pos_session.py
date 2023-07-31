@@ -1785,6 +1785,7 @@ class PosSession(models.Model):
         config = self.env['pos.config'].search_read(**params['search_params'])[0]
         config['use_proxy'] = config['is_posbox'] and (config['iface_electronic_scale'] or config['iface_print_via_proxy']
                                                        or config['iface_scan_via_proxy'] or config['iface_customer_facing_display_via_proxy'])
+        config['has_cash_move_permission'] = self.user_has_groups('account.group_account_invoice')
         return config
 
     def _loader_params_pos_bill(self):
