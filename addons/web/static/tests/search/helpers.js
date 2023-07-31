@@ -280,25 +280,14 @@ export async function toggleGroupByMenu(el) {
     await click(findItem(el, `.o_group_by_menu .dropdown-toggle`));
 }
 
-export async function toggleAddCustomGroup(el) {
-    await click(findItem(el, `.o_add_custom_group_menu`));
-}
-
 export async function selectGroup(el, fieldName) {
-    const select = findItem(el, `.o_add_custom_group_menu + .o_accordion_values select`);
-    select.value = fieldName;
-    await triggerEvent(select, null, "change");
-}
-
-export async function applyGroup(el) {
-    await click(findItem(el, `.o_add_custom_group_menu + .o_accordion_values .btn`));
+    el.querySelector(".o_add_custom_group_menu").value = fieldName;
+    await triggerEvent(el, ".o_add_custom_group_menu", "change");
 }
 
 export async function groupByMenu(el, fieldName) {
     await toggleSearchBarMenu(el);
-    await toggleAddCustomGroup(el);
     await selectGroup(el, fieldName);
-    await applyGroup(el);
 }
 
 /** Favorite menu */

@@ -10,14 +10,13 @@ import {
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import {
-    applyGroup,
     openAddCustomFilterDialog,
     removeFacet,
     switchView,
-    toggleAddCustomGroup,
     toggleSearchBarMenu,
     toggleMenuItem,
     toggleMenuItemOption,
+    selectGroup,
 } from "@web/../tests/search/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
@@ -140,8 +139,7 @@ QUnit.module("Board", (hooks) => {
 
         // Group It
         await toggleSearchBarMenu(target);
-        await toggleAddCustomGroup(target);
-        await applyGroup(target);
+        await selectGroup(target, "foo");
 
         // add this action to dashboard
         await testUtils.dom.triggerEvent($(".o_add_to_board button.dropdown-toggle"), "mouseenter");
