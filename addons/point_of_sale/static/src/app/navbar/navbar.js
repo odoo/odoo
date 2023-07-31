@@ -49,7 +49,7 @@ export class Navbar extends Component {
         return this.pos.config.iface_customer_facing_display;
     }
     get showCashMoveButton() {
-        return Boolean(this.pos?.config?.cash_control);
+        return Boolean(this.pos?.config?.cash_control && this.pos?.config?.has_cash_move_permission);
     }
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
