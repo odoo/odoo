@@ -199,6 +199,7 @@ QUnit.module("ActionManager", (hooks) => {
                 sticky: true,
             },
         });
+        await nextTick(); // wait for the notification to be displayed
         const notificationSelector = ".o_notification_manager .o_notification";
         assert.containsOnce(
             document.body,
@@ -245,6 +246,7 @@ QUnit.module("ActionManager", (hooks) => {
                 ],
             },
         });
+        await nextTick(); // wait for the notification to be displayed
         const notificationSelector = ".o_notification_manager .o_notification";
         assert.containsOnce(
             document.body,
@@ -285,6 +287,7 @@ QUnit.module("ActionManager", (hooks) => {
                 ],
             },
         });
+        await nextTick(); // wait for the notification to be displayed
         assert.containsOnce(
             document.body,
             notificationSelector,
@@ -321,6 +324,7 @@ QUnit.module("ActionManager", (hooks) => {
             },
             options
         );
+        await nextTick(); // wait for the notification to be displayed
         const notificationSelector = ".o_notification_manager .o_notification";
         assert.containsOnce(
             document.body,

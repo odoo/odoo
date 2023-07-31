@@ -34,7 +34,6 @@ import {
     editSelect,
     getFixture,
     getNodesTextContent,
-    legacyExtraNextTick,
     makeDeferred,
     mouseEnter,
     nextTick,
@@ -13532,7 +13531,6 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_group_header", 3); // page 1
 
         await pagerNext(target);
-        await legacyExtraNextTick();
         assert.deepEqual(getPagerValue(target), [4, 4]);
         assert.containsN(target, ".o_group_header", 1); // page 2
 

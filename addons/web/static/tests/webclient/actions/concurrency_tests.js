@@ -4,7 +4,6 @@ import {
     click,
     getFixture,
     getNodesTextContent,
-    legacyExtraNextTick,
     makeDeferred,
     nextTick,
 } from "@web/../tests/helpers/utils";
@@ -420,15 +419,12 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData });
             doAction(webClient, "slowAction");
             await nextTick();
-            await legacyExtraNextTick();
             assert.containsNone(target, ".client_action", "client action isn't ready yet");
             doAction(webClient, 4);
             await nextTick();
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".o_kanban_view", "should have loaded a kanban view");
             slowWillStartDef.resolve();
             await nextTick();
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".o_kanban_view", "should still display the kanban view");
         }
     );

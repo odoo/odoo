@@ -20,7 +20,6 @@ import {
     editInput,
     getFixture,
     getNodesTextContent,
-    legacyExtraNextTick,
     makeDeferred,
     nextTick,
     patchWithCleanup,
@@ -111,17 +110,14 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view", "should display the list view");
         // switch to kanban view
         await cpHelpers.switchView(target, "kanban");
-        await legacyExtraNextTick();
         assert.containsNone(target, ".o_list_view", "should no longer display the list view");
         assert.containsOnce(target, ".o_kanban_view", "should display the kanban view");
         // switch back to list view
         await cpHelpers.switchView(target, "list");
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should display the list view");
         assert.containsNone(target, ".o_kanban_view", "should no longer display the kanban view");
         // open a record in form view
         await testUtils.dom.click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
         assert.containsNone(target, ".o_list_view", "should no longer display the list view");
         assert.containsOnce(target, ".o_form_view", "should display the form view");
         assert.strictEqual(
@@ -131,7 +127,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // go back to list view using the breadcrumbs
         await testUtils.dom.click(target.querySelector(".o_control_panel .breadcrumb a"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should display the list view");
         assert.containsNone(target, ".o_form_view", "should no longer display the form view");
         assert.verifySteps([
@@ -260,7 +255,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // switch to kanban view
         await cpHelpers.switchView(target, "kanban");
-        await legacyExtraNextTick();
         assert.containsNone(target, ".o_control_panel .breadcrumb-item");
         assert.strictEqual(
             target.querySelector(".o_control_panel .o_breadcrumb .active").innerText,
@@ -313,7 +307,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // switch to kanban view
         await cpHelpers.switchView(target, "kanban");
-        await legacyExtraNextTick();
         assert.containsN(
             target,
             ".o_control_panel .o_switch_view",
@@ -337,7 +330,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // switch back to list view
         await cpHelpers.switchView(target, "list");
-        await legacyExtraNextTick();
         assert.containsN(
             target,
             ".o_control_panel .o_switch_view",
@@ -351,7 +343,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // open a record in form view
         await testUtils.dom.click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
         assert.containsNone(
             target,
             ".o_control_panel .o_switch_view",
@@ -359,7 +350,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // go back to list view using the breadcrumbs
         await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a"));
-        await legacyExtraNextTick();
         assert.containsN(
             target,
             ".o_control_panel .o_switch_view",
@@ -389,7 +379,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // switch to list view
         await cpHelpers.switchView(target, "list");
-        await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_control_panel .o_pager_value").text(),
             "1-3",
@@ -402,7 +391,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // open a record in form view
         await testUtils.dom.click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_control_panel .o_pager_value").text(),
             "1",
@@ -415,7 +403,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // go back to list view using the breadcrumbs
         await testUtils.dom.click(target.querySelector(".o_control_panel .breadcrumb a"));
-        await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_control_panel .o_pager_value").text(),
             "1-3",
@@ -428,7 +415,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // switch back to kanban view
         await cpHelpers.switchView(target, "kanban");
-        await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_control_panel .o_pager_value").text(),
             "1-5",
@@ -520,19 +506,15 @@ QUnit.module("ActionManager", (hooks) => {
         // activate a domain
         await cpHelpers.toggleSearchBarMenu(target);
         await cpHelpers.toggleMenuItem(target, "Bar");
-        await legacyExtraNextTick();
         assert.containsN(target, ".o_data_row", 2);
         // switch to kanban
         await cpHelpers.switchView(target, "kanban");
-        await legacyExtraNextTick();
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
         // remove the domain
         await testUtils.dom.click(target.querySelector(".o_searchview .o_facet_remove"));
-        await legacyExtraNextTick();
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 5);
         // switch back to list
         await cpHelpers.switchView(target, "list");
-        await legacyExtraNextTick();
         assert.containsN(target, ".o_data_row", 5);
     });
 
@@ -573,7 +555,6 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.dom.click(
             $(target).find(".o_list_view .o_data_row:first .o_data_cell:first")
         );
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view", "The form view should be displayed");
 
         // Delete the current record
@@ -583,10 +564,8 @@ QUnit.module("ActionManager", (hooks) => {
                 (e) => e.textContent === "Delete"
             )
         );
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".modal", "a confirm modal should be displayed");
         await testUtils.dom.click(target.querySelector(".modal-footer button.btn-primary"));
-        await legacyExtraNextTick();
 
         // The form view is automatically switched to the next record
         // Go back to the previous (now deleted) record
@@ -597,7 +576,6 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "form",
         });
         await testUtils.nextTick();
-        await legacyExtraNextTick();
 
         // Go back to the list view
         webClient.env.bus.trigger("test:hashchange", {
@@ -606,13 +584,11 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "list",
         });
         await testUtils.nextTick();
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should still display the list view");
 
         await testUtils.dom.click(
             $(target).find(".o_list_view .o_data_row:first .o_data_cell:first")
         );
-        await legacyExtraNextTick();
         assert.containsOnce(
             target,
             ".o_form_view",
@@ -772,7 +748,6 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         // open a record in form view
         await click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_field_widget[name=foo] input").val(),
             "yop",
@@ -780,7 +755,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // click on 'Call method' button (should call an Object method)
         await testUtils.dom.click($(target).find(".o_form_view button:contains(Call method)"));
-        await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_field_widget[name=foo] input").val(),
             "value changed",
@@ -826,25 +800,21 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(target, ".o_list_view");
             // open first record in form view
             await testUtils.dom.click(target.querySelector(".o_list_view .o_data_cell"));
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".o_form_view");
             // click on 'Execute action', to execute action 4 in a dialog
             await testUtils.dom.click(target.querySelector('.o_form_view button[name="4"]'));
-            await legacyExtraNextTick();
             assert.ok(
                 target.querySelector(".o_form_button_create").disabled,
                 "control panel buttons should be disabled"
             );
             def.resolve();
             await nextTick();
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".modal .o_form_view");
             assert.notOk(
                 target.querySelector(".o_form_button_create").disabled,
                 "control panel buttons should have been re-enabled"
             );
             await testUtils.dom.click(target.querySelector(".modal .cancel-btn"));
-            await legacyExtraNextTick();
             assert.notOk(
                 target.querySelector(".o_form_button_create").disabled,
                 "control panel buttons should still be enabled"
@@ -870,7 +840,6 @@ QUnit.module("ActionManager", (hooks) => {
             click(target.querySelector('.o_form_view button[name="object"]'));
             assert.ok(target.querySelector(".o_form_button_create").disabled);
             await nextTick();
-            await legacyExtraNextTick();
             assert.notOk(target.querySelector(".o_form_button_create").disabled);
         }
     );
@@ -899,7 +868,6 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(target, ".modal .o_form_view");
             assert.ok(target.querySelector(".modal footer button").disabled);
             await testUtils.nextTick();
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".modal .o_form_view");
             assert.notOk(target.querySelector(".modal footer button").disabled);
         }
@@ -955,10 +923,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view");
         assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         await testUtils.dom.click(target.querySelector(".oe_stat_button"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_kanban_view");
         await testUtils.dom.click(target.querySelector(".breadcrumb-item"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         assert.verifySteps(["web_read", "unity_web_search_read", "web_read"]);
@@ -977,7 +943,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view");
         assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         await testUtils.dom.click(target.querySelector(".oe_stat_button"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         assert.verifySteps([
@@ -1008,11 +973,9 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 3);
             // open a record in form view
             await click(target.querySelector(".o_list_view .o_data_cell"));
-            await legacyExtraNextTick();
             // click on 'Call method' button (should call an Object method)
             def = testUtils.makeTestPromise();
             await testUtils.dom.click($(target).find(".o_form_view button:contains(Call method)"));
-            await legacyExtraNextTick();
             // Buttons should be disabled
             assert.strictEqual(
                 $(target).find(".o_form_view button:contains(Call method)").attr("disabled"),
@@ -1022,7 +985,6 @@ QUnit.module("ActionManager", (hooks) => {
             // Release the 'read' call
             def.resolve();
             await testUtils.nextTick();
-            await legacyExtraNextTick();
             // Buttons should be enabled after the reload
             assert.strictEqual(
                 $(target).find(".o_form_view button:contains(Call method)").attr("disabled"),
@@ -1162,7 +1124,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // switch to graph view
         await cpHelpers.switchView(target, "graph");
-        await legacyExtraNextTick();
         assert.doesNotHaveClass(
             $(target).find(".o_control_panel .o_switch_view.o_list")[0],
             "active",
@@ -1194,7 +1155,6 @@ QUnit.module("ActionManager", (hooks) => {
         await cpHelpers.toggleSearchBarMenu(target);
         // click on foo link
         await cpHelpers.toggleMenuItem(target, "foo");
-        await legacyExtraNextTick();
         assert.hasClass(
             $(target).find(".o_list_table")[0],
             "o_list_table_grouped",
@@ -1266,7 +1226,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         // switch to kanban view
         await cpHelpers.switchView(target, "kanban");
-        await legacyExtraNextTick();
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
     });
 
@@ -1307,13 +1266,11 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 3);
             // open a record in form view
             await click(target.querySelector(".o_list_view .o_data_cell"));
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".o_form_view .o_form_editable");
             // do some other action
             await doAction(webClient, 4);
             // go back to form view
             await click(target.querySelectorAll(".o_control_panel .breadcrumb a")[1]);
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".o_form_view .o_form_editable");
         }
     );
@@ -1392,7 +1349,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view", "should display the list view");
         // try to open a record in a form view
         testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should still display the list view");
         assert.containsNone(target, ".o_form_view", "should not display the form view");
         assert.verifySteps([
@@ -2042,6 +1998,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         // Open Partner form in create mode
         await doAction(webClient, 3, { viewType: "form" });
+        await nextTick();
         const prevHash = Object.assign({}, webClient.env.services.router.current.hash);
         // Edit another partner in a dialog
         await doAction(webClient, {
@@ -2053,6 +2010,7 @@ QUnit.module("ActionManager", (hooks) => {
             target: "new",
             view_mode: "form",
         });
+        await nextTick();
         assert.deepEqual(
             webClient.env.services.router.current.hash,
             prevHash,
@@ -2076,15 +2034,12 @@ QUnit.module("ActionManager", (hooks) => {
       </form>`;
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3, { viewType: "form", props: { resId: 1 } });
-        await legacyExtraNextTick();
         await editInput(target, "div[name='display_name'] input", "Edited value");
         assert.isVisible(target.querySelector(".o_form_button_save"));
         assert.isVisible(target.querySelector(".o_statusbar_buttons button[name=do_something]"));
         await click(target.querySelector(".o_statusbar_buttons button[name=do_something]"));
-        await legacyExtraNextTick();
         assert.isVisible(target.querySelector(".o_form_button_save"));
         await click(target.querySelector(".o_form_button_save"));
-        await legacyExtraNextTick();
         assert.isNotVisible(target.querySelector(".o_form_buttons_view .o_form_button_save"));
     });
 
@@ -2131,7 +2086,6 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target.querySelector(".o_pivot_measure_row"));
         assert.hasClass(target.querySelector(".o_pivot_measure_row"), "o_pivot_sort_order_asc");
         await cpHelpers.switchView(target, "pivot");
-        await legacyExtraNextTick();
         assert.hasClass(target.querySelector(".o_pivot_measure_row"), "o_pivot_sort_order_asc");
         assert.verifySteps([
             "read_group", // initial read_group

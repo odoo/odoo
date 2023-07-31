@@ -207,11 +207,13 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("document's title is updated when an action is executed", async function (assert) {
         const defaultTitle = { zopenerp: "Odoo" };
         const webClient = await createWebClient({ serverData });
+        await nextTick();
         let currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, defaultTitle);
         let currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, {});
         await doAction(webClient, 4);
+        await nextTick();
         currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, {
             ...defaultTitle,
@@ -220,6 +222,7 @@ QUnit.module("ActionManager", (hooks) => {
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, { action: 4, model: "partner", view_type: "kanban" });
         await doAction(webClient, 8);
+        await nextTick();
         currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, {
             ...defaultTitle,
@@ -329,6 +332,7 @@ QUnit.module("ActionManager", (hooks) => {
             await click(target.querySelector(".o_form_view .o_data_row .o_data_cell"));
             assert.containsOnce(document.body, ".modal .o_form_view");
             await doAction(webClient, 1); // target != 'new'
+            await nextTick(); // wait for the dialog to be closed
             assert.containsNone(document.body, ".modal");
         }
     );
