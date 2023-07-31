@@ -458,6 +458,7 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
         img.dataset.mimetype = original.mimetype;
+        img.dataset.mimetypeBeforeConversion = original.mimetype;
     }
 }
 
