@@ -9,7 +9,7 @@ patch(Store.prototype, "im_livechat", {
     setup(env) {
         this._super(env);
         this.discuss.livechat = {
-            extraClass: "o-mail-DiscussCategory-livechat",
+            extraClass: "o-mail-DiscussSidebarCategory-livechat",
             id: "livechat",
             name: _t("Livechat"),
             isOpen: false,

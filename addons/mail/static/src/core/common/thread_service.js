@@ -1022,7 +1022,7 @@ export class ThreadService {
         return thread.message_needaction_counter;
     }
 
-    getDiscussCategoryCounter(categoryId) {
+    getDiscussSidebarCategoryCounter(categoryId) {
         return this.store.discuss[categoryId].threads.reduce((acc, threadLocalId) => {
             const channel = this.store.threads[threadLocalId];
             if (categoryId === "channels") {

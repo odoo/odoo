@@ -240,10 +240,10 @@ QUnit.test("sidebar: chat im_status rendering", async (assert) => {
     ]);
     const { openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss();
-    assert.containsN($, ".o-mail-DiscussCategoryItem-threadIcon", 3);
-    const chat1 = $(".o-mail-DiscussCategoryItem")[0];
-    const chat2 = $(".o-mail-DiscussCategoryItem")[1];
-    const chat3 = $(".o-mail-DiscussCategoryItem")[2];
+    assert.containsN($, ".o-mail-DiscussSidebarChannel-threadIcon", 3);
+    const chat1 = $(".o-mail-DiscussSidebarChannel")[0];
+    const chat2 = $(".o-mail-DiscussSidebarChannel")[1];
+    const chat3 = $(".o-mail-DiscussSidebarChannel")[2];
     assert.strictEqual(chat1.textContent, "Partner1");
     assert.strictEqual(chat2.textContent, "Partner2");
     assert.strictEqual(chat3.textContent, "Partner3");
@@ -313,7 +313,7 @@ QUnit.test("sidebar: chat custom name", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.strictEqual($(".o-mail-DiscussCategoryItem span").text(), "Marc");
+    assert.strictEqual($(".o-mail-DiscussSidebarChannel span").text(), "Marc");
 });
 
 QUnit.test("reply to message from inbox (message linked to document)", async (assert) => {
@@ -473,11 +473,11 @@ QUnit.test("basic rendering: sidebar", async (assert) => {
     assert.containsOnce($, ".o-mail-DiscussSidebar button:contains(Inbox)");
     assert.containsOnce($, ".o-mail-DiscussSidebar button:contains(Starred)");
     assert.containsOnce($, ".o-mail-DiscussSidebar button:contains(History)");
-    assert.containsN($, ".o-mail-DiscussCategory", 2);
-    assert.containsOnce($, ".o-mail-DiscussCategory-channel");
-    assert.containsOnce($, ".o-mail-DiscussCategory-chat");
-    assert.strictEqual($(".o-mail-DiscussCategory-channel").text(), "Channels");
-    assert.strictEqual($(".o-mail-DiscussCategory-chat").text(), "Direct messages");
+    assert.containsN($, ".o-mail-DiscussSidebarCategory", 2);
+    assert.containsOnce($, ".o-mail-DiscussSidebarCategory-channel");
+    assert.containsOnce($, ".o-mail-DiscussSidebarCategory-chat");
+    assert.strictEqual($(".o-mail-DiscussSidebarCategory-channel").text(), "Channels");
+    assert.strictEqual($(".o-mail-DiscussSidebarCategory-chat").text(), "Direct messages");
 });
 
 QUnit.test("sidebar: Inbox should have icon", async (assert) => {
@@ -511,20 +511,23 @@ QUnit.test("sidebar: basic channel rendering", async (assert) => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem");
-    assert.strictEqual($(".o-mail-DiscussCategoryItem").text(), "General");
-    assert.containsOnce($(".o-mail-DiscussCategoryItem"), "img[data-alt='Thread Image']");
-    assert.containsOnce($(".o-mail-DiscussCategoryItem"), ".o-mail-DiscussCategoryItem-commands");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel");
+    assert.strictEqual($(".o-mail-DiscussSidebarChannel").text(), "General");
+    assert.containsOnce($(".o-mail-DiscussSidebarChannel"), "img[data-alt='Thread Image']");
+    assert.containsOnce(
+        $(".o-mail-DiscussSidebarChannel"),
+        ".o-mail-DiscussSidebarChannel-commands"
+    );
     assert.hasClass(
-        $(".o-mail-DiscussCategoryItem .o-mail-DiscussCategoryItem-commands"),
+        $(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands"),
         "d-none"
     );
     assert.containsOnce(
-        $(".o-mail-DiscussCategoryItem .o-mail-DiscussCategoryItem-commands"),
+        $(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands"),
         "i[title='Channel settings']"
     );
     assert.containsOnce(
-        $(".o-mail-DiscussCategoryItem .o-mail-DiscussCategoryItem-commands"),
+        $(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands"),
         "div[title='Leave this channel']"
     );
 });
@@ -534,10 +537,10 @@ QUnit.test("channel become active", async (assert) => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem");
-    assert.containsNone($, ".o-mail-DiscussCategoryItem.o-active");
-    await click(".o-mail-DiscussCategoryItem");
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem.o-active");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel.o-active");
+    await click(".o-mail-DiscussSidebarChannel");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active");
 });
 
 QUnit.test("channel become active - show composer in discuss content", async (assert) => {
@@ -545,7 +548,7 @@ QUnit.test("channel become active - show composer in discuss content", async (as
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
-    await click(".o-mail-DiscussCategoryItem");
+    await click(".o-mail-DiscussSidebarChannel");
     assert.containsOnce($, ".o-mail-Thread");
     assert.containsOnce($, ".o-mail-Composer");
 });
@@ -565,8 +568,8 @@ QUnit.test("sidebar: channel rendering with needaction counter", async (assert) 
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(general)");
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(general) .badge:contains(1)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(general)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(general) .badge:contains(1)");
 });
 
 QUnit.test("sidebar: chat rendering with unread counter", async (assert) => {
@@ -579,10 +582,10 @@ QUnit.test("sidebar: chat rendering with unread counter", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem .badge:contains(100)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel .badge:contains(100)");
     assert.containsNone(
         $,
-        ".o-mail-DiscussCategoryItem .o-mail-DiscussCategoryItem-commands:contains(Unpin Conversation)"
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands:contains(Unpin Conversation)"
     );
 });
 
@@ -621,7 +624,7 @@ QUnit.test("basic top bar rendering", async (assert) => {
     assert.isVisible($unstarAll);
     assert.ok($unstarAll[0].disabled);
 
-    await click(".o-mail-DiscussCategoryItem:contains(General)");
+    await click(".o-mail-DiscussSidebarChannel:contains(General)");
     assert.strictEqual($(".o-mail-Discuss-threadName").val(), "General");
     assert.isVisible($(".o-mail-Discuss-header button[title='Add Users']"));
 });
@@ -927,19 +930,19 @@ QUnit.test("auto-focus composer on opening thread", async (assert) => {
     await openDiscuss();
     assert.containsOnce($, "button:contains(Inbox)");
     assert.hasClass($("button:contains(Inbox)"), "o-active");
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(General)");
-    assert.doesNotHaveClass($(".o-mail-DiscussCategoryItem:contains(General)"), "o-active");
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Demo User)");
-    assert.doesNotHaveClass($(".o-mail-DiscussCategoryItem:contains(Demo User)"), "o-active");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(General)");
+    assert.doesNotHaveClass($(".o-mail-DiscussSidebarChannel:contains(General)"), "o-active");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Demo User)");
+    assert.doesNotHaveClass($(".o-mail-DiscussSidebarChannel:contains(Demo User)"), "o-active");
     assert.containsNone($, ".o-mail-Composer");
 
-    await click(".o-mail-DiscussCategoryItem:contains(General)");
-    assert.hasClass($(".o-mail-DiscussCategoryItem:contains(General)"), "o-active");
+    await click(".o-mail-DiscussSidebarChannel:contains(General)");
+    assert.hasClass($(".o-mail-DiscussSidebarChannel:contains(General)"), "o-active");
     assert.containsOnce($, ".o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 
-    await click(".o-mail-DiscussCategoryItem:contains(Demo User)");
-    assert.hasClass($(".o-mail-DiscussCategoryItem:contains(Demo User)"), "o-active");
+    await click(".o-mail-DiscussSidebarChannel:contains(Demo User)");
+    assert.hasClass($(".o-mail-DiscussSidebarChannel:contains(Demo User)"), "o-active");
     assert.containsOnce($, ".o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 });
@@ -1110,7 +1113,7 @@ QUnit.test("should auto-pin chat when receiving a new DM", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem:contains(Demo)");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(Demo)");
 
     // simulate receiving the first message on channel 11
     await afterNextRender(() =>
@@ -1121,7 +1124,7 @@ QUnit.test("should auto-pin chat when receiving a new DM", async (assert) => {
             thread_model: "discuss.channel",
         })
     );
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Demo)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Demo)");
 });
 
 QUnit.test("'Add Users' button should be displayed in the topbar of channels", async (assert) => {
@@ -1254,18 +1257,18 @@ QUnit.test(
         ]);
         const { openDiscuss } = await start();
         await openDiscuss();
-        await click(".o-mail-DiscussCategoryItem:contains('Michel Online')");
+        await click(".o-mail-DiscussSidebarChannel:contains('Michel Online')");
         assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Online']");
-        await click(".o-mail-DiscussCategoryItem:contains('Jacqueline Offline')");
+        await click(".o-mail-DiscussSidebarChannel:contains('Jacqueline Offline')");
         assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Offline']");
-        await click(".o-mail-DiscussCategoryItem:contains('Nabuchodonosor Idle')");
+        await click(".o-mail-DiscussSidebarChannel:contains('Nabuchodonosor Idle')");
         assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Idle']");
-        await click(".o-mail-DiscussCategoryItem:contains('Robert Fired')");
+        await click(".o-mail-DiscussSidebarChannel:contains('Robert Fired')");
         assert.containsOnce(
             $,
             ".o-mail-Discuss-header .o-mail-ImStatus [title='No IM status available']"
         );
-        await click(".o-mail-DiscussCategoryItem:contains('OdooBot')");
+        await click(".o-mail-DiscussSidebarChannel:contains('OdooBot')");
         assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Bot']");
     }
 );
@@ -1338,14 +1341,14 @@ QUnit.test("Channel is added to discuss after invitation", async (assert) => {
         },
     });
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem:contains(General)");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(General)");
     await afterNextRender(() => {
         env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
             partner_ids: [pyEnv.currentPartnerId],
             context: { mockedUserId: userId },
         });
     });
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(General)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(General)");
     assert.verifySteps(["You have been invited to #General"]);
 });
 
@@ -1828,7 +1831,9 @@ QUnit.test("Message shows up even if channel data is incomplete", async (assert)
                 thread_model: "discuss.channel",
             })
     );
-    await click(".o-mail-DiscussCategory-chat + .o-mail-DiscussCategoryItem:contains(Albert)");
+    await click(
+        ".o-mail-DiscussSidebarCategory-chat + .o-mail-DiscussSidebarChannel:contains(Albert)"
+    );
     assert.containsOnce($, ".o-mail-Message:contains(hello world)");
 });
 
@@ -1841,7 +1846,7 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button:contains(Start a meeting)");
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Mitchell Admin)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
     assert.containsOnce($, ".o-discuss-Call");
     await waitUntil(".o-discuss-ChannelInvitation");
     assert.containsOnce($, ".o-discuss-ChannelInvitation");
@@ -1857,7 +1862,7 @@ QUnit.test(
         await click(".o-mail-NotificationItem:contains(General)");
         await click("[title='Open Actions Menu']");
         await click("[title='Open in Discuss']");
-        await click(".o-mail-DiscussCategoryItem:contains(General) [title='Channel settings']");
+        await click(".o-mail-DiscussSidebarChannel:contains(General) [title='Channel settings']");
         assert.strictEqual($(".o_breadcrumb").text(), "DiscussGeneral");
     }
 );

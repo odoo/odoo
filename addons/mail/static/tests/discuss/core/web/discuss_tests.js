@@ -29,14 +29,14 @@ QUnit.test("can create a new channel [REQUIRE FOCUS]", async (assert) => {
         },
     });
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel");
 
     await click(".o-mail-DiscussSidebar i[title='Add or join a channel']");
     await afterNextRender(() =>
         editInput(document.body, ".o-discuss-ChannelSelector input", "abc")
     );
     await click(".o-discuss-ChannelSelector-suggestion");
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel");
     assert.containsNone($, ".o-mail-Discuss-content .o-mail-Message");
     assert.verifySteps([
         "/mail/init_messaging",
@@ -56,7 +56,7 @@ QUnit.test(
         pyEnv["res.users"].create({ partner_id: partnerId });
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.containsNone($, ".o-mail-DiscussCategoryItem");
+        assert.containsNone($, ".o-mail-DiscussSidebarChannel");
 
         await click("i[title='Start a conversation']");
         await afterNextRender(() =>
@@ -64,7 +64,7 @@ QUnit.test(
         );
         await click(".o-discuss-ChannelSelector-suggestion");
         assert.containsOnce($, ".o-discuss-ChannelSelector span[title='Mario']");
-        assert.containsNone($, ".o-mail-DiscussCategoryItem");
+        assert.containsNone($, ".o-mail-DiscussSidebarChannel");
 
         await triggerEvent(document.body, ".o-discuss-ChannelSelector input", "keydown", {
             key: "Backspace",
@@ -78,7 +78,7 @@ QUnit.test(
             key: "Enter",
         });
         assert.containsOnce($, ".o-discuss-ChannelSelector span[title='Mario']");
-        assert.containsNone($, ".o-mail-DiscussCategoryItem");
+        assert.containsNone($, ".o-mail-DiscussSidebarChannel");
     }
 );
 
@@ -101,7 +101,7 @@ QUnit.test("can join a chat conversation", async (assert) => {
         },
     });
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel");
 
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await afterNextRender(() =>
@@ -111,7 +111,7 @@ QUnit.test("can join a chat conversation", async (assert) => {
     await triggerEvent(document.body, ".o-discuss-ChannelSelector input", "keydown", {
         key: "Enter",
     });
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel");
     assert.containsNone($, ".o-mail-Message");
     assert.verifySteps([
         "/mail/init_messaging",
@@ -131,7 +131,7 @@ QUnit.test("can create a group chat conversation", async (assert) => {
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel");
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector input", "Mario");
     await click(".o-discuss-ChannelSelector-suggestion");
@@ -140,7 +140,7 @@ QUnit.test("can create a group chat conversation", async (assert) => {
     await triggerEvent(document.body, ".o-discuss-ChannelSelector input", "keydown", {
         key: "Enter",
     });
-    assert.containsN($, ".o-mail-DiscussCategoryItem", 1);
+    assert.containsN($, ".o-mail-DiscussSidebarChannel", 1);
     assert.containsNone($, ".o-mail-Message");
 });
 
@@ -150,7 +150,7 @@ QUnit.test("should create DM chat when adding self and another user", async (ass
     pyEnv["res.users"].create({ partner_id });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel");
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector input", "Mi"); // Mitchell Admin
     await click(".o-discuss-ChannelSelector-suggestion");
@@ -159,7 +159,7 @@ QUnit.test("should create DM chat when adding self and another user", async (ass
     await triggerEvent(document.body, ".o-discuss-ChannelSelector input", "keydown", {
         key: "Enter",
     });
-    assert.strictEqual($(".o-mail-DiscussCategoryItem:contains(Mario)").text(), "Mario");
+    assert.strictEqual($(".o-mail-DiscussSidebarChannel:contains(Mario)").text(), "Mario");
 });
 
 QUnit.test("chat search should display no result when no matches found", async (assert) => {
@@ -178,7 +178,7 @@ QUnit.test(
         pyEnv["res.users"].create({ partner_id: partnerId });
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.containsNone($, ".o-mail-DiscussCategoryItem");
+        assert.containsNone($, ".o-mail-DiscussSidebarChannel");
         await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
         await insertText(".o-discuss-ChannelSelector", "Panda");
         assert.containsOnce($, ".o-discuss-ChannelSelector-suggestion");
@@ -190,13 +190,16 @@ QUnit.test(
 QUnit.test("sidebar: add channel", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussCategory-channel .o-mail-DiscussCategory-add");
+    assert.containsOnce(
+        $,
+        ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add"
+    );
     assert.hasAttrValue(
-        $(".o-mail-DiscussCategory-channel .o-mail-DiscussCategory-add")[0],
+        $(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add")[0],
         "title",
         "Add or join a channel"
     );
-    await click(".o-mail-DiscussCategory-channel .o-mail-DiscussCategory-add");
+    await click(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add");
     assert.containsOnce($, ".o-discuss-ChannelSelector");
     assert.containsOnce($, ".o-discuss-ChannelSelector input[placeholder='Add or join a channel']");
 });
@@ -209,10 +212,10 @@ QUnit.test("Chat is added to discuss on other tab that the one that joined", asy
     const tab2 = await start({ asTab: true });
     await tab1.openDiscuss();
     await tab2.openDiscuss();
-    await tab1.click(".o-mail-DiscussCategory-chat .o-mail-DiscussCategory-add");
+    await tab1.click(".o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add");
     await tab1.insertText(".o-discuss-ChannelSelector input", "Jer");
     await tab1.click(".o-discuss-ChannelSelector-suggestion");
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce(tab1.target, ".o-mail-DiscussCategoryItem:contains(Jerry Golay)");
-    assert.containsOnce(tab2.target, ".o-mail-DiscussCategoryItem:contains(Jerry Golay)");
+    assert.containsOnce(tab1.target, ".o-mail-DiscussSidebarChannel:contains(Jerry Golay)");
+    assert.containsOnce(tab2.target, ".o-mail-DiscussSidebarChannel:contains(Jerry Golay)");
 });

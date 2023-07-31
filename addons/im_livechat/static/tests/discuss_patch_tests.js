@@ -85,7 +85,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategory-livechat");
+    assert.containsNone($, ".o-mail-DiscussSidebarCategory-livechat");
     // simulate livechat visitor sending a message
     const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     await afterNextRender(async () =>
@@ -95,11 +95,14 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
             message_content: "new message",
         })
     );
-    assert.containsOnce($, ".o-mail-DiscussCategory-livechat");
-    assert.containsOnce($, ".o-mail-DiscussCategory-livechat + .o-mail-DiscussCategoryItem");
+    assert.containsOnce($, ".o-mail-DiscussSidebarCategory-livechat");
     assert.containsOnce(
         $,
-        ".o-mail-DiscussCategory-livechat + .o-mail-DiscussCategoryItem:contains(Visitor (Belgium))"
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel"
+    );
+    assert.containsOnce(
+        $,
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel:contains(Visitor (Belgium))"
     );
 });
 
@@ -175,14 +178,14 @@ QUnit.test(
         ]);
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.strictEqual($(".o-mail-DiscussCategoryItem:eq(0)").text(), "Visitor 12");
-        assert.strictEqual($(".o-mail-DiscussCategoryItem:eq(1)").text(), "Visitor 11");
+        assert.strictEqual($(".o-mail-DiscussSidebarChannel:eq(0)").text(), "Visitor 12");
+        assert.strictEqual($(".o-mail-DiscussSidebarChannel:eq(1)").text(), "Visitor 11");
         // post a new message on the last channel
-        await click(".o-mail-DiscussCategoryItem:eq(1)");
+        await click(".o-mail-DiscussSidebarChannel:eq(1)");
         await insertText(".o-mail-Composer-input", "Blabla");
         await click(".o-mail-Composer-send");
-        assert.containsN($, ".o-mail-DiscussCategoryItem", 2);
-        assert.strictEqual($(".o-mail-DiscussCategoryItem:eq(0)").text(), "Visitor 11");
-        assert.strictEqual($(".o-mail-DiscussCategoryItem:eq(1)").text(), "Visitor 12");
+        assert.containsN($, ".o-mail-DiscussSidebarChannel", 2);
+        assert.strictEqual($(".o-mail-DiscussSidebarChannel:eq(0)").text(), "Visitor 11");
+        assert.strictEqual($(".o-mail-DiscussSidebarChannel:eq(1)").text(), "Visitor 12");
     }
 );

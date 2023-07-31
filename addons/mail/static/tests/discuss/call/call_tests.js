@@ -207,6 +207,6 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     const { openDiscuss } = await start();
     await openDiscuss();
     await click("button:contains(Start a meeting)");
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Mitchell Admin)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
     assert.containsOnce($, ".o-discuss-Call");
 });

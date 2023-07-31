@@ -107,7 +107,7 @@ export class Store {
         isActive: false,
         threadLocalId: null,
         channels: {
-            extraClass: "o-mail-DiscussCategory-channel",
+            extraClass: "o-mail-DiscussSidebarCategory-channel",
             id: "channels",
             name: _t("Channels"),
             isOpen: false,
@@ -118,7 +118,7 @@ export class Store {
             threads: [], // list of ids
         },
         chats: {
-            extraClass: "o-mail-DiscussCategory-chat",
+            extraClass: "o-mail-DiscussSidebarCategory-chat",
             id: "chats",
             name: _t("Direct messages"),
             isOpen: false,
