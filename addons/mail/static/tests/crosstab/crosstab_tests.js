@@ -66,7 +66,7 @@ QUnit.test("Thread rename", async (assert) => {
     await tab1.insertText(".o-mail-Discuss-threadName", "Sales", { replace: true });
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.containsOnce(tab2.target, ".o-mail-Discuss-threadName[title='Sales']");
-    assert.containsOnce(tab2.target, ".o-mail-DiscussCategoryItem:contains(Sales)");
+    assert.containsOnce(tab2.target, ".o-mail-DiscussSidebarChannel:contains(Sales)");
 });
 
 QUnit.test("Thread description update", async (assert) => {
@@ -118,7 +118,7 @@ QUnit.test("Channel subscription is renewed when channel is left", async (assert
         },
     });
     await openDiscuss();
-    await click(".o-mail-DiscussCategoryItem .btn[title='Leave this channel']");
+    await click(".o-mail-DiscussSidebarChannel .btn[title='Leave this channel']");
     assert.verifySteps(["update-channels"]);
 });
 

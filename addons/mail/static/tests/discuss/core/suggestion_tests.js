@@ -118,11 +118,11 @@ QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
     ]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    await click(".o-mail-DiscussCategoryItem:contains('User 2')");
+    await click(".o-mail-DiscussSidebarChannel:contains('User 2')");
     await insertText(".o-mail-Composer-input", "This is a test");
     await click(".o-mail-Composer-send:not(:disabled)");
     assert.containsOnce($, ".o-mail-Message:contains('This is a test')");
-    await click(".o-mail-DiscussCategoryItem:contains('General')");
+    await click(".o-mail-DiscussSidebarChannel:contains('General')");
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "User");
     assert.containsN($, ".o-mail-Composer-suggestion", 3);
