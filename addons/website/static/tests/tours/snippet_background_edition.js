@@ -99,6 +99,29 @@ wTourUtils.registerWebsitePreviewTour('snippet_background_edition', {
 wTourUtils.dragNDrop(snippets[0]),
 wTourUtils.clickOnSnippet(snippets[0]),
 
+// Set background image and save.
+{
+    content: "Click on camera icon",
+    trigger: ".snippet-option-ColoredLevelBackground we-button.fa-camera",
+},
+{
+    content: "Click on image",
+    trigger: ".o_select_media_dialog img[title='test.png']",
+},
+...wTourUtils.clickOnSave(),
+{
+    content: "Check that the image is set",
+    trigger: `iframe section.${snippets[0].id} img[data-original-id]`,
+    isCheck: true,
+},
+...wTourUtils.clickOnEditAndWaitEditMode(),
+wTourUtils.clickOnSnippet(snippets[0]),
+// Remove background image.
+{
+    content: "Click on camera icon",
+    trigger: ".snippet-option-ColoredLevelBackground we-button.fa-camera",
+},
+
 // Add a color combination
 ...checkAndUpdateBackgroundColor({
     changeType: 'cc',
