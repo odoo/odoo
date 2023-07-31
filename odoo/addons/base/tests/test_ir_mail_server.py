@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import email.message
+import email.policy
+
 from unittest.mock import patch
 
 from odoo import tools
@@ -12,6 +15,47 @@ from odoo.tools import mute_logger
 from odoo.tools import config
 
 
+class _FakeSMTP:
+    """SMTP stub"""
+    def __init__(self):
+        self.messages = []
+        self.from_filter = 'example.com'
+
+    # Python 3 before 3.7.4
+    def sendmail(self, smtp_from, smtp_to_list, message_str,
+                 mail_options=(), rcpt_options=()):
+        self.messages.append(message_str)
+
+    # Python 3.7.4+
+    def send_message(self, message, smtp_from, smtp_to_list,
+                     mail_options=(), rcpt_options=()):
+        self.messages.append(message.as_string())
+
+
+@tagged('mail_server')
+class EmailConfigCase(TransactionCase):
+
+    @patch.dict(config.options, {"email_from": "settings@example.com"})
+    def test_default_email_from(self, *args):
+        """Email from setting is respected."""
+        # ICP setting is more important
+        ICP = self.env["ir.config_parameter"].sudo()
+        ICP.set_param("mail.catchall.domain", "test.mycompany.com")
+        ICP.set_param("mail.default.from", "icp")
+        message = self.env["ir.mail_server"].build_email(
+            False, "recipient@example.com", "Subject",
+            "The body of an email",
+        )
+        self.assertEqual(message["From"], "icp@test.mycompany.com")
+        # Without ICP, the config file/CLI setting is used
+        ICP.set_param("mail.default.from", False)
+        message = self.env["ir.mail_server"].build_email(
+            False, "recipient@example.com", "Subject",
+            "The body of an email",
+        )
+        self.assertEqual(message["From"], "settings@example.com")
+
+
 @tagged('mail_server')
 class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
@@ -21,13 +65,48 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         cls._init_mail_config()
         cls._init_mail_servers()
 
-    def _build_email(self, mail_from, return_path=None):
-        return self.env['ir.mail_server'].build_email(
-            email_from=mail_from,
-            email_to='dest@example-é.com',
-            subject='subject', body='body',
-            headers={'Return-Path': return_path} if return_path else None
+    def test_bpo_34424_35805(self):
+        """Ensure all email sent are bpo-34424 and bpo-35805 free"""
+        fake_smtp = _FakeSMTP()
+        msg = email.message.EmailMessage(policy=email.policy.SMTP)
+        msg['From'] = '"Joé Doe" <joe@example.com>'
+        msg['To'] = '"Joé Doe" <joe@example.com>'
+
+        # Message-Id & References fields longer than 77 chars (bpo-35805)
+        msg['Message-Id'] = '<929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>'
+        msg['References'] = '<345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>'
+
+        msg_on_the_wire = self._send_email(msg, fake_smtp)
+        self.assertEqual(msg_on_the_wire,
+            'From: =?utf-8?q?Jo=C3=A9?= Doe <joe@example.com>\r\n'
+            'To: =?utf-8?q?Jo=C3=A9?= Doe <joe@example.com>\r\n'
+            'Message-Id: <929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>\r\n'
+            'References: <345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>\r\n'
+            '\r\n'
         )
+
+    def test_content_alternative_correct_order(self):
+        """
+        RFC-1521 7.2.3. The Multipart/alternative subtype
+        > the alternatives appear in an order of increasing faithfulness
+        > to the original content. In general, the best choice is the
+        > LAST part of a type supported by the recipient system's local
+        > environment.
+
+        Also, the MIME-Version header should be present in BOTH the
+        enveloppe AND the parts
+        """
+        fake_smtp = _FakeSMTP()
+        msg = self._build_email("test@example.com", body='<p>Hello world</p>', subtype='html')
+        msg_on_the_wire = self._send_email(msg, fake_smtp)
+
+        self.assertGreater(msg_on_the_wire.index('text/html'), msg_on_the_wire.index('text/plain'),
+            "The html part should be preferred (=appear after) to the text part")
+        self.assertEqual(msg_on_the_wire.count('==============='), 2 + 2, # +2 for the header and the footer
+            "There should be 2 parts: one text and one html")
+        self.assertEqual(msg_on_the_wire.count('MIME-Version: 1.0'), 3,
+            "There should be 3 headers MIME-Version: one on the enveloppe, "
+            "one on the html part, one on the text part")
 
     def test_match_from_filter(self):
         """Test the from_filter field on the "ir.mail_server"."""
