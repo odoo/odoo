@@ -49,19 +49,19 @@
         <record id="analytic_office_design" model="account.analytic.account">
             <field name="name">Office Design</field>
             <field name="plan_id" ref="analytic.analytic_plan_projects"/>
-            <field name="company_id" eval="None"/>
+            <field name="company_id" model="account.analytic.plan" eval="obj().search([('id', '=', ref('analytic.analytic_plan_projects'))]).company_id"/>
         </record>
 
         <record id="analytic_research_development" model="account.analytic.account">
             <field name="name">Research &amp; Development</field>
             <field name="plan_id" ref="analytic.analytic_plan_projects"/>
-            <field name="company_id" eval="None"/>
+            <field name="company_id" model="account.analytic.plan" eval="obj().search([('id', '=', ref('analytic.analytic_plan_projects'))]).company_id"/>
         </record>
 
         <record id="analytic_renovations" model="account.analytic.account">
             <field name="name">Renovations</field>
             <field name="plan_id" ref="analytic.analytic_plan_projects"/>
-            <field name="company_id" eval="None"/>
+            <field name="company_id" model="account.analytic.plan" eval="obj().search([('id', '=', ref('analytic.analytic_plan_projects'))]).company_id"/>
         </record>
 
         <!-- Stage templates -->
