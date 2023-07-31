@@ -298,17 +298,14 @@
                         <field name="partner_id"
                                widget="res_partner_many2one"
                                context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
-                               options="{'always_reload': True}"
                                placeholder="Type to find a customer..."/>
                         <field name="partner_invoice_id"
                               groups="account.group_delivery_invoice_address"
                               context="{'default_type':'invoice'}"
-                              options="{'always_reload': True}"
                               attrs="{'readonly': ['|', ('state', '=', 'cancel'), ('locked', '=', True)]}"/>
                         <field name="partner_shipping_id"
                               groups="account.group_delivery_invoice_address"
                               context="{'default_type':'delivery'}"
-                              options="{'always_reload': True}"
                               attrs="{'readonly': ['|', ('state', '=', 'cancel'), ('locked', '=', True)]}"/>
                     </group>
                     <group name="order_details">
@@ -730,7 +727,7 @@
                             </group>
                             <group string="Tracking" name="sale_reporting">
                                 <field name="origin"/>
-                                <field name="campaign_id" options="{'create_name_field': 'title', 'always_reload': True}"/>
+                                <field name="campaign_id" options="{'create_name_field': 'title'}"/>
                                 <field name="medium_id"/>
                                 <field name="source_id"/>
                             </group>
