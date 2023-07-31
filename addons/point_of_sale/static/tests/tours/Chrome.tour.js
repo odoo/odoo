@@ -10,6 +10,9 @@ import { registry } from "@web/core/registry";
 
 startSteps();
 
+Chrome.do.clickMenuButton();
+Chrome.check.isCashMoveButtonShown();
+
 // Order 1 is at Product Screen
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
