@@ -135,6 +135,7 @@ export class Wysiwyg extends Component {
 
     setup() {
         this.orm = this._useService('orm');
+        this.getColorPickerTemplateService = this._useService('get_color_picker_template');
         this.notification = this._useService("notification");
         this.popover = this._useService("popover");
         this.busService = this.env.services.bus_service;
@@ -184,7 +185,7 @@ export class Wysiwyg extends Component {
                 $(pickergroup.querySelector('.dropdown-toggle')).dropdown('hide');
             },
 
-            getTemplate: this._getColorpickerTemplate.bind(this),
+            getTemplate: this.getColorpickerTemplate.bind(this),
             getEditableCustomColors: () => {
                 if (!this.$editable) {
                     return [];
@@ -1700,6 +1701,13 @@ export class Wysiwyg extends Component {
         }
         return Promise.resolve();
     }
+    getColorpickerTemplate() {
+        // Public user using the editor may have a colorpalette but with
+        // the default wysiwyg ones.
+        if (!session.is_website_user) {
+            return this.getColorPickerTemplateService();
+        }
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2972,14 +2980,6 @@ export class Wysiwyg extends Component {
         } else {
             el.setAttribute('src', newAttachmentSrc);
         }
-    }
-
-    _getColorpickerTemplate() {
-        return this.env.services.orm.call(
-            'ir.ui.view',
-            'render_public_asset',
-            ['web_editor.colorpicker', {}]
-        );
     }
 
     // -----------------------------------------------------------------------------
