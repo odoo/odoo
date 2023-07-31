@@ -10,7 +10,7 @@
                 <field name="website_url" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="name" placeholder="e.g. &quot;Conference for Architects&quot;" string="Event Name"/>
-                <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
+                <field name="address_id" context="{'show_address': 1}"/>
                 <field name="date_begin" string="Start &#8594; End" widget="daterange" options="{'end_date_field': 'date_end'}" />
                 <field name="date_end" invisible="1" />
             </group>
