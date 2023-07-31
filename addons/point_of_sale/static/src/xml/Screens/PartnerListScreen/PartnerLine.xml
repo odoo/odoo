@@ -30,6 +30,11 @@
                     <i class="fa fa-paper-plane-o fa-fw"/><t t-esc="props.partner.email" />
                 </div>
             </td>
+            <td class="partner-line-email" t-if="!env.isMobile">
+                <div t-if="props.partner.studentCardNumber">
+                   <t t-esc="props.partner.studentCardNumber"/>
+                </div>
+            </td>
             <td t-if="env.isMobile">
                 <t t-esc="props.partner.zip or ''" />
                 <span t-if="highlight"><br/></span>
