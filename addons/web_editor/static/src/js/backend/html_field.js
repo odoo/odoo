@@ -46,7 +46,6 @@ export class HtmlField extends Component {
         dynamicPlaceholder: { type: Boolean, optional: true, default: false },
         dynamicPlaceholderModelReferenceField: { type: String, optional: true },
         cssReadonlyAssetId: { type: String, optional: true },
-        cssEditAssetId: { type: String, optional: true },
         isInlineStyle: { type: Boolean, optional: true },
         sandboxedPreview: {type: Boolean, optional: true},
         wrapper: { type: String, optional: true },
@@ -90,9 +89,6 @@ export class HtmlField extends Component {
         onWillStart(async () => {
             if (this.props.cssReadonlyAssetId) {
                 this.cssReadonlyAsset = await getBundle(this.props.cssReadonlyAssetId);
-            }
-            if (this.props.cssEditAssetId || this.props.isInlineStyle) {
-                await getBundle(this.props.cssEditAssetId || 'web_editor.assets_edit_html_field');
             }
         });
         this._lastRecordInfo = {
@@ -706,7 +702,6 @@ export const htmlField = {
             cssReadonlyAssetId: options.cssReadonly,
             dynamicPlaceholder: options?.dynamic_placeholder || false,
             dynamicPlaceholderModelReferenceField: options?.dynamic_placeholder_model_reference_field || "",
-            cssEditAssetId: options.cssEdit,
             isInlineStyle: options['style-inline'],
 
             wysiwygOptions,
