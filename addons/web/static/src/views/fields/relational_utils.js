@@ -590,7 +590,7 @@ export class X2ManyFieldDialog extends Component {
 
     async save({ saveAndNew }) {
         const disabledButtons = this.disableButtons();
-        if (await this.record.checkValidity()) {
+        if (await this.record.checkValidity({ displayNotification: true })) {
             try {
                 await this.props.save(this.record);
             } catch (error) {
@@ -601,7 +601,6 @@ export class X2ManyFieldDialog extends Component {
                 this.record = await this.props.addNew();
             }
         } else {
-            this.record.openInvalidFieldsNotification();
             this.enableButtons(disabledButtons);
             return false;
         }
