@@ -32,13 +32,7 @@ import {
     makeFakeHTTPService,
     makeFakeUserService,
 } from "../helpers/mock_services";
-import {
-    getFixture,
-    legacyExtraNextTick,
-    mount,
-    nextTick,
-    patchWithCleanup,
-} from "../helpers/utils";
+import { getFixture, mount, nextTick, patchWithCleanup } from "../helpers/utils";
 import session from "web.session";
 import LegacyMockServer from "@web/../tests/legacy/helpers/mock_server";
 import Widget from "@web/legacy/js/core/widget";
@@ -237,15 +231,11 @@ export async function createWebClient(params) {
     return wc;
 }
 
-export async function doAction(env, ...args) {
+export function doAction(env, ...args) {
     if (env instanceof Component) {
         env = env.env;
     }
-    try {
-        await env.services.action.doAction(...args);
-    } finally {
-        await legacyExtraNextTick();
-    }
+    return env.services.action.doAction(...args);
 }
 
 export async function loadState(env, state) {
@@ -256,10 +246,10 @@ export async function loadState(env, state) {
     // wait the asynchronous hashchange
     // (the event hashchange must be triggered in a nonBlocking stack)
     await nextTick();
+    // wait for BlankComponent
+    await nextTick();
     // wait for the regular rendering
     await nextTick();
-    // wait for the legacy rendering below owl layer
-    await legacyExtraNextTick();
 }
 
 export function getActionManagerServerData() {

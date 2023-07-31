@@ -3,12 +3,7 @@
 import { manageMessages } from "@mail/js/tools/debug_manager";
 
 import { registry } from "@web/core/registry";
-import {
-    click,
-    getFixture,
-    legacyExtraNextTick,
-    patchWithCleanup,
-} from "@web/../tests/helpers/utils";
+import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -46,14 +41,12 @@ QUnit.test("Manage Messages", async (assert) => {
     const target = getFixture();
     const wc = await createWebClient({ serverData, mockRPC });
     await doAction(wc, 3, { viewType: "form", props: { resId: 5 } });
-    await legacyExtraNextTick();
     await click(target, ".o_debug_manager .dropdown-toggle");
     const dropdownItems = target.querySelectorAll(".o_debug_manager .dropdown-menu .dropdown-item");
     assert.strictEqual(dropdownItems.length, 1);
     assert.strictEqual(dropdownItems[0].innerText.trim(), "Manage Messages");
 
     await click(dropdownItems[0]);
-    await legacyExtraNextTick();
     assert.verifySteps(["message_read"]);
     assert.strictEqual(
         target.querySelector(".o_breadcrumb .active > span").innerText.trim(),

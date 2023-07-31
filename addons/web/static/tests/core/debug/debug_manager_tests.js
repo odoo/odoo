@@ -22,7 +22,6 @@ import {
     click,
     getFixture,
     getNodesTextContent,
-    legacyExtraNextTick,
     mount,
     nextTick,
     patchWithCleanup,
@@ -421,7 +420,6 @@ QUnit.module("DebugMenu", (hooks) => {
         await doAction(webClient, 1);
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".breadcrumb-item");
         assert.containsOnce(target, ".o_breadcrumb .active");
         assert.strictEqual(target.querySelector(".o_breadcrumb .active").textContent, "Edit view");
@@ -484,7 +482,6 @@ QUnit.module("DebugMenu", (hooks) => {
 
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".breadcrumb-item");
         assert.containsOnce(target, ".o_breadcrumb .active");
         assert.strictEqual(target.querySelector(".o_breadcrumb .active").textContent, "Edit view");

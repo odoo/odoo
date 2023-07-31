@@ -2,13 +2,7 @@
 
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { registerCleanup } from "../../helpers/cleanup";
-import {
-    click,
-    getFixture,
-    legacyExtraNextTick,
-    nextTick,
-    patchWithCleanup,
-} from "../../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 import { registry } from "@web/core/registry";
@@ -149,7 +143,6 @@ QUnit.module("ActionManager", (hooks) => {
 
         await click(target, ".modal-header button.btn-close");
         await nextTick();
-        await legacyExtraNextTick();
         assert.containsNone(target, ".modal");
         assert.containsNone(target, ".o_list_view");
         assert.containsOnce(target, ".o_kanban_view");
@@ -181,7 +174,6 @@ QUnit.module("ActionManager", (hooks) => {
             list.env.config.historyBack();
             assert.verifySteps(["on_close"], "should have called the on_close handler");
             await nextTick();
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".o_list_view");
             assert.containsNone(target, ".modal");
         }
@@ -214,7 +206,6 @@ QUnit.module("ActionManager", (hooks) => {
         // display a form view
         await testUtils.dom.click($(target).find(".o_list_view .o_data_cell:first"));
         assert.verifySteps([]);
-        await legacyExtraNextTick();
         readOnFirstRecordDef.reject(new Error("not working as intended"));
         await nextTick();
         assert.verifySteps(["error"]);
@@ -223,7 +214,6 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.dom.click(
             $(target).find(".o_list_view .o_data_row:eq(2) .o_data_cell:first")
         );
-        await legacyExtraNextTick();
         assert.containsNone(target, ".o_list_view", "there should not be a list view in dom");
         assert.containsOnce(target, ".o_form_view", "there should be a form view in dom");
     });

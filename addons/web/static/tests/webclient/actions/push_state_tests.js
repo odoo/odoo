@@ -4,14 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
-import {
-    click,
-    getFixture,
-    legacyExtraNextTick,
-    makeDeferred,
-    nextTick,
-    patchWithCleanup,
-} from "../../helpers/utils";
+import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 import { Component, xml } from "@odoo/owl";
@@ -65,6 +58,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
         assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "App2");
         await doAction(webClient, 1001, { clearBreadcrumbs: true });
+        await nextTick();
         urlState = webClient.env.services.router.current;
         assert.strictEqual(urlState.hash.action, 1001);
         assert.strictEqual(urlState.hash.menu_id, 2);
@@ -94,10 +88,12 @@ QUnit.module("ActionManager", (hooks) => {
         let urlState = webClient.env.services.router.current;
         assert.deepEqual(urlState.hash, {});
         await doAction(webClient, "client_action_pushes");
+        await nextTick();
         urlState = webClient.env.services.router.current;
         assert.strictEqual(urlState.hash.action, "client_action_pushes");
         assert.strictEqual(urlState.hash.menu_id, undefined);
         await click(target, ".test_client_action");
+        await nextTick();
         urlState = webClient.env.services.router.current;
         assert.strictEqual(urlState.hash.action, "client_action_pushes");
         assert.strictEqual(urlState.hash.arbitrary, "actionPushed");
@@ -123,10 +119,12 @@ QUnit.module("ActionManager", (hooks) => {
         assert.deepEqual(urlState.hash, {});
         await doAction(webClient, "client_action_pushes");
         await click(target, ".test_client_action");
+        await nextTick();
         urlState = webClient.env.services.router.current;
         assert.strictEqual(urlState.hash.action, "client_action_pushes");
         assert.strictEqual(urlState.hash.arbitrary, "actionPushed");
         await doAction(webClient, 1001);
+        await nextTick();
         urlState = webClient.env.services.router.current;
         assert.strictEqual(urlState.hash.action, 1001);
         assert.strictEqual(urlState.hash.arbitrary, undefined);
@@ -174,18 +172,21 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1001);
         assert.containsOnce(target, ".modal .test_client_action");
+        await nextTick();
     });
 
     QUnit.test("properly push state", async function (assert) {
         assert.expect(3);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
+        await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 4,
             model: "partner",
             view_type: "kanban",
         });
         await doAction(webClient, 8);
+        await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 8,
             model: "pony",
@@ -232,15 +233,16 @@ QUnit.module("ActionManager", (hooks) => {
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 8);
+        await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 8,
             model: "pony",
             view_type: "list",
         });
         await testUtils.dom.click($(target).find("tr.o_data_row:first"));
-        await legacyExtraNextTick();
         // we make sure here that the list view is still in the dom
         assert.containsOnce(target, ".o_list_view", "there should still be a list view in dom");
+        await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 8,
             model: "pony",
