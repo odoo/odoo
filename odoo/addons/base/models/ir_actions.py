@@ -556,7 +556,8 @@ class IrActionsServer(models.Model):
 
     def _run_action_code_multi(self, eval_context):
         try:
-            safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
+            with self.env.cr.savepoint():
+                safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
         except Exception as e:
             external_id = self.get_external_id().get(self.id)
             if not external_id or external_id.startswith('__export__'):
@@ -581,7 +582,8 @@ class IrActionsServer(models.Model):
                 record_cached[field] = new_value
         else:
             try:
-                self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
+                with self.env.cr.savepoint():
+                    self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
             except Exception as e:
                 e.sentry_ignored = True
                 raise
@@ -595,7 +597,8 @@ class IrActionsServer(models.Model):
         res = {line.col1.name: vals[line.id] for line in self.fields_lines}
 
         try:
-            res = self.env[self.crud_model_id.model].create(res)
+            with self.env.cr.savepoint():
+                res = self.env[self.crud_model_id.model].create(res)
         except Exception as e:
             e.sentry_ignored = True
             raise
