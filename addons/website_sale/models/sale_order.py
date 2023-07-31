@@ -551,7 +551,7 @@ class SaleOrder(models.Model):
             action['url'] = f'/@{action["url"]}'
         return action
 
-    def _check_carrier_quotation(self, force_carrier_id=None, keep_carrier=False):
+    def _check_carrier_quotation(self, force_carrier_id=None):
         self.ensure_one()
         DeliveryCarrier = self.env['delivery.carrier']
 
@@ -561,7 +561,7 @@ class SaleOrder(models.Model):
         else:
             self = self.with_company(self.company_id)
             # attempt to use partner's preferred carrier
-            if not force_carrier_id and self.partner_shipping_id.property_delivery_carrier_id and not keep_carrier:
+            if not force_carrier_id and self.partner_shipping_id.property_delivery_carrier_id:
                 force_carrier_id = self.partner_shipping_id.property_delivery_carrier_id.id
 
             carrier = force_carrier_id and DeliveryCarrier.browse(force_carrier_id) or self.carrier_id
