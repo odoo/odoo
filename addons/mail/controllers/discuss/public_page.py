@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import consteq
 from odoo.tools.misc import get_lang
+from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class PublicPageController(http.Controller):
@@ -22,6 +23,7 @@ class PublicPageController(http.Controller):
         type="http",
         auth="public",
     )
+    @add_guest_to_context
     def discuss_channel_chat_from_token(self, create_token, channel_name=None):
         return self._response_discuss_channel_from_token(create_token=create_token, channel_name=channel_name)
 
@@ -34,12 +36,14 @@ class PublicPageController(http.Controller):
         type="http",
         auth="public",
     )
+    @add_guest_to_context
     def discuss_channel_meet_from_token(self, create_token, channel_name=None):
         return self._response_discuss_channel_from_token(
             create_token=create_token, channel_name=channel_name, default_display_mode="video_full_screen"
         )
 
     @http.route("/chat/<int:channel_id>/<string:invitation_token>", methods=["GET"], type="http", auth="public")
+    @add_guest_to_context
     def discuss_channel_invitation(self, channel_id, invitation_token):
         channel_sudo = request.env["discuss.channel"].browse(channel_id).sudo().exists()
         if not channel_sudo or not channel_sudo.uuid or not consteq(channel_sudo.uuid, invitation_token):
@@ -47,6 +51,7 @@ class PublicPageController(http.Controller):
         return self._response_discuss_channel_invitation(channel_sudo=channel_sudo)
 
     @http.route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
+    @add_guest_to_context
     def discuss_channel(self, channel_id):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         return self._response_discuss_public_template(channel_sudo=channel_member_sudo.channel_id)

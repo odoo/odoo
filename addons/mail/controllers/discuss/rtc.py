@@ -5,10 +5,12 @@ from collections import defaultdict
 from odoo import http
 from odoo.http import request
 from odoo.tools import file_open
+from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class RtcController(http.Controller):
     @http.route("/mail/rtc/session/notify_call_members", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def session_call_notify(self, peer_notifications):
         """Sends content to other session of the same channel, only works if the user is the user of that session.
         This is used to send peer to peer information between sessions.
@@ -33,6 +35,7 @@ class RtcController(http.Controller):
             session_sudo._notify_peers(notifications)
 
     @http.route("/mail/rtc/session/update_and_broadcast", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def session_update_and_broadcast(self, session_id, values):
         """Update a RTC session and broadcasts the changes to the members of its channel,
         only works of the user is the user of that session.
@@ -52,6 +55,7 @@ class RtcController(http.Controller):
             session._update_and_broadcast(values)
 
     @http.route("/mail/rtc/channel/join_call", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def channel_call_join(self, channel_id, check_rtc_session_ids=None):
         """Joins the RTC call of a channel if the user is a member of that channel
         :param int channel_id: id of the channel to join
@@ -60,6 +64,7 @@ class RtcController(http.Controller):
         return channel_member_sudo._rtc_join_call(check_rtc_session_ids=check_rtc_session_ids)
 
     @http.route("/mail/rtc/channel/leave_call", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def channel_call_leave(self, channel_id):
         """Disconnects the current user from a rtc call and clears any invitation sent to that user on this channel
         :param int channel_id: id of the channel from which to disconnect
@@ -68,6 +73,7 @@ class RtcController(http.Controller):
         return channel_member_sudo._rtc_leave_call()
 
     @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def channel_call_cancel_invitation(self, channel_id, member_ids=None):
         """
         :param member_ids: members whose invitation is to cancel
@@ -91,6 +97,7 @@ class RtcController(http.Controller):
         )
 
     @http.route("/discuss/channel/ping", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def channel_ping(self, channel_id, rtc_session_id=None, check_rtc_session_ids=None):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=int(channel_id))
         if rtc_session_id:

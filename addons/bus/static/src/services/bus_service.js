@@ -32,6 +32,7 @@ export const busService = {
         let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
         const startTs = new Date().getTime();
         const connectionInitializedDeferred = new Deferred();
+        let context = {};
 
         /**
          * Send a message to the worker.
@@ -169,6 +170,23 @@ export const busService = {
                 send("add_channel", channel);
                 send("start");
                 isActive = true;
+            },
+            get context() {
+                return context;
+            },
+            /**
+             * Update the context to be sent with every websocket
+             * message.
+             *
+             * @param {object} newContext
+             */
+            async updateContext(newContext) {
+                context = newContext;
+                if (!worker) {
+                    startWorker();
+                    await connectionInitializedDeferred;
+                }
+                send("update_context", context);
             },
             deleteChannel: (channel) => send("delete_channel", channel),
             forceUpdateChannels: () => send("force_update_channels"),

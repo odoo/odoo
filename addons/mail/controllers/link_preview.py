@@ -2,10 +2,12 @@
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class LinkPreviewController(http.Controller):
     @http.route("/mail/link_preview", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def mail_link_preview(self, message_id, clear=None):
         if not request.env["mail.link.preview"]._is_link_preview_enabled():
             return
@@ -20,6 +22,7 @@ class LinkPreviewController(http.Controller):
         guest.env["mail.link.preview"].sudo()._create_link_previews(message)
 
     @http.route("/mail/link_preview/delete", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def mail_link_preview_delete(self, link_preview_id):
         guest = request.env["mail.guest"]._get_guest_from_context()
         link_preview_sudo = guest.env["mail.link.preview"].sudo().search([("id", "=", int(link_preview_id))])

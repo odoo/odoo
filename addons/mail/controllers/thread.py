@@ -6,6 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class ThreadController(http.Controller):
@@ -70,6 +71,7 @@ class ThreadController(http.Controller):
         return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid", "parent_id"}
 
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def mail_message_post(self, thread_model, thread_id, post_data, context=None):
         guest = request.env["mail.guest"]._get_guest_from_context()
         guest.env["ir.attachment"].browse(post_data.get("attachment_ids", []))._check_attachments_access(
@@ -109,6 +111,7 @@ class ThreadController(http.Controller):
         return message_data
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None):
         guest = request.env["mail.guest"]._get_guest_from_context()
         guest.env["ir.attachment"].browse(attachment_ids)._check_attachments_access(attachment_tokens)
