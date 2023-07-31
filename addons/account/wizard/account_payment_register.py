@@ -544,7 +544,9 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('can_edit_wizard', 'source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date')
     def _compute_amount(self):
         for wizard in self:
-            if wizard.source_currency_id and wizard.can_edit_wizard:
+            if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date:
+                wizard.amount = wizard.amount
+            elif wizard.source_currency_id and wizard.can_edit_wizard:
                 batch_result = wizard._get_batches()[0]
                 wizard.amount = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)[0]
             else:
@@ -554,7 +556,9 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('can_edit_wizard', 'payment_date', 'currency_id', 'amount')
     def _compute_early_payment_discount_mode(self):
         for wizard in self:
-            if wizard.can_edit_wizard and wizard.currency_id:
+            if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date:
+                wizard.early_payment_discount_mode = wizard.early_payment_discount_mode
+            elif wizard.can_edit_wizard:
                 batch_result = wizard._get_batches()[0]
                 total_amount_residual_in_wizard_currency, mode = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)
                 wizard.early_payment_discount_mode = \
@@ -566,7 +570,7 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('can_edit_wizard', 'amount')
     def _compute_payment_difference(self):
         for wizard in self:
-            if wizard.can_edit_wizard:
+            if wizard.can_edit_wizard and wizard.payment_date:
                 batch_result = wizard._get_batches()[0]
                 total_amount_residual_in_wizard_currency = wizard\
                     ._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result, early_payment_discount=False)[0]
