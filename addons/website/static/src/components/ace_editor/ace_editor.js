@@ -5,6 +5,7 @@ import {useService} from '@web/core/utils/hooks';
 import AceEditor from '@web_editor/js/backend/ace';
 
 import { Component, xml } from "@odoo/owl";
+import { AceEditorWarningOverlay } from "../ace_warning/ace_warning";
 
 export const WebsiteAceEditor = AceEditor.extend({
 
@@ -101,8 +102,16 @@ export const WebsiteAceEditor = AceEditor.extend({
     },
 });
 
-export class AceEditorAdapterComponent extends Component {
-    static template = xml`<div style="display: contents;" t-ref="wrapper"/>`;
+export class AceEditorWrapper extends Component {
+    static components = { AceEditorWarningOverlay };
+    static template = xml`
+        <div class="o_ace_view_editor_wrapper d-flex">
+            <div class="d-flex position-relative">
+                <div style="display: contents;" t-ref="wrapper"/>
+                <AceEditorWarningOverlay/>
+            </div>
+        </div>
+    `;
 
     setup() {
         this.website = useService("website");
@@ -125,6 +134,7 @@ export class AceEditorAdapterComponent extends Component {
                     ...this.user.context,
                     website_id: this.website.currentWebsite.id,
                 }),
+                noWarning: true,
             },
         ]);
     }

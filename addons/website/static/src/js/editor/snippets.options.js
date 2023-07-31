@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { loadBundle, loadCSS } from "@web/core/assets";
+import { loadCSS } from "@web/core/assets";
 import Dialog from "@web/legacy/js/core/dialog";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
@@ -213,7 +213,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             }
             fontEls.push(fontEl);
             this.menuEl.appendChild(fontEl);
-        };
+        }
 
         if (this.googleLocalFonts.length) {
             const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
@@ -1364,74 +1364,11 @@ options.registry.OptionsTab = options.Class.extend({
             'body-image': widgetValue ? `'${widgetValue}'` : '',
         }, params.nullValue);
     },
-    /**
-     * @see this.selectClass for parameters
-     */
     async openCustomCodeDialog(previewMode, widgetValue, params) {
-        const libsProm = loadBundle({
-            jsLibs: [
-                '/web/static/lib/ace/ace.js',
-                '/web/static/lib/ace/mode-xml.js',
-                '/web/static/lib/ace/mode-qweb.js',
-            ],
-        });
-
-        let websiteId;
-        this.trigger_up('context_get', {
-            callback: (ctx) => {
-                websiteId = ctx['website_id'];
-            },
-        });
-
-        let website;
-        const dataProm = this.orm.read(
-            "website",
-            [websiteId],
-            ['custom_code_head', 'custom_code_footer']
-        ).then(websites => {
-            website = websites[0];
-        });
-
-        let fieldName, title, contentText;
-        if (widgetValue === 'head') {
-            fieldName = 'custom_code_head';
-            title = _t('Custom head code');
-            contentText = _t('Enter code that will be added into the <head> of every page of your site.');
-        } else {
-            fieldName = 'custom_code_footer';
-            title = _t('Custom end of body code');
-            contentText = _t('Enter code that will be added before the </body> of every page of your site.');
-        }
-
-        await Promise.all([libsProm, dataProm]);
-
-        await new Promise(resolve => {
-            const $content = $(renderToElement('website.custom_code_dialog_content', {
-                contentText,
-            }));
-            const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], website[fieldName] || '');
-            const dialog = new Dialog(this, {
-                title,
-                $content,
-                buttons: [
-                    {
-                        text: _t("Save"),
-                        classes: 'btn-primary',
-                        click: async () => {
-                            await this.orm.write("website", [websiteId], {
-                                [fieldName]: aceEditor.getValue(),
-                            });
-                        },
-                        close: true,
-                    },
-                    {
-                        text: _t("Discard"),
-                        close: true,
-                    },
-                ],
+        return new Promise(resolve => {
+            this.trigger_up('open_edit_head_body_dialog', {
+                onSuccess: resolve,
             });
-            dialog.on('closed', this, resolve);
-            dialog.open();
         });
     },
     /**
@@ -1563,34 +1500,6 @@ options.registry.OptionsTab = options.Class.extend({
             return !!font;
         }
         return this._super(...arguments);
-    },
-    /**
-     * @private
-     * @param {DOMElement} node
-     * @param {String} content text of the editor
-     * @returns {Object}
-     */
-    _renderAceEditor(node, content) {
-        const aceEditor = window.ace.edit(node);
-        aceEditor.setTheme('ace/theme/monokai');
-        aceEditor.setValue(content, 1);
-        aceEditor.setOptions({
-            minLines: 20,
-            maxLines: Infinity,
-            showPrintMargin: false,
-        });
-        aceEditor.renderer.setOptions({
-            highlightGutterLine: true,
-            showInvisibles: true,
-            fontSize: 14,
-        });
-
-        const aceSession = aceEditor.getSession();
-        aceSession.setOptions({
-            mode: "ace/mode/qweb",
-            useWorker: false,
-        });
-        return aceEditor;
     },
 });
 

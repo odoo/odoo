@@ -14,6 +14,7 @@ import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
 import { onWillStart, useEffect, onWillUnmount } from "@odoo/owl";
+import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dialog";
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -778,6 +779,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             'menu_dialog': this._onMenuDialogRequest.bind(this),
             'request_mobile_preview': this._onMobilePreviewRequest.bind(this),
             'get_switchable_related_views': this._onGetSwitchableRelatedViews.bind(this),
+            'open_edit_head_body_dialog': this._onOpenEditHeadBodyDialog.bind(this),
         };
 
 
@@ -998,6 +1000,15 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      */
     _onContextGet(event) {
         return event.data.callback(this._context);
+    }
+    /**
+     * @param {OdooEvent}
+     * @private
+     */
+    _onOpenEditHeadBodyDialog(ev) {
+        this.dialogs.add(EditHeadBodyDialog, {}, {
+            onClose: ev.data.onSuccess,
+        });
     }
     /**
      * Retrieves the website service context.

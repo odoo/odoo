@@ -181,6 +181,7 @@ var ViewEditor = Widget.extend({
      * @param {boolean} [options.doNotLoadViews=false]
      * @param {boolean} [options.doNotLoadSCSS=false]
      * @param {boolean} [options.doNotLoadJS=false]
+     * @param {boolean} [options.noWarning=false]
      * @param {boolean} [options.includeBundles=false]
      * @param {string} [options.filesFilter=custom]
      * @param {string[]} [options.defaultBundlesRestriction]
@@ -196,6 +197,11 @@ var ViewEditor = Widget.extend({
             doNotLoadViews: false,
             doNotLoadSCSS: false,
             doNotLoadJS: false,
+            // TODO review if this warning is still useful since this option
+            // is never kept to false and replaced by the website blocking
+            // warning. Maybe once the blocking warning is validated, this
+            // small warning should still be shown. To be discussed later.
+            noWarning: false,
             includeBundles: false,
             filesFilter: 'custom',
             defaultBundlesRestriction: [],
@@ -443,7 +449,7 @@ var ViewEditor = Widget.extend({
         this.$resetButton.toggleClass('d-none', this.currentType === 'xml' || !isCustomized);
 
         this.$warningMessage.toggleClass('d-none',
-            this.currentType !== 'xml' && (resID.indexOf('/user_custom_') >= 0) || isCustomized);
+            this.currentType !== 'xml' && (resID.indexOf('/user_custom_') >= 0) || isCustomized || this.options.noWarning);
 
         this.aceEditor.resize(true);
     },
