@@ -131,7 +131,7 @@ class SaleOrderLine(models.Model):
     remaining_hours_available = fields.Boolean(compute='_compute_remaining_hours_available', compute_sudo=True)
     remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours', compute_sudo=True, store=True)
     has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell')
-    timesheet_ids = fields.One2many('account.analytic.line', 'so_line', 'Timesheets')
+    timesheet_ids = fields.One2many('account.analytic.line', 'so_line', domain=[('project_id', '!=', False)], string='Timesheets')
 
     def name_get(self):
         res = super(SaleOrderLine, self).name_get()
