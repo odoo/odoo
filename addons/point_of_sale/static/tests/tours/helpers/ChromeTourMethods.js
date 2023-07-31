@@ -49,6 +49,28 @@ class Do {
         ];
     }
 }
+
+class Check {
+    isCashMoveButtonHidden() {
+        return [
+            {
+                extraTrigger: ".pos-topheader",
+                trigger: ".pos-topheader:not(:contains(Cash In/Out))",
+                run: () => {},
+            },
+        ];
+    }
+
+    isCashMoveButtonShown() {
+        return [
+            {
+                trigger: ".pos-topheader:contains(Cash In/Out)",
+                run: () => {},
+            },
+        ];
+    }
+}
+
 // FIXME: this is a horrible hack to export an object as named exports.
 // eslint-disable-next-line no-undef
-Object.assign(__exports, createTourMethods("Chrome", Do));
+Object.assign(__exports, createTourMethods("Chrome", Do, Check));
