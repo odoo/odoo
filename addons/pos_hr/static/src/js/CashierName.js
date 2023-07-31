@@ -13,7 +13,10 @@ patch(CashierName.prototype, "pos_hr.CashierName", {
     get avatar() {
         if (this.pos.globalState.config.module_pos_hr) {
             const cashier = this.pos.globalState.get_cashier();
-            return `/web/image/hr.employee/${cashier.id}/avatar_128`;
+            if (!(cashier && cashier.id)) {
+                return "";
+            }
+            return `/web/image/hr.employee.public/${cashier.id}/avatar_128`;
         }
         return this._super(...arguments);
     },
