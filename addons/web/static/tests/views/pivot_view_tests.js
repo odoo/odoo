@@ -6,7 +6,6 @@ import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/moc
 import {
     click,
     getFixture,
-    legacyExtraNextTick,
     makeDeferred,
     mockDownload,
     nextTick,
@@ -3245,7 +3244,6 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
         });
 
-
         assert.strictEqual(
             target.querySelector("table tbody tr").innerText.replace(/\s/g, ""),
             "Total1124",
@@ -4096,7 +4094,6 @@ QUnit.module("Views", (hooks) => {
             await nextTick();
 
             await click(target.querySelectorAll(".o_pivot_cell_value")[1]);
-            await legacyExtraNextTick();
 
             assert.containsOnce(target, ".o_list_view");
 
@@ -4739,7 +4736,6 @@ QUnit.module("Views", (hooks) => {
 
         // switch to list view
         await click(target.querySelector(".o_control_panel .o_switch_view.o_list"));
-        await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_list_view");
         assert.verifySteps(["unity_web_search_read"]);
@@ -4785,7 +4781,6 @@ QUnit.module("Views", (hooks) => {
 
         // switch to list view
         await click(target.querySelector(".o_control_panel .o_switch_view.o_list"));
-        await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_list_view");
 
@@ -4829,7 +4824,6 @@ QUnit.module("Views", (hooks) => {
 
         // switch to list view
         await click(target.querySelector(".o_control_panel .o_switch_view.o_list"));
-        await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_list_view");
 

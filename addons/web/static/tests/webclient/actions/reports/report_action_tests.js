@@ -6,7 +6,13 @@ import { session } from "@web/session";
 import { ReportAction } from "@web/webclient/actions/reports/report_action";
 import { clearRegistryWithCleanup } from "@web/../tests/helpers/mock_env";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { mockDownload, patchWithCleanup, getFixture, click } from "@web/../tests/helpers/utils";
+import {
+    mockDownload,
+    nextTick,
+    patchWithCleanup,
+    getFixture,
+    click,
+} from "@web/../tests/helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -389,7 +395,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 12); // 12 is a html report action in serverData
-
+        await nextTick();
         const hash = webClient.router.current.hash;
         // used to put report.client_action in the url
         assert.strictEqual(hash.action === "report.client_action", false);

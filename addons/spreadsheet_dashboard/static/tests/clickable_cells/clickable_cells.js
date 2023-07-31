@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { getFixture } from "@web/../tests/helpers/utils";
+import { getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { getDashboardServerData } from "../utils/data";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
 import { getBasicData } from "@spreadsheet/../tests/utils/data";
@@ -20,6 +20,7 @@ async function createDashboardWithModel(model) {
         ...getBasicData(),
     };
     await createSpreadsheetDashboard({ serverData, spreadsheetId: dashboard.id });
+    await nextTick();
     return getFixture();
 }
 

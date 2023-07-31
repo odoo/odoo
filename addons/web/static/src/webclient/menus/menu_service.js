@@ -65,8 +65,6 @@ function makeMenus(env, menusData, fetchLoadMenus) {
             if (menu && menu.appID !== currentAppId) {
                 currentAppId = menu.appID;
                 env.bus.trigger("MENUS:APP-CHANGED");
-                // FIXME: lock API: maybe do something like
-                // pushState({menu_id: ...}, { lock: true}); ?
                 env.services.router.pushState({ menu_id: menu.id }, { lock: true });
             }
         },

@@ -639,10 +639,6 @@ export async function triggerHotkey(hotkey, addOverlayModParts = false, eventAtt
     return { keydownEvent, keyupEvent };
 }
 
-export async function legacyExtraNextTick() {
-    return nextTick();
-}
-
 export function mockDownload(cb) {
     patchWithCleanup(download, { _download: cb });
 }

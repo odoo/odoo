@@ -1,12 +1,6 @@
 /** @odoo-module */
 
-import {
-    getFixture,
-    click,
-    legacyExtraNextTick,
-    nextTick,
-    editInput,
-} from "@web/../tests/helpers/utils";
+import { getFixture, click, nextTick, editInput } from "@web/../tests/helpers/utils";
 import { getDashboardServerData } from "../utils/data";
 import { getBasicData, getBasicListArchs } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
@@ -148,10 +142,8 @@ QUnit.test(
         await createSpreadsheetDashboard({ serverData });
         await click(fixture, ".o_search_panel li:last-child");
         await click(fixture, ".o-dashboard-clickable-cell");
-        await legacyExtraNextTick();
         assert.containsOnce(fixture, ".o_list_view");
         await click(document.body.querySelector(".o_back_button"));
-        await legacyExtraNextTick();
         assert.hasClass(fixture.querySelector(".o_search_panel li:last-child"), "active");
     }
 );

@@ -483,10 +483,13 @@ QUnit.module("ActionManager", (hooks) => {
         ] = `<form><button name="1" type="action" class="oe_stat_button" /></form>`;
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 6);
+        await nextTick(); // for the webclient to react and remove the navbar
         assert.isNotVisible(target.querySelector(".o_main_navbar"));
         await click(target.querySelector("button[name='1']"));
+        await nextTick();
         assert.isNotVisible(target.querySelector(".o_main_navbar"));
         await click(target.querySelector(".breadcrumb li a"));
+        await nextTick();
         assert.isNotVisible(target.querySelector(".o_main_navbar"));
     });
 

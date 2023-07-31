@@ -7,13 +7,7 @@ import { serializeDate } from "@web/core/l10n/dates";
 
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
-import {
-    editInput,
-    legacyExtraNextTick,
-    patchWithCleanup,
-    click,
-    patchDate,
-} from "@web/../tests/helpers/utils";
+import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/helpers/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { session } from "@web/session";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
@@ -671,11 +665,9 @@ QUnit.module("test_mail", {}, function () {
         await testUtils.dom.click(
             document.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell")
         );
-        await legacyExtraNextTick();
         assert.containsOnce($, ".modal.o_technical_modal", "Activity Modal should be opened");
 
         await testUtils.dom.click($('.modal.o_technical_modal button[special="cancel"]'));
-        await legacyExtraNextTick();
         assert.containsNone($, ".modal.o_technical_modal", "Activity Modal should be closed");
     });
 
@@ -717,7 +709,6 @@ QUnit.module("test_mail", {}, function () {
             const { webClient } = await start({ serverData });
             await doAction(webClient, 1);
 
-            await legacyExtraNextTick();
             assert.containsN(document.body, ".o_m2o_avatar", 2);
             assert.containsOnce(
                 document.body,

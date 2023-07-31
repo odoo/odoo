@@ -3,13 +3,7 @@
 import { registry } from "@web/core/registry";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
-import {
-    click,
-    getFixture,
-    legacyExtraNextTick,
-    nextTick,
-    patchWithCleanup,
-} from "../../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { session } from "@web/session";
 
@@ -37,16 +31,13 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".o_reward");
         webClient.env.services.effect.add({ type: "rainbow_man", message: "", fadeout: "no" });
         await nextTick();
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_reward");
         assert.containsOnce(target, ".o_kanban_view");
         await testUtils.dom.click(target.querySelector(".o_kanban_record"));
-        await legacyExtraNextTick();
         assert.containsNone(target, ".o_reward");
         assert.containsOnce(target, ".o_kanban_view");
         webClient.env.services.effect.add({ type: "rainbow_man", message: "", fadeout: "no" });
         await nextTick();
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_reward");
         assert.containsOnce(target, ".o_kanban_view");
         // Do not force rainbow man to destroy on doAction
@@ -100,7 +91,6 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 6);
         await click(target.querySelector('button[name="object"]'));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_reward");
         assert.strictEqual(
             target.querySelector(".o_reward .o_reward_msg_content").textContent,

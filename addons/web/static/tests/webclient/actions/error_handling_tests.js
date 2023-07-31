@@ -45,6 +45,7 @@ QUnit.module("ActionManager", (hooks) => {
         } catch (e) {
             assert.ok(e.cause instanceof TypeError);
         }
+        await nextTick();
         assert.containsOnce(target, ".o_kanban_view");
         assert.strictEqual(target.querySelector(".o_breadcrumb").textContent, "Partners Action 1");
         assert.deepEqual(
