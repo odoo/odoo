@@ -155,7 +155,7 @@ class SaleOrderLine(models.Model):
     remaining_hours_available = fields.Boolean(compute='_compute_remaining_hours_available', compute_sudo=True)
     remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours', compute_sudo=True, store=True)
     has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell')
-    timesheet_ids = fields.One2many('account.analytic.line', 'so_line', 'Timesheets')
+    timesheet_ids = fields.One2many('account.analytic.line', 'so_line', domain=[('project_id', '!=', False)], string='Timesheets')
 
     @api.depends('remaining_hours_available', 'remaining_hours')
     @api.depends_context('with_remaining_hours', 'company')
