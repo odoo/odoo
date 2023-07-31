@@ -175,12 +175,12 @@ QUnit.test(
         await openDiscuss(channelId_1);
         const scrolltop_1 = $(".o-mail-Thread")[0].scrollHeight / 2;
         $(".o-mail-Thread")[0].scrollTo({ top: scrolltop_1 });
-        await click(".o-mail-DiscussCategoryItem:contains(channel-2)");
+        await click(".o-mail-DiscussSidebarChannel:contains(channel-2)");
         const scrolltop_2 = $(".o-mail-Thread")[0].scrollHeight / 3;
         $(".o-mail-Thread")[0].scrollTo({ top: scrolltop_2 });
-        await click(".o-mail-DiscussCategoryItem:contains(channel-1)");
+        await click(".o-mail-DiscussSidebarChannel:contains(channel-1)");
         assert.ok(isScrolledTo($(".o-mail-Thread")[0], scrolltop_1));
-        await click(".o-mail-DiscussCategoryItem:contains(channel-2)");
+        await click(".o-mail-DiscussSidebarChannel:contains(channel-2)");
         assert.ok(isScrolledTo($(".o-mail-Thread")[0], scrolltop_2));
     }
 );
@@ -869,11 +869,11 @@ QUnit.test("Thread messages are only loaded once", async (assert) => {
         },
     ]);
     await openDiscuss();
-    await click(".o-mail-DiscussCategoryItem:eq(0)");
+    await click(".o-mail-DiscussSidebarChannel:eq(0)");
     await waitUntil(".o-mail-Message:contains(channel1)");
-    await click(".o-mail-DiscussCategoryItem:eq(1)");
+    await click(".o-mail-DiscussSidebarChannel:eq(1)");
     await waitUntil(".o-mail-Message:contains(channel2)");
-    await click(".o-mail-DiscussCategoryItem:eq(0)");
+    await click(".o-mail-DiscussSidebarChannel:eq(0)");
     await waitUntil(".o-mail-Message:contains(channel1)");
     assert.verifySteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
@@ -983,7 +983,7 @@ QUnit.test("can be marked as read while loading", async function (assert) {
     });
     await openDiscuss(undefined, { waitUntilMessagesLoaded: false });
     assert.containsOnce($, ".o-discuss-badge:contains(1)");
-    await click(".o-mail-DiscussCategoryItem:contains(Demo)");
+    await click(".o-mail-DiscussSidebarChannel:contains(Demo)");
     await afterNextRender(loadDeferred.resolve);
     assert.containsNone($, ".o-discuss-badge");
 });

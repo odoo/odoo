@@ -12,7 +12,7 @@ QUnit.test("no default rtc after joining a chat conversation", async (assert) =>
     pyEnv["res.users"].create({ partner_id: partnerId });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel");
 
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await afterNextRender(() =>
@@ -22,7 +22,7 @@ QUnit.test("no default rtc after joining a chat conversation", async (assert) =>
     await triggerEvent(document.body, ".o-discuss-ChannelSelector input", "keydown", {
         key: "Enter",
     });
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel");
     assert.containsNone($, ".o-mail-Discuss-content .o-mail-Message");
     assert.containsNone($, ".o-discuss-Call");
 });
@@ -36,7 +36,7 @@ QUnit.test("no default rtc after joining a group conversation", async (assert) =
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel");
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await afterNextRender(() =>
         editInput(document.body, ".o-discuss-ChannelSelector input", "mario")
@@ -49,7 +49,7 @@ QUnit.test("no default rtc after joining a group conversation", async (assert) =
     await triggerEvent(document.body, ".o-discuss-ChannelSelector input", "keydown", {
         key: "Enter",
     });
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel");
     assert.containsNone($, ".o-mail-Discuss-content .o-mail-Message");
     assert.containsNone($, ".o-discuss-Call");
 });

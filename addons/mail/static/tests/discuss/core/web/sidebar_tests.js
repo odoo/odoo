@@ -30,7 +30,7 @@ QUnit.test("sidebar find shows channels matching search term", async (assert) =>
         },
     });
     await openDiscuss();
-    await click(".o-mail-DiscussCategory-add");
+    await click(".o-mail-DiscussSidebarCategory-add");
     await insertText(".o-discuss-ChannelSelector input", "test");
     await def;
     await nextAnimationFrame(); // ensures search_read rpc is rendered.
@@ -60,7 +60,7 @@ QUnit.test(
             },
         });
         await openDiscuss();
-        await click(".o-mail-DiscussCategory-add");
+        await click(".o-mail-DiscussSidebarCategory-add");
         await insertText(".o-discuss-ChannelSelector input", "test");
         await def;
         await nextAnimationFrame(); // ensures search_read rpc is rendered.

@@ -98,11 +98,11 @@ QUnit.test("Partners invited most frequently by the current user come first", as
 
     const { openDiscuss } = await start();
     await openDiscuss();
-    await click(".o-mail-DiscussCategoryItem:contains(Visitor #1)");
+    await click(".o-mail-DiscussSidebarChannel:contains(Visitor #1)");
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(John) input");
     await click("button:contains(Invite)");
-    await click(".o-mail-DiscussCategoryItem:contains(Visitor #2)");
+    await click(".o-mail-DiscussSidebarChannel:contains(Visitor #2)");
     await click("button[title='Add Users']");
     const partnerSuggestions = document.querySelectorAll(".o-discuss-ChannelInvitation-selectable");
     assert.ok(partnerSuggestions[0].textContent.includes("John"));

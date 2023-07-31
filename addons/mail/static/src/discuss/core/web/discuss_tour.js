@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add("mail_tour", {
     sequence: 80,
     steps: () => [
         {
-            trigger: ".o-mail-DiscussCategory-channel .o-mail-DiscussCategory-add",
+            trigger: ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add",
             content: Markup(
                 _t(
                     "<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"
@@ -81,7 +81,7 @@ registry.category("web_tour.tours").add("mail_tour", {
             position: "bottom",
         },
         {
-            trigger: ".o-mail-DiscussCategory-chat .o-mail-DiscussCategory-add",
+            trigger: ".o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add",
             content: Markup(
                 _t(
                     "<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"

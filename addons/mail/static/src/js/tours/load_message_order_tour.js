@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("mail.load_message_order", {
     test: true,
     steps: () => [
         {
-            trigger: ".o-mail-DiscussCategoryItem:contains(MyTestChannel)",
+            trigger: ".o-mail-DiscussSidebarChannel:contains(MyTestChannel)",
             run: "click",
         },
         {

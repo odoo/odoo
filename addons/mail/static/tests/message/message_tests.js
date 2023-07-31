@@ -690,11 +690,11 @@ QUnit.test("redirect to author (open chat)", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId_1);
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem.o-active:contains(General)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(General)");
     assert.containsOnce($, ".o-mail-Discuss-content .o-mail-Message-avatarContainer img");
 
     await click(".o-mail-Discuss-content .o-mail-Message-avatarContainer img");
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem.o-active:contains(Demo)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Demo)");
 });
 
 QUnit.test("open chat from avatar should not work on self-authored messages", async (assert) => {
@@ -720,7 +720,7 @@ QUnit.test("open chat from avatar should not work on self-authored messages", as
     // try to click on self, to test it doesn't work
     click(".o-mail-Message-avatar").catch(() => {});
     await nextAnimationFrame();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem.o-active:contains(Mitchell Admin)");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel.o-active:contains(Mitchell Admin)");
     assert.containsNone($, ".breadcrumb:contains(Mitchell Admin)"); // should not open form view neither
 });
 
@@ -1500,7 +1500,7 @@ QUnit.test("Mark as unread", async (assert) => {
     await click("[title='Expand']");
     await click("[title='Mark as Unread']");
     assert.containsOnce($, ".o-mail-Thread-newMessage");
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem .badge:contains(1)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel .badge:contains(1)");
 });
 
 QUnit.test("Avatar of unknown author", async (assert) => {

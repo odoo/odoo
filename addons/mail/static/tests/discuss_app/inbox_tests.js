@@ -404,13 +404,13 @@ QUnit.test("inbox: mark all messages as read", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce($, "button:contains(Inbox) .badge:contains(2)");
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(General) .badge:contains(2)");
+    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(General) .badge:contains(2)");
     assert.containsN($, ".o-mail-Discuss-content .o-mail-Message", 2);
     assert.notOk($("button:contains(Mark all read)")[0].disabled);
 
     await click(".o-mail-Discuss-header button:contains(Mark all read)");
     assert.containsNone($, "button:contains(Inbox) .badge");
-    assert.containsNone($, ".o-mail-DiscussCategoryItem:contains(General) .badge");
+    assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(General) .badge");
     assert.containsNone($, ".o-mail-Message");
     assert.ok($("button:contains(Mark all read)")[0].disabled);
 });
@@ -501,7 +501,7 @@ QUnit.test("inbox messages are never squashed", async (assert) => {
     assert.containsN($, ".o-mail-Message", 2);
     assert.doesNotHaveClass($(".o-mail-Message:contains(body1)"), "o-squashed");
     assert.doesNotHaveClass($(".o-mail-Message:contains(body2)"), "o-squashed");
-    await click(".o-mail-DiscussCategoryItem:contains(test)");
+    await click(".o-mail-DiscussSidebarChannel:contains(test)");
     assert.hasClass($(".o-mail-Message:contains(body2)"), "o-squashed");
 });
 
