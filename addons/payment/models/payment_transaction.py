@@ -970,6 +970,12 @@ class PaymentTransaction(models.Model):
                 self.env.cr.commit()
             except psycopg2.OperationalError:
                 self.env.cr.rollback()  # Rollback and try later.
+            except ValidationError as e:
+                _logger.warning(
+                    "encountered an error while post-processing transaction with reference %s:\n%s",
+                    tx.reference, e
+                )
+                self.env.cr.rollback()
             except Exception as e:
                 _logger.exception(
                     "encountered an error while post-processing transaction with reference %s:\n%s",
