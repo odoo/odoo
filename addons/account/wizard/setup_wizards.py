@@ -3,7 +3,7 @@
 
 from datetime import date, timedelta
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 
 
@@ -146,3 +146,16 @@ class SetupBarBankConfigWizard(models.TransientModel):
         extension hook in account_bank_statement_import.
         """
         self.linked_journal_id.mark_bank_setup_as_done_action()
+        #self.update_template_and_reload_view()
+        import pdb; pdb.set_trace()
+        #self.linked_journal_id.unmark_bank_setup_as_done_action()
+'''
+    def update_template_and_reload_view(self):
+         # ... Code to update the QWeb template ...
+        # After updating the template, reload the view
+        self.reload_qweb_view(self.env, self.env.ref('account.onboarding_bank_account_step').id)
+
+    def reload_qweb_view(self, env, view_id):
+        # Call the `update` method of the `ir.qweb` service
+        env['ir.qweb'].update([view_id])
+        '''
