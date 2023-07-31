@@ -17,7 +17,7 @@ import {
     getRangePosition
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from 'web_editor.convertInline';
-import { loadJS, getBundle } from '@web/core/assets';
+import { getBundle } from '@web/core/assets';
 import {
     Component,
     useRef,
@@ -92,7 +92,6 @@ export class HtmlField extends Component {
                 this.cssReadonlyAsset = await getBundle(this.props.cssReadonlyAssetId);
             }
             if (this.props.cssEditAssetId || this.props.isInlineStyle) {
-                await loadJS('/web_editor/static/lib/html2canvas.js');
                 await getBundle(this.props.cssEditAssetId || 'web_editor.assets_edit_html_field');
             }
         });
