@@ -37,7 +37,7 @@ export class Chrome extends Component {
     // GETTERS //
 
     get showCashMoveButton() {
-        return Boolean(this.pos.globalState?.config?.cash_control);
+        return Boolean(this.pos.globalState?.config?.cash_control && this.pos.globalState?.config?.has_cash_move_permission);
     }
     /**
      * Unmounts the tempScreen on error and dispatches the error in a separate
