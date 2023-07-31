@@ -4,7 +4,7 @@
 from odoo.tests import common
 
 
-class ChatbotCase(common.TransactionCase):
+class ChatbotCase(common.HttpCase):
 
     @classmethod
     def setUpClass(cls):

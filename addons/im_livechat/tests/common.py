@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import HttpCase
 
 
-class TestImLivechatCommon(TransactionCase):
+class TestImLivechatCommon(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.password = 'Pl1bhD@2!kXZ'
         cls.operators = cls.env['res.users'].create([{
             'name': 'Michel',
             'login': 'michel',
+            'password': cls.password,
             'livechat_username': "Michel Operator",
             'email': 'michel@example.com',
         }, {

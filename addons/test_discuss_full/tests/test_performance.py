@@ -3,17 +3,19 @@
 
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from unittest.mock import patch, PropertyMock
 
 from odoo import Command
-from odoo.tests.common import users, tagged, TransactionCase, warmup
+from odoo.tests.common import users, tagged, HttpCase, warmup
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 @tagged('post_install', '-at_install')
-class TestDiscussFullPerformance(TransactionCase):
+class TestDiscussFullPerformance(HttpCase):
     def setUp(self):
         super().setUp()
         self.group_user = self.env.ref('base.group_user')
+        self.password = 'Pl1bhD@2!kXZ'
         self.users = self.env['res.users'].create([
             {
                 'email': 'e.e@example.com',
@@ -24,7 +26,7 @@ class TestDiscussFullPerformance(TransactionCase):
                 'odoobot_state': 'disabled',
                 'signature': '--\nErnest',
             },
-            {'name': 'test1', 'login': 'test1', 'email': 'test1@example.com'},
+            {'name': 'test1', 'login': 'test1', 'password': self.password, 'email': 'test1@example.com', 'country_id': self.env.ref('base.in').id},
             {'name': 'test2', 'login': 'test2', 'email': 'test2@example.com'},
             {'name': 'test3', 'login': 'test3'},
             {'name': 'test4', 'login': 'test4'},
@@ -82,9 +84,20 @@ class TestDiscussFullPerformance(TransactionCase):
         # create livechats
         im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env['bus.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
-        self.channel_livechat_1 = self.env['discuss.channel'].browse(im_livechat_channel._open_livechat_discuss_channel(anonymous_name='anon 1', previous_operator_id=self.users[0].partner_id.id, user_id=self.users[1].id, country_id=self.env.ref('base.in').id)['id'])
+        self.authenticate('test1', self.password)
+        self.channel_livechat_1 = self.env['discuss.channel'].browse(self.make_jsonrpc_request("/im_livechat/get_session", {
+            'anonymous_name': 'anon 1',
+            'channel_id': im_livechat_channel.id,
+            'previous_operator_id': self.users[0].partner_id.id,
+        })['id'])
         self.channel_livechat_1.with_user(self.users[1]).message_post(body="test")
-        self.channel_livechat_2 = self.env['discuss.channel'].browse(im_livechat_channel.with_user(self.env.ref('base.public_user'))._open_livechat_discuss_channel(anonymous_name='anon 2', previous_operator_id=self.users[0].partner_id.id, country_id=self.env.ref('base.be').id)['id'])
+        self.authenticate(None, None)
+        with patch("odoo.http.GeoIP.country_code", new_callable=PropertyMock(return_value=self.env.ref('base.be').code)):
+            self.channel_livechat_2 = self.env['discuss.channel'].browse(self.make_jsonrpc_request("/im_livechat/get_session", {
+                'anonymous_name': 'anon 2',
+                'channel_id': im_livechat_channel.id,
+                'previous_operator_id': self.users[0].partner_id.id,
+            })['id'])
         self.channel_livechat_2.with_user(self.env.ref('base.public_user')).sudo().message_post(body="test")
         # add needaction
         self.users[0].notification_type = 'inbox'
@@ -830,7 +843,11 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'persona': {
                                     'partner': {
                                         'active': True,
-                                        'country': [('clear',)],
+                                        'country': {
+                                            'code': 'IN',
+                                            'id': self.env.ref('base.in').id,
+                                            'name': 'India',
+                                        },
                                         'id': self.users[1].partner_id.id,
                                         'is_bot': False,
                                         'is_public': False,
@@ -844,7 +861,7 @@ class TestDiscussFullPerformance(TransactionCase):
                         'memberCount': 2,
                         'message_unread_counter': 0,
                     },
-                    'create_uid': self.env.user.id,
+                    'create_uid': self.users[1].id,
                     'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
@@ -1016,4 +1033,4 @@ class TestDiscussFullPerformance(TransactionCase):
             Returns the expected query count.
             The point of having a separate getter is to allow it to be overriden.
         """
-        return 68
+        return 71

@@ -81,24 +81,13 @@ class TestPortalControllers(TestPortal):
         """Test retrieving chatter messages through the portal controller"""
         self.authenticate(None, None)
         message_fetch_url = '/mail/chatter_fetch'
-        payload = json.dumps({
-            'jsonrpc': '2.0',
-            'method': 'call',
-            'id': 0,
-            'params': {
+
+        def get_chatter_message_count():
+            return self.make_jsonrpc_request(message_fetch_url, {
                 'res_model': 'mail.test.portal',
                 'res_id': self.record_portal.id,
                 'token': self.record_portal.access_token,
-            },
-        })
-
-        def get_chatter_message_count():
-            res = self.url_open(
-                url=message_fetch_url,
-                data=payload,
-                headers={'Content-Type': 'application/json'}
-            )
-            return res.json().get('result', {}).get('message_count', 0)
+            }).get('message_count', 0)
 
         self.assertEqual(get_chatter_message_count(), 0)
 

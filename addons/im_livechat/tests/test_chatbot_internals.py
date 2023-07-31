@@ -44,8 +44,11 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                          "Only step 'step_no_one_available' should be flagged as forward operator child.")
 
     def test_chatbot_steps(self):
-        channel_info = self.livechat_channel._open_livechat_discuss_channel(
-            anonymous_name='Test Visitor', chatbot_script=self.chatbot_script)
+        channel_info = self.make_jsonrpc_request("/im_livechat/get_session", {
+            'anonymous_name': 'Test Visitor',
+            'chatbot_script_id': self.chatbot_script.id,
+            'channel_id': self.livechat_channel.id,
+        })
         discuss_channel = self.env['discuss.channel'].browse(channel_info['id'])
 
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_dispatch)

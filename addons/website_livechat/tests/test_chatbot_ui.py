@@ -7,7 +7,7 @@ from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 
 
 @tests.tagged('post_install', '-at_install')
-class TestLivechatChatbotUI(tests.HttpCase, TestLivechatCommon, ChatbotCase):
+class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
     def setUp(self):
         super().setUp()
         self.env['im_livechat.channel'].search([

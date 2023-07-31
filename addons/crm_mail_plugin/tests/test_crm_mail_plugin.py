@@ -15,7 +15,7 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
             {"name": "Partner 2"},
         ])
 
-        result = self._make_rpc_call("/mail_plugin/partner/get", {"partner_id": partner.id})
+        result = self.make_jsonrpc_request("/mail_plugin/partner/get", {"partner_id": partner.id})
 
         self.assertNotIn("leads", result,
             msg="The user has no access to crm.lead, the leads section should not be visible")
@@ -27,7 +27,7 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
             {"name": "Lead Partner 2", "partner_id": partner_2.id},
         ])
 
-        result = self._make_rpc_call("/mail_plugin/partner/get", {"partner_id": partner.id})
+        result = self.make_jsonrpc_request("/mail_plugin/partner/get", {"partner_id": partner.id})
 
         self.assertIn(
             "leads",
@@ -71,7 +71,7 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
             'email_subject': 'test subject',
         }
 
-        result = self._make_rpc_call('/mail_plugin/lead/create', params)
+        result = self.make_jsonrpc_request('/mail_plugin/lead/create', params)
 
         # Check that the created lead record has the correct company and return the lead_id
         self.assertIn(
@@ -87,27 +87,3 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
             company_b,
             msg='The created record should belong to company_B',
         )
-
-    def _make_rpc_call(self, url, params):
-        """
-        Makes an RPC call to the specified URL with the given parameters, and returns the 'result' key from the response.
-
-        :param params (dict): A dictionary containing the parameters to send in the RPC call.
-        :param url (str): The URL to send the RPC call to.
-        :return (dict): The 'result' key from the response.
-        """
-
-        data = {
-            'id': 0,
-            'jsonrpc': '2.0',
-            'method': 'call',
-            'params': params,
-        }
-
-        response = self.url_open(
-            url,
-            data=json.dumps(data).encode(),
-            headers={'Content-Type': 'application/json'}
-        ).json()
-
-        return response['result']
