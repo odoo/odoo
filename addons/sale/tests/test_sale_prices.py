@@ -993,6 +993,9 @@ class TestSalePrices(SaleCommon):
         order.action_confirm()
         line = order.order_line
         quantity_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        expected_price_subtotal = line.price_unit * float_round(product_uom_qty, precision_digits=quantity_precision)
+        self.assertEqual(
+            line.product_uom_qty, float_round(product_uom_qty, precision_digits=quantity_precision))
+        expected_price_subtotal = line.currency_id.round(
+            line.price_unit * float_round(product_uom_qty, precision_digits=quantity_precision))
         self.assertAlmostEqual(line.price_subtotal, expected_price_subtotal)
         self.assertEqual(order.amount_total, order.tax_totals.get('amount_total'))
