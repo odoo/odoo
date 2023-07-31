@@ -124,7 +124,7 @@
                                     <field name="department_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     <field name="address_id"
                                         context="{'show_address': 1}"
-                                        options='{"always_reload": True, "highlight_first_line": True}'
+                                        options='{"highlight_first_line": True}'
                                         attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                 </group>
                                 <group name="managers" string="Approvers" class="hide-group-if-empty">
