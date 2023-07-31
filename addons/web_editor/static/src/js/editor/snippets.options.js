@@ -1638,6 +1638,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         const wysiwyg = this.getParent().options.wysiwyg;
         if (wysiwyg) {
             options.document = this.$target[0].ownerDocument;
+            options.getTemplate = wysiwyg.getColorpickerTemplate.bind(wysiwyg);
         }
         if (this.colorPaletteWrapper) {
             this.colorPaletteWrapper.destroy();
