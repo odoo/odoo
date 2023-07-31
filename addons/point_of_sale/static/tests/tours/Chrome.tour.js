@@ -15,9 +15,13 @@ registry
         url: "/pos/ui", 
         steps: () => {
             startSteps();
-            
-            // Order 1 is at Product Screen
+
             ProductScreen.do.confirmOpeningPopup();
+            Chrome.do.clickMenuButton();
+            Chrome.check.isCashMoveButtonShown();
+            Chrome.do.clickMenuButton();
+
+            // Order 1 is at Product Screen
             ProductScreen.do.clickHomeCategory();
             ProductScreen.exec.addOrderline("Desk Pad", "1", "2", "2.0");
             Chrome.do.clickMenuButton();
