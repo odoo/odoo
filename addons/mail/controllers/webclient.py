@@ -4,10 +4,12 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class WebclientController(http.Controller):
     @http.route("/mail/init_messaging", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
     def mail_init_messaging(self):
         if not request.env.user.sudo()._is_public():
             return request.env.user.sudo(request.env.user.has_group("base.group_portal"))._init_messaging()

@@ -4,6 +4,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class BinaryController(http.Controller):
@@ -13,6 +14,7 @@ class BinaryController(http.Controller):
         type="http",
         auth="public",
     )
+    @add_guest_to_context
     def discuss_channel_partner_avatar_128(self, channel_id, partner_id, **kwargs):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=channel_id)
         partner_sudo = channel_member_sudo.env["res.partner"].browse(partner_id).exists()
@@ -35,6 +37,7 @@ class BinaryController(http.Controller):
     @http.route(
         "/discuss/channel/<int:channel_id>/guest/<int:guest_id>/avatar_128", methods=["GET"], type="http", auth="public"
     )
+    @add_guest_to_context
     def discuss_channel_guest_avatar_128(self, channel_id, guest_id, **kwargs):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=channel_id)
         guest_sudo = channel_member_sudo.env["mail.guest"].browse(guest_id).exists()
@@ -57,6 +60,7 @@ class BinaryController(http.Controller):
     @http.route(
         "/discuss/channel/<int:channel_id>/attachment/<int:attachment_id>", methods=["GET"], type="http", auth="public"
     )
+    @add_guest_to_context
     def discuss_channel_attachment(self, channel_id, attachment_id, download=None, **kwargs):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         domain = [
@@ -75,6 +79,7 @@ class BinaryController(http.Controller):
         type="http",
         auth="public",
     )
+    @add_guest_to_context
     def discuss_channel_avatar_128(self, channel_id, **kwargs):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=channel_id)
         domain = [("id", "=", channel_id)]
@@ -96,6 +101,7 @@ class BinaryController(http.Controller):
         type="http",
         auth="public",
     )
+    @add_guest_to_context
     def fetch_image(self, channel_id, attachment_id, width=0, height=0, **kwargs):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=channel_id)
         domain = [
