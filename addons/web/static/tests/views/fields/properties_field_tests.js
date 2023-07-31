@@ -4,6 +4,7 @@ import {
     click,
     clickDiscard,
     clickSave,
+    dragAndDrop,
     editInput,
     editSelect,
     getFixture,
@@ -486,9 +487,16 @@ QUnit.module("Fields", (hooks) => {
         const type = popover.querySelector(".o_field_property_definition_type input");
         assert.strictEqual(type.value, "Selection");
 
+        const getOptions = () => {
+            return popover.querySelectorAll(".o_field_property_selection_option");
+        };
+        const getOptionsValues = () => {
+            return [...getOptions()].map((option) => option.querySelector("input").value);
+        };
+
         // Create a new selection option
         await click(target, ".o_field_property_selection .fa-plus");
-        let options = popover.querySelectorAll(".o_field_property_selection_option");
+        let options = getOptions();
         assert.strictEqual(options.length, 4, "Should have added the new option");
         assert.strictEqual(
             document.activeElement,
@@ -511,7 +519,7 @@ QUnit.module("Fields", (hooks) => {
         );
         await nextTick();
 
-        options = popover.querySelectorAll(".o_field_property_selection_option");
+        options = getOptions();
         assert.strictEqual(options.length, 5, "Should have added the new option on Enter");
         assert.strictEqual(
             document.activeElement,
@@ -530,12 +538,12 @@ QUnit.module("Fields", (hooks) => {
 
         await nextTick();
 
+        options = getOptions();
         assert.strictEqual(
             document.activeElement,
             options[3].querySelector("input"),
             "Should focus the previous option"
         );
-        options = popover.querySelectorAll(".o_field_property_selection_option");
         assert.strictEqual(
             options.length,
             4,
@@ -554,19 +562,55 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
 
         assert.strictEqual(document.activeElement, options[2].querySelector("input"));
-        options = popover.querySelectorAll(".o_field_property_selection_option");
-        assert.strictEqual(options.length, 4, "Should not remove any options");
+        assert.strictEqual(getOptions().length, 4, "Should not remove any options");
 
         // Remove the second option
         await click(target, ".o_field_property_selection_option:nth-child(2) .fa-trash-o");
-        options = popover.querySelectorAll(".o_field_property_selection_option");
-        assert.strictEqual(options.length, 3, "Should have removed the second option");
-        const optionValues = [...options].map((option) => option.querySelector("input").value);
         assert.deepEqual(
-            optionValues,
+            getOptionsValues(),
             ["A", "C", "New option"],
             "Should have removed the second option"
         );
+
+        // focus should be in option C
+        assert.strictEqual(document.activeElement, getOptions()[1].querySelector("input"));
+        // test that pressing 'Enter' inserts a new option after the one currently focused (and not last).
+        await triggerEvent(
+            target,
+            ".o_field_property_selection_option:nth-child(2) input",
+            "keydown",
+            { key: "Enter" }
+        );
+        await editInput(
+            target,
+            ".o_field_property_selection_option:nth-child(3) input",
+            "New option 2"
+        );
+        assert.deepEqual(
+            getOptionsValues(),
+            ["A", "C", "New option 2", "New option"],
+            "Should have added a new option at the correct spot"
+        );
+
+        await nextTick();
+        const getOptionDraggableElement = (index) => {
+            return target.querySelector(
+                `.o_field_property_selection_option:nth-child(${index + 1})` +
+                    " .o_field_property_selection_drag"
+            );
+        };
+
+        await dragAndDrop(getOptionDraggableElement(0), getOptionDraggableElement(2));
+        assert.deepEqual(getOptionsValues(), ["C", "New option 2", "A", "New option"]);
+
+        await dragAndDrop(getOptionDraggableElement(3), getOptionDraggableElement(0));
+        assert.deepEqual(getOptionsValues(), ["New option", "C", "New option 2", "A"]);
+
+        // create an empty option and move it
+        await click(target, ".o_field_property_selection > div > .btn-link");
+        assert.deepEqual(getOptionsValues(), ["New option", "C", "New option 2", "A", ""]);
+        await dragAndDrop(getOptionDraggableElement(4), getOptionDraggableElement(1));
+        assert.deepEqual(getOptionsValues(), ["New option", "", "C", "New option 2", "A"]);
     });
 
     /**
