@@ -19,12 +19,14 @@ export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
         this.declinedCount = this.props.record.data.declined_count;
         this.uncertainCount = this.attendeesCount - this.acceptedCount - this.declinedCount;
 
-        useEffect(() => {
-            const popover = document.querySelector(".o_field_many2manyattendeeexpandable")
-                .closest(".o_popover");
-            const targetElement = document.querySelector(`.fc-event[data-event-id="${this.props.record.resId}"]`);
-            reposition(targetElement, popover, null, { position: "right", margin: 0 });
-        }, () => [ this.state.expanded ]);
+        if (!this.env.isSmall) {
+            useEffect(() => {
+                const popover = document.querySelector(".o_field_many2manyattendeeexpandable")
+                    .closest(".o_popover");
+                const targetElement = document.querySelector(`.fc-event[data-event-id="${this.props.record.resId}"]`);
+                reposition(targetElement, popover, null, { position: "right", margin: 0 });
+            }, () => [ this.state.expanded ]);
+        }
     }
 
     onExpanderClick() {
