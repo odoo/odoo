@@ -4,7 +4,7 @@ import { formatFloat } from "@web/views/fields/formatters";
 import { uuidv4 } from "@point_of_sale/utils";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
-import { formatDate, formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import { formatDate, formatDateTime, serializeDateTime, deserializeDate } from "@web/core/l10n/dates";
 import {
     roundDecimals as round_di,
     roundPrecision as round_pr,
@@ -227,8 +227,8 @@ export class Product extends PosModel {
         const categories = this.parent_category_ids.concat(this.categ.id);
         return (
             (!item.categ_id || categories.includes(item.categ_id[0])) &&
-            (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
-            (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
+            (!item.date_start || deserializeDate(item.date_start) <= date) &&
+            (!item.date_end || deserializeDate(item.date_end) >= date)
         );
     }
     // Port of _get_product_price on product.pricelist.
@@ -242,7 +242,7 @@ export class Product extends PosModel {
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
     get_price(pricelist, quantity, price_extra = 0, recurring = false) {
-        var date = moment();
+        const date = DateTime.now();
 
         // In case of nested pricelists, it is necessary that all pricelists are made available in
         // the POS. Display a basic alert to the user in the case where there is a pricelist item

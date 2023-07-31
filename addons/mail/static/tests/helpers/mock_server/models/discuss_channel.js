@@ -7,6 +7,7 @@ import { datetime_to_str } from "@web/legacy/js/core/time";
 import { assignDefined } from "@mail/utils/common/misc";
 import { formatDate } from "@web/core/l10n/dates";
 import { Command } from "@mail/../tests/helpers/command";
+const { DateTime } = luxon;
 
 patch(MockServer.prototype, "mail/models/discuss_channel", {
     async _performRPC(route, args) {
@@ -953,7 +954,7 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
      */
     _mockDiscussChannelWriteImage128(id) {
         this.pyEnv["discuss.channel"].write([id], {
-            avatarCacheKey: moment.utc().format("YYYYMMDDHHmmss"),
+            avatarCacheKey: DateTime.utc().toFormat("yyyyMMddHHmmss"),
         });
         const channel = this.pyEnv["discuss.channel"].searchRead([["id", "=", id]])[0];
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {

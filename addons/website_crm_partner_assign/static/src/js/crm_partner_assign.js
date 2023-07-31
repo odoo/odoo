@@ -4,6 +4,8 @@ import { sprintf } from "@web/core/utils/strings";
 import {_t} from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import time from "@web/legacy/js/core/time";
+import { parseDate, formatDate } from "@web/core/l10n/dates";
+const { DateTime } = luxon;
 
 publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.interested_partner_assign_form, .desinterested_partner_assign_form, .opp-stage-button, .new_opp_form)',
@@ -252,9 +254,10 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
             $('.edit_opp_form .activity_summary').val($selected.attr('activity_summary'));
         }
         if ($selected.attr('delay_count')) {
-            var now = moment();
-            var date = now.add(parseInt($selected.attr('delay_count')), $selected.attr('delay_unit'));
-            $('.edit_opp_form .activity_date_deadline').val(date.format(time.getLangDateFormat()));
+            const value = +$selected.attr('delay_count');
+            const unit = $selected.attr('delay_unit');
+            const date = DateTime.now().plus({ [unit]: value});
+            $('.edit_opp_form .activity_date_deadline').val( formatDate(date) );
         }
     },
     /**
@@ -277,9 +280,9 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
 
     _parse_date: function (value) {
         console.log(value);
-        var date = moment(value, time.getLangDateFormat(), true);
-        if (date.isValid() && date.year() >= 1900) {
-            return time.date_to_str(date.toDate());
+        var date = parseDate(value);
+        if (date.isValid && date.year >= 1900) {
+            return formatDate(date);
         }
         else {
             return false;

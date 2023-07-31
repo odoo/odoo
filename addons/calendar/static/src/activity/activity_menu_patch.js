@@ -2,8 +2,8 @@
 
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { patch } from "@web/core/utils/patch";
-import fieldUtils from "@web/legacy/js/fields/field_utils";
-import time from "@web/legacy/js/core/time";
+import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
+import { localization } from "@web/core/l10n/localization";
 
 patch(ActivityMenu.prototype, "calendar", {
     async fetchSystrayActivities() {
@@ -12,11 +12,8 @@ patch(ActivityMenu.prototype, "calendar", {
             if (group.type === "meeting") {
                 for (const meeting of group.meetings) {
                     if (meeting.start) {
-                        meeting.formattedStart = moment(
-                            fieldUtils.parse.datetime(meeting.start, false, { isUTC: true })
-                        )
-                            .local()
-                            .format(time.getLangTimeFormat());
+                        const date = deserializeDateTime(meeting.start);
+                        meeting.formattedStart = formatDateTime(date, { format: localization.timeFormat });
                     }
                 }
             }
