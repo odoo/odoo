@@ -393,3 +393,31 @@ export function useMessageToReplyTo() {
         },
     });
 }
+
+export function useSequential() {
+    let inProgress = false;
+    let nextFunction;
+    let nextResolve;
+    async function call() {
+        const resolve = nextResolve;
+        const func = nextFunction;
+        nextResolve = undefined;
+        nextFunction = undefined;
+        inProgress = true;
+        const data = await func();
+        inProgress = false;
+        resolve(data);
+        if (nextFunction && nextResolve) {
+            call();
+        }
+    }
+    return (func) => {
+        nextResolve?.();
+        const prom = new Promise((resolve) => (nextResolve = resolve));
+        nextFunction = func;
+        if (!inProgress) {
+            call();
+        }
+        return prom;
+    };
+}

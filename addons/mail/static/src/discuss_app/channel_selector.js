@@ -5,10 +5,11 @@ import { TagsList } from "@web/core/tags_list/tags_list";
 import { NavigableList } from "../composer/navigable_list";
 import { useService } from "@web/core/utils/hooks";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { Component, onMounted, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 import { cleanTerm } from "@mail/utils/format";
 import { createLocalId, isEventHandled, markEventHandled } from "@mail/utils/misc";
 import { _t } from "@web/core/l10n/translation";
+import { useSequential } from "@mail/utils/hooks";
 
 export class ChannelSelector extends Component {
     static components = { TagsList, NavigableList };
@@ -20,10 +21,23 @@ export class ChannelSelector extends Component {
         this.store = useStore();
         this.threadService = useState(useService("mail.thread"));
         this.personaService = useService("mail.persona");
-        this.orm = useService("orm");
+        this.sequential = useSequential();
+        this.orm = this.env.services.orm;
         this.state = useState({
             value: "",
             selectedPartners: [],
+            navigableListProps: {
+                anchorRef: undefined,
+                position: "bottom-fit",
+                onSelect: (ev, option) => this.onSelect(option),
+                placeholder: _t("Loading"),
+                optionTemplate:
+                    this.props.category.id === "channels"
+                        ? "discuss.ChannelSelector.channel"
+                        : "discuss.ChannelSelector.chat",
+                options: [],
+                isLoading: false,
+            },
         });
         this.inputRef = useRef("input");
         this.rootRef = useRef("root");
@@ -31,6 +45,25 @@ export class ChannelSelector extends Component {
             onMounted(() => this.inputRef.el.focus());
         }
         this.markEventHandled = markEventHandled;
+        useEffect(
+            () => {
+                this.state.navigableListProps.anchorRef = this.rootRef?.el;
+                this.state.navigableListProps.optionTemplate =
+                    this.props.category.id === "channels"
+                        ? "discuss.ChannelSelector.channel"
+                        : "discuss.ChannelSelector.chat";
+            },
+            () => [this.rootRef, this.props.category]
+        );
+        useEffect(
+            () => {
+                this.state.navigableListProps.isLoading = true;
+                this.fetchSuggestions().then(
+                    () => (this.state.navigableListProps.isLoading = false)
+                );
+            },
+            () => [this.state.value]
+        );
     }
 
     async fetchSuggestions() {
@@ -42,9 +75,15 @@ export class ChannelSelector extends Component {
                     ["name", "ilike", cleanedTerm],
                 ];
                 const fields = ["name"];
-                const results = await this.orm.searchRead("discuss.channel", domain, fields, {
-                    limit: 10,
-                });
+                const results = await this.sequential(() =>
+                    this.orm.searchRead("discuss.channel", domain, fields, {
+                        limit: 10,
+                    })
+                );
+                if (!results) {
+                    this.state.navigableListProps.options = [];
+                    return;
+                }
                 const choices = results.map((channel) => {
                     return {
                         channelId: channel.id,
@@ -57,14 +96,21 @@ export class ChannelSelector extends Component {
                     classList: "o-mail-ChannelSelector-suggestion",
                     label: cleanedTerm,
                 });
-                return choices;
+                this.state.navigableListProps.options = choices;
+                return;
             }
             if (this.props.category.id === "chats") {
-                const results = await this.orm.call("res.partner", "im_search", [
-                    cleanedTerm,
-                    10,
-                    this.state.selectedPartners,
-                ]);
+                const results = await this.sequential(() =>
+                    this.orm.call("res.partner", "im_search", [
+                        cleanedTerm,
+                        10,
+                        this.state.selectedPartners,
+                    ])
+                );
+                if (!results) {
+                    this.state.navigableListProps.options = [];
+                    return;
+                }
                 const suggestions = results.map((data) => {
                     this.personaService.insert({ ...data, type: "partner" });
                     return {
@@ -87,10 +133,12 @@ export class ChannelSelector extends Component {
                         unselectable: true,
                     });
                 }
-                return suggestions;
+                this.state.navigableListProps.options = suggestions;
+                return;
             }
         }
-        return [];
+        this.state.navigableListProps.options = [];
+        return;
     }
 
     onSelect(option) {
@@ -180,19 +228,5 @@ export class ChannelSelector extends Component {
             });
         }
         return res;
-    }
-
-    get navigableListProps() {
-        return {
-            anchorRef: this.rootRef.el,
-            position: "bottom-fit",
-            onSelect: (ev, option) => this.onSelect(option),
-            placeholder: _t("Loading"),
-            optionTemplate:
-                this.props.category.id === "channels"
-                    ? "discuss.ChannelSelector.channel"
-                    : "discuss.ChannelSelector.chat",
-            options: this.fetchSuggestions(),
-        };
     }
 }
