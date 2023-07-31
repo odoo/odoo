@@ -36,6 +36,8 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
      'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
      'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
+     # TODO: remove me in master; introduced in 16.4 as a stable fix.
+     'data-mimetype-before-conversion',
      'data-behavior-props', 'data-prop-name',  # knowledge commands
      ])
 SANITIZE_TAGS = {

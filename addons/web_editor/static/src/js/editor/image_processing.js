@@ -458,6 +458,11 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
         img.dataset.mimetype = original.mimetype;
+        // TODO: remove me in master; introduced in 16.4 as a stable fix.
+        // In master (V17), the name of this attribute will be replaced by
+        // `originalMimetype` and the current `originalMimetype` will be
+        // replaced by `mimetypeBeforeShape`.
+        img.dataset.mimetypeBeforeConversion = original.mimetype;
     }
 }
 
