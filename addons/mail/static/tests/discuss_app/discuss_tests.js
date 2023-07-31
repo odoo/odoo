@@ -17,7 +17,13 @@ import {
 } from "@mail/../tests/helpers/test_utils";
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { editInput, nextTick, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
+import {
+    editInput,
+    makeDeferred,
+    nextTick,
+    triggerEvent,
+    triggerHotkey,
+} from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss");
 
@@ -1897,5 +1903,48 @@ QUnit.test(
             $,
             ".o-mail-Chatter .o-mail-Message:contains(A needaction message to have it in messaging menu)"
         );
+    }
+);
+
+QUnit.test(
+    "Chats input should wait until the previous RPC is done before starting a new one",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const [partnerId1, partnerId2] = pyEnv["res.partner"].create([
+            { name: "Mario" },
+            { name: "Mama" },
+        ]);
+        pyEnv["res.users"].create([{ partner_id: partnerId1 }, { partner_id: partnerId2 }]);
+        const deferred1 = makeDeferred();
+        const deferred2 = makeDeferred();
+        const { openDiscuss } = await start({
+            async mockRPC(route, params) {
+                if (route === "/web/dataset/call_kw/res.partner/im_search") {
+                    const { args } = params;
+                    if (args[0] === "m") {
+                        assert.step("First RPC");
+                        await deferred1;
+                    }
+                    if (args[0] === "mar") {
+                        assert.step("Second RPC");
+                        await deferred2;
+                    }
+                }
+            },
+        });
+        await openDiscuss();
+        await click(".o-mail-DiscussSidebarCategory-add[title='Start a conversation']");
+        await insertText(".o-discuss-ChannelSelector input", "m");
+        await waitUntil(".o-mail-NavigableList-item:contains(Loading)");
+        await insertText(".o-discuss-ChannelSelector input", "a");
+        await insertText(".o-discuss-ChannelSelector input", "r");
+        deferred1.resolve();
+        assert.verifySteps(["First RPC"]);
+        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
+        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mama)");
+        deferred2.resolve();
+        assert.verifySteps(["Second RPC"]);
+        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mama)", 0);
+        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
     }
 );
