@@ -49,6 +49,7 @@ var _t = core._t;
 const _lt = core._lt;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const descendants = OdooEditorLib.descendants;
+const { DateTime } = luxon;
 
 /**
  * @param {HTMLElement} el
@@ -1849,7 +1850,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      */
     init: function () {
         this._super(...arguments);
-        this._value = moment().unix().toString();
+        this._value = DateTime.now().toUnixInteger().toString();
         this.__libInput = 0;
     },
     /**

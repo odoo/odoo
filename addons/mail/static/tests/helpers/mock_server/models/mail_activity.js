@@ -3,7 +3,7 @@
 import { sortBy } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
-import { serializeDate } from "@web/core/l10n/dates";
+import { serializeDate, deserializeDate } from "@web/core/l10n/dates";
 
 const { DateTime} = luxon;
 
@@ -140,7 +140,7 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
             group.activity_type_id = group.activity_type_id[0];
             let minDate;
             activites.forEach(function (activity) {
-                if (!minDate || moment(activity.date_deadline) < moment(minDate)) {
+                if (!minDate || deserializeDate(activity.date_deadline) < deserializeDate(minDate)) {
                     minDate = activity.date_deadline;
                 }
             });
@@ -149,7 +149,7 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
             let state;
             if (group.date_deadline === serializeDate(DateTime.now())) {
                 state = "today";
-            } else if (moment(group.date_deadline) > moment()) {
+            } else if (deserializeDate(group.date_deadline) > DateTime.now()) {
                 state = "planned";
             } else {
                 state = "overdue";
@@ -183,7 +183,7 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
             }),
             activity_res_ids: sortBy(
                 records.map((x) => x.id),
-                (id) => moment(resIdToDeadline[id])
+                (id) => deserializeDate(resIdToDeadline[id])
             ),
             grouped_activities: groupedActivities,
         };

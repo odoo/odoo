@@ -3,7 +3,7 @@
 import { Order } from "@point_of_sale/app/store/models";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, deserializeDate } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _lt } from "@web/core/l10n/translation";
 
@@ -333,7 +333,7 @@ export class TicketScreen extends Component {
         return this._getOrderList().filter(predicate);
     }
     getDate(order) {
-        return moment(order.validation_date).format("YYYY-MM-DD hh:mm A");
+        return deserializeDate(order.validation_date).toFormat("yyyy-MM-dd HH:mm a");
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.get_total_with_tax());
@@ -580,7 +580,7 @@ export class TicketScreen extends Component {
                 modelField: "pos_reference",
             },
             DATE: {
-                repr: (order) => moment(order.creation_date).format("YYYY-MM-DD hh:mm A"),
+                repr: (order) => deserializeDate(order.creation_date).toFormat("yyyy-MM-dd HH:mm a"),
                 displayName: this.env._t("Date"),
                 modelField: "date_order",
             },
