@@ -6,7 +6,10 @@
             <div class="w-100">
                 <div
                     t-foreach="optionsVisible" t-as="option" t-key="option[0]"
-                    class="o_field_property_selection_option d-flex flex-row align-items-center justify-content-between mb-2 rounded">
+                    class="o_field_property_selection_option d-flex flex-row align-items-center justify-content-between mb-2 rounded"
+                    t-att-option-name="option[0]">
+                    <i t-if="!props.readonly and props.canChangeDefinition"
+                        class="o_field_property_selection_drag oi oi-draggable ui-sortable-handle me-2 text-center"/>
                     <span t-if="props.readonly" t-out="option[1]"/>
                     <input
                         t-else=""
@@ -35,7 +38,7 @@
                 <button
                     t-if="!props.readonly"
                     class="btn btn-link btn-sm"
-                    t-on-click="onOptionCreate"
+                    t-on-click="() => this.onOptionCreate(this.options.length)"
                     t-ref="addButton">
                     <i class="fa fa-plus"/>
                     Add a Value
