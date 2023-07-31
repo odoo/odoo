@@ -24,7 +24,8 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         foreign_employee = self.env['hr.employee'].create({
             'name': 'foreign_employee',
             'company_id': foreign_company.id,
-            'work_contact_id': foreign_partner.id
+            'work_contact_id': foreign_partner.id,
+            'work_email': 'email@email',
         })
 
         expense = self.env['hr.expense'].create({
