@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
+from collections import defaultdict
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, RedirectWarning
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
@@ -181,6 +183,20 @@ class Task(models.Model):
     def _get_timesheet(self):
         # Is override in sale_timesheet
         return self.timesheet_ids
+
+    def _get_timesheet_report_data(self):
+        subtask_ids_per_task_id = self._get_subtask_ids_per_task_id()
+        subtasks = self.browse(set.union(set(), *subtask_ids_per_task_id.values()))
+        timesheets_read_group = self.env['account.analytic.line']._read_group(
+            [('task_id', 'in', (self | subtasks).ids)],
+            ['task_id'],
+            ['id:recordset'],
+        )
+        timesheets_per_task = dict(timesheets_read_group)
+        return {
+            'subtask_ids_per_task_id': subtask_ids_per_task_id,
+            'timesheets_per_task': timesheets_per_task,
+        }
 
     @api.depends('allow_timesheets', 'allocated_hours', 'encode_uom_in_days', 'remaining_hours')
     @api.depends_context('hr_timesheet_display_remaining_hours')
