@@ -1,17 +1,16 @@
 /** @odoo-module **/
-import FieldRegistry from '@web/legacy/js/fields/field_registry';
-import basic_fields from '@web/legacy/js/fields/basic_fields';
 
-var FieldFloat = basic_fields.FieldFloat;
+import { registry } from "@web/core/registry";
+import { floatField, FloatField } from "@web/views/fields/float/float_field";
 
-var FloatWithoutTrailingZeros = FieldFloat.extend({
-    _renderReadonly: function () {
-        var value = this._formatValue(this.value);
-        var parsed_value = parseFloat(value);
-        value = parsed_value.toString().replace(/\.0+$/, '');
-        this.$el.text(value);
+const fieldRegistry = registry.category("fields");
+
+class FloatWithoutTrailingZeros extends FloatField {
+    get formattedValue() {
+        return super.formattedValue.replace(/\.0+$/, '');
     }
-});
+}
 
-FieldRegistry.add('float_without_trailing_zeros', FloatWithoutTrailingZeros);
+const floatWithoutTrailingZeros = { ...floatField, component: FloatWithoutTrailingZeros };
 
+fieldRegistry.add("float_without_trailing_zeros", floatWithoutTrailingZeros);
