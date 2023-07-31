@@ -89,14 +89,28 @@ class ProgressBarState {
                 color: "200",
             });
 
-            if (
-                this.activeBars[group.value] &&
-                bars.find((b) => b.value === this.activeBars[group.value].value).count === 0
-            ) {
-                group.applyFilter(undefined).then(() => {
-                    delete this.activeBars[group.value];
-                    group.model.notify();
-                });
+            // Update activeBars count and aggreagates
+            if (this.activeBars[group.value]) {
+                this.activeBars[group.value].count = bars.find(
+                    (x) => x.value === this.activeBars[group.value].value
+                ).count;
+
+                if (this.activeBars[group.value].count === 0) {
+                    group.applyFilter(undefined).then(() => {
+                        delete this.activeBars[group.value];
+                        group.model.notify();
+                    });
+                }
+
+                if (this._aggregateFields.length) {
+                    //recompute the aggregates is not necessary
+                    //the web_read_group was already done with the correct domain (containing the applied filter)
+                    this.activeBars[group.value].aggregates = _findGroup(
+                        this._aggregateValues,
+                        group.groupByField,
+                        group.value
+                    );
+                }
             }
 
             const self = this;
@@ -164,17 +178,16 @@ class ProgressBarState {
             })
         );
         if (this._aggregateFields.length) {
-            proms.push(this._updateAggregateGroup(group, nextActiveBar));
+            proms.push(this._updateAggregateGroup(group, bars, nextActiveBar));
         }
         await Promise.all(proms);
         this.activeBars[group.value] = nextActiveBar;
     }
 
-    _updateAggregateGroup(group, activeBar) {
-        const groupInfo = this.getGroupInfo(group);
+    _updateAggregateGroup(group, bars, activeBar) {
         const filterDomain = _createFilterDomain(
             this.progressAttributes.fieldName,
-            groupInfo.bars,
+            bars,
             activeBar.value
         );
         const { context, groupBy, resModel } = this.model.root;
@@ -214,7 +227,8 @@ class ProgressBarState {
 
     updateAggreagteGroup(group) {
         if (group && this.activeBars[group.value]) {
-            this._updateAggregateGroup(group, this.activeBars[group.value]);
+            const { bars } = this.getGroupInfo(group);
+            this._updateAggregateGroup(group, bars, this.activeBars[group.value]);
         }
     }
 
@@ -294,6 +308,7 @@ class ProgressBarState {
                 context,
             });
             this._groupsInfo = {};
+            this._aggregateValues = [];
             this._pbCounts = res;
         }
     }
