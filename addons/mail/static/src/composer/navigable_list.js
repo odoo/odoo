@@ -12,21 +12,21 @@ export class NavigableList extends Component {
     static components = { ImStatus };
     static template = "mail.NavigableList";
     static props = {
-        anchorRef: {},
+        anchorRef: { optional: true },
         class: { type: String, optional: true },
         onSelect: { type: Function },
-        options: { type: [Array, Promise] },
+        options: { type: Array },
         optionTemplate: { type: String, optional: true },
         placeholder: { type: String, optional: true },
         position: { type: String, optional: true },
+        isLoading: { type: Boolean, optional: true },
     };
-    static defaultProps = { position: "bottom" };
+    static defaultProps = { position: "bottom", isLoading: false };
 
     setup() {
         this.rootRef = useRef("root");
         this.state = useState({
             activeOption: null,
-            isLoading: false,
             open: false,
             options: [],
         });
@@ -59,17 +59,13 @@ export class NavigableList extends Component {
     }
 
     get show() {
-        return Boolean(this.state.open && (this.state.isLoading || this.state.options.length));
+        return Boolean(this.state.open && (this.props.isLoading || this.state.options.length));
     }
 
     open() {
-        if (this.state.isLoading) {
-            return;
-        }
-        this.load().then(() => {
-            this.state.open = true;
-            this.navigate("first");
-        });
+        this.state.open = true;
+        this.load();
+        this.navigate("first");
     }
 
     close() {
@@ -77,26 +73,14 @@ export class NavigableList extends Component {
         this.state.activeOption = null;
     }
 
-    async load() {
+    load() {
         this.state.options = [];
         const makeOption = (opt) => {
             return Object.assign(Object.create(opt), {
                 id: this.state.options.length,
             });
         };
-        if (this.props.options instanceof Promise) {
-            this.state.isLoading = true;
-            return this.props.options.then((opts) => {
-                opts.forEach((opt) => this.state.options.push(makeOption(opt)));
-                this.state.isLoading = false;
-            });
-        }
-        if (this.props.options instanceof Array) {
-            if (this.props.options.length === 0) {
-                return;
-            }
-            this.props.options.forEach((opt) => this.state.options.push(makeOption(opt)));
-        }
+        this.props.options.forEach((opt) => this.state.options.push(makeOption(opt)));
     }
 
     isActiveOption(option) {

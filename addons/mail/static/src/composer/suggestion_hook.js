@@ -1,10 +1,12 @@
 /* @odoo-module */
 
+import { useSequential } from "@mail/utils/hooks";
 import { useComponent, useEffect, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export function useSuggestion() {
     const comp = useComponent();
+    const sequential = useSequential();
     /** @type {import("@mail/composer/suggestion_service").SuggestionService} */
     const suggestionService = useService("mail.suggestion");
     const self = {
@@ -70,10 +72,6 @@ export function useSuggestion() {
         get thread() {
             return comp.props.composer.thread || comp.props.composer.message.originThread;
         },
-        fetch: {
-            inProgress: false,
-            rpcFunction: undefined,
-        },
         insert(option) {
             const cursorPosition = comp.props.composer.selection.start;
             const content = comp.props.composer.textInputContent;
@@ -95,19 +93,6 @@ export function useSuggestion() {
             comp.props.composer.selection.start = textLeft.length + recordReplacement.length + 1;
             comp.props.composer.selection.end = textLeft.length + recordReplacement.length + 1;
             comp.props.composer.forceCursorMove = true;
-        },
-        async process(func) {
-            if (self.fetch.inProgress) {
-                self.fetch.rpcFunction = func;
-                return;
-            }
-            self.fetch.inProgress = true;
-            self.fetch.rpcFunction = undefined;
-            await func();
-            self.fetch.inProgress = false;
-            if (self.fetch.rpcFunction) {
-                self.process(self.fetch.rpcFunction);
-            }
         },
         search: {
             delimiter: undefined,
@@ -146,7 +131,7 @@ export function useSuggestion() {
     useEffect(
         () => {
             self.update();
-            self.process(async () => {
+            sequential(async () => {
                 if (self.search.position === undefined || !self.search.delimiter) {
                     return; // ignore obsolete call
                 }
