@@ -1652,6 +1652,7 @@ class PosSession(models.Model):
             'account.cash.rounding',
             'pos.payment.method',
             'account.fiscal.position',
+            'op.student',
         ]
 
         return models_to_load
@@ -1815,6 +1816,19 @@ class PosSession(models.Model):
         # might return a partner id that is not accessible.
         params['search_params']['domain'] = [('id', 'in', partner_ids)]
         return self.env['res.partner'].search_read(**params['search_params'])
+
+    def _loader_params_op_student(self):
+        return {
+            'search_params': {
+                'domain': self._get_partners_domain(),
+                'fields': [
+                    'partner_id', 'student_card_number'
+                ],
+            },
+        }
+
+    def _get_pos_ui_op_student(self, params):
+        return self.env['op.student'].search_read(**params['search_params'])
 
     def _loader_params_stock_picking_type(self):
         return {

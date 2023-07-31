@@ -99,6 +99,7 @@ class PosGlobalState extends PosModel {
         this.company = null;
         this.user = null;
         this.partners = [];
+        this.students = [];
         this.taxes = [];
         this.pos_session = null;
         this.config = null;
@@ -192,6 +193,7 @@ class PosGlobalState extends PosModel {
         this._loadPoSConfig();
         this.bills = loadedData['pos.bill'];
         this.partners = loadedData['res.partner'];
+        this.students = loadedData['op.student'];
         this.addPartners(this.partners);
         this.picking_type = loadedData['stock.picking.type'];
         this.user = loadedData['res.users'];
@@ -225,7 +227,21 @@ class PosGlobalState extends PosModel {
         this.db.set_uuid(this.config.uuid);
     }
     addPartners(partners) {
+        this._enrichPartners(this.partners, this.students);
         return this.db.add_partners(partners);
+    }
+    _enrichPartners(partners, students) {
+        if (students) {
+            for (let i in students) {
+                let student = students[i];
+                if (student.partner_id && student.partner_id.length > 0) {
+                    let foundPartners = partners.filter(p => p.id === student.partner_id[0]);
+                    if (foundPartners && foundPartners.length > 0) {
+                        foundPartners[0].studentCardNumber = student.student_card_number;
+                    }
+                }
+            }
+        }
     }
     _assignApplicableItems(pricelist, correspondingProduct, pricelistItem) {
         if (!(pricelist.id in correspondingProduct.applicablePricelistItems)) {
