@@ -97,7 +97,7 @@ class WebsiteSaleCart(TransactionCase):
             # add the product to the cart
             self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
             sale_order = website.sale_get_order()
-            self.assertEqual(sale_order.amount_total, 1150.0)
+            self.assertEqual(sale_order.amount_untaxed, 1000.0)
 
             # remove the product from the cart
             self.WebsiteSaleController.cart_update_json(product_id=product.id, line_id=sale_order.order_line.id, set_qty=0)
