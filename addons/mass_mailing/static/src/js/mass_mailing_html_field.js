@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { initializeDesignTabCss } from "mass_mailing.design_constants";
 import { toInline, getCSSRules } from "web_editor.convertInline";
-import { loadBundle, loadJS } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { qweb } from 'web.core';
 import { useService } from "@web/core/utils/hooks";
 import { buildQuery } from "web.rpc";
@@ -16,7 +16,6 @@ import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const {
-    onWillStart,
     useSubEnv,
     onWillUpdateProps,
     status,
@@ -32,9 +31,6 @@ export class MassMailingHtmlField extends HtmlField {
         this.action = useService('action');
         this.rpc = useService('rpc');
         this.dialog = useService('dialog');
-
-        // Load html2canvas for toInline.
-        onWillStart(() => loadJS('/web_editor/static/lib/html2canvas.js'));
 
         onWillUpdateProps(() => {
             if (this.props.record.data.mailing_model_id && this.wysiwyg) {
