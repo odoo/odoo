@@ -14,21 +14,21 @@ export class NavigableList extends Component {
     static components = { ImStatus };
     static template = "mail.NavigableList";
     static props = {
-        anchorRef: {},
+        anchorRef: { optional: true },
         class: { type: String, optional: true },
         onSelect: { type: Function },
-        options: { type: [Array, Promise] },
+        options: { type: Array },
         optionTemplate: { type: String, optional: true },
         placeholder: { type: String, optional: true },
         position: { type: String, optional: true },
+        isLoading: { type: Boolean, optional: true },
     };
-    static defaultProps = { position: "bottom" };
+    static defaultProps = { position: "bottom", isLoading: false };
 
     setup() {
         this.rootRef = useRef("root");
         this.state = useState({
             activeOption: null,
-            isLoading: false,
             open: false,
             options: [],
         });
@@ -61,14 +61,11 @@ export class NavigableList extends Component {
     }
 
     get show() {
-        return Boolean(this.state.open && (this.state.isLoading || this.state.options.length));
+        return Boolean(this.state.open && (this.props.isLoading || this.state.options.length));
     }
 
-    async open() {
-        if (this.state.isLoading) {
-            return;
-        }
-        await this.load();
+    open() {
+        this.load();
         this.state.open = true;
         this.navigate("first");
     }
@@ -78,24 +75,12 @@ export class NavigableList extends Component {
         this.state.activeOption = null;
     }
 
-    async load() {
+    load() {
         this.state.options = [];
-        if (this.props.options instanceof Promise) {
-            this.state.isLoading = true;
-            const options = await this.props.options;
-            this.state.options = options.map((option, index) => ({
-                ...option,
-                id: index,
-            }));
-            this.state.isLoading = false;
-            return;
-        }
-        if (this.props.options instanceof Array) {
-            this.state.options = this.props.options.map((option, index) => ({
-                ...option,
-                id: index,
-            }));
-        }
+        this.state.options = this.props.options.map((option, index) => ({
+            ...option,
+            id: index,
+        }));
     }
 
     isActiveOption(option) {
