@@ -3,10 +3,13 @@ from odoo import api, fields, models, _, Command
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import clean_context, formatLang
 from odoo.tools import frozendict, groupby
 
-from collections import defaultdict
+from collections import Counter, defaultdict
+from markupsafe import Markup
+
+import ast
 import math
 import re
 
@@ -80,13 +83,14 @@ class AccountTaxGroup(models.Model):
 
 class AccountTax(models.Model):
     _name = 'account.tax'
+    _inherit = ['mail.thread']
     _description = 'Tax'
     _order = 'sequence,id'
     _check_company_auto = True
     _rec_names_search = ['name', 'description', 'invoice_label']
     _check_company_domain = models.check_company_domain_parent_of
 
-    name = fields.Char(string='Tax Name', required=True, translate=True)
+    name = fields.Char(string='Tax Name', required=True, translate=True, tracking=True)
     name_searchable = fields.Char(store=False, search='_search_name',
           help="This dummy field lets us use another search method on the field 'name'."
                "This allows more freedom on how to search the 'name' compared to 'filter_domain'."
@@ -114,16 +118,17 @@ class AccountTax(models.Model):
         string='Children Taxes')
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
-    amount = fields.Float(required=True, digits=(16, 4), default=0.0)
+    amount = fields.Float(required=True, digits=(16, 4), default=0.0, tracking=True)
     description = fields.Char(string='Description', translate=True)
     invoice_label = fields.Char(string='Label on Invoices', translate=True)
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
-    include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False,
+    include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False, tracking=True,
         help="If set, taxes with a higher sequence than this one will be affected by it, provided they accept it.")
     is_base_affected = fields.Boolean(
         string="Base Affected by Previous Taxes",
         default=True,
+        tracking=True,
         help="If set, taxes with a lower sequence might affect this one, provided they try to do it.")
     analytic = fields.Boolean(string="Include in Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tax_group_id = fields.Many2one(
@@ -175,6 +180,8 @@ class AccountTax(models.Model):
         help="The country for which this tax is applicable.",
     )
     country_code = fields.Char(related='country_id.code', readonly=True)
+    is_used = fields.Boolean(string="Tax used", compute='_compute_is_used')
+    repartition_lines_str = fields.Char(string="Repartition Lines", tracking=True, compute='_compute_repartition_lines_str')
 
     @api.constrains('company_id', 'name', 'type_tax_use', 'tax_scope')
     def _constrains_name(self):
@@ -201,6 +208,12 @@ class AccountTax(models.Model):
             if record.tax_group_id.country_id and record.tax_group_id.country_id != record.country_id:
                 raise ValidationError(_("The tax group must have the same country_id as the tax using it."))
 
+    @api.constrains('amount_type', 'type_tax_use', 'price_include', 'include_base_amount')
+    def _constrains_fields_after_tax_is_used(self):
+        for tax in self:
+            if tax.is_used:
+                raise ValidationError(_("This tax has been used in transactions. For that reason, it is forbidden to modify this field."))
+
     @api.depends('company_id.account_fiscal_country_id')
     def _compute_country_id(self):
         for tax in self:
@@ -224,6 +237,93 @@ class AccountTax(models.Model):
                 *self.env['account.tax.group']._check_company_domain(company),
                 ('country_id', '=', False),
             ], limit=1)
+
+    def _hook_compute_is_used(self):
+        '''
+            To be overriden to add taxed transactions in the computation of `is_used`
+            Should return a Counter containing a dictionary {record: int} where
+            the record is an account.tax object. The int should be greater than 0
+            if the tax is used in a transaction.
+        '''
+        return Counter()
+
+    def _compute_is_used(self):
+        taxes_in_transactions_ctr = (
+            Counter(dict(self.env['account.move.line']._read_group([], groupby=['tax_ids'], aggregates=['__count']))) +
+            Counter(dict(self.env['account.reconcile.model.line']._read_group([], groupby=['tax_ids'], aggregates=['__count']))) +
+            self._hook_compute_is_used()
+        )
+        for tax in self:
+            tax.is_used = bool(taxes_in_transactions_ctr[tax])
+
+    @api.depends('repartition_line_ids.account_id', 'repartition_line_ids.factor_percent', 'repartition_line_ids.use_in_tax_closing', 'repartition_line_ids.tag_ids')
+    def _compute_repartition_lines_str(self):
+        for tax in self:
+            repartition_lines_str = tax.repartition_lines_str or ""
+            if tax.is_used:
+                for repartition_line in tax.repartition_line_ids:
+                    repartition_line_info = {
+                        _('id'): repartition_line.id,
+                        _('Factor Percent'): repartition_line.factor_percent,
+                        _('Account'): repartition_line.account_id.name or _('None'),
+                        _('Tax Grids'): repartition_line.tag_ids.mapped('name') or _('None'),
+                        _('Use in tax closing'): _('True') if repartition_line.use_in_tax_closing else _('False'),
+                    }
+                    repartition_lines_str += str(repartition_line_info) + '//'
+                repartition_lines_str = repartition_lines_str.strip('//')
+            tax.repartition_lines_str = repartition_lines_str
+
+    def _message_log_repartition_lines(self, old_value_str, new_value_str):
+        self.ensure_one()
+        if not self.is_used:
+            return
+
+        old_values = old_value_str.split('//')
+        new_values = new_value_str.split('//')
+
+        kwargs = {}
+        for old_value, new_value in zip(old_values, new_values):
+            if old_value != new_value:
+                old_value = ast.literal_eval(old_value)
+                new_value = ast.literal_eval(new_value)
+                diff_keys = [key for key in old_value if old_value[key] != new_value[key]]
+                repartition_line = self.env['account.tax.repartition.line'].search([('id', '=', new_value['id'])])
+                body = Markup("<b>{type}</b> {rep} {seq}:<ul class='mb-0 ps-4'>{changes}</ul>").format(
+                    type=repartition_line.document_type.capitalize(),
+                    rep=_('repartition line'),
+                    seq=repartition_line.sequence + 1,
+                    changes=Markup().join(
+                        [Markup("""
+                            <li>
+                                <span class='o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold'>{old}</span>
+                                <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
+                                <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{new}</span>
+                                <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({diff})</span>
+                            </li>""").format(old=old_value[diff_key], new=new_value[diff_key], diff=diff_key)
+                        for diff_key in diff_keys]
+                    )
+                )
+                kwargs['body'] = body
+                super()._message_log(**kwargs)
+
+    def _message_log(self, **kwargs):
+        # OVERRIDE _message_log
+        # We only log the modification of the tracked fields if the tax is
+        # currently used in transactions. We remove the `repartition_lines_str`
+        # from tracked value to avoid having it logged twice (once in the raw
+        # string format and one in the nice formatted way thanks to
+        # `_message_log_repartition_lines`)
+
+        self.ensure_one()
+
+        if self.is_used:
+            repartition_line_str_field_id = self.env['ir.model.fields']._get('account.tax', 'repartition_lines_str').id
+            for tracked_value_id in kwargs['tracking_value_ids']:
+                if tracked_value_id[2]['field_id'] == repartition_line_str_field_id:
+                    kwargs['tracking_value_ids'].remove(tracked_value_id)
+                    self._message_log_repartition_lines(tracked_value_id[2]['old_value_char'], tracked_value_id[2]['new_value_char'])
+
+            return super()._message_log(**kwargs)
 
     @api.depends('company_id')
     def _compute_invoice_repartition_line_ids(self):
@@ -359,7 +459,14 @@ class AccountTax(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        return super().create([self._sanitize_vals(vals) for vals in vals_list])
+        context = clean_context(self.env.context)
+        context.update({
+            'mail_create_nosubscribe': True, # At create or message_post, do not subscribe the current user to the record thread
+            'mail_auto_subscribe_no_notify': True, # Do no notify users set as followers of the mail thread
+            'mail_create_nolog': True, # At create, do not log the automatic ‘<Document> created’ message
+        })
+        taxes = super(AccountTax, self.with_context(context)).create([self._sanitize_vals(vals) for vals in vals_list])
+        return taxes
 
     def write(self, vals):
         return super().write(self._sanitize_vals(vals))
@@ -1381,6 +1488,23 @@ class AccountTaxRepartitionLine(models.Model):
     )
 
     tag_ids_domain = fields.Binary(string="tag domain", help="Dynamic domain used for the tag that can be set on tax", compute="_compute_tag_ids_domain")
+
+    @api.model_create_multi
+    def create(self, vals):
+        tax_ids = list(set([line.get('tax_id') for line in vals])) # Sorted
+        taxes = self.env['account.tax'].search_fetch([('id', 'in', tax_ids)], ['name'], order='id ASC')
+        tax_dict = dict(zip(tax_ids, taxes))
+        for line in vals:
+            tax = tax_dict.get(line.get('tax_id'))
+            if tax and tax.is_used:
+                raise ValidationError(_("The tax named {} has already been used, you cannot add nor delete its tax repartition lines.").format(tax.name))
+        return super().create(vals)
+
+    def unlink(self):
+        for repartition_line in self:
+            if repartition_line.tax_id.is_used:
+                raise ValidationError(_("The tax named {} has already been used, you cannot add nor delete its tax repartition lines.").format(repartition_line.tax_id.name))
+        return super().unlink()
 
     @api.depends('company_id.multi_vat_foreign_country_ids', 'company_id.account_fiscal_country_id')
     def _compute_tag_ids_domain(self):

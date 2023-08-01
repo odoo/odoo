@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from collections import Counter
 from odoo import _, api, models
 from odoo.exceptions import UserError
 from odoo.tools import split_every
@@ -26,3 +27,10 @@ class AccountTax(models.Model):
                     ))
                 lines_chunk.invalidate_recordset(['tax_ids'])
         return super(AccountTax, self).write(vals)
+
+    def _hook_compute_is_used(self):
+        # OVERRIDE in order to count the usage of taxes in pos order lines
+
+        taxes_in_transactions_ctr = Counter(dict(self.env['pos.order.line']._read_group([], groupby=['tax_ids'], aggregates=['__count'])))
+
+        return super()._hook_compute_is_used() + taxes_in_transactions_ctr
