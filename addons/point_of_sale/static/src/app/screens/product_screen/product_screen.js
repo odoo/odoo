@@ -255,14 +255,14 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             const currentQuantity = selectedLine.get_quantity();
             if (newQuantity >= currentQuantity) {
                 selectedLine.set_quantity(newQuantity);
-                return;
+                return true;
             }
             if (newQuantity >= selectedLine.saved_quantity) {
                 if (newQuantity == 0) {
                     order.remove_orderline(selectedLine);
                 }
                 selectedLine.set_quantity(newQuantity);
-                return;
+                return true;
             }
             const newLine = selectedLine.clone();
             const decreasedQuantity = selectedLine.saved_quantity - newQuantity;
@@ -270,7 +270,9 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             newLine.set_quantity(-decreasedQuantity, true);
             selectedLine.set_quantity(selectedLine.saved_quantity);
             order.add_orderline(newLine);
+            return true;
         }
+        return false;
     }
     get selectedOrderlineQuantity() {
         return this.currentOrder.get_selected_orderline()?.get_quantity_str();
