@@ -24,19 +24,7 @@ export class ProductCard extends Component {
 
     clickOnProduct() {
         const product = this.props.product;
-        if (!this.canOpenProductMainView(product)) {
-            return;
-        }
         this.router.navigate("product", { id: product.id });
-    }
-
-    canOpenProductMainView(product) {
-        return (
-            this.selfOrder.table ||
-            product.has_image ||
-            product.description_sale ||
-            product.attributes.length
-        );
     }
 
     getQtyInCartString() {
