@@ -5,7 +5,7 @@
         <div class="o-discuss-Call user-select-none d-flex" t-att-class="{'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen, 'o-minimized': minimized, 'position-relative': !state.isFullscreen }">
             <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto" t-on-mouseleave="onMouseleaveMain">
                 <div
-                    class="d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
+                    class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
                     t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px;"
                     t-on-click="() => this.showOverlay()"
                     t-on-mousemove="onMousemoveMain"
@@ -13,7 +13,7 @@
                 >
                     <CallParticipantCard t-foreach="visibleMainCards" t-as="cardData" t-key="cardData.key"
                         cardData="cardData"
-                        className="'o-discuss-Call-mainCard'"
+                        className="'o-discuss-Call-mainCardStyle'"
                         minimized="minimized"
                         thread="props.thread"
                     />
@@ -40,6 +40,13 @@
                     thread="props.thread"
                 />
             </div>
+            <CallParticipantCard
+                t-if="props.thread.videoCount > 0 and state.insetCard"
+                cardData="state.insetCard"
+                className="'o-discuss-Call-mainCardStyle'"
+                thread="props.thread"
+                inset.bind="setInset"
+            />
         </div>
     </t>
 
