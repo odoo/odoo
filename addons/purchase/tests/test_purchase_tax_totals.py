@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+from odoo import Command
 from odoo.addons.account.tests.test_invoice_tax_totals import TestTaxTotals
 from odoo.tests import tagged
 
@@ -34,3 +36,27 @@ class PurchaseTestTaxTotals(TestTaxTotals):
             'partner_id': self.partner_a.id,
             'order_line': lines_vals,
         })
+
+    def test_tax_is_used_when_in_transactions(self):
+        ''' Ensures that a tax is set to used when it is part of some transactions '''
+
+        # Account.move is one type of transaction
+        tax_purchase = self.env['account.tax'].create({
+            'name': 'test_is_used_purchase',
+            'amount': '100',
+        })
+
+        self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'order_line',
+                    'product_id': self.po_product.id,
+                    'product_qty': 1.0,
+                    'price_unit': 100.0,
+                    'taxes_id': [Command.set(tax_purchase.ids)],
+                }),
+            ],
+        })
+        tax_purchase.invalidate_model(fnames=['is_used'])
+        self.assertTrue(tax_purchase.is_used)
