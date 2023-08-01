@@ -10,6 +10,10 @@
     --o-discuss-badge-bg: #{$o-success}; // sync with --o-navbar-badge-bg
     color: $white !important;
     background-color: var(--o-discuss-badge-bg) !important;
+
+    &.o-muted {
+        --o-discuss-badge-bg: #{$gray-400};
+    }
 }
 
 .o-discuss-badge, .o-discuss-badgeShape {
