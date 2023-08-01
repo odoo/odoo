@@ -573,6 +573,11 @@ class Meeting(models.Model):
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def unlink(self):
+        if not self:
+            return super().unlink()
+        if self.user_id and self.user_id != self.env.user and not self.env.su:
+            raise ValidationError(_('You cannot delete a meeting if you are not the organizer'))
+
         # Get concerned attendees to notify them if there is an alarm on the unlinked events,
         # as it might have changed their next event notification
         events = self.filtered_domain([('alarm_ids', '!=', False)])
