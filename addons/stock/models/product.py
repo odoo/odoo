@@ -587,8 +587,8 @@ class Product(models.Model):
         else:
             return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
 
-    def _get_date_with_security_lead_days(self, date, location):
-        rules = self._get_rules_from_location(location)
+    def _get_date_with_security_lead_days(self, date, location, route_ids=False):
+        rules = self._get_rules_from_location(location, route_ids=route_ids)
         for action, days in location.company_id._get_security_by_rule_action().items():
             if action in rules.mapped('action'):
                 date -= relativedelta(days=days)
