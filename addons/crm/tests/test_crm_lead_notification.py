@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest import skip
+
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.tests import tagged, users
 from odoo.tools import mute_logger
@@ -10,6 +12,7 @@ from odoo.tools import mute_logger
 class NewLeadNotification(TestCrmCommon):
 
     @users('user_sales_manager')
+    @skip('Wait until test_predictive_lead_scoring issue is fixed')
     def test_lead_message_get_suggested_recipient(self):
         """ Test '_message_get_suggested_recipients' and its override in lead. """
         lead_format, lead_multi, lead_from, lead_partner = self.env['crm.lead'].create([
