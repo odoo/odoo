@@ -510,7 +510,6 @@ mail_header_msgid_re = re.compile('<[^<>]+>')
 
 email_addr_escapes_re = re.compile(r'[\\"]')
 
-
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
 
@@ -551,14 +550,26 @@ def email_split_and_format(text):
     return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
 
 def email_normalize(text, strict=True):
-    """ Sanitize and standardize email address entries.
-        A normalized email is considered as :
-        - having a left part + @ + a right part (the domain can be without '.something')
-        - being lower case
-        - having no name before the address. Typically, having no 'Name <>'
-        Ex:
-        - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
-        - Normalized Output Email : 'name@domain.com'
+    """ Sanitize and standardize email address entries. As of rfc5322 section
+    3.4.1 local-part is case-sensitive. However most main providers do consider
+    the local-part as case insensitive. With the introduction of smtp-utf8
+    within odoo, this assumption is certain to fall short for international
+    emails. We now consider that
+
+      * if local part is ascii: normalize still 'lower' ;
+      * else: use as it, SMTP-UF8 is made for non-ascii local parts;
+
+    Concerning domain part of the address, as of v14 international domain (IDNA)
+    are handled fine. The domain is always lowercase, lowering it is fine as it
+    is probably an error. With the introduction of IDNA, there is an encoding
+    that allow non-ascii characters to be encoded to ascii ones, using 'idna.encode'.
+
+    A normalized email is considered as :
+    - having a left part + @ + a right part (the domain can be without '.something')
+    - having no name before the address. Typically, having no 'Name <>'
+    Ex:
+    - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
+    - Normalized Output Email : 'name@domain.com'
 
     :param boolean strict: if True, text should contain a single email
       (default behavior in stable 14+). If more than one email is found no
@@ -572,7 +583,16 @@ def email_normalize(text, strict=True):
     emails = email_split(text)
     if not emails or (strict and len(emails) != 1):
         return False
-    return emails[0].lower()
+
+    local_part, at, domain = emails[0].rpartition('@')
+    try:
+        local_part.encode('ascii')
+    except UnicodeEncodeError:
+        pass
+    else:
+        local_part = local_part.lower()
+
+    return local_part + at + domain.lower()
 
 def email_normalize_all(text):
     """ Tool method allowing to extract email addresses from a text input and returning
