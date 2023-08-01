@@ -24,11 +24,10 @@ export const SlideCoursePage = publicWidget.Widget.extend({
      * Collapse the next category when the current one has just been completed
      */
     collapseNextCategory: function (nextCategoryId) {
-        const $categorySection = document.getElementById(`category-collapse-${nextCategoryId}`);
-        const $categorySlides = document.querySelector(`ul[id=collapse-${nextCategoryId}]`);
-        if ($categorySection.getAttribute('aria-expanded') === 'false' && !$categorySlides.classList.contains('show')) {
-            $categorySection.setAttribute('aria-expanded', true);
-            $categorySlides.classList.add('show')
+        const categorySection = document.getElementById(`category-collapse-${nextCategoryId}`);
+        if (categorySection?.getAttribute('aria-expanded') === 'false') {
+            categorySection.setAttribute('aria-expanded', true);
+            document.querySelector(`ul[id=collapse-${nextCategoryId}]`).classList.add('show');
         }
     },
 
