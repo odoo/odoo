@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models
-from odoo.exceptions import ValidationError
+from odoo import models, _
 
 
 SECTOR_RO_CODES = ['SECTOR1', 'SECTOR2', 'SECTOR3', 'SECTOR4', 'SECTOR5', 'SECTOR6']
@@ -25,17 +24,8 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._get_partner_address_vals(partner)
 
-        if partner.country_code == 'RO':
-            if not partner.state_id:
-                # TODO - if partner country is 'RO', they must have state_id
-                raise ValidationError("if country is RO, partner must have a state_id")
-
+        if partner.country_code == 'RO' and partner.state_id:
             vals["country_subentity"] = 'RO-' + partner.state_id.code
-
-            # TODO if state_id is selected as București (RO), the city name must be SECTOR[1-6]
-            # make it a selection field later
-            if partner.state_id.code == 'B' and partner.city not in SECTOR_RO_CODES:
-                raise ValidationError("if state is București, city must be 'SECTORX', where X is a number between 1-6")
 
         return vals
 
@@ -64,3 +54,29 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         vals['vals']['tax_currency_code'] = 'RON'
 
         return vals
+
+    def _export_invoice_constraints(self, invoice, vals):
+        constraints = super()._export_invoice_constraints(invoice, vals)
+
+        for partner_type in ('supplier', 'customer'):
+            partner = vals[partner_type]
+
+            constraints.update({
+                f"ciusro_{partner_type}_vat_required": self._check_required_fields(partner, 'vat'),
+                f"ciusro_{partner_type}_city_required": self._check_required_fields(partner, 'city'),
+                f"ciusro_{partner_type}_street_required": self._check_required_fields(partner, 'street'),
+            })
+
+            if partner.country_code == 'RO':
+                if not partner.state_id:
+                    constraints[f"ciusro_{partner_type}_state_id_required"] = \
+                        _("The following partner's state ID is missing: %s") % partner.name
+
+                if partner.state_id and partner.state_id.code == 'B' and partner.city not in SECTOR_RO_CODES:
+                    constraints[f"ciusro_{partner_type}_invalid_city_name"] = _(
+                        "The following partner's city name is invalid: %s. "
+                        "If partner's state is București, the city name must be 'SECTORX', "
+                        "where X is a number between 1-6"
+                    ) % partner.name
+
+        return constraints

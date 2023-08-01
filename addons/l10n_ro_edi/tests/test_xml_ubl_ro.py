@@ -164,62 +164,37 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
     # string-length constrains are skipped
 
     # BR-RO-030
-    def test_diff_currency_code(self):
-        self.env['res.currency.rate'].create({
-            'name': '2017-01-01',
-            'rate': 4.15,
-            'currency_id': self.env.ref("base.AUD").id,
-            'company_id': self.env.company.id,
-        })
-        self.company_data["company"].write({
-            "currency_id": self.env.ref("base.AUD").id,
-        })
-        attachment = self.create_invoice_attachment(self.partner_a.id)
-        self.post_anaf(attachment, True)
-
-    """
-    not((cac:AllowanceCharge/cac:TaxCategory/cbc:ID[ancestor::cac:AllowanceCharge/cbc:ChargeIndicator = 'false' and
-        following-sibling::cac:TaxScheme/cbc:ID = 'VAT'] = ('S', 'Z', 'E', 'AE', 'K', 'G', 'L', 'M')) 
-            or
-        (cac:AllowanceCharge/cac:TaxCategory/cbc:ID[ancestor::cac:AllowanceCharge/cbc:ChargeIndicator = 'true'] = 
-        ('S', 'Z', 'E', 'AE', 'K', 'G', 'L', 'M')) 
-            or
-        (cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cbc:ID = ('S', 'Z', 'E', 'AE', 'K', 'G', 'L', 'M'))) 
-    or
-    (cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID, 
-    cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID[boolean(normalize-space(.))])
-    # The Seller tax registration identifier (BT-32) and/or the Seller VAT identifier (BT-31) and/or 
-      the Seller tax representative VAT identifier (BT-63) shall be present
-    """
-    # def test_no_vat(self):
-    #     # self.company_data["company"].write({
-    #     #     "vat": None,
-    #     # })
-    #     invoice = self.env["account.move"].create({
-    #         'move_type': 'out_invoice',
-    #         'partner_id': self.partner_a.id,
-    #         'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
-    #         'invoice_payment_term_id': self.pay_terms_b.id,
-    #         'invoice_date': '2017-01-01',
-    #         'date': '2017-01-01',
-    #         'narration': 'test narration',
-    #         'ref': 'ref_move',
-    #         'invoice_line_ids': [
-    #             Command.create({
-    #                 'product_id': self.product_a.id,
-    #                 'quantity': 1.0,
-    #                 'price_unit': 500.0,
-    #                 'tax_ids': [(6, 0, self.tax_19.ids)],
-    #             }),
-    #             Command.create({
-    #                 'product_id': self.product_b.id,
-    #                 'quantity': 2.0,
-    #                 'price_unit': 350.0,
-    #                 'tax_ids': [(6, 0, self.tax_19.ids)],
-    #             }),
-    #         ],
+    # def test_diff_currency_code(self):
+    #     self.env['res.currency.rate'].create({
+    #         'name': '2017-01-01',
+    #         'rate': 4.15,
+    #         'currency_id': self.env.ref("base.AUD").id,
+    #         'company_id': self.env.company.id,
     #     })
-    #     invoice.action_post()
-    #     invoice._generate_pdf_and_send_invoice(self.move_template)
-    #     attachment = invoice.ubl_cii_xml_id
-    #     self.post_anaf(attachment, True)
+    #     self.company_data["company"].write({
+    #         "currency_id": self.env.ref("base.AUD").id,
+    #     })
+    #     attachment = self.create_invoice_attachment(self.partner_a.id)
+    #     self.post_anaf(attachment)
+
+    # Required fields for seller and buyer: vat, city, street
+    def test_required_fields(self):
+        def write_and_test(field_name, value):
+            prev_value = self.company_data["company"][field_name]
+            self.company_data["company"].write({field_name: value})
+            self.partner_a.write({field_name: value})
+            attachment = self.create_invoice_attachment(self.partner_a.id)
+            print(f"writing {field_name} to {str(value)}")
+            self.post_anaf(attachment)
+            self.company_data["company"].write({field_name: prev_value})
+            self.partner_a.write({field_name: prev_value})
+
+        self.company_data["company"].write({"state_id": self.env.ref("base.RO_AB")})
+        self.partner_a.write({"state_id": self.env.ref("base.RO_AB")})
+        write_and_test('vat', None)
+        write_and_test('city', None)
+        write_and_test('street', None)
+        self.company_data["company"].write({"state_id": self.env.ref("base.RO_B")})
+        self.partner_a.write({"state_id": self.env.ref("base.RO_B")})
+        write_and_test('city', 'SECTORLOL')
+        write_and_test('city', 'SECTOR1')
