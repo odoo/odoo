@@ -70,6 +70,20 @@ function completeActiveField(activeField, extra) {
     }
 }
 
+export function completeActiveFields(activeFields, extraActiveFields) {
+    for (const fieldName in extraActiveFields) {
+        const extraActiveField = {
+            ...extraActiveFields[fieldName],
+            invisible: true,
+        };
+        if (fieldName in activeFields) {
+            completeActiveField(activeFields[fieldName], extraActiveField);
+        } else {
+            activeFields[fieldName] = extraActiveField;
+        }
+    }
+}
+
 export function createPropertyActiveField(property) {
     const { type } = property;
 
@@ -182,20 +196,10 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                             fieldNode.views.form,
                             fieldNode.views.form.fields
                         );
-                        for (const fieldName in formArchInfo.activeFields) {
-                            const formActiveField = {
-                                ...formArchInfo.activeFields[fieldName],
-                                invisible: true,
-                            };
-                            if (fieldName in activeField.related.activeFields) {
-                                completeActiveField(
-                                    activeField.related.activeFields[fieldName],
-                                    formActiveField
-                                );
-                            } else {
-                                activeField.related.activeFields[fieldName] = formActiveField;
-                            }
-                        }
+                        completeActiveFields(
+                            activeField.related.activeFields,
+                            formArchInfo.activeFields
+                        );
                         Object.assign(activeField.related.fields, formArchInfo.fields);
                     }
                 }

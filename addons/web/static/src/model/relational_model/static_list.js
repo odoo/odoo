@@ -3,6 +3,7 @@
 import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
+import { completeActiveFields } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
 import { fromUnityToServerValues, getId, patchActiveFields } from "./utils";
 
@@ -202,6 +203,7 @@ export class StaticList extends DataPoint {
     extendRecord(params, record) {
         return this.model.mutex.exec(async () => {
             // extend fields and activeFields of the list with those given in params
+            completeActiveFields(this.config.activeFields, params.activeFields);
             Object.assign(this.fields, params.fields);
             const activeFields = { ...params.activeFields };
             for (const fieldName in this.activeFields) {
