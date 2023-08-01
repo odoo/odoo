@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "../browser/browser";
-import { _lt } from "../l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "../registry";
 import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";
 import { isIOS } from "@web/core/browser/feature_detection";
@@ -24,20 +24,20 @@ export class UncaughtError extends Error {
 }
 
 export class UncaughtClientError extends UncaughtError {
-    constructor(message = _lt("Uncaught Javascript Error")) {
+    constructor(message = _t("Uncaught Javascript Error")) {
         super(message);
     }
 }
 
 export class UncaughtPromiseError extends UncaughtError {
-    constructor(message = _lt("Uncaught Promise")) {
+    constructor(message = _t("Uncaught Promise")) {
         super(message);
         this.unhandledRejectionEvent = null;
     }
 }
 
 export class UncaughtCorsError extends UncaughtError {
-    constructor(message = _lt("Uncaught CORS Error")) {
+    constructor(message = _t("Uncaught CORS Error")) {
         super(message);
     }
 }

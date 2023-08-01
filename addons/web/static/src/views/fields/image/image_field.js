@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -183,36 +183,36 @@ export class ImageField extends Component {
 
 export const imageField = {
     component: ImageField,
-    displayName: _lt("Image"),
+    displayName: _t("Image"),
     supportedOptions: [
         {
-            label: _lt("Enable zoom"),
+            label: _t("Enable zoom"),
             name: "zoom",
             type: "boolean",
         },
         {
-            label: _lt("Zoom delay"),
+            label: _t("Zoom delay"),
             name: "zoom_delay",
             type: "number",
-            help: _lt("Delay the apparition of the zoomed image with a value in milliseconds"),
+            help: _t("Delay the apparition of the zoomed image with a value in milliseconds"),
         },
         {
-            label: _lt("Accepted file extensions"),
+            label: _t("Accepted file extensions"),
             name: "accepted_file_extensions",
             type: "string",
         },
         {
-            label: _lt("Size"),
+            label: _t("Size"),
             name: "size",
             type: "selection",
             choices: [
-                { label: _lt("Small"), value: "[0,90]" },
-                { label: _lt("Medium"), value: "[0,180]" },
-                { label: _lt("Large"), value: "[0,270]" },
+                { label: _t("Small"), value: "[0,90]" },
+                { label: _t("Medium"), value: "[0,180]" },
+                { label: _t("Large"), value: "[0,270]" },
             ],
         },
         {
-            label: _lt("Preview image"),
+            label: _t("Preview image"),
             name: "preview_image",
             type: "field",
             availableTypes: ["binary"],

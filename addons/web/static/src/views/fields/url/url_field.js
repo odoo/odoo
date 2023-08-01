@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -38,7 +38,7 @@ export class UrlField extends Component {
 
 export const urlField = {
     component: UrlField,
-    displayName: _lt("URL"),
+    displayName: _t("URL"),
     supportedTypes: ["char"],
     extractProps: ({ attrs, options }) => ({
         text: attrs.text,

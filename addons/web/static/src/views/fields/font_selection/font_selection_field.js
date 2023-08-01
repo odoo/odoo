@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 import { formatSelection } from "../formatters";
 
@@ -41,7 +41,7 @@ export class FontSelectionField extends Component {
 
 export const fontSelectionField = {
     component: FontSelectionField,
-    displayName: _lt("Font Selection"),
+    displayName: _t("Font Selection"),
     supportedTypes: ["selection"],
     extractProps({ attrs }, dynamicInfo) {
         return {

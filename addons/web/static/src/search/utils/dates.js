@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -8,10 +8,10 @@ import { localization } from "@web/core/l10n/localization";
 export const DEFAULT_PERIOD = "this_month";
 
 export const QUARTERS = {
-    1: { description: _lt("Q1"), coveredMonths: [1, 2, 3] },
-    2: { description: _lt("Q2"), coveredMonths: [4, 5, 6] },
-    3: { description: _lt("Q3"), coveredMonths: [7, 8, 9] },
-    4: { description: _lt("Q4"), coveredMonths: [10, 11, 12] },
+    1: { description: _t("Q1"), coveredMonths: [1, 2, 3] },
+    2: { description: _t("Q2"), coveredMonths: [4, 5, 6] },
+    3: { description: _t("Q3"), coveredMonths: [7, 8, 9] },
+    4: { description: _t("Q4"), coveredMonths: [10, 11, 12] },
 };
 
 export const MONTH_OPTIONS = {
@@ -98,21 +98,21 @@ export const PERIOD_OPTIONS = Object.assign({}, MONTH_OPTIONS, QUARTER_OPTIONS, 
 export const DEFAULT_INTERVAL = "month";
 
 export const INTERVAL_OPTIONS = {
-    year: { description: _lt("Year"), id: "year", groupNumber: 1 },
-    quarter: { description: _lt("Quarter"), id: "quarter", groupNumber: 1 },
-    month: { description: _lt("Month"), id: "month", groupNumber: 1 },
-    week: { description: _lt("Week"), id: "week", groupNumber: 1 },
-    day: { description: _lt("Day"), id: "day", groupNumber: 1 },
+    year: { description: _t("Year"), id: "year", groupNumber: 1 },
+    quarter: { description: _t("Quarter"), id: "quarter", groupNumber: 1 },
+    month: { description: _t("Month"), id: "month", groupNumber: 1 },
+    week: { description: _t("Week"), id: "week", groupNumber: 1 },
+    day: { description: _t("Day"), id: "day", groupNumber: 1 },
 };
 
 // ComparisonMenu parameters
 export const COMPARISON_OPTIONS = {
     previous_period: {
-        description: _lt("Previous Period"),
+        description: _t("Previous Period"),
         id: "previous_period",
     },
     previous_year: {
-        description: _lt("Previous Year"),
+        description: _t("Previous Year"),
         id: "previous_year",
         plusParam: { years: -1 },
     },

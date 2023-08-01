@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { formatPercentage } from "../formatters";
 import { parsePercentage } from "../parsers";
 import { useInputField } from "../input_field_hook";
@@ -44,7 +44,7 @@ export class PercentageField extends Component {
 
 export const percentageField = {
     component: PercentageField,
-    displayName: _lt("Percentage"),
+    displayName: _t("Percentage"),
     supportedTypes: ["integer", "float"],
     extractProps: ({ attrs, options }) => {
         // Sadly, digits param was available as an option and an attr.

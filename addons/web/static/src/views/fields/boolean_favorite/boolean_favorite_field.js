@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { archParseBoolean } from "@web/views/utils";
 import { standardFieldProps } from "../standard_field_props";
@@ -28,7 +28,7 @@ export class BooleanFavoriteField extends Component {
 
 export const booleanFavoriteField = {
     component: BooleanFavoriteField,
-    displayName: _lt("Favorite"),
+    displayName: _t("Favorite"),
     supportedTypes: ["boolean"],
     isEmpty: () => false,
     extractProps: ({ attrs, options }) => ({

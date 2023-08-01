@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { QWebPlugin } from '@web_editor/js/backend/QWebPlugin';
 import { TranslationButton } from "@web/views/fields/translation_button";
@@ -609,46 +609,46 @@ export class HtmlField extends Component {
 
 export const htmlField = {
     component: HtmlField,
-    displayName: _lt("Html"),
+    displayName: _t("Html"),
     supportedOptions: [{
-        label: _lt("CSS Edit"),
+        label: _t("CSS Edit"),
         name: "cssEdit",
         type: "string"
     }, {
-        label: _lt("Height"),
+        label: _t("Height"),
         name: "height",
         type: "string"
     }, {
-        label: _lt("Min height"),
+        label: _t("Min height"),
         name: "minHeight",
         type: "string"
     }, {
-        label: _lt("Max height"),
+        label: _t("Max height"),
         name: "maxHeight",
         type: "string"
     }, {
-        label: _lt("Snippets"),
+        label: _t("Snippets"),
         name: "snippets",
         type: "string"
     }, {
-        label: _lt("No videos"),
+        label: _t("No videos"),
         name: "noVideos",
         type: "boolean",
         default: true
     }, {
-        label: _lt("Resizable"),
+        label: _t("Resizable"),
         name: "resizable",
         type: "boolean",
     }, {
-        label: _lt("Dynamic placeholder"),
+        label: _t("Dynamic placeholder"),
         name: "dynamic_placeholder",
         type: "boolean",
     }, {
-        label: _lt("Collaborative"),
+        label: _t("Collaborative"),
         name: "collaborative",
         type: "boolean",
     }, {
-        label: _lt("Codeview"),
+        label: _t("Codeview"),
         name: "codeview",
         type: "boolean",
     }],

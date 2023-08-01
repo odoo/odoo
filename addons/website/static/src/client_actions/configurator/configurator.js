@@ -3,7 +3,7 @@
 import concurrency from '@web/legacy/js/core/concurrency';
 import utils from '@web/legacy/js/core/utils';
 import weUtils from '@web_editor/js/common/utils';
-import {_lt} from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import {svgToPNG} from '@website/js/utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -19,19 +19,19 @@ const ROUTES = {
 };
 
 const WEBSITE_TYPES = {
-    1: {id: 1, label: _lt("a business website"), name: 'business'},
-    2: {id: 2, label: _lt("an online store"), name: 'online_store'},
-    3: {id: 3, label: _lt("a blog"), name: 'blog'},
-    4: {id: 4, label: _lt("an event website"), name: 'event'},
-    5: {id: 5, label: _lt("an elearning platform"), name: 'elearning'},
+    1: {id: 1, label: _t("a business website"), name: 'business'},
+    2: {id: 2, label: _t("an online store"), name: 'online_store'},
+    3: {id: 3, label: _t("a blog"), name: 'blog'},
+    4: {id: 4, label: _t("an event website"), name: 'event'},
+    5: {id: 5, label: _t("an elearning platform"), name: 'elearning'},
 };
 
 const WEBSITE_PURPOSES = {
-    1: {id: 1, label: _lt("get leads"), name: 'get_leads'},
-    2: {id: 2, label: _lt("develop the brand"), name: 'develop_brand'},
-    3: {id: 3, label: _lt("sell more"), name: 'sell_more'},
-    4: {id: 4, label: _lt("inform customers"), name: 'inform_customers'},
-    5: {id: 5, label: _lt("schedule appointments"), name: 'schedule_appointments'},
+    1: {id: 1, label: _t("get leads"), name: 'get_leads'},
+    2: {id: 2, label: _t("develop the brand"), name: 'develop_brand'},
+    3: {id: 3, label: _t("sell more"), name: 'sell_more'},
+    4: {id: 4, label: _t("inform customers"), name: 'inform_customers'},
+    5: {id: 5, label: _t("schedule appointments"), name: 'schedule_appointments'},
 };
 
 const PALETTE_NAMES = [

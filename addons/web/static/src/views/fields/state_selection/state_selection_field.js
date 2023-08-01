@@ -4,7 +4,7 @@ import { Component } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
 import { formatSelection } from "../formatters";
@@ -81,7 +81,7 @@ export class StateSelectionField extends Component {
 
 export const stateSelectionField = {
     component: StateSelectionField,
-    displayName: _lt("Label Selection"),
+    displayName: _t("Label Selection"),
     supportedTypes: ["selection"],
     extractProps({ options, viewType }, dynamicInfo) {
         return {

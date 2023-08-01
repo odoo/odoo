@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatFloatFactor } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
@@ -58,27 +58,27 @@ export const floatToggleField = {
     component: FloatToggleField,
     supportedOptions: [
         {
-            label: _lt("Digits"),
+            label: _t("Digits"),
             name: "digits",
             type: "string",
         },
         {
-            label: _lt("Type"),
+            label: _t("Type"),
             name: "type",
             type: "string",
         },
         {
-            label: _lt("Range"),
+            label: _t("Range"),
             name: "range",
             type: "string",
         },
         {
-            label: _lt("Factor"),
+            label: _t("Factor"),
             name: "factor",
             type: "number",
         },
         {
-            label: _lt("Disable readonly"),
+            label: _t("Disable readonly"),
             name: "force_button",
             type: "boolean",
         },

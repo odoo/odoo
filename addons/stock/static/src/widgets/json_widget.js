@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 const { Component, onWillStart, onWillUpdateProps } = owl;
@@ -18,7 +18,7 @@ export class JsonPopOver extends Component {
 
 export const jsonPopOver = {
     component: JsonPopOver,
-    displayName: _lt("Json Popup"),
+    displayName: _t("Json Popup"),
     supportedTypes: ["char"],
 };
 

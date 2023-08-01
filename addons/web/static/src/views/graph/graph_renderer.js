@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { getBorderWhite, DEFAULT_BG, getColor, hexToRGBA } from "@web/core/colors/colors";
 import { formatFloat } from "@web/views/fields/formatters";
 import { SEP } from "./graph_model";
@@ -13,7 +13,7 @@ import { Component, onWillUnmount, useEffect, useRef, onWillStart } from "@odoo/
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-const NO_DATA = _lt("No data");
+const NO_DATA = _t("No data");
 
 export const LINE_FILL_TRANSPARENCY = 0.4;
 

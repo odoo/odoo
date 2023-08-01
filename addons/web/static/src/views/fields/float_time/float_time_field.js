@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatFloatTime } from "../formatters";
 import { parseFloatTime } from "../parsers";
@@ -40,10 +40,10 @@ export class FloatTimeField extends Component {
 
 export const floatTimeField = {
     component: FloatTimeField,
-    displayName: _lt("Time"),
+    displayName: _t("Time"),
     supportedOptions: [
         {
-            label: _lt("Type"),
+            label: _t("Type"),
             name: "type",
             type: "string",
         },

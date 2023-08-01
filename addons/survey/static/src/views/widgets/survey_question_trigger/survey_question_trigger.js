@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from '@web/core/utils/strings';
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -22,11 +22,11 @@ export class SurveyQuestionTriggerWidget extends Component {
                 if (triggerError === "MISPLACED_TRIGGER_WARNING") {
                     this.state.surveyIconWarning = true;
                     this.state.triggerTooltip = sprintf(
-                        '⚠ ' + _lt('This question is positioned before its trigger ("%s") and will be skipped.'),
+                        '⚠ ' + _t('This question is positioned before its trigger ("%s") and will be skipped.'),
                         triggeringQuestionTitle);
                 } else if (triggerError === "WRONG_QUESTIONS_SELECTION_WARNING") {
                     this.state.surveyIconWarning = true;
-                    this.state.triggerTooltip = '⚠ ' + _lt(
+                    this.state.triggerTooltip = '⚠ ' + _t(
                         'Conditional display is not available when questions are randomly picked.');
                 } else if (triggerError === "MISSING_TRIGGER_ERROR") {
                     // This case must be handled to not temporarily render the "normal" icon if previously
@@ -34,7 +34,7 @@ export class SurveyQuestionTriggerWidget extends Component {
                     // at next save (auto on survey form and primary list view).
                 } else {
                     this.state.surveyIconWarning = false;
-                    this.state.triggerTooltip = sprintf(_lt('Displayed if "%s: %s"'),
+                    this.state.triggerTooltip = sprintf(_t('Displayed if "%s: %s"'),
                         triggeringQuestionTitle, this.props.record.data.triggering_answer_id[1]);
                 }
             } else {

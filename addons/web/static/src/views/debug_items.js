@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { evalDomain } from "@web/core/domain";
 import { editModelDebug } from "@web/core/debug/debug_utils";
@@ -34,7 +34,7 @@ GetViewDialog.props = {
     arch: { type: String },
     close: { type: Function },
 };
-GetViewDialog.title = _lt("Get View");
+GetViewDialog.title = _t("Get View");
 
 export function getView({ component, env }) {
     let { arch } = component.props;

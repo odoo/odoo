@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { deserializeDateTime, deserializeDate } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
@@ -42,8 +42,8 @@ export class TicketScreen extends Component {
         reuseSavedUIState: false,
         ui: {},
     };
-    static numpadActionName = _lt("Refund");
-    static searchPlaceholder = _lt("Search Orders...");
+    static numpadActionName = _t("Refund");
+    static searchPlaceholder = _t("Search Orders...");
 
     setup() {
         this.pos = usePos();

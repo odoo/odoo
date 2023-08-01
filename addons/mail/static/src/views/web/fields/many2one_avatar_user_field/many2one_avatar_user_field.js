@@ -3,7 +3,7 @@
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
 import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command_hook";
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import {
@@ -108,7 +108,7 @@ export const kanbanMany2OneAvatarUserField = {
     supportedOptions: [
         ...(kanbanMany2OneAvatarField.supportedOptions || []),
         {
-            label: _lt("Display avatar name"),
+            label: _t("Display avatar name"),
             name: "display_avatar_name",
             type: "boolean",
         },

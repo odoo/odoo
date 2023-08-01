@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Component, onWillRender, onWillUpdateProps, useState } from "@odoo/owl";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import {
     MAX_VALID_DATE,
     MIN_VALID_DATE,
@@ -151,9 +151,9 @@ const MERIDIEMS = ["AM", "PM"];
  */
 const PRECISION_LEVELS = new Map()
     .set("days", {
-        mainTitle: _lt("Select month"),
-        nextTitle: _lt("Next month"),
-        prevTitle: _lt("Previous month"),
+        mainTitle: _t("Select month"),
+        nextTitle: _t("Next month"),
+        prevTitle: _t("Previous month"),
         step: { month: 1 },
         getTitle: (date, { additionalMonth }) => {
             const titles = [`${date.monthLong} ${date.year}`];
@@ -200,7 +200,7 @@ const PRECISION_LEVELS = new Map()
                     d.range[0].weekdayLong,
                 ]);
                 if (showWeekNumbers) {
-                    daysOfWeek.unshift(["#", _lt("Week numbers")]);
+                    daysOfWeek.unshift(["#", _t("Week numbers")]);
                 }
 
                 return {
@@ -213,9 +213,9 @@ const PRECISION_LEVELS = new Map()
         },
     })
     .set("months", {
-        mainTitle: _lt("Select year"),
-        nextTitle: _lt("Next year"),
-        prevTitle: _lt("Previous year"),
+        mainTitle: _t("Select year"),
+        nextTitle: _t("Next year"),
+        prevTitle: _t("Previous year"),
         step: { year: 1 },
         getTitle: (date) => String(date.year),
         getItems: (date, { maxDate, minDate }) => {
@@ -231,9 +231,9 @@ const PRECISION_LEVELS = new Map()
         },
     })
     .set("years", {
-        mainTitle: _lt("Select decade"),
-        nextTitle: _lt("Next decade"),
-        prevTitle: _lt("Previous decade"),
+        mainTitle: _t("Select decade"),
+        nextTitle: _t("Next decade"),
+        prevTitle: _t("Previous decade"),
         step: { year: 10 },
         getTitle: (date) => `${getStartOfDecade(date) - 1} - ${getStartOfDecade(date) + 10}`,
         getItems: (date, { maxDate, minDate }) => {
@@ -250,9 +250,9 @@ const PRECISION_LEVELS = new Map()
         },
     })
     .set("decades", {
-        mainTitle: _lt("Select century"),
-        nextTitle: _lt("Next century"),
-        prevTitle: _lt("Previous century"),
+        mainTitle: _t("Select century"),
+        nextTitle: _t("Next century"),
+        prevTitle: _t("Previous century"),
         step: { year: 100 },
         getTitle: (date) => `${getStartOfCentury(date) - 10} - ${getStartOfCentury(date) + 100}`,
         getItems: (date, { maxDate, minDate }) => {

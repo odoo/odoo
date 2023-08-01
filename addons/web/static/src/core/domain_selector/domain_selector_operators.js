@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { formatValue, toValue } from "@web/core/domain_tree";
 import { sprintf } from "@web/core/utils/strings";
 import { parseExpr } from "@web/core/py_js/py";
@@ -21,25 +21,25 @@ export const OPERATOR_DESCRIPTIONS = {
     ">": { label: ">", valueCount: 1 },
     ">=": { label: ">=", valueCount: 1 },
     "=?": { label: "=?", valueCount: 1 },
-    "=like": { label: _lt("=like"), valueCount: 1 },
-    "=ilike": { label: _lt("=ilike"), valueCount: 1 },
-    like: { label: _lt("like"), valueCount: 1 },
-    "not like": { label: _lt("not like"), valueCount: 1 },
-    ilike: { label: _lt("contains"), valueCount: 1 },
-    "not ilike": { label: _lt("does not contain"), valueCount: 1 },
-    in: { label: _lt("is in"), valueCount: "variable" },
-    "not in": { label: _lt("is not in"), valueCount: "variable" },
-    child_of: { label: _lt("child of"), valueCount: 1 },
-    parent_of: { label: _lt("parent of"), valueCount: 1 },
+    "=like": { label: _t("=like"), valueCount: 1 },
+    "=ilike": { label: _t("=ilike"), valueCount: 1 },
+    like: { label: _t("like"), valueCount: 1 },
+    "not like": { label: _t("not like"), valueCount: 1 },
+    ilike: { label: _t("contains"), valueCount: 1 },
+    "not ilike": { label: _t("does not contain"), valueCount: 1 },
+    in: { label: _t("is in"), valueCount: "variable" },
+    "not in": { label: _t("is not in"), valueCount: "variable" },
+    child_of: { label: _t("child of"), valueCount: 1 },
+    parent_of: { label: _t("parent of"), valueCount: 1 },
 
     // virtual operators (replace = and != in some cases)
-    is: { label: _lt("is"), valueCount: 1 },
-    is_not: { label: _lt("is not"), valueCount: 1 },
-    set: { label: _lt("is set"), valueCount: 0 },
-    not_set: { label: _lt("is not set"), valueCount: 0 },
+    is: { label: _t("is"), valueCount: 1 },
+    is_not: { label: _t("is not"), valueCount: 1 },
+    set: { label: _t("is set"), valueCount: 0 },
+    not_set: { label: _t("is not set"), valueCount: 0 },
 
     // virtual operator (equivalent to a couple (>=,<=))
-    between: { label: _lt("is between"), valueCount: 2 },
+    between: { label: _t("is between"), valueCount: 2 },
 };
 
 function toKey(operator, negate = false) {

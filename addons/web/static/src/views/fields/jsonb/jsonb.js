@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -19,7 +19,7 @@ export class JsonField extends Component {
 
 export const jsonField = {
     component: JsonField,
-    displayName: _lt("Json"),
+    displayName: _t("Json"),
     supportedTypes: ["jsonb"],
 };
 

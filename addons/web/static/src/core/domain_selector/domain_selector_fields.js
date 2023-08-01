@@ -8,7 +8,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, formatAST } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
 import { registry } from "@web/core/registry";
@@ -238,8 +238,8 @@ const BOOLEAN = {
                 value,
                 update,
                 options: [
-                    [true, _lt("set")],
-                    [false, _lt("not set")],
+                    [true, _t("set")],
+                    [false, _t("not set")],
                 ],
             }),
         }),

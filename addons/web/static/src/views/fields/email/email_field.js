@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -21,7 +21,7 @@ export class EmailField extends Component {
 
 export const emailField = {
     component: EmailField,
-    displayName: _lt("Email"),
+    displayName: _t("Email"),
     supportedTypes: ["char"],
     extractProps: ({ attrs }) => ({
         placeholder: attrs.placeholder,

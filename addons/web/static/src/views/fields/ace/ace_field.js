@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
@@ -67,10 +67,10 @@ export class AceField extends Component {
 
 export const aceField = {
     component: AceField,
-    displayName: _lt("Ace Editor"),
+    displayName: _t("Ace Editor"),
     supportedOptions: [
         {
-            label: _lt("Mode"),
+            label: _t("Mode"),
             name: "mode",
             type: "string",
         },

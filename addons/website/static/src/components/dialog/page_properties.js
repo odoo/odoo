@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import {CheckBox} from '@web/core/checkbox/checkbox';
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import {useService, useAutofocus} from "@web/core/utils/hooks";
 import {sprintf} from "@web/core/utils/strings";
 import {useWowlService} from '@web/legacy/utils';
@@ -200,7 +200,7 @@ PagePropertiesDialog.props = {
 PagePropertiesDialog.defaultProps = {
     ...FormViewDialog.defaultProps,
     resModel: 'website.page',
-    title: _lt("Page Properties"),
+    title: _t("Page Properties"),
     size: 'md',
     context: {
         form_view_ref: 'website.website_page_properties_view_form',

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -143,29 +143,29 @@ export const signatureField = {
     component: SignatureField,
     supportedOptions: [
         {
-            label: _lt("Prefill with"),
+            label: _t("Prefill with"),
             name: "full_name",
             type: "field",
             availableTypes: ["char", "many2one"],
-            help: _lt("The selected field will be used to pre-fill the signature"),
+            help: _t("The selected field will be used to pre-fill the signature"),
         },
         {
-            label: _lt("Default font"),
+            label: _t("Default font"),
             name: "default_font",
             type: "string",
         },
         {
-            label: _lt("Size"),
+            label: _t("Size"),
             name: "size",
             type: "selection",
             choices: [
-                { label: _lt("Small"), value: "[0,90]" },
-                { label: _lt("Medium"), value: "[0,180]" },
-                { label: _lt("Large"), value: "[0,270]" },
+                { label: _t("Small"), value: "[0,90]" },
+                { label: _t("Medium"), value: "[0,180]" },
+                { label: _t("Large"), value: "[0,270]" },
             ],
         },
         {
-            label: _lt("Preview image field"),
+            label: _t("Preview image field"),
             name: "preview_image",
             type: "field",
             availableTypes: ["binary"],

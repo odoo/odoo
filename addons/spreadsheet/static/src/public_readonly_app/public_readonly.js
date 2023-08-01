@@ -6,12 +6,12 @@ import { download } from "@web/core/network/download";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Spreadsheet, Model, registries } from "@odoo/o-spreadsheet";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { loadSpreadsheetDependencies } from "../helpers/helpers";
 import { migrate } from "../o_spreadsheet/migration";
 
 registries.topbarMenuRegistry.addChild("download_public_excel", ["file"], {
-    name: _lt("Download"),
+    name: _t("Download"),
     execute: (env) => env.downloadExcel(),
     isReadonlyAllowed: true,
 });
