@@ -156,7 +156,7 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         # Verifies whether changing the value of the "email_from" field reflects on the receiving end.
         action = self.survey.action_send_survey()
         action['context']['default_send_email'] = True
-        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+        invite_form = Form(self.env[action['res_model']].sudo().with_context(action['context']))
         invite_form.partner_ids.add(self.survey_user.partner_id)
         invite_form.template_id.write({'email_from':'{{ object.partner_id.email_formatted }}'})
         invite = invite_form.save()

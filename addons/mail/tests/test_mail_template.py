@@ -153,7 +153,7 @@ class TestMailTemplate(MailCommon):
         with self.assertRaises(AccessError):
             employee_template.with_context(lang='fr_FR').subject = '{{ object.foo }}'
 
-        employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.foo }}'
+        employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.name }}'
 
     def test_server_archived_usage_protection(self):
         """ Test the protection against using archived server (servers used cannot be archived) """
