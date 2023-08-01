@@ -16,7 +16,7 @@ import { loadLanguages } from "@web/core/l10n/translation";
 transitionConfig.disabled = true;
 
 import { patch } from "@web/core/utils/patch";
-import { App, whenReady } from "@odoo/owl";
+import { App, EventBus, whenReady } from "@odoo/owl";
 import { currencies } from "@web/core/currency";
 import "./helpers/session";
 
@@ -352,27 +352,38 @@ function patchAssets() {
     });
 }
 
+function patchEventBus() {
+    patchWithCleanup(EventBus.prototype, {
+        addEventListener() {
+            this._super(...arguments);
+            registerCleanup(() => this.removeEventListener(...arguments));
+        },
+    });
+}
+
 export async function setupTests() {
     // uncomment to debug memory leaks in qunit suite
-    // let memoryBeforeModule;
-    // QUnit.moduleStart(({ tests }) => {
-    //     if (tests.length) {
-    //         window.gc();
-    //         memoryBeforeModule = window.performance.memory.usedJSHeapSize;
-    //     }
-    // });
-    // QUnit.moduleDone(({ name }) => {
-    //     if (memoryBeforeModule) {
-    //         window.gc();
-    //         const afterGc = window.performance.memory.usedJSHeapSize;
-    //         console.log(
-    //             `MEMINFO - After suite "${name}" - after gc: ${afterGc} delta: ${
-    //                 afterGc - memoryBeforeModule
-    //             }`
-    //         );
-    //         memoryBeforeModule = null;
-    //     }
-    // });
+    // if (window.gc) {
+    //     let memoryBeforeModule;
+    //     QUnit.moduleStart(({ tests }) => {
+    //         if (tests.length) {
+    //             window.gc();
+    //             memoryBeforeModule = window.performance.memory.usedJSHeapSize;
+    //         }
+    //     });
+    //     QUnit.moduleDone(({ name }) => {
+    //         if (memoryBeforeModule) {
+    //             window.gc();
+    //             const afterGc = window.performance.memory.usedJSHeapSize;
+    //             console.log(
+    //                 `MEMINFO - After suite "${name}" - after gc: ${afterGc} delta: ${
+    //                     afterGc - memoryBeforeModule
+    //                 }`
+    //             );
+    //             memoryBeforeModule = null;
+    //         }
+    //     });
+    // }
 
     QUnit.testStart(() => {
         checkGlobalObjectsIntegrity();
@@ -381,6 +392,7 @@ export async function setupTests() {
         cleanLoadedLanguages();
         patchBrowserWithCleanup();
         patchBodyAddEventListener();
+        patchEventBus();
         patchLegacyBus();
         patchOdoo();
         patchSessionInfo();
