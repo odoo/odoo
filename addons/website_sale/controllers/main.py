@@ -1040,7 +1040,7 @@ class WebsiteSale(http.Controller):
                 data["vat"] = Partner.fix_eu_vat_number(country_id, data.get("vat"))
             partner_dummy = Partner.new(self._get_vat_validation_fields(data))
             try:
-                partner_dummy.check_vat()
+                partner_dummy.sudo().check_vat()
             except ValidationError as exception:
                 error["vat"] = 'error'
                 error_message.append(exception.args[0])
