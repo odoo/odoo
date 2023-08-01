@@ -383,7 +383,9 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
                 newLine.set_quantity(-decreasedQuantity, true);
                 order.add_orderline(newLine);
             }
+            return true;
         }
+        return false;
     }
     async onClickPartner() {
         // IMPROVEMENT: This code snippet is very similar to selectPartner of PaymentScreen.
