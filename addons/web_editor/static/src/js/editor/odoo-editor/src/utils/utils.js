@@ -1598,6 +1598,9 @@ export function isVisibleTextNode(testedNode) {
         return false;
     }
     const nodeIterator = document.createNodeIterator(currentNodeParentBlock);
+    if (!currentNodeParentBlock) {
+        return false;
+    }
     for (let node = nodeIterator.nextNode(); node; node = nodeIterator.nextNode()) {
         if (node.nodeType === Node.TEXT_NODE) {
             // If we already found the tested node, the current node is the
