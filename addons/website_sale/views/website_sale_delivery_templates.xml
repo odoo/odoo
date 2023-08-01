@@ -2,17 +2,20 @@
 <odoo>
 
     <template id="cart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
-        <xpath expr="//tr[@id='order_total_untaxed']" position="before">
+        <tr id="order_total_untaxed" position="before">
             <tr id="order_delivery" t-if="website_sale_order and website_sale_order.carrier_id">
-              <td class="text-end border-0 text-muted"  title="Delivery will be updated after choosing a new delivery method">Delivery:</td>
-              <td class="text-xl-end border-0 text-muted" >
-                   <span t-field="website_sale_order.amount_delivery" class="monetary_field" style="white-space: nowrap;" t-options='{
-                      "widget": "monetary",
-                      "display_currency": website_sale_order.currency_id,
-                  }'/>
-              </td>
+                <td class="text-end border-0 text-muted"
+                    title="Delivery will be updated after choosing a new delivery method">
+                    Delivery:
+                </td>
+                <td class="text-xl-end border-0 text-muted" >
+                    <span t-field="website_sale_order.amount_delivery"
+                          class="monetary_field"
+                          style="white-space: nowrap;"
+                          t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
+                </td>
             </tr>
-        </xpath>
+        </tr>
     </template>
 
     <template id="payment_delivery_methods">
