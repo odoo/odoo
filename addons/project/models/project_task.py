@@ -998,6 +998,46 @@ class Task(models.Model):
                 # unset the parent => "I want to display the task back in the project"
                 #                    => set `display_in_project` to True
                 vals['display_in_project'] = True
+
+        if 'milestone_id' in vals:
+            # WARNING: has to be done after 'project_id' vals is written on subtasks
+            milestone = self.env['project.milestone'].browse(vals['milestone_id'])
+
+            # 1. Task for which the milestone is unvalid -> milestone_id is reset
+            if 'project_id' not in vals:
+                unvalid_milestone_tasks = self.filtered(lambda task: task.project_id != milestone.project_id) if vals['milestone_id'] else self.env['project.task']
+            else:
+                unvalid_milestone_tasks = self if not vals['milestone_id'] or milestone.project_id.id != vals['project_id'] else self.env['project.task']
+            valid_milestone_tasks = self - unvalid_milestone_tasks
+            if unvalid_milestone_tasks:
+                unvalid_milestone_tasks.write({'milestone_id': False})
+                if valid_milestone_tasks:
+                    valid_milestone_tasks.write({'milestone_id': vals['milestone_id']})
+                del vals['milestone_id']
+
+            # 2. Parent's milestone is set to subtask with no milestone recursively
+            subtasks_to_update = valid_milestone_tasks.child_ids.filtered(
+                lambda task: (task not in self and \
+                              not task.milestone_id and \
+                              task.project_id == milestone.project_id and \
+                              task.state not in CLOSED_STATES))
+
+            # 3. If parent and child task share the same milestone, child task's milestone is updated when the parent one is changed
+            # No need to check if state is changed in vals as it won't affect the subtasks selected for update
+            if 'project_id' not in vals:
+                subtasks_to_update |= valid_milestone_tasks.child_ids.filtered(
+                    lambda task: (task not in self and \
+                                  task.milestone_id == task.parent_id.milestone_id and \
+                                  task.state not in CLOSED_STATES))
+            else:
+                subtasks_to_update |= valid_milestone_tasks.child_ids.filtered(
+                    lambda task: (task not in self and \
+                                  (not task.display_in_project or task.project_id.id == vals['project_id']) and \
+                                  task.milestone_id == task.parent_id.milestone_id  and \
+                                  task.state not in CLOSED_STATES))
+            if subtasks_to_update:
+                subtasks_to_update.write({'milestone_id': vals['milestone_id']})
+
         # stage change: update date_last_stage_update
         now = fields.Datetime.now()
         if 'stage_id' in vals:
@@ -1103,8 +1143,8 @@ class Task(models.Model):
     @api.depends('project_id')
     def _compute_milestone_id(self):
         for task in self:
-            if (task.project_id or task.parent_id.project_id) != task.milestone_id.project_id:
-                task.milestone_id = False
+            if task.project_id != task.milestone_id.project_id:
+                task.milestone_id = task.parent_id.project_id == task.project_id and task.parent_id.milestone_id
 
     def _compute_has_late_and_unreached_milestone(self):
         if all(not task.allow_milestones for task in self):

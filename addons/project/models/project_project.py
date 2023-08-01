@@ -384,6 +384,7 @@ class Project(models.Model):
             'name': task.name,
             'state': task.state,
             'company_id': project.company_id.id,
+            'project_id': project.id,
         }
 
     def map_tasks(self, new_project_id):
@@ -399,11 +400,6 @@ class Project(models.Model):
             defaults = self._map_tasks_default_valeus(task, project)
             new_tasks |= task.copy(defaults)
         project.write({'tasks': [Command.set(new_tasks.ids)]})
-        new_tasks._get_all_subtasks().filtered(
-            lambda child: child.project_id == self
-        ).write({
-            'project_id': project.id
-        })
         return True
 
     @api.returns('self', lambda value: value.id)
