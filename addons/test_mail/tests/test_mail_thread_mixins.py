@@ -4,7 +4,7 @@
 from odoo import exceptions, tools
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.tests.common import tagged
+from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
@@ -59,3 +59,26 @@ class TestMailThread(MailCommon, TestRecipients):
                     self.assertTrue(new_record.is_blacklisted)
 
                 bl_record.unlink()
+
+
+@tagged('mail_thread', 'mail_thread_cc')
+class TestMailThreadCC(MailCommon):
+
+    @users("employee")
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_suggested_recipients_mail_cc(self):
+        """ MailThreadCC mixin adds its own suggested recipients management
+        coming from CC (carbon copy) management. """
+        record = self.env['mail.test.cc'].create({
+            'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>',
+        })
+        suggestions = record._message_get_suggested_recipients()[record.id]
+        self.assertEqual(
+            sorted(suggestions),
+            [
+                (False, '"cc3" <cc3@example.com>', None, 'CC Email', {}),
+                (False, 'cc1@example.com', None, 'CC Email', {}),
+                (False, 'cc2@example.com', None, 'CC Email', {}),
+            ],
+            'cc should be in suggestions'
+        )
