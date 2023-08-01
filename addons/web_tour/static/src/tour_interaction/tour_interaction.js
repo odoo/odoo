@@ -122,7 +122,7 @@ class HighlightOverlay extends Component {
 
     getOverlayStyle(overlay) {
         const { height, width, top, left, color } = overlay;
-        return `position: absolute;top: ${top}px;left:${left}px;height:${height}px;width:${width}px;border: dashed ${color};"`;
+        return `position: absolute;top: ${top}px;left:${left}px;height:${height}px;width:${width}px;border: dashed ${color}; animation: 500ms infinite overlay-pulse;"`;
     }
 }
 
