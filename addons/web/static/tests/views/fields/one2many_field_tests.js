@@ -546,7 +546,9 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=parent_id] input", "ABC");
         await clickOpenedDropdownItem(target, "parent_id", "Create and edit...");
         await click(
-            target.querySelector(".o_dialog:not(.o_inactive_modal) .modal-footer .o_form_button_save")
+            target.querySelector(
+                ".o_dialog:not(.o_inactive_modal) .modal-footer .o_form_button_save"
+            )
         );
         assert.strictEqual(
             target
@@ -558,7 +560,9 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
         // close all dialogs
         await click(
-            target.querySelector(".o_dialog:not(.o_inactive_modal) .modal-footer .o_form_button_save")
+            target.querySelector(
+                ".o_dialog:not(.o_inactive_modal) .modal-footer .o_form_button_save"
+            )
         );
         await nextTick();
         assert.containsNone(target, ".o_dialog .o_form_view");
@@ -3213,6 +3217,111 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".modal-footer button.btn-primary"));
             firstCellOfSecondRow = target.querySelectorAll(".o_data_cell.o_list_char")[1];
             assert.strictEqual(firstCellOfSecondRow.innerText, "3");
+        }
+    );
+
+    QUnit.test(
+        "onchange specification complete after open sub form view not inline",
+        async function (assert) {
+            serverData.models.partner.onchanges.display_name = () => {};
+            serverData.views = {
+                "turtle,false,form": `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="partner_ids">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="turtles">
+                            <tree>
+                                <field name="turtle_foo"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                resId: 1,
+                async mockRPC(route, args) {
+                    if (args.method === "onchange2" && args.model === "partner") {
+                        if (args.args[1].display_name === "test") {
+                            assert.deepEqual(args.args[3], {
+                                display_name: {},
+                                turtles: {
+                                    fields: {
+                                        turtle_foo: {},
+                                    },
+                                    limit: 40,
+                                    order: "",
+                                },
+                            });
+                        } else if (args.args[1].display_name === "test2") {
+                            assert.deepEqual(args.args[3], {
+                                display_name: {},
+                                turtles: {
+                                    fields: {
+                                        display_name: {},
+                                        partner_ids: {
+                                            fields: {
+                                                display_name: {},
+                                            },
+                                            limit: 40,
+                                            order: "",
+                                        },
+                                        turtle_foo: {},
+                                    },
+                                    limit: 40,
+                                    order: "",
+                                },
+                            });
+                            return {
+                                value: {
+                                    turtles: [
+                                        [
+                                            1,
+                                            2,
+                                            {
+                                                display_name: "yop",
+                                                partner_ids: [[1, 2, { display_name: "plop" }]],
+                                            },
+                                        ],
+                                    ],
+                                },
+                            };
+                        }
+                    }
+                },
+            });
+            await editInput(target, "div[name='display_name'] input", "test");
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.strictEqual(
+                target.querySelector(".modal [name='display_name'] input").value,
+                "donatello"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll(".modal .o_data_row")].map((el) => el.textContent),
+                ["second record", "aaa"]
+            );
+
+            await click(target.querySelector(".modal .o_form_button_save"));
+            await editInput(target, "div[name='display_name'] input", "test2");
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.strictEqual(
+                target.querySelector(".modal [name='display_name'] input").value,
+                "yop"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll(".modal .o_data_row")].map((el) => el.textContent),
+                ["plop", "aaa"]
+            );
         }
     );
 
