@@ -18,6 +18,20 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
+/**
+ * @typedef CardData
+ * @property {string} key
+ * @property {import("@mail/discuss/call/common/rtc_session_model").RtcSession} session
+ * @property {MediaStream} videoStream
+ * @property {import("@mail/core/common/channel_member_model").ChannelMember} [member]
+ */
+
+/**
+ * @typedef {Object} Props
+ * @property {import("@mail/core/common/thread_model").Thread} thread
+ * @property {boolean} [compact]
+ * @extends {Component<Props, Env>}
+ */
 export class Call extends Component {
     static components = { CallActionList, CallParticipantCard };
     static props = ["thread", "compact?"];
@@ -36,6 +50,8 @@ export class Call extends Component {
             tileHeight: 0,
             columnCount: 0,
             overlay: false,
+            /** @type {CardData|undefined} */
+            insetCard: undefined,
         });
         this.store = useState(useService("mail.store"));
         this.userSettings = useState(useService("mail.user_settings"));
@@ -66,22 +82,29 @@ export class Call extends Component {
         return false;
     }
 
+    /** @returns {CardData[]} */
     get visibleCards() {
         const raisingHandCards = [];
         const sessionCards = [];
         const invitationCards = [];
         const filterVideos = this.props.thread.showOnlyVideo && this.props.thread.videoCount > 0;
         for (const session of Object.values(this.props.thread.rtcSessions)) {
-            if (!filterVideos || session.videoStream) {
-                const data = {
-                    key: "session_" + session.id,
+            const target = session.raisingHand ? raisingHandCards : sessionCards;
+            const cameraStream = session.videoStreams.get("camera");
+            if (!filterVideos || cameraStream) {
+                target.push({
+                    key: "session_main_" + session.id,
                     session,
-                };
-                if (session.raisingHand) {
-                    raisingHandCards.push(data);
-                } else {
-                    sessionCards.push(data);
-                }
+                    videoStream: cameraStream,
+                });
+            }
+            const screenStream = session.videoStreams.get("screen");
+            if (screenStream) {
+                target.push({
+                    key: "session_secondary_" + session.id,
+                    session,
+                    videoStream: screenStream,
+                });
             }
         }
         if (!filterVideos) {
@@ -108,16 +131,57 @@ export class Call extends Component {
         return raisingHandCards.concat(sessionCards, invitationCards);
     }
 
+    /** @returns {CardData[]} */
     get visibleMainCards() {
-        if (this.props.thread.activeRtcSession) {
-            return [
-                {
-                    key: "session_" + this.props.thread.activeRtcSession.id,
-                    session: this.props.thread.activeRtcSession,
-                },
-            ];
+        const activeSession = this.props.thread.activeRtcSession;
+        if (!activeSession) {
+            this.state.insetCard = undefined;
+            return this.visibleCards;
         }
-        return this.visibleCards;
+        switch (activeSession.videoStreams.size) {
+            case 1:
+                if (activeSession.videoStreams.get("screen") === activeSession.mainVideoStream) {
+                    this.setInset(activeSession);
+                }
+                if (
+                    activeSession.videoStreams.get("camera") &&
+                    activeSession.videoStreams.get("camera") === activeSession.mainVideoStream
+                ) {
+                    this.state.insetCard = undefined;
+                }
+                if (!activeSession.mainVideoStream && activeSession.videoStreams.get("screen")) {
+                    this.setInset(activeSession, "screen");
+                }
+                break;
+            case 2: {
+                const videoType =
+                    activeSession.videoStreams.get("screen") === activeSession.mainVideoStream
+                        ? "camera"
+                        : "screen";
+                this.setInset(activeSession, videoType);
+                break;
+            }
+        }
+
+        return [
+            {
+                key: "session_" + activeSession.id,
+                session: activeSession,
+                videoStream: activeSession.mainVideoStream,
+            },
+        ];
+    }
+
+    /**
+     * @param {RtcSession} session
+     * @param {String} videoType
+     */
+    setInset(session, videoType) {
+        this.state.insetCard = {
+            key: "session_" + session.id,
+            session,
+            videoStream: session.videoStreams.get(videoType),
+        };
     }
 
     get hasCallNotifications() {

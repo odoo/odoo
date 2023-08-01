@@ -7,7 +7,7 @@ import { mockGetMedia, start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import { click, contains, triggerEvents } from "@web/../tests/utils";
 
 QUnit.module("call");
 
@@ -160,6 +160,7 @@ QUnit.test("can share screen", async () => {
     await click(".o-discuss-CallActionList [title='More']");
     await click("[title='Share Screen']");
     await contains(".o-discuss-CallParticipantCard video");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
     await click(".o-discuss-CallActionList [title='More']");
     await click("[title='Stop Sharing Screen']");
     await contains(".o-discuss-CallParticipantCard video", { count: 0 });

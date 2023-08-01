@@ -4,6 +4,30 @@
 
     &.o-isTalking {
         box-shadow: inset 0 0 0 map-get($spacers, 1) darken($o-enterprise-action-color, 5%);
+
+        &.o-inset {
+            box-shadow: inset 0 0 0 map-get($spacers, 1)/2 darken($o-enterprise-action-color, 5%);
+        }
+    }
+
+    &.o-inset {
+        height: 20%;
+        max-height: 125px !important;
+        right: 1vh;
+        bottom: 1vh;
+        position: absolute !important;
+        cursor: move !important;
+
+        &.o-small {
+            width: 30%;
+            left: 0;
+            top: 0;
+        }
+
+        .o-discuss-CallParticipantCard-avatar img {
+            max-height: #{"min(70%, 70px)"};
+            max-width: #{"min(70%, 70px)"};
+        }
     }
 }
 

@@ -107,7 +107,7 @@ export class Thread extends Record {
     channel;
     /** @type {import("@mail/core/common/channel_member_model").ChannelMember[]} */
     channelMembers = [];
-    /** @type {RtcSession{}} */
+    /** @type {Object<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
     rtcSessions = {};
     invitingRtcSessionId;
     /** @type {Set<number>} */
@@ -481,7 +481,7 @@ export class Thread extends Record {
 
     get videoCount() {
         return Object.values(this._store.RtcSession.records).filter(
-            (session) => session.videoStream
+            (session) => session.videoStreams.size
         ).length;
     }
 

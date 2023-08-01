@@ -62,8 +62,10 @@ export class RtcSession extends Record {
     /** @type {Date|undefined} */
     raisingHand;
     videoComponentCount = 0;
+    /** @type {Map<'screen'|'camera', MediaStream>} */
+    videoStreams = new Map();
     /** @type {MediaStream} */
-    videoStream;
+    mainVideoStream;
     // RTC stats
     connectionState;
     localCandidateType;
