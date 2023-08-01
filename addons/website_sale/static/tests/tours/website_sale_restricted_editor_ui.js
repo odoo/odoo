@@ -5,7 +5,7 @@ import wTourUtils from '@website/js/tours/tour_utils';
 wTourUtils.registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
     test: true,
     url: `/shop`,
-}, [
+}, () => [
     {
         content: "Open the site menu to check what is inside",
         trigger: '[data-menu-xmlid="website.menu_site"]',

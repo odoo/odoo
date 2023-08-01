@@ -63,7 +63,7 @@
     wTourUtils.registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
         test: true,
         url: '/jobs',
-    }, [{
+    }, () => [{
         content: 'Go to the Guru job page',
         trigger: 'iframe a[href*="guru"]',
     }, {

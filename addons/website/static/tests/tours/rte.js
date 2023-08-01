@@ -13,7 +13,7 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     test: true,
     url: '/',
     wait_for: ready,
-}, [{
+}, () => [{
     content: "click language dropdown",
     trigger: 'iframe .js_language_selector .dropdown-toggle',
 }, {

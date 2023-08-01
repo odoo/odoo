@@ -14,7 +14,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     // TODO: replace by wTourUtils.getClientActionURL when it's added
     url: '/slides',
     test: true
-}, [{
+}, () => [{
     content: 'eLearning: click on New (top-menu)',
     trigger: 'div.o_new_content_container a',
 }, {

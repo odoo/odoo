@@ -7,7 +7,7 @@
         test: true,
         url: '/contactus',
         edition: true,
-    }, [{
+    }, () => [{
         content: "Select contact form",
         trigger: "iframe #wrap.o_editable section.s_website_form",
     }, {

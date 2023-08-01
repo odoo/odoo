@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_countdown', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({id: 's_countdown', name: 'Countdown'}),
     wTourUtils.clickOnSnippet({id: 's_countdown', name: 'Countdown'}),
     wTourUtils.changeOption('countdown', 'we-select:has([data-end-action]) we-toggler', 'end action'),

@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
     test: true,
     url: '/shop?search=Test Product',
 },
-    [
+    () => [
         {
             content: "check price on /shop",
             trigger: 'iframe .oe_product_cart .oe_currency_value:contains("825.00")',

@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
     test: true,
     url: '/',
     edition: true,
-}, [{
+}, () => [{
     content: 'Drop s_popup snippet',
     trigger: '.oe_snippet:has( > [data-snippet="s_popup"]) .oe_snippet_thumbnail',
     run: "drag_and_drop iframe #wrap",

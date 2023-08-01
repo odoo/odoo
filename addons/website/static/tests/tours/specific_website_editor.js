@@ -6,7 +6,7 @@ import wTourUtils from "@website/js/tours/tour_utils";
 wTourUtils.registerWebsitePreviewTour("generic_website_editor", {
     test: true,
     edition: true,
-}, [{
+}, () => [{
     trigger: 'iframe body:not([data-hello="world"])',
     content: 'Check that the editor DOM matches its website-generic features',
     run: function () {}, // Simple check

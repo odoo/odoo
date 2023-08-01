@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
     test: true,
     url: "/",
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({
         id: 's_newsletter_subscribe_popup',
         name: 'Newsletter Popup',

@@ -18,7 +18,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_images_wall", {
     test: true,
     url: "/",
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({
         id: "s_images_wall",
         name: "Images Wall",

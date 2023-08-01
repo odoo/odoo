@@ -63,7 +63,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     url: '/test_image_progress',
     test: true,
     edition: true,
-}, [
+}, () => [
     ...setupSteps,
     // 1. Check multi image upload
     {
@@ -205,7 +205,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
     url: '/test_image_progress',
     test: true,
     edition: true,
-}, [
+}, () => [
     ...setupSteps,
     // 1. Check multi image upload
     {

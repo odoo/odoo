@@ -13,7 +13,7 @@ import wTourUtils from '@website/js/tours/tour_utils';
 wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     url: '/slides',
     test: true,
-}, [{
+}, () => [{
     content: 'eLearning: click on New (top-menu)',
     trigger: 'div.o_new_content_container a'
 }, {

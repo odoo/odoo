@@ -11,7 +11,7 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
     edition: true,
     test: true,
 },
-    [
+    () => [
         {
             content: "drop a snippet",
             trigger: ".oe_snippet:has(.s_cover) .oe_snippet_thumbnail",
@@ -71,7 +71,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
     url: '/contactus',
     test: true,
 },
-    [
+    () => [
         // 1. Open Html Editor and select a scss file
         {
             content: "open site menu",
@@ -157,7 +157,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
     url: '/',
     test: true,
 },
-    [
+    () => [
         // This part of the test ensures that a restricted user can still use
         // the HTML Editor if someone else made a customization previously.
 

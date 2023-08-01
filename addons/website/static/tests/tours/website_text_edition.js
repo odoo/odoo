@@ -8,7 +8,7 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     {
         content: "Go to theme options",
         trigger: '.o_we_customize_theme_btn',

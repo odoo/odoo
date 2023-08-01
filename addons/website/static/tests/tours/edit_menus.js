@@ -5,7 +5,7 @@ import wTourUtils from '@website/js/tours/tour_utils';
 wTourUtils.registerWebsitePreviewTour('edit_menus', {
     test: true,
     url: '/',
-}, [
+}, () => [
     // Add a megamenu item from the menu.
     {
         content: "open site menu",

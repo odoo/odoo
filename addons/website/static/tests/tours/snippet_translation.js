@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation', {
     url: '/',
     edition: true,
     test: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({name: 'Cover'}),
     {
         content: "Check that contact us contain Parseltongue",
@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation', {
 wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
     url: '/',
     test: true,
-}, [
+}, () => [
     {
         content: "Change language to Parseltongue",
         trigger: 'iframe .js_language_selector .btn',

@@ -9,7 +9,7 @@ import wTourUtils from '@website/js/tours/tour_utils';
 wTourUtils.registerWebsitePreviewTour('blog_tags', {
     test: true,
     url: '/blog',
-}, [{
+}, () => [{
         content: "Go to first blog",
         trigger: "iframe article[name=blog_post] a",
     },
