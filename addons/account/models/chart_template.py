@@ -46,7 +46,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
     This method is mainly used as a local upgrade script.
     Returns a list of tuple (template_id, tax_id) of newly created records.
     """
-    def _create_taxes_from_template(company, template2tax_mapping):
+    def _create_taxes_from_template(company, template2tax_mapping, template2tax_to_update=None):
         """ Create a new taxes from templates. If an old tax already used the same xmlid, we
         remove the xmlid from it but don't modify anything else.
         :param company: the company of the tax to instantiate
@@ -74,7 +74,9 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                     _remove_xml_id(xml_id)
             _avoid_name_conflict(company, template)
             templates_to_create += template
-        new_template2tax_company = templates_to_create._generate_tax(company, accounts_exist=True)['tax_template_to_tax']
+        new_template2tax_company = templates_to_create._generate_tax(
+            company, accounts_exist=True, existing_template_to_tax=template2tax_to_update
+        )['tax_template_to_tax']
         return [(template.id, tax.id) for template, tax in new_template2tax_company.items()]
 
     def _update_taxes_from_template(template2tax_mapping):
@@ -258,7 +260,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                     new_tax_template_by_company[company.id] += template
             else:
                 templates_to_tax_update.append((template, tax))
-        new_template2tax += _create_taxes_from_template(company, templates_to_tax_create)
+        new_template2tax += _create_taxes_from_template(company, templates_to_tax_create, templates_to_tax_update)
         _update_taxes_from_template(templates_to_tax_update)
     _update_fiscal_positions_from_templates(chart_template, new_tax_template_by_company, templates)
     if outdated_taxes:
@@ -1391,10 +1393,12 @@ class AccountTaxTemplate(models.Model):
         })
         return vals
 
-    def _generate_tax(self, company, accounts_exist=False):
+    def _generate_tax(self, company, accounts_exist=False, existing_template_to_tax=None):
         """ This method generate taxes from templates.
 
             :param company: the company for which the taxes should be created from templates in self
+            :account_exist: whether accounts have already been created
+            :existing_template_to_tax: mapping of already existing templates to taxes [(template, tax), ...]
             :returns: {
                 'tax_template_to_tax': mapping between tax template and the newly generated taxes corresponding,
                 'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
@@ -1404,7 +1408,9 @@ class AccountTaxTemplate(models.Model):
         # repartition lines on taxes
         ChartTemplate = self.env['account.chart.template'].with_context(default_company_id=company.id)
         todo_dict = {'account.tax': {}, 'account.tax.repartition.line': {}}
-        tax_template_to_tax = {}
+        if not existing_template_to_tax:
+            existing_template_to_tax = []
+        tax_template_to_tax = {template: tax for (template, tax) in existing_template_to_tax}
 
         templates_todo = list(self)
         while templates_todo:
@@ -1441,6 +1447,9 @@ class AccountTaxTemplate(models.Model):
                 todo_dict['account.tax'][tax] = {
                     'cash_basis_transition_account_id': template.cash_basis_transition_account_id,
                 }
+                for existing_template, existing_tax in existing_template_to_tax:
+                    if template in existing_template.children_tax_ids and tax not in existing_tax.children_tax_ids:
+                        existing_tax.write({'children_tax_ids': [(4, tax.id, False)]})
 
                 if not accounts_exist:
                     # We also have to delay the assignation of accounts to repartition lines
