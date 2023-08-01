@@ -225,6 +225,12 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
                 selectedLine.order._updateRewards();
             }
         }
+        async _showDecreaseQuantityPopup() {
+            const result = await super._showDecreaseQuantityPopup();
+            if (result){
+                this.env.pos.get_order()._updateRewards();
+            }
+        }
     };
 
 Registries.Component.extend(ProductScreen, PosLoyaltyProductScreen);
