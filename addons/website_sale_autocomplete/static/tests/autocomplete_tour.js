@@ -12,22 +12,11 @@ function fail (errorMessage) {
 registry.category("web_tour.tours").add('autocomplete_tour', {
     test: true,
     url: '/shop', // /shop/address is redirected if no sales order
-    steps: () => [{
-    content: "search test product",
-    trigger: 'form input[name="search"]',
-    run: "text A test product",
-},{
-    content: 'Go to the product page',
-    trigger: '.dropdown-item:contains("A test product")'
-}, {
-    content: 'Add to cart',
-    trigger: '#add_to_cart'
-},
+    steps: () => [
+    ...tourUtils.addToCart({productName: "A test product"}),
     tourUtils.goToCart(),
-{
-    content: 'Go to process checkout',
-    trigger: 'a:contains("Process Checkout")'
-}, { // Actual test
+    tourUtils.goToCheckout(),
+{ // Actual test
     content: 'Input in Street & Number field',
     trigger: 'input[name="street"]',
     run: 'text This is a test'

@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { getPriceListChecksSteps } from '@website_event_booth_sale/../tests/tours/helpers/WebsiteEventBoothSaleTourMethods';
+import wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_currencies', {
     test: true,
@@ -38,10 +39,8 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
     {
         content: 'Submit your informations',
         trigger: 'button[type="submit"]',
-    }, {
-        content: 'Checkout your order',
-        trigger: 'a[role="button"] span:contains("Process Checkout")',
     },
+    wsTourUtils.goToCheckout(),
     ...getPriceListChecksSteps({
         pricelistName: "EUR With Discount Included",
         eventName: "Test Event Booths",

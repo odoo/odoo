@@ -9,16 +9,9 @@ var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';
 
 registry.category("web_tour.tours").add('shop_cart_recovery', {
     test: true,
-    url: '/shop?search=Acoustic Bloc Screens',
+    url: '/shop',
     steps: () => [
-    {
-        content: "select Acoustic Bloc Screens",
-        trigger: '.oe_product_cart a:containsExact("Acoustic Bloc Screens")',
-    },
-    {
-        content: "click add to cart",
-        trigger: '#product_details #add_to_cart',
-    },
+        ...tourUtils.addToCart({productName: "Acoustic Bloc Screens"}),
         tourUtils.goToCart(),
     {
         content: "check product is in cart, get cart id, logout, go to login",

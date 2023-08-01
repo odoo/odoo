@@ -1,20 +1,13 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import wTourUtils from '@website/js/tours/tour_utils';
+import wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('website_sale_cart_popover_tour', {
-        test: true,
-        url: '/shop',
-        steps: () => [
-        {
-            content: "Search for the product",
-            trigger: 'form input[name="search"]',
-            run: 'text website_sale_cart_popover_tour_product'
-        },
-        wTourUtils.clickOnElement('Search', 'form:has(input[name="search"]) .oe_search_button'),
-        wTourUtils.clickOnElement('website_sale_cart_popover_tour_product', 'a:contains(website_sale_cart_popover_tour_product)'),
-        wTourUtils.clickOnElement('Add to Cart', '#product_detail form[action^="/shop/cart/update"] #add_to_cart'),
+    test: true,
+    url: '/shop',
+    steps: () => [
+        ...wsTourUtils.addToCart({productName: "website_sale_cart_popover_tour_product"}),
         {
             content: "hover on cart popover",
             trigger: '#top_menu a[href$="/shop/cart"]',

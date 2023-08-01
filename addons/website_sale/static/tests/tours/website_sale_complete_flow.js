@@ -33,21 +33,11 @@
         extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
         trigger: 'a[href*="/shop/checkout"]',
     },
-    {
-        content: "Check Price b2b subtotal",
-        trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact(158.00)',
-        run: function () {}, // it's a check
-    },
-    {
-        content: "Check Price b2b Sale Tax(15%)",
-        trigger: 'tr#order_total_taxes .oe_currency_value:containsExact(23.70)',
-        run: function () {}, // it's a check
-    },
-    {
-        content: "Check Price b2b Total amount",
-        trigger: 'tr#order_total .oe_currency_value:containsExact(181.70)',
-        run: function () {}, // it's a check
-    },
+    ...tourUtils.assertCartAmounts({
+        taxes: '23.70',
+        untaxed: '158.00',
+        total: '181.70',
+    }),
     {
         content: "Fulfill billing address form",
         trigger: 'select[name="country_id"]',
@@ -227,21 +217,11 @@
         extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
         trigger: 'a[href*="/shop/checkout"]',
     },
-    {
-        content: "Check Price b2c total",
-        trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact(158.00)',
-        run: function () {}, // it's a check
-    },
-    {
-        content: "Check Price b2c Sale Tax(15%)",
-        trigger: 'tr#order_total_taxes .oe_currency_value:containsExact(23.70)',
-        run: function () {}, // it's a check
-    },
-    {
-        content: "Check Price b2c Total amount",
-        trigger: 'tr#order_total .oe_currency_value:containsExact(181.70)',
-        run: function () {}, // it's a check
-    },
+    ...tourUtils.assertCartAmounts({
+        taxes: '23.70',
+        untaxed: '158.00',
+        total: '181.70',
+    }),
     {
         content: "Click on Sign in Button",
         trigger: '.oe_cart a:contains(" Sign in")',

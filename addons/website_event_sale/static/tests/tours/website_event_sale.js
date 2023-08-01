@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('event_buy_tickets', {
     test: true,
@@ -47,39 +48,11 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
             extra_trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
             trigger: 'button[type=submit]',
         },
-        {
-            content: "Check that the cart contains exactly 3 triggers",
-            trigger: 'a:has(.my_cart_quantity:containsExact(3)),.o_extra_menu_items .fa-plus',
-            run: function () {}, // it's a check
-        },
-        {
-            content: "go to cart",
-            trigger: 'a:contains(Return to Cart)',
-        },
-        {
-            content: "Now click on `Process Checkout`",
-            extra_trigger: 'a:has(.my_cart_quantity):contains(3),#cart_products input.js_quantity[value="3"]',
-            trigger: '.btn-primary:contains("Process Checkout")'
-        },
-        {
-            content: "Check that the subtotal is 4,000.00 USD", // this test will fail if the currency of the main company is not USD
-            trigger: '#order_total_untaxed .oe_currency_value:contains("4,000.00")',
-            run: function () {}, // it's a check
-        },
-        {
-            content: "Select `Wire Transfer` payment method",
-            trigger: '#payment_method label:contains("Wire Transfer")',
-        },
-        {
-            content: "Pay",
-            //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
-            // extra_trigger: '#payment_method input:checked,#payment_method:not(:has("input:radio:visible"))',
-            trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
-        },
-        {
-            content: "Last step",
-            trigger: '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
-            timeout: 30000,
-        }
+        wsTourUtils.goToCart({quantity: 3}),
+        wsTourUtils.goToCheckout(),
+        ...wsTourUtils.assertCartAmounts({
+            untaxed: '4,000.00',
+        }),
+        ...wsTourUtils.payWithTransfer(),
     ]
 });
