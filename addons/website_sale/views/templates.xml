@@ -2325,30 +2325,37 @@
     <template id="total">
         <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order and website_sale_order.website_order_line">
             <table class="table mb-0">
-                  <tr id="empty">
-                      <t t-if='not no_rowspan'><td rowspan="10" class="border-0"/></t>
-                      <td class="col-md-2 col-3 border-0"></td>
-                      <td class="col-md-2 col-3 border-0" ></td>
-                  </tr>
-                  <tr id="order_total_untaxed">
-                      <td class="text-end border-0">Subtotal:</td>
-                      <td class="text-xl-end border-0" >
-                          <span t-field="website_sale_order.amount_untaxed" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
-                      </td>
-                  </tr>
-                  <tr id="order_total_taxes">
-                      <td class="text-end border-0">Taxes:</td>
-                      <td class="text-xl-end border-0">
-                           <span t-field="website_sale_order.amount_tax" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
-                      </td>
-                  </tr>
-                  <tr id="order_total">
-                      <td class="text-end border-top border-bottom-0"><strong>Total:</strong></td>
-                      <td class="text-xl-end border-top border-bottom-0">
-                          <strong t-field="website_sale_order.amount_total" class="monetary_field"
-                              t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
-                      </td>
-                  </tr>
+                <tr id="empty">
+                    <td t-if="not no_rowspan" rowspan="10" class="border-0"/>
+                    <td class="col-md-2 col-3 border-0"/>
+                    <td class="col-md-2 col-3 border-0"/>
+                </tr>
+                <tr id="order_total_untaxed">
+                    <td class="text-end border-0">Subtotal:</td>
+                    <td class="text-xl-end border-0">
+                        <span t-field="website_sale_order.amount_untaxed"
+                              class="monetary_field"
+                              style="white-space: nowrap;"
+                              t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                    </td>
+                </tr>
+                <tr id="order_total_taxes">
+                    <td class="text-end border-0">Taxes:</td>
+                    <td class="text-xl-end border-0">
+                        <span t-field="website_sale_order.amount_tax"
+                              class="monetary_field"
+                              style="white-space: nowrap;"
+                              t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                    </td>
+                </tr>
+                <tr id="order_total">
+                    <td class="text-end border-top border-bottom-0"><strong>Total:</strong></td>
+                    <td class="text-xl-end border-top border-bottom-0">
+                        <strong t-field="website_sale_order.amount_total"
+                                class="monetary_field"
+                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                    </td>
+                </tr>
             </table>
         </div>
     </template>
@@ -2357,8 +2364,8 @@
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_promotions">
                 <td colspan="3" class="text-center text-xl-end border-0">
-                <span class=''>
-                    <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
+                <span class="">
+                    <t t-set="force_coupon" t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
                     <t t-if="not force_coupon">
                         <a href="#" class="show_coupon">I have a promo code</a>
                     </t>
