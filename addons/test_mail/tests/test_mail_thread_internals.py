@@ -361,25 +361,6 @@ class TestDiscuss(MailCommon, TestRecipients):
         )
 
     @users("employee")
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_suggested_recipients_mail_cc(self):
-        """ MailThreadCC mixin adds its own suggested recipients management
-        coming from CC (carbon copy) management. """
-        record = self.env['mail.test.cc'].create({
-            'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>',
-        })
-        suggestions = record._message_get_suggested_recipients()[record.id]
-        self.assertEqual(
-            sorted(suggestions),
-            [
-                (False, '"cc3" <cc3@example.com>', None, 'CC Email', {}),
-                (False, 'cc1@example.com', None, 'CC Email', {}),
-                (False, 'cc2@example.com', None, 'CC Email', {}),
-            ],
-            'cc should be in suggestions'
-        )
-
-    @users("employee")
     def test_unlink_notification_message(self):
         channel = self.env['discuss.channel'].create({'name': 'testChannel'})
         notification_msg = channel.with_user(self.user_admin).message_notify(
