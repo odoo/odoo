@@ -42,6 +42,7 @@ export class PropertiesField extends Component {
             popoverClass: "o_property_field_popover",
             position: "top",
             onClose: () => this.onCloseCurrentPopover?.(),
+            fixedPosition: true,
         });
         this.propertiesRef = useRef("properties");
 
