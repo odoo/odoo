@@ -14,17 +14,17 @@ QUnit.test("persisted session history", async (assert) => {
     const livechatChannelId = await loadDefaultConfig();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: pyEnv.adminPartnerId }),
             Command.create({ partner_id: pyEnv.publicPartnerId }),
         ],
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: pyEnv.adminPartnerId,
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
     setCookie("im_livechat_session", JSON.stringify(channelInfo));
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: pyEnv.adminPartnerId,
         body: "Old message in history",
         res_id: channelId,
         model: "discuss.channel",

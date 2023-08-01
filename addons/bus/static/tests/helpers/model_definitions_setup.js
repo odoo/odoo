@@ -39,9 +39,9 @@ insertRecords("res.groups", [{ id: TEST_GROUP_IDS.groupUserId, name: "Internal U
 insertRecords("res.users", [
     {
         display_name: "Your Company, Mitchell Admin",
-        id: TEST_USER_IDS.currentUserId,
+        id: TEST_USER_IDS.adminUserId,
         name: "Mitchell Admin",
-        partner_id: TEST_USER_IDS.currentPartnerId,
+        partner_id: TEST_USER_IDS.adminPartnerId,
     },
     {
         active: false,
@@ -55,12 +55,13 @@ insertRecords("res.partner", [
     {
         active: false,
         display_name: "Public user",
+        name: "Public user",
         id: TEST_USER_IDS.publicPartnerId,
         is_public: true,
     },
     {
         display_name: "Your Company, Mitchell Admin",
-        id: TEST_USER_IDS.currentPartnerId,
+        id: TEST_USER_IDS.adminPartnerId,
         name: "Mitchell Admin",
     },
     {

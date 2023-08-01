@@ -13,13 +13,14 @@ QUnit.test("chat request opens chat window", async (assert) => {
     const pyEnv = await startServer();
     const channelId = await loadDefaultConfig();
     const [channel] = pyEnv["im_livechat.channel"].searchRead([["id", "=", channelId]]);
+    const [adminPartner] = pyEnv["res.partner"].searchRead([["id", "=", pyEnv.adminPartnerId]]);
     patchWithCleanup(session.livechatData, {
         options: {
             ...session.livechatData.options,
             chat_request_session: {
                 folded: false,
                 id: channel.id,
-                operator_pid: [pyEnv.currentPartnerId, pyEnv.currentPartner.name],
+                operator_pid: [adminPartner.id, adminPartner.name],
                 name: channel.name,
                 uuid: channel.uuid,
                 isChatRequest: true,

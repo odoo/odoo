@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { Command } from "@mail/../tests/helpers/command";
+
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
@@ -42,15 +44,14 @@ patch(MockServer.prototype, {
                 },
             ],
         ];
-        let visitor_user;
-        if (user_id) {
-            const visitor_user = this.getRecords("res.users", [["id", "=", user_id]])[0];
-            if (visitor_user && visitor_user.active && visitor_user !== operator) {
-                // valid session user (not public)
-                membersToAdd.push([0, 0, { partner_id: visitor_user.partner_id.id }]);
-            }
-        } else {
-            membersToAdd.push([0, 0, { partner_id: this.publicPartnerId }]);
+        const visitor_user = this.getRecords("res.users", [["id", "=", user_id]])[0];
+        if (
+            visitor_user &&
+            visitor_user.id === this.pyEnv.currentUserId &&
+            visitor_user !== operator
+        ) {
+            // valid session user (not public)
+            membersToAdd.push(Command.create({ partner_id: visitor_user.partner_id }));
         }
         const membersName = [
             visitor_user ? visitor_user.display_name : anonymous_name,
