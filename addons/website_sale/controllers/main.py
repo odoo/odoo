@@ -1034,7 +1034,7 @@ class WebsiteSale(http.Controller):
             error_message.append(_('Invalid Email! Please enter a valid email address.'))
 
         # vat validation
-        Partner = request.env['res.partner']
+        Partner = request.env['res.partner'].sudo()
         if data.get("vat") and hasattr(Partner, "check_vat"):
             if country_id:
                 data["vat"] = Partner.fix_eu_vat_number(country_id, data.get("vat"))
