@@ -182,7 +182,6 @@
                                 </t>
                             </tbody>
                         </table>
-                        <div>
                             <div id="right-elements" t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
                                 <div id="total" class="clearfix row">
                                     <div class="ms-auto">
@@ -227,6 +226,7 @@
                                 </div>
                                 <t t-call="account.document_tax_totals_company_currency_template"/>
                             </div>
+                    </div>
                             <div id="payment_term" t-attf-class="#{'col-7' if report_type != 'html' else '' } clearfix" class="clearfix col-5">
                                 <div class="justify-text">
                                     <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note" class="mb-2">
