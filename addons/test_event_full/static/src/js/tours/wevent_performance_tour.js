@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 var registerSteps = [{
     content: "Select 2 units of 'Ticket1' ticket type",
@@ -40,38 +41,20 @@ var registerSteps = [{
     extra_trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
     trigger: 'button[type=submit]',
     run: 'click',
-}, {
-    content: "Address filling",
-    trigger: 'select[name="country_id"]',
-    run: function () {
-        $('input[name="name"]').val('Raoulette Poiluchette');
-        $('input[name="phone"]').val('0456112233');
-        $('input[name="email"]').val('raoulette@example.com');
-        $('input[name="street"]').val('Cheesy Crust Street, 42');
-        $('input[name="city"]').val('CheeseCity');
-        $('input[name="zip"]').val('8888');
-        $('#country_id option:eq(1)').attr('selected', true);
-    },
-}, {
+},
+wsTourUtils.fillAdressForm({
+    name: "Raoulette Poiluchette",
+    phone: "0456112233",
+    email: "raoulette@example.com",
+    street: "Cheesy Crust Street, 42",
+    city: "CheeseCity",
+    zip: "8888",
+}), {
     content: "Next",
     trigger: '.oe_cart .btn:contains("Next")',
-}, {
-    content: 'Select Test payment provider',
-    trigger: '.o_payment_option_card:contains("Demo")'
-}, {
-    content: 'Add card number',
-    trigger: 'input[name="customer_input"]',
-    run: 'text 4242424242424242'
-}, {
-    content: "Pay now",
-    extra_trigger: "#cart_products:contains(Ticket1):contains(Ticket2)",
-    trigger: 'button:contains(Pay Now)',
-    run: 'click',
-}, {
-    content: 'Payment is successful',
-    trigger: '.oe_website_sale_tx_status:contains("Your payment has been successfully processed.")',
-    run: function () {}
-}];
+},
+...wsTourUtils.payWithDemo(),
+];
 
 
 registry.category("web_tour.tours").add('wevent_performance_register', {

@@ -74,24 +74,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
                 });
             },
         },
-        {
-            content: "type Taxed Product in search",
-            trigger: 'form input[name="search"]',
-            run: "text Taxed Product",
-        },
-        {
-            content: "start search",
-            trigger: 'form:has(input[name="search"]) .oe_search_button',
-        },
-        {
-            content: "select Taxed Product",
-            extra_trigger: '.oe_search_found', // Wait to be on search results or it sometimes throws concurent error (sent search form + click on product on /shop)
-            trigger: '.oe_product_cart a:containsExact("Taxed Product")',
-        },
-        {
-            content: "click on 'Add to Cart' button",
-            trigger: "a:contains(ADD TO CART)",
-        },
+            ...tourUtils.addToCart({productName: "Taxed Product"}),
             tourUtils.goToCart({quantity: 3}),
         {
             content: "check reduction amount got recomputed and merged both discount lines into one only",
@@ -135,10 +118,8 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             content: "go to checkout",
             trigger: 'a[href="/shop/checkout?express=1"]',
         },
-        {
-            content: "check total is unchanged once we land on payment page",
-            trigger: 'tr#order_total .oe_currency_value:contains("967.50")',
-            run: function () {}, // it's a check
-        },
+        ...tourUtils.assertCartAmounts({
+            total: '967.50',
+        }),
     ]
 });

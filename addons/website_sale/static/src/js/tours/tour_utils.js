@@ -18,6 +18,39 @@ function addToCart({productName, search = true, productHasVariants = false}) {
     return steps;
 }
 
+function assertCartAmounts({taxes = false, untaxed = false, total = false, delivery = false}) {
+    let steps = [];
+    if (taxes) {
+        steps.push({
+            content: 'Check if the tax is correct',
+            trigger: `tr#order_total_taxes .oe_currency_value:containsExact(${taxes})`,
+            run: function () {},  // it's a check
+        });
+    }
+    if (untaxed) {
+        steps.push({
+            content: 'Check if the tax is correct',
+            trigger: `tr#order_total_untaxed .oe_currency_value:containsExact(${untaxed})`,
+            run: function () {},  // it's a check
+        });
+    }
+    if (total) {
+        steps.push({
+            content: 'Check if the tax is correct',
+            trigger: `tr#order_total .oe_currency_value:containsExact(${total})`,
+            run: function () {},  // it's a check
+        });
+    }
+    if (delivery) {
+        steps.push({
+            content: 'Check if the tax is correct',
+            trigger: `tr#order_delivery .oe_currency_value:containsExact(${delivery})`,
+            run: function () {},  // it's a check
+        });
+    }
+    return steps
+}
+
 function assertCartContains({productName, backend, notContains = false} = {}) {
     let trigger = `a:contains(${productName})`;
 
@@ -80,6 +113,74 @@ function goToCart({quantity = 1, position = "bottom", backend = false} = {}) {
     };
 }
 
+function goToCheckout() {
+    return {
+        content: 'Checkout your order',
+        trigger: 'a[role="button"] span:contains("Process Checkout")',
+        run: 'click',
+    };
+}
+
+function pay() {
+    return {
+        content: 'Pay',
+        //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
+        // extra_trigger: '#payment_method input:checked,#payment_method:not(:has("input:radio:visible"))',
+        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)'
+    };
+}
+
+function payWithDemo() {
+    return [{
+        content: 'eCommerce: select Test payment provider',
+        trigger: '.o_payment_option_card:contains("Demo")'
+    }, {
+        content: 'eCommerce: add card number',
+        trigger: 'input[name="customer_input"]',
+        run: 'text 4242424242424242'
+    },
+    pay(),
+    {
+        content: 'eCommerce: check that the payment is successful',
+        trigger: '.oe_website_sale_tx_status:contains("Your payment has been successfully processed.")',
+        run: function () {}
+    }]
+}
+
+function payWithTransfer(redirect=false) {
+    const first_step = {
+        content: "Select `Wire Transfer` payment method",
+        trigger: '#payment_method label:contains("Wire Transfer")',
+    }
+    if (!redirect) {
+        return [
+        first_step,
+        pay(),
+        {
+            content: "Last step",
+            trigger: '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
+            timeout: 30000,
+        }]
+    } else {
+        return [
+            first_step,
+            pay(),
+            {
+                content: "Last step",
+                trigger: '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
+                timeout: 30000,
+                run: () => {
+                    window.location.href = '/contactus'; // Redirect in JS to avoid the RPC loop (20x1sec)
+                },
+            }, {
+                content: "wait page loaded",
+                trigger: 'h1:contains("Contact us")',
+                run: function () {}, // it's a check
+            }
+        ]
+    }
+}
+
 function searchProduct(productName) {
     return [
         wTourUtils.clickOnElement('Shop', 'a:contains("Shop")'),
@@ -110,10 +211,15 @@ function selectPriceList(pricelist) {
 
 export default {
     addToCart,
+    assertCartAmounts,
     assertCartContains,
     assertProductPrice,
     fillAdressForm,
     goToCart,
+    goToCheckout,
+    pay,
+    payWithDemo,
+    payWithTransfer,
     selectPriceList,
     searchProduct,
 };
