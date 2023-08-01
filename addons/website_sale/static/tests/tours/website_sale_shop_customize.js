@@ -8,7 +8,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
     edition: true,
     test: true,
 },
-    [
+    () => [
         ...wTourUtils.clickOnSave(),
         {
             content: "select product attribute Steel",

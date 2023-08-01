@@ -24,7 +24,7 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     {
         content: "Go to theme options",
         trigger: '.o_we_customize_theme_btn',

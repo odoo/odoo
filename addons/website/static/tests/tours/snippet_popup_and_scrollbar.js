@@ -37,7 +37,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     test: true,
     url: "/",
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop(snippets[1]), // Media List
     wTourUtils.dragNDrop(snippets[0]), // Popup
     checkScrollbar(false),

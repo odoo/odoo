@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('client_action_iframe_fallback', {
     test: true,
     url: '/',
 },
-[
+() => [
     {
         content: "Ensure we are on the expected page",
         trigger: 'body iframe html[data-view-xmlid="website.homepage"]',

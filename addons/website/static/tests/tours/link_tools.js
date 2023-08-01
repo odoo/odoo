@@ -11,7 +11,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     // 1. Create a new link from scratch.
     wTourUtils.dragNDrop({
         id: 's_text_image',

@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_version", {
     edition: true,
     url: "/",
     test: true,
-}, [{
+}, () => [{
     content: "Drop s_test_snip snippet",
     trigger: '#oe_snippets .oe_snippet:has(.s_test_snip) .oe_snippet_thumbnail',
     run: "drag_and_drop iframe #wrap",

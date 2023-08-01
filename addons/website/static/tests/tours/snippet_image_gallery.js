@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_image_gallery', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({id: 's_image_gallery', name: 'Images Wall'}),
     ...wTourUtils.clickOnSave(),
     {
@@ -25,7 +25,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
     test: true,
     url: "/",
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({
         id: "s_image_gallery",
         name: "Image Gallery",

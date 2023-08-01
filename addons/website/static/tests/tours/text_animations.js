@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     test: true,
     url: "/",
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({
         id: "s_cover",
         name: "Cover",

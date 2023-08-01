@@ -18,7 +18,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     // Add a megamenu item to the top menu.
     {
         content: "Click on a menu item",

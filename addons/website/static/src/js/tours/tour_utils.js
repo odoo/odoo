@@ -320,61 +320,79 @@ function clickOnExtraMenuItem(stepOptions, backend = false) {
  * @param {object} options The tour options
  * @param {string} options.url The page to edit
  * @param {boolean} [options.edition] If the tour starts in edit mode
- * @param {object[]} steps The steps of the tour
+ * @param {() => TourStep[]} steps The steps of the tour. Has to be a function to avoid direct interpolation of steps. 
  */
 function registerWebsitePreviewTour(name, options, steps) {
-    const tourSteps = [...steps];
-    const url = getClientActionUrl(options.url, !!options.edition);
-
-    // Note: for both non edit mode and edit mode, we set a high timeout for the
-    // first step. Indeed loading both the backend and the frontend (in the
-    // iframe) and potentially starting the edit mode can take a long time in
-    // automatic tests. We'll try and decrease the need for this high timeout
-    // of course.
-    if (options.edition) {
-        tourSteps.unshift({
-            content: "Wait for the edit mode to be started",
-            trigger: '.o_website_preview.editor_enable.editor_has_snippets',
-            timeout: 30000,
-            auto: true,
-            run: () => {}, // It's a check
-        });
-    } else {
-        tourSteps[0].timeout = 20000;
+    if(typeof steps !== "function") {
+        throw new Error(`tour.steps has to be a function that returns TourStep[]`)
     }
-
-    return registry.category("web_tour.tours").add(name, Object.assign({}, options, { url, steps: () => tourSteps}));
+    return registry
+        .category("web_tour.tours")
+        .add(name, {
+            ...options,
+            url : getClientActionUrl(options.url, !!options.edition), 
+            steps: () => {
+                const tourSteps = [...steps()];
+                // Note: for both non edit mode and edit mode, we set a high timeout for the
+                // first step. Indeed loading both the backend and the frontend (in the
+                // iframe) and potentially starting the edit mode can take a long time in
+                // automatic tests. We'll try and decrease the need for this high timeout
+                // of course.
+                if (options.edition) {
+                    tourSteps.unshift({
+                        content: "Wait for the edit mode to be started",
+                        trigger: '.o_website_preview.editor_enable.editor_has_snippets',
+                        timeout: 30000,
+                        auto: true,
+                        run: () => {}, // It's a check
+                    });
+                } else {
+                    tourSteps[0].timeout = 20000;
+                }
+                return tourSteps;
+            }
+        });
 }
 
 function registerThemeHomepageTour(name, steps) {
+    if(typeof steps !== "function") {
+        throw new Error(`tour.steps has to be a function that returns TourStep[]`)
+    }
     return registerWebsitePreviewTour(name, {
         url: '/',
         edition: true,
         sequence: 1010,
         saveAs: "homepage",
-    }, prepend_trigger(
-        steps.concat(clickOnSave()),
+    }, () => prepend_trigger(
+        steps().concat(clickOnSave()),
         ".o_website_preview[data-view-xmlid='website.homepage'] "
     ));
 }
 
 function registerBackendAndFrontendTour(name, options, steps) {
+    if(typeof steps !== "function") {
+        throw new Error(`tour.steps has to be a function that returns TourStep[]`)
+    }
     if (window.location.pathname === '/web') {
-        const newSteps = [];
-        for (const step of steps) {
-            const newStep = Object.assign({}, step);
-            newStep.trigger = `iframe ${step.trigger}`;
-            if (step.extra_trigger) {
-                newStep.extra_trigger = `iframe ${step.extra_trigger}`;
+        return registerWebsitePreviewTour(name, options, () => {
+            const newSteps = [];
+            for (const step of steps()) {
+                const newStep = Object.assign({}, step);
+                newStep.trigger = `iframe ${step.trigger}`;
+                if (step.extra_trigger) {
+                    newStep.extra_trigger = `iframe ${step.extra_trigger}`;
+                }
+                newSteps.push(newStep);
             }
-            newSteps.push(newStep);
-        }
-        return registerWebsitePreviewTour(name, options, newSteps);
+            return newSteps
+        });
     }
 
     return registry.category("web_tour.tours").add(name, {
         url: options.url,
-        steps: () => steps,
+        steps: () => {
+            return steps()
+        },
     });
 }
 

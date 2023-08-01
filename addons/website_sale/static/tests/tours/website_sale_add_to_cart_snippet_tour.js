@@ -15,7 +15,7 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         edition: true,
         test: true,
     },
-    [
+    () => [
         wTourUtils.dragNDrop({name: 'Add to Cart Button'}),
 
         // Basic product with no variants

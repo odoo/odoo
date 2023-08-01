@@ -30,7 +30,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     test: true,
     url: "/",
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop(snippets[1]), // Media List
     wTourUtils.dragNDrop(snippets[1]), // Media List
     wTourUtils.dragNDrop(snippets[2]), // Columns

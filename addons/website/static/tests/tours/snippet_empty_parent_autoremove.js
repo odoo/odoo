@@ -13,7 +13,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     // Base case: remove both columns from text - image
     wTourUtils.dragNDrop({
         id: 's_text_image',

@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     test: true,
     url: '/',
 },
-[
+() => [
     {
         content: "Select the language dropdown",
         trigger: 'iframe .js_language_selector .dropdown-toggle'
