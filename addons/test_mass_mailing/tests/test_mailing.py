@@ -214,9 +214,11 @@ class TestMassMailing(TestMassMailCommon):
                          'partner': customer_fmt,
                          'state': 'sent'},
                         {'email': 'test.customer.😊@example.com',
+                         # mail to avoids double encapsulation
+                         'email_to_recipients': [[f'"{customer_unic.name}" <test.customer.😊@example.com>']],
                          'failure_type': False,
                          'partner': customer_unic,
-                         'state': 'ignored'},  # email_re usage forbids mailing to unicode
+                         'state': 'sent'},
                         {'email': 'test.customer.case@example.com',
                          'email_to_recipients': [[f'"{customer_case.name}" <test.customer.case@example.com>']],
                          'failure_type': False,
@@ -242,7 +244,7 @@ class TestMassMailing(TestMassMailCommon):
                          'state': 'sent'},
                         {'email': 'record.😊@example.com',
                          'failure_type': False,
-                         'state': 'ignored'},  # email_re usage forbids mailing to unicode
+                         'state': 'sent'},
                     ],
                     mailing,
                     test_records,
