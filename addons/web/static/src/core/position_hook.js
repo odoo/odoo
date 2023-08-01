@@ -307,12 +307,19 @@ const POSITION_BUS = Symbol("position-bus");
 export function usePosition(target, options) {
     const popperRef = useRef(options?.popper || DEFAULTS.popper);
     const getTarget = typeof target === "function" ? target : () => target;
+    let wasPositioned = false;
     const update = () => {
         const targetEl = getTarget();
         const popperEl = popperRef.el;
         if (!targetEl || !popperEl) {
             return;
         }
+        if (options.fixedPosition && wasPositioned) {
+            // in case we have fixedPosition set to true, we only want to position the popover once,
+            // and then ignore subsequent reposition events
+            return;
+        }
+        wasPositioned = true;
 
         // Prepare
         const iframe = getIFrame(targetEl);

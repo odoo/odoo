@@ -264,3 +264,36 @@ QUnit.test("within iframe", async (assert) => {
     assert.strictEqual(popoverBox.top, expectedTop);
     assert.strictEqual(popoverBox.left, expectedLeft);
 });
+
+QUnit.test("popover fixed position", async (assert) => {
+    const container = document.createElement("div");
+    container.id = "container";
+    container.style.backgroundColor = "pink";
+    container.style.height = "450px";
+    container.style.width = "450px";
+    container.style.display = "flex";
+    container.style.alignItems = "center";
+    container.style.justifyContent = "center";
+    popoverTarget.style.height = "50px";
+    container.appendChild(popoverTarget);
+    fixture.appendChild(container);
+
+    const TestPopover = class extends Popover {
+        onPositioned(el, { direction, variant }) {
+            assert.step("onPositioned");
+        }
+    };
+    await mount(TestPopover, fixture, {
+        props: { target: container, position: "bottom-fit", fixedPosition: true },
+    });
+
+    assert.verifySteps(["onPositioned"]);
+
+    // force the DOM update
+    container.style.height = "125px";
+    container.style.alignItems = "flex-end";
+    triggerEvent(document, null, "scroll");
+    await nextTick();
+
+    assert.verifySteps([]);
+});
