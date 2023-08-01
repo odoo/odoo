@@ -51,9 +51,10 @@ class LeaveReport(models.Model):
                 FROM (SELECT
                     allocation.employee_id as employee_id,
                     employee.active as active_employee,
-                    CASE 
-                        WHEN request.number_of_days > 0 THEN allocation.number_of_days - request.number_of_days
-                        ELSE allocation.number_of_days 
+                    CASE
+                        WHEN allocation.id = min_allocation_id.min_id
+                            THEN aggregate_allocation.number_of_days - aggregate_leave.number_of_days
+                            ELSE 0
                     END as number_of_days,
                     allocation.department_id as department_id,
                     allocation.holiday_status_id as leave_type,
@@ -64,10 +65,25 @@ class LeaveReport(models.Model):
                     allocation.employee_company_id as company_id
                 FROM hr_leave_allocation as allocation
                 INNER JOIN hr_employee as employee ON (allocation.employee_id = employee.id)
-                LEFT JOIN 
-                    (SELECT holiday_status_id, employee_id, sum(number_of_days) as number_of_days 
-                    FROM hr_leave GROUP BY holiday_status_id, employee_id) request 
-                on (allocation.employee_id=request.employee_id and allocation.holiday_status_id = request.holiday_status_id)
+
+                /* Obtain the minimum id for a given employee and type of leave */
+                LEFT JOIN
+                    (SELECT employee_id, holiday_status_id, min(id) as min_id
+                    FROM hr_leave_allocation GROUP BY employee_id, holiday_status_id) min_allocation_id
+                on (allocation.employee_id=min_allocation_id.employee_id and allocation.holiday_status_id=min_allocation_id.holiday_status_id)
+
+                /* Obtain the sum of allocations */
+                LEFT JOIN
+                    (SELECT employee_id, holiday_status_id, sum(number_of_days) as number_of_days
+                    FROM hr_leave_allocation GROUP BY employee_id, holiday_status_id) aggregate_allocation
+                on (allocation.employee_id=aggregate_allocation.employee_id and allocation.holiday_status_id=aggregate_allocation.holiday_status_id)
+
+                /* Obtain the sum of requested leaves (validated and confirmed) */
+                LEFT JOIN
+                    (SELECT employee_id, holiday_status_id, sum(number_of_days) as number_of_days 
+                    FROM hr_leave GROUP BY employee_id, holiday_status_id) aggregate_leave
+                on (allocation.employee_id=aggregate_leave.employee_id and allocation.holiday_status_id = aggregate_leave.holiday_status_id)
+
                 UNION ALL SELECT
                     request.employee_id as employee_id,
                     employee.active as active_employee,
