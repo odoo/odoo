@@ -1409,6 +1409,22 @@ export class PosStore extends Reactive {
         }
         return false;
     }
+    /**
+     * @param {Object} tax
+     * @param {integer} sign
+     * @param {float} factorized_tax_amount
+     * @param {float} tax_base_amount
+     * @param {float} currency_round
+     * @returns {Object}
+    */
+    _prepare_tax_vals_data(tax, sign, factorized_tax_amount, tax_base_amount, currency_rounding) {
+        return {
+            'id': tax.id,
+            'name': tax.name,
+            'amount': sign * factorized_tax_amount,
+            'base': sign * round_pr(tax_base_amount, currency_rounding),
+        }
+    }
 
     /**
      * Mirror JS method of:
@@ -1555,12 +1571,7 @@ export class PosStore extends Reactive {
                 cumulated_tax_included_amount += factorized_tax_amount;
             }
 
-            taxes_vals.push({
-                id: tax.id,
-                name: tax.name,
-                amount: sign * factorized_tax_amount,
-                base: sign * round_pr(tax_base_amount, currency_rounding),
-            });
+            taxes_vals.push(self._prepare_tax_vals_data(tax, sign, factorized_tax_amount, tax_base_amount, currency_rounding));
 
             if (tax.include_base_amount) {
                 base += factorized_tax_amount;
