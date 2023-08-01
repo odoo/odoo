@@ -110,4 +110,10 @@ patch(ProductScreen.prototype, {
         await super._barcodeProductAction(code);
         this.currentOrder._updateRewards();
     },
+    async _showDecreaseQuantityPopup() {
+        const result = await this._super();
+        if (result){
+            this.currentOrder._updateRewards();
+        }
+    }
 });
