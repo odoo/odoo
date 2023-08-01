@@ -42,24 +42,9 @@ var buyCertificationSteps = [{
     trigger: 'a:contains("Add to Cart")'
 },
     tourUtils.goToCart(),
+    tourUtils.goToCheckout(),
+    ...tourUtils.payWithDemo(),
 {
-    content: 'eCommerce: Process Checkout',
-    trigger: 'a:contains("Process Checkout")'
-}, {
-    content: 'eCommerce: select Test payment provider',
-    trigger: '.o_payment_option_card:contains("Demo")'
-}, {
-    content: 'eCommerce: add card number',
-    trigger: 'input[name="customer_input"]',
-    run: 'text 4242424242424242'
-}, {
-    content: 'eCommerce: pay',
-    trigger: 'button[name="o_payment_submit_button"]'
-}, {
-    content: 'eCommerce: check that the payment is successful',
-    trigger: '.oe_website_sale_tx_status:contains("Your payment has been successfully processed.")',
-    run: function () {}
-}, {
     content: 'eCommerce: go back to e-learning home page',
     trigger: '.nav-link:contains("Courses")'
 }, {

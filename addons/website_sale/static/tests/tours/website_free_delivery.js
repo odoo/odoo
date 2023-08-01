@@ -4,24 +4,13 @@ import { registry } from "@web/core/registry";
 import tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('check_free_delivery', {
-        test: true,
-        url: '/shop?search=office chair black',
-        steps: () => [
+    test: true,
+    url: '/shop',
+    steps: () => [
         // Part 1: Check free delivery
-        {
-            content: "select office chair black",
-            trigger: '.oe_product_cart a:contains("Office Chair Black TEST")',
-        },
-        {
-            content: "click on add to cart",
-            trigger: '#product_details #add_to_cart',
-        },
-            tourUtils.goToCart(),
-        {
-            content: "go to checkout",
-            extra_trigger: '#cart_products input.js_quantity:propValue(1)',
-            trigger: 'a[href*="/shop/checkout"]',
-        },
+        ...tourUtils.addToCart({productName: "Office Chair Black TEST"}),
+        tourUtils.goToCart({quantity: 1}),
+        tourUtils.goToCheckout(),
         {
             content: "Check Free Delivery value to be zero",
             extra_trigger: '#delivery_carrier label:containsExact("Delivery Now Free Over 10")',
@@ -38,14 +27,12 @@ registry.category("web_tour.tours").add('check_free_delivery', {
             content: "Select `Wire Transfer` payment method",
             trigger: '#payment_method label:contains("Wire Transfer")',
         },
-        {
-            content: "Click on Pay Now",
-            trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
-        },
+        tourUtils.pay(),
         {
             content: "Confirmation page should be shown",
             trigger: '#oe_structure_website_sale_confirmation_1',
             allowInvisible: true,
             run: function () {}, // it's a check
         }
-    ]});
+    ],
+});

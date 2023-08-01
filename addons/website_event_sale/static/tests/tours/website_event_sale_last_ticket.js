@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('event_buy_last_ticket', {
     test: true,
@@ -58,33 +59,5 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         content: "Validate address",
         trigger: '.btn-primary:contains("Next")',
     },
-    {
-        // if the seats_available checking logic is not correct,
-        // the shopping cart will be cleared when selling the last ticket
-        // the tour test will be failed here
-        content: "Select `Wire Transfer` payment method",
-        trigger: '#payment_method label:contains("Wire Transfer")',
-    },
-    // following steps are based on the website_sale_buy.js
-    {
-        content: "Pay",
-        //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
-        extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
-    },
-    {
-        content: "payment finish",
-        trigger: '.oe_website_sale:contains("Please use the following transfer details")',
-        // Leave /shop/confirmation to prevent RPC loop to /shop/payment/get_status.
-        // The RPC could be handled in python while the tour is killed (and the session), leading to crashes
-        run: function () {
-            window.location.href = '/contactus'; // Redirect in JS to avoid the RPC loop (20x1sec)
-        },
-        timeout: 30000,
-    },
-    {
-        content: "wait page loaded",
-        trigger: 'h1:contains("Contact us")',
-        run: function () {}, // it's a check
-    },
+    ...wsTourUtils.payWithTransfer(true),
 ]});
