@@ -271,7 +271,9 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 newLine.set_quantity(-decreasedQuantity, true);
                 order.add_orderline(newLine);
             }
+            return true;
         }
+        return false;
     }
     async onClickPay() {
         if (this.env.pos.get_order().server_id) {

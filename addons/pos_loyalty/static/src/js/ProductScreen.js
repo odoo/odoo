@@ -109,4 +109,10 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
         await this._super(code);
         this.currentOrder._updateRewards();
     },
+    async _showDecreaseQuantityPopup() {
+        const result = await this._super();
+        if (result){
+            this.currentOrder._updateRewards();
+        }
+    }
 });
