@@ -12,7 +12,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 
-const ORDERED_TRANSCEIVER_NAMES = ["audio", "video"];
+const ORDERED_TRANSCEIVER_NAMES = ["audio", "screen", "camera"];
 const PEER_NOTIFICATION_WAIT_DELAY = 50;
 const RECOVERY_TIMEOUT = 15_000;
 const RECOVERY_DELAY = 3_000;
@@ -112,7 +112,8 @@ export class Rtc {
             isPendingNotify: false,
             notificationsToSend: new Map(),
             audioTrack: undefined,
-            videoTrack: undefined,
+            cameraTrack: undefined,
+            screenTrack: undefined,
             /**
              * callback to properly end the audio monitoring.
              * If set it indicates that we are currently monitoring the local
@@ -132,6 +133,7 @@ export class Rtc {
             outgoingSessions: new Set(),
             pttReleaseTimeout: undefined,
             sourceCameraStream: null,
+            sourceScreenStream: null,
         });
         this.blurManager = undefined;
         this.ringingThreads = reactive([], () => this.onRingingThreadsChange());
@@ -390,8 +392,15 @@ export class Rtc {
                     });
                     return;
                 }
-                await this.updateRemote(session, "audio");
-                await this.updateRemote(session, "video");
+                if (peerConnection.getTransceivers().length === 0) {
+                    for (const trackKind of ORDERED_TRANSCEIVER_NAMES) {
+                        const type = ["screen", "camera"].includes(trackKind) ? "video" : trackKind;
+                        peerConnection.addTransceiver(type);
+                    }
+                }
+                for (const transceiverName of ORDERED_TRANSCEIVER_NAMES) {
+                    await this.updateRemote(session, transceiverName);
+                }
 
                 let answer;
                 try {
@@ -487,8 +496,8 @@ export class Rtc {
                 }
                 break;
             case "trackChange": {
-                const { isSelfMuted, isTalking, isSendingVideo, isDeaf } = payload.state;
                 if (payload.type === "audio") {
+                    const { isSelfMuted, isTalking, isDeaf } = payload.state;
                     if (!session.audioStream) {
                         return;
                     }
@@ -497,17 +506,17 @@ export class Rtc {
                         isTalking,
                         isDeaf,
                     });
+                    return;
                 }
-                if (payload.type === "video" && isSendingVideo === false) {
-                    /**
-                     * Since WebRTC "unified plan", the local track is tied to the
-                     * remote transceiver.sender and not the remote track. Therefore
-                     * when the remote track is 'ended' the local track is not 'ended'
-                     * but only 'muted'. This is why we do not stop the local track
-                     * until the peer is completely removed.
-                     */
-                    session.videoStream = undefined;
-                }
+                /**
+                 * Since WebRTC "unified plan", the local track is tied to the
+                 * remote transceiver.sender and not the remote track. Therefore
+                 * when the remote track is 'ended' the local track is not 'ended'
+                 * but only 'muted'. This is why we do not stop the local track
+                 * until the peer is completely removed.
+                 */
+                this.updateActiveSession(session, payload.type);
+                session.videoStreams.delete(payload.type);
                 break;
             }
         }
@@ -602,7 +611,7 @@ export class Rtc {
     async connect(session) {
         this.createConnection(session);
         for (const transceiverName of ORDERED_TRANSCEIVER_NAMES) {
-            await this.updateRemote(session, transceiverName, true);
+            await this.updateRemote(session, transceiverName);
         }
         this.state.outgoingSessions.add(session.id);
     }
@@ -700,9 +709,12 @@ export class Rtc {
         };
         peerConnection.ontrack = ({ transceiver, track }) => {
             this.log(session, `received ${track.kind} track`);
+            const videoType = this.getVideoType(session.peerConnection, transceiver);
             this.updateStream(session, track, {
                 mute: this.state.selfSession.isDeaf,
+                videoType,
             });
+            this.updateActiveSession(session, videoType, { addVideo: true });
         };
         const dataChannel = peerConnection.createDataChannel("notifications", {
             negotiated: true,
@@ -746,6 +758,15 @@ export class Rtc {
             connectionState: "connecting",
         });
         return peerConnection;
+    }
+
+    /**
+     * @param {RTCPeerConnection} peerConnection
+     * @param {RTCRtpTransceiver} transceiver
+     */
+    getVideoType(peerConnection, transceiver) {
+        const transceivers = peerConnection.getTransceivers();
+        return ORDERED_TRANSCEIVER_NAMES[transceivers.indexOf(transceiver)];
     }
 
     /**
@@ -1003,7 +1024,8 @@ export class Rtc {
         this.state.updateAndBroadcastDebounce?.cancel();
         this.state.disconnectAudioMonitor?.();
         this.state.audioTrack?.stop();
-        this.state.videoTrack?.stop();
+        this.state.cameraTrack?.stop();
+        this.state.screenTrack?.stop();
         this.state.notificationsToSend.clear();
         closeStream(this.state.sourceCameraStream);
         this.state.sourceCameraStream = null;
@@ -1015,7 +1037,8 @@ export class Rtc {
             updateAndBroadcastDebounce: undefined,
             disconnectAudioMonitor: undefined,
             outgoingSessions: new Set(),
-            videoTrack: undefined,
+            cameraTrack: undefined,
+            screenTrack: undefined,
             audioTrack: undefined,
             selfSession: undefined,
             sendCamera: false,
@@ -1121,36 +1144,62 @@ export class Rtc {
         }
         switch (type) {
             case "camera": {
+                const track = this.state.cameraTrack;
                 const sendCamera = force ?? !this.state.sendCamera;
-                await this.setVideo(type, sendCamera);
+                this.state.sendCamera = false;
+                await this.setVideo(track, type, sendCamera);
                 break;
             }
             case "screen": {
+                const track = this.state.screenTrack;
                 const sendScreen = force ?? !this.state.sendScreen;
-                await this.setVideo(type, sendScreen);
+                this.state.sendScreen = false;
+                await this.setVideo(track, type, sendScreen);
                 break;
             }
         }
         if (this.state.selfSession) {
-            if (!this.state.videoTrack) {
-                this.removeVideoFromSession(this.state.selfSession);
-            } else {
-                this.updateStream(this.state.selfSession, this.state.videoTrack);
+            switch (type) {
+                case "camera": {
+                    this.removeVideoFromSession(this.state.selfSession, "camera");
+                    if (this.state.cameraTrack) {
+                        this.updateStream(this.state.selfSession, this.state.cameraTrack);
+                    }
+                    break;
+                }
+                case "screen": {
+                    if (!this.state.screenTrack) {
+                        this.removeVideoFromSession(this.state.selfSession, "screen");
+                    } else {
+                        this.updateStream(this.state.selfSession, this.state.screenTrack);
+                    }
+                    break;
+                }
             }
         }
         for (const session of Object.values(this.state.channel.rtcSessions)) {
             if (session.eq(this.state.selfSession)) {
                 continue;
             }
-            await this.updateRemote(session, "video");
+            await this.updateRemote(session, type);
         }
         if (!this.state.selfSession) {
             return;
         }
-        this.updateAndBroadcast({
-            isScreenSharingOn: !!this.state.sendScreen,
-            isCameraOn: !!this.state.sendCamera,
-        });
+        switch (type) {
+            case "camera": {
+                this.updateAndBroadcast({
+                    isCameraOn: !!this.state.sendCamera,
+                });
+                break;
+            }
+            case "screen": {
+                this.updateAndBroadcast({
+                    isScreenSharingOn: !!this.state.sendScreen,
+                });
+                break;
+            }
+        }
     }
 
     updateAndBroadcast(data) {
@@ -1182,20 +1231,29 @@ export class Rtc {
     /**
      * @param {String} type 'camera' or 'screen'
      */
-    async setVideo(type, activateVideo = false) {
-        this.state.sendScreen = false;
-        this.state.sendCamera = false;
+    async setVideo(track, type, activateVideo = false) {
         if (this.blurManager) {
             this.blurManager.close();
             this.blurManager = undefined;
         }
         const stopVideo = () => {
-            if (this.state.videoTrack) {
-                this.state.videoTrack.stop();
+            if (track) {
+                track.stop();
             }
-            this.state.videoTrack = undefined;
-            closeStream(this.state.sourceCameraStream);
-            this.state.sourceCameraStream = null;
+            switch (type) {
+                case "camera": {
+                    this.state.cameraTrack = undefined;
+                    closeStream(this.state.sourceCameraStream);
+                    this.state.sourceCameraStream = null;
+                    break;
+                }
+                case "screen": {
+                    this.state.screenTrack = undefined;
+                    closeStream(this.state.sourceScreenStream);
+                    this.state.sourceScreenStream = null;
+                    break;
+                }
+            }
         };
         if (!activateVideo) {
             if (type === "screen") {
@@ -1216,9 +1274,13 @@ export class Rtc {
                 }
             }
             if (type === "screen") {
-                sourceStream = await browser.navigator.mediaDevices.getDisplayMedia({
-                    video: VIDEO_CONFIG,
-                });
+                if (this.state.sourceScreenStream && this.state.sendScreen) {
+                    sourceStream = this.state.sourceScreenStream;
+                } else {
+                    sourceStream = await browser.navigator.mediaDevices.getDisplayMedia({
+                        video: VIDEO_CONFIG,
+                    });
+                }
                 this.soundEffectsService.play("screen-sharing");
             }
         } catch {
@@ -1246,22 +1308,30 @@ export class Rtc {
                 this.userSettingsService.useBlur = false;
             }
         }
-        const track = videoStream ? videoStream.getVideoTracks()[0] : undefined;
+        track = videoStream ? videoStream.getVideoTracks()[0] : undefined;
         if (track) {
             track.addEventListener("ended", async () => {
                 await this.toggleVideo(type, false);
             });
         }
-        // ensures that the previous stream is stopped before overwriting it
-        if (this.state.sourceCameraStream && sourceStream.id !== this.state.sourceCameraStream.id) {
-            closeStream(this.state.sourceCameraStream);
+        switch (type) {
+            case "camera": {
+                Object.assign(this.state, {
+                    sourceCameraStream: sourceStream,
+                    cameraTrack: track,
+                    sendCamera: Boolean(type === "camera" && track),
+                });
+                break;
+            }
+            case "screen": {
+                Object.assign(this.state, {
+                    sourceScreenStream: sourceStream,
+                    screenTrack: track,
+                    sendScreen: Boolean(type === "screen" && track),
+                });
+                break;
+            }
         }
-        Object.assign(this.state, {
-            sourceCameraStream: sourceStream,
-            videoTrack: track,
-            sendCamera: Boolean(type === "camera" && track),
-            sendScreen: Boolean(type === "screen" && track),
-        });
     }
 
     /**
@@ -1271,29 +1341,37 @@ export class Rtc {
      *
      * negotiationneeded -> offer -> answer -> ...
      */
-    async updateRemote(session, trackKind, initTransceiver = false) {
+    async updateRemote(session, trackKind) {
         this.log(session, `updating ${trackKind} transceiver`);
-        const track = trackKind === "audio" ? this.state.audioTrack : this.state.videoTrack;
+        let track;
+        switch (trackKind) {
+            case "audio": {
+                track = this.state.audioTrack;
+                break;
+            }
+            case "camera": {
+                track = this.state.cameraTrack;
+                break;
+            }
+            case "screen": {
+                track = this.state.screenTrack;
+                break;
+            }
+        }
         let transceiverDirection = track ? "sendrecv" : "recvonly";
-        if (trackKind === "video") {
+        if (trackKind !== "audio") {
             transceiverDirection = this.getTransceiverDirection(session, Boolean(track));
         }
-        let transceiver;
-        if (initTransceiver) {
-            transceiver = session.peerConnection.addTransceiver(trackKind);
-        } else {
-            transceiver = getTransceiver(session.peerConnection, trackKind);
-        }
+        const transceiver = getTransceiver(session.peerConnection, trackKind);
         try {
             await transceiver.sender.replaceTrack(track || null);
             transceiver.direction = transceiverDirection;
         } catch {
             this.log(session, `failed to update ${trackKind} transceiver`);
         }
-        if (!track && trackKind === "video") {
+        if (!track && trackKind !== "audio") {
             this.notify([session], "trackChange", {
-                type: "video",
-                state: { isSendingVideo: false },
+                type: this.getVideoType(session.peerConnection, transceiver),
             });
         }
     }
@@ -1410,8 +1488,9 @@ export class Rtc {
      * @param {MediaStreamTrack} track
      * @param {Object} [parm1]
      * @param {boolean} [parm1.mute]
+     * @param {"camera"|"screen"} [parm1.videoType]
      */
-    async updateStream(session, track, { mute } = {}) {
+    async updateStream(session, track, { mute, videoType } = {}) {
         const stream = new window.MediaStream();
         stream.addTrack(track);
         if (track.kind === "audio") {
@@ -1430,13 +1509,68 @@ export class Rtc {
             await session.playAudio();
         }
         if (track.kind === "video") {
-            session.videoStream = stream;
+            videoType = videoType
+                ? videoType
+                : track.id === this.state.cameraTrack?.id
+                ? "camera"
+                : "screen";
+            session.videoStreams.set(videoType, stream);
+            this.updateActiveSession(session, videoType, { addVideo: true });
         }
     }
 
-    removeVideoFromSession(session) {
-        closeStream(session.videoStream);
-        session.videoStream = undefined;
+    /**
+     * @param {RtcSession} session
+     * @param {String} [videoType]
+     */
+    removeVideoFromSession(session, videoType = false) {
+        if (videoType) {
+            this.updateActiveSession(session, videoType);
+            closeStream(session.videoStreams.get(videoType));
+            session.videoStreams.delete(videoType);
+        } else {
+            for (const stream of session.videoStreams.values()) {
+                closeStream(stream);
+            }
+            session.videoStreams.clear();
+        }
+    }
+
+    /**
+     * @param {RtcSession} session
+     * @param {"screen"|"camera"} [videoType]
+     */
+    updateActiveSession(session, videoType, { addVideo = false } = {}) {
+        const activeRtcSession = this.state.channel.activeRtcSession;
+        if (addVideo) {
+            if (videoType === "screen") {
+                this.state.channel.activeRtcSession = session;
+                session.mainVideoStream = session.videoStreams.get("screen");
+                return;
+            }
+            if (activeRtcSession && session.videoStreams.size && !session.mainVideoStream) {
+                session.mainVideoStream = session.videoStreams.get("camera");
+            }
+            return;
+        }
+        if (!activeRtcSession || activeRtcSession.notEq(session)) {
+            return;
+        }
+        if (activeRtcSession.mainVideoStream) {
+            const activeVideoType =
+                activeRtcSession.videoStreams.get("screen") === session.mainVideoStream
+                    ? "screen"
+                    : "camera";
+            if (videoType === activeVideoType) {
+                session.mainVideoStream = undefined;
+                if (videoType === "screen") {
+                    this.state.channel.activeRtcSession = undefined;
+                }
+            }
+        }
+        if (!activeRtcSession.mainVideoStream && videoType === "screen") {
+            session.mainVideoStream = undefined;
+        }
     }
 
     updateVideoDownload(rtcSession, { viewCountIncrement }) {
@@ -1445,14 +1579,20 @@ export class Rtc {
             return;
         }
         const transceivers = rtcSession.peerConnection.getTransceivers();
-        const transceiver = transceivers[ORDERED_TRANSCEIVER_NAMES.indexOf("video")];
-        if (!transceiver) {
-            return;
+        const cameraTransceiver = transceivers[ORDERED_TRANSCEIVER_NAMES.indexOf("camera")];
+        const screenTransceiver = transceivers[ORDERED_TRANSCEIVER_NAMES.indexOf("screen")];
+        if (cameraTransceiver) {
+            cameraTransceiver.direction = this.getTransceiverDirection(
+                rtcSession,
+                Boolean(this.state.cameraTrack)
+            );
         }
-        transceiver.direction = this.getTransceiverDirection(
-            rtcSession,
-            Boolean(this.state.videoTrack)
-        );
+        if (screenTransceiver) {
+            screenTransceiver.direction = this.getTransceiverDirection(
+                rtcSession,
+                Boolean(this.state.screenTrack)
+            );
+        }
     }
 
     getTransceiverDirection(session, allowUpload = false) {
