@@ -8,7 +8,8 @@ import { registry } from "@web/core/registry";
 import { config as transitionConfig } from "@web/core/transition";
 import { session } from "@web/session";
 import { TourPointer } from "../tour_pointer/tour_pointer";
-import { compileStepAuto, compileStepManual, compileTourToMacro } from "./tour_compilers";
+import { TourPointerContainer } from "./tour_pointer_container";
+import { TourCompiler } from "./tour_compilers";
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
@@ -67,8 +68,9 @@ export const tourService = {
                 name: tour.saveAs || name,
                 get steps() {
                     if (typeof tour.steps === "function") {
-                        return tour.steps().map((step) => {
+                        return tour.steps().map((step, index) => {
                             step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
+                            step.absolutePosition = index;
                             return step;
                         });
                     } else {
@@ -174,13 +176,10 @@ export const tourService = {
             pointer,
             { mode, stepDelay, keepWatchBrowser, showPointerDuration }
         ) {
-            // IMPROVEMENTS: Custom step compiler. Will probably require decoupling from `mode`.
-            const stepCompiler = mode === "auto" ? compileStepAuto : compileStepManual;
             const checkDelay = mode === "auto" ? tour.checkDelay : 100;
             const filteredSteps = tour.steps.filter((step) => !shouldOmit(step, mode));
-            return compileTourToMacro(tour, {
+            const compiler = new TourCompiler(tour, mode, {
                 filteredSteps,
-                stepCompiler,
                 pointer,
                 stepDelay,
                 keepWatchBrowser,
@@ -218,6 +217,8 @@ export const tourService = {
                     runningTours.delete(name);
                 },
             });
+
+            return compiler.compile();
         }
 
         /**
