@@ -3,8 +3,8 @@
 import core from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import options from "@web_editor/js/editor/snippets.options";
+import { renderToElement } from "@web/core/utils/render";
 
-const qweb = core.qweb;
 var _t = core._t;
 
 
@@ -114,7 +114,7 @@ options.registry.recaptchaSubscribe = options.Class.extend({
             recaptchaLegalEl.remove();
         } else {
             const template = document.createElement('template');
-            template.innerHTML = qweb.render("google_recaptcha.recaptcha_legal_terms");
+            template.innerHTML = renderToElement("google_recaptcha.recaptcha_legal_terms");
             this.$target[0].appendChild(template.content.firstElementChild);
         }
     },

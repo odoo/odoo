@@ -123,7 +123,7 @@
             this.displayContent("payment.display_tx_list", render_values);
         },
         displayContent: function (xmlid, render_values) {
-            var html = core.qweb.render(xmlid, render_values);
+            var html = core.renderToElement(xmlid, render_values);
             $.unblockUI();
             this.$el.find('div[name="o_payment_status_content"]').html(html);
         },

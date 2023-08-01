@@ -136,7 +136,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _prepareContent: function () {
-        this.renderedContent = core.qweb.render(
+        this.renderedContent = core.renderToElement(
             this.template_key,
             this._getQWebRenderOptions()
         );

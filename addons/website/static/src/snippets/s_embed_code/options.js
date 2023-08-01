@@ -25,7 +25,7 @@ options.registry.EmbedCode = options.Class.extend({
         });
 
         await new Promise(resolve => {
-            const $content = $(core.qweb.render('website.custom_code_dialog_content'));
+            const $content = $(core.renderToElement('website.custom_code_dialog_content'));
             const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], code || '');
             const dialog = new Dialog(this, {
                 title: _t("Edit embedded code"),

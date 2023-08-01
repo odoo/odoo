@@ -2,7 +2,8 @@
 
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
-var QWeb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
+
 var _t = core._t;
 
 publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
@@ -61,7 +62,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
     _fillBooths() {
         const boothsElem = this.el.querySelector('.o_wbooth_booths');
-        boothsElem.innerHTML = QWeb.render('event_booth_checkbox_list', {
+        boothsElem.innerHTML = renderToElement('event_booth_checkbox_list', {
             'event_booth_ids': this.boothCache[this.activeBoothCategoryId],
             'selected_booth_ids': this.boothsFirstRendering ? this.selectedBoothIds : [],
         });
@@ -219,7 +220,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
             if (jsonResponse.success) {
                 this.el.querySelector('.o_wevent_booth_order_progress').remove();
                 const boothCategoryId = this.el.querySelector('input[name=booth_category_id]').value;
-                $form.replaceWith(QWeb.render('event_booth_registration_complete', {
+                $form.replaceWith(renderToElement('event_booth_registration_complete', {
                     'booth_category_id': boothCategoryId,
                     'event_id': this.eventId,
                     'event_name': jsonResponse.event_name,

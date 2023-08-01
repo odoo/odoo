@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import core from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import PortalChatter from "@portal/js/portal_chatter";
 import { roundPrecision } from "@web/core/utils/numbers";
 
 var _t = core._t;
-var qweb = core.qweb;
 
 /**
  * PortalChatter
@@ -162,7 +162,7 @@ PortalChatter.include({
      * @private
      */
     _renderRatingCard: function () {
-        this.$('.o_website_rating_card_container').replaceWith(qweb.render("portal_rating.rating_card", {widget: this}));
+        this.$('.o_website_rating_card_container').replaceWith(renderToElement("portal_rating.rating_card", {widget: this}));
     },
     /**
      * Default rating data for publisher comment qweb template
@@ -280,7 +280,7 @@ PortalChatter.include({
 
         var oldRating = this.messages[messageIndex].rating;
         data.rating.publisher_comment = oldRating.publisher_comment ? oldRating.publisher_comment : '';
-        this._getCommentContainer($source).html($(qweb.render("portal_rating.chatter_rating_publisher_form", data)));
+        this._getCommentContainer($source).html($(renderToElement("portal_rating.chatter_rating_publisher_form", data)));
         this._focusTextComment($source);
     },
 
@@ -333,7 +333,7 @@ PortalChatter.include({
             if (self.messages[messageIndex].rating.publisher_comment !== '') {
                 // Remove the button comment if exist and render the comment
                 self._getCommentButton($source).addClass('d-none');
-                self._getCommentContainer($source).html($(qweb.render("portal_rating.chatter_rating_publisher_comment", {
+                self._getCommentContainer($source).html($(renderToElement("portal_rating.chatter_rating_publisher_comment", {
                     rating: self.messages[messageIndex].rating,
                     is_publisher: self.options.is_user_publisher
                 })));
@@ -359,7 +359,7 @@ PortalChatter.include({
                 rating: this.messages[messageIndex].rating,
                 is_publisher: this.options.is_user_publisher
             };
-            this._getCommentContainer($source).html($(qweb.render("portal_rating.chatter_rating_publisher_comment", data)));
+            this._getCommentContainer($source).html($(renderToElement("portal_rating.chatter_rating_publisher_comment", data)));
         } else {
             this._getCommentContainer($source).empty();
         }

@@ -2,8 +2,8 @@
 
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { renderToElement } from "@web/core/utils/render";
 
-var QWeb = core.qweb;
 var _t = core._t;
 
 publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend({
@@ -183,7 +183,7 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
                 const offsetTop = ($("#wrapwrap").scrollTop() || 0) + this.$el.offset().top;
                 const floatingMenuHeight = ($('.o_header_standard').height() || 0) +
                     ($('#oe_main_menu_navbar').height() || 0);
-                this.$el.replaceWith($(QWeb.render('event_track_proposal_success')));
+                this.$el.replaceWith($(renderToElement('event_track_proposal_success')));
                 $('#wrapwrap').scrollTop(offsetTop - floatingMenuHeight);
             } else if (jsonResponse.error) {
                 this._updateErrorDisplay([jsonResponse.error]);

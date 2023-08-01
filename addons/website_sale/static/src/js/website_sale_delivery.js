@@ -2,9 +2,10 @@
 
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { renderToElement } from "@web/core/utils/render";
 
 const _t = core._t;
-const qweb = core.qweb;
+
 import concurrency from "@web/legacy/js/core/concurrency";
 
 publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
@@ -331,7 +332,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         const deliveryType = deliveryTypeInput.getAttribute("delivery_type");
         const deliveryTypeId = deliveryTypeInput.value;
         await this._checkCarrier(ev,deliveryTypeId)
-        $(qweb.render(deliveryType + "_pickup_location_loading")).appendTo($(modal));
+        $(renderToElement(deliveryType + "_pickup_location_loading")).appendTo($(modal));
         const data = await this._rpc({
             route: "/shop/access_point/close_locations",
         })
@@ -349,7 +350,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         var listToRender = deliveryType + "_pickup_location_list";
         var dataToRender = {partner_address: data.partner_address};
         dataToRender[deliveryType + "_pickup_locations"] = data.close_locations;
-        $(qweb.render(listToRender, dataToRender)).appendTo($(modal));
+        $(renderToElement(listToRender, dataToRender)).appendTo($(modal));
 
         const showLocations = document.querySelectorAll(".o_show_pickup_locations");
         if (!ev.currentTarget.closest(".o_delivery_carrier_select")) {

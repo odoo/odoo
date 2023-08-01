@@ -3,7 +3,7 @@
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { NameAndSignature } from "@web/legacy/js/widgets/name_and_signature";
-var qweb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 var _t = core._t;
 
@@ -118,9 +118,9 @@ var SignatureForm = publicWidget.Widget.extend({
         }).then(function (data) {
             if (data.error) {
                 self.$('.o_portal_sign_error_msg').remove();
-                self.$controls.prepend(qweb.render('portal.portal_signature_error', {widget: data}));
+                self.$controls.prepend(renderToElement('portal.portal_signature_error', {widget: data}));
             } else if (data.success) {
-                var $success = qweb.render('portal.portal_signature_success', {widget: data});
+                var $success = renderToElement('portal.portal_signature_success', {widget: data});
                 self.$el.empty().append($success);
             }
             if (data.force_refresh) {

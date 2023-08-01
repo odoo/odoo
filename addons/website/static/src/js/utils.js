@@ -2,8 +2,9 @@
 
 import { intersection } from "@web/core/utils/arrays";
 import core from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 
-const { qweb, _t } = core;
+const { _t } = core;
 
 /**
  * Allows to load anchors from a page.
@@ -193,7 +194,7 @@ function prompt(options, _qweb) {
     options.field_name = options.field_name || options[type];
 
     var def = new Promise(function (resolve, reject) {
-        var dialog = $(qweb.render(_qweb, options)).appendTo('body');
+        var dialog = $(renderToElement(_qweb, options)).appendTo('body');
         options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
         field.val(options['default']); // dict notation for IE<9

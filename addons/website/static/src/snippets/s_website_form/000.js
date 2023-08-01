@@ -10,9 +10,9 @@
     import concurrency from "@web/legacy/js/core/concurrency";
     import { sprintf } from "@web/core/utils/strings";
     import { debounce } from "@web/core/utils/timing";
+    import { renderToElement } from "@web/core/utils/render";
 
     var _t = core._t;
-    var qweb = core.qweb;
 
     publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({
         selector: '.s_website_form form, form.s_website_form', // !compatibility
@@ -608,7 +608,7 @@
             // before any qweb rendering which depends on xml assets
             // because the event handlers are binded before the call to
             // willStart for public widgets...
-            this.__started.then(() => $result.replaceWith(qweb.render(`website.s_website_form_status_${status}`, {
+            this.__started.then(() => $result.replaceWith(renderToElement(`website.s_website_form_status_${status}`, {
                 message: message,
             })));
         },
@@ -807,7 +807,7 @@
          *      displayed
          */
         _createFileBlock(fileDetails, filesZoneEl) {
-            const fileBlockEl = qweb.render("website.file_block", {fileName: fileDetails.name});
+            const fileBlockEl = renderToElement("website.file_block", {fileName: fileDetails.name});
             filesZoneEl.insertAdjacentHTML("beforeend", fileBlockEl);
             filesZoneEl.lastElementChild.fileDetails = fileDetails;
         },

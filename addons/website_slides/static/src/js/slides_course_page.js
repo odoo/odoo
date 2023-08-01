@@ -2,7 +2,7 @@
 
 import publicWidget from '@web/legacy/js/public/public_widget';
 import session from 'web.session';
-import { qweb as QWeb } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 
 
 /**
@@ -62,7 +62,7 @@ export const SlideCoursePage = publicWidget.Widget.extend({
             return;
         }
 
-        const newButton = QWeb.render('website.slides.sidebar.done.button', {
+        const newButton = renderToElement('website.slides.sidebar.done.button', {
             slideId: slide.id,
             slideIcon: $button.data('slideIcon') ?? 'fa-file-o',
             slideCompleted: completed,

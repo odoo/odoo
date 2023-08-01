@@ -2,7 +2,7 @@
 
 import VariantMixin from "@website_sale_stock/js/variant_mixin";
 import "@website_sale/js/website_sale";
-import { qweb as QWeb } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 
 const oldChangeCombinationStock = VariantMixin._onChangeCombinationStock;
 /**
@@ -17,7 +17,7 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         const messageEl = this.el.querySelector('div.availability_messages');
         if (messageEl && !this.el.querySelector('#stock_wishlist_message')) {
             messageEl.insertAdjacentHTML('beforeend',
-                QWeb.render('website_sale_stock_wishlist.product_availability', combination)
+                renderToElement('website_sale_stock_wishlist.product_availability', combination)
             );
         }
     }

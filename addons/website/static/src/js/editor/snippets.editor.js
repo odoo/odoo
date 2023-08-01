@@ -1,6 +1,7 @@
 /** @odoo-modules **/
 
-import {qweb, _t, _lt} from "@web/legacy/js/services/core";
+import { _t, _lt } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import Dialog from "@web/legacy/js/core/dialog";
 import weSnippetEditor from "@web_editor/js/editor/snippets.editor";
 import wSnippetOptions from "@website/js/editor/snippets.options";
@@ -120,7 +121,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             $apiKeyHelp.empty().text(message);
         }
 
-        const $content = $(qweb.render('website.s_google_map_modal', {
+        const $content = $(renderToElement('website.s_google_map_modal', {
             apiKey: apiKey,
         }));
         if (!apiKeyValidation.isValid && apiKeyValidation.message) {

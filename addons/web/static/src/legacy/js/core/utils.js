@@ -276,21 +276,6 @@ class UnknownPatchError extends Error {
     }
 }
 
-// notable issues:
-// * objects can't be negative in JS, so !!"" -> false but
-//   !!(new String) -> true, likewise markup
-// TODO (?)
-// * Markup.join / Markup#join => escapes items and returns a Markup
-// * Markup#replace => automatically escapes the replacements (difficult impl)
-
-// get a reference to the internalMarkup class from owl
-const _Markup = owl.markup('').constructor;
-_Markup.prototype[escapeMethod] = function () {
-    return this;
-}
-
-// exposed for qweb2.js
-window._Markup = _Markup;
 window._escape = escapeHTML;
 
 /**
@@ -321,7 +306,7 @@ window._escape = escapeHTML;
  * } else {
  *     h = Markup(_t("Things did <strong>not</strong> work out"));
  * }
- * qweb.render("some_template", { message: h });
+ * renderToElement("some_template", { message: h });
  *
  * @example template tag
  * const escaped = "<some> text";

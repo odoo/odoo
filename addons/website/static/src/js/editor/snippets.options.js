@@ -21,7 +21,7 @@ import {
  } from '@web/core/utils/colors';
 
 var _t = core._t;
-var qweb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
@@ -213,7 +213,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.googleLocalFonts.length) {
             const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
             googleLocalFontsEls.forEach((el, index) => {
-                $(el).append(core.qweb.render('website.delete_google_font_btn', {
+                $(el).append(core.renderToElement('website.delete_google_font_btn', {
                     index: index,
                     local: true,
                 }));
@@ -223,13 +223,13 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.googleFonts.length) {
             const googleFontsEls = fontEls.splice(-this.googleFonts.length);
             googleFontsEls.forEach((el, index) => {
-                $(el).append(core.qweb.render('website.delete_google_font_btn', {
+                $(el).append(core.renderToElement('website.delete_google_font_btn', {
                     index: index,
                 }));
             });
         }
 
-        $(this.menuEl).append($(core.qweb.render('website.add_google_font_btn', {
+        $(this.menuEl).append($(core.renderToElement('website.add_google_font_btn', {
             variable: variable,
         })));
 
@@ -264,7 +264,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const variable = $(ev.currentTarget).data('variable');
         const dialog = new Dialog(this, {
             title: _t("Add a Google Font"),
-            $content: $(core.qweb.render('website.dialog.addGoogleFont')),
+            $content: $(core.renderToElement('website.dialog.addGoogleFont')),
             buttons: [
                 {
                     text: _t("Save & Reload"),
@@ -1399,7 +1399,7 @@ options.registry.OptionsTab = options.Class.extend({
         await Promise.all([libsProm, dataProm]);
 
         await new Promise(resolve => {
-            const $content = $(core.qweb.render('website.custom_code_dialog_content', {
+            const $content = $(core.renderToElement('website.custom_code_dialog_content', {
                 contentText,
             }));
             const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], website[fieldName] || '');
@@ -1675,10 +1675,10 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
         let ccPreviewEls = [];
         for (let i = 1; i <= 5; i++) {
             const collapseEl = document.createElement('we-collapse');
-            const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview.legacy'))[0];
+            const ccPreviewEl = $(renderToElement('web_editor.color.combination.preview.legacy'))[0];
             ccPreviewEl.classList.add('text-center', `o_cc${i}`, 'o_colored_level', 'o_we_collapse_toggler');
             collapseEl.appendChild(ccPreviewEl);
-            const editionEls = $(qweb.render('website.color_combination_edition', {number: i}));
+            const editionEls = $(renderToElement('website.color_combination_edition', {number: i}));
             for (const el of editionEls) {
                 collapseEl.appendChild(el);
             }
@@ -2861,7 +2861,7 @@ options.registry.anchor = options.Class.extend({
         }
         new Dialog(this, {
             title: _t("Link Anchor"),
-            $content: $(qweb.render('website.dialog.anchorName', {
+            $content: $(renderToElement('website.dialog.anchorName', {
                 currentAnchor: decodeURIComponent(this.$target.attr('id')),
             })),
             buttons: buttons,
@@ -2969,7 +2969,7 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
             },
         });
 
-        const $template = $(qweb.render(`website.cookies_bar.${widgetValue}`, {
+        const $template = $(renderToElement(`website.cookies_bar.${widgetValue}`, {
             websiteId: websiteId,
         }));
 

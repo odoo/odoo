@@ -7,8 +7,8 @@ import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import website_sale_utils from "@website_sale/js/website_sale_utils";
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
+import { renderToElement } from "@web/core/utils/render";
 
-var qweb = core.qweb;
 var _t = core._t;
 
 // VariantMixin events are overridden on purpose here
@@ -51,7 +51,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             },
             container: '.o_product_feature_panel',
             placement: 'top',
-            template: qweb.render('popover'),
+            template: renderToElement('popover'),
             content: function () {
                 return $('#comparelist .o_product_panel_content').html();
             }

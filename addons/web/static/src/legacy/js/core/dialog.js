@@ -3,8 +3,8 @@
 import core from "@web/legacy/js/services/core";
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
+import { renderToElement } from "@web/core/utils/render";
 
-var QWeb = core.qweb;
 var _t = core._t;
 
 /**
@@ -113,7 +113,7 @@ var Dialog = Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             // Render modal once xml dependencies are loaded
-            self.$modal = $(QWeb.render('web.DialogWidget', {
+            self.$modal = $(renderToElement('web.DialogWidget', {
                 fullscreen: self.fullscreen,
                 title: self.title,
                 subtitle: self.subtitle,
@@ -385,7 +385,7 @@ var Dialog = Widget.extend({
                     $primaryButton.tooltip({
                         delay: {show: 200, hide:0},
                         title: function(){
-                            return QWeb.render('FormButton.tooltip',{title:$primaryButton.text().toUpperCase()});
+                            return renderToElement('FormButton.tooltip',{title:$primaryButton.text().toUpperCase()});
                         },
                         trigger: 'manual',
                     });

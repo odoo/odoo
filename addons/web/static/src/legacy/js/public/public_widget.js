@@ -282,7 +282,7 @@ export const PublicWidget = core.Class.extend(mixins.PropertiesMixin, ServicesMi
     renderElement: function () {
         var $el;
         if (this.template) {
-            $el = $(core.qweb.render(this.template, {widget: this}).trim());
+            $el = $(core.renderToElement(this.template, {widget: this}).trim());
         } else {
             $el = this._makeDescriptive();
         }

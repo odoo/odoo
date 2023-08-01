@@ -9,7 +9,6 @@ import { loadJS } from "@web/core/assets";
 
 
 var _t = core._t;
-var qweb = core.qweb;
 
 // To do: refactor session. Session accomplishes several concerns (rpc,
 // configuration, currencies (wtf?), user permissions...). They should be

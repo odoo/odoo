@@ -23,10 +23,10 @@ import Domain from "@web/legacy/js/core/domain";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { uniqueId } from "@web/core/utils/functions";
 import { sortBy } from "@web/core/utils/arrays";
+import { renderToElement } from "@web/core/utils/render";
 
 var _t = core._t;
 var _lt = core._lt;
-var qweb = core.qweb;
 
 //------------------------------------------------------------------------------
 // Many2one widgets
@@ -952,7 +952,7 @@ const Many2OneAvatar = FieldMany2One.extend({
      * @override
      */
     _render() {
-        const m2oAvatar = qweb.render(this._template, {
+        const m2oAvatar = renderToElement(this._template, {
             url: `/web/image/${this.field.relation}/${this.value.res_id}/avatar_128`,
             value: this.m2o_value,
             widget: this,
@@ -1155,7 +1155,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @private
      */
     _renderTags: function () {
-        this.$el.html(qweb.render(this.tag_template, this._getRenderTagsContext()));
+        this.$el.html(renderToElement(this.tag_template, this._getRenderTagsContext()));
     },
 
     //--------------------------------------------------------------------------
@@ -1258,7 +1258,7 @@ const M2MAvatarMixin = {
             placement: 'auto',
             content: () => {
                 const elements = this.value ? this.value.data.map((d) => d.data) : [];
-                return qweb.render('Many2ManyTagAvatarPopover', {
+                return renderToElement('Many2ManyTagAvatarPopover', {
                     elements: elements.slice(this.visibleAvatarCount - 1),
                 });
             },
@@ -1350,7 +1350,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             // Manual initialize dropdown and show (once)
             if (ev.currentTarget.dataset.bsToggle !== 'dropdown') {
-                this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
+                this.$color_picker = $(renderToElement('FieldMany2ManyTag.colorpicker', {
                     'widget': this,
                     'tag_id': tagID,
                 }));
@@ -1639,7 +1639,7 @@ var FieldRadio = FieldSelection.extend({
         this.$el.attr('role', 'radiogroup')
             .attr('aria-label', this.string);
         this.values.forEach((value, index) => {
-            self.$el.append(qweb.render('FieldRadio.button', {
+            self.$el.append(renderToElement('FieldRadio.button', {
                 checked: value[0] === currentValue,
                 id: self.unique_id + '_' + value[0],
                 index: index,

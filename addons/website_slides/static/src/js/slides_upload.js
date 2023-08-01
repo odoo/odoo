@@ -2,7 +2,8 @@
 
 import { uniqueId } from '@web/core/utils/functions';
 import { sprintf } from '@web/core/utils/strings';
-import {_t, qweb as QWeb} from "@web/legacy/js/services/core";
+import { _t } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import Dialog from '@web/legacy/js/core/dialog';
 import publicWidget from '@web/legacy/js/public/public_widget';
 import utils from '@web/legacy/js/core/utils';
@@ -481,7 +482,7 @@ var SlideUploadDialog = Dialog.extend({
      */
     _setModalLoading: function (loading) {
         if (loading) {
-            this.$el.closest('.modal-content').append(QWeb.render('website.slide.upload.modal.loading'));
+            this.$el.closest('.modal-content').append(renderToElement('website.slide.upload.modal.loading'));
         } else {
             this.$el.closest('.modal-content').find('.o_wslides_slide_upload_loading').remove();
         }
@@ -506,7 +507,7 @@ var SlideUploadDialog = Dialog.extend({
             this.$modal.find('.modal-dialog').addClass('modal-lg');
         }
         this.$('.o_w_slide_upload_modal_container').empty();
-        this.$('.o_w_slide_upload_modal_container').append(QWeb.render(tmpl, {widget: this}));
+        this.$('.o_w_slide_upload_modal_container').append(renderToElement(tmpl, {widget: this}));
 
         this._resetModalButton();
 

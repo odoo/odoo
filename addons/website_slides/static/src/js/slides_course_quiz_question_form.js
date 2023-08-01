@@ -2,8 +2,8 @@
 
 import publicWidget from '@web/legacy/js/public/public_widget';
 import core from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 
-var QWeb = core.qweb;
 var _t = core._t;
 
 /**
@@ -89,7 +89,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
      * @private
      */
     _addAnswerLine: function (ev) {
-        $(ev.currentTarget).closest('.o_wslides_js_quiz_answer').after(QWeb.render('slide.quiz.answer.line'));
+        $(ev.currentTarget).closest('.o_wslides_js_quiz_answer').after(renderToElement('slide.quiz.answer.line'));
     },
 
     /**

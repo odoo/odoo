@@ -9,7 +9,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { Markup } from '@web/legacy/js/core/utils';
 import session from "web.session";
 import { escape, sprintf } from "@web/core/utils/strings";
-var qweb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 var _t = core._t;
 
@@ -648,7 +648,7 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
             Object.values(o).forEach((r) => {
                 r.content = $('<p>' + $(r.content).html() + '</p>').text().substring(0, 250);
             });
-            self.$('div.post_spam').html(qweb.render('website_forum.spam_search_name', {
+            self.$('div.post_spam').html(renderToElement('website_forum.spam_search_name', {
                 posts: o,
             }));
         });

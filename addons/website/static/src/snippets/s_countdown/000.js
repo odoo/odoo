@@ -4,8 +4,8 @@ import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import weUtils from "@web_editor/js/common/utils";
 import { isCSSColor } from '@web/core/utils/colors';
+import { renderToElement } from "@web/core/utils/render";
 
-const qweb = core.qweb;
 const _t = core._t;
 
 const CountdownWidget = publicWidget.Widget.extend({
@@ -113,7 +113,7 @@ const CountdownWidget = publicWidget.Widget.extend({
                 if (!this.$('.s_countdown_end_redirect_message').length) {
                     const $container = this.$('> .container, > .container-fluid, > .o_container_small');
                     $container.append(
-                        $(qweb.render('website.s_countdown.end_redirect_message', {
+                        $(renderToElement('website.s_countdown.end_redirect_message', {
                             redirectUrl: redirectUrl,
                         }))
                     );

@@ -4,8 +4,8 @@ import { escape, sprintf } from "@web/core/utils/strings";
 import ajax from "@web/legacy/js/core/ajax";
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { renderToElement } from "@web/core/utils/render";
 
-var qweb = core.qweb;
 var _t = core._t;
 
 /**
@@ -184,7 +184,7 @@ var PortalComposer = publicWidget.Widget.extend({
      * @private
      */
     _updateAttachments: function () {
-        this.$attachments.html(qweb.render('portal.Chatter.Attachments', {
+        this.$attachments.html(renderToElement('portal.Chatter.Attachments', {
             attachments: this.attachments,
             showDelete: true,
         }));

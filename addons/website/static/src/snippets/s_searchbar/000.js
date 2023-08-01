@@ -3,7 +3,7 @@
 import concurrency from '@web/legacy/js/core/concurrency';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
-import {qweb} from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import { Markup } from '@web/legacy/js/core/utils';
 import { debounce } from '@web/core/utils/timing';
 
@@ -150,7 +150,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
             if (qweb.has_template(candidate)) {
                 template = candidate;
             }
-            this.$menu = $(qweb.render(template, {
+            this.$menu = $(renderToElement(template, {
                 results: results,
                 parts: res['parts'],
                 hasMoreResults: results.length < res['results_count'],

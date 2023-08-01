@@ -379,7 +379,7 @@ export var NameAndSignature = Widget.extend({
      * @returns {string} image = mimetype + image data
      */
     _getSVGText: function (font, text, width, height) {
-        var $svg = $(core.qweb.render('web.legacy.sign_svg_text', {
+        var $svg = $(core.renderToElement('web.legacy.sign_svg_text', {
             width: width,
             height: height,
             font: font,

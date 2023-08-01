@@ -9,8 +9,8 @@ import weUtils from "@web_editor/js/common/utils";
 import "@website/js/editor/snippets.options";
 import { sprintf } from "@web/core/utils/strings";
 import { unique } from "@web/core/utils/arrays";
+import { renderToElement } from "@web/core/utils/render";
 
-const qweb = core.qweb;
 const _t = core._t;
 let currentActionName;
 
@@ -164,7 +164,7 @@ const FormEditor = options.Class.extend({
             field.id = weUtils.generateHTMLId();
         }
         const template = document.createElement('template');
-        template.innerHTML = qweb.render("website.form_field_" + field.type, {field: field}).trim();
+        template.innerHTML = renderToElement("website.form_field_" + field.type, {field: field}).trim();
         if (field.description && field.description !== true) {
             $(template.content.querySelector('.s_website_form_field_description')).replaceWith(field.description);
         }
@@ -536,7 +536,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         this.$target[0].dataset.successMode = value;
         if (value === 'message') {
             if (!this.$message.length) {
-                this.$message = $(qweb.render('website.s_website_form_end_message'));
+                this.$message = $(renderToElement('website.s_website_form_end_message'));
             }
             this.$target.after(this.$message);
         } else {
@@ -580,7 +580,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         } else {
             const template = document.createElement('template');
             const labelWidth = this.$target[0].querySelector('.s_website_form_label').style.width;
-            $(template).html(qweb.render("website.s_website_form_recaptcha_legal", {labelWidth: labelWidth}));
+            $(template).html(renderToElement("website.s_website_form_recaptcha_legal", {labelWidth: labelWidth}));
             const legal = template.content.firstElementChild;
             legal.setAttribute('contentEditable', true);
             this.$target.find('.s_website_form_submit').before(legal);
@@ -672,7 +672,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
     _addHiddenField: function (value, fieldName) {
         this.$target.find(`.s_website_form_dnone:has(input[name="${fieldName}"])`).remove();
         if (value) {
-            const hiddenField = qweb.render('website.form_field_hidden', {
+            const hiddenField = renderToElement('website.form_field_hidden', {
                 field: {
                     name: fieldName,
                     value: value,

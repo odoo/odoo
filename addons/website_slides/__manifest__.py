@@ -194,7 +194,6 @@ Featuring
             'web/static/lib/select2/select2.js',
             'web/static/lib/clipboard/clipboard.js',
             'web/static/lib/jSignature/jSignatureCustom.js',
-            'web/static/lib/qweb/qweb2.js',
             'web/static/src/legacy/js/assets.js',
             'web/static/src/legacy/js/libs/autocomplete.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
