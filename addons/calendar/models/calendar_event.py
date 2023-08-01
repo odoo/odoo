@@ -604,7 +604,7 @@ class Meeting(models.Model):
         update_time = False
         self._set_videocall_location([values])
         if 'partner_ids' in values:
-            values['attendee_ids'] = self._attendees_values(values['partner_ids'])
+            values['attendee_ids'] = self._attendees_values(values['partner_ids'], values.get('attendee_ids'))
             update_alarms = True
             if self.videocall_channel_id:
                 new_partner_ids = []
@@ -759,7 +759,7 @@ class Meeting(models.Model):
                     return 'write'
         return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
 
-    def _attendees_values(self, partner_commands):
+    def _attendees_values(self, partner_commands, attendee_ids=None):
         """
         :param partner_commands: ORM commands for partner_id field (0 and 1 commands not supported)
         :return: associated attendee_ids ORM commands
@@ -792,6 +792,12 @@ class Meeting(models.Model):
             [0, 0, dict(partner_id=partner_id)]
             for partner_id in added_partner_ids
         ]
+        if attendee_ids:
+            for item in attendee_ids:
+                if isinstance(item, tuple) and len(item) >= 3 and isinstance(item[2], dict) and item[2].get('state') == 'accepted':
+                    for command in attendee_commands:
+                        if isinstance(command, list) and len(command) >= 3 and isinstance(command[2], dict):
+                            command[2]['state'] = 'accepted'
         return attendee_commands
 
     def _create_videocall_channel(self):
