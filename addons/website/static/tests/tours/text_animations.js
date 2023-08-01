@@ -13,7 +13,7 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     }),
     {
         content: "Click on the snippet title",
-        trigger: "iframe .s_cover h1 > font",
+        trigger: "iframe .s_cover h1",
         run: "dblclick", // Make sure the title is selected.
     },
     {

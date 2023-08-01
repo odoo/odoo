@@ -4,8 +4,8 @@ import wTourUtils from '@website/js/tours/tour_utils';
 
 const scrollToHeading = function (position) {
     return {
-        content: `Scroll to h1 number ${position}`,
-        trigger: `iframe h1:eq(${position})`,
+        content: `Scroll to h2 number ${position}`,
+        trigger: `iframe h2:eq(${position})`,
         run: function () {
             this.$anchor[0].scrollIntoView(true);
         },
@@ -41,7 +41,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Click on the first TOC's title",
-        trigger: 'iframe .s_table_of_content:eq(0) h1',
+        trigger: 'iframe .s_table_of_content:eq(0) h2',
     },
     {
         content: "Hide the first TOC on mobile",
@@ -49,7 +49,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     },
     {
         content: "Click on the second TOC's title",
-        trigger: 'iframe .s_table_of_content:eq(1) h1',
+        trigger: 'iframe .s_table_of_content:eq(1) h2',
     },
     {
         content: "Hide the second TOC on desktop",
