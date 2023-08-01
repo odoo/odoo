@@ -7,11 +7,10 @@
             <form string="Contract logs">
                 <field name="company_id" invisible="1"/>
                 <header>
-                    <button name="action_open" states="futur" type="object" string="Start Contract" class="oe_highlight" groups="fleet.fleet_group_manager"/>
-                    <button name="action_close" states="futur" type="object" string="Cancel" groups="fleet.fleet_group_manager"/>
-                    <button name="action_close" states="open,expired,futur" type="object" string="Close Contract" groups="fleet.fleet_group_manager"/>
-                    <button name="action_draft" states="closed" type="object" string="Reset To Draft" groups="fleet.fleet_group_manager"/>
-                    <field name="state" widget="statusbar" />
+                    <button name="action_open" states="futur" type="object" string="Start" class="oe_highlight" groups="fleet.fleet_group_manager"/>
+                    <button name="action_expire" states="open,futur" type="object" string="End" groups="fleet.fleet_group_manager"/>
+                    <button name="action_close" states="expired,open,futur" type="object" string="Cancel" groups="fleet.fleet_group_manager"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <field name="active" invisible="1"/>

@@ -202,10 +202,16 @@ class FleetVehicle(models.Model):
             total = 0
             name = ''
             state = ''
-            for element in record.log_contracts:
-                if element.state in ('open', 'expired') and element.expiration_date:
+
+             # Get the last contract by ordering by creation date
+            log_contract = self.env['fleet.vehicle.log.contract'].search([
+                ('vehicle_id', '=', record.id)
+                ], limit=1, order='create_date desc')
+
+            if log_contract and log_contract.expiration_date:
+                if log_contract.state in ('open', 'expired'):
                     current_date_str = fields.Date.context_today(record)
-                    due_time_str = element.expiration_date
+                    due_time_str = log_contract.expiration_date
                     current_date = fields.Date.from_string(current_date_str)
                     due_time = fields.Date.from_string(due_time_str)
                     diff_time = (due_time - current_date).days
