@@ -23,6 +23,9 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         ...PosSelf.action.addProduct("Office Chair Black", 1),
         ...PosSelf.action.addProduct("Office Chair Black", 2, "Description"),
         ...PosSelf.action.addProduct("Large Cabinet", 2),
+        // When clicking on basic product (without image, sale description and attributes) it
+        // displays the product window.
+        ...PosSelf.action.addProduct("Virtual Home Staging", 1),
         PosSelf.action.clickPrimaryBtn("Review"),
 
         // Here we're looking at whether when an orderline is clicked on from
