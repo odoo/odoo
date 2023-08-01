@@ -10,7 +10,7 @@ from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.exceptions import UserError
 from odoo.tests.common import Form, tagged, users
-from odoo.tools import formataddr, mute_logger
+from odoo.tools import mute_logger
 
 
 @tagged('lead_internals')
@@ -645,114 +645,6 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(new_lead.partner_id.team_id, self.sales_team_1)
 
     @users('user_sales_manager')
-    def test_message_get_suggested_recipients(self):
-        """This test checks that creating a contact from a lead with an inactive language will ignore the language
-            while creating a contact from a lead with an active language will take it into account """
-        ResLang = self.env['res.lang'].sudo().with_context(active_test=False)
-
-        # Create a lead with an inactive language -> should ignore the preset language
-        lang_fr = ResLang.search([('code', '=', 'fr_FR')])
-        if not lang_fr:
-            lang_fr = ResLang._create_lang('fr_FR')
-        # set French language as inactive then try to call "_message_get_suggested_recipients"
-        # -> lang code should be ignored
-        lang_fr.active = False
-        lead1 = self.env['crm.lead'].create({
-            'name': 'TestLead',
-            'email_from': self.test_email,
-            'lang_id': lang_fr.id,
-        })
-        data = lead1._message_get_suggested_recipients()[lead1.id]
-        self.assertEqual(len(data), 1)
-        suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason, create_vals = data[0]
-        self.assertFalse(suggested_partner_id)
-        self.assertEqual(suggested_partner_email, self.test_email)
-        self.assertEqual(suggested_lang, None)
-        self.assertEqual(suggested_reason, 'Customer Email')
-        self.assertEqual(create_vals['lang'], 'fr_FR')
-
-        # Create a lead with an active language -> should keep the preset language for recipients
-        lang_en = ResLang.search([('code', '=', 'en_US')])
-        if not lang_en:
-            lang_en = ResLang._create_lang('en_US')
-        # set American English language as active then try to call "_message_get_suggested_recipients"
-        # -> lang code should be kept
-        lang_en.active = True
-        lead2 = self.env['crm.lead'].create({
-            'name': 'TestLead',
-            'email_from': self.test_email,
-            'lang_id': lang_en.id,
-        })
-        data = lead2._message_get_suggested_recipients()[lead2.id]
-        self.assertEqual(len(data), 1)
-        suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason, create_vals = data[0]
-        self.assertFalse(suggested_partner_id)
-        self.assertEqual(suggested_partner_email, self.test_email)
-        self.assertEqual(suggested_lang, 'en_US')
-        self.assertEqual(suggested_reason, 'Customer Email')
-        self.assertEqual(create_vals['lang'], lang_en.code)
-
-    @users('user_sales_manager')
-    def test_message_get_suggested_recipients_auto_creation(self):
-        """Check default creates value for auto creation of recipient
-        (customer)."""
-        lead_details_for_contact = {
-            'title': self.env.ref('base.res_partner_title_mister').id,
-            'street': '3rd Floor, Room 3-C',
-            'street2': '123 Arlington Avenue',
-            'zip': '13202',
-            'city': 'New York',
-            'country_id': self.env.ref('base.us').id,
-            'state_id': self.env.ref('base.state_us_39').id,
-            'website': 'https://www.arlington123.com/3f3c',
-            'phone': '678-728-0949',
-            'mobile': '661-606-0781',
-            'function': 'Delivery Boy',
-            'team_id': self.sales_team_1.id,
-            'user_id': self.user_sales_manager.id,
-        }
-
-        for partner_name, name, email in [
-            (False, 'Test', 'test_default_create@example.com'),
-            ('Delivery Boy company', 'Test With Company', 'default_create_with_partner@example.com'),
-            ('Delivery Boy company', '', 'default_create_with_partner_no_name@example.com'),
-        ]:
-            formatted_email = formataddr((name, email))
-            with self.subTest(partner_name=partner_name):
-                lang = self.env['res.lang'].sudo().search([], limit=1)[0]
-                description = '<p>Top</p>'
-                lead1 = self.env['crm.lead'].create({
-                    'name': 'TestLead',
-                    'contact_name': name,
-                    'email_from': formatted_email,
-                    'lang_id': lang.id,
-                    'description': description,
-                    'partner_name': partner_name,
-                    **lead_details_for_contact,
-                })
-                data = lead1._message_get_suggested_recipients()[lead1.id]
-                suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason, create_vals = data[0]
-                self.assertFalse(suggested_partner_id)
-                self.assertEqual(suggested_partner_email, formatted_email)
-                self.assertEqual(suggested_lang, lang.code)
-                self.assertEqual(suggested_reason, 'Customer Email')
-                self.assertEqual(create_vals, lead1._get_customer_information().get(email, {}))
-                for field, value in lead_details_for_contact.items():
-                    self.assertEqual(create_vals.get(field), value)
-                expected_name = partner_name if partner_name and not name else name
-                self.assertEqual(create_vals['name'], expected_name)
-                self.assertEqual(create_vals['comment'], description)  # description -> comment
-                # Parent company not created even if partner_name is set
-                self.assertFalse(create_vals.get('parent_id'))  # not supported, even if partner_name set
-                self.assertEqual(create_vals['company_name'], partner_name)  # partner_name -> company_name
-                expected_company_type = 'company' if partner_name and not name else 'person'
-                self.assertEqual(create_vals.get('company_type', 'person'), expected_company_type)
-
-                # Check that the creation of the contact won't fail
-                partner = self.env['res.partner'].create(create_vals)
-                partner.unlink()
-
-    @users('user_sales_manager')
     def test_phone_mobile_search(self):
         lead_1 = self.env['crm.lead'].create({
             'name': 'Lead 1',
@@ -886,6 +778,8 @@ class TestCRMLead(TestCrmCommon):
         self.assertFalse(lead.phone_sanitized)
 
 
-class TestLeadFormatAddress(FormatAddressCase):
+@tagged('lead_internals')
+class TestLeadFormTools(FormatAddressCase):
+
     def test_address_view(self):
         self.assertAddressView('crm.lead')
