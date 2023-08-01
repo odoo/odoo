@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour("carousel_content_removal", {
     test: true,
     url: '/',
     edition: true,
-}, [{
+}, () => [{
     trigger: "#snippet_structure .oe_snippet:has(span:contains('Carousel')) .oe_snippet_thumbnail",
     content: "Drag the Carousel block and drop it in your page.",
     run: "drag_and_drop iframe #wrap",

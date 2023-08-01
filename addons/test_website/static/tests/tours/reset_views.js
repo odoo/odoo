@@ -18,7 +18,7 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1'
     // 1. Edit the page through Edit Mode, it will COW the view
     edition: true,
 },
-    [
+    () => [
         {
             content: "drop a snippet",
             trigger: ".oe_snippet:has(.s_cover) .oe_snippet_thumbnail",
@@ -60,7 +60,7 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
     test: true,
     url: '/test_page_view',
 },
-    [
+    () => [
         {
             content: "check that the view got fixed",
             trigger: 'iframe p:containsExact("Test Page View")',

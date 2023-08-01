@@ -8,7 +8,7 @@
     wTourUtils.registerWebsitePreviewTour("shop", {
         url: '/shop',
         sequence: 130,
-    }, [{
+    }, () => [{
         trigger: ".o_menu_systray .o_new_content_container > a",
         content: _t("Let's create your first product."),
         extra_trigger: "iframe .js_sale",

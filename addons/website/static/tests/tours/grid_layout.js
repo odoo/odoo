@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('website_replace_grid_image', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',

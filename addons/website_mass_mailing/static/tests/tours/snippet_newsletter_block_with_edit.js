@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
     // Put a Newsletter block.
     wTourUtils.dragNDrop({
         id: 's_newsletter_block',

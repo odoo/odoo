@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_editor_panel_options', {
     test: true,
     url: '/',
     edition: true,
-}, [
+}, () => [
 wTourUtils.dragNDrop({
     id: 's_text_image',
     name: 'Text - Image',

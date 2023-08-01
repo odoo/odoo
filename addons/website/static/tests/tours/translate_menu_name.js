@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('translate_menu_name', {
     url: '/pa_GB',
     test: true,
     edition: false,
-}, [
+}, () => [
     {
         content: "activate translate mode",
         trigger: '.o_translate_website_container a',

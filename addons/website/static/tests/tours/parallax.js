@@ -8,7 +8,7 @@ wTourUtils.registerWebsitePreviewTour("test_parallax", {
     test: true,
     url: "/",
     edition: true,
-}, [
+}, () => [
     wTourUtils.dragNDrop(coverSnippet),
     wTourUtils.clickOnSnippet(coverSnippet),
     wTourUtils.changeOption("BackgroundOptimize", "we-toggler"),

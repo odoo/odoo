@@ -10,7 +10,7 @@ const cover = {
 wTourUtils.registerWebsitePreviewTour('website_click_tour', {
     test: true,
     url: '/',
-}, [
+}, () => [
     {
         content: "trigger a page navigation",
         trigger: 'iframe a[href="/contactus"]',

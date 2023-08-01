@@ -9,7 +9,7 @@ wTourUtils.registerWebsitePreviewTour('category_page_and_products_snippet_editio
     test: true,
     url: `/shop/category/${PRODUCT_CATEGORY_ID}`,
     edition: true,
-}, [
+}, () => [
     Object.assign(wTourUtils.dragNDrop({id: 's_dynamic_snippet_products', name: 'Products'}), {
         content: "Drag and drop the product snippet inside the category area",
         run: 'drag_and_drop iframe #category_header',

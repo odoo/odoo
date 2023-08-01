@@ -13,7 +13,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     url: '/',
     test: true,
     edition: true,
-}, [
+}, () => [
     {
         trigger: "body",
         run: function () {

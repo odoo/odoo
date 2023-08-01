@@ -77,7 +77,7 @@ const homePage = 'tr:contains("Home")';
 wTourUtils.registerWebsitePreviewTour('website_page_manager', {
     test: true,
     url: '/',
-}, [
+}, () => [
     {
         content: "Click on Site",
         trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',

@@ -6,7 +6,7 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
     url: '/shop?search=Rock',
     test: true,
 },
-    [
+    () => [
         {
             content: "Go to Rock shop page",
             trigger: 'iframe a:contains("Rock"):first',

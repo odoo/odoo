@@ -42,7 +42,7 @@ wTourUtils.registerWebsitePreviewTour('website_sale.snippet_products', {
     url: '/',
     edition: true,
 },
-[
+() => [
     wTourUtils.dragNDrop(productsSnippet),
     wTourUtils.clickOnSnippet(productsSnippet),
     ...templatesSteps,
@@ -60,7 +60,7 @@ wTourUtils.registerWebsitePreviewTour('website_sale.products_snippet_recently_vi
     url: '/',
     edition: true,
 },
-[
+() => [
     wTourUtils.dragNDrop(productsSnippet),
     wTourUtils.clickOnSnippet(productsSnippet),
     ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),

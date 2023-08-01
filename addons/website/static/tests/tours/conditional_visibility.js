@@ -44,7 +44,7 @@ wTourUtils.registerWebsitePreviewTour('conditional_visibility_1', {
     edition: true,
     url: '/',
     test: true,
-}, [
+}, () => [
 wTourUtils.dragNDrop(snippets[0]),
 wTourUtils.clickOnSnippet(snippets[0]),
 wTourUtils.changeOption('ConditionalVisibility', 'we-toggler'),
@@ -94,7 +94,7 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_3", {
     test: true,
     url: "/",
 },
-[
+() => [
 checkEyeIcon("Text - Image", true),
 // Drag a "Banner" snippet on the website.
 wTourUtils.dragNDrop(snippets[1]),
@@ -143,7 +143,7 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_4", {
     test: true,
     url: "/",
 },
-[
+() => [
 // Click on the "Text-Image" snippet.
 wTourUtils.clickOnSnippet(snippets[0]),
 {

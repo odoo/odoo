@@ -13,7 +13,7 @@ wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
     edition: true,
     test: true,
     url: '/',
-}, [
+}, () => [
     dragNDropOutOfFooter,
     wTourUtils.clickOnSnippet(countdownSnippet),
     {
