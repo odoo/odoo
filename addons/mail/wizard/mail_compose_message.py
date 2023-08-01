@@ -8,7 +8,6 @@ import re
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import email_re
 
 
 def _reopen(self, res_id, model, context=None):
@@ -466,12 +465,11 @@ class MailComposer(models.TransientModel):
 
         recipients_info = {}
         for record_id, mail_values in mail_values_dict.items():
-            mail_to = []
-            if mail_values.get('email_to'):
-                mail_to += email_re.findall(mail_values['email_to'])
-                # if unrecognized email in email_to -> keep it as used for further processing
-                if not mail_to:
-                    mail_to.append(mail_values['email_to'])
+            # add email from email_to; if unrecognized email in email_to keep
+            # it as used for further processing
+            mail_to = tools.email_split_and_format(mail_values.get('email_to'))
+            if not mail_to and mail_values.get('email_to'):
+                mail_to.append(mail_values['email_to'])
             # add email from recipients (res.partner)
             mail_to += [
                 recipient_emails[recipient_command[1]]
@@ -528,7 +526,7 @@ class MailComposer(models.TransientModel):
             elif not mail_to:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_missing'
-            elif not mail_to_normalized or not email_re.findall(mail_to):
+            elif not mail_to_normalized:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
             elif done_emails is not None and not mailing_document_based:

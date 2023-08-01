@@ -418,6 +418,8 @@ class TestEmailTools(BaseCase):
         """ Test 'email_normalize'. Note that it is built on 'email_split' so
         some use cases are already managed in 'test_email_split(_and_format)'
         hence having more specific test cases here about normalization itself. """
+        format_name = 'My Super Prénom'
+        format_name_ascii = '=?utf-8?b?TXkgU3VwZXIgUHLDqW5vbQ==?='
         sources = [
             '"Super Déboulonneur" <deboulonneur@example.com>',  # formatted
             'Déboulonneur deboulonneur@example.com',  # wrong formatting
@@ -430,17 +432,42 @@ class TestEmailTools(BaseCase):
         ]
         expected_list = [
             'deboulonneur@example.com',
-            'déboulonneur deboulonneur@example.com',
+            'Déboulonneur deboulonneur@example.com',
             'deboulonneur@example.comdéboulonneur',
             False,
             '@example.com',  # funny
             'deboulonneur.😊@example.com',
             'déboulonneur@examplé.com',
-            'déboulonneur@examplé.com',
+            'DéBoulonneur@examplé.com',
         ]
-        for source, expected in zip(sources, expected_list):
+        expected_fmt_utf8_list = [
+            f'"{format_name}" <deboulonneur@example.com>',
+            f'"{format_name}" <Déboulonneur deboulonneur@example.com>',
+            f'"{format_name}" <deboulonneur@example.comdéboulonneur>',
+            f'"{format_name}" <@>',
+            f'"{format_name}" <@example.com>',
+            f'"{format_name}" <deboulonneur.😊@example.com>',
+            f'"{format_name}" <déboulonneur@examplé.com>',
+            f'"{format_name}" <DéBoulonneur@examplé.com>',
+        ]
+        expected_fmt_ascii_list = [
+            f'{format_name_ascii} <deboulonneur@example.com>',
+            f'{format_name_ascii} <Déboulonneur deboulonneur@example.com>',
+            f'{format_name_ascii} <deboulonneur@example.xn--comdboulonneur-ekb>',
+            f'{format_name_ascii} <@>',
+            f'{format_name_ascii} <@example.com>',
+            f'{format_name_ascii} <deboulonneur.😊@example.com>',
+            f'{format_name_ascii} <déboulonneur@xn--exampl-gva.com>',
+            f'{format_name_ascii} <DéBoulonneur@xn--exampl-gva.com>',
+        ]
+        for source, expected, expected_utf8_fmt, expected_ascii_fmt in zip(sources, expected_list, expected_fmt_utf8_list, expected_fmt_ascii_list):
             with self.subTest(source=source):
                 self.assertEqual(email_normalize(source, strict=True), expected)
+                # standard usage of formataddr
+                self.assertEqual(formataddr((format_name, (expected or '')), charset='utf-8'), expected_utf8_fmt)
+                # check using INDA at format time, using ascii charset as done when
+                # sending emails (see extract_rfc2822_addresses)
+                self.assertEqual(formataddr((format_name, (expected or '')), charset='ascii'), expected_ascii_fmt)
 
     def test_email_split(self):
         """ Test 'email_split' """
