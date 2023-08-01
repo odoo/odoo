@@ -541,3 +541,13 @@ class TestPoSProductsWithTax(TestPoSCommon):
             {'account_id': self.sale_account.id, 'balance': 0},
             {'account_id': self.cash_pm1.receivable_account_id.id, 'balance': 1},
         ])
+
+    def test_tax_is_used_when_in_transactions(self):
+        ''' Ensures that a tax is set to used when it is part of some transactions '''
+
+        # Call another test that uses product_1
+        tax_pos = self.product1.taxes_id
+        self.assertFalse(tax_pos.is_used)
+        self.test_orders_no_invoiced()
+        tax_pos.invalidate_model(fnames=['is_used'])
+        self.assertTrue(tax_pos.is_used)
