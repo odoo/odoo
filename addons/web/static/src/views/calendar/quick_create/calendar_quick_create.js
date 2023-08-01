@@ -2,7 +2,7 @@
 
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 
 import { Component } from "@odoo/owl";
 
@@ -14,7 +14,7 @@ export class CalendarQuickCreate extends Component {
     }
 
     get dialogTitle() {
-        return _lt("New Event");
+        return _t("New Event");
     }
 
     get recordTitle() {

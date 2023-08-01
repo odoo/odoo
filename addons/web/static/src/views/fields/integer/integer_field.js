@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatInteger } from "../formatters";
 import { parseInteger } from "../parsers";
@@ -46,22 +46,22 @@ export class IntegerField extends Component {
 
 export const integerField = {
     component: IntegerField,
-    displayName: _lt("Integer"),
+    displayName: _t("Integer"),
     supportedOptions: [
         {
-            label: _lt("Format number"),
+            label: _t("Format number"),
             name: "enable_formatting",
             type: "boolean",
-            help: _lt("Format the value according to your language setup - e.g. thousand separators, rounding, etc."),
+            help: _t("Format the value according to your language setup - e.g. thousand separators, rounding, etc."),
             default: true,
         },
         {
-            label: _lt("Type"),
+            label: _t("Type"),
             name: "type",
             type: "string",
         },
         {
-            label: _lt("Step"),
+            label: _t("Step"),
             name: "step",
             type: "number",
         },

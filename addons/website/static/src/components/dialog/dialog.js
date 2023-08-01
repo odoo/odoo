@@ -2,7 +2,7 @@
 
 import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { Dialog } from '@web/core/dialog/dialog';
-import { _lt } from '@web/core/l10n/translation';
+import { _t } from "@web/core/l10n/translation";
 import { Switch } from '@website/components/switch/switch';
 import {unslugHtmlDataObject} from '../../services/website_service';
 import { csrf_token } from "@web/legacy/js/services/core";
@@ -65,9 +65,9 @@ WebsiteDialog.props = {
 };
 WebsiteDialog.defaultProps = {
     ...Dialog.defaultProps,
-    title: _lt("Confirmation"),
-    primaryTitle: _lt("Ok"),
-    secondaryTitle: _lt("Cancel"),
+    title: _t("Confirmation"),
+    primaryTitle: _t("Ok"),
+    secondaryTitle: _t("Cancel"),
     showSecondaryButton: true,
     size: "md",
     closeOnClick: true,

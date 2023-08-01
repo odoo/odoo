@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import FormEditorRegistry from "@website/js/form_editor_registry";
 
 FormEditorRegistry.add('send_mail', {
@@ -45,7 +45,7 @@ FormEditorRegistry.add('send_mail', {
         name: 'email_to',
         type: 'char',
         required: true,
-        string: _lt('Recipient Email'),
+        string: _t('Recipient Email'),
         defaultValue: 'info@yourcompany.example.com',
     }],
 });

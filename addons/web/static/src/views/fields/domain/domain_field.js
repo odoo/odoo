@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -240,15 +240,15 @@ export class DomainField extends Component {
 
 export const domainField = {
     component: DomainField,
-    displayName: _lt("Domain"),
+    displayName: _t("Domain"),
     supportedOptions: [
         {
-            label: _lt("Edit in dialog"),
+            label: _t("Edit in dialog"),
             name: "in_dialog",
             type: "boolean",
         },
         {
-            label: _lt("Model"),
+            label: _t("Model"),
             name: "model",
             type: "string",
         },

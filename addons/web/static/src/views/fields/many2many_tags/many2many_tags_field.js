@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { Domain } from "@web/core/domain";
@@ -257,15 +257,15 @@ export class Many2ManyTagsField extends Component {
 
 export const many2ManyTagsField = {
     component: Many2ManyTagsField,
-    displayName: _lt("Tags"),
+    displayName: _t("Tags"),
     supportedOptions: [
         {
-            label: _lt("Disable creation"),
+            label: _t("Disable creation"),
             name: "no_create",
             type: "boolean",
         },
         {
-            label: _lt("Use colors"),
+            label: _t("Use colors"),
             name: "color_field",
             type: "boolean",
         },
@@ -375,7 +375,7 @@ export const many2ManyTagsFieldColorEditable = {
     supportedOptions: [
         ...many2ManyTagsField.supportedOptions,
         {
-            label: _lt("Prevent color edition"),
+            label: _t("Prevent color edition"),
             name: "no_edit_color",
             type: "boolean",
         },

@@ -2,7 +2,7 @@
 
 import { patch } from "@web/core/utils/patch";
 import { BarcodeParser } from "@barcodes/js/barcode_parser";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 export class GS1BarcodeError extends Error {};
 
 export const FNC1_CHAR = String.fromCharCode(29);
@@ -81,14 +81,14 @@ patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
             }
         } else if (rule.gs1_content_type === 'identifier'){
             if (parseInt(match[2][match[2].length - 1]) !== this.get_barcode_check_digit("0".repeat(18 - match[2].length) + match[2])){
-                throw new Error(_lt("Invalid barcode: the check digit is incorrect"));
-                // return {error: _lt("Invalid barcode: the check digit is incorrect")};
+                throw new Error(_t("Invalid barcode: the check digit is incorrect"));
+                // return {error: _t("Invalid barcode: the check digit is incorrect")};
             }
             result.value = match[2];
         } else if (rule.gs1_content_type === 'date'){
             if (match[2].length !== 6){
-                throw new Error(_lt("Invalid barcode: can't be formated as date"));
-                // return {error: _lt("Invalid barcode: can't be formated as date")};
+                throw new Error(_t("Invalid barcode: can't be formated as date"));
+                // return {error: _t("Invalid barcode: can't be formated as date")};
             }
             result.value = this.gs1_date_to_date(match[2]);
         } else {
@@ -121,12 +121,12 @@ patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
                             return results; // Barcode completly parsed, no need to keep looping.
                         }
                     } else {
-                        throw new GS1BarcodeError(_lt("This barcode can't be parsed by any barcode rules."));
+                        throw new GS1BarcodeError(_t("This barcode can't be parsed by any barcode rules."));
                     }
                 }
             }
             if (barcodeLength === barcode.length) {
-                throw new GS1BarcodeError(_lt("This barcode can't be partially or fully parsed."));
+                throw new GS1BarcodeError(_t("This barcode can't be partially or fully parsed."));
             }
         }
 

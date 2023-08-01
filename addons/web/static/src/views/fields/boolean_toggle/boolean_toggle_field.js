@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { booleanField, BooleanField } from "../boolean/boolean_field";
 
@@ -22,7 +22,7 @@ export class BooleanToggleField extends BooleanField {
 export const booleanToggleField = {
     ...booleanField,
     component: BooleanToggleField,
-    displayName: _lt("Toggle"),
+    displayName: _t("Toggle"),
     extractProps({ options }, dynamicInfo) {
         return {
             autosave: "autosave" in options ? Boolean(options.autosave) : true,

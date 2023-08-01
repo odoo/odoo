@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -24,7 +24,7 @@ export class PhoneField extends Component {
 
 export const phoneField = {
     component: PhoneField,
-    displayName: _lt("Phone"),
+    displayName: _t("Phone"),
     supportedTypes: ["char"],
     extractProps: ({ attrs }) => ({
         placeholder: attrs.placeholder,

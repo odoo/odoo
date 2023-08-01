@@ -4,7 +4,7 @@ import { cleanTerm } from "@mail/utils/common/format";
 
 import { Component, xml } from "@odoo/owl";
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 const commandSetupRegistry = registry.category("command_setup");
@@ -15,9 +15,9 @@ const commandProviderRegistry = registry.category("command_provider");
 // -----------------------------------------------------------------------------
 commandSetupRegistry.add("@", {
     debounceDelay: 200,
-    emptyMessage: _lt("No user found"),
-    name: _lt("users"),
-    placeholder: _lt("Search for a user..."),
+    emptyMessage: _t("No user found"),
+    name: _t("users"),
+    placeholder: _t("Search for a user..."),
 });
 
 class DialogCommand extends Component {}
@@ -58,9 +58,9 @@ commandProviderRegistry.add("mail.partner", {
 
 commandSetupRegistry.add("#", {
     debounceDelay: 200,
-    emptyMessage: _lt("No channel found"),
-    name: _lt("channels"),
-    placeholder: _lt("Search for a channel..."),
+    emptyMessage: _t("No channel found"),
+    name: _t("channels"),
+    placeholder: _t("Search for a channel..."),
 });
 
 commandProviderRegistry.add("discuss.channel", {

@@ -3,7 +3,7 @@
 import { Component } from "@odoo/owl";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { _lt, _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
 import { DateTimeField } from "../datetime/datetime_field";
@@ -60,7 +60,7 @@ export class RemainingDaysField extends Component {
 
 export const remainingDaysField = {
     component: RemainingDaysField,
-    displayName: _lt("Remaining Days"),
+    displayName: _t("Remaining Days"),
     supportedTypes: ["date", "datetime"],
 };
 

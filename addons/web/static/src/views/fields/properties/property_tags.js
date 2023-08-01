@@ -2,7 +2,7 @@
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { ColorList } from "@web/core/colorlist/colorlist";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -122,7 +122,7 @@ export class PropertyTags extends Component {
                             return [
                                 {
                                     value: null,
-                                    label: _lt("Start typing..."),
+                                    label: _t("Start typing..."),
                                     classList: "fst-italic",
                                 },
                             ];
@@ -130,7 +130,7 @@ export class PropertyTags extends Component {
                             return [
                                 {
                                     value: null,
-                                    label: _lt("No result"),
+                                    label: _t("No result"),
                                     classList: "fst-italic",
                                 },
                             ];
@@ -139,7 +139,7 @@ export class PropertyTags extends Component {
                         return [
                             {
                                 value: { toCreate: true, value: request },
-                                label: sprintf(_lt('Create "%s"'), request),
+                                label: sprintf(_t('Create "%s"'), request),
                                 classList: "o_field_property_dropdown_add",
                             },
                         ];
@@ -195,7 +195,7 @@ export class PropertyTags extends Component {
 
         if (!(await this.props.checkDefinitionWriteAccess())) {
             this.notification.add(
-                _lt("You need to be able to edit parent first to add property tags"),
+                _t("You need to be able to edit parent first to add property tags"),
                 { type: "warning" }
             );
             return;
@@ -205,7 +205,7 @@ export class PropertyTags extends Component {
 
         const existingTag = this.props.tags.find((tag) => tag[0] === newValue);
         if (existingTag) {
-            this.notification.add(_lt("This tag is already available"), {
+            this.notification.add(_t("This tag is already available"), {
                 type: "warning",
             });
             return;

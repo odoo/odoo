@@ -2,7 +2,7 @@
 
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { capitalize } from "@web/core/utils/strings";
 import { getVisibleElements } from "@web/core/utils/ui";
@@ -12,8 +12,8 @@ import { Component } from "@odoo/owl";
 
 const commandSetupRegistry = registry.category("command_setup");
 commandSetupRegistry.add("default", {
-    emptyMessage: _lt("No command found"),
-    placeholder: _lt("Search for a command..."),
+    emptyMessage: _t("No command found"),
+    placeholder: _t("Search for a command..."),
 });
 
 export class HotkeyCommandItem extends Component {

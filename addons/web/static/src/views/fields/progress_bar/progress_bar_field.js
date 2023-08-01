@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseFloat } from "../parsers";
@@ -102,36 +102,36 @@ export class ProgressBarField extends Component {
 
 export const progressBarField = {
     component: ProgressBarField,
-    displayName: _lt("Progress Bar"),
+    displayName: _t("Progress Bar"),
     supportedOptions: [
         {
-            label: _lt("Editable"),
+            label: _t("Editable"),
             name: "editable",
             type: "boolean",
         },
         {
-            label: _lt("Edit max value"),
+            label: _t("Edit max value"),
             name: "edit_max_value",
             type: "boolean",
         },
         {
-            label: _lt("Current value field"),
+            label: _t("Current value field"),
             name: "current_value",
             type: "field",
             availableTypes: ["integer", "float"],
         },
         {
-            label: _lt("Max value field"),
+            label: _t("Max value field"),
             name: "max_value",
             type: "field",
             availableTypes: ["integer", "float"],
         },
         {
-            label: _lt("Overflow style"),
+            label: _t("Overflow style"),
             name: "overflow_class",
             type: "string",
             availableTypes: ["integer", "float"],
-            help: _lt(
+            help: _t(
                 "Bootstrap classname to customize the style of the progress bar when the maximum value is exceeded"
             ),
             default: "bg-secondary",

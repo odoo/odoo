@@ -55,55 +55,55 @@
 // Since JSON grammar is way simpler than JavaScript's grammar, it is actually
 // faster to parse the data as a JSON object than as a JavaScript object.
 
-import { _lt as lazyTranslate } from "@web/core/l10n/translation";
-const _lt = str => JSON.stringify(lazyTranslate(str)).slice(1, -1);
+import { _t as lazyTranslate } from "@web/core/l10n/translation";
+const _t = str => JSON.stringify(lazyTranslate(str)).slice(1, -1);
 
 export const categories = JSON.parse(`[
     {
         "name": "Smileys & Emotion",
-        "displayName": "`+ _lt("Smileys & Emotion") + `",
+        "displayName": "`+ _t("Smileys & Emotion") + `",
         "title": "🙂",
         "sortId": 1
     },
     {
         "name": "People & Body",
-        "displayName": "`+ _lt("People & Body") + `",
+        "displayName": "`+ _t("People & Body") + `",
         "title": "🤟",
         "sortId": 2
     },
     {
         "name": "Animals & Nature",
-        "displayName": "`+ _lt("Animals & Nature") + `",
+        "displayName": "`+ _t("Animals & Nature") + `",
         "title": "🐢",
         "sortId": 3
     },
     {
         "name": "Food & Drink",
-        "displayName": "`+ _lt("Food & Drink") + `",
+        "displayName": "`+ _t("Food & Drink") + `",
         "title": "🍭",
         "sortId": 4
     },
     {
         "name": "Travel & Places",
-        "displayName": "`+ _lt("Travel & Places") + `",
+        "displayName": "`+ _t("Travel & Places") + `",
         "title": "🚗",
         "sortId": 5
     },
     {
         "name": "Activities",
-        "displayName": "`+ _lt("Activities") + `",
+        "displayName": "`+ _t("Activities") + `",
         "title": "🏈",
         "sortId": 6
     },
     {
         "name": "Objects",
-        "displayName": "`+ _lt("Objects") + `",
+        "displayName": "`+ _t("Objects") + `",
         "title": "📕",
         "sortId": 7
     },
     {
         "name": "Symbols",
-        "displayName": "`+ _lt("Symbols") + `",
+        "displayName": "`+ _t("Symbols") + `",
         "title": "🔠",
         "sortId": 8
     }
@@ -114,11 +114,11 @@ const emojisData1 = `{
     "codepoints": "😀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("grin") + `",
-        "` + _lt("grinning face") + `"
+        "` + _t("face") + `",
+        "` + _t("grin") + `",
+        "` + _t("grinning face") + `"
     ],
-    "name": "` + _lt("grinning face") + `",
+    "name": "` + _t("grinning face") + `",
     "shortcodes": [
         ":grinning:"
     ]
@@ -132,13 +132,13 @@ const emojisData1 = `{
         "=D"
     ],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("grinning face with big eyes") + `",
-        "` + _lt("mouth") + `",
-        "` + _lt("open") + `",
-        "` + _lt("smile") + `"
+        "` + _t("face") + `",
+        "` + _t("grinning face with big eyes") + `",
+        "` + _t("mouth") + `",
+        "` + _t("open") + `",
+        "` + _t("smile") + `"
     ],
-    "name": "` + _lt("grinning face with big eyes") + `",
+    "name": "` + _t("grinning face with big eyes") + `",
     "shortcodes": [
         ":smiley:"
     ]
@@ -148,14 +148,14 @@ const emojisData1 = `{
     "codepoints": "😄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("grinning face with smiling eyes") + `",
-        "` + _lt("mouth") + `",
-        "` + _lt("open") + `",
-        "` + _lt("smile") + `"
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("grinning face with smiling eyes") + `",
+        "` + _t("mouth") + `",
+        "` + _t("open") + `",
+        "` + _t("smile") + `"
     ],
-    "name": "` + _lt("grinning face with smiling eyes") + `",
+    "name": "` + _t("grinning face with smiling eyes") + `",
     "shortcodes": [
         ":smile:"
     ]
@@ -165,13 +165,13 @@ const emojisData1 = `{
     "codepoints": "😁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("beaming face with smiling eyes") + `",
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("grin") + `",
-        "` + _lt("smile") + `"
+        "` + _t("beaming face with smiling eyes") + `",
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("grin") + `",
+        "` + _t("smile") + `"
     ],
-    "name": "` + _lt("beaming face with smiling eyes") + `",
+    "name": "` + _t("beaming face with smiling eyes") + `",
     "shortcodes": [
         ":grin:"
     ]
@@ -184,14 +184,14 @@ const emojisData1 = `{
         "XD"
     ],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("grinning squinting face") + `",
-        "` + _lt("laugh") + `",
-        "` + _lt("mouth") + `",
-        "` + _lt("satisfied") + `",
-        "` + _lt("smile") + `"
+        "` + _t("face") + `",
+        "` + _t("grinning squinting face") + `",
+        "` + _t("laugh") + `",
+        "` + _t("mouth") + `",
+        "` + _t("satisfied") + `",
+        "` + _t("smile") + `"
     ],
-    "name": "` + _lt("grinning squinting face") + `",
+    "name": "` + _t("grinning squinting face") + `",
     "shortcodes": [
         ":laughing:"
     ]
@@ -201,14 +201,14 @@ const emojisData1 = `{
     "codepoints": "😅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cold") + `",
-        "` + _lt("face") + `",
-        "` + _lt("grinning face with sweat") + `",
-        "` + _lt("open") + `",
-        "` + _lt("smile") + `",
-        "` + _lt("sweat") + `"
+        "` + _t("cold") + `",
+        "` + _t("face") + `",
+        "` + _t("grinning face with sweat") + `",
+        "` + _t("open") + `",
+        "` + _t("smile") + `",
+        "` + _t("sweat") + `"
     ],
-    "name": "` + _lt("grinning face with sweat") + `",
+    "name": "` + _t("grinning face with sweat") + `",
     "shortcodes": [
         ":sweat_smile:"
     ]
@@ -218,15 +218,15 @@ const emojisData1 = `{
     "codepoints": "🤣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("floor") + `",
-        "` + _lt("laugh") + `",
-        "` + _lt("rofl") + `",
-        "` + _lt("rolling") + `",
-        "` + _lt("rolling on the floor laughing") + `",
-        "` + _lt("rotfl") + `"
+        "` + _t("face") + `",
+        "` + _t("floor") + `",
+        "` + _t("laugh") + `",
+        "` + _t("rofl") + `",
+        "` + _t("rolling") + `",
+        "` + _t("rolling on the floor laughing") + `",
+        "` + _t("rotfl") + `"
     ],
-    "name": "` + _lt("rolling on the floor laughing") + `",
+    "name": "` + _t("rolling on the floor laughing") + `",
     "shortcodes": [
         ":rofl:"
     ]
@@ -238,13 +238,13 @@ const emojisData1 = `{
         "x'D"
     ],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("face with tears of joy") + `",
-        "` + _lt("joy") + `",
-        "` + _lt("laugh") + `",
-        "` + _lt("tear") + `"
+        "` + _t("face") + `",
+        "` + _t("face with tears of joy") + `",
+        "` + _t("joy") + `",
+        "` + _t("laugh") + `",
+        "` + _t("tear") + `"
     ],
-    "name": "` + _lt("face with tears of joy") + `",
+    "name": "` + _t("face with tears of joy") + `",
     "shortcodes": [
         ":joy:",
         ":jpp:"
@@ -255,11 +255,11 @@ const emojisData1 = `{
     "codepoints": "🙂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("slightly smiling face") + `",
-        "` + _lt("smile") + `"
+        "` + _t("face") + `",
+        "` + _t("slightly smiling face") + `",
+        "` + _t("smile") + `"
     ],
-    "name": "` + _lt("slightly smiling face") + `",
+    "name": "` + _t("slightly smiling face") + `",
     "shortcodes": [
         ":slight_smile:"
     ]
@@ -269,12 +269,12 @@ const emojisData1 = `{
     "codepoints": "🙃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("upside-down") + `",
-        "` + _lt("upside down") + `",
-        "` + _lt("upside-down face") + `"
+        "` + _t("face") + `",
+        "` + _t("upside-down") + `",
+        "` + _t("upside down") + `",
+        "` + _t("upside-down face") + `"
     ],
-    "name": "` + _lt("upside-down face") + `",
+    "name": "` + _t("upside-down face") + `",
     "shortcodes": [
         ":upside_down:"
     ]
@@ -287,11 +287,11 @@ const emojisData1 = `{
         ";-)"
     ],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("wink") + `",
-        "` + _lt("winking face") + `"
+        "` + _t("face") + `",
+        "` + _t("wink") + `",
+        "` + _t("winking face") + `"
     ],
-    "name": "` + _lt("winking face") + `",
+    "name": "` + _t("winking face") + `",
     "shortcodes": [
         ":wink:"
     ]
@@ -306,13 +306,13 @@ const emojisData1 = `{
         ":]"
     ],
     "keywords": [
-        "` + _lt("blush") + `",
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("smile") + `",
-        "` + _lt("smiling face with smiling eyes") + `"
+        "` + _t("blush") + `",
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("smile") + `",
+        "` + _t("smiling face with smiling eyes") + `"
     ],
-    "name": "` + _lt("smiling face with smiling eyes") + `",
+    "name": "` + _t("smiling face with smiling eyes") + `",
     "shortcodes": [
         ":smiling_face_with_smiling_eyes:"
     ]
@@ -324,14 +324,14 @@ const emojisData1 = `{
         "o:)"
     ],
     "keywords": [
-        "` + _lt("angel") + `",
-        "` + _lt("face") + `",
-        "` + _lt("fantasy") + `",
-        "` + _lt("halo") + `",
-        "` + _lt("innocent") + `",
-        "` + _lt("smiling face with halo") + `"
+        "` + _t("angel") + `",
+        "` + _t("face") + `",
+        "` + _t("fantasy") + `",
+        "` + _t("halo") + `",
+        "` + _t("innocent") + `",
+        "` + _t("smiling face with halo") + `"
     ],
-    "name": "` + _lt("smiling face with halo") + `",
+    "name": "` + _t("smiling face with halo") + `",
     "shortcodes": [
         ":innocent:",
         ":halo:"
@@ -342,13 +342,13 @@ const emojisData1 = `{
     "codepoints": "🥰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adore") + `",
-        "` + _lt("crush") + `",
-        "` + _lt("hearts") + `",
-        "` + _lt("in love") + `",
-        "` + _lt("smiling face with hearts") + `"
+        "` + _t("adore") + `",
+        "` + _t("crush") + `",
+        "` + _t("hearts") + `",
+        "` + _t("in love") + `",
+        "` + _t("smiling face with hearts") + `"
     ],
-    "name": "` + _lt("smiling face with hearts") + `",
+    "name": "` + _t("smiling face with hearts") + `",
     "shortcodes": [
         ":smiling_face_with_hearts:"
     ]
@@ -360,14 +360,14 @@ const emojisData1 = `{
         ":heart_eyes"
     ],
     "keywords": [
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("love") + `",
-        "` + _lt("smile") + `",
-        "` + _lt("smiling face with heart-eyes") + `",
-        "` + _lt("smiling face with heart eyes") + `"
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("love") + `",
+        "` + _t("smile") + `",
+        "` + _t("smiling face with heart-eyes") + `",
+        "` + _t("smiling face with heart eyes") + `"
     ],
-    "name": "` + _lt("smiling face with heart-eyes") + `",
+    "name": "` + _t("smiling face with heart-eyes") + `",
     "shortcodes": [
         ":heart_eyes:"
     ]
@@ -377,13 +377,13 @@ const emojisData1 = `{
     "codepoints": "🤩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("eyes") + `",
-        "` + _lt("face") + `",
-        "` + _lt("grinning") + `",
-        "` + _lt("star") + `",
-        "` + _lt("star-struck") + `"
+        "` + _t("eyes") + `",
+        "` + _t("face") + `",
+        "` + _t("grinning") + `",
+        "` + _t("star") + `",
+        "` + _t("star-struck") + `"
     ],
-    "name": "` + _lt("star-struck") + `",
+    "name": "` + _t("star-struck") + `",
     "shortcodes": [
         ":star_struck:"
     ]
@@ -396,11 +396,11 @@ const emojisData1 = `{
         ":-*"
     ],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("face blowing a kiss") + `",
-        "` + _lt("kiss") + `"
+        "` + _t("face") + `",
+        "` + _t("face blowing a kiss") + `",
+        "` + _t("kiss") + `"
     ],
-    "name": "` + _lt("face blowing a kiss") + `",
+    "name": "` + _t("face blowing a kiss") + `",
     "shortcodes": [
         ":kissing_heart:"
     ]
@@ -410,11 +410,11 @@ const emojisData1 = `{
     "codepoints": "😗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("kiss") + `",
-        "` + _lt("kissing face") + `"
+        "` + _t("face") + `",
+        "` + _t("kiss") + `",
+        "` + _t("kissing face") + `"
     ],
-    "name": "` + _lt("kissing face") + `",
+    "name": "` + _t("kissing face") + `",
     "shortcodes": [
         ":kissing:"
     ]
@@ -424,13 +424,13 @@ const emojisData1 = `{
     "codepoints": "😚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("closed") + `",
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("kiss") + `",
-        "` + _lt("kissing face with closed eyes") + `"
+        "` + _t("closed") + `",
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("kiss") + `",
+        "` + _t("kissing face with closed eyes") + `"
     ],
-    "name": "` + _lt("kissing face with closed eyes") + `",
+    "name": "` + _t("kissing face with closed eyes") + `",
     "shortcodes": [
         ":kissing_closed_eyes:"
     ]
@@ -440,13 +440,13 @@ const emojisData1 = `{
     "codepoints": "😙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("kiss") + `",
-        "` + _lt("kissing face with smiling eyes") + `",
-        "` + _lt("smile") + `"
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("kiss") + `",
+        "` + _t("kissing face with smiling eyes") + `",
+        "` + _t("smile") + `"
     ],
-    "name": "` + _lt("kissing face with smiling eyes") + `",
+    "name": "` + _t("kissing face with smiling eyes") + `",
     "shortcodes": [
         ":kissing_smiling_eyes:"
     ]
@@ -456,16 +456,16 @@ const emojisData1 = `{
     "codepoints": "😋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("delicious") + `",
-        "` + _lt("face") + `",
-        "` + _lt("face savoring food") + `",
-        "` + _lt("savouring") + `",
-        "` + _lt("smile") + `",
-        "` + _lt("yum") + `",
-        "` + _lt("face savouring food") + `",
-        "` + _lt("savoring") + `"
+        "` + _t("delicious") + `",
+        "` + _t("face") + `",
+        "` + _t("face savoring food") + `",
+        "` + _t("savouring") + `",
+        "` + _t("smile") + `",
+        "` + _t("yum") + `",
+        "` + _t("face savouring food") + `",
+        "` + _t("savoring") + `"
     ],
-    "name": "` + _lt("face savoring food") + `",
+    "name": "` + _t("face savoring food") + `",
     "shortcodes": [
         ":yum:"
     ]
@@ -481,11 +481,11 @@ const emojisData1 = `{
         "=P"
     ],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("face with tongue") + `",
-        "` + _lt("tongue") + `"
+        "` + _t("face") + `",
+        "` + _t("face with tongue") + `",
+        "` + _t("tongue") + `"
     ],
-    "name": "` + _lt("face with tongue") + `",
+    "name": "` + _t("face with tongue") + `",
     "shortcodes": [
         ":stuck_out_ltongue:"
     ]
@@ -498,14 +498,14 @@ const emojisData1 = `{
         ";P"
     ],
     "keywords": [
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("joke") + `",
-        "` + _lt("tongue") + `",
-        "` + _lt("wink") + `",
-        "` + _lt("winking face with tongue") + `"
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("joke") + `",
+        "` + _t("tongue") + `",
+        "` + _t("wink") + `",
+        "` + _t("winking face with tongue") + `"
     ],
-    "name": "` + _lt("winking face with tongue") + `",
+    "name": "` + _t("winking face with tongue") + `",
     "shortcodes": [
         ":stuck_out_ltongue_winking_eye:"
     ]
@@ -515,13 +515,13 @@ const emojisData1 = `{
     "codepoints": "🤪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("eye") + `",
-        "` + _lt("goofy") + `",
-        "` + _lt("large") + `",
-        "` + _lt("small") + `",
-        "` + _lt("zany face") + `"
+        "` + _t("eye") + `",
+        "` + _t("goofy") + `",
+        "` + _t("large") + `",
+        "` + _t("small") + `",
+        "` + _t("zany face") + `"
     ],
-    "name": "` + _lt("zany face") + `",
+    "name": "` + _t("zany face") + `",
     "shortcodes": [
         ":zany:"
     ]
@@ -534,14 +534,14 @@ const emojisData1 = `{
         "xP"
     ],
     "keywords": [
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("horrible") + `",
-        "` + _lt("squinting face with tongue") + `",
-        "` + _lt("taste") + `",
-        "` + _lt("tongue") + `"
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("horrible") + `",
+        "` + _t("squinting face with tongue") + `",
+        "` + _t("taste") + `",
+        "` + _t("tongue") + `"
     ],
-    "name": "` + _lt("squinting face with tongue") + `",
+    "name": "` + _t("squinting face with tongue") + `",
     "shortcodes": [
         ":stuck_out_ltongue_closed_eyes:"
     ]
@@ -551,12 +551,12 @@ const emojisData1 = `{
     "codepoints": "🤑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("money") + `",
-        "` + _lt("money-mouth face") + `",
-        "` + _lt("mouth") + `"
+        "` + _t("face") + `",
+        "` + _t("money") + `",
+        "` + _t("money-mouth face") + `",
+        "` + _t("mouth") + `"
     ],
-    "name": "` + _lt("money-mouth face") + `",
+    "name": "` + _t("money-mouth face") + `",
     "shortcodes": [
         ":money_mouth:"
     ]
@@ -566,14 +566,14 @@ const emojisData1 = `{
     "codepoints": "🤗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("hug") + `",
-        "` + _lt("hugging") + `",
-        "` + _lt("open hands") + `",
-        "` + _lt("smiling face") + `",
-        "` + _lt("smiling face with open hands") + `"
+        "` + _t("face") + `",
+        "` + _t("hug") + `",
+        "` + _t("hugging") + `",
+        "` + _t("open hands") + `",
+        "` + _t("smiling face") + `",
+        "` + _t("smiling face with open hands") + `"
     ],
-    "name": "` + _lt("smiling face with open hands") + `",
+    "name": "` + _t("smiling face with open hands") + `",
     "shortcodes": [
         ":hugging_face:"
     ]
@@ -583,12 +583,12 @@ const emojisData1 = `{
     "codepoints": "🤭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face with hand over mouth") + `",
-        "` + _lt("whoops") + `",
-        "` + _lt("oops") + `",
-        "` + _lt("embarrassed") + `"
+        "` + _t("face with hand over mouth") + `",
+        "` + _t("whoops") + `",
+        "` + _t("oops") + `",
+        "` + _t("embarrassed") + `"
     ],
-    "name": "` + _lt("face with hand over mouth") + `",
+    "name": "` + _t("face with hand over mouth") + `",
     "shortcodes": [
         ":hand_over_mouth:"
     ]
@@ -598,12 +598,12 @@ const emojisData1 = `{
     "codepoints": "🤫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("quiet") + `",
-        "` + _lt("shooshing face") + `",
-        "` + _lt("shush") + `",
-        "` + _lt("shushing face") + `"
+        "` + _t("quiet") + `",
+        "` + _t("shooshing face") + `",
+        "` + _t("shush") + `",
+        "` + _t("shushing face") + `"
     ],
-    "name": "` + _lt("shushing face") + `",
+    "name": "` + _t("shushing face") + `",
     "shortcodes": [
         ":shush:"
     ]
@@ -613,10 +613,10 @@ const emojisData1 = `{
     "codepoints": "🤔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("thinking") + `"
+        "` + _t("face") + `",
+        "` + _t("thinking") + `"
     ],
-    "name": "` + _lt("thinking face") + `",
+    "name": "` + _t("thinking face") + `",
     "shortcodes": [
         ":thinking:"
     ]
@@ -626,12 +626,12 @@ const emojisData1 = `{
     "codepoints": "🤐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("mouth") + `",
-        "` + _lt("zipper") + `",
-        "` + _lt("zipper-mouth face") + `"
+        "` + _t("face") + `",
+        "` + _t("mouth") + `",
+        "` + _t("zipper") + `",
+        "` + _t("zipper-mouth face") + `"
     ],
-    "name": "` + _lt("zipper-mouth face") + `",
+    "name": "` + _t("zipper-mouth face") + `",
     "shortcodes": [
         ":zipper_mouth:"
     ]
@@ -641,11 +641,11 @@ const emojisData1 = `{
     "codepoints": "🤨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("distrust") + `",
-        "` + _lt("face with raised eyebrow") + `",
-        "` + _lt("skeptic") + `"
+        "` + _t("distrust") + `",
+        "` + _t("face with raised eyebrow") + `",
+        "` + _t("skeptic") + `"
     ],
-    "name": "` + _lt("face with raised eyebrow") + `",
+    "name": "` + _t("face with raised eyebrow") + `",
     "shortcodes": [
         ":raised_eyebrow:",
         ":skeptic:"
@@ -659,12 +659,12 @@ const emojisData1 = `{
         ":-|"
     ],
     "keywords": [
-        "` + _lt("deadpan") + `",
-        "` + _lt("face") + `",
-        "` + _lt("meh") + `",
-        "` + _lt("neutral") + `"
+        "` + _t("deadpan") + `",
+        "` + _t("face") + `",
+        "` + _t("meh") + `",
+        "` + _t("neutral") + `"
     ],
-    "name": "` + _lt("neutral face") + `",
+    "name": "` + _t("neutral face") + `",
     "shortcodes": [
         ":neutral:"
     ]
@@ -674,13 +674,13 @@ const emojisData1 = `{
     "codepoints": "😑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("expressionless") + `",
-        "` + _lt("face") + `",
-        "` + _lt("inexpressive") + `",
-        "` + _lt("meh") + `",
-        "` + _lt("unexpressive") + `"
+        "` + _t("expressionless") + `",
+        "` + _t("face") + `",
+        "` + _t("inexpressive") + `",
+        "` + _t("meh") + `",
+        "` + _t("unexpressive") + `"
     ],
-    "name": "` + _lt("expressionless face") + `",
+    "name": "` + _t("expressionless face") + `",
     "shortcodes": [
         ":expressionless:"
     ]
@@ -690,13 +690,13 @@ const emojisData1 = `{
     "codepoints": "😶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("face without mouth") + `",
-        "` + _lt("mouth") + `",
-        "` + _lt("quiet") + `",
-        "` + _lt("silent") + `"
+        "` + _t("face") + `",
+        "` + _t("face without mouth") + `",
+        "` + _t("mouth") + `",
+        "` + _t("quiet") + `",
+        "` + _t("silent") + `"
     ],
-    "name": "` + _lt("face without mouth") + `",
+    "name": "` + _t("face without mouth") + `",
     "shortcodes": [
         ":no_mouth:"
     ]
@@ -706,11 +706,11 @@ const emojisData1 = `{
     "codepoints": "😏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("smirk") + `",
-        "` + _lt("smirking face") + `"
+        "` + _t("face") + `",
+        "` + _t("smirk") + `",
+        "` + _t("smirking face") + `"
     ],
-    "name": "` + _lt("smirking face") + `",
+    "name": "` + _t("smirking face") + `",
     "shortcodes": [
         ":smirk:"
     ]
@@ -720,11 +720,11 @@ const emojisData1 = `{
     "codepoints": "😒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("unamused") + `",
-        "` + _lt("unhappy") + `"
+        "` + _t("face") + `",
+        "` + _t("unamused") + `",
+        "` + _t("unhappy") + `"
     ],
-    "name": "` + _lt("unamused face") + `",
+    "name": "` + _t("unamused face") + `",
     "shortcodes": [
         ":unamused_face:"
     ]
@@ -734,13 +734,13 @@ const emojisData1 = `{
     "codepoints": "🙄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("eyeroll") + `",
-        "` + _lt("eyes") + `",
-        "` + _lt("face") + `",
-        "` + _lt("face with rolling eyes") + `",
-        "` + _lt("rolling") + `"
+        "` + _t("eyeroll") + `",
+        "` + _t("eyes") + `",
+        "` + _t("face") + `",
+        "` + _t("face with rolling eyes") + `",
+        "` + _t("rolling") + `"
     ],
-    "name": "` + _lt("face with rolling eyes") + `",
+    "name": "` + _t("face with rolling eyes") + `",
     "shortcodes": [
         ":face_with_rolling_eyes:"
     ]
@@ -750,11 +750,11 @@ const emojisData1 = `{
     "codepoints": "😬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("grimace") + `",
-        "` + _lt("grimacing face") + `"
+        "` + _t("face") + `",
+        "` + _t("grimace") + `",
+        "` + _t("grimacing face") + `"
     ],
-    "name": "` + _lt("grimacing face") + `",
+    "name": "` + _t("grimacing face") + `",
     "shortcodes": [
         ":grimacing_face:"
     ]
@@ -764,12 +764,12 @@ const emojisData1 = `{
     "codepoints": "🤥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("lie") + `",
-        "` + _lt("lying face") + `",
-        "` + _lt("pinocchio") + `"
+        "` + _t("face") + `",
+        "` + _t("lie") + `",
+        "` + _t("lying face") + `",
+        "` + _t("pinocchio") + `"
     ],
-    "name": "` + _lt("lying face") + `",
+    "name": "` + _t("lying face") + `",
     "shortcodes": [
         ":lying_face:"
     ]
@@ -779,10 +779,10 @@ const emojisData1 = `{
     "codepoints": "😌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("relieved") + `"
+        "` + _t("face") + `",
+        "` + _t("relieved") + `"
     ],
-    "name": "` + _lt("relieved face") + `",
+    "name": "` + _t("relieved face") + `",
     "shortcodes": [
         ":relieved_face:"
     ]
@@ -792,11 +792,11 @@ const emojisData1 = `{
     "codepoints": "😔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dejected") + `",
-        "` + _lt("face") + `",
-        "` + _lt("pensive") + `"
+        "` + _t("dejected") + `",
+        "` + _t("face") + `",
+        "` + _t("pensive") + `"
     ],
-    "name": "` + _lt("pensive face") + `",
+    "name": "` + _t("pensive face") + `",
     "shortcodes": [
         ":pensive_face:"
     ]
@@ -806,12 +806,12 @@ const emojisData1 = `{
     "codepoints": "😪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("good night") + `",
-        "` + _lt("sleep") + `",
-        "` + _lt("sleepy face") + `"
+        "` + _t("face") + `",
+        "` + _t("good night") + `",
+        "` + _t("sleep") + `",
+        "` + _t("sleepy face") + `"
     ],
-    "name": "` + _lt("sleepy face") + `",
+    "name": "` + _t("sleepy face") + `",
     "shortcodes": [
         ":sleepy_face:"
     ]
@@ -821,10 +821,10 @@ const emojisData1 = `{
     "codepoints": "🤤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("drooling") + `",
-        "` + _lt("face") + `"
+        "` + _t("drooling") + `",
+        "` + _t("face") + `"
     ],
-    "name": "` + _lt("drooling face") + `",
+    "name": "` + _t("drooling face") + `",
     "shortcodes": [
         ":drooling_face:"
     ]
@@ -834,13 +834,13 @@ const emojisData1 = `{
     "codepoints": "😴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("good night") + `",
-        "` + _lt("sleep") + `",
-        "` + _lt("sleeping face") + `",
-        "` + _lt("ZZZ") + `"
+        "` + _t("face") + `",
+        "` + _t("good night") + `",
+        "` + _t("sleep") + `",
+        "` + _t("sleeping face") + `",
+        "` + _t("ZZZ") + `"
     ],
-    "name": "` + _lt("sleeping face") + `",
+    "name": "` + _t("sleeping face") + `",
     "shortcodes": [
         ":sleeping_face:"
     ]
@@ -850,17 +850,17 @@ const emojisData1 = `{
     "codepoints": "😷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cold") + `",
-        "` + _lt("doctor") + `",
-        "` + _lt("face") + `",
-        "` + _lt("face with medical mask") + `",
-        "` + _lt("mask") + `",
-        "` + _lt("sick") + `",
-        "` + _lt("ill") + `",
-        "` + _lt("medicine") + `",
-        "` + _lt("poorly") + `"
+        "` + _t("cold") + `",
+        "` + _t("doctor") + `",
+        "` + _t("face") + `",
+        "` + _t("face with medical mask") + `",
+        "` + _t("mask") + `",
+        "` + _t("sick") + `",
+        "` + _t("ill") + `",
+        "` + _t("medicine") + `",
+        "` + _t("poorly") + `"
     ],
-    "name": "` + _lt("face with medical mask") + `",
+    "name": "` + _t("face with medical mask") + `",
     "shortcodes": [
         ":face_with_medical_mask:"
     ]
@@ -870,13 +870,13 @@ const emojisData1 = `{
     "codepoints": "🤒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("face with thermometer") + `",
-        "` + _lt("ill") + `",
-        "` + _lt("sick") + `",
-        "` + _lt("thermometer") + `"
+        "` + _t("face") + `",
+        "` + _t("face with thermometer") + `",
+        "` + _t("ill") + `",
+        "` + _t("sick") + `",
+        "` + _t("thermometer") + `"
     ],
-    "name": "` + _lt("face with thermometer") + `",
+    "name": "` + _t("face with thermometer") + `",
     "shortcodes": [
         ":face_with_lthermometer:"
     ]
@@ -886,14 +886,14 @@ const emojisData1 = `{
     "codepoints": "🤕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bandage") + `",
-        "` + _lt("face") + `",
-        "` + _lt("face with head-bandage") + `",
-        "` + _lt("hurt") + `",
-        "` + _lt("injury") + `",
-        "` + _lt("face with head bandage") + `"
+        "` + _t("bandage") + `",
+        "` + _t("face") + `",
+        "` + _t("face with head-bandage") + `",
+        "` + _t("hurt") + `",
+        "` + _t("injury") + `",
+        "` + _t("face with head bandage") + `"
     ],
-    "name": "` + _lt("face with head-bandage") + `",
+    "name": "` + _t("face with head-bandage") + `",
     "shortcodes": [
         ":face_with_head-bandage:"
     ]
@@ -903,11 +903,11 @@ const emojisData1 = `{
     "codepoints": "🤢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("nauseated") + `",
-        "` + _lt("vomit") + `"
+        "` + _t("face") + `",
+        "` + _t("nauseated") + `",
+        "` + _t("vomit") + `"
     ],
-    "name": "` + _lt("nauseated face") + `",
+    "name": "` + _t("nauseated face") + `",
     "shortcodes": [
         ":nauseated_face:"
     ]
@@ -917,12 +917,12 @@ const emojisData1 = `{
     "codepoints": "🤮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face vomiting") + `",
-        "` + _lt("puke") + `",
-        "` + _lt("sick") + `",
-        "` + _lt("vomit") + `"
+        "` + _t("face vomiting") + `",
+        "` + _t("puke") + `",
+        "` + _t("sick") + `",
+        "` + _t("vomit") + `"
     ],
-    "name": "` + _lt("face vomiting") + `",
+    "name": "` + _t("face vomiting") + `",
     "shortcodes": [
         ":face_vomiting:"
     ]
@@ -932,13 +932,13 @@ const emojisData1 = `{
     "codepoints": "🤧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("gesundheit") + `",
-        "` + _lt("sneeze") + `",
-        "` + _lt("sneezing face") + `",
-        "` + _lt("bless you") + `"
+        "` + _t("face") + `",
+        "` + _t("gesundheit") + `",
+        "` + _t("sneeze") + `",
+        "` + _t("sneezing face") + `",
+        "` + _t("bless you") + `"
     ],
-    "name": "` + _lt("sneezing face") + `",
+    "name": "` + _t("sneezing face") + `",
     "shortcodes": [
         ":sneezing_face:"
     ]
@@ -948,15 +948,15 @@ const emojisData1 = `{
     "codepoints": "🥵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("feverish") + `",
-        "` + _lt("flushed") + `",
-        "` + _lt("heat stroke") + `",
-        "` + _lt("hot") + `",
-        "` + _lt("hot face") + `",
-        "` + _lt("red-faced") + `",
-        "` + _lt("sweating") + `"
+        "` + _t("feverish") + `",
+        "` + _t("flushed") + `",
+        "` + _t("heat stroke") + `",
+        "` + _t("hot") + `",
+        "` + _t("hot face") + `",
+        "` + _t("red-faced") + `",
+        "` + _t("sweating") + `"
     ],
-    "name": "` + _lt("hot face") + `",
+    "name": "` + _t("hot face") + `",
     "shortcodes": [
         ":hot_face:"
     ]
@@ -966,14 +966,14 @@ const emojisData1 = `{
     "codepoints": "🥶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blue-faced") + `",
-        "` + _lt("cold") + `",
-        "` + _lt("cold face") + `",
-        "` + _lt("freezing") + `",
-        "` + _lt("frostbite") + `",
-        "` + _lt("icicles") + `"
+        "` + _t("blue-faced") + `",
+        "` + _t("cold") + `",
+        "` + _t("cold face") + `",
+        "` + _t("freezing") + `",
+        "` + _t("frostbite") + `",
+        "` + _t("icicles") + `"
     ],
-    "name": "` + _lt("cold face") + `",
+    "name": "` + _t("cold face") + `",
     "shortcodes": [
         ":cold_face:"
     ]
@@ -983,14 +983,14 @@ const emojisData1 = `{
     "codepoints": "🥴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dizzy") + `",
-        "` + _lt("intoxicated") + `",
-        "` + _lt("tipsy") + `",
-        "` + _lt("uneven eyes") + `",
-        "` + _lt("wavy mouth") + `",
-        "` + _lt("woozy face") + `"
+        "` + _t("dizzy") + `",
+        "` + _t("intoxicated") + `",
+        "` + _t("tipsy") + `",
+        "` + _t("uneven eyes") + `",
+        "` + _t("wavy mouth") + `",
+        "` + _t("woozy face") + `"
     ],
-    "name": "` + _lt("woozy face") + `",
+    "name": "` + _t("woozy face") + `",
     "shortcodes": [
         ":woozy_face:"
     ]
@@ -1000,13 +1000,13 @@ const emojisData1 = `{
     "codepoints": "😵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("crossed-out eyes") + `",
-        "` + _lt("dead") + `",
-        "` + _lt("face") + `",
-        "` + _lt("face with crossed-out eyes") + `",
-        "` + _lt("knocked out") + `"
+        "` + _t("crossed-out eyes") + `",
+        "` + _t("dead") + `",
+        "` + _t("face") + `",
+        "` + _t("face with crossed-out eyes") + `",
+        "` + _t("knocked out") + `"
     ],
-    "name": "` + _lt("face with crossed-out eyes") + `",
+    "name": "` + _t("face with crossed-out eyes") + `",
     "shortcodes": [
         ":face_with_crossed-out_eyes:"
     ]
@@ -1016,11 +1016,11 @@ const emojisData1 = `{
     "codepoints": "🤯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("exploding head") + `",
-        "` + _lt("mind blown") + `",
-        "` + _lt("shocked") + `"
+        "` + _t("exploding head") + `",
+        "` + _t("mind blown") + `",
+        "` + _t("shocked") + `"
     ],
-    "name": "` + _lt("exploding head") + `",
+    "name": "` + _t("exploding head") + `",
     "shortcodes": [
         ":exploding_head:"
     ]
@@ -1030,12 +1030,12 @@ const emojisData1 = `{
     "codepoints": "🤠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cowboy") + `",
-        "` + _lt("cowgirl") + `",
-        "` + _lt("face") + `",
-        "` + _lt("hat") + `"
+        "` + _t("cowboy") + `",
+        "` + _t("cowgirl") + `",
+        "` + _t("face") + `",
+        "` + _t("hat") + `"
     ],
-    "name": "` + _lt("cowboy hat face") + `",
+    "name": "` + _t("cowboy hat face") + `",
     "shortcodes": [
         ":cowboy_hat_face:"
     ]
@@ -1045,13 +1045,13 @@ const emojisData1 = `{
     "codepoints": "🥳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("hat") + `",
-        "` + _lt("horn") + `",
-        "` + _lt("party") + `",
-        "` + _lt("partying face") + `"
+        "` + _t("celebration") + `",
+        "` + _t("hat") + `",
+        "` + _t("horn") + `",
+        "` + _t("party") + `",
+        "` + _t("partying face") + `"
     ],
-    "name": "` + _lt("partying face") + `",
+    "name": "` + _t("partying face") + `",
     "shortcodes": [
         ":partying_face:"
     ]
@@ -1066,14 +1066,14 @@ const emojisData1 = `{
         "8-)"
     ],
     "keywords": [
-        "` + _lt("bright") + `",
-        "` + _lt("cool") + `",
-        "` + _lt("face") + `",
-        "` + _lt("smiling face with sunglasses") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sunglasses") + `"
+        "` + _t("bright") + `",
+        "` + _t("cool") + `",
+        "` + _t("face") + `",
+        "` + _t("smiling face with sunglasses") + `",
+        "` + _t("sun") + `",
+        "` + _t("sunglasses") + `"
     ],
-    "name": "` + _lt("smiling face with sunglasses") + `",
+    "name": "` + _t("smiling face with sunglasses") + `",
     "shortcodes": [
         ":smiling_face_with_sunglasses:"
     ]
@@ -1083,11 +1083,11 @@ const emojisData1 = `{
     "codepoints": "🤓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("geek") + `",
-        "` + _lt("nerd") + `"
+        "` + _t("face") + `",
+        "` + _t("geek") + `",
+        "` + _t("nerd") + `"
     ],
-    "name": "` + _lt("nerd face") + `",
+    "name": "` + _t("nerd face") + `",
     "shortcodes": [
         ":nerd_face:"
     ]
@@ -1097,12 +1097,12 @@ const emojisData1 = `{
     "codepoints": "🧐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("face with monocle") + `",
-        "` + _lt("monocle") + `",
-        "` + _lt("stuffy") + `"
+        "` + _t("face") + `",
+        "` + _t("face with monocle") + `",
+        "` + _t("monocle") + `",
+        "` + _t("stuffy") + `"
     ],
-    "name": "` + _lt("face with monocle") + `",
+    "name": "` + _t("face with monocle") + `",
     "shortcodes": [
         ":face_with_monocle:"
     ]
@@ -1115,11 +1115,11 @@ const emojisData1 = `{
         ":-/"
     ],
     "keywords": [
-        "` + _lt("confused") + `",
-        "` + _lt("face") + `",
-        "` + _lt("meh") + `"
+        "` + _t("confused") + `",
+        "` + _t("face") + `",
+        "` + _t("meh") + `"
     ],
-    "name": "` + _lt("confused face") + `",
+    "name": "` + _t("confused face") + `",
     "shortcodes": [
         ":confused_face:"
     ]
@@ -1129,10 +1129,10 @@ const emojisData1 = `{
     "codepoints": "😟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("worried") + `"
+        "` + _t("face") + `",
+        "` + _t("worried") + `"
     ],
-    "name": "` + _lt("worried face") + `",
+    "name": "` + _t("worried face") + `",
     "shortcodes": [
         ":worried_face:"
     ]
@@ -1142,11 +1142,11 @@ const emojisData1 = `{
     "codepoints": "🙁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("frown") + `",
-        "` + _lt("slightly frowning face") + `"
+        "` + _t("face") + `",
+        "` + _t("frown") + `",
+        "` + _t("slightly frowning face") + `"
     ],
-    "name": "` + _lt("slightly frowning face") + `",
+    "name": "` + _t("slightly frowning face") + `",
     "shortcodes": [
         ":slightly_frowning_face:"
     ]
@@ -1156,13 +1156,13 @@ const emojisData1 = `{
     "codepoints": "😮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("face with open mouth") + `",
-        "` + _lt("mouth") + `",
-        "` + _lt("open") + `",
-        "` + _lt("sympathy") + `"
+        "` + _t("face") + `",
+        "` + _t("face with open mouth") + `",
+        "` + _t("mouth") + `",
+        "` + _t("open") + `",
+        "` + _t("sympathy") + `"
     ],
-    "name": "` + _lt("face with open mouth") + `",
+    "name": "` + _t("face with open mouth") + `",
     "shortcodes": [
         ":face_with_open_mouth:"
     ]
@@ -1172,12 +1172,12 @@ const emojisData1 = `{
     "codepoints": "😯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("hushed") + `",
-        "` + _lt("stunned") + `",
-        "` + _lt("surprised") + `"
+        "` + _t("face") + `",
+        "` + _t("hushed") + `",
+        "` + _t("stunned") + `",
+        "` + _t("surprised") + `"
     ],
-    "name": "` + _lt("hushed face") + `",
+    "name": "` + _t("hushed face") + `",
     "shortcodes": [
         ":hushed_face:"
     ]
@@ -1192,12 +1192,12 @@ const emojisData1 = `{
         ":-o"
     ],
     "keywords": [
-        "` + _lt("astonished") + `",
-        "` + _lt("face") + `",
-        "` + _lt("shocked") + `",
-        "` + _lt("totally") + `"
+        "` + _t("astonished") + `",
+        "` + _t("face") + `",
+        "` + _t("shocked") + `",
+        "` + _t("totally") + `"
     ],
-    "name": "` + _lt("astonished face") + `",
+    "name": "` + _t("astonished face") + `",
     "shortcodes": [
         ":astonished_face:"
     ]
@@ -1209,11 +1209,11 @@ const emojisData1 = `{
         "o_o"
     ],
     "keywords": [
-        "` + _lt("dazed") + `",
-        "` + _lt("face") + `",
-        "` + _lt("flushed") + `"
+        "` + _t("dazed") + `",
+        "` + _t("face") + `",
+        "` + _t("flushed") + `"
     ],
-    "name": "` + _lt("flushed face") + `",
+    "name": "` + _t("flushed face") + `",
     "shortcodes": [
         ":flushed_face:"
     ]
@@ -1223,12 +1223,12 @@ const emojisData1 = `{
     "codepoints": "🥺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("begging") + `",
-        "` + _lt("mercy") + `",
-        "` + _lt("pleading face") + `",
-        "` + _lt("puppy eyes") + `"
+        "` + _t("begging") + `",
+        "` + _t("mercy") + `",
+        "` + _t("pleading face") + `",
+        "` + _t("puppy eyes") + `"
     ],
-    "name": "` + _lt("pleading face") + `",
+    "name": "` + _t("pleading face") + `",
     "shortcodes": [
         ":pleading_face:"
     ]
@@ -1238,13 +1238,13 @@ const emojisData1 = `{
     "codepoints": "😦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("frown") + `",
-        "` + _lt("frowning face with open mouth") + `",
-        "` + _lt("mouth") + `",
-        "` + _lt("open") + `"
+        "` + _t("face") + `",
+        "` + _t("frown") + `",
+        "` + _t("frowning face with open mouth") + `",
+        "` + _t("mouth") + `",
+        "` + _t("open") + `"
     ],
-    "name": "` + _lt("frowning face with open mouth") + `",
+    "name": "` + _t("frowning face with open mouth") + `",
     "shortcodes": [
         ":frowning_face_with_open_mouth:"
     ]
@@ -1254,10 +1254,10 @@ const emojisData1 = `{
     "codepoints": "😧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("anguished") + `",
-        "` + _lt("face") + `"
+        "` + _t("anguished") + `",
+        "` + _t("face") + `"
     ],
-    "name": "` + _lt("anguished face") + `",
+    "name": "` + _t("anguished face") + `",
     "shortcodes": [
         ":anguished_face:"
     ]
@@ -1269,12 +1269,12 @@ const emojisData1 = `{
         ":'o"
     ],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("fear") + `",
-        "` + _lt("fearful") + `",
-        "` + _lt("scared") + `"
+        "` + _t("face") + `",
+        "` + _t("fear") + `",
+        "` + _t("fearful") + `",
+        "` + _t("scared") + `"
     ],
-    "name": "` + _lt("fearful face") + `",
+    "name": "` + _t("fearful face") + `",
     "shortcodes": [
         ":fearful_face:"
     ]
@@ -1284,14 +1284,14 @@ const emojisData1 = `{
     "codepoints": "😰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("anxious face with sweat") + `",
-        "` + _lt("blue") + `",
-        "` + _lt("cold") + `",
-        "` + _lt("face") + `",
-        "` + _lt("rushed") + `",
-        "` + _lt("sweat") + `"
+        "` + _t("anxious face with sweat") + `",
+        "` + _t("blue") + `",
+        "` + _t("cold") + `",
+        "` + _t("face") + `",
+        "` + _t("rushed") + `",
+        "` + _t("sweat") + `"
     ],
-    "name": "` + _lt("anxious face with sweat") + `",
+    "name": "` + _t("anxious face with sweat") + `",
     "shortcodes": [
         ":anxious_face_with_sweat:"
     ]
@@ -1301,13 +1301,13 @@ const emojisData1 = `{
     "codepoints": "😥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("disappointed") + `",
-        "` + _lt("face") + `",
-        "` + _lt("relieved") + `",
-        "` + _lt("sad but relieved face") + `",
-        "` + _lt("whew") + `"
+        "` + _t("disappointed") + `",
+        "` + _t("face") + `",
+        "` + _t("relieved") + `",
+        "` + _t("sad but relieved face") + `",
+        "` + _t("whew") + `"
     ],
-    "name": "` + _lt("sad but relieved face") + `",
+    "name": "` + _t("sad but relieved face") + `",
     "shortcodes": [
         ":sad_but_relieved_face:"
     ]
@@ -1319,13 +1319,13 @@ const emojisData1 = `{
         ":'("
     ],
     "keywords": [
-        "` + _lt("cry") + `",
-        "` + _lt("crying face") + `",
-        "` + _lt("face") + `",
-        "` + _lt("sad") + `",
-        "` + _lt("tear") + `"
+        "` + _t("cry") + `",
+        "` + _t("crying face") + `",
+        "` + _t("face") + `",
+        "` + _t("sad") + `",
+        "` + _t("tear") + `"
     ],
-    "name": "` + _lt("crying face") + `",
+    "name": "` + _t("crying face") + `",
     "shortcodes": [
         ":crying_face:"
     ]
@@ -1338,14 +1338,14 @@ const emojisData1 = `{
         ":\\"("
     ],
     "keywords": [
-        "` + _lt("cry") + `",
-        "` + _lt("face") + `",
-        "` + _lt("loudly crying face") + `",
-        "` + _lt("sad") + `",
-        "` + _lt("sob") + `",
-        "` + _lt("tear") + `"
+        "` + _t("cry") + `",
+        "` + _t("face") + `",
+        "` + _t("loudly crying face") + `",
+        "` + _t("sad") + `",
+        "` + _t("sob") + `",
+        "` + _t("tear") + `"
     ],
-    "name": "` + _lt("loudly crying face") + `",
+    "name": "` + _t("loudly crying face") + `",
     "shortcodes": [
         ":loudly_crying_face:"
     ]
@@ -1357,15 +1357,15 @@ const emojisData1 = `{
         ":@"
     ],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("face screaming in fear") + `",
-        "` + _lt("fear") + `",
-        "` + _lt("Munch") + `",
-        "` + _lt("scared") + `",
-        "` + _lt("scream") + `",
-        "` + _lt("munch") + `"
+        "` + _t("face") + `",
+        "` + _t("face screaming in fear") + `",
+        "` + _t("fear") + `",
+        "` + _t("Munch") + `",
+        "` + _t("scared") + `",
+        "` + _t("scream") + `",
+        "` + _t("munch") + `"
     ],
-    "name": "` + _lt("face screaming in fear") + `",
+    "name": "` + _t("face screaming in fear") + `",
     "shortcodes": [
         ":face_screaming_in_fear:"
     ]
@@ -1375,10 +1375,10 @@ const emojisData1 = `{
     "codepoints": "😖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("confounded") + `",
-        "` + _lt("face") + `"
+        "` + _t("confounded") + `",
+        "` + _t("face") + `"
     ],
-    "name": "` + _lt("confounded face") + `",
+    "name": "` + _t("confounded face") + `",
     "shortcodes": [
         ":confounded_face:"
     ]
@@ -1388,11 +1388,11 @@ const emojisData1 = `{
     "codepoints": "😣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("persevere") + `",
-        "` + _lt("persevering face") + `"
+        "` + _t("face") + `",
+        "` + _t("persevere") + `",
+        "` + _t("persevering face") + `"
     ],
-    "name": "` + _lt("persevering face") + `",
+    "name": "` + _t("persevering face") + `",
     "shortcodes": [
         ":persevering_face:"
     ]
@@ -1404,10 +1404,10 @@ const emojisData1 = `{
         ":("
     ],
     "keywords": [
-        "` + _lt("disappointed") + `",
-        "` + _lt("face") + `"
+        "` + _t("disappointed") + `",
+        "` + _t("face") + `"
     ],
-    "name": "` + _lt("disappointed face") + `",
+    "name": "` + _t("disappointed face") + `",
     "shortcodes": [
         ":disappointed_face:"
     ]
@@ -1417,12 +1417,12 @@ const emojisData1 = `{
     "codepoints": "😓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cold") + `",
-        "` + _lt("downcast face with sweat") + `",
-        "` + _lt("face") + `",
-        "` + _lt("sweat") + `"
+        "` + _t("cold") + `",
+        "` + _t("downcast face with sweat") + `",
+        "` + _t("face") + `",
+        "` + _t("sweat") + `"
     ],
-    "name": "` + _lt("downcast face with sweat") + `",
+    "name": "` + _t("downcast face with sweat") + `",
     "shortcodes": [
         ":downcast_face_with_sweat:"
     ]
@@ -1432,11 +1432,11 @@ const emojisData1 = `{
     "codepoints": "😩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("tired") + `",
-        "` + _lt("weary") + `"
+        "` + _t("face") + `",
+        "` + _t("tired") + `",
+        "` + _t("weary") + `"
     ],
-    "name": "` + _lt("weary face") + `",
+    "name": "` + _t("weary face") + `",
     "shortcodes": [
         ":weary_face:"
     ]
@@ -1446,10 +1446,10 @@ const emojisData1 = `{
     "codepoints": "😫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("tired") + `"
+        "` + _t("face") + `",
+        "` + _t("tired") + `"
     ],
-    "name": "` + _lt("tired face") + `",
+    "name": "` + _t("tired face") + `",
     "shortcodes": [
         ":tired_face:"
     ]
@@ -1459,12 +1459,12 @@ const emojisData1 = `{
     "codepoints": "🥱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bored") + `",
-        "` + _lt("tired") + `",
-        "` + _lt("yawn") + `",
-        "` + _lt("yawning face") + `"
+        "` + _t("bored") + `",
+        "` + _t("tired") + `",
+        "` + _t("yawn") + `",
+        "` + _t("yawning face") + `"
     ],
-    "name": "` + _lt("yawning face") + `",
+    "name": "` + _t("yawning face") + `",
     "shortcodes": [
         ":yawning_face:"
     ]
@@ -1474,14 +1474,14 @@ const emojisData1 = `{
     "codepoints": "😤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("face with steam from nose") + `",
-        "` + _lt("triumph") + `",
-        "` + _lt("won") + `",
-        "` + _lt("angry") + `",
-        "` + _lt("frustration") + `"
+        "` + _t("face") + `",
+        "` + _t("face with steam from nose") + `",
+        "` + _t("triumph") + `",
+        "` + _t("won") + `",
+        "` + _t("angry") + `",
+        "` + _t("frustration") + `"
     ],
-    "name": "` + _lt("face with steam from nose") + `",
+    "name": "` + _t("face with steam from nose") + `",
     "shortcodes": [
         ":face_with_steam_from_nose:"
     ]
@@ -1491,15 +1491,15 @@ const emojisData1 = `{
     "codepoints": "😡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("angry") + `",
-        "` + _lt("enraged") + `",
-        "` + _lt("face") + `",
-        "` + _lt("mad") + `",
-        "` + _lt("pouting") + `",
-        "` + _lt("rage") + `",
-        "` + _lt("red") + `"
+        "` + _t("angry") + `",
+        "` + _t("enraged") + `",
+        "` + _t("face") + `",
+        "` + _t("mad") + `",
+        "` + _t("pouting") + `",
+        "` + _t("rage") + `",
+        "` + _t("red") + `"
     ],
-    "name": "` + _lt("enraged face") + `",
+    "name": "` + _t("enraged face") + `",
     "shortcodes": [
         ":enraged_face:"
     ]
@@ -1512,12 +1512,12 @@ const emojisData1 = `{
         ">:("
     ],
     "keywords": [
-        "` + _lt("anger") + `",
-        "` + _lt("angry") + `",
-        "` + _lt("face") + `",
-        "` + _lt("mad") + `"
+        "` + _t("anger") + `",
+        "` + _t("angry") + `",
+        "` + _t("face") + `",
+        "` + _t("mad") + `"
     ],
-    "name": "` + _lt("angry face") + `",
+    "name": "` + _t("angry face") + `",
     "shortcodes": [
         ":angry_face:"
     ]
@@ -1527,10 +1527,10 @@ const emojisData1 = `{
     "codepoints": "🤬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face with symbols on mouth") + `",
-        "` + _lt("swearing") + `"
+        "` + _t("face with symbols on mouth") + `",
+        "` + _t("swearing") + `"
     ],
-    "name": "` + _lt("face with symbols on mouth") + `",
+    "name": "` + _t("face with symbols on mouth") + `",
     "shortcodes": [
         ":face_with_symbols_on_mouth:"
     ]
@@ -1543,15 +1543,15 @@ const emojisData1 = `{
         ">:)"
     ],
     "keywords": [
-        "` + _lt("devil") + `",
-        "` + _lt("face") + `",
-        "` + _lt("fantasy") + `",
-        "` + _lt("horns") + `",
-        "` + _lt("smile") + `",
-        "` + _lt("smiling face with horns") + `",
-        "` + _lt("fairy tale") + `"
+        "` + _t("devil") + `",
+        "` + _t("face") + `",
+        "` + _t("fantasy") + `",
+        "` + _t("horns") + `",
+        "` + _t("smile") + `",
+        "` + _t("smiling face with horns") + `",
+        "` + _t("fairy tale") + `"
     ],
-    "name": "` + _lt("smiling face with horns") + `",
+    "name": "` + _t("smiling face with horns") + `",
     "shortcodes": [
         ":smiling_face_with_horns:"
     ]
@@ -1561,14 +1561,14 @@ const emojisData1 = `{
     "codepoints": "👿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("angry face with horns") + `",
-        "` + _lt("demon") + `",
-        "` + _lt("devil") + `",
-        "` + _lt("face") + `",
-        "` + _lt("fantasy") + `",
-        "` + _lt("imp") + `"
+        "` + _t("angry face with horns") + `",
+        "` + _t("demon") + `",
+        "` + _t("devil") + `",
+        "` + _t("face") + `",
+        "` + _t("fantasy") + `",
+        "` + _t("imp") + `"
     ],
-    "name": "` + _lt("angry face with horns") + `",
+    "name": "` + _t("angry face with horns") + `",
     "shortcodes": [
         ":angry_face_with_horns:"
     ]
@@ -1580,13 +1580,13 @@ const emojisData1 = `{
         ":skull"
     ],
     "keywords": [
-        "` + _lt("death") + `",
-        "` + _lt("face") + `",
-        "` + _lt("fairy tale") + `",
-        "` + _lt("monster") + `",
-        "` + _lt("skull") + `"
+        "` + _t("death") + `",
+        "` + _t("face") + `",
+        "` + _t("fairy tale") + `",
+        "` + _t("monster") + `",
+        "` + _t("skull") + `"
     ],
-    "name": "` + _lt("skull") + `",
+    "name": "` + _t("skull") + `",
     "shortcodes": [
         ":skull:"
     ]
@@ -1596,14 +1596,14 @@ const emojisData1 = `{
     "codepoints": "☠️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("crossbones") + `",
-        "` + _lt("death") + `",
-        "` + _lt("face") + `",
-        "` + _lt("monster") + `",
-        "` + _lt("skull") + `",
-        "` + _lt("skull and crossbones") + `"
+        "` + _t("crossbones") + `",
+        "` + _t("death") + `",
+        "` + _t("face") + `",
+        "` + _t("monster") + `",
+        "` + _t("skull") + `",
+        "` + _t("skull and crossbones") + `"
     ],
-    "name": "` + _lt("skull and crossbones") + `",
+    "name": "` + _t("skull and crossbones") + `",
     "shortcodes": [
         ":skull_and_crossbones:"
     ]
@@ -1615,14 +1615,14 @@ const emojisData1 = `{
         ":poop"
     ],
     "keywords": [
-        "` + _lt("dung") + `",
-        "` + _lt("face") + `",
-        "` + _lt("monster") + `",
-        "` + _lt("pile of poo") + `",
-        "` + _lt("poo") + `",
-        "` + _lt("poop") + `"
+        "` + _t("dung") + `",
+        "` + _t("face") + `",
+        "` + _t("monster") + `",
+        "` + _t("pile of poo") + `",
+        "` + _t("poo") + `",
+        "` + _t("poop") + `"
     ],
-    "name": "` + _lt("pile of poo") + `",
+    "name": "` + _t("pile of poo") + `",
     "shortcodes": [
         ":pile_of_poo:"
     ]
@@ -1632,10 +1632,10 @@ const emojisData1 = `{
     "codepoints": "🤡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clown") + `",
-        "` + _lt("face") + `"
+        "` + _t("clown") + `",
+        "` + _t("face") + `"
     ],
-    "name": "` + _lt("clown face") + `",
+    "name": "` + _t("clown face") + `",
     "shortcodes": [
         ":clown_face:"
     ]
@@ -1645,14 +1645,14 @@ const emojisData1 = `{
     "codepoints": "👹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("creature") + `",
-        "` + _lt("face") + `",
-        "` + _lt("fairy tale") + `",
-        "` + _lt("fantasy") + `",
-        "` + _lt("monster") + `",
-        "` + _lt("ogre") + `"
+        "` + _t("creature") + `",
+        "` + _t("face") + `",
+        "` + _t("fairy tale") + `",
+        "` + _t("fantasy") + `",
+        "` + _t("monster") + `",
+        "` + _t("ogre") + `"
     ],
-    "name": "` + _lt("ogre") + `",
+    "name": "` + _t("ogre") + `",
     "shortcodes": [
         ":ogre:"
     ]
@@ -1662,14 +1662,14 @@ const emojisData1 = `{
     "codepoints": "👺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("creature") + `",
-        "` + _lt("face") + `",
-        "` + _lt("fairy tale") + `",
-        "` + _lt("fantasy") + `",
-        "` + _lt("goblin") + `",
-        "` + _lt("monster") + `"
+        "` + _t("creature") + `",
+        "` + _t("face") + `",
+        "` + _t("fairy tale") + `",
+        "` + _t("fantasy") + `",
+        "` + _t("goblin") + `",
+        "` + _t("monster") + `"
     ],
-    "name": "` + _lt("goblin") + `",
+    "name": "` + _t("goblin") + `",
     "shortcodes": [
         ":goblin:"
     ]
@@ -1681,14 +1681,14 @@ const emojisData1 = `{
         ":ghost"
     ],
     "keywords": [
-        "` + _lt("creature") + `",
-        "` + _lt("face") + `",
-        "` + _lt("fairy tale") + `",
-        "` + _lt("fantasy") + `",
-        "` + _lt("ghost") + `",
-        "` + _lt("monster") + `"
+        "` + _t("creature") + `",
+        "` + _t("face") + `",
+        "` + _t("fairy tale") + `",
+        "` + _t("fantasy") + `",
+        "` + _t("ghost") + `",
+        "` + _t("monster") + `"
     ],
-    "name": "` + _lt("ghost") + `",
+    "name": "` + _t("ghost") + `",
     "shortcodes": [
         ":ghost:"
     ]
@@ -1701,14 +1701,14 @@ const emojisData1 = `{
         ":alien"
     ],
     "keywords": [
-        "` + _lt("alien") + `",
-        "` + _lt("creature") + `",
-        "` + _lt("extraterrestrial") + `",
-        "` + _lt("face") + `",
-        "` + _lt("fantasy") + `",
-        "` + _lt("ufo") + `"
+        "` + _t("alien") + `",
+        "` + _t("creature") + `",
+        "` + _t("extraterrestrial") + `",
+        "` + _t("face") + `",
+        "` + _t("fantasy") + `",
+        "` + _t("ufo") + `"
     ],
-    "name": "` + _lt("alien") + `",
+    "name": "` + _t("alien") + `",
     "shortcodes": [
         ":alien:"
     ]
@@ -1718,14 +1718,14 @@ const emojisData1 = `{
     "codepoints": "👾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("alien") + `",
-        "` + _lt("creature") + `",
-        "` + _lt("extraterrestrial") + `",
-        "` + _lt("face") + `",
-        "` + _lt("monster") + `",
-        "` + _lt("ufo") + `"
+        "` + _t("alien") + `",
+        "` + _t("creature") + `",
+        "` + _t("extraterrestrial") + `",
+        "` + _t("face") + `",
+        "` + _t("monster") + `",
+        "` + _t("ufo") + `"
     ],
-    "name": "` + _lt("alien monster") + `",
+    "name": "` + _t("alien monster") + `",
     "shortcodes": [
         ":alien_monster:"
     ]
@@ -1735,11 +1735,11 @@ const emojisData1 = `{
     "codepoints": "🤖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("monster") + `",
-        "` + _lt("robot") + `"
+        "` + _t("face") + `",
+        "` + _t("monster") + `",
+        "` + _t("robot") + `"
     ],
-    "name": "` + _lt("robot") + `",
+    "name": "` + _t("robot") + `",
     "shortcodes": [
         ":robot:"
     ]
@@ -1751,14 +1751,14 @@ const emojisData1 = `{
         ":kitten"
     ],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("face") + `",
-        "` + _lt("grinning") + `",
-        "` + _lt("mouth") + `",
-        "` + _lt("open") + `",
-        "` + _lt("smile") + `"
+        "` + _t("cat") + `",
+        "` + _t("face") + `",
+        "` + _t("grinning") + `",
+        "` + _t("mouth") + `",
+        "` + _t("open") + `",
+        "` + _t("smile") + `"
     ],
-    "name": "` + _lt("grinning cat") + `",
+    "name": "` + _t("grinning cat") + `",
     "shortcodes": [
         ":grinning_cat:"
     ]
@@ -1768,14 +1768,14 @@ const emojisData1 = `{
     "codepoints": "😸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("grin") + `",
-        "` + _lt("grinning cat with smiling eyes") + `",
-        "` + _lt("smile") + `"
+        "` + _t("cat") + `",
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("grin") + `",
+        "` + _t("grinning cat with smiling eyes") + `",
+        "` + _t("smile") + `"
     ],
-    "name": "` + _lt("grinning cat with smiling eyes") + `",
+    "name": "` + _t("grinning cat with smiling eyes") + `",
     "shortcodes": [
         ":grinning_cat_with_smiling_eyes:"
     ]
@@ -1785,13 +1785,13 @@ const emojisData1 = `{
     "codepoints": "😹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("cat with tears of joy") + `",
-        "` + _lt("face") + `",
-        "` + _lt("joy") + `",
-        "` + _lt("tear") + `"
+        "` + _t("cat") + `",
+        "` + _t("cat with tears of joy") + `",
+        "` + _t("face") + `",
+        "` + _t("joy") + `",
+        "` + _t("tear") + `"
     ],
-    "name": "` + _lt("cat with tears of joy") + `",
+    "name": "` + _t("cat with tears of joy") + `",
     "shortcodes": [
         ":cat_with_ltears_of_joy:"
     ]
@@ -1801,17 +1801,17 @@ const emojisData1 = `{
     "codepoints": "😻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("heart") + `",
-        "` + _lt("love") + `",
-        "` + _lt("smile") + `",
-        "` + _lt("smiling cat with heart-eyes") + `",
-        "` + _lt("smiling cat face with heart eyes") + `",
-        "` + _lt("smiling cat face with heart-eyes") + `"
+        "` + _t("cat") + `",
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("heart") + `",
+        "` + _t("love") + `",
+        "` + _t("smile") + `",
+        "` + _t("smiling cat with heart-eyes") + `",
+        "` + _t("smiling cat face with heart eyes") + `",
+        "` + _t("smiling cat face with heart-eyes") + `"
     ],
-    "name": "` + _lt("smiling cat with heart-eyes") + `",
+    "name": "` + _t("smiling cat with heart-eyes") + `",
     "shortcodes": [
         ":smiling_cat_with_heart-eyes:"
     ]
@@ -1821,14 +1821,14 @@ const emojisData1 = `{
     "codepoints": "😼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("cat with wry smile") + `",
-        "` + _lt("face") + `",
-        "` + _lt("ironic") + `",
-        "` + _lt("smile") + `",
-        "` + _lt("wry") + `"
+        "` + _t("cat") + `",
+        "` + _t("cat with wry smile") + `",
+        "` + _t("face") + `",
+        "` + _t("ironic") + `",
+        "` + _t("smile") + `",
+        "` + _t("wry") + `"
     ],
-    "name": "` + _lt("cat with wry smile") + `",
+    "name": "` + _t("cat with wry smile") + `",
     "shortcodes": [
         ":cat_with_wry_smile:"
     ]
@@ -1838,13 +1838,13 @@ const emojisData1 = `{
     "codepoints": "😽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("eye") + `",
-        "` + _lt("face") + `",
-        "` + _lt("kiss") + `",
-        "` + _lt("kissing cat") + `"
+        "` + _t("cat") + `",
+        "` + _t("eye") + `",
+        "` + _t("face") + `",
+        "` + _t("kiss") + `",
+        "` + _t("kissing cat") + `"
     ],
-    "name": "` + _lt("kissing cat") + `",
+    "name": "` + _t("kissing cat") + `",
     "shortcodes": [
         ":kissing_cat:"
     ]
@@ -1854,13 +1854,13 @@ const emojisData1 = `{
     "codepoints": "🙀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("face") + `",
-        "` + _lt("oh") + `",
-        "` + _lt("surprised") + `",
-        "` + _lt("weary") + `"
+        "` + _t("cat") + `",
+        "` + _t("face") + `",
+        "` + _t("oh") + `",
+        "` + _t("surprised") + `",
+        "` + _t("weary") + `"
     ],
-    "name": "` + _lt("weary cat") + `",
+    "name": "` + _t("weary cat") + `",
     "shortcodes": [
         ":weary_cat:"
     ]
@@ -1870,14 +1870,14 @@ const emojisData1 = `{
     "codepoints": "😿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("cry") + `",
-        "` + _lt("crying cat") + `",
-        "` + _lt("face") + `",
-        "` + _lt("sad") + `",
-        "` + _lt("tear") + `"
+        "` + _t("cat") + `",
+        "` + _t("cry") + `",
+        "` + _t("crying cat") + `",
+        "` + _t("face") + `",
+        "` + _t("sad") + `",
+        "` + _t("tear") + `"
     ],
-    "name": "` + _lt("crying cat") + `",
+    "name": "` + _t("crying cat") + `",
     "shortcodes": [
         ":crying_cat:"
     ]
@@ -1887,11 +1887,11 @@ const emojisData1 = `{
     "codepoints": "😾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("face") + `",
-        "` + _lt("pouting") + `"
+        "` + _t("cat") + `",
+        "` + _t("face") + `",
+        "` + _t("pouting") + `"
     ],
-    "name": "` + _lt("pouting cat") + `",
+    "name": "` + _t("pouting cat") + `",
     "shortcodes": [
         ":pouting_cat:"
     ]
@@ -1903,14 +1903,14 @@ const emojisData1 = `{
         ":no_see"
     ],
     "keywords": [
-        "` + _lt("evil") + `",
-        "` + _lt("face") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("monkey") + `",
-        "` + _lt("see") + `",
-        "` + _lt("see-no-evil monkey") + `"
+        "` + _t("evil") + `",
+        "` + _t("face") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("monkey") + `",
+        "` + _t("see") + `",
+        "` + _t("see-no-evil monkey") + `"
     ],
-    "name": "` + _lt("see-no-evil monkey") + `",
+    "name": "` + _t("see-no-evil monkey") + `",
     "shortcodes": [
         ":see-no-evil_monkey:"
     ]
@@ -1922,14 +1922,14 @@ const emojisData1 = `{
         ":no_hear"
     ],
     "keywords": [
-        "` + _lt("evil") + `",
-        "` + _lt("face") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("hear") + `",
-        "` + _lt("hear-no-evil monkey") + `",
-        "` + _lt("monkey") + `"
+        "` + _t("evil") + `",
+        "` + _t("face") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("hear") + `",
+        "` + _t("hear-no-evil monkey") + `",
+        "` + _t("monkey") + `"
     ],
-    "name": "` + _lt("hear-no-evil monkey") + `",
+    "name": "` + _t("hear-no-evil monkey") + `",
     "shortcodes": [
         ":hear-no-evil_monkey:"
     ]
@@ -1941,14 +1941,14 @@ const emojisData1 = `{
         ":no_speak"
     ],
     "keywords": [
-        "` + _lt("evil") + `",
-        "` + _lt("face") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("monkey") + `",
-        "` + _lt("speak") + `",
-        "` + _lt("speak-no-evil monkey") + `"
+        "` + _t("evil") + `",
+        "` + _t("face") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("monkey") + `",
+        "` + _t("speak") + `",
+        "` + _t("speak-no-evil monkey") + `"
     ],
-    "name": "` + _lt("speak-no-evil monkey") + `",
+    "name": "` + _t("speak-no-evil monkey") + `",
     "shortcodes": [
         ":speak-no-evil_monkey:"
     ]
@@ -1958,11 +1958,11 @@ const emojisData1 = `{
     "codepoints": "💋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("kiss") + `",
-        "` + _lt("kiss mark") + `",
-        "` + _lt("lips") + `"
+        "` + _t("kiss") + `",
+        "` + _t("kiss mark") + `",
+        "` + _t("lips") + `"
     ],
-    "name": "` + _lt("kiss mark") + `",
+    "name": "` + _t("kiss mark") + `",
     "shortcodes": [
         ":kiss_mark:"
     ]
@@ -1972,12 +1972,12 @@ const emojisData1 = `{
     "codepoints": "💌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("heart") + `",
-        "` + _lt("letter") + `",
-        "` + _lt("love") + `",
-        "` + _lt("mail") + `"
+        "` + _t("heart") + `",
+        "` + _t("letter") + `",
+        "` + _t("love") + `",
+        "` + _t("mail") + `"
     ],
-    "name": "` + _lt("love letter") + `",
+    "name": "` + _t("love letter") + `",
     "shortcodes": [
         ":love_letter:"
     ]
@@ -1987,11 +1987,11 @@ const emojisData1 = `{
     "codepoints": "💘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("cupid") + `",
-        "` + _lt("heart with arrow") + `"
+        "` + _t("arrow") + `",
+        "` + _t("cupid") + `",
+        "` + _t("heart with arrow") + `"
     ],
-    "name": "` + _lt("heart with arrow") + `",
+    "name": "` + _t("heart with arrow") + `",
     "shortcodes": [
         ":heart_with_arrow:"
     ]
@@ -2001,11 +2001,11 @@ const emojisData1 = `{
     "codepoints": "💝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("heart with ribbon") + `",
-        "` + _lt("ribbon") + `",
-        "` + _lt("valentine") + `"
+        "` + _t("heart with ribbon") + `",
+        "` + _t("ribbon") + `",
+        "` + _t("valentine") + `"
     ],
-    "name": "` + _lt("heart with ribbon") + `",
+    "name": "` + _t("heart with ribbon") + `",
     "shortcodes": [
         ":heart_with_ribbon:"
     ]
@@ -2015,11 +2015,11 @@ const emojisData1 = `{
     "codepoints": "💖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("excited") + `",
-        "` + _lt("sparkle") + `",
-        "` + _lt("sparkling heart") + `"
+        "` + _t("excited") + `",
+        "` + _t("sparkle") + `",
+        "` + _t("sparkling heart") + `"
     ],
-    "name": "` + _lt("sparkling heart") + `",
+    "name": "` + _t("sparkling heart") + `",
     "shortcodes": [
         ":sparkling_heart:"
     ]
@@ -2029,13 +2029,13 @@ const emojisData1 = `{
     "codepoints": "💗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("excited") + `",
-        "` + _lt("growing") + `",
-        "` + _lt("growing heart") + `",
-        "` + _lt("nervous") + `",
-        "` + _lt("pulse") + `"
+        "` + _t("excited") + `",
+        "` + _t("growing") + `",
+        "` + _t("growing heart") + `",
+        "` + _t("nervous") + `",
+        "` + _t("pulse") + `"
     ],
-    "name": "` + _lt("growing heart") + `",
+    "name": "` + _t("growing heart") + `",
     "shortcodes": [
         ":growing_heart:"
     ]
@@ -2045,12 +2045,12 @@ const emojisData1 = `{
     "codepoints": "💓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("beating") + `",
-        "` + _lt("beating heart") + `",
-        "` + _lt("heartbeat") + `",
-        "` + _lt("pulsating") + `"
+        "` + _t("beating") + `",
+        "` + _t("beating heart") + `",
+        "` + _t("heartbeat") + `",
+        "` + _t("pulsating") + `"
     ],
-    "name": "` + _lt("beating heart") + `",
+    "name": "` + _t("beating heart") + `",
     "shortcodes": [
         ":beating_heart:"
     ]
@@ -2060,10 +2060,10 @@ const emojisData1 = `{
     "codepoints": "💞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("revolving") + `",
-        "` + _lt("revolving hearts") + `"
+        "` + _t("revolving") + `",
+        "` + _t("revolving hearts") + `"
     ],
-    "name": "` + _lt("revolving hearts") + `",
+    "name": "` + _t("revolving hearts") + `",
     "shortcodes": [
         ":revolving_hearts:"
     ]
@@ -2073,10 +2073,10 @@ const emojisData1 = `{
     "codepoints": "💕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("love") + `",
-        "` + _lt("two hearts") + `"
+        "` + _t("love") + `",
+        "` + _t("two hearts") + `"
     ],
-    "name": "` + _lt("two hearts") + `",
+    "name": "` + _t("two hearts") + `",
     "shortcodes": [
         ":two_hearts:"
     ]
@@ -2086,10 +2086,10 @@ const emojisData1 = `{
     "codepoints": "💟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("heart") + `",
-        "` + _lt("heart decoration") + `"
+        "` + _t("heart") + `",
+        "` + _t("heart decoration") + `"
     ],
-    "name": "` + _lt("heart decoration") + `",
+    "name": "` + _t("heart decoration") + `",
     "shortcodes": [
         ":heart_decoration:"
     ]
@@ -2099,12 +2099,12 @@ const emojisData1 = `{
     "codepoints": "❣️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("exclamation") + `",
-        "` + _lt("heart exclamation") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("punctuation") + `"
+        "` + _t("exclamation") + `",
+        "` + _t("heart exclamation") + `",
+        "` + _t("mark") + `",
+        "` + _t("punctuation") + `"
     ],
-    "name": "` + _lt("heart exclamation") + `",
+    "name": "` + _t("heart exclamation") + `",
     "shortcodes": [
         ":heart_exclamation:"
     ]
@@ -2117,11 +2117,11 @@ const emojisData1 = `{
         "&lt;/3"
     ],
     "keywords": [
-        "` + _lt("break") + `",
-        "` + _lt("broken") + `",
-        "` + _lt("broken heart") + `"
+        "` + _t("break") + `",
+        "` + _t("broken") + `",
+        "` + _t("broken heart") + `"
     ],
-    "name": "` + _lt("broken heart") + `",
+    "name": "` + _t("broken heart") + `",
     "shortcodes": [
         ":broken_heart:"
     ]
@@ -2135,10 +2135,10 @@ const emojisData1 = `{
         ":heart"
     ],
     "keywords": [
-        "` + _lt("heart") + `",
-        "` + _lt("red heart") + `"
+        "` + _t("heart") + `",
+        "` + _t("red heart") + `"
     ],
-    "name": "` + _lt("red heart") + `",
+    "name": "` + _t("red heart") + `",
     "shortcodes": [
         ":red_heart:"
     ]
@@ -2148,10 +2148,10 @@ const emojisData1 = `{
     "codepoints": "🧡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("orange") + `",
-        "` + _lt("orange heart") + `"
+        "` + _t("orange") + `",
+        "` + _t("orange heart") + `"
     ],
-    "name": "` + _lt("orange heart") + `",
+    "name": "` + _t("orange heart") + `",
     "shortcodes": [
         ":orange_heart:"
     ]
@@ -2161,10 +2161,10 @@ const emojisData1 = `{
     "codepoints": "💛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("yellow") + `",
-        "` + _lt("yellow heart") + `"
+        "` + _t("yellow") + `",
+        "` + _t("yellow heart") + `"
     ],
-    "name": "` + _lt("yellow heart") + `",
+    "name": "` + _t("yellow heart") + `",
     "shortcodes": [
         ":yellow_heart:"
     ]
@@ -2174,10 +2174,10 @@ const emojisData1 = `{
     "codepoints": "💚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("green") + `",
-        "` + _lt("green heart") + `"
+        "` + _t("green") + `",
+        "` + _t("green heart") + `"
     ],
-    "name": "` + _lt("green heart") + `",
+    "name": "` + _t("green heart") + `",
     "shortcodes": [
         ":green_heart:"
     ]
@@ -2187,10 +2187,10 @@ const emojisData1 = `{
     "codepoints": "💙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blue") + `",
-        "` + _lt("blue heart") + `"
+        "` + _t("blue") + `",
+        "` + _t("blue heart") + `"
     ],
-    "name": "` + _lt("blue heart") + `",
+    "name": "` + _t("blue heart") + `",
     "shortcodes": [
         ":blue_heart:"
     ]
@@ -2200,10 +2200,10 @@ const emojisData1 = `{
     "codepoints": "💜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("purple") + `",
-        "` + _lt("purple heart") + `"
+        "` + _t("purple") + `",
+        "` + _t("purple heart") + `"
     ],
-    "name": "` + _lt("purple heart") + `",
+    "name": "` + _t("purple heart") + `",
     "shortcodes": [
         ":purple_heart:"
     ]
@@ -2213,10 +2213,10 @@ const emojisData1 = `{
     "codepoints": "🤎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("brown") + `",
-        "` + _lt("heart") + `"
+        "` + _t("brown") + `",
+        "` + _t("heart") + `"
     ],
-    "name": "` + _lt("brown heart") + `",
+    "name": "` + _t("brown heart") + `",
     "shortcodes": [
         ":brown_heart:"
     ]
@@ -2226,12 +2226,12 @@ const emojisData1 = `{
     "codepoints": "🖤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("black") + `",
-        "` + _lt("black heart") + `",
-        "` + _lt("evil") + `",
-        "` + _lt("wicked") + `"
+        "` + _t("black") + `",
+        "` + _t("black heart") + `",
+        "` + _t("evil") + `",
+        "` + _t("wicked") + `"
     ],
-    "name": "` + _lt("black heart") + `",
+    "name": "` + _t("black heart") + `",
     "shortcodes": [
         ":black_heart:"
     ]
@@ -2241,10 +2241,10 @@ const emojisData1 = `{
     "codepoints": "🤍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("heart") + `",
-        "` + _lt("white") + `"
+        "` + _t("heart") + `",
+        "` + _t("white") + `"
     ],
-    "name": "` + _lt("white heart") + `",
+    "name": "` + _t("white heart") + `",
     "shortcodes": [
         ":white_heart:"
     ]
@@ -2254,13 +2254,13 @@ const emojisData1 = `{
     "codepoints": "💯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("100") + `",
-        "` + _lt("full") + `",
-        "` + _lt("hundred") + `",
-        "` + _lt("hundred points") + `",
-        "` + _lt("score") + `"
+        "` + _t("100") + `",
+        "` + _t("full") + `",
+        "` + _t("hundred") + `",
+        "` + _t("hundred points") + `",
+        "` + _t("score") + `"
     ],
-    "name": "` + _lt("hundred points") + `",
+    "name": "` + _t("hundred points") + `",
     "shortcodes": [
         ":hundred_points:"
     ]
@@ -2270,12 +2270,12 @@ const emojisData1 = `{
     "codepoints": "💢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("anger symbol") + `",
-        "` + _lt("angry") + `",
-        "` + _lt("comic") + `",
-        "` + _lt("mad") + `"
+        "` + _t("anger symbol") + `",
+        "` + _t("angry") + `",
+        "` + _t("comic") + `",
+        "` + _t("mad") + `"
     ],
-    "name": "` + _lt("anger symbol") + `",
+    "name": "` + _t("anger symbol") + `",
     "shortcodes": [
         ":anger_symbol:"
     ]
@@ -2285,11 +2285,11 @@ const emojisData1 = `{
     "codepoints": "💥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boom") + `",
-        "` + _lt("collision") + `",
-        "` + _lt("comic") + `"
+        "` + _t("boom") + `",
+        "` + _t("collision") + `",
+        "` + _t("comic") + `"
     ],
-    "name": "` + _lt("collision") + `",
+    "name": "` + _t("collision") + `",
     "shortcodes": [
         ":collision:"
     ]
@@ -2299,11 +2299,11 @@ const emojisData1 = `{
     "codepoints": "💫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("comic") + `",
-        "` + _lt("dizzy") + `",
-        "` + _lt("star") + `"
+        "` + _t("comic") + `",
+        "` + _t("dizzy") + `",
+        "` + _t("star") + `"
     ],
-    "name": "` + _lt("dizzy") + `",
+    "name": "` + _t("dizzy") + `",
     "shortcodes": [
         ":dizzy:"
     ]
@@ -2313,12 +2313,12 @@ const emojisData1 = `{
     "codepoints": "💦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("comic") + `",
-        "` + _lt("splashing") + `",
-        "` + _lt("sweat") + `",
-        "` + _lt("sweat droplets") + `"
+        "` + _t("comic") + `",
+        "` + _t("splashing") + `",
+        "` + _t("sweat") + `",
+        "` + _t("sweat droplets") + `"
     ],
-    "name": "` + _lt("sweat droplets") + `",
+    "name": "` + _t("sweat droplets") + `",
     "shortcodes": [
         ":sweat_droplets:"
     ]
@@ -2328,12 +2328,12 @@ const emojisData1 = `{
     "codepoints": "💨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("comic") + `",
-        "` + _lt("dash") + `",
-        "` + _lt("dashing away") + `",
-        "` + _lt("running") + `"
+        "` + _t("comic") + `",
+        "` + _t("dash") + `",
+        "` + _t("dashing away") + `",
+        "` + _t("running") + `"
     ],
-    "name": "` + _lt("dashing away") + `",
+    "name": "` + _t("dashing away") + `",
     "shortcodes": [
         ":dashing_away:"
     ]
@@ -2343,9 +2343,9 @@ const emojisData1 = `{
     "codepoints": "🕳️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hole") + `"
+        "` + _t("hole") + `"
     ],
-    "name": "` + _lt("hole") + `",
+    "name": "` + _t("hole") + `",
     "shortcodes": [
         ":hole:"
     ]
@@ -2355,10 +2355,10 @@ const emojisData1 = `{
     "codepoints": "💣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bomb") + `",
-        "` + _lt("comic") + `"
+        "` + _t("bomb") + `",
+        "` + _t("comic") + `"
     ],
-    "name": "` + _lt("bomb") + `",
+    "name": "` + _t("bomb") + `",
     "shortcodes": [
         ":bomb:"
     ]
@@ -2368,13 +2368,13 @@ const emojisData1 = `{
     "codepoints": "💬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("balloon") + `",
-        "` + _lt("bubble") + `",
-        "` + _lt("comic") + `",
-        "` + _lt("dialog") + `",
-        "` + _lt("speech") + `"
+        "` + _t("balloon") + `",
+        "` + _t("bubble") + `",
+        "` + _t("comic") + `",
+        "` + _t("dialog") + `",
+        "` + _t("speech") + `"
     ],
-    "name": "` + _lt("speech balloon") + `",
+    "name": "` + _t("speech balloon") + `",
     "shortcodes": [
         ":speech_balloon:"
     ]
@@ -2384,7 +2384,7 @@ const emojisData1 = `{
     "codepoints": "👁️‍🗨️",
     "emoticons": [],
     "keywords": [],
-    "name": "` + _lt("eye in speech bubble") + `",
+    "name": "` + _t("eye in speech bubble") + `",
     "shortcodes": [
         ":eye_in_speech_bubble:"
     ]
@@ -2394,14 +2394,14 @@ const emojisData1 = `{
     "codepoints": "🗨️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("balloon") + `",
-        "` + _lt("bubble") + `",
-        "` + _lt("dialog") + `",
-        "` + _lt("left speech bubble") + `",
-        "` + _lt("speech") + `",
-        "` + _lt("dialogue") + `"
+        "` + _t("balloon") + `",
+        "` + _t("bubble") + `",
+        "` + _t("dialog") + `",
+        "` + _t("left speech bubble") + `",
+        "` + _t("speech") + `",
+        "` + _t("dialogue") + `"
     ],
-    "name": "` + _lt("left speech bubble") + `",
+    "name": "` + _t("left speech bubble") + `",
     "shortcodes": [
         ":left_speech_bubble:"
     ]
@@ -2411,13 +2411,13 @@ const emojisData1 = `{
     "codepoints": "🗯️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("angry") + `",
-        "` + _lt("balloon") + `",
-        "` + _lt("bubble") + `",
-        "` + _lt("mad") + `",
-        "` + _lt("right anger bubble") + `"
+        "` + _t("angry") + `",
+        "` + _t("balloon") + `",
+        "` + _t("bubble") + `",
+        "` + _t("mad") + `",
+        "` + _t("right anger bubble") + `"
     ],
-    "name": "` + _lt("right anger bubble") + `",
+    "name": "` + _t("right anger bubble") + `",
     "shortcodes": [
         ":right_anger_bubble:"
     ]
@@ -2427,12 +2427,12 @@ const emojisData1 = `{
     "codepoints": "💭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("balloon") + `",
-        "` + _lt("bubble") + `",
-        "` + _lt("comic") + `",
-        "` + _lt("thought") + `"
+        "` + _t("balloon") + `",
+        "` + _t("bubble") + `",
+        "` + _t("comic") + `",
+        "` + _t("thought") + `"
     ],
-    "name": "` + _lt("thought balloon") + `",
+    "name": "` + _t("thought balloon") + `",
     "shortcodes": [
         ":thought_balloon:"
     ]
@@ -2442,12 +2442,12 @@ const emojisData1 = `{
     "codepoints": "💤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("comic") + `",
-        "` + _lt("good night") + `",
-        "` + _lt("sleep") + `",
-        "` + _lt("ZZZ") + `"
+        "` + _t("comic") + `",
+        "` + _t("good night") + `",
+        "` + _t("sleep") + `",
+        "` + _t("ZZZ") + `"
     ],
-    "name": "` + _lt("ZZZ") + `",
+    "name": "` + _t("ZZZ") + `",
     "shortcodes": [
         ":ZZZ:"
     ]
@@ -2458,11 +2458,11 @@ const emojisData2 = `{
     "codepoints": "👋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hand") + `",
-        "` + _lt("wave") + `",
-        "` + _lt("waving") + `"
+        "` + _t("hand") + `",
+        "` + _t("wave") + `",
+        "` + _t("waving") + `"
     ],
-    "name": "` + _lt("waving hand") + `",
+    "name": "` + _t("waving hand") + `",
     "shortcodes": [
         ":waving_hand:"
     ]
@@ -2472,11 +2472,11 @@ const emojisData2 = `{
     "codepoints": "🤚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("backhand") + `",
-        "` + _lt("raised") + `",
-        "` + _lt("raised back of hand") + `"
+        "` + _t("backhand") + `",
+        "` + _t("raised") + `",
+        "` + _t("raised back of hand") + `"
     ],
-    "name": "` + _lt("raised back of hand") + `",
+    "name": "` + _t("raised back of hand") + `",
     "shortcodes": [
         ":raised_back_of_hand:"
     ]
@@ -2486,12 +2486,12 @@ const emojisData2 = `{
     "codepoints": "🖐️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("finger") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("hand with fingers splayed") + `",
-        "` + _lt("splayed") + `"
+        "` + _t("finger") + `",
+        "` + _t("hand") + `",
+        "` + _t("hand with fingers splayed") + `",
+        "` + _t("splayed") + `"
     ],
-    "name": "` + _lt("hand with fingers splayed") + `",
+    "name": "` + _t("hand with fingers splayed") + `",
     "shortcodes": [
         ":hand_with_fingers_splayed:"
     ]
@@ -2501,12 +2501,12 @@ const emojisData2 = `{
     "codepoints": "✋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hand") + `",
-        "` + _lt("high 5") + `",
-        "` + _lt("high five") + `",
-        "` + _lt("raised hand") + `"
+        "` + _t("hand") + `",
+        "` + _t("high 5") + `",
+        "` + _t("high five") + `",
+        "` + _t("raised hand") + `"
     ],
-    "name": "` + _lt("raised hand") + `",
+    "name": "` + _t("raised hand") + `",
     "shortcodes": [
         ":raised_hand:"
     ]
@@ -2516,14 +2516,14 @@ const emojisData2 = `{
     "codepoints": "🖖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("finger") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("spock") + `",
-        "` + _lt("vulcan") + `",
-        "` + _lt("Vulcan salute") + `",
-        "` + _lt("vulcan salute") + `"
+        "` + _t("finger") + `",
+        "` + _t("hand") + `",
+        "` + _t("spock") + `",
+        "` + _t("vulcan") + `",
+        "` + _t("Vulcan salute") + `",
+        "` + _t("vulcan salute") + `"
     ],
-    "name": "` + _lt("vulcan salute") + `",
+    "name": "` + _t("vulcan salute") + `",
     "shortcodes": [
         ":vulcan_salute:"
     ]
@@ -2535,11 +2535,11 @@ const emojisData2 = `{
         ":ok"
     ],
     "keywords": [
-        "` + _lt("hand") + `",
-        "` + _lt("OK") + `",
-        "` + _lt("perfect") + `"
+        "` + _t("hand") + `",
+        "` + _t("OK") + `",
+        "` + _t("perfect") + `"
     ],
-    "name": "` + _lt("OK hand") + `",
+    "name": "` + _t("OK hand") + `",
     "shortcodes": [
         ":OK_hand:"
     ]
@@ -2549,10 +2549,10 @@ const emojisData2 = `{
     "codepoints": "🤏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pinching hand") + `",
-        "` + _lt("small amount") + `"
+        "` + _t("pinching hand") + `",
+        "` + _t("small amount") + `"
     ],
-    "name": "` + _lt("pinching hand") + `",
+    "name": "` + _t("pinching hand") + `",
     "shortcodes": [
         ":pinching_hand:"
     ]
@@ -2562,11 +2562,11 @@ const emojisData2 = `{
     "codepoints": "✌️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hand") + `",
-        "` + _lt("v") + `",
-        "` + _lt("victory") + `"
+        "` + _t("hand") + `",
+        "` + _t("v") + `",
+        "` + _t("victory") + `"
     ],
-    "name": "` + _lt("victory hand") + `",
+    "name": "` + _t("victory hand") + `",
     "shortcodes": [
         ":victory_hand:"
     ]
@@ -2576,14 +2576,14 @@ const emojisData2 = `{
     "codepoints": "🤞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cross") + `",
-        "` + _lt("crossed fingers") + `",
-        "` + _lt("finger") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("luck") + `",
-        "` + _lt("good luck") + `"
+        "` + _t("cross") + `",
+        "` + _t("crossed fingers") + `",
+        "` + _t("finger") + `",
+        "` + _t("hand") + `",
+        "` + _t("luck") + `",
+        "` + _t("good luck") + `"
     ],
-    "name": "` + _lt("crossed fingers") + `",
+    "name": "` + _t("crossed fingers") + `",
     "shortcodes": [
         ":crossed_fingers:"
     ]
@@ -2593,12 +2593,12 @@ const emojisData2 = `{
     "codepoints": "🤟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hand") + `",
-        "` + _lt("ILY") + `",
-        "` + _lt("love-you gesture") + `",
-        "` + _lt("love you gesture") + `"
+        "` + _t("hand") + `",
+        "` + _t("ILY") + `",
+        "` + _t("love-you gesture") + `",
+        "` + _t("love you gesture") + `"
     ],
-    "name": "` + _lt("love-you gesture") + `",
+    "name": "` + _t("love-you gesture") + `",
     "shortcodes": [
         ":love-you_gesture:"
     ]
@@ -2608,14 +2608,14 @@ const emojisData2 = `{
     "codepoints": "🤘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("finger") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("horns") + `",
-        "` + _lt("rock-on") + `",
-        "` + _lt("sign of the horns") + `",
-        "` + _lt("rock on") + `"
+        "` + _t("finger") + `",
+        "` + _t("hand") + `",
+        "` + _t("horns") + `",
+        "` + _t("rock-on") + `",
+        "` + _t("sign of the horns") + `",
+        "` + _t("rock on") + `"
     ],
-    "name": "` + _lt("sign of the horns") + `",
+    "name": "` + _t("sign of the horns") + `",
     "shortcodes": [
         ":sign_of_lthe_horns:"
     ]
@@ -2625,15 +2625,15 @@ const emojisData2 = `{
     "codepoints": "🤙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("call") + `",
-        "` + _lt("call me hand") + `",
-        "` + _lt("call-me hand") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("shaka") + `",
-        "` + _lt("hang loose") + `",
-        "` + _lt("Shaka") + `"
+        "` + _t("call") + `",
+        "` + _t("call me hand") + `",
+        "` + _t("call-me hand") + `",
+        "` + _t("hand") + `",
+        "` + _t("shaka") + `",
+        "` + _t("hang loose") + `",
+        "` + _t("Shaka") + `"
     ],
-    "name": "` + _lt("call me hand") + `",
+    "name": "` + _t("call me hand") + `",
     "shortcodes": [
         ":call_me_hand:"
     ]
@@ -2643,14 +2643,14 @@ const emojisData2 = `{
     "codepoints": "👈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("backhand") + `",
-        "` + _lt("backhand index pointing left") + `",
-        "` + _lt("finger") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("index") + `",
-        "` + _lt("point") + `"
+        "` + _t("backhand") + `",
+        "` + _t("backhand index pointing left") + `",
+        "` + _t("finger") + `",
+        "` + _t("hand") + `",
+        "` + _t("index") + `",
+        "` + _t("point") + `"
     ],
-    "name": "` + _lt("backhand index pointing left") + `",
+    "name": "` + _t("backhand index pointing left") + `",
     "shortcodes": [
         ":backhand_index_pointing_left:"
     ]
@@ -2660,14 +2660,14 @@ const emojisData2 = `{
     "codepoints": "👉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("backhand") + `",
-        "` + _lt("backhand index pointing right") + `",
-        "` + _lt("finger") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("index") + `",
-        "` + _lt("point") + `"
+        "` + _t("backhand") + `",
+        "` + _t("backhand index pointing right") + `",
+        "` + _t("finger") + `",
+        "` + _t("hand") + `",
+        "` + _t("index") + `",
+        "` + _t("point") + `"
     ],
-    "name": "` + _lt("backhand index pointing right") + `",
+    "name": "` + _t("backhand index pointing right") + `",
     "shortcodes": [
         ":backhand_index_pointing_right:"
     ]
@@ -2677,14 +2677,14 @@ const emojisData2 = `{
     "codepoints": "👆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("backhand") + `",
-        "` + _lt("backhand index pointing up") + `",
-        "` + _lt("finger") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("point") + `",
-        "` + _lt("up") + `"
+        "` + _t("backhand") + `",
+        "` + _t("backhand index pointing up") + `",
+        "` + _t("finger") + `",
+        "` + _t("hand") + `",
+        "` + _t("point") + `",
+        "` + _t("up") + `"
     ],
-    "name": "` + _lt("backhand index pointing up") + `",
+    "name": "` + _t("backhand index pointing up") + `",
     "shortcodes": [
         ":backhand_index_pointing_up:"
     ]
@@ -2694,11 +2694,11 @@ const emojisData2 = `{
     "codepoints": "🖕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("finger") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("middle finger") + `"
+        "` + _t("finger") + `",
+        "` + _t("hand") + `",
+        "` + _t("middle finger") + `"
     ],
-    "name": "` + _lt("middle finger") + `",
+    "name": "` + _t("middle finger") + `",
     "shortcodes": [
         ":middle_finger:"
     ]
@@ -2708,14 +2708,14 @@ const emojisData2 = `{
     "codepoints": "👇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("backhand") + `",
-        "` + _lt("backhand index pointing down") + `",
-        "` + _lt("down") + `",
-        "` + _lt("finger") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("point") + `"
+        "` + _t("backhand") + `",
+        "` + _t("backhand index pointing down") + `",
+        "` + _t("down") + `",
+        "` + _t("finger") + `",
+        "` + _t("hand") + `",
+        "` + _t("point") + `"
     ],
-    "name": "` + _lt("backhand index pointing down") + `",
+    "name": "` + _t("backhand index pointing down") + `",
     "shortcodes": [
         ":backhand_index_pointing_down:"
     ]
@@ -2725,14 +2725,14 @@ const emojisData2 = `{
     "codepoints": "☝️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("finger") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("index") + `",
-        "` + _lt("index pointing up") + `",
-        "` + _lt("point") + `",
-        "` + _lt("up") + `"
+        "` + _t("finger") + `",
+        "` + _t("hand") + `",
+        "` + _t("index") + `",
+        "` + _t("index pointing up") + `",
+        "` + _t("point") + `",
+        "` + _t("up") + `"
     ],
-    "name": "` + _lt("index pointing up") + `",
+    "name": "` + _t("index pointing up") + `",
     "shortcodes": [
         ":index_pointing_up:"
     ]
@@ -2744,13 +2744,13 @@ const emojisData2 = `{
         ":+1"
     ],
     "keywords": [
-        "` + _lt("+1") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("thumb") + `",
-        "` + _lt("thumbs up") + `",
-        "` + _lt("up") + `"
+        "` + _t("+1") + `",
+        "` + _t("hand") + `",
+        "` + _t("thumb") + `",
+        "` + _t("thumbs up") + `",
+        "` + _t("up") + `"
     ],
-    "name": "` + _lt("thumbs up") + `",
+    "name": "` + _t("thumbs up") + `",
     "shortcodes": [
         ":thumbs_up:"
     ]
@@ -2762,13 +2762,13 @@ const emojisData2 = `{
         ":-1"
     ],
     "keywords": [
-        "` + _lt("-1") + `",
-        "` + _lt("down") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("thumb") + `",
-        "` + _lt("thumbs down") + `"
+        "` + _t("-1") + `",
+        "` + _t("down") + `",
+        "` + _t("hand") + `",
+        "` + _t("thumb") + `",
+        "` + _t("thumbs down") + `"
     ],
-    "name": "` + _lt("thumbs down") + `",
+    "name": "` + _t("thumbs down") + `",
     "shortcodes": [
         ":thumbs_down:"
     ]
@@ -2778,13 +2778,13 @@ const emojisData2 = `{
     "codepoints": "✊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clenched") + `",
-        "` + _lt("fist") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("punch") + `",
-        "` + _lt("raised fist") + `"
+        "` + _t("clenched") + `",
+        "` + _t("fist") + `",
+        "` + _t("hand") + `",
+        "` + _t("punch") + `",
+        "` + _t("raised fist") + `"
     ],
-    "name": "` + _lt("raised fist") + `",
+    "name": "` + _t("raised fist") + `",
     "shortcodes": [
         ":raised_fist:"
     ]
@@ -2794,13 +2794,13 @@ const emojisData2 = `{
     "codepoints": "👊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clenched") + `",
-        "` + _lt("fist") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("oncoming fist") + `",
-        "` + _lt("punch") + `"
+        "` + _t("clenched") + `",
+        "` + _t("fist") + `",
+        "` + _t("hand") + `",
+        "` + _t("oncoming fist") + `",
+        "` + _t("punch") + `"
     ],
-    "name": "` + _lt("oncoming fist") + `",
+    "name": "` + _t("oncoming fist") + `",
     "shortcodes": [
         ":oncoming_fist:"
     ]
@@ -2810,12 +2810,12 @@ const emojisData2 = `{
     "codepoints": "🤛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fist") + `",
-        "` + _lt("left-facing fist") + `",
-        "` + _lt("leftwards") + `",
-        "` + _lt("leftward") + `"
+        "` + _t("fist") + `",
+        "` + _t("left-facing fist") + `",
+        "` + _t("leftwards") + `",
+        "` + _t("leftward") + `"
     ],
-    "name": "` + _lt("left-facing fist") + `",
+    "name": "` + _t("left-facing fist") + `",
     "shortcodes": [
         ":left-facing_fist:"
     ]
@@ -2825,12 +2825,12 @@ const emojisData2 = `{
     "codepoints": "🤜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fist") + `",
-        "` + _lt("right-facing fist") + `",
-        "` + _lt("rightwards") + `",
-        "` + _lt("rightward") + `"
+        "` + _t("fist") + `",
+        "` + _t("right-facing fist") + `",
+        "` + _t("rightwards") + `",
+        "` + _t("rightward") + `"
     ],
-    "name": "` + _lt("right-facing fist") + `",
+    "name": "` + _t("right-facing fist") + `",
     "shortcodes": [
         ":right-facing_fist:"
     ]
@@ -2840,11 +2840,11 @@ const emojisData2 = `{
     "codepoints": "👏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clap") + `",
-        "` + _lt("clapping hands") + `",
-        "` + _lt("hand") + `"
+        "` + _t("clap") + `",
+        "` + _t("clapping hands") + `",
+        "` + _t("hand") + `"
     ],
-    "name": "` + _lt("clapping hands") + `",
+    "name": "` + _t("clapping hands") + `",
     "shortcodes": [
         ":clapping_hands:"
     ]
@@ -2854,16 +2854,16 @@ const emojisData2 = `{
     "codepoints": "🙌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("gesture") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("hooray") + `",
-        "` + _lt("raised") + `",
-        "` + _lt("raising hands") + `",
-        "` + _lt("woo hoo") + `",
-        "` + _lt("yay") + `"
+        "` + _t("celebration") + `",
+        "` + _t("gesture") + `",
+        "` + _t("hand") + `",
+        "` + _t("hooray") + `",
+        "` + _t("raised") + `",
+        "` + _t("raising hands") + `",
+        "` + _t("woo hoo") + `",
+        "` + _t("yay") + `"
     ],
-    "name": "` + _lt("raising hands") + `",
+    "name": "` + _t("raising hands") + `",
     "shortcodes": [
         ":raising_hands:"
     ]
@@ -2873,11 +2873,11 @@ const emojisData2 = `{
     "codepoints": "👐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hand") + `",
-        "` + _lt("open") + `",
-        "` + _lt("open hands") + `"
+        "` + _t("hand") + `",
+        "` + _t("open") + `",
+        "` + _t("open hands") + `"
     ],
-    "name": "` + _lt("open hands") + `",
+    "name": "` + _t("open hands") + `",
     "shortcodes": [
         ":open_hands:"
     ]
@@ -2887,10 +2887,10 @@ const emojisData2 = `{
     "codepoints": "🤲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("palms up together") + `",
-        "` + _lt("prayer") + `"
+        "` + _t("palms up together") + `",
+        "` + _t("prayer") + `"
     ],
-    "name": "` + _lt("palms up together") + `",
+    "name": "` + _t("palms up together") + `",
     "shortcodes": [
         ":palms_up_ltogether:"
     ]
@@ -2900,13 +2900,13 @@ const emojisData2 = `{
     "codepoints": "🤝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("agreement") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("handshake") + `",
-        "` + _lt("meeting") + `",
-        "` + _lt("shake") + `"
+        "` + _t("agreement") + `",
+        "` + _t("hand") + `",
+        "` + _t("handshake") + `",
+        "` + _t("meeting") + `",
+        "` + _t("shake") + `"
     ],
-    "name": "` + _lt("handshake") + `",
+    "name": "` + _t("handshake") + `",
     "shortcodes": [
         ":handshake:"
     ]
@@ -2916,16 +2916,16 @@ const emojisData2 = `{
     "codepoints": "🙏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ask") + `",
-        "` + _lt("folded hands") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("high 5") + `",
-        "` + _lt("high five") + `",
-        "` + _lt("please") + `",
-        "` + _lt("pray") + `",
-        "` + _lt("thanks") + `"
+        "` + _t("ask") + `",
+        "` + _t("folded hands") + `",
+        "` + _t("hand") + `",
+        "` + _t("high 5") + `",
+        "` + _t("high five") + `",
+        "` + _t("please") + `",
+        "` + _t("pray") + `",
+        "` + _t("thanks") + `"
     ],
-    "name": "` + _lt("folded hands") + `",
+    "name": "` + _t("folded hands") + `",
     "shortcodes": [
         ":folded_hands:"
     ]
@@ -2935,11 +2935,11 @@ const emojisData2 = `{
     "codepoints": "✍️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hand") + `",
-        "` + _lt("write") + `",
-        "` + _lt("writing hand") + `"
+        "` + _t("hand") + `",
+        "` + _t("write") + `",
+        "` + _t("writing hand") + `"
     ],
-    "name": "` + _lt("writing hand") + `",
+    "name": "` + _t("writing hand") + `",
     "shortcodes": [
         ":writing_hand:"
     ]
@@ -2949,13 +2949,13 @@ const emojisData2 = `{
     "codepoints": "💅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("care") + `",
-        "` + _lt("cosmetics") + `",
-        "` + _lt("manicure") + `",
-        "` + _lt("nail") + `",
-        "` + _lt("polish") + `"
+        "` + _t("care") + `",
+        "` + _t("cosmetics") + `",
+        "` + _t("manicure") + `",
+        "` + _t("nail") + `",
+        "` + _t("polish") + `"
     ],
-    "name": "` + _lt("nail polish") + `",
+    "name": "` + _t("nail polish") + `",
     "shortcodes": [
         ":nail_polish:"
     ]
@@ -2965,11 +2965,11 @@ const emojisData2 = `{
     "codepoints": "🤳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("camera") + `",
-        "` + _lt("phone") + `",
-        "` + _lt("selfie") + `"
+        "` + _t("camera") + `",
+        "` + _t("phone") + `",
+        "` + _t("selfie") + `"
     ],
-    "name": "` + _lt("selfie") + `",
+    "name": "` + _t("selfie") + `",
     "shortcodes": [
         ":selfie:"
     ]
@@ -2979,13 +2979,13 @@ const emojisData2 = `{
     "codepoints": "💪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("biceps") + `",
-        "` + _lt("comic") + `",
-        "` + _lt("flex") + `",
-        "` + _lt("flexed biceps") + `",
-        "` + _lt("muscle") + `"
+        "` + _t("biceps") + `",
+        "` + _t("comic") + `",
+        "` + _t("flex") + `",
+        "` + _t("flexed biceps") + `",
+        "` + _t("muscle") + `"
     ],
-    "name": "` + _lt("flexed biceps") + `",
+    "name": "` + _t("flexed biceps") + `",
     "shortcodes": [
         ":flexed_biceps:"
     ]
@@ -2995,11 +2995,11 @@ const emojisData2 = `{
     "codepoints": "🦾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("mechanical arm") + `",
-        "` + _lt("prosthetic") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("mechanical arm") + `",
+        "` + _t("prosthetic") + `"
     ],
-    "name": "` + _lt("mechanical arm") + `",
+    "name": "` + _t("mechanical arm") + `",
     "shortcodes": [
         ":mechanical_arm:"
     ]
@@ -3009,11 +3009,11 @@ const emojisData2 = `{
     "codepoints": "🦿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("mechanical leg") + `",
-        "` + _lt("prosthetic") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("mechanical leg") + `",
+        "` + _t("prosthetic") + `"
     ],
-    "name": "` + _lt("mechanical leg") + `",
+    "name": "` + _t("mechanical leg") + `",
     "shortcodes": [
         ":mechanical_leg:"
     ]
@@ -3023,11 +3023,11 @@ const emojisData2 = `{
     "codepoints": "🦵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("kick") + `",
-        "` + _lt("leg") + `",
-        "` + _lt("limb") + `"
+        "` + _t("kick") + `",
+        "` + _t("leg") + `",
+        "` + _t("limb") + `"
     ],
-    "name": "` + _lt("leg") + `",
+    "name": "` + _t("leg") + `",
     "shortcodes": [
         ":leg:"
     ]
@@ -3037,11 +3037,11 @@ const emojisData2 = `{
     "codepoints": "🦶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("foot") + `",
-        "` + _lt("kick") + `",
-        "` + _lt("stomp") + `"
+        "` + _t("foot") + `",
+        "` + _t("kick") + `",
+        "` + _t("stomp") + `"
     ],
-    "name": "` + _lt("foot") + `",
+    "name": "` + _t("foot") + `",
     "shortcodes": [
         ":foot:"
     ]
@@ -3051,10 +3051,10 @@ const emojisData2 = `{
     "codepoints": "👂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("body") + `",
-        "` + _lt("ear") + `"
+        "` + _t("body") + `",
+        "` + _t("ear") + `"
     ],
-    "name": "` + _lt("ear") + `",
+    "name": "` + _t("ear") + `",
     "shortcodes": [
         ":ear:"
     ]
@@ -3064,12 +3064,12 @@ const emojisData2 = `{
     "codepoints": "🦻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("ear with hearing aid") + `",
-        "` + _lt("hard of hearing") + `",
-        "` + _lt("hearing impaired") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("ear with hearing aid") + `",
+        "` + _t("hard of hearing") + `",
+        "` + _t("hearing impaired") + `"
     ],
-    "name": "` + _lt("ear with hearing aid") + `",
+    "name": "` + _t("ear with hearing aid") + `",
     "shortcodes": [
         ":ear_with_hearing_aid:"
     ]
@@ -3079,10 +3079,10 @@ const emojisData2 = `{
     "codepoints": "👃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("body") + `",
-        "` + _lt("nose") + `"
+        "` + _t("body") + `",
+        "` + _t("nose") + `"
     ],
-    "name": "` + _lt("nose") + `",
+    "name": "` + _t("nose") + `",
     "shortcodes": [
         ":nose:"
     ]
@@ -3092,10 +3092,10 @@ const emojisData2 = `{
     "codepoints": "🧠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("brain") + `",
-        "` + _lt("intelligent") + `"
+        "` + _t("brain") + `",
+        "` + _t("intelligent") + `"
     ],
-    "name": "` + _lt("brain") + `",
+    "name": "` + _t("brain") + `",
     "shortcodes": [
         ":brain:"
     ]
@@ -3105,10 +3105,10 @@ const emojisData2 = `{
     "codepoints": "🦷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dentist") + `",
-        "` + _lt("tooth") + `"
+        "` + _t("dentist") + `",
+        "` + _t("tooth") + `"
     ],
-    "name": "` + _lt("tooth") + `",
+    "name": "` + _t("tooth") + `",
     "shortcodes": [
         ":tooth:"
     ]
@@ -3118,10 +3118,10 @@ const emojisData2 = `{
     "codepoints": "🦴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bone") + `",
-        "` + _lt("skeleton") + `"
+        "` + _t("bone") + `",
+        "` + _t("skeleton") + `"
     ],
-    "name": "` + _lt("bone") + `",
+    "name": "` + _t("bone") + `",
     "shortcodes": [
         ":bone:"
     ]
@@ -3131,11 +3131,11 @@ const emojisData2 = `{
     "codepoints": "👀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("eye") + `",
-        "` + _lt("eyes") + `",
-        "` + _lt("face") + `"
+        "` + _t("eye") + `",
+        "` + _t("eyes") + `",
+        "` + _t("face") + `"
     ],
-    "name": "` + _lt("eyes") + `",
+    "name": "` + _t("eyes") + `",
     "shortcodes": [
         ":eyes:"
     ]
@@ -3145,10 +3145,10 @@ const emojisData2 = `{
     "codepoints": "👁️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("body") + `",
-        "` + _lt("eye") + `"
+        "` + _t("body") + `",
+        "` + _t("eye") + `"
     ],
-    "name": "` + _lt("eye") + `",
+    "name": "` + _t("eye") + `",
     "shortcodes": [
         ":eye:"
     ]
@@ -3158,10 +3158,10 @@ const emojisData2 = `{
     "codepoints": "👅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("body") + `",
-        "` + _lt("tongue") + `"
+        "` + _t("body") + `",
+        "` + _t("tongue") + `"
     ],
-    "name": "` + _lt("tongue") + `",
+    "name": "` + _t("tongue") + `",
     "shortcodes": [
         ":tongue:"
     ]
@@ -3171,10 +3171,10 @@ const emojisData2 = `{
     "codepoints": "👄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("lips") + `",
-        "` + _lt("mouth") + `"
+        "` + _t("lips") + `",
+        "` + _t("mouth") + `"
     ],
-    "name": "` + _lt("mouth") + `",
+    "name": "` + _t("mouth") + `",
     "shortcodes": [
         ":mouth:"
     ]
@@ -3184,10 +3184,10 @@ const emojisData2 = `{
     "codepoints": "👶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baby") + `",
-        "` + _lt("young") + `"
+        "` + _t("baby") + `",
+        "` + _t("young") + `"
     ],
-    "name": "` + _lt("baby") + `",
+    "name": "` + _t("baby") + `",
     "shortcodes": [
         ":baby:"
     ]
@@ -3197,12 +3197,12 @@ const emojisData2 = `{
     "codepoints": "🧒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("child") + `",
-        "` + _lt("gender-neutral") + `",
-        "` + _lt("unspecified gender") + `",
-        "` + _lt("young") + `"
+        "` + _t("child") + `",
+        "` + _t("gender-neutral") + `",
+        "` + _t("unspecified gender") + `",
+        "` + _t("young") + `"
     ],
-    "name": "` + _lt("child") + `",
+    "name": "` + _t("child") + `",
     "shortcodes": [
         ":child:"
     ]
@@ -3212,11 +3212,11 @@ const emojisData2 = `{
     "codepoints": "👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("young") + `",
-        "` + _lt("young person") + `"
+        "` + _t("boy") + `",
+        "` + _t("young") + `",
+        "` + _t("young person") + `"
     ],
-    "name": "` + _lt("boy") + `",
+    "name": "` + _t("boy") + `",
     "shortcodes": [
         ":boy:"
     ]
@@ -3226,13 +3226,13 @@ const emojisData2 = `{
     "codepoints": "👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("girl") + `",
-        "` + _lt("Virgo") + `",
-        "` + _lt("young person") + `",
-        "` + _lt("zodiac") + `",
-        "` + _lt("young") + `"
+        "` + _t("girl") + `",
+        "` + _t("Virgo") + `",
+        "` + _t("young person") + `",
+        "` + _t("zodiac") + `",
+        "` + _t("young") + `"
     ],
-    "name": "` + _lt("girl") + `",
+    "name": "` + _t("girl") + `",
     "shortcodes": [
         ":girl:"
     ]
@@ -3242,12 +3242,12 @@ const emojisData2 = `{
     "codepoints": "🧑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("gender-neutral") + `",
-        "` + _lt("person") + `",
-        "` + _lt("unspecified gender") + `"
+        "` + _t("adult") + `",
+        "` + _t("gender-neutral") + `",
+        "` + _t("person") + `",
+        "` + _t("unspecified gender") + `"
     ],
-    "name": "` + _lt("person") + `",
+    "name": "` + _t("person") + `",
     "shortcodes": [
         ":person:"
     ]
@@ -3257,12 +3257,12 @@ const emojisData2 = `{
     "codepoints": "👱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blond") + `",
-        "` + _lt("blond-haired person") + `",
-        "` + _lt("hair") + `",
-        "` + _lt("person: blond hair") + `"
+        "` + _t("blond") + `",
+        "` + _t("blond-haired person") + `",
+        "` + _t("hair") + `",
+        "` + _t("person: blond hair") + `"
     ],
-    "name": "` + _lt("person: blond hair") + `",
+    "name": "` + _t("person: blond hair") + `",
     "shortcodes": [
         ":person:_blond_hair:"
     ]
@@ -3272,10 +3272,10 @@ const emojisData2 = `{
     "codepoints": "👨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("man") + `"
+        "` + _t("adult") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("man") + `",
+    "name": "` + _t("man") + `",
     "shortcodes": [
         ":man:"
     ]
@@ -3285,11 +3285,11 @@ const emojisData2 = `{
     "codepoints": "🧔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("beard") + `",
-        "` + _lt("person") + `",
-        "` + _lt("person: beard") + `"
+        "` + _t("beard") + `",
+        "` + _t("person") + `",
+        "` + _t("person: beard") + `"
     ],
-    "name": "` + _lt("person: beard") + `",
+    "name": "` + _t("person: beard") + `",
     "shortcodes": [
         ":person:_beard:"
     ]
@@ -3299,11 +3299,11 @@ const emojisData2 = `{
     "codepoints": "👨‍🦰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("man") + `",
-        "` + _lt("red hair") + `"
+        "` + _t("adult") + `",
+        "` + _t("man") + `",
+        "` + _t("red hair") + `"
     ],
-    "name": "` + _lt("man: red hair") + `",
+    "name": "` + _t("man: red hair") + `",
     "shortcodes": [
         ":man:_red_hair:"
     ]
@@ -3313,11 +3313,11 @@ const emojisData2 = `{
     "codepoints": "👨‍🦱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("curly hair") + `",
-        "` + _lt("man") + `"
+        "` + _t("adult") + `",
+        "` + _t("curly hair") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("man: curly hair") + `",
+    "name": "` + _t("man: curly hair") + `",
     "shortcodes": [
         ":man:_curly_hair:"
     ]
@@ -3327,11 +3327,11 @@ const emojisData2 = `{
     "codepoints": "👨‍🦳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("man") + `",
-        "` + _lt("white hair") + `"
+        "` + _t("adult") + `",
+        "` + _t("man") + `",
+        "` + _t("white hair") + `"
     ],
-    "name": "` + _lt("man: white hair") + `",
+    "name": "` + _t("man: white hair") + `",
     "shortcodes": [
         ":man:_white_hair:"
     ]
@@ -3341,11 +3341,11 @@ const emojisData2 = `{
     "codepoints": "👨‍🦲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("bald") + `",
-        "` + _lt("man") + `"
+        "` + _t("adult") + `",
+        "` + _t("bald") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("man: bald") + `",
+    "name": "` + _t("man: bald") + `",
     "shortcodes": [
         ":man:_bald:"
     ]
@@ -3355,10 +3355,10 @@ const emojisData2 = `{
     "codepoints": "👩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("woman") + `"
+        "` + _t("adult") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman") + `",
+    "name": "` + _t("woman") + `",
     "shortcodes": [
         ":woman:"
     ]
@@ -3368,11 +3368,11 @@ const emojisData2 = `{
     "codepoints": "👩‍🦰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("red hair") + `",
-        "` + _lt("woman") + `"
+        "` + _t("adult") + `",
+        "` + _t("red hair") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman: red hair") + `",
+    "name": "` + _t("woman: red hair") + `",
     "shortcodes": [
         ":woman:_red_hair:"
     ]
@@ -3382,11 +3382,11 @@ const emojisData2 = `{
     "codepoints": "👩‍🦱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("curly hair") + `",
-        "` + _lt("woman") + `"
+        "` + _t("adult") + `",
+        "` + _t("curly hair") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman: curly hair") + `",
+    "name": "` + _t("woman: curly hair") + `",
     "shortcodes": [
         ":woman:_curly_hair:"
     ]
@@ -3396,11 +3396,11 @@ const emojisData2 = `{
     "codepoints": "👩‍🦳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("white hair") + `",
-        "` + _lt("woman") + `"
+        "` + _t("adult") + `",
+        "` + _t("white hair") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman: white hair") + `",
+    "name": "` + _t("woman: white hair") + `",
     "shortcodes": [
         ":woman:_white_hair:"
     ]
@@ -3410,11 +3410,11 @@ const emojisData2 = `{
     "codepoints": "👩‍🦲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("bald") + `",
-        "` + _lt("woman") + `"
+        "` + _t("adult") + `",
+        "` + _t("bald") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman: bald") + `",
+    "name": "` + _t("woman: bald") + `",
     "shortcodes": [
         ":woman:_bald:"
     ]
@@ -3424,13 +3424,13 @@ const emojisData2 = `{
     "codepoints": "👱‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blond-haired woman") + `",
-        "` + _lt("blonde") + `",
-        "` + _lt("hair") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman: blond hair") + `"
+        "` + _t("blond-haired woman") + `",
+        "` + _t("blonde") + `",
+        "` + _t("hair") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman: blond hair") + `"
     ],
-    "name": "` + _lt("woman: blond hair") + `",
+    "name": "` + _t("woman: blond hair") + `",
     "shortcodes": [
         ":woman:_blond_hair:"
     ]
@@ -3440,13 +3440,13 @@ const emojisData2 = `{
     "codepoints": "👱‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blond") + `",
-        "` + _lt("blond-haired man") + `",
-        "` + _lt("hair") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man: blond hair") + `"
+        "` + _t("blond") + `",
+        "` + _t("blond-haired man") + `",
+        "` + _t("hair") + `",
+        "` + _t("man") + `",
+        "` + _t("man: blond hair") + `"
     ],
-    "name": "` + _lt("man: blond hair") + `",
+    "name": "` + _t("man: blond hair") + `",
     "shortcodes": [
         ":man:_blond_hair:"
     ]
@@ -3456,13 +3456,13 @@ const emojisData2 = `{
     "codepoints": "🧓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("gender-neutral") + `",
-        "` + _lt("old") + `",
-        "` + _lt("older person") + `",
-        "` + _lt("unspecified gender") + `"
+        "` + _t("adult") + `",
+        "` + _t("gender-neutral") + `",
+        "` + _t("old") + `",
+        "` + _t("older person") + `",
+        "` + _t("unspecified gender") + `"
     ],
-    "name": "` + _lt("older person") + `",
+    "name": "` + _t("older person") + `",
     "shortcodes": [
         ":older_person:"
     ]
@@ -3472,11 +3472,11 @@ const emojisData2 = `{
     "codepoints": "👴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("man") + `",
-        "` + _lt("old") + `"
+        "` + _t("adult") + `",
+        "` + _t("man") + `",
+        "` + _t("old") + `"
     ],
-    "name": "` + _lt("old man") + `",
+    "name": "` + _t("old man") + `",
     "shortcodes": [
         ":old_man:"
     ]
@@ -3486,11 +3486,11 @@ const emojisData2 = `{
     "codepoints": "👵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adult") + `",
-        "` + _lt("old") + `",
-        "` + _lt("woman") + `"
+        "` + _t("adult") + `",
+        "` + _t("old") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("old woman") + `",
+    "name": "` + _t("old woman") + `",
     "shortcodes": [
         ":old_woman:"
     ]
@@ -3500,11 +3500,11 @@ const emojisData2 = `{
     "codepoints": "🙍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("frown") + `",
-        "` + _lt("gesture") + `",
-        "` + _lt("person frowning") + `"
+        "` + _t("frown") + `",
+        "` + _t("gesture") + `",
+        "` + _t("person frowning") + `"
     ],
-    "name": "` + _lt("person frowning") + `",
+    "name": "` + _t("person frowning") + `",
     "shortcodes": [
         ":person_frowning:"
     ]
@@ -3514,11 +3514,11 @@ const emojisData2 = `{
     "codepoints": "🙍‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("frowning") + `",
-        "` + _lt("gesture") + `",
-        "` + _lt("man") + `"
+        "` + _t("frowning") + `",
+        "` + _t("gesture") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("man frowning") + `",
+    "name": "` + _t("man frowning") + `",
     "shortcodes": [
         ":man_frowning:"
     ]
@@ -3528,11 +3528,11 @@ const emojisData2 = `{
     "codepoints": "🙍‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("frowning") + `",
-        "` + _lt("gesture") + `",
-        "` + _lt("woman") + `"
+        "` + _t("frowning") + `",
+        "` + _t("gesture") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman frowning") + `",
+    "name": "` + _t("woman frowning") + `",
     "shortcodes": [
         ":woman_frowning:"
     ]
@@ -3542,11 +3542,11 @@ const emojisData2 = `{
     "codepoints": "🙎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gesture") + `",
-        "` + _lt("person pouting") + `",
-        "` + _lt("pouting") + `"
+        "` + _t("gesture") + `",
+        "` + _t("person pouting") + `",
+        "` + _t("pouting") + `"
     ],
-    "name": "` + _lt("person pouting") + `",
+    "name": "` + _t("person pouting") + `",
     "shortcodes": [
         ":person_pouting:"
     ]
@@ -3556,11 +3556,11 @@ const emojisData2 = `{
     "codepoints": "🙎‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gesture") + `",
-        "` + _lt("man") + `",
-        "` + _lt("pouting") + `"
+        "` + _t("gesture") + `",
+        "` + _t("man") + `",
+        "` + _t("pouting") + `"
     ],
-    "name": "` + _lt("man pouting") + `",
+    "name": "` + _t("man pouting") + `",
     "shortcodes": [
         ":man_pouting:"
     ]
@@ -3570,11 +3570,11 @@ const emojisData2 = `{
     "codepoints": "🙎‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gesture") + `",
-        "` + _lt("pouting") + `",
-        "` + _lt("woman") + `"
+        "` + _t("gesture") + `",
+        "` + _t("pouting") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman pouting") + `",
+    "name": "` + _t("woman pouting") + `",
     "shortcodes": [
         ":woman_pouting:"
     ]
@@ -3584,13 +3584,13 @@ const emojisData2 = `{
     "codepoints": "🙅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("forbidden") + `",
-        "` + _lt("gesture") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("person gesturing NO") + `",
-        "` + _lt("prohibited") + `"
+        "` + _t("forbidden") + `",
+        "` + _t("gesture") + `",
+        "` + _t("hand") + `",
+        "` + _t("person gesturing NO") + `",
+        "` + _t("prohibited") + `"
     ],
-    "name": "` + _lt("person gesturing NO") + `",
+    "name": "` + _t("person gesturing NO") + `",
     "shortcodes": [
         ":person_gesturing_NO:"
     ]
@@ -3600,14 +3600,14 @@ const emojisData2 = `{
     "codepoints": "🙅‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("forbidden") + `",
-        "` + _lt("gesture") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man gesturing NO") + `",
-        "` + _lt("prohibited") + `"
+        "` + _t("forbidden") + `",
+        "` + _t("gesture") + `",
+        "` + _t("hand") + `",
+        "` + _t("man") + `",
+        "` + _t("man gesturing NO") + `",
+        "` + _t("prohibited") + `"
     ],
-    "name": "` + _lt("man gesturing NO") + `",
+    "name": "` + _t("man gesturing NO") + `",
     "shortcodes": [
         ":man_gesturing_NO:"
     ]
@@ -3617,14 +3617,14 @@ const emojisData2 = `{
     "codepoints": "🙅‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("forbidden") + `",
-        "` + _lt("gesture") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("prohibited") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman gesturing NO") + `"
+        "` + _t("forbidden") + `",
+        "` + _t("gesture") + `",
+        "` + _t("hand") + `",
+        "` + _t("prohibited") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman gesturing NO") + `"
     ],
-    "name": "` + _lt("woman gesturing NO") + `",
+    "name": "` + _t("woman gesturing NO") + `",
     "shortcodes": [
         ":woman_gesturing_NO:"
     ]
@@ -3634,12 +3634,12 @@ const emojisData2 = `{
     "codepoints": "🙆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gesture") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("OK") + `",
-        "` + _lt("person gesturing OK") + `"
+        "` + _t("gesture") + `",
+        "` + _t("hand") + `",
+        "` + _t("OK") + `",
+        "` + _t("person gesturing OK") + `"
     ],
-    "name": "` + _lt("person gesturing OK") + `",
+    "name": "` + _t("person gesturing OK") + `",
     "shortcodes": [
         ":person_gesturing_OK:"
     ]
@@ -3649,13 +3649,13 @@ const emojisData2 = `{
     "codepoints": "🙆‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gesture") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man gesturing OK") + `",
-        "` + _lt("OK") + `"
+        "` + _t("gesture") + `",
+        "` + _t("hand") + `",
+        "` + _t("man") + `",
+        "` + _t("man gesturing OK") + `",
+        "` + _t("OK") + `"
     ],
-    "name": "` + _lt("man gesturing OK") + `",
+    "name": "` + _t("man gesturing OK") + `",
     "shortcodes": [
         ":man_gesturing_OK:"
     ]
@@ -3665,13 +3665,13 @@ const emojisData2 = `{
     "codepoints": "🙆‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gesture") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("OK") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman gesturing OK") + `"
+        "` + _t("gesture") + `",
+        "` + _t("hand") + `",
+        "` + _t("OK") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman gesturing OK") + `"
     ],
-    "name": "` + _lt("woman gesturing OK") + `",
+    "name": "` + _t("woman gesturing OK") + `",
     "shortcodes": [
         ":woman_gesturing_OK:"
     ]
@@ -3681,14 +3681,14 @@ const emojisData2 = `{
     "codepoints": "💁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hand") + `",
-        "` + _lt("help") + `",
-        "` + _lt("information") + `",
-        "` + _lt("person tipping hand") + `",
-        "` + _lt("sassy") + `",
-        "` + _lt("tipping") + `"
+        "` + _t("hand") + `",
+        "` + _t("help") + `",
+        "` + _t("information") + `",
+        "` + _t("person tipping hand") + `",
+        "` + _t("sassy") + `",
+        "` + _t("tipping") + `"
     ],
-    "name": "` + _lt("person tipping hand") + `",
+    "name": "` + _t("person tipping hand") + `",
     "shortcodes": [
         ":person_ltipping_hand:"
     ]
@@ -3698,12 +3698,12 @@ const emojisData2 = `{
     "codepoints": "💁‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man") + `",
-        "` + _lt("man tipping hand") + `",
-        "` + _lt("sassy") + `",
-        "` + _lt("tipping hand") + `"
+        "` + _t("man") + `",
+        "` + _t("man tipping hand") + `",
+        "` + _t("sassy") + `",
+        "` + _t("tipping hand") + `"
     ],
-    "name": "` + _lt("man tipping hand") + `",
+    "name": "` + _t("man tipping hand") + `",
     "shortcodes": [
         ":man_ltipping_hand:"
     ]
@@ -3713,12 +3713,12 @@ const emojisData2 = `{
     "codepoints": "💁‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("sassy") + `",
-        "` + _lt("tipping hand") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman tipping hand") + `"
+        "` + _t("sassy") + `",
+        "` + _t("tipping hand") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman tipping hand") + `"
     ],
-    "name": "` + _lt("woman tipping hand") + `",
+    "name": "` + _t("woman tipping hand") + `",
     "shortcodes": [
         ":woman_ltipping_hand:"
     ]
@@ -3728,13 +3728,13 @@ const emojisData2 = `{
     "codepoints": "🙋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gesture") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("happy") + `",
-        "` + _lt("person raising hand") + `",
-        "` + _lt("raised") + `"
+        "` + _t("gesture") + `",
+        "` + _t("hand") + `",
+        "` + _t("happy") + `",
+        "` + _t("person raising hand") + `",
+        "` + _t("raised") + `"
     ],
-    "name": "` + _lt("person raising hand") + `",
+    "name": "` + _t("person raising hand") + `",
     "shortcodes": [
         ":person_raising_hand:"
     ]
@@ -3744,12 +3744,12 @@ const emojisData2 = `{
     "codepoints": "🙋‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gesture") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man raising hand") + `",
-        "` + _lt("raising hand") + `"
+        "` + _t("gesture") + `",
+        "` + _t("man") + `",
+        "` + _t("man raising hand") + `",
+        "` + _t("raising hand") + `"
     ],
-    "name": "` + _lt("man raising hand") + `",
+    "name": "` + _t("man raising hand") + `",
     "shortcodes": [
         ":man_raising_hand:"
     ]
@@ -3759,12 +3759,12 @@ const emojisData2 = `{
     "codepoints": "🙋‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gesture") + `",
-        "` + _lt("raising hand") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman raising hand") + `"
+        "` + _t("gesture") + `",
+        "` + _t("raising hand") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman raising hand") + `"
     ],
-    "name": "` + _lt("woman raising hand") + `",
+    "name": "` + _t("woman raising hand") + `",
     "shortcodes": [
         ":woman_raising_hand:"
     ]
@@ -3774,14 +3774,14 @@ const emojisData2 = `{
     "codepoints": "🧏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("deaf") + `",
-        "` + _lt("deaf person") + `",
-        "` + _lt("ear") + `",
-        "` + _lt("hear") + `",
-        "` + _lt("hearing impaired") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("deaf") + `",
+        "` + _t("deaf person") + `",
+        "` + _t("ear") + `",
+        "` + _t("hear") + `",
+        "` + _t("hearing impaired") + `"
     ],
-    "name": "` + _lt("deaf person") + `",
+    "name": "` + _t("deaf person") + `",
     "shortcodes": [
         ":deaf_person:"
     ]
@@ -3791,10 +3791,10 @@ const emojisData2 = `{
     "codepoints": "🧏‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("deaf") + `",
-        "` + _lt("man") + `"
+        "` + _t("deaf") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("deaf man") + `",
+    "name": "` + _t("deaf man") + `",
     "shortcodes": [
         ":deaf_man:"
     ]
@@ -3804,10 +3804,10 @@ const emojisData2 = `{
     "codepoints": "🧏‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("deaf") + `",
-        "` + _lt("woman") + `"
+        "` + _t("deaf") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("deaf woman") + `",
+    "name": "` + _t("deaf woman") + `",
     "shortcodes": [
         ":deaf_woman:"
     ]
@@ -3817,13 +3817,13 @@ const emojisData2 = `{
     "codepoints": "🙇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("apology") + `",
-        "` + _lt("bow") + `",
-        "` + _lt("gesture") + `",
-        "` + _lt("person bowing") + `",
-        "` + _lt("sorry") + `"
+        "` + _t("apology") + `",
+        "` + _t("bow") + `",
+        "` + _t("gesture") + `",
+        "` + _t("person bowing") + `",
+        "` + _t("sorry") + `"
     ],
-    "name": "` + _lt("person bowing") + `",
+    "name": "` + _t("person bowing") + `",
     "shortcodes": [
         ":person_bowing:"
     ]
@@ -3833,14 +3833,14 @@ const emojisData2 = `{
     "codepoints": "🙇‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("apology") + `",
-        "` + _lt("bowing") + `",
-        "` + _lt("favor") + `",
-        "` + _lt("gesture") + `",
-        "` + _lt("man") + `",
-        "` + _lt("sorry") + `"
+        "` + _t("apology") + `",
+        "` + _t("bowing") + `",
+        "` + _t("favor") + `",
+        "` + _t("gesture") + `",
+        "` + _t("man") + `",
+        "` + _t("sorry") + `"
     ],
-    "name": "` + _lt("man bowing") + `",
+    "name": "` + _t("man bowing") + `",
     "shortcodes": [
         ":man_bowing:"
     ]
@@ -3850,14 +3850,14 @@ const emojisData2 = `{
     "codepoints": "🙇‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("apology") + `",
-        "` + _lt("bowing") + `",
-        "` + _lt("favor") + `",
-        "` + _lt("gesture") + `",
-        "` + _lt("sorry") + `",
-        "` + _lt("woman") + `"
+        "` + _t("apology") + `",
+        "` + _t("bowing") + `",
+        "` + _t("favor") + `",
+        "` + _t("gesture") + `",
+        "` + _t("sorry") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman bowing") + `",
+    "name": "` + _t("woman bowing") + `",
     "shortcodes": [
         ":woman_bowing:"
     ]
@@ -3867,13 +3867,13 @@ const emojisData2 = `{
     "codepoints": "🤦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("disbelief") + `",
-        "` + _lt("exasperation") + `",
-        "` + _lt("face") + `",
-        "` + _lt("palm") + `",
-        "` + _lt("person facepalming") + `"
+        "` + _t("disbelief") + `",
+        "` + _t("exasperation") + `",
+        "` + _t("face") + `",
+        "` + _t("palm") + `",
+        "` + _t("person facepalming") + `"
     ],
-    "name": "` + _lt("person facepalming") + `",
+    "name": "` + _t("person facepalming") + `",
     "shortcodes": [
         ":person_facepalming:"
     ]
@@ -3883,13 +3883,13 @@ const emojisData2 = `{
     "codepoints": "🤦‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("disbelief") + `",
-        "` + _lt("exasperation") + `",
-        "` + _lt("facepalm") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man facepalming") + `"
+        "` + _t("disbelief") + `",
+        "` + _t("exasperation") + `",
+        "` + _t("facepalm") + `",
+        "` + _t("man") + `",
+        "` + _t("man facepalming") + `"
     ],
-    "name": "` + _lt("man facepalming") + `",
+    "name": "` + _t("man facepalming") + `",
     "shortcodes": [
         ":man_facepalming:"
     ]
@@ -3899,13 +3899,13 @@ const emojisData2 = `{
     "codepoints": "🤦‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("disbelief") + `",
-        "` + _lt("exasperation") + `",
-        "` + _lt("facepalm") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman facepalming") + `"
+        "` + _t("disbelief") + `",
+        "` + _t("exasperation") + `",
+        "` + _t("facepalm") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman facepalming") + `"
     ],
-    "name": "` + _lt("woman facepalming") + `",
+    "name": "` + _t("woman facepalming") + `",
     "shortcodes": [
         ":woman_facepalming:"
     ]
@@ -3915,13 +3915,13 @@ const emojisData2 = `{
     "codepoints": "🤷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("doubt") + `",
-        "` + _lt("ignorance") + `",
-        "` + _lt("indifference") + `",
-        "` + _lt("person shrugging") + `",
-        "` + _lt("shrug") + `"
+        "` + _t("doubt") + `",
+        "` + _t("ignorance") + `",
+        "` + _t("indifference") + `",
+        "` + _t("person shrugging") + `",
+        "` + _t("shrug") + `"
     ],
-    "name": "` + _lt("person shrugging") + `",
+    "name": "` + _t("person shrugging") + `",
     "shortcodes": [
         ":person_shrugging:"
     ]
@@ -3931,14 +3931,14 @@ const emojisData2 = `{
     "codepoints": "🤷‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("doubt") + `",
-        "` + _lt("ignorance") + `",
-        "` + _lt("indifference") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man shrugging") + `",
-        "` + _lt("shrug") + `"
+        "` + _t("doubt") + `",
+        "` + _t("ignorance") + `",
+        "` + _t("indifference") + `",
+        "` + _t("man") + `",
+        "` + _t("man shrugging") + `",
+        "` + _t("shrug") + `"
     ],
-    "name": "` + _lt("man shrugging") + `",
+    "name": "` + _t("man shrugging") + `",
     "shortcodes": [
         ":man_shrugging:"
     ]
@@ -3948,14 +3948,14 @@ const emojisData2 = `{
     "codepoints": "🤷‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("doubt") + `",
-        "` + _lt("ignorance") + `",
-        "` + _lt("indifference") + `",
-        "` + _lt("shrug") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman shrugging") + `"
+        "` + _t("doubt") + `",
+        "` + _t("ignorance") + `",
+        "` + _t("indifference") + `",
+        "` + _t("shrug") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman shrugging") + `"
     ],
-    "name": "` + _lt("woman shrugging") + `",
+    "name": "` + _t("woman shrugging") + `",
     "shortcodes": [
         ":woman_shrugging:"
     ]
@@ -3965,15 +3965,15 @@ const emojisData2 = `{
     "codepoints": "👨‍⚕️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("doctor") + `",
-        "` + _lt("healthcare") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man health worker") + `",
-        "` + _lt("nurse") + `",
-        "` + _lt("therapist") + `",
-        "` + _lt("health care") + `"
+        "` + _t("doctor") + `",
+        "` + _t("healthcare") + `",
+        "` + _t("man") + `",
+        "` + _t("man health worker") + `",
+        "` + _t("nurse") + `",
+        "` + _t("therapist") + `",
+        "` + _t("health care") + `"
     ],
-    "name": "` + _lt("man health worker") + `",
+    "name": "` + _t("man health worker") + `",
     "shortcodes": [
         ":man_health_worker:"
     ]
@@ -3983,15 +3983,15 @@ const emojisData2 = `{
     "codepoints": "👩‍⚕️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("doctor") + `",
-        "` + _lt("healthcare") + `",
-        "` + _lt("nurse") + `",
-        "` + _lt("therapist") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman health worker") + `",
-        "` + _lt("health care") + `"
+        "` + _t("doctor") + `",
+        "` + _t("healthcare") + `",
+        "` + _t("nurse") + `",
+        "` + _t("therapist") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman health worker") + `",
+        "` + _t("health care") + `"
     ],
-    "name": "` + _lt("woman health worker") + `",
+    "name": "` + _t("woman health worker") + `",
     "shortcodes": [
         ":woman_health_worker:"
     ]
@@ -4001,11 +4001,11 @@ const emojisData2 = `{
     "codepoints": "👨‍🎓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("graduate") + `",
-        "` + _lt("man") + `",
-        "` + _lt("student") + `"
+        "` + _t("graduate") + `",
+        "` + _t("man") + `",
+        "` + _t("student") + `"
     ],
-    "name": "` + _lt("man student") + `",
+    "name": "` + _t("man student") + `",
     "shortcodes": [
         ":man_student:"
     ]
@@ -4015,11 +4015,11 @@ const emojisData2 = `{
     "codepoints": "👩‍🎓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("graduate") + `",
-        "` + _lt("student") + `",
-        "` + _lt("woman") + `"
+        "` + _t("graduate") + `",
+        "` + _t("student") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman student") + `",
+    "name": "` + _t("woman student") + `",
     "shortcodes": [
         ":woman_student:"
     ]
@@ -4029,12 +4029,12 @@ const emojisData2 = `{
     "codepoints": "👨‍🏫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("instructor") + `",
-        "` + _lt("man") + `",
-        "` + _lt("professor") + `",
-        "` + _lt("teacher") + `"
+        "` + _t("instructor") + `",
+        "` + _t("man") + `",
+        "` + _t("professor") + `",
+        "` + _t("teacher") + `"
     ],
-    "name": "` + _lt("man teacher") + `",
+    "name": "` + _t("man teacher") + `",
     "shortcodes": [
         ":man_lteacher:"
     ]
@@ -4044,12 +4044,12 @@ const emojisData2 = `{
     "codepoints": "👩‍🏫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("instructor") + `",
-        "` + _lt("professor") + `",
-        "` + _lt("teacher") + `",
-        "` + _lt("woman") + `"
+        "` + _t("instructor") + `",
+        "` + _t("professor") + `",
+        "` + _t("teacher") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman teacher") + `",
+    "name": "` + _t("woman teacher") + `",
     "shortcodes": [
         ":woman_lteacher:"
     ]
@@ -4059,12 +4059,12 @@ const emojisData2 = `{
     "codepoints": "👨‍⚖️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("judge") + `",
-        "` + _lt("justice") + `",
-        "` + _lt("man") + `",
-        "` + _lt("scales") + `"
+        "` + _t("judge") + `",
+        "` + _t("justice") + `",
+        "` + _t("man") + `",
+        "` + _t("scales") + `"
     ],
-    "name": "` + _lt("man judge") + `",
+    "name": "` + _t("man judge") + `",
     "shortcodes": [
         ":man_judge:"
     ]
@@ -4074,12 +4074,12 @@ const emojisData2 = `{
     "codepoints": "👩‍⚖️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("judge") + `",
-        "` + _lt("justice") + `",
-        "` + _lt("scales") + `",
-        "` + _lt("woman") + `"
+        "` + _t("judge") + `",
+        "` + _t("justice") + `",
+        "` + _t("scales") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman judge") + `",
+    "name": "` + _t("woman judge") + `",
     "shortcodes": [
         ":woman_judge:"
     ]
@@ -4089,12 +4089,12 @@ const emojisData2 = `{
     "codepoints": "👨‍🌾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("farmer") + `",
-        "` + _lt("gardener") + `",
-        "` + _lt("man") + `",
-        "` + _lt("rancher") + `"
+        "` + _t("farmer") + `",
+        "` + _t("gardener") + `",
+        "` + _t("man") + `",
+        "` + _t("rancher") + `"
     ],
-    "name": "` + _lt("man farmer") + `",
+    "name": "` + _t("man farmer") + `",
     "shortcodes": [
         ":man_farmer:"
     ]
@@ -4104,12 +4104,12 @@ const emojisData2 = `{
     "codepoints": "👩‍🌾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("farmer") + `",
-        "` + _lt("gardener") + `",
-        "` + _lt("rancher") + `",
-        "` + _lt("woman") + `"
+        "` + _t("farmer") + `",
+        "` + _t("gardener") + `",
+        "` + _t("rancher") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman farmer") + `",
+    "name": "` + _t("woman farmer") + `",
     "shortcodes": [
         ":woman_farmer:"
     ]
@@ -4119,11 +4119,11 @@ const emojisData2 = `{
     "codepoints": "👨‍🍳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chef") + `",
-        "` + _lt("cook") + `",
-        "` + _lt("man") + `"
+        "` + _t("chef") + `",
+        "` + _t("cook") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("man cook") + `",
+    "name": "` + _t("man cook") + `",
     "shortcodes": [
         ":man_cook:"
     ]
@@ -4133,11 +4133,11 @@ const emojisData2 = `{
     "codepoints": "👩‍🍳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chef") + `",
-        "` + _lt("cook") + `",
-        "` + _lt("woman") + `"
+        "` + _t("chef") + `",
+        "` + _t("cook") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman cook") + `",
+    "name": "` + _t("woman cook") + `",
     "shortcodes": [
         ":woman_cook:"
     ]
@@ -4147,13 +4147,13 @@ const emojisData2 = `{
     "codepoints": "👨‍🔧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("electrician") + `",
-        "` + _lt("man") + `",
-        "` + _lt("mechanic") + `",
-        "` + _lt("plumber") + `",
-        "` + _lt("tradesperson") + `"
+        "` + _t("electrician") + `",
+        "` + _t("man") + `",
+        "` + _t("mechanic") + `",
+        "` + _t("plumber") + `",
+        "` + _t("tradesperson") + `"
     ],
-    "name": "` + _lt("man mechanic") + `",
+    "name": "` + _t("man mechanic") + `",
     "shortcodes": [
         ":man_mechanic:"
     ]
@@ -4163,13 +4163,13 @@ const emojisData2 = `{
     "codepoints": "👩‍🔧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("electrician") + `",
-        "` + _lt("mechanic") + `",
-        "` + _lt("plumber") + `",
-        "` + _lt("tradesperson") + `",
-        "` + _lt("woman") + `"
+        "` + _t("electrician") + `",
+        "` + _t("mechanic") + `",
+        "` + _t("plumber") + `",
+        "` + _t("tradesperson") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman mechanic") + `",
+    "name": "` + _t("woman mechanic") + `",
     "shortcodes": [
         ":woman_mechanic:"
     ]
@@ -4179,13 +4179,13 @@ const emojisData2 = `{
     "codepoints": "👨‍🏭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("assembly") + `",
-        "` + _lt("factory") + `",
-        "` + _lt("industrial") + `",
-        "` + _lt("man") + `",
-        "` + _lt("worker") + `"
+        "` + _t("assembly") + `",
+        "` + _t("factory") + `",
+        "` + _t("industrial") + `",
+        "` + _t("man") + `",
+        "` + _t("worker") + `"
     ],
-    "name": "` + _lt("man factory worker") + `",
+    "name": "` + _t("man factory worker") + `",
     "shortcodes": [
         ":man_factory_worker:"
     ]
@@ -4195,13 +4195,13 @@ const emojisData2 = `{
     "codepoints": "👩‍🏭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("assembly") + `",
-        "` + _lt("factory") + `",
-        "` + _lt("industrial") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("worker") + `"
+        "` + _t("assembly") + `",
+        "` + _t("factory") + `",
+        "` + _t("industrial") + `",
+        "` + _t("woman") + `",
+        "` + _t("worker") + `"
     ],
-    "name": "` + _lt("woman factory worker") + `",
+    "name": "` + _t("woman factory worker") + `",
     "shortcodes": [
         ":woman_factory_worker:"
     ]
@@ -4211,17 +4211,17 @@ const emojisData2 = `{
     "codepoints": "👨‍💼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("business man") + `",
-        "` + _lt("man office worker") + `",
-        "` + _lt("manager") + `",
-        "` + _lt("office worker") + `",
-        "` + _lt("white collar") + `",
-        "` + _lt("architect") + `",
-        "` + _lt("business") + `",
-        "` + _lt("man") + `",
-        "` + _lt("white-collar") + `"
+        "` + _t("business man") + `",
+        "` + _t("man office worker") + `",
+        "` + _t("manager") + `",
+        "` + _t("office worker") + `",
+        "` + _t("white collar") + `",
+        "` + _t("architect") + `",
+        "` + _t("business") + `",
+        "` + _t("man") + `",
+        "` + _t("white-collar") + `"
     ],
-    "name": "` + _lt("man office worker") + `",
+    "name": "` + _t("man office worker") + `",
     "shortcodes": [
         ":man_office_worker:"
     ]
@@ -4231,17 +4231,17 @@ const emojisData2 = `{
     "codepoints": "👩‍💼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("business woman") + `",
-        "` + _lt("manager") + `",
-        "` + _lt("office worker") + `",
-        "` + _lt("white collar") + `",
-        "` + _lt("woman office worker") + `",
-        "` + _lt("architect") + `",
-        "` + _lt("business") + `",
-        "` + _lt("white-collar") + `",
-        "` + _lt("woman") + `"
+        "` + _t("business woman") + `",
+        "` + _t("manager") + `",
+        "` + _t("office worker") + `",
+        "` + _t("white collar") + `",
+        "` + _t("woman office worker") + `",
+        "` + _t("architect") + `",
+        "` + _t("business") + `",
+        "` + _t("white-collar") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman office worker") + `",
+    "name": "` + _t("woman office worker") + `",
     "shortcodes": [
         ":woman_office_worker:"
     ]
@@ -4251,14 +4251,14 @@ const emojisData2 = `{
     "codepoints": "👨‍🔬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("biologist") + `",
-        "` + _lt("chemist") + `",
-        "` + _lt("engineer") + `",
-        "` + _lt("man") + `",
-        "` + _lt("physicist") + `",
-        "` + _lt("scientist") + `"
+        "` + _t("biologist") + `",
+        "` + _t("chemist") + `",
+        "` + _t("engineer") + `",
+        "` + _t("man") + `",
+        "` + _t("physicist") + `",
+        "` + _t("scientist") + `"
     ],
-    "name": "` + _lt("man scientist") + `",
+    "name": "` + _t("man scientist") + `",
     "shortcodes": [
         ":man_scientist:"
     ]
@@ -4268,14 +4268,14 @@ const emojisData2 = `{
     "codepoints": "👩‍🔬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("biologist") + `",
-        "` + _lt("chemist") + `",
-        "` + _lt("engineer") + `",
-        "` + _lt("physicist") + `",
-        "` + _lt("scientist") + `",
-        "` + _lt("woman") + `"
+        "` + _t("biologist") + `",
+        "` + _t("chemist") + `",
+        "` + _t("engineer") + `",
+        "` + _t("physicist") + `",
+        "` + _t("scientist") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman scientist") + `",
+    "name": "` + _t("woman scientist") + `",
     "shortcodes": [
         ":woman_scientist:"
     ]
@@ -4285,14 +4285,14 @@ const emojisData2 = `{
     "codepoints": "👨‍💻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("coder") + `",
-        "` + _lt("developer") + `",
-        "` + _lt("inventor") + `",
-        "` + _lt("man") + `",
-        "` + _lt("software") + `",
-        "` + _lt("technologist") + `"
+        "` + _t("coder") + `",
+        "` + _t("developer") + `",
+        "` + _t("inventor") + `",
+        "` + _t("man") + `",
+        "` + _t("software") + `",
+        "` + _t("technologist") + `"
     ],
-    "name": "` + _lt("man technologist") + `",
+    "name": "` + _t("man technologist") + `",
     "shortcodes": [
         ":man_ltechnologist:"
     ]
@@ -4302,14 +4302,14 @@ const emojisData2 = `{
     "codepoints": "👩‍💻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("coder") + `",
-        "` + _lt("developer") + `",
-        "` + _lt("inventor") + `",
-        "` + _lt("software") + `",
-        "` + _lt("technologist") + `",
-        "` + _lt("woman") + `"
+        "` + _t("coder") + `",
+        "` + _t("developer") + `",
+        "` + _t("inventor") + `",
+        "` + _t("software") + `",
+        "` + _t("technologist") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman technologist") + `",
+    "name": "` + _t("woman technologist") + `",
     "shortcodes": [
         ":woman_ltechnologist:"
     ]
@@ -4319,17 +4319,17 @@ const emojisData2 = `{
     "codepoints": "👨‍🎤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("entertainer") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man singer") + `",
-        "` + _lt("performer") + `",
-        "` + _lt("rock singer") + `",
-        "` + _lt("star") + `",
-        "` + _lt("actor") + `",
-        "` + _lt("rock") + `",
-        "` + _lt("singer") + `"
+        "` + _t("entertainer") + `",
+        "` + _t("man") + `",
+        "` + _t("man singer") + `",
+        "` + _t("performer") + `",
+        "` + _t("rock singer") + `",
+        "` + _t("star") + `",
+        "` + _t("actor") + `",
+        "` + _t("rock") + `",
+        "` + _t("singer") + `"
     ],
-    "name": "` + _lt("man singer") + `",
+    "name": "` + _t("man singer") + `",
     "shortcodes": [
         ":man_singer:"
     ]
@@ -4339,17 +4339,17 @@ const emojisData2 = `{
     "codepoints": "👩‍🎤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("entertainer") + `",
-        "` + _lt("performer") + `",
-        "` + _lt("rock singer") + `",
-        "` + _lt("star") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman singer") + `",
-        "` + _lt("actor") + `",
-        "` + _lt("rock") + `",
-        "` + _lt("singer") + `"
+        "` + _t("entertainer") + `",
+        "` + _t("performer") + `",
+        "` + _t("rock singer") + `",
+        "` + _t("star") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman singer") + `",
+        "` + _t("actor") + `",
+        "` + _t("rock") + `",
+        "` + _t("singer") + `"
     ],
-    "name": "` + _lt("woman singer") + `",
+    "name": "` + _t("woman singer") + `",
     "shortcodes": [
         ":woman_singer:"
     ]
@@ -4359,12 +4359,12 @@ const emojisData2 = `{
     "codepoints": "👨‍🎨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("artist") + `",
-        "` + _lt("man") + `",
-        "` + _lt("painter") + `",
-        "` + _lt("palette") + `"
+        "` + _t("artist") + `",
+        "` + _t("man") + `",
+        "` + _t("painter") + `",
+        "` + _t("palette") + `"
     ],
-    "name": "` + _lt("man artist") + `",
+    "name": "` + _t("man artist") + `",
     "shortcodes": [
         ":man_artist:"
     ]
@@ -4374,12 +4374,12 @@ const emojisData2 = `{
     "codepoints": "👩‍🎨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("artist") + `",
-        "` + _lt("painter") + `",
-        "` + _lt("palette") + `",
-        "` + _lt("woman") + `"
+        "` + _t("artist") + `",
+        "` + _t("painter") + `",
+        "` + _t("palette") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman artist") + `",
+    "name": "` + _t("woman artist") + `",
     "shortcodes": [
         ":woman_artist:"
     ]
@@ -4389,11 +4389,11 @@ const emojisData2 = `{
     "codepoints": "👨‍✈️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man") + `",
-        "` + _lt("pilot") + `",
-        "` + _lt("plane") + `"
+        "` + _t("man") + `",
+        "` + _t("pilot") + `",
+        "` + _t("plane") + `"
     ],
-    "name": "` + _lt("man pilot") + `",
+    "name": "` + _t("man pilot") + `",
     "shortcodes": [
         ":man_pilot:"
     ]
@@ -4403,11 +4403,11 @@ const emojisData2 = `{
     "codepoints": "👩‍✈️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pilot") + `",
-        "` + _lt("plane") + `",
-        "` + _lt("woman") + `"
+        "` + _t("pilot") + `",
+        "` + _t("plane") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman pilot") + `",
+    "name": "` + _t("woman pilot") + `",
     "shortcodes": [
         ":woman_pilot:"
     ]
@@ -4417,11 +4417,11 @@ const emojisData2 = `{
     "codepoints": "👨‍🚀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("astronaut") + `",
-        "` + _lt("man") + `",
-        "` + _lt("rocket") + `"
+        "` + _t("astronaut") + `",
+        "` + _t("man") + `",
+        "` + _t("rocket") + `"
     ],
-    "name": "` + _lt("man astronaut") + `",
+    "name": "` + _t("man astronaut") + `",
     "shortcodes": [
         ":man_astronaut:"
     ]
@@ -4431,11 +4431,11 @@ const emojisData2 = `{
     "codepoints": "👩‍🚀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("astronaut") + `",
-        "` + _lt("rocket") + `",
-        "` + _lt("woman") + `"
+        "` + _t("astronaut") + `",
+        "` + _t("rocket") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman astronaut") + `",
+    "name": "` + _t("woman astronaut") + `",
     "shortcodes": [
         ":woman_astronaut:"
     ]
@@ -4445,13 +4445,13 @@ const emojisData2 = `{
     "codepoints": "👨‍🚒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fire truck") + `",
-        "` + _lt("firefighter") + `",
-        "` + _lt("man") + `",
-        "` + _lt("firetruck") + `",
-        "` + _lt("fireman") + `"
+        "` + _t("fire truck") + `",
+        "` + _t("firefighter") + `",
+        "` + _t("man") + `",
+        "` + _t("firetruck") + `",
+        "` + _t("fireman") + `"
     ],
-    "name": "` + _lt("man firefighter") + `",
+    "name": "` + _t("man firefighter") + `",
     "shortcodes": [
         ":man_firefighter:"
     ]
@@ -4461,16 +4461,16 @@ const emojisData2 = `{
     "codepoints": "👩‍🚒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fire truck") + `",
-        "` + _lt("firefighter") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("firetruck") + `",
-        "` + _lt("engine") + `",
-        "` + _lt("fire") + `",
-        "` + _lt("firewoman") + `",
-        "` + _lt("truck") + `"
+        "` + _t("fire truck") + `",
+        "` + _t("firefighter") + `",
+        "` + _t("woman") + `",
+        "` + _t("firetruck") + `",
+        "` + _t("engine") + `",
+        "` + _t("fire") + `",
+        "` + _t("firewoman") + `",
+        "` + _t("truck") + `"
     ],
-    "name": "` + _lt("woman firefighter") + `",
+    "name": "` + _t("woman firefighter") + `",
     "shortcodes": [
         ":woman_firefighter:"
     ]
@@ -4480,11 +4480,11 @@ const emojisData2 = `{
     "codepoints": "👮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cop") + `",
-        "` + _lt("officer") + `",
-        "` + _lt("police") + `"
+        "` + _t("cop") + `",
+        "` + _t("officer") + `",
+        "` + _t("police") + `"
     ],
-    "name": "` + _lt("police officer") + `",
+    "name": "` + _t("police officer") + `",
     "shortcodes": [
         ":police_officer:"
     ]
@@ -4494,12 +4494,12 @@ const emojisData2 = `{
     "codepoints": "👮‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cop") + `",
-        "` + _lt("man") + `",
-        "` + _lt("officer") + `",
-        "` + _lt("police") + `"
+        "` + _t("cop") + `",
+        "` + _t("man") + `",
+        "` + _t("officer") + `",
+        "` + _t("police") + `"
     ],
-    "name": "` + _lt("man police officer") + `",
+    "name": "` + _t("man police officer") + `",
     "shortcodes": [
         ":man_police_officer:"
     ]
@@ -4509,12 +4509,12 @@ const emojisData2 = `{
     "codepoints": "👮‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cop") + `",
-        "` + _lt("officer") + `",
-        "` + _lt("police") + `",
-        "` + _lt("woman") + `"
+        "` + _t("cop") + `",
+        "` + _t("officer") + `",
+        "` + _t("police") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman police officer") + `",
+    "name": "` + _t("woman police officer") + `",
     "shortcodes": [
         ":woman_police_officer:"
     ]
@@ -4524,12 +4524,12 @@ const emojisData2 = `{
     "codepoints": "🕵️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("detective") + `",
-        "` + _lt("investigator") + `",
-        "` + _lt("sleuth") + `",
-        "` + _lt("spy") + `"
+        "` + _t("detective") + `",
+        "` + _t("investigator") + `",
+        "` + _t("sleuth") + `",
+        "` + _t("spy") + `"
     ],
-    "name": "` + _lt("detective") + `",
+    "name": "` + _t("detective") + `",
     "shortcodes": [
         ":detective:"
     ]
@@ -4539,7 +4539,7 @@ const emojisData2 = `{
     "codepoints": "🕵️‍♂️",
     "emoticons": [],
     "keywords": [],
-    "name": "` + _lt("man detective") + `",
+    "name": "` + _t("man detective") + `",
     "shortcodes": [
         ":man_detective:"
     ]
@@ -4549,7 +4549,7 @@ const emojisData2 = `{
     "codepoints": "🕵️‍♀️",
     "emoticons": [],
     "keywords": [],
-    "name": "` + _lt("woman detective") + `",
+    "name": "` + _t("woman detective") + `",
     "shortcodes": [
         ":woman_detective:"
     ]
@@ -4559,9 +4559,9 @@ const emojisData2 = `{
     "codepoints": "💂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("guard") + `"
+        "` + _t("guard") + `"
     ],
-    "name": "` + _lt("guard") + `",
+    "name": "` + _t("guard") + `",
     "shortcodes": [
         ":guard:"
     ]
@@ -4571,10 +4571,10 @@ const emojisData2 = `{
     "codepoints": "💂‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("guard") + `",
-        "` + _lt("man") + `"
+        "` + _t("guard") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("man guard") + `",
+    "name": "` + _t("man guard") + `",
     "shortcodes": [
         ":man_guard:"
     ]
@@ -4584,10 +4584,10 @@ const emojisData2 = `{
     "codepoints": "💂‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("guard") + `",
-        "` + _lt("woman") + `"
+        "` + _t("guard") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman guard") + `",
+    "name": "` + _t("woman guard") + `",
     "shortcodes": [
         ":woman_guard:"
     ]
@@ -4597,11 +4597,11 @@ const emojisData2 = `{
     "codepoints": "👷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("construction") + `",
-        "` + _lt("hat") + `",
-        "` + _lt("worker") + `"
+        "` + _t("construction") + `",
+        "` + _t("hat") + `",
+        "` + _t("worker") + `"
     ],
-    "name": "` + _lt("construction worker") + `",
+    "name": "` + _t("construction worker") + `",
     "shortcodes": [
         ":construction_worker:"
     ]
@@ -4611,11 +4611,11 @@ const emojisData2 = `{
     "codepoints": "👷‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("construction") + `",
-        "` + _lt("man") + `",
-        "` + _lt("worker") + `"
+        "` + _t("construction") + `",
+        "` + _t("man") + `",
+        "` + _t("worker") + `"
     ],
-    "name": "` + _lt("man construction worker") + `",
+    "name": "` + _t("man construction worker") + `",
     "shortcodes": [
         ":man_construction_worker:"
     ]
@@ -4625,11 +4625,11 @@ const emojisData2 = `{
     "codepoints": "👷‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("construction") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("worker") + `"
+        "` + _t("construction") + `",
+        "` + _t("woman") + `",
+        "` + _t("worker") + `"
     ],
-    "name": "` + _lt("woman construction worker") + `",
+    "name": "` + _t("woman construction worker") + `",
     "shortcodes": [
         ":woman_construction_worker:"
     ]
@@ -4639,9 +4639,9 @@ const emojisData2 = `{
     "codepoints": "🤴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("prince") + `"
+        "` + _t("prince") + `"
     ],
-    "name": "` + _lt("prince") + `",
+    "name": "` + _t("prince") + `",
     "shortcodes": [
         ":prince:"
     ]
@@ -4651,11 +4651,11 @@ const emojisData2 = `{
     "codepoints": "👸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fairy tale") + `",
-        "` + _lt("fantasy") + `",
-        "` + _lt("princess") + `"
+        "` + _t("fairy tale") + `",
+        "` + _t("fantasy") + `",
+        "` + _t("princess") + `"
     ],
-    "name": "` + _lt("princess") + `",
+    "name": "` + _t("princess") + `",
     "shortcodes": [
         ":princess:"
     ]
@@ -4667,10 +4667,10 @@ const emojisData2 = `{
         ":turban"
     ],
     "keywords": [
-        "` + _lt("person wearing turban") + `",
-        "` + _lt("turban") + `"
+        "` + _t("person wearing turban") + `",
+        "` + _t("turban") + `"
     ],
-    "name": "` + _lt("person wearing turban") + `",
+    "name": "` + _t("person wearing turban") + `",
     "shortcodes": [
         ":person_wearing_lturban:"
     ]
@@ -4680,11 +4680,11 @@ const emojisData2 = `{
     "codepoints": "👳‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man") + `",
-        "` + _lt("man wearing turban") + `",
-        "` + _lt("turban") + `"
+        "` + _t("man") + `",
+        "` + _t("man wearing turban") + `",
+        "` + _t("turban") + `"
     ],
-    "name": "` + _lt("man wearing turban") + `",
+    "name": "` + _t("man wearing turban") + `",
     "shortcodes": [
         ":man_wearing_lturban:"
     ]
@@ -4694,11 +4694,11 @@ const emojisData2 = `{
     "codepoints": "👳‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("turban") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman wearing turban") + `"
+        "` + _t("turban") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman wearing turban") + `"
     ],
-    "name": "` + _lt("woman wearing turban") + `",
+    "name": "` + _t("woman wearing turban") + `",
     "shortcodes": [
         ":woman_wearing_lturban:"
     ]
@@ -4708,14 +4708,14 @@ const emojisData2 = `{
     "codepoints": "👲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cap") + `",
-        "` + _lt("gua pi mao") + `",
-        "` + _lt("hat") + `",
-        "` + _lt("person") + `",
-        "` + _lt("person with skullcap") + `",
-        "` + _lt("skullcap") + `"
+        "` + _t("cap") + `",
+        "` + _t("gua pi mao") + `",
+        "` + _t("hat") + `",
+        "` + _t("person") + `",
+        "` + _t("person with skullcap") + `",
+        "` + _t("skullcap") + `"
     ],
-    "name": "` + _lt("person with skullcap") + `",
+    "name": "` + _t("person with skullcap") + `",
     "shortcodes": [
         ":person_with_skullcap:"
     ]
@@ -4725,13 +4725,13 @@ const emojisData2 = `{
     "codepoints": "🧕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("headscarf") + `",
-        "` + _lt("hijab") + `",
-        "` + _lt("mantilla") + `",
-        "` + _lt("tichel") + `",
-        "` + _lt("woman with headscarf") + `"
+        "` + _t("headscarf") + `",
+        "` + _t("hijab") + `",
+        "` + _t("mantilla") + `",
+        "` + _t("tichel") + `",
+        "` + _t("woman with headscarf") + `"
     ],
-    "name": "` + _lt("woman with headscarf") + `",
+    "name": "` + _t("woman with headscarf") + `",
     "shortcodes": [
         ":woman_with_headscarf:"
     ]
@@ -4741,13 +4741,13 @@ const emojisData2 = `{
     "codepoints": "🤵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("groom") + `",
-        "` + _lt("person") + `",
-        "` + _lt("person in tux") + `",
-        "` + _lt("person in tuxedo") + `",
-        "` + _lt("tuxedo") + `"
+        "` + _t("groom") + `",
+        "` + _t("person") + `",
+        "` + _t("person in tux") + `",
+        "` + _t("person in tuxedo") + `",
+        "` + _t("tuxedo") + `"
     ],
-    "name": "` + _lt("person in tuxedo") + `",
+    "name": "` + _t("person in tuxedo") + `",
     "shortcodes": [
         ":person_in_ltuxedo:"
     ]
@@ -4757,13 +4757,13 @@ const emojisData2 = `{
     "codepoints": "👰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bride") + `",
-        "` + _lt("person") + `",
-        "` + _lt("person with veil") + `",
-        "` + _lt("veil") + `",
-        "` + _lt("wedding") + `"
+        "` + _t("bride") + `",
+        "` + _t("person") + `",
+        "` + _t("person with veil") + `",
+        "` + _t("veil") + `",
+        "` + _t("wedding") + `"
     ],
-    "name": "` + _lt("person with veil") + `",
+    "name": "` + _t("person with veil") + `",
     "shortcodes": [
         ":person_with_veil:"
     ]
@@ -4773,10 +4773,10 @@ const emojisData2 = `{
     "codepoints": "🤰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pregnant") + `",
-        "` + _lt("woman") + `"
+        "` + _t("pregnant") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("pregnant woman") + `",
+    "name": "` + _t("pregnant woman") + `",
     "shortcodes": [
         ":pregnant_woman:"
     ]
@@ -4786,12 +4786,12 @@ const emojisData2 = `{
     "codepoints": "🤱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baby") + `",
-        "` + _lt("breast") + `",
-        "` + _lt("breast-feeding") + `",
-        "` + _lt("nursing") + `"
+        "` + _t("baby") + `",
+        "` + _t("breast") + `",
+        "` + _t("breast-feeding") + `",
+        "` + _t("nursing") + `"
     ],
-    "name": "` + _lt("breast-feeding") + `",
+    "name": "` + _t("breast-feeding") + `",
     "shortcodes": [
         ":breast-feeding:"
     ]
@@ -4801,13 +4801,13 @@ const emojisData2 = `{
     "codepoints": "👼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("angel") + `",
-        "` + _lt("baby") + `",
-        "` + _lt("face") + `",
-        "` + _lt("fairy tale") + `",
-        "` + _lt("fantasy") + `"
+        "` + _t("angel") + `",
+        "` + _t("baby") + `",
+        "` + _t("face") + `",
+        "` + _t("fairy tale") + `",
+        "` + _t("fantasy") + `"
     ],
-    "name": "` + _lt("baby angel") + `",
+    "name": "` + _t("baby angel") + `",
     "shortcodes": [
         ":baby_angel:"
     ]
@@ -4817,18 +4817,18 @@ const emojisData2 = `{
     "codepoints": "🎅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("Christmas") + `",
-        "` + _lt("Father Christmas") + `",
-        "` + _lt("Santa") + `",
-        "` + _lt("Santa Claus") + `",
-        "` + _lt("claus") + `",
-        "` + _lt("father") + `",
-        "` + _lt("santa") + `",
-        "` + _lt("Claus") + `",
-        "` + _lt("Father") + `"
+        "` + _t("celebration") + `",
+        "` + _t("Christmas") + `",
+        "` + _t("Father Christmas") + `",
+        "` + _t("Santa") + `",
+        "` + _t("Santa Claus") + `",
+        "` + _t("claus") + `",
+        "` + _t("father") + `",
+        "` + _t("santa") + `",
+        "` + _t("Claus") + `",
+        "` + _t("Father") + `"
     ],
-    "name": "` + _lt("Santa Claus") + `",
+    "name": "` + _t("Santa Claus") + `",
     "shortcodes": [
         ":Santa_Claus:"
     ]
@@ -4838,18 +4838,18 @@ const emojisData2 = `{
     "codepoints": "🤶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("Christmas") + `",
-        "` + _lt("Mrs Claus") + `",
-        "` + _lt("Mrs Santa Claus") + `",
-        "` + _lt("Mrs. Claus") + `",
-        "` + _lt("claus") + `",
-        "` + _lt("mother") + `",
-        "` + _lt("Mrs.") + `",
-        "` + _lt("Claus") + `",
-        "` + _lt("Mother") + `"
+        "` + _t("celebration") + `",
+        "` + _t("Christmas") + `",
+        "` + _t("Mrs Claus") + `",
+        "` + _t("Mrs Santa Claus") + `",
+        "` + _t("Mrs. Claus") + `",
+        "` + _t("claus") + `",
+        "` + _t("mother") + `",
+        "` + _t("Mrs.") + `",
+        "` + _t("Claus") + `",
+        "` + _t("Mother") + `"
     ],
-    "name": "` + _lt("Mrs. Claus") + `",
+    "name": "` + _t("Mrs. Claus") + `",
     "shortcodes": [
         ":Mrs._Claus:"
     ]
@@ -4859,13 +4859,13 @@ const emojisData2 = `{
     "codepoints": "🦸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("good") + `",
-        "` + _lt("hero") + `",
-        "` + _lt("heroine") + `",
-        "` + _lt("superhero") + `",
-        "` + _lt("superpower") + `"
+        "` + _t("good") + `",
+        "` + _t("hero") + `",
+        "` + _t("heroine") + `",
+        "` + _t("superhero") + `",
+        "` + _t("superpower") + `"
     ],
-    "name": "` + _lt("superhero") + `",
+    "name": "` + _t("superhero") + `",
     "shortcodes": [
         ":superhero:"
     ]
@@ -4875,13 +4875,13 @@ const emojisData2 = `{
     "codepoints": "🦸‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("good") + `",
-        "` + _lt("hero") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man superhero") + `",
-        "` + _lt("superpower") + `"
+        "` + _t("good") + `",
+        "` + _t("hero") + `",
+        "` + _t("man") + `",
+        "` + _t("man superhero") + `",
+        "` + _t("superpower") + `"
     ],
-    "name": "` + _lt("man superhero") + `",
+    "name": "` + _t("man superhero") + `",
     "shortcodes": [
         ":man_superhero:"
     ]
@@ -4891,14 +4891,14 @@ const emojisData2 = `{
     "codepoints": "🦸‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("good") + `",
-        "` + _lt("hero") + `",
-        "` + _lt("heroine") + `",
-        "` + _lt("superpower") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman superhero") + `"
+        "` + _t("good") + `",
+        "` + _t("hero") + `",
+        "` + _t("heroine") + `",
+        "` + _t("superpower") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman superhero") + `"
     ],
-    "name": "` + _lt("woman superhero") + `",
+    "name": "` + _t("woman superhero") + `",
     "shortcodes": [
         ":woman_superhero:"
     ]
@@ -4908,13 +4908,13 @@ const emojisData2 = `{
     "codepoints": "🦹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("criminal") + `",
-        "` + _lt("evil") + `",
-        "` + _lt("superpower") + `",
-        "` + _lt("supervillain") + `",
-        "` + _lt("villain") + `"
+        "` + _t("criminal") + `",
+        "` + _t("evil") + `",
+        "` + _t("superpower") + `",
+        "` + _t("supervillain") + `",
+        "` + _t("villain") + `"
     ],
-    "name": "` + _lt("supervillain") + `",
+    "name": "` + _t("supervillain") + `",
     "shortcodes": [
         ":supervillain:"
     ]
@@ -4924,14 +4924,14 @@ const emojisData2 = `{
     "codepoints": "🦹‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("criminal") + `",
-        "` + _lt("evil") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man supervillain") + `",
-        "` + _lt("superpower") + `",
-        "` + _lt("villain") + `"
+        "` + _t("criminal") + `",
+        "` + _t("evil") + `",
+        "` + _t("man") + `",
+        "` + _t("man supervillain") + `",
+        "` + _t("superpower") + `",
+        "` + _t("villain") + `"
     ],
-    "name": "` + _lt("man supervillain") + `",
+    "name": "` + _t("man supervillain") + `",
     "shortcodes": [
         ":man_supervillain:"
     ]
@@ -4941,14 +4941,14 @@ const emojisData2 = `{
     "codepoints": "🦹‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("criminal") + `",
-        "` + _lt("evil") + `",
-        "` + _lt("superpower") + `",
-        "` + _lt("villain") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman supervillain") + `"
+        "` + _t("criminal") + `",
+        "` + _t("evil") + `",
+        "` + _t("superpower") + `",
+        "` + _t("villain") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman supervillain") + `"
     ],
-    "name": "` + _lt("woman supervillain") + `",
+    "name": "` + _t("woman supervillain") + `",
     "shortcodes": [
         ":woman_supervillain:"
     ]
@@ -4958,13 +4958,13 @@ const emojisData2 = `{
     "codepoints": "🧙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mage") + `",
-        "` + _lt("sorcerer") + `",
-        "` + _lt("sorceress") + `",
-        "` + _lt("witch") + `",
-        "` + _lt("wizard") + `"
+        "` + _t("mage") + `",
+        "` + _t("sorcerer") + `",
+        "` + _t("sorceress") + `",
+        "` + _t("witch") + `",
+        "` + _t("wizard") + `"
     ],
-    "name": "` + _lt("mage") + `",
+    "name": "` + _t("mage") + `",
     "shortcodes": [
         ":mage:"
     ]
@@ -4974,11 +4974,11 @@ const emojisData2 = `{
     "codepoints": "🧙‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man mage") + `",
-        "` + _lt("sorcerer") + `",
-        "` + _lt("wizard") + `"
+        "` + _t("man mage") + `",
+        "` + _t("sorcerer") + `",
+        "` + _t("wizard") + `"
     ],
-    "name": "` + _lt("man mage") + `",
+    "name": "` + _t("man mage") + `",
     "shortcodes": [
         ":man_mage:"
     ]
@@ -4988,11 +4988,11 @@ const emojisData2 = `{
     "codepoints": "🧙‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("sorceress") + `",
-        "` + _lt("witch") + `",
-        "` + _lt("woman mage") + `"
+        "` + _t("sorceress") + `",
+        "` + _t("witch") + `",
+        "` + _t("woman mage") + `"
     ],
-    "name": "` + _lt("woman mage") + `",
+    "name": "` + _t("woman mage") + `",
     "shortcodes": [
         ":woman_mage:"
     ]
@@ -5002,12 +5002,12 @@ const emojisData2 = `{
     "codepoints": "🧚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fairy") + `",
-        "` + _lt("Oberon") + `",
-        "` + _lt("Puck") + `",
-        "` + _lt("Titania") + `"
+        "` + _t("fairy") + `",
+        "` + _t("Oberon") + `",
+        "` + _t("Puck") + `",
+        "` + _t("Titania") + `"
     ],
-    "name": "` + _lt("fairy") + `",
+    "name": "` + _t("fairy") + `",
     "shortcodes": [
         ":fairy:"
     ]
@@ -5017,11 +5017,11 @@ const emojisData2 = `{
     "codepoints": "🧚‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man fairy") + `",
-        "` + _lt("Oberon") + `",
-        "` + _lt("Puck") + `"
+        "` + _t("man fairy") + `",
+        "` + _t("Oberon") + `",
+        "` + _t("Puck") + `"
     ],
-    "name": "` + _lt("man fairy") + `",
+    "name": "` + _t("man fairy") + `",
     "shortcodes": [
         ":man_fairy:"
     ]
@@ -5031,10 +5031,10 @@ const emojisData2 = `{
     "codepoints": "🧚‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Titania") + `",
-        "` + _lt("woman fairy") + `"
+        "` + _t("Titania") + `",
+        "` + _t("woman fairy") + `"
     ],
-    "name": "` + _lt("woman fairy") + `",
+    "name": "` + _t("woman fairy") + `",
     "shortcodes": [
         ":woman_fairy:"
     ]
@@ -5044,11 +5044,11 @@ const emojisData2 = `{
     "codepoints": "🧛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Dracula") + `",
-        "` + _lt("undead") + `",
-        "` + _lt("vampire") + `"
+        "` + _t("Dracula") + `",
+        "` + _t("undead") + `",
+        "` + _t("vampire") + `"
     ],
-    "name": "` + _lt("vampire") + `",
+    "name": "` + _t("vampire") + `",
     "shortcodes": [
         ":vampire:"
     ]
@@ -5058,11 +5058,11 @@ const emojisData2 = `{
     "codepoints": "🧛‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Dracula") + `",
-        "` + _lt("man vampire") + `",
-        "` + _lt("undead") + `"
+        "` + _t("Dracula") + `",
+        "` + _t("man vampire") + `",
+        "` + _t("undead") + `"
     ],
-    "name": "` + _lt("man vampire") + `",
+    "name": "` + _t("man vampire") + `",
     "shortcodes": [
         ":man_vampire:"
     ]
@@ -5072,10 +5072,10 @@ const emojisData2 = `{
     "codepoints": "🧛‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("undead") + `",
-        "` + _lt("woman vampire") + `"
+        "` + _t("undead") + `",
+        "` + _t("woman vampire") + `"
     ],
-    "name": "` + _lt("woman vampire") + `",
+    "name": "` + _t("woman vampire") + `",
     "shortcodes": [
         ":woman_vampire:"
     ]
@@ -5085,12 +5085,12 @@ const emojisData2 = `{
     "codepoints": "🧜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mermaid") + `",
-        "` + _lt("merman") + `",
-        "` + _lt("merperson") + `",
-        "` + _lt("merwoman") + `"
+        "` + _t("mermaid") + `",
+        "` + _t("merman") + `",
+        "` + _t("merperson") + `",
+        "` + _t("merwoman") + `"
     ],
-    "name": "` + _lt("merperson") + `",
+    "name": "` + _t("merperson") + `",
     "shortcodes": [
         ":merperson:"
     ]
@@ -5100,10 +5100,10 @@ const emojisData2 = `{
     "codepoints": "🧜‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("merman") + `",
-        "` + _lt("Triton") + `"
+        "` + _t("merman") + `",
+        "` + _t("Triton") + `"
     ],
-    "name": "` + _lt("merman") + `",
+    "name": "` + _t("merman") + `",
     "shortcodes": [
         ":merman:"
     ]
@@ -5113,10 +5113,10 @@ const emojisData2 = `{
     "codepoints": "🧜‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mermaid") + `",
-        "` + _lt("merwoman") + `"
+        "` + _t("mermaid") + `",
+        "` + _t("merwoman") + `"
     ],
-    "name": "` + _lt("mermaid") + `",
+    "name": "` + _t("mermaid") + `",
     "shortcodes": [
         ":mermaid:"
     ]
@@ -5126,10 +5126,10 @@ const emojisData2 = `{
     "codepoints": "🧝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("elf") + `",
-        "` + _lt("magical") + `"
+        "` + _t("elf") + `",
+        "` + _t("magical") + `"
     ],
-    "name": "` + _lt("elf") + `",
+    "name": "` + _t("elf") + `",
     "shortcodes": [
         ":elf:"
     ]
@@ -5139,10 +5139,10 @@ const emojisData2 = `{
     "codepoints": "🧝‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("magical") + `",
-        "` + _lt("man elf") + `"
+        "` + _t("magical") + `",
+        "` + _t("man elf") + `"
     ],
-    "name": "` + _lt("man elf") + `",
+    "name": "` + _t("man elf") + `",
     "shortcodes": [
         ":man_elf:"
     ]
@@ -5152,10 +5152,10 @@ const emojisData2 = `{
     "codepoints": "🧝‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("magical") + `",
-        "` + _lt("woman elf") + `"
+        "` + _t("magical") + `",
+        "` + _t("woman elf") + `"
     ],
-    "name": "` + _lt("woman elf") + `",
+    "name": "` + _t("woman elf") + `",
     "shortcodes": [
         ":woman_elf:"
     ]
@@ -5165,10 +5165,10 @@ const emojisData2 = `{
     "codepoints": "🧞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("djinn") + `",
-        "` + _lt("genie") + `"
+        "` + _t("djinn") + `",
+        "` + _t("genie") + `"
     ],
-    "name": "` + _lt("genie") + `",
+    "name": "` + _t("genie") + `",
     "shortcodes": [
         ":genie:"
     ]
@@ -5178,10 +5178,10 @@ const emojisData2 = `{
     "codepoints": "🧞‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("djinn") + `",
-        "` + _lt("man genie") + `"
+        "` + _t("djinn") + `",
+        "` + _t("man genie") + `"
     ],
-    "name": "` + _lt("man genie") + `",
+    "name": "` + _t("man genie") + `",
     "shortcodes": [
         ":man_genie:"
     ]
@@ -5191,10 +5191,10 @@ const emojisData2 = `{
     "codepoints": "🧞‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("djinn") + `",
-        "` + _lt("woman genie") + `"
+        "` + _t("djinn") + `",
+        "` + _t("woman genie") + `"
     ],
-    "name": "` + _lt("woman genie") + `",
+    "name": "` + _t("woman genie") + `",
     "shortcodes": [
         ":woman_genie:"
     ]
@@ -5204,11 +5204,11 @@ const emojisData2 = `{
     "codepoints": "🧟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("undead") + `",
-        "` + _lt("walking dead") + `",
-        "` + _lt("zombie") + `"
+        "` + _t("undead") + `",
+        "` + _t("walking dead") + `",
+        "` + _t("zombie") + `"
     ],
-    "name": "` + _lt("zombie") + `",
+    "name": "` + _t("zombie") + `",
     "shortcodes": [
         ":zombie:"
     ]
@@ -5218,11 +5218,11 @@ const emojisData2 = `{
     "codepoints": "🧟‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man zombie") + `",
-        "` + _lt("undead") + `",
-        "` + _lt("walking dead") + `"
+        "` + _t("man zombie") + `",
+        "` + _t("undead") + `",
+        "` + _t("walking dead") + `"
     ],
-    "name": "` + _lt("man zombie") + `",
+    "name": "` + _t("man zombie") + `",
     "shortcodes": [
         ":man_zombie:"
     ]
@@ -5232,11 +5232,11 @@ const emojisData2 = `{
     "codepoints": "🧟‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("undead") + `",
-        "` + _lt("walking dead") + `",
-        "` + _lt("woman zombie") + `"
+        "` + _t("undead") + `",
+        "` + _t("walking dead") + `",
+        "` + _t("woman zombie") + `"
     ],
-    "name": "` + _lt("woman zombie") + `",
+    "name": "` + _t("woman zombie") + `",
     "shortcodes": [
         ":woman_zombie:"
     ]
@@ -5246,12 +5246,12 @@ const emojisData2 = `{
     "codepoints": "💆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("massage") + `",
-        "` + _lt("person getting massage") + `",
-        "` + _lt("salon") + `"
+        "` + _t("face") + `",
+        "` + _t("massage") + `",
+        "` + _t("person getting massage") + `",
+        "` + _t("salon") + `"
     ],
-    "name": "` + _lt("person getting massage") + `",
+    "name": "` + _t("person getting massage") + `",
     "shortcodes": [
         ":person_getting_massage:"
     ]
@@ -5261,12 +5261,12 @@ const emojisData2 = `{
     "codepoints": "💆‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man getting massage") + `",
-        "` + _lt("massage") + `"
+        "` + _t("face") + `",
+        "` + _t("man") + `",
+        "` + _t("man getting massage") + `",
+        "` + _t("massage") + `"
     ],
-    "name": "` + _lt("man getting massage") + `",
+    "name": "` + _t("man getting massage") + `",
     "shortcodes": [
         ":man_getting_massage:"
     ]
@@ -5276,12 +5276,12 @@ const emojisData2 = `{
     "codepoints": "💆‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("massage") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman getting massage") + `"
+        "` + _t("face") + `",
+        "` + _t("massage") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman getting massage") + `"
     ],
-    "name": "` + _lt("woman getting massage") + `",
+    "name": "` + _t("woman getting massage") + `",
     "shortcodes": [
         ":woman_getting_massage:"
     ]
@@ -5291,14 +5291,14 @@ const emojisData2 = `{
     "codepoints": "💇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("barber") + `",
-        "` + _lt("beauty") + `",
-        "` + _lt("haircut") + `",
-        "` + _lt("parlor") + `",
-        "` + _lt("person getting haircut") + `",
-        "` + _lt("parlour") + `"
+        "` + _t("barber") + `",
+        "` + _t("beauty") + `",
+        "` + _t("haircut") + `",
+        "` + _t("parlor") + `",
+        "` + _t("person getting haircut") + `",
+        "` + _t("parlour") + `"
     ],
-    "name": "` + _lt("person getting haircut") + `",
+    "name": "` + _t("person getting haircut") + `",
     "shortcodes": [
         ":person_getting_haircut:"
     ]
@@ -5308,12 +5308,12 @@ const emojisData2 = `{
     "codepoints": "💇‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("haircut") + `",
-        "` + _lt("hairdresser") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man getting haircut") + `"
+        "` + _t("haircut") + `",
+        "` + _t("hairdresser") + `",
+        "` + _t("man") + `",
+        "` + _t("man getting haircut") + `"
     ],
-    "name": "` + _lt("man getting haircut") + `",
+    "name": "` + _t("man getting haircut") + `",
     "shortcodes": [
         ":man_getting_haircut:"
     ]
@@ -5323,12 +5323,12 @@ const emojisData2 = `{
     "codepoints": "💇‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("haircut") + `",
-        "` + _lt("hairdresser") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman getting haircut") + `"
+        "` + _t("haircut") + `",
+        "` + _t("hairdresser") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman getting haircut") + `"
     ],
-    "name": "` + _lt("woman getting haircut") + `",
+    "name": "` + _t("woman getting haircut") + `",
     "shortcodes": [
         ":woman_getting_haircut:"
     ]
@@ -5338,12 +5338,12 @@ const emojisData2 = `{
     "codepoints": "🚶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hike") + `",
-        "` + _lt("person walking") + `",
-        "` + _lt("walk") + `",
-        "` + _lt("walking") + `"
+        "` + _t("hike") + `",
+        "` + _t("person walking") + `",
+        "` + _t("walk") + `",
+        "` + _t("walking") + `"
     ],
-    "name": "` + _lt("person walking") + `",
+    "name": "` + _t("person walking") + `",
     "shortcodes": [
         ":person_walking:"
     ]
@@ -5353,12 +5353,12 @@ const emojisData2 = `{
     "codepoints": "🚶‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hike") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man walking") + `",
-        "` + _lt("walk") + `"
+        "` + _t("hike") + `",
+        "` + _t("man") + `",
+        "` + _t("man walking") + `",
+        "` + _t("walk") + `"
     ],
-    "name": "` + _lt("man walking") + `",
+    "name": "` + _t("man walking") + `",
     "shortcodes": [
         ":man_walking:"
     ]
@@ -5368,12 +5368,12 @@ const emojisData2 = `{
     "codepoints": "🚶‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hike") + `",
-        "` + _lt("walk") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman walking") + `"
+        "` + _t("hike") + `",
+        "` + _t("walk") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman walking") + `"
     ],
-    "name": "` + _lt("woman walking") + `",
+    "name": "` + _t("woman walking") + `",
     "shortcodes": [
         ":woman_walking:"
     ]
@@ -5383,11 +5383,11 @@ const emojisData2 = `{
     "codepoints": "🧍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("person standing") + `",
-        "` + _lt("stand") + `",
-        "` + _lt("standing") + `"
+        "` + _t("person standing") + `",
+        "` + _t("stand") + `",
+        "` + _t("standing") + `"
     ],
-    "name": "` + _lt("person standing") + `",
+    "name": "` + _t("person standing") + `",
     "shortcodes": [
         ":person_standing:"
     ]
@@ -5397,10 +5397,10 @@ const emojisData2 = `{
     "codepoints": "🧍‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man") + `",
-        "` + _lt("standing") + `"
+        "` + _t("man") + `",
+        "` + _t("standing") + `"
     ],
-    "name": "` + _lt("man standing") + `",
+    "name": "` + _t("man standing") + `",
     "shortcodes": [
         ":man_standing:"
     ]
@@ -5410,10 +5410,10 @@ const emojisData2 = `{
     "codepoints": "🧍‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("standing") + `",
-        "` + _lt("woman") + `"
+        "` + _t("standing") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman standing") + `",
+    "name": "` + _t("woman standing") + `",
     "shortcodes": [
         ":woman_standing:"
     ]
@@ -5423,11 +5423,11 @@ const emojisData2 = `{
     "codepoints": "🧎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("kneel") + `",
-        "` + _lt("kneeling") + `",
-        "` + _lt("person kneeling") + `"
+        "` + _t("kneel") + `",
+        "` + _t("kneeling") + `",
+        "` + _t("person kneeling") + `"
     ],
-    "name": "` + _lt("person kneeling") + `",
+    "name": "` + _t("person kneeling") + `",
     "shortcodes": [
         ":person_kneeling:"
     ]
@@ -5437,10 +5437,10 @@ const emojisData2 = `{
     "codepoints": "🧎‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("kneeling") + `",
-        "` + _lt("man") + `"
+        "` + _t("kneeling") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("man kneeling") + `",
+    "name": "` + _t("man kneeling") + `",
     "shortcodes": [
         ":man_kneeling:"
     ]
@@ -5450,10 +5450,10 @@ const emojisData2 = `{
     "codepoints": "🧎‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("kneeling") + `",
-        "` + _lt("woman") + `"
+        "` + _t("kneeling") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman kneeling") + `",
+    "name": "` + _t("woman kneeling") + `",
     "shortcodes": [
         ":woman_kneeling:"
     ]
@@ -5463,13 +5463,13 @@ const emojisData2 = `{
     "codepoints": "👨‍🦯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("blind") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man with white cane") + `",
-        "` + _lt("man with guide cane") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("blind") + `",
+        "` + _t("man") + `",
+        "` + _t("man with white cane") + `",
+        "` + _t("man with guide cane") + `"
     ],
-    "name": "` + _lt("man with white cane") + `",
+    "name": "` + _t("man with white cane") + `",
     "shortcodes": [
         ":man_with_white_cane:"
     ]
@@ -5479,13 +5479,13 @@ const emojisData2 = `{
     "codepoints": "👩‍🦯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("blind") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman with white cane") + `",
-        "` + _lt("woman with guide cane") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("blind") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman with white cane") + `",
+        "` + _t("woman with guide cane") + `"
     ],
-    "name": "` + _lt("woman with white cane") + `",
+    "name": "` + _t("woman with white cane") + `",
     "shortcodes": [
         ":woman_with_white_cane:"
     ]
@@ -5495,14 +5495,14 @@ const emojisData2 = `{
     "codepoints": "👨‍🦼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man in motorised wheelchair") + `",
-        "` + _lt("accessibility") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man in motorized wheelchair") + `",
-        "` + _lt("wheelchair") + `",
-        "` + _lt("man in powered wheelchair") + `"
+        "` + _t("man in motorised wheelchair") + `",
+        "` + _t("accessibility") + `",
+        "` + _t("man") + `",
+        "` + _t("man in motorized wheelchair") + `",
+        "` + _t("wheelchair") + `",
+        "` + _t("man in powered wheelchair") + `"
     ],
-    "name": "` + _lt("man in motorized wheelchair") + `",
+    "name": "` + _t("man in motorized wheelchair") + `",
     "shortcodes": [
         ":man_in_motorized_wheelchair:"
     ]
@@ -5512,14 +5512,14 @@ const emojisData2 = `{
     "codepoints": "👩‍🦼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("woman in motorised wheelchair") + `",
-        "` + _lt("accessibility") + `",
-        "` + _lt("wheelchair") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman in motorized wheelchair") + `",
-        "` + _lt("woman in powered wheelchair") + `"
+        "` + _t("woman in motorised wheelchair") + `",
+        "` + _t("accessibility") + `",
+        "` + _t("wheelchair") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman in motorized wheelchair") + `",
+        "` + _t("woman in powered wheelchair") + `"
     ],
-    "name": "` + _lt("woman in motorized wheelchair") + `",
+    "name": "` + _t("woman in motorized wheelchair") + `",
     "shortcodes": [
         ":woman_in_motorized_wheelchair:"
     ]
@@ -5529,12 +5529,12 @@ const emojisData2 = `{
     "codepoints": "👨‍🦽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man in manual wheelchair") + `",
-        "` + _lt("wheelchair") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("man") + `",
+        "` + _t("man in manual wheelchair") + `",
+        "` + _t("wheelchair") + `"
     ],
-    "name": "` + _lt("man in manual wheelchair") + `",
+    "name": "` + _t("man in manual wheelchair") + `",
     "shortcodes": [
         ":man_in_manual_wheelchair:"
     ]
@@ -5544,12 +5544,12 @@ const emojisData2 = `{
     "codepoints": "👩‍🦽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("wheelchair") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman in manual wheelchair") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("wheelchair") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman in manual wheelchair") + `"
     ],
-    "name": "` + _lt("woman in manual wheelchair") + `",
+    "name": "` + _t("woman in manual wheelchair") + `",
     "shortcodes": [
         ":woman_in_manual_wheelchair:"
     ]
@@ -5561,11 +5561,11 @@ const emojisData2 = `{
         ":run"
     ],
     "keywords": [
-        "` + _lt("marathon") + `",
-        "` + _lt("person running") + `",
-        "` + _lt("running") + `"
+        "` + _t("marathon") + `",
+        "` + _t("person running") + `",
+        "` + _t("running") + `"
     ],
-    "name": "` + _lt("person running") + `",
+    "name": "` + _t("person running") + `",
     "shortcodes": [
         ":person_running:"
     ]
@@ -5575,12 +5575,12 @@ const emojisData2 = `{
     "codepoints": "🏃‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man") + `",
-        "` + _lt("marathon") + `",
-        "` + _lt("racing") + `",
-        "` + _lt("running") + `"
+        "` + _t("man") + `",
+        "` + _t("marathon") + `",
+        "` + _t("racing") + `",
+        "` + _t("running") + `"
     ],
-    "name": "` + _lt("man running") + `",
+    "name": "` + _t("man running") + `",
     "shortcodes": [
         ":man_running:"
     ]
@@ -5590,12 +5590,12 @@ const emojisData2 = `{
     "codepoints": "🏃‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("marathon") + `",
-        "` + _lt("racing") + `",
-        "` + _lt("running") + `",
-        "` + _lt("woman") + `"
+        "` + _t("marathon") + `",
+        "` + _t("racing") + `",
+        "` + _t("running") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman running") + `",
+    "name": "` + _t("woman running") + `",
     "shortcodes": [
         ":woman_running:"
     ]
@@ -5605,11 +5605,11 @@ const emojisData2 = `{
     "codepoints": "💃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dance") + `",
-        "` + _lt("dancing") + `",
-        "` + _lt("woman") + `"
+        "` + _t("dance") + `",
+        "` + _t("dancing") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman dancing") + `",
+    "name": "` + _t("woman dancing") + `",
     "shortcodes": [
         ":woman_dancing:"
     ]
@@ -5619,11 +5619,11 @@ const emojisData2 = `{
     "codepoints": "🕺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dance") + `",
-        "` + _lt("dancing") + `",
-        "` + _lt("man") + `"
+        "` + _t("dance") + `",
+        "` + _t("dancing") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("man dancing") + `",
+    "name": "` + _t("man dancing") + `",
     "shortcodes": [
         ":man_dancing:"
     ]
@@ -5633,12 +5633,12 @@ const emojisData2 = `{
     "codepoints": "🕴️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("business") + `",
-        "` + _lt("person") + `",
-        "` + _lt("person in suit levitating") + `",
-        "` + _lt("suit") + `"
+        "` + _t("business") + `",
+        "` + _t("person") + `",
+        "` + _t("person in suit levitating") + `",
+        "` + _t("suit") + `"
     ],
-    "name": "` + _lt("person in suit levitating") + `",
+    "name": "` + _t("person in suit levitating") + `",
     "shortcodes": [
         ":person_in_suit_levitating:"
     ]
@@ -5648,12 +5648,12 @@ const emojisData2 = `{
     "codepoints": "👯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bunny ear") + `",
-        "` + _lt("dancer") + `",
-        "` + _lt("partying") + `",
-        "` + _lt("people with bunny ears") + `"
+        "` + _t("bunny ear") + `",
+        "` + _t("dancer") + `",
+        "` + _t("partying") + `",
+        "` + _t("people with bunny ears") + `"
     ],
-    "name": "` + _lt("people with bunny ears") + `",
+    "name": "` + _t("people with bunny ears") + `",
     "shortcodes": [
         ":people_with_bunny_ears:"
     ]
@@ -5663,13 +5663,13 @@ const emojisData2 = `{
     "codepoints": "👯‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bunny ear") + `",
-        "` + _lt("dancer") + `",
-        "` + _lt("men") + `",
-        "` + _lt("men with bunny ears") + `",
-        "` + _lt("partying") + `"
+        "` + _t("bunny ear") + `",
+        "` + _t("dancer") + `",
+        "` + _t("men") + `",
+        "` + _t("men with bunny ears") + `",
+        "` + _t("partying") + `"
     ],
-    "name": "` + _lt("men with bunny ears") + `",
+    "name": "` + _t("men with bunny ears") + `",
     "shortcodes": [
         ":men_with_bunny_ears:"
     ]
@@ -5679,13 +5679,13 @@ const emojisData2 = `{
     "codepoints": "👯‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bunny ear") + `",
-        "` + _lt("dancer") + `",
-        "` + _lt("partying") + `",
-        "` + _lt("women") + `",
-        "` + _lt("women with bunny ears") + `"
+        "` + _t("bunny ear") + `",
+        "` + _t("dancer") + `",
+        "` + _t("partying") + `",
+        "` + _t("women") + `",
+        "` + _t("women with bunny ears") + `"
     ],
-    "name": "` + _lt("women with bunny ears") + `",
+    "name": "` + _t("women with bunny ears") + `",
     "shortcodes": [
         ":women_with_bunny_ears:"
     ]
@@ -5695,11 +5695,11 @@ const emojisData2 = `{
     "codepoints": "🧖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("person in steamy room") + `",
-        "` + _lt("sauna") + `",
-        "` + _lt("steam room") + `"
+        "` + _t("person in steamy room") + `",
+        "` + _t("sauna") + `",
+        "` + _t("steam room") + `"
     ],
-    "name": "` + _lt("person in steamy room") + `",
+    "name": "` + _t("person in steamy room") + `",
     "shortcodes": [
         ":person_in_steamy_room:"
     ]
@@ -5709,12 +5709,12 @@ const emojisData2 = `{
     "codepoints": "🧖‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man in steam room") + `",
-        "` + _lt("man in steamy room") + `",
-        "` + _lt("sauna") + `",
-        "` + _lt("steam room") + `"
+        "` + _t("man in steam room") + `",
+        "` + _t("man in steamy room") + `",
+        "` + _t("sauna") + `",
+        "` + _t("steam room") + `"
     ],
-    "name": "` + _lt("man in steamy room") + `",
+    "name": "` + _t("man in steamy room") + `",
     "shortcodes": [
         ":man_in_steamy_room:"
     ]
@@ -5724,12 +5724,12 @@ const emojisData2 = `{
     "codepoints": "🧖‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("sauna") + `",
-        "` + _lt("steam room") + `",
-        "` + _lt("woman in steam room") + `",
-        "` + _lt("woman in steamy room") + `"
+        "` + _t("sauna") + `",
+        "` + _t("steam room") + `",
+        "` + _t("woman in steam room") + `",
+        "` + _t("woman in steamy room") + `"
     ],
-    "name": "` + _lt("woman in steamy room") + `",
+    "name": "` + _t("woman in steamy room") + `",
     "shortcodes": [
         ":woman_in_steamy_room:"
     ]
@@ -5739,10 +5739,10 @@ const emojisData2 = `{
     "codepoints": "🧗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("climber") + `",
-        "` + _lt("person climbing") + `"
+        "` + _t("climber") + `",
+        "` + _t("person climbing") + `"
     ],
-    "name": "` + _lt("person climbing") + `",
+    "name": "` + _t("person climbing") + `",
     "shortcodes": [
         ":person_climbing:"
     ]
@@ -5752,10 +5752,10 @@ const emojisData2 = `{
     "codepoints": "🧗‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("climber") + `",
-        "` + _lt("man climbing") + `"
+        "` + _t("climber") + `",
+        "` + _t("man climbing") + `"
     ],
-    "name": "` + _lt("man climbing") + `",
+    "name": "` + _t("man climbing") + `",
     "shortcodes": [
         ":man_climbing:"
     ]
@@ -5765,10 +5765,10 @@ const emojisData2 = `{
     "codepoints": "🧗‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("climber") + `",
-        "` + _lt("woman climbing") + `"
+        "` + _t("climber") + `",
+        "` + _t("woman climbing") + `"
     ],
-    "name": "` + _lt("woman climbing") + `",
+    "name": "` + _t("woman climbing") + `",
     "shortcodes": [
         ":woman_climbing:"
     ]
@@ -5778,12 +5778,12 @@ const emojisData2 = `{
     "codepoints": "🤺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fencer") + `",
-        "` + _lt("fencing") + `",
-        "` + _lt("person fencing") + `",
-        "` + _lt("sword") + `"
+        "` + _t("fencer") + `",
+        "` + _t("fencing") + `",
+        "` + _t("person fencing") + `",
+        "` + _t("sword") + `"
     ],
-    "name": "` + _lt("person fencing") + `",
+    "name": "` + _t("person fencing") + `",
     "shortcodes": [
         ":person_fencing:"
     ]
@@ -5793,12 +5793,12 @@ const emojisData2 = `{
     "codepoints": "🏇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("horse") + `",
-        "` + _lt("jockey") + `",
-        "` + _lt("racehorse") + `",
-        "` + _lt("racing") + `"
+        "` + _t("horse") + `",
+        "` + _t("jockey") + `",
+        "` + _t("racehorse") + `",
+        "` + _t("racing") + `"
     ],
-    "name": "` + _lt("horse racing") + `",
+    "name": "` + _t("horse racing") + `",
     "shortcodes": [
         ":horse_racing:"
     ]
@@ -5808,11 +5808,11 @@ const emojisData2 = `{
     "codepoints": "⛷️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ski") + `",
-        "` + _lt("skier") + `",
-        "` + _lt("snow") + `"
+        "` + _t("ski") + `",
+        "` + _t("skier") + `",
+        "` + _t("snow") + `"
     ],
-    "name": "` + _lt("skier") + `",
+    "name": "` + _t("skier") + `",
     "shortcodes": [
         ":skier:"
     ]
@@ -5822,12 +5822,12 @@ const emojisData2 = `{
     "codepoints": "🏂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ski") + `",
-        "` + _lt("snow") + `",
-        "` + _lt("snowboard") + `",
-        "` + _lt("snowboarder") + `"
+        "` + _t("ski") + `",
+        "` + _t("snow") + `",
+        "` + _t("snowboard") + `",
+        "` + _t("snowboarder") + `"
     ],
-    "name": "` + _lt("snowboarder") + `",
+    "name": "` + _t("snowboarder") + `",
     "shortcodes": [
         ":snowboarder:"
     ]
@@ -5837,12 +5837,12 @@ const emojisData2 = `{
     "codepoints": "🏌️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("golf") + `",
-        "` + _lt("golfer") + `",
-        "` + _lt("person golfing") + `"
+        "` + _t("ball") + `",
+        "` + _t("golf") + `",
+        "` + _t("golfer") + `",
+        "` + _t("person golfing") + `"
     ],
-    "name": "` + _lt("person golfing") + `",
+    "name": "` + _t("person golfing") + `",
     "shortcodes": [
         ":person_golfing:"
     ]
@@ -5852,7 +5852,7 @@ const emojisData2 = `{
     "codepoints": "🏌️‍♂️",
     "emoticons": [],
     "keywords": [],
-    "name": "` + _lt("man golfing") + `",
+    "name": "` + _t("man golfing") + `",
     "shortcodes": [
         ":man_golfing:"
     ]
@@ -5862,7 +5862,7 @@ const emojisData2 = `{
     "codepoints": "🏌️‍♀️",
     "emoticons": [],
     "keywords": [],
-    "name": "` + _lt("woman golfing") + `",
+    "name": "` + _t("woman golfing") + `",
     "shortcodes": [
         ":woman_golfing:"
     ]
@@ -5872,11 +5872,11 @@ const emojisData2 = `{
     "codepoints": "🏄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("person surfing") + `",
-        "` + _lt("surfer") + `",
-        "` + _lt("surfing") + `"
+        "` + _t("person surfing") + `",
+        "` + _t("surfer") + `",
+        "` + _t("surfing") + `"
     ],
-    "name": "` + _lt("person surfing") + `",
+    "name": "` + _t("person surfing") + `",
     "shortcodes": [
         ":person_surfing:"
     ]
@@ -5886,11 +5886,11 @@ const emojisData2 = `{
     "codepoints": "🏄‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man") + `",
-        "` + _lt("surfer") + `",
-        "` + _lt("surfing") + `"
+        "` + _t("man") + `",
+        "` + _t("surfer") + `",
+        "` + _t("surfing") + `"
     ],
-    "name": "` + _lt("man surfing") + `",
+    "name": "` + _t("man surfing") + `",
     "shortcodes": [
         ":man_surfing:"
     ]
@@ -5900,11 +5900,11 @@ const emojisData2 = `{
     "codepoints": "🏄‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("surfer") + `",
-        "` + _lt("surfing") + `",
-        "` + _lt("woman") + `"
+        "` + _t("surfer") + `",
+        "` + _t("surfing") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman surfing") + `",
+    "name": "` + _t("woman surfing") + `",
     "shortcodes": [
         ":woman_surfing:"
     ]
@@ -5914,12 +5914,12 @@ const emojisData2 = `{
     "codepoints": "🚣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boat") + `",
-        "` + _lt("person") + `",
-        "` + _lt("person rowing boat") + `",
-        "` + _lt("rowboat") + `"
+        "` + _t("boat") + `",
+        "` + _t("person") + `",
+        "` + _t("person rowing boat") + `",
+        "` + _t("rowboat") + `"
     ],
-    "name": "` + _lt("person rowing boat") + `",
+    "name": "` + _t("person rowing boat") + `",
     "shortcodes": [
         ":person_rowing_boat:"
     ]
@@ -5929,12 +5929,12 @@ const emojisData2 = `{
     "codepoints": "🚣‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boat") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man rowing boat") + `",
-        "` + _lt("rowboat") + `"
+        "` + _t("boat") + `",
+        "` + _t("man") + `",
+        "` + _t("man rowing boat") + `",
+        "` + _t("rowboat") + `"
     ],
-    "name": "` + _lt("man rowing boat") + `",
+    "name": "` + _t("man rowing boat") + `",
     "shortcodes": [
         ":man_rowing_boat:"
     ]
@@ -5944,12 +5944,12 @@ const emojisData2 = `{
     "codepoints": "🚣‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boat") + `",
-        "` + _lt("rowboat") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman rowing boat") + `"
+        "` + _t("boat") + `",
+        "` + _t("rowboat") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman rowing boat") + `"
     ],
-    "name": "` + _lt("woman rowing boat") + `",
+    "name": "` + _t("woman rowing boat") + `",
     "shortcodes": [
         ":woman_rowing_boat:"
     ]
@@ -5959,11 +5959,11 @@ const emojisData2 = `{
     "codepoints": "🏊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("person swimming") + `",
-        "` + _lt("swim") + `",
-        "` + _lt("swimmer") + `"
+        "` + _t("person swimming") + `",
+        "` + _t("swim") + `",
+        "` + _t("swimmer") + `"
     ],
-    "name": "` + _lt("person swimming") + `",
+    "name": "` + _t("person swimming") + `",
     "shortcodes": [
         ":person_swimming:"
     ]
@@ -5973,12 +5973,12 @@ const emojisData2 = `{
     "codepoints": "🏊‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man") + `",
-        "` + _lt("man swimming") + `",
-        "` + _lt("swim") + `",
-        "` + _lt("swimmer") + `"
+        "` + _t("man") + `",
+        "` + _t("man swimming") + `",
+        "` + _t("swim") + `",
+        "` + _t("swimmer") + `"
     ],
-    "name": "` + _lt("man swimming") + `",
+    "name": "` + _t("man swimming") + `",
     "shortcodes": [
         ":man_swimming:"
     ]
@@ -5988,12 +5988,12 @@ const emojisData2 = `{
     "codepoints": "🏊‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("swim") + `",
-        "` + _lt("swimmer") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman swimming") + `"
+        "` + _t("swim") + `",
+        "` + _t("swimmer") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman swimming") + `"
     ],
-    "name": "` + _lt("woman swimming") + `",
+    "name": "` + _t("woman swimming") + `",
     "shortcodes": [
         ":woman_swimming:"
     ]
@@ -6003,10 +6003,10 @@ const emojisData2 = `{
     "codepoints": "⛹️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("person bouncing ball") + `"
+        "` + _t("ball") + `",
+        "` + _t("person bouncing ball") + `"
     ],
-    "name": "` + _lt("person bouncing ball") + `",
+    "name": "` + _t("person bouncing ball") + `",
     "shortcodes": [
         ":person_bouncing_ball:"
     ]
@@ -6016,7 +6016,7 @@ const emojisData2 = `{
     "codepoints": "⛹️‍♂️",
     "emoticons": [],
     "keywords": [],
-    "name": "` + _lt("man bouncing ball") + `",
+    "name": "` + _t("man bouncing ball") + `",
     "shortcodes": [
         ":man_bouncing_ball:"
     ]
@@ -6026,7 +6026,7 @@ const emojisData2 = `{
     "codepoints": "⛹️‍♀️",
     "emoticons": [],
     "keywords": [],
-    "name": "` + _lt("woman bouncing ball") + `",
+    "name": "` + _t("woman bouncing ball") + `",
     "shortcodes": [
         ":woman_bouncing_ball:"
     ]
@@ -6036,12 +6036,12 @@ const emojisData2 = `{
     "codepoints": "🏋️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("lifter") + `",
-        "` + _lt("person lifting weights") + `",
-        "` + _lt("weight") + `",
-        "` + _lt("weightlifter") + `"
+        "` + _t("lifter") + `",
+        "` + _t("person lifting weights") + `",
+        "` + _t("weight") + `",
+        "` + _t("weightlifter") + `"
     ],
-    "name": "` + _lt("person lifting weights") + `",
+    "name": "` + _t("person lifting weights") + `",
     "shortcodes": [
         ":person_lifting_weights:"
     ]
@@ -6051,7 +6051,7 @@ const emojisData2 = `{
     "codepoints": "🏋️‍♂️",
     "emoticons": [],
     "keywords": [],
-    "name": "` + _lt("man lifting weights") + `",
+    "name": "` + _t("man lifting weights") + `",
     "shortcodes": [
         ":man_lifting_weights:"
     ]
@@ -6061,7 +6061,7 @@ const emojisData2 = `{
     "codepoints": "🏋️‍♀️",
     "emoticons": [],
     "keywords": [],
-    "name": "` + _lt("woman lifting weights") + `",
+    "name": "` + _t("woman lifting weights") + `",
     "shortcodes": [
         ":woman_lifting_weights:"
     ]
@@ -6071,13 +6071,13 @@ const emojisData2 = `{
     "codepoints": "🚴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bicycle") + `",
-        "` + _lt("biking") + `",
-        "` + _lt("cyclist") + `",
-        "` + _lt("person biking") + `",
-        "` + _lt("person riding a bike") + `"
+        "` + _t("bicycle") + `",
+        "` + _t("biking") + `",
+        "` + _t("cyclist") + `",
+        "` + _t("person biking") + `",
+        "` + _t("person riding a bike") + `"
     ],
-    "name": "` + _lt("person biking") + `",
+    "name": "` + _t("person biking") + `",
     "shortcodes": [
         ":person_biking:"
     ]
@@ -6087,13 +6087,13 @@ const emojisData2 = `{
     "codepoints": "🚴‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bicycle") + `",
-        "` + _lt("biking") + `",
-        "` + _lt("cyclist") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man riding a bike") + `"
+        "` + _t("bicycle") + `",
+        "` + _t("biking") + `",
+        "` + _t("cyclist") + `",
+        "` + _t("man") + `",
+        "` + _t("man riding a bike") + `"
     ],
-    "name": "` + _lt("man biking") + `",
+    "name": "` + _t("man biking") + `",
     "shortcodes": [
         ":man_biking:"
     ]
@@ -6103,13 +6103,13 @@ const emojisData2 = `{
     "codepoints": "🚴‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bicycle") + `",
-        "` + _lt("biking") + `",
-        "` + _lt("cyclist") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman riding a bike") + `"
+        "` + _t("bicycle") + `",
+        "` + _t("biking") + `",
+        "` + _t("cyclist") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman riding a bike") + `"
     ],
-    "name": "` + _lt("woman biking") + `",
+    "name": "` + _t("woman biking") + `",
     "shortcodes": [
         ":woman_biking:"
     ]
@@ -6119,14 +6119,14 @@ const emojisData2 = `{
     "codepoints": "🚵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bicycle") + `",
-        "` + _lt("bicyclist") + `",
-        "` + _lt("bike") + `",
-        "` + _lt("cyclist") + `",
-        "` + _lt("mountain") + `",
-        "` + _lt("person mountain biking") + `"
+        "` + _t("bicycle") + `",
+        "` + _t("bicyclist") + `",
+        "` + _t("bike") + `",
+        "` + _t("cyclist") + `",
+        "` + _t("mountain") + `",
+        "` + _t("person mountain biking") + `"
     ],
-    "name": "` + _lt("person mountain biking") + `",
+    "name": "` + _t("person mountain biking") + `",
     "shortcodes": [
         ":person_mountain_biking:"
     ]
@@ -6136,14 +6136,14 @@ const emojisData2 = `{
     "codepoints": "🚵‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bicycle") + `",
-        "` + _lt("bike") + `",
-        "` + _lt("cyclist") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man mountain biking") + `",
-        "` + _lt("mountain") + `"
+        "` + _t("bicycle") + `",
+        "` + _t("bike") + `",
+        "` + _t("cyclist") + `",
+        "` + _t("man") + `",
+        "` + _t("man mountain biking") + `",
+        "` + _t("mountain") + `"
     ],
-    "name": "` + _lt("man mountain biking") + `",
+    "name": "` + _t("man mountain biking") + `",
     "shortcodes": [
         ":man_mountain_biking:"
     ]
@@ -6153,14 +6153,14 @@ const emojisData2 = `{
     "codepoints": "🚵‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bicycle") + `",
-        "` + _lt("bike") + `",
-        "` + _lt("biking") + `",
-        "` + _lt("cyclist") + `",
-        "` + _lt("mountain") + `",
-        "` + _lt("woman") + `"
+        "` + _t("bicycle") + `",
+        "` + _t("bike") + `",
+        "` + _t("biking") + `",
+        "` + _t("cyclist") + `",
+        "` + _t("mountain") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("woman mountain biking") + `",
+    "name": "` + _t("woman mountain biking") + `",
     "shortcodes": [
         ":woman_mountain_biking:"
     ]
@@ -6170,11 +6170,11 @@ const emojisData2 = `{
     "codepoints": "🤸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cartwheel") + `",
-        "` + _lt("gymnastics") + `",
-        "` + _lt("person cartwheeling") + `"
+        "` + _t("cartwheel") + `",
+        "` + _t("gymnastics") + `",
+        "` + _t("person cartwheeling") + `"
     ],
-    "name": "` + _lt("person cartwheeling") + `",
+    "name": "` + _t("person cartwheeling") + `",
     "shortcodes": [
         ":person_cartwheeling:"
     ]
@@ -6184,12 +6184,12 @@ const emojisData2 = `{
     "codepoints": "🤸‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cartwheel") + `",
-        "` + _lt("gymnastics") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man cartwheeling") + `"
+        "` + _t("cartwheel") + `",
+        "` + _t("gymnastics") + `",
+        "` + _t("man") + `",
+        "` + _t("man cartwheeling") + `"
     ],
-    "name": "` + _lt("man cartwheeling") + `",
+    "name": "` + _t("man cartwheeling") + `",
     "shortcodes": [
         ":man_cartwheeling:"
     ]
@@ -6199,12 +6199,12 @@ const emojisData2 = `{
     "codepoints": "🤸‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cartwheel") + `",
-        "` + _lt("gymnastics") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman cartwheeling") + `"
+        "` + _t("cartwheel") + `",
+        "` + _t("gymnastics") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman cartwheeling") + `"
     ],
-    "name": "` + _lt("woman cartwheeling") + `",
+    "name": "` + _t("woman cartwheeling") + `",
     "shortcodes": [
         ":woman_cartwheeling:"
     ]
@@ -6214,11 +6214,11 @@ const emojisData2 = `{
     "codepoints": "🤼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("people wrestling") + `",
-        "` + _lt("wrestle") + `",
-        "` + _lt("wrestler") + `"
+        "` + _t("people wrestling") + `",
+        "` + _t("wrestle") + `",
+        "` + _t("wrestler") + `"
     ],
-    "name": "` + _lt("people wrestling") + `",
+    "name": "` + _t("people wrestling") + `",
     "shortcodes": [
         ":people_wrestling:"
     ]
@@ -6228,11 +6228,11 @@ const emojisData2 = `{
     "codepoints": "🤼‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("men") + `",
-        "` + _lt("men wrestling") + `",
-        "` + _lt("wrestle") + `"
+        "` + _t("men") + `",
+        "` + _t("men wrestling") + `",
+        "` + _t("wrestle") + `"
     ],
-    "name": "` + _lt("men wrestling") + `",
+    "name": "` + _t("men wrestling") + `",
     "shortcodes": [
         ":men_wrestling:"
     ]
@@ -6242,11 +6242,11 @@ const emojisData2 = `{
     "codepoints": "🤼‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("women") + `",
-        "` + _lt("women wrestling") + `",
-        "` + _lt("wrestle") + `"
+        "` + _t("women") + `",
+        "` + _t("women wrestling") + `",
+        "` + _t("wrestle") + `"
     ],
-    "name": "` + _lt("women wrestling") + `",
+    "name": "` + _t("women wrestling") + `",
     "shortcodes": [
         ":women_wrestling:"
     ]
@@ -6256,11 +6256,11 @@ const emojisData2 = `{
     "codepoints": "🤽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("person playing water polo") + `",
-        "` + _lt("polo") + `",
-        "` + _lt("water") + `"
+        "` + _t("person playing water polo") + `",
+        "` + _t("polo") + `",
+        "` + _t("water") + `"
     ],
-    "name": "` + _lt("person playing water polo") + `",
+    "name": "` + _t("person playing water polo") + `",
     "shortcodes": [
         ":person_playing_water_polo:"
     ]
@@ -6270,11 +6270,11 @@ const emojisData2 = `{
     "codepoints": "🤽‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man") + `",
-        "` + _lt("man playing water polo") + `",
-        "` + _lt("water polo") + `"
+        "` + _t("man") + `",
+        "` + _t("man playing water polo") + `",
+        "` + _t("water polo") + `"
     ],
-    "name": "` + _lt("man playing water polo") + `",
+    "name": "` + _t("man playing water polo") + `",
     "shortcodes": [
         ":man_playing_water_polo:"
     ]
@@ -6284,11 +6284,11 @@ const emojisData2 = `{
     "codepoints": "🤽‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("water polo") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman playing water polo") + `"
+        "` + _t("water polo") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman playing water polo") + `"
     ],
-    "name": "` + _lt("woman playing water polo") + `",
+    "name": "` + _t("woman playing water polo") + `",
     "shortcodes": [
         ":woman_playing_water_polo:"
     ]
@@ -6298,11 +6298,11 @@ const emojisData2 = `{
     "codepoints": "🤾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("handball") + `",
-        "` + _lt("person playing handball") + `"
+        "` + _t("ball") + `",
+        "` + _t("handball") + `",
+        "` + _t("person playing handball") + `"
     ],
-    "name": "` + _lt("person playing handball") + `",
+    "name": "` + _t("person playing handball") + `",
     "shortcodes": [
         ":person_playing_handball:"
     ]
@@ -6312,11 +6312,11 @@ const emojisData2 = `{
     "codepoints": "🤾‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("handball") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man playing handball") + `"
+        "` + _t("handball") + `",
+        "` + _t("man") + `",
+        "` + _t("man playing handball") + `"
     ],
-    "name": "` + _lt("man playing handball") + `",
+    "name": "` + _t("man playing handball") + `",
     "shortcodes": [
         ":man_playing_handball:"
     ]
@@ -6326,11 +6326,11 @@ const emojisData2 = `{
     "codepoints": "🤾‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("handball") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman playing handball") + `"
+        "` + _t("handball") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman playing handball") + `"
     ],
-    "name": "` + _lt("woman playing handball") + `",
+    "name": "` + _t("woman playing handball") + `",
     "shortcodes": [
         ":woman_playing_handball:"
     ]
@@ -6340,14 +6340,14 @@ const emojisData2 = `{
     "codepoints": "🤹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("balance") + `",
-        "` + _lt("juggle") + `",
-        "` + _lt("multi-task") + `",
-        "` + _lt("person juggling") + `",
-        "` + _lt("skill") + `",
-        "` + _lt("multitask") + `"
+        "` + _t("balance") + `",
+        "` + _t("juggle") + `",
+        "` + _t("multi-task") + `",
+        "` + _t("person juggling") + `",
+        "` + _t("skill") + `",
+        "` + _t("multitask") + `"
     ],
-    "name": "` + _lt("person juggling") + `",
+    "name": "` + _t("person juggling") + `",
     "shortcodes": [
         ":person_juggling:"
     ]
@@ -6357,12 +6357,12 @@ const emojisData2 = `{
     "codepoints": "🤹‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("juggling") + `",
-        "` + _lt("man") + `",
-        "` + _lt("multi-task") + `",
-        "` + _lt("multitask") + `"
+        "` + _t("juggling") + `",
+        "` + _t("man") + `",
+        "` + _t("multi-task") + `",
+        "` + _t("multitask") + `"
     ],
-    "name": "` + _lt("man juggling") + `",
+    "name": "` + _t("man juggling") + `",
     "shortcodes": [
         ":man_juggling:"
     ]
@@ -6372,12 +6372,12 @@ const emojisData2 = `{
     "codepoints": "🤹‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("juggling") + `",
-        "` + _lt("multi-task") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("multitask") + `"
+        "` + _t("juggling") + `",
+        "` + _t("multi-task") + `",
+        "` + _t("woman") + `",
+        "` + _t("multitask") + `"
     ],
-    "name": "` + _lt("woman juggling") + `",
+    "name": "` + _t("woman juggling") + `",
     "shortcodes": [
         ":woman_juggling:"
     ]
@@ -6387,11 +6387,11 @@ const emojisData2 = `{
     "codepoints": "🧘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("meditation") + `",
-        "` + _lt("person in lotus position") + `",
-        "` + _lt("yoga") + `"
+        "` + _t("meditation") + `",
+        "` + _t("person in lotus position") + `",
+        "` + _t("yoga") + `"
     ],
-    "name": "` + _lt("person in lotus position") + `",
+    "name": "` + _t("person in lotus position") + `",
     "shortcodes": [
         ":person_in_lotus_position:"
     ]
@@ -6401,11 +6401,11 @@ const emojisData2 = `{
     "codepoints": "🧘‍♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("man in lotus position") + `",
-        "` + _lt("meditation") + `",
-        "` + _lt("yoga") + `"
+        "` + _t("man in lotus position") + `",
+        "` + _t("meditation") + `",
+        "` + _t("yoga") + `"
     ],
-    "name": "` + _lt("man in lotus position") + `",
+    "name": "` + _t("man in lotus position") + `",
     "shortcodes": [
         ":man_in_lotus_position:"
     ]
@@ -6415,11 +6415,11 @@ const emojisData2 = `{
     "codepoints": "🧘‍♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("meditation") + `",
-        "` + _lt("woman in lotus position") + `",
-        "` + _lt("yoga") + `"
+        "` + _t("meditation") + `",
+        "` + _t("woman in lotus position") + `",
+        "` + _t("yoga") + `"
     ],
-    "name": "` + _lt("woman in lotus position") + `",
+    "name": "` + _t("woman in lotus position") + `",
     "shortcodes": [
         ":woman_in_lotus_position:"
     ]
@@ -6429,12 +6429,12 @@ const emojisData2 = `{
     "codepoints": "🛀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bath") + `",
-        "` + _lt("bathtub") + `",
-        "` + _lt("person taking bath") + `",
-        "` + _lt("tub") + `"
+        "` + _t("bath") + `",
+        "` + _t("bathtub") + `",
+        "` + _t("person taking bath") + `",
+        "` + _t("tub") + `"
     ],
-    "name": "` + _lt("person taking bath") + `",
+    "name": "` + _t("person taking bath") + `",
     "shortcodes": [
         ":person_ltaking_bath:"
     ]
@@ -6444,13 +6444,13 @@ const emojisData2 = `{
     "codepoints": "🛌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hotel") + `",
-        "` + _lt("person in bed") + `",
-        "` + _lt("sleep") + `",
-        "` + _lt("sleeping") + `",
-        "` + _lt("good night") + `"
+        "` + _t("hotel") + `",
+        "` + _t("person in bed") + `",
+        "` + _t("sleep") + `",
+        "` + _t("sleeping") + `",
+        "` + _t("good night") + `"
     ],
-    "name": "` + _lt("person in bed") + `",
+    "name": "` + _t("person in bed") + `",
     "shortcodes": [
         ":person_in_bed:"
     ]
@@ -6460,14 +6460,14 @@ const emojisData2 = `{
     "codepoints": "🧑‍🤝‍🧑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("hold") + `",
-        "` + _lt("holding hands") + `",
-        "` + _lt("people holding hands") + `",
-        "` + _lt("person") + `"
+        "` + _t("couple") + `",
+        "` + _t("hand") + `",
+        "` + _t("hold") + `",
+        "` + _t("holding hands") + `",
+        "` + _t("people holding hands") + `",
+        "` + _t("person") + `"
     ],
-    "name": "` + _lt("people holding hands") + `",
+    "name": "` + _t("people holding hands") + `",
     "shortcodes": [
         ":people_holding_hands:"
     ]
@@ -6477,14 +6477,14 @@ const emojisData2 = `{
     "codepoints": "👭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("holding hands") + `",
-        "` + _lt("women") + `",
-        "` + _lt("women holding hands") + `",
-        "` + _lt("two women holding hands") + `"
+        "` + _t("couple") + `",
+        "` + _t("hand") + `",
+        "` + _t("holding hands") + `",
+        "` + _t("women") + `",
+        "` + _t("women holding hands") + `",
+        "` + _t("two women holding hands") + `"
     ],
-    "name": "` + _lt("women holding hands") + `",
+    "name": "` + _t("women holding hands") + `",
     "shortcodes": [
         ":women_holding_hands:"
     ]
@@ -6494,16 +6494,16 @@ const emojisData2 = `{
     "codepoints": "👫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("hand") + `",
-        "` + _lt("hold") + `",
-        "` + _lt("holding hands") + `",
-        "` + _lt("man") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman and man holding hands") + `",
-        "` + _lt("man and woman holding hands") + `"
+        "` + _t("couple") + `",
+        "` + _t("hand") + `",
+        "` + _t("hold") + `",
+        "` + _t("holding hands") + `",
+        "` + _t("man") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman and man holding hands") + `",
+        "` + _t("man and woman holding hands") + `"
     ],
-    "name": "` + _lt("woman and man holding hands") + `",
+    "name": "` + _t("woman and man holding hands") + `",
     "shortcodes": [
         ":woman_and_man_holding_hands:"
     ]
@@ -6513,17 +6513,17 @@ const emojisData2 = `{
     "codepoints": "👬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("Gemini") + `",
-        "` + _lt("holding hands") + `",
-        "` + _lt("man") + `",
-        "` + _lt("men") + `",
-        "` + _lt("men holding hands") + `",
-        "` + _lt("twins") + `",
-        "` + _lt("zodiac") + `",
-        "` + _lt("two men holding hands") + `"
+        "` + _t("couple") + `",
+        "` + _t("Gemini") + `",
+        "` + _t("holding hands") + `",
+        "` + _t("man") + `",
+        "` + _t("men") + `",
+        "` + _t("men holding hands") + `",
+        "` + _t("twins") + `",
+        "` + _t("zodiac") + `",
+        "` + _t("two men holding hands") + `"
     ],
-    "name": "` + _lt("men holding hands") + `",
+    "name": "` + _t("men holding hands") + `",
     "shortcodes": [
         ":men_holding_hands:"
     ]
@@ -6533,10 +6533,10 @@ const emojisData2 = `{
     "codepoints": "💏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("kiss") + `"
+        "` + _t("couple") + `",
+        "` + _t("kiss") + `"
     ],
-    "name": "` + _lt("kiss") + `",
+    "name": "` + _t("kiss") + `",
     "shortcodes": [
         ":kiss:"
     ]
@@ -6546,12 +6546,12 @@ const emojisData2 = `{
     "codepoints": "👩‍❤️‍💋‍👨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("kiss") + `",
-        "` + _lt("man") + `",
-        "` + _lt("woman") + `"
+        "` + _t("couple") + `",
+        "` + _t("kiss") + `",
+        "` + _t("man") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("kiss: woman, man") + `",
+    "name": "` + _t("kiss: woman, man") + `",
     "shortcodes": [
         ":kiss:_woman,_man:"
     ]
@@ -6561,11 +6561,11 @@ const emojisData2 = `{
     "codepoints": "👨‍❤️‍💋‍👨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("kiss") + `",
-        "` + _lt("man") + `"
+        "` + _t("couple") + `",
+        "` + _t("kiss") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("kiss: man, man") + `",
+    "name": "` + _t("kiss: man, man") + `",
     "shortcodes": [
         ":kiss:_man,_man:"
     ]
@@ -6575,11 +6575,11 @@ const emojisData2 = `{
     "codepoints": "👩‍❤️‍💋‍👩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("kiss") + `",
-        "` + _lt("woman") + `"
+        "` + _t("couple") + `",
+        "` + _t("kiss") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("kiss: woman, woman") + `",
+    "name": "` + _t("kiss: woman, woman") + `",
     "shortcodes": [
         ":kiss:_woman,_woman:"
     ]
@@ -6589,11 +6589,11 @@ const emojisData2 = `{
     "codepoints": "💑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("couple with heart") + `",
-        "` + _lt("love") + `"
+        "` + _t("couple") + `",
+        "` + _t("couple with heart") + `",
+        "` + _t("love") + `"
     ],
-    "name": "` + _lt("couple with heart") + `",
+    "name": "` + _t("couple with heart") + `",
     "shortcodes": [
         ":couple_with_heart:"
     ]
@@ -6603,13 +6603,13 @@ const emojisData2 = `{
     "codepoints": "👩‍❤️‍👨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("couple with heart") + `",
-        "` + _lt("love") + `",
-        "` + _lt("man") + `",
-        "` + _lt("woman") + `"
+        "` + _t("couple") + `",
+        "` + _t("couple with heart") + `",
+        "` + _t("love") + `",
+        "` + _t("man") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("couple with heart: woman, man") + `",
+    "name": "` + _t("couple with heart: woman, man") + `",
     "shortcodes": [
         ":couple_with_heart:_woman,_man:"
     ]
@@ -6619,12 +6619,12 @@ const emojisData2 = `{
     "codepoints": "👨‍❤️‍👨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("couple with heart") + `",
-        "` + _lt("love") + `",
-        "` + _lt("man") + `"
+        "` + _t("couple") + `",
+        "` + _t("couple with heart") + `",
+        "` + _t("love") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("couple with heart: man, man") + `",
+    "name": "` + _t("couple with heart: man, man") + `",
     "shortcodes": [
         ":couple_with_heart:_man,_man:"
     ]
@@ -6634,12 +6634,12 @@ const emojisData2 = `{
     "codepoints": "👩‍❤️‍👩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couple") + `",
-        "` + _lt("couple with heart") + `",
-        "` + _lt("love") + `",
-        "` + _lt("woman") + `"
+        "` + _t("couple") + `",
+        "` + _t("couple with heart") + `",
+        "` + _t("love") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("couple with heart: woman, woman") + `",
+    "name": "` + _t("couple with heart: woman, woman") + `",
     "shortcodes": [
         ":couple_with_heart:_woman,_woman:"
     ]
@@ -6649,9 +6649,9 @@ const emojisData2 = `{
     "codepoints": "👪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `"
+        "` + _t("family") + `"
     ],
-    "name": "` + _lt("family") + `",
+    "name": "` + _t("family") + `",
     "shortcodes": [
         ":family:"
     ]
@@ -6661,12 +6661,12 @@ const emojisData2 = `{
     "codepoints": "👨‍👩‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("man") + `",
-        "` + _lt("woman") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("man") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: man, woman, boy") + `",
+    "name": "` + _t("family: man, woman, boy") + `",
     "shortcodes": [
         ":family:_man,_woman,_boy:"
     ]
@@ -6676,12 +6676,12 @@ const emojisData2 = `{
     "codepoints": "👨‍👩‍👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("man") + `",
-        "` + _lt("woman") + `"
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("man") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: man, woman, girl") + `",
+    "name": "` + _t("family: man, woman, girl") + `",
     "shortcodes": [
         ":family:_man,_woman,_girl:"
     ]
@@ -6691,13 +6691,13 @@ const emojisData2 = `{
     "codepoints": "👨‍👩‍👧‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("man") + `",
-        "` + _lt("woman") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("man") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: man, woman, girl, boy") + `",
+    "name": "` + _t("family: man, woman, girl, boy") + `",
     "shortcodes": [
         ":family:_man,_woman,_girl,_boy:"
     ]
@@ -6707,12 +6707,12 @@ const emojisData2 = `{
     "codepoints": "👨‍👩‍👦‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("man") + `",
-        "` + _lt("woman") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("man") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: man, woman, boy, boy") + `",
+    "name": "` + _t("family: man, woman, boy, boy") + `",
     "shortcodes": [
         ":family:_man,_woman,_boy,_boy:"
     ]
@@ -6722,12 +6722,12 @@ const emojisData2 = `{
     "codepoints": "👨‍👩‍👧‍👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("man") + `",
-        "` + _lt("woman") + `"
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("man") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: man, woman, girl, girl") + `",
+    "name": "` + _t("family: man, woman, girl, girl") + `",
     "shortcodes": [
         ":family:_man,_woman,_girl,_girl:"
     ]
@@ -6737,11 +6737,11 @@ const emojisData2 = `{
     "codepoints": "👨‍👨‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("man") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("family: man, man, boy") + `",
+    "name": "` + _t("family: man, man, boy") + `",
     "shortcodes": [
         ":family:_man,_man,_boy:"
     ]
@@ -6751,11 +6751,11 @@ const emojisData2 = `{
     "codepoints": "👨‍👨‍👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("man") + `"
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("family: man, man, girl") + `",
+    "name": "` + _t("family: man, man, girl") + `",
     "shortcodes": [
         ":family:_man,_man,_girl:"
     ]
@@ -6765,12 +6765,12 @@ const emojisData2 = `{
     "codepoints": "👨‍👨‍👧‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("man") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("family: man, man, girl, boy") + `",
+    "name": "` + _t("family: man, man, girl, boy") + `",
     "shortcodes": [
         ":family:_man,_man,_girl,_boy:"
     ]
@@ -6780,11 +6780,11 @@ const emojisData2 = `{
     "codepoints": "👨‍👨‍👦‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("man") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("family: man, man, boy, boy") + `",
+    "name": "` + _t("family: man, man, boy, boy") + `",
     "shortcodes": [
         ":family:_man,_man,_boy,_boy:"
     ]
@@ -6794,11 +6794,11 @@ const emojisData2 = `{
     "codepoints": "👨‍👨‍👧‍👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("man") + `"
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("family: man, man, girl, girl") + `",
+    "name": "` + _t("family: man, man, girl, girl") + `",
     "shortcodes": [
         ":family:_man,_man,_girl,_girl:"
     ]
@@ -6808,11 +6808,11 @@ const emojisData2 = `{
     "codepoints": "👩‍👩‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("woman") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: woman, woman, boy") + `",
+    "name": "` + _t("family: woman, woman, boy") + `",
     "shortcodes": [
         ":family:_woman,_woman,_boy:"
     ]
@@ -6822,11 +6822,11 @@ const emojisData2 = `{
     "codepoints": "👩‍👩‍👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("woman") + `"
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: woman, woman, girl") + `",
+    "name": "` + _t("family: woman, woman, girl") + `",
     "shortcodes": [
         ":family:_woman,_woman,_girl:"
     ]
@@ -6836,12 +6836,12 @@ const emojisData2 = `{
     "codepoints": "👩‍👩‍👧‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("woman") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: woman, woman, girl, boy") + `",
+    "name": "` + _t("family: woman, woman, girl, boy") + `",
     "shortcodes": [
         ":family:_woman,_woman,_girl,_boy:"
     ]
@@ -6851,11 +6851,11 @@ const emojisData2 = `{
     "codepoints": "👩‍👩‍👦‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("woman") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: woman, woman, boy, boy") + `",
+    "name": "` + _t("family: woman, woman, boy, boy") + `",
     "shortcodes": [
         ":family:_woman,_woman,_boy,_boy:"
     ]
@@ -6865,11 +6865,11 @@ const emojisData2 = `{
     "codepoints": "👩‍👩‍👧‍👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("woman") + `"
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: woman, woman, girl, girl") + `",
+    "name": "` + _t("family: woman, woman, girl, girl") + `",
     "shortcodes": [
         ":family:_woman,_woman,_girl,_girl:"
     ]
@@ -6879,11 +6879,11 @@ const emojisData2 = `{
     "codepoints": "👨‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("man") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("family: man, boy") + `",
+    "name": "` + _t("family: man, boy") + `",
     "shortcodes": [
         ":family:_man,_boy:"
     ]
@@ -6893,11 +6893,11 @@ const emojisData2 = `{
     "codepoints": "👨‍👦‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("man") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("family: man, boy, boy") + `",
+    "name": "` + _t("family: man, boy, boy") + `",
     "shortcodes": [
         ":family:_man,_boy,_boy:"
     ]
@@ -6907,11 +6907,11 @@ const emojisData2 = `{
     "codepoints": "👨‍👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("man") + `"
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("family: man, girl") + `",
+    "name": "` + _t("family: man, girl") + `",
     "shortcodes": [
         ":family:_man,_girl:"
     ]
@@ -6921,12 +6921,12 @@ const emojisData2 = `{
     "codepoints": "👨‍👧‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("man") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("family: man, girl, boy") + `",
+    "name": "` + _t("family: man, girl, boy") + `",
     "shortcodes": [
         ":family:_man,_girl,_boy:"
     ]
@@ -6936,11 +6936,11 @@ const emojisData2 = `{
     "codepoints": "👨‍👧‍👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("man") + `"
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("family: man, girl, girl") + `",
+    "name": "` + _t("family: man, girl, girl") + `",
     "shortcodes": [
         ":family:_man,_girl,_girl:"
     ]
@@ -6950,11 +6950,11 @@ const emojisData2 = `{
     "codepoints": "👩‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("woman") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: woman, boy") + `",
+    "name": "` + _t("family: woman, boy") + `",
     "shortcodes": [
         ":family:_woman,_boy:"
     ]
@@ -6964,11 +6964,11 @@ const emojisData2 = `{
     "codepoints": "👩‍👦‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("woman") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: woman, boy, boy") + `",
+    "name": "` + _t("family: woman, boy, boy") + `",
     "shortcodes": [
         ":family:_woman,_boy,_boy:"
     ]
@@ -6978,11 +6978,11 @@ const emojisData2 = `{
     "codepoints": "👩‍👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("woman") + `"
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: woman, girl") + `",
+    "name": "` + _t("family: woman, girl") + `",
     "shortcodes": [
         ":family:_woman,_girl:"
     ]
@@ -6992,12 +6992,12 @@ const emojisData2 = `{
     "codepoints": "👩‍👧‍👦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boy") + `",
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("woman") + `"
+        "` + _t("boy") + `",
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: woman, girl, boy") + `",
+    "name": "` + _t("family: woman, girl, boy") + `",
     "shortcodes": [
         ":family:_woman,_girl,_boy:"
     ]
@@ -7007,11 +7007,11 @@ const emojisData2 = `{
     "codepoints": "👩‍👧‍👧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("family") + `",
-        "` + _lt("girl") + `",
-        "` + _lt("woman") + `"
+        "` + _t("family") + `",
+        "` + _t("girl") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("family: woman, girl, girl") + `",
+    "name": "` + _t("family: woman, girl, girl") + `",
     "shortcodes": [
         ":family:_woman,_girl,_girl:"
     ]
@@ -7021,13 +7021,13 @@ const emojisData2 = `{
     "codepoints": "🗣️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("head") + `",
-        "` + _lt("silhouette") + `",
-        "` + _lt("speak") + `",
-        "` + _lt("speaking") + `"
+        "` + _t("face") + `",
+        "` + _t("head") + `",
+        "` + _t("silhouette") + `",
+        "` + _t("speak") + `",
+        "` + _t("speaking") + `"
     ],
-    "name": "` + _lt("speaking head") + `",
+    "name": "` + _t("speaking head") + `",
     "shortcodes": [
         ":speaking_head:"
     ]
@@ -7037,11 +7037,11 @@ const emojisData2 = `{
     "codepoints": "👤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bust") + `",
-        "` + _lt("bust in silhouette") + `",
-        "` + _lt("silhouette") + `"
+        "` + _t("bust") + `",
+        "` + _t("bust in silhouette") + `",
+        "` + _t("silhouette") + `"
     ],
-    "name": "` + _lt("bust in silhouette") + `",
+    "name": "` + _t("bust in silhouette") + `",
     "shortcodes": [
         ":bust_in_silhouette:"
     ]
@@ -7051,11 +7051,11 @@ const emojisData2 = `{
     "codepoints": "👥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bust") + `",
-        "` + _lt("busts in silhouette") + `",
-        "` + _lt("silhouette") + `"
+        "` + _t("bust") + `",
+        "` + _t("busts in silhouette") + `",
+        "` + _t("silhouette") + `"
     ],
-    "name": "` + _lt("busts in silhouette") + `",
+    "name": "` + _t("busts in silhouette") + `",
     "shortcodes": [
         ":busts_in_silhouette:"
     ]
@@ -7065,12 +7065,12 @@ const emojisData2 = `{
     "codepoints": "👣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("footprint") + `",
-        "` + _lt("footprints") + `",
-        "` + _lt("print") + `"
+        "` + _t("clothing") + `",
+        "` + _t("footprint") + `",
+        "` + _t("footprints") + `",
+        "` + _t("print") + `"
     ],
-    "name": "` + _lt("footprints") + `",
+    "name": "` + _t("footprints") + `",
     "shortcodes": [
         ":footprints:"
     ]
@@ -7081,10 +7081,10 @@ const emojisData3 = `{
     "codepoints": "🐵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("monkey") + `"
+        "` + _t("face") + `",
+        "` + _t("monkey") + `"
     ],
-    "name": "` + _lt("monkey face") + `",
+    "name": "` + _t("monkey face") + `",
     "shortcodes": [
         ":monkey_face:"
     ]
@@ -7094,9 +7094,9 @@ const emojisData3 = `{
     "codepoints": "🐒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("monkey") + `"
+        "` + _t("monkey") + `"
     ],
-    "name": "` + _lt("monkey") + `",
+    "name": "` + _t("monkey") + `",
     "shortcodes": [
         ":monkey:"
     ]
@@ -7106,9 +7106,9 @@ const emojisData3 = `{
     "codepoints": "🦍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gorilla") + `"
+        "` + _t("gorilla") + `"
     ],
-    "name": "` + _lt("gorilla") + `",
+    "name": "` + _t("gorilla") + `",
     "shortcodes": [
         ":gorilla:"
     ]
@@ -7118,10 +7118,10 @@ const emojisData3 = `{
     "codepoints": "🦧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ape") + `",
-        "` + _lt("orangutan") + `"
+        "` + _t("ape") + `",
+        "` + _t("orangutan") + `"
     ],
-    "name": "` + _lt("orangutan") + `",
+    "name": "` + _t("orangutan") + `",
     "shortcodes": [
         ":orangutan:"
     ]
@@ -7131,11 +7131,11 @@ const emojisData3 = `{
     "codepoints": "🐶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dog") + `",
-        "` + _lt("face") + `",
-        "` + _lt("pet") + `"
+        "` + _t("dog") + `",
+        "` + _t("face") + `",
+        "` + _t("pet") + `"
     ],
-    "name": "` + _lt("dog face") + `",
+    "name": "` + _t("dog face") + `",
     "shortcodes": [
         ":dog_face:"
     ]
@@ -7145,10 +7145,10 @@ const emojisData3 = `{
     "codepoints": "🐕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dog") + `",
-        "` + _lt("pet") + `"
+        "` + _t("dog") + `",
+        "` + _t("pet") + `"
     ],
-    "name": "` + _lt("dog") + `",
+    "name": "` + _t("dog") + `",
     "shortcodes": [
         ":dog:"
     ]
@@ -7158,12 +7158,12 @@ const emojisData3 = `{
     "codepoints": "🦮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("blind") + `",
-        "` + _lt("guide") + `",
-        "` + _lt("guide dog") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("blind") + `",
+        "` + _t("guide") + `",
+        "` + _t("guide dog") + `"
     ],
-    "name": "` + _lt("guide dog") + `",
+    "name": "` + _t("guide dog") + `",
     "shortcodes": [
         ":guide_dog:"
     ]
@@ -7173,12 +7173,12 @@ const emojisData3 = `{
     "codepoints": "🐕‍🦺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("assistance") + `",
-        "` + _lt("dog") + `",
-        "` + _lt("service") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("assistance") + `",
+        "` + _t("dog") + `",
+        "` + _t("service") + `"
     ],
-    "name": "` + _lt("service dog") + `",
+    "name": "` + _t("service dog") + `",
     "shortcodes": [
         ":service_dog:"
     ]
@@ -7188,10 +7188,10 @@ const emojisData3 = `{
     "codepoints": "🐩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dog") + `",
-        "` + _lt("poodle") + `"
+        "` + _t("dog") + `",
+        "` + _t("poodle") + `"
     ],
-    "name": "` + _lt("poodle") + `",
+    "name": "` + _t("poodle") + `",
     "shortcodes": [
         ":poodle:"
     ]
@@ -7201,10 +7201,10 @@ const emojisData3 = `{
     "codepoints": "🐺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("wolf") + `"
+        "` + _t("face") + `",
+        "` + _t("wolf") + `"
     ],
-    "name": "` + _lt("wolf") + `",
+    "name": "` + _t("wolf") + `",
     "shortcodes": [
         ":wolf:"
     ]
@@ -7214,10 +7214,10 @@ const emojisData3 = `{
     "codepoints": "🦊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("fox") + `"
+        "` + _t("face") + `",
+        "` + _t("fox") + `"
     ],
-    "name": "` + _lt("fox") + `",
+    "name": "` + _t("fox") + `",
     "shortcodes": [
         ":fox:"
     ]
@@ -7227,11 +7227,11 @@ const emojisData3 = `{
     "codepoints": "🦝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("curious") + `",
-        "` + _lt("raccoon") + `",
-        "` + _lt("sly") + `"
+        "` + _t("curious") + `",
+        "` + _t("raccoon") + `",
+        "` + _t("sly") + `"
     ],
-    "name": "` + _lt("raccoon") + `",
+    "name": "` + _t("raccoon") + `",
     "shortcodes": [
         ":raccoon:"
     ]
@@ -7241,11 +7241,11 @@ const emojisData3 = `{
     "codepoints": "🐱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("face") + `",
-        "` + _lt("pet") + `"
+        "` + _t("cat") + `",
+        "` + _t("face") + `",
+        "` + _t("pet") + `"
     ],
-    "name": "` + _lt("cat face") + `",
+    "name": "` + _t("cat face") + `",
     "shortcodes": [
         ":cat_face:"
     ]
@@ -7255,10 +7255,10 @@ const emojisData3 = `{
     "codepoints": "🐈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cat") + `",
-        "` + _lt("pet") + `"
+        "` + _t("cat") + `",
+        "` + _t("pet") + `"
     ],
-    "name": "` + _lt("cat") + `",
+    "name": "` + _t("cat") + `",
     "shortcodes": [
         ":cat:"
     ]
@@ -7268,12 +7268,12 @@ const emojisData3 = `{
     "codepoints": "🦁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("Leo") + `",
-        "` + _lt("lion") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("face") + `",
+        "` + _t("Leo") + `",
+        "` + _t("lion") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("lion") + `",
+    "name": "` + _t("lion") + `",
     "shortcodes": [
         ":lion:"
     ]
@@ -7283,10 +7283,10 @@ const emojisData3 = `{
     "codepoints": "🐯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("tiger") + `"
+        "` + _t("face") + `",
+        "` + _t("tiger") + `"
     ],
-    "name": "` + _lt("tiger face") + `",
+    "name": "` + _t("tiger face") + `",
     "shortcodes": [
         ":tiger_face:"
     ]
@@ -7296,9 +7296,9 @@ const emojisData3 = `{
     "codepoints": "🐅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("tiger") + `"
+        "` + _t("tiger") + `"
     ],
-    "name": "` + _lt("tiger") + `",
+    "name": "` + _t("tiger") + `",
     "shortcodes": [
         ":tiger:"
     ]
@@ -7308,9 +7308,9 @@ const emojisData3 = `{
     "codepoints": "🐆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("leopard") + `"
+        "` + _t("leopard") + `"
     ],
-    "name": "` + _lt("leopard") + `",
+    "name": "` + _t("leopard") + `",
     "shortcodes": [
         ":leopard:"
     ]
@@ -7320,10 +7320,10 @@ const emojisData3 = `{
     "codepoints": "🐴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("horse") + `"
+        "` + _t("face") + `",
+        "` + _t("horse") + `"
     ],
-    "name": "` + _lt("horse face") + `",
+    "name": "` + _t("horse face") + `",
     "shortcodes": [
         ":horse_face:"
     ]
@@ -7333,12 +7333,12 @@ const emojisData3 = `{
     "codepoints": "🐎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("equestrian") + `",
-        "` + _lt("horse") + `",
-        "` + _lt("racehorse") + `",
-        "` + _lt("racing") + `"
+        "` + _t("equestrian") + `",
+        "` + _t("horse") + `",
+        "` + _t("racehorse") + `",
+        "` + _t("racing") + `"
     ],
-    "name": "` + _lt("horse") + `",
+    "name": "` + _t("horse") + `",
     "shortcodes": [
         ":horse:"
     ]
@@ -7348,10 +7348,10 @@ const emojisData3 = `{
     "codepoints": "🦄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("unicorn") + `"
+        "` + _t("face") + `",
+        "` + _t("unicorn") + `"
     ],
-    "name": "` + _lt("unicorn") + `",
+    "name": "` + _t("unicorn") + `",
     "shortcodes": [
         ":unicorn:"
     ]
@@ -7361,10 +7361,10 @@ const emojisData3 = `{
     "codepoints": "🦓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("stripe") + `",
-        "` + _lt("zebra") + `"
+        "` + _t("stripe") + `",
+        "` + _t("zebra") + `"
     ],
-    "name": "` + _lt("zebra") + `",
+    "name": "` + _t("zebra") + `",
     "shortcodes": [
         ":zebra:"
     ]
@@ -7374,10 +7374,10 @@ const emojisData3 = `{
     "codepoints": "🦌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("deer") + `",
-        "` + _lt("stag") + `"
+        "` + _t("deer") + `",
+        "` + _t("stag") + `"
     ],
-    "name": "` + _lt("deer") + `",
+    "name": "` + _t("deer") + `",
     "shortcodes": [
         ":deer:"
     ]
@@ -7387,10 +7387,10 @@ const emojisData3 = `{
     "codepoints": "🐮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cow") + `",
-        "` + _lt("face") + `"
+        "` + _t("cow") + `",
+        "` + _t("face") + `"
     ],
-    "name": "` + _lt("cow face") + `",
+    "name": "` + _t("cow face") + `",
     "shortcodes": [
         ":cow_face:"
     ]
@@ -7400,12 +7400,12 @@ const emojisData3 = `{
     "codepoints": "🐂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bull") + `",
-        "` + _lt("ox") + `",
-        "` + _lt("Taurus") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("bull") + `",
+        "` + _t("ox") + `",
+        "` + _t("Taurus") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("ox") + `",
+    "name": "` + _t("ox") + `",
     "shortcodes": [
         ":ox:"
     ]
@@ -7415,10 +7415,10 @@ const emojisData3 = `{
     "codepoints": "🐃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("buffalo") + `",
-        "` + _lt("water") + `"
+        "` + _t("buffalo") + `",
+        "` + _t("water") + `"
     ],
-    "name": "` + _lt("water buffalo") + `",
+    "name": "` + _t("water buffalo") + `",
     "shortcodes": [
         ":water_buffalo:"
     ]
@@ -7428,9 +7428,9 @@ const emojisData3 = `{
     "codepoints": "🐄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cow") + `"
+        "` + _t("cow") + `"
     ],
-    "name": "` + _lt("cow") + `",
+    "name": "` + _t("cow") + `",
     "shortcodes": [
         ":cow:"
     ]
@@ -7440,10 +7440,10 @@ const emojisData3 = `{
     "codepoints": "🐷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("pig") + `"
+        "` + _t("face") + `",
+        "` + _t("pig") + `"
     ],
-    "name": "` + _lt("pig face") + `",
+    "name": "` + _t("pig face") + `",
     "shortcodes": [
         ":pig_face:"
     ]
@@ -7453,10 +7453,10 @@ const emojisData3 = `{
     "codepoints": "🐖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pig") + `",
-        "` + _lt("sow") + `"
+        "` + _t("pig") + `",
+        "` + _t("sow") + `"
     ],
-    "name": "` + _lt("pig") + `",
+    "name": "` + _t("pig") + `",
     "shortcodes": [
         ":pig:"
     ]
@@ -7468,10 +7468,10 @@ const emojisData3 = `{
         ":boar"
     ],
     "keywords": [
-        "` + _lt("boar") + `",
-        "` + _lt("pig") + `"
+        "` + _t("boar") + `",
+        "` + _t("pig") + `"
     ],
-    "name": "` + _lt("boar") + `",
+    "name": "` + _t("boar") + `",
     "shortcodes": [
         ":boar:"
     ]
@@ -7481,11 +7481,11 @@ const emojisData3 = `{
     "codepoints": "🐽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("nose") + `",
-        "` + _lt("pig") + `"
+        "` + _t("face") + `",
+        "` + _t("nose") + `",
+        "` + _t("pig") + `"
     ],
-    "name": "` + _lt("pig nose") + `",
+    "name": "` + _t("pig nose") + `",
     "shortcodes": [
         ":pig_nose:"
     ]
@@ -7495,13 +7495,13 @@ const emojisData3 = `{
     "codepoints": "🐏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Aries") + `",
-        "` + _lt("male") + `",
-        "` + _lt("ram") + `",
-        "` + _lt("sheep") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("Aries") + `",
+        "` + _t("male") + `",
+        "` + _t("ram") + `",
+        "` + _t("sheep") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("ram") + `",
+    "name": "` + _t("ram") + `",
     "shortcodes": [
         ":ram:"
     ]
@@ -7511,11 +7511,11 @@ const emojisData3 = `{
     "codepoints": "🐑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ewe") + `",
-        "` + _lt("female") + `",
-        "` + _lt("sheep") + `"
+        "` + _t("ewe") + `",
+        "` + _t("female") + `",
+        "` + _t("sheep") + `"
     ],
-    "name": "` + _lt("ewe") + `",
+    "name": "` + _t("ewe") + `",
     "shortcodes": [
         ":ewe:"
     ]
@@ -7525,11 +7525,11 @@ const emojisData3 = `{
     "codepoints": "🐐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Capricorn") + `",
-        "` + _lt("goat") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("Capricorn") + `",
+        "` + _t("goat") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("goat") + `",
+    "name": "` + _t("goat") + `",
     "shortcodes": [
         ":goat:"
     ]
@@ -7539,11 +7539,11 @@ const emojisData3 = `{
     "codepoints": "🐪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("camel") + `",
-        "` + _lt("dromedary") + `",
-        "` + _lt("hump") + `"
+        "` + _t("camel") + `",
+        "` + _t("dromedary") + `",
+        "` + _t("hump") + `"
     ],
-    "name": "` + _lt("camel") + `",
+    "name": "` + _t("camel") + `",
     "shortcodes": [
         ":camel:"
     ]
@@ -7553,13 +7553,13 @@ const emojisData3 = `{
     "codepoints": "🐫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bactrian") + `",
-        "` + _lt("camel") + `",
-        "` + _lt("hump") + `",
-        "` + _lt("two-hump camel") + `",
-        "` + _lt("Bactrian") + `"
+        "` + _t("bactrian") + `",
+        "` + _t("camel") + `",
+        "` + _t("hump") + `",
+        "` + _t("two-hump camel") + `",
+        "` + _t("Bactrian") + `"
     ],
-    "name": "` + _lt("two-hump camel") + `",
+    "name": "` + _t("two-hump camel") + `",
     "shortcodes": [
         ":two-hump_camel:"
     ]
@@ -7569,13 +7569,13 @@ const emojisData3 = `{
     "codepoints": "🦙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("alpaca") + `",
-        "` + _lt("guanaco") + `",
-        "` + _lt("llama") + `",
-        "` + _lt("vicuña") + `",
-        "` + _lt("wool") + `"
+        "` + _t("alpaca") + `",
+        "` + _t("guanaco") + `",
+        "` + _t("llama") + `",
+        "` + _t("vicuña") + `",
+        "` + _t("wool") + `"
     ],
-    "name": "` + _lt("llama") + `",
+    "name": "` + _t("llama") + `",
     "shortcodes": [
         ":llama:"
     ]
@@ -7585,10 +7585,10 @@ const emojisData3 = `{
     "codepoints": "🦒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("giraffe") + `",
-        "` + _lt("spots") + `"
+        "` + _t("giraffe") + `",
+        "` + _t("spots") + `"
     ],
-    "name": "` + _lt("giraffe") + `",
+    "name": "` + _t("giraffe") + `",
     "shortcodes": [
         ":giraffe:"
     ]
@@ -7598,9 +7598,9 @@ const emojisData3 = `{
     "codepoints": "🐘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("elephant") + `"
+        "` + _t("elephant") + `"
     ],
-    "name": "` + _lt("elephant") + `",
+    "name": "` + _t("elephant") + `",
     "shortcodes": [
         ":elephant:"
     ]
@@ -7610,10 +7610,10 @@ const emojisData3 = `{
     "codepoints": "🦏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("rhino") + `",
-        "` + _lt("rhinoceros") + `"
+        "` + _t("rhino") + `",
+        "` + _t("rhinoceros") + `"
     ],
-    "name": "` + _lt("rhinoceros") + `",
+    "name": "` + _t("rhinoceros") + `",
     "shortcodes": [
         ":rhinoceros:"
     ]
@@ -7623,10 +7623,10 @@ const emojisData3 = `{
     "codepoints": "🦛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hippo") + `",
-        "` + _lt("hippopotamus") + `"
+        "` + _t("hippo") + `",
+        "` + _t("hippopotamus") + `"
     ],
-    "name": "` + _lt("hippopotamus") + `",
+    "name": "` + _t("hippopotamus") + `",
     "shortcodes": [
         ":hippopotamus:"
     ]
@@ -7636,11 +7636,11 @@ const emojisData3 = `{
     "codepoints": "🐭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("mouse") + `",
-        "` + _lt("pet") + `"
+        "` + _t("face") + `",
+        "` + _t("mouse") + `",
+        "` + _t("pet") + `"
     ],
-    "name": "` + _lt("mouse face") + `",
+    "name": "` + _t("mouse face") + `",
     "shortcodes": [
         ":mouse_face:"
     ]
@@ -7650,11 +7650,11 @@ const emojisData3 = `{
     "codepoints": "🐁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mouse") + `",
-        "` + _lt("pet") + `",
-        "` + _lt("rodent") + `"
+        "` + _t("mouse") + `",
+        "` + _t("pet") + `",
+        "` + _t("rodent") + `"
     ],
-    "name": "` + _lt("mouse") + `",
+    "name": "` + _t("mouse") + `",
     "shortcodes": [
         ":mouse:"
     ]
@@ -7664,11 +7664,11 @@ const emojisData3 = `{
     "codepoints": "🐀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pet") + `",
-        "` + _lt("rat") + `",
-        "` + _lt("rodent") + `"
+        "` + _t("pet") + `",
+        "` + _t("rat") + `",
+        "` + _t("rodent") + `"
     ],
-    "name": "` + _lt("rat") + `",
+    "name": "` + _t("rat") + `",
     "shortcodes": [
         ":rat:"
     ]
@@ -7678,11 +7678,11 @@ const emojisData3 = `{
     "codepoints": "🐹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("hamster") + `",
-        "` + _lt("pet") + `"
+        "` + _t("face") + `",
+        "` + _t("hamster") + `",
+        "` + _t("pet") + `"
     ],
-    "name": "` + _lt("hamster") + `",
+    "name": "` + _t("hamster") + `",
     "shortcodes": [
         ":hamster:"
     ]
@@ -7692,12 +7692,12 @@ const emojisData3 = `{
     "codepoints": "🐰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bunny") + `",
-        "` + _lt("face") + `",
-        "` + _lt("pet") + `",
-        "` + _lt("rabbit") + `"
+        "` + _t("bunny") + `",
+        "` + _t("face") + `",
+        "` + _t("pet") + `",
+        "` + _t("rabbit") + `"
     ],
-    "name": "` + _lt("rabbit face") + `",
+    "name": "` + _t("rabbit face") + `",
     "shortcodes": [
         ":rabbit_face:"
     ]
@@ -7707,11 +7707,11 @@ const emojisData3 = `{
     "codepoints": "🐇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bunny") + `",
-        "` + _lt("pet") + `",
-        "` + _lt("rabbit") + `"
+        "` + _t("bunny") + `",
+        "` + _t("pet") + `",
+        "` + _t("rabbit") + `"
     ],
-    "name": "` + _lt("rabbit") + `",
+    "name": "` + _t("rabbit") + `",
     "shortcodes": [
         ":rabbit:"
     ]
@@ -7721,10 +7721,10 @@ const emojisData3 = `{
     "codepoints": "🐿️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chipmunk") + `",
-        "` + _lt("squirrel") + `"
+        "` + _t("chipmunk") + `",
+        "` + _t("squirrel") + `"
     ],
-    "name": "` + _lt("chipmunk") + `",
+    "name": "` + _t("chipmunk") + `",
     "shortcodes": [
         ":chipmunk:"
     ]
@@ -7734,10 +7734,10 @@ const emojisData3 = `{
     "codepoints": "🦔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hedgehog") + `",
-        "` + _lt("spiny") + `"
+        "` + _t("hedgehog") + `",
+        "` + _t("spiny") + `"
     ],
-    "name": "` + _lt("hedgehog") + `",
+    "name": "` + _t("hedgehog") + `",
     "shortcodes": [
         ":hedgehog:"
     ]
@@ -7747,10 +7747,10 @@ const emojisData3 = `{
     "codepoints": "🦇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bat") + `",
-        "` + _lt("vampire") + `"
+        "` + _t("bat") + `",
+        "` + _t("vampire") + `"
     ],
-    "name": "` + _lt("bat") + `",
+    "name": "` + _t("bat") + `",
     "shortcodes": [
         ":bat:"
     ]
@@ -7762,10 +7762,10 @@ const emojisData3 = `{
         ":bear"
     ],
     "keywords": [
-        "` + _lt("bear") + `",
-        "` + _lt("face") + `"
+        "` + _t("bear") + `",
+        "` + _t("face") + `"
     ],
-    "name": "` + _lt("bear") + `",
+    "name": "` + _t("bear") + `",
     "shortcodes": [
         ":bear:"
     ]
@@ -7775,11 +7775,11 @@ const emojisData3 = `{
     "codepoints": "🐨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("koala") + `",
-        "` + _lt("marsupial") + `",
-        "` + _lt("face") + `"
+        "` + _t("koala") + `",
+        "` + _t("marsupial") + `",
+        "` + _t("face") + `"
     ],
-    "name": "` + _lt("koala") + `",
+    "name": "` + _t("koala") + `",
     "shortcodes": [
         ":koala:"
     ]
@@ -7789,10 +7789,10 @@ const emojisData3 = `{
     "codepoints": "🐼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("panda") + `"
+        "` + _t("face") + `",
+        "` + _t("panda") + `"
     ],
-    "name": "` + _lt("panda") + `",
+    "name": "` + _t("panda") + `",
     "shortcodes": [
         ":panda:"
     ]
@@ -7802,11 +7802,11 @@ const emojisData3 = `{
     "codepoints": "🦥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("lazy") + `",
-        "` + _lt("sloth") + `",
-        "` + _lt("slow") + `"
+        "` + _t("lazy") + `",
+        "` + _t("sloth") + `",
+        "` + _t("slow") + `"
     ],
-    "name": "` + _lt("sloth") + `",
+    "name": "` + _t("sloth") + `",
     "shortcodes": [
         ":sloth:"
     ]
@@ -7816,11 +7816,11 @@ const emojisData3 = `{
     "codepoints": "🦦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fishing") + `",
-        "` + _lt("otter") + `",
-        "` + _lt("playful") + `"
+        "` + _t("fishing") + `",
+        "` + _t("otter") + `",
+        "` + _t("playful") + `"
     ],
-    "name": "` + _lt("otter") + `",
+    "name": "` + _t("otter") + `",
     "shortcodes": [
         ":otter:"
     ]
@@ -7830,10 +7830,10 @@ const emojisData3 = `{
     "codepoints": "🦨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("skunk") + `",
-        "` + _lt("stink") + `"
+        "` + _t("skunk") + `",
+        "` + _t("stink") + `"
     ],
-    "name": "` + _lt("skunk") + `",
+    "name": "` + _t("skunk") + `",
     "shortcodes": [
         ":skunk:"
     ]
@@ -7843,13 +7843,13 @@ const emojisData3 = `{
     "codepoints": "🦘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Australia") + `",
-        "` + _lt("joey") + `",
-        "` + _lt("jump") + `",
-        "` + _lt("kangaroo") + `",
-        "` + _lt("marsupial") + `"
+        "` + _t("Australia") + `",
+        "` + _t("joey") + `",
+        "` + _t("jump") + `",
+        "` + _t("kangaroo") + `",
+        "` + _t("marsupial") + `"
     ],
-    "name": "` + _lt("kangaroo") + `",
+    "name": "` + _t("kangaroo") + `",
     "shortcodes": [
         ":kangaroo:"
     ]
@@ -7859,11 +7859,11 @@ const emojisData3 = `{
     "codepoints": "🦡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("badger") + `",
-        "` + _lt("honey badger") + `",
-        "` + _lt("pester") + `"
+        "` + _t("badger") + `",
+        "` + _t("honey badger") + `",
+        "` + _t("pester") + `"
     ],
-    "name": "` + _lt("badger") + `",
+    "name": "` + _t("badger") + `",
     "shortcodes": [
         ":badger:"
     ]
@@ -7873,12 +7873,12 @@ const emojisData3 = `{
     "codepoints": "🐾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("feet") + `",
-        "` + _lt("paw") + `",
-        "` + _lt("paw prints") + `",
-        "` + _lt("print") + `"
+        "` + _t("feet") + `",
+        "` + _t("paw") + `",
+        "` + _t("paw prints") + `",
+        "` + _t("print") + `"
     ],
-    "name": "` + _lt("paw prints") + `",
+    "name": "` + _t("paw prints") + `",
     "shortcodes": [
         ":paw_prints:"
     ]
@@ -7888,11 +7888,11 @@ const emojisData3 = `{
     "codepoints": "🦃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird") + `",
-        "` + _lt("poultry") + `",
-        "` + _lt("turkey") + `"
+        "` + _t("bird") + `",
+        "` + _t("poultry") + `",
+        "` + _t("turkey") + `"
     ],
-    "name": "` + _lt("turkey") + `",
+    "name": "` + _t("turkey") + `",
     "shortcodes": [
         ":turkey:"
     ]
@@ -7902,11 +7902,11 @@ const emojisData3 = `{
     "codepoints": "🐔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird") + `",
-        "` + _lt("chicken") + `",
-        "` + _lt("poultry") + `"
+        "` + _t("bird") + `",
+        "` + _t("chicken") + `",
+        "` + _t("poultry") + `"
     ],
-    "name": "` + _lt("chicken") + `",
+    "name": "` + _t("chicken") + `",
     "shortcodes": [
         ":chicken:"
     ]
@@ -7916,10 +7916,10 @@ const emojisData3 = `{
     "codepoints": "🐓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird") + `",
-        "` + _lt("rooster") + `"
+        "` + _t("bird") + `",
+        "` + _t("rooster") + `"
     ],
-    "name": "` + _lt("rooster") + `",
+    "name": "` + _t("rooster") + `",
     "shortcodes": [
         ":rooster:"
     ]
@@ -7929,12 +7929,12 @@ const emojisData3 = `{
     "codepoints": "🐣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baby") + `",
-        "` + _lt("bird") + `",
-        "` + _lt("chick") + `",
-        "` + _lt("hatching") + `"
+        "` + _t("baby") + `",
+        "` + _t("bird") + `",
+        "` + _t("chick") + `",
+        "` + _t("hatching") + `"
     ],
-    "name": "` + _lt("hatching chick") + `",
+    "name": "` + _t("hatching chick") + `",
     "shortcodes": [
         ":hatching_chick:"
     ]
@@ -7944,11 +7944,11 @@ const emojisData3 = `{
     "codepoints": "🐤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baby") + `",
-        "` + _lt("bird") + `",
-        "` + _lt("chick") + `"
+        "` + _t("baby") + `",
+        "` + _t("bird") + `",
+        "` + _t("chick") + `"
     ],
-    "name": "` + _lt("baby chick") + `",
+    "name": "` + _t("baby chick") + `",
     "shortcodes": [
         ":baby_chick:"
     ]
@@ -7958,12 +7958,12 @@ const emojisData3 = `{
     "codepoints": "🐥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baby") + `",
-        "` + _lt("bird") + `",
-        "` + _lt("chick") + `",
-        "` + _lt("front-facing baby chick") + `"
+        "` + _t("baby") + `",
+        "` + _t("bird") + `",
+        "` + _t("chick") + `",
+        "` + _t("front-facing baby chick") + `"
     ],
-    "name": "` + _lt("front-facing baby chick") + `",
+    "name": "` + _t("front-facing baby chick") + `",
     "shortcodes": [
         ":front-facing_baby_chick:"
     ]
@@ -7973,9 +7973,9 @@ const emojisData3 = `{
     "codepoints": "🐦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird") + `"
+        "` + _t("bird") + `"
     ],
-    "name": "` + _lt("bird") + `",
+    "name": "` + _t("bird") + `",
     "shortcodes": [
         ":bird:"
     ]
@@ -7985,10 +7985,10 @@ const emojisData3 = `{
     "codepoints": "🐧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird") + `",
-        "` + _lt("penguin") + `"
+        "` + _t("bird") + `",
+        "` + _t("penguin") + `"
     ],
-    "name": "` + _lt("penguin") + `",
+    "name": "` + _t("penguin") + `",
     "shortcodes": [
         ":penguin:"
     ]
@@ -7998,12 +7998,12 @@ const emojisData3 = `{
     "codepoints": "🕊️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird") + `",
-        "` + _lt("dove") + `",
-        "` + _lt("fly") + `",
-        "` + _lt("peace") + `"
+        "` + _t("bird") + `",
+        "` + _t("dove") + `",
+        "` + _t("fly") + `",
+        "` + _t("peace") + `"
     ],
-    "name": "` + _lt("dove") + `",
+    "name": "` + _t("dove") + `",
     "shortcodes": [
         ":dove:"
     ]
@@ -8013,11 +8013,11 @@ const emojisData3 = `{
     "codepoints": "🦅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird of prey") + `",
-        "` + _lt("eagle") + `",
-        "` + _lt("bird") + `"
+        "` + _t("bird of prey") + `",
+        "` + _t("eagle") + `",
+        "` + _t("bird") + `"
     ],
-    "name": "` + _lt("eagle") + `",
+    "name": "` + _t("eagle") + `",
     "shortcodes": [
         ":eagle:"
     ]
@@ -8027,10 +8027,10 @@ const emojisData3 = `{
     "codepoints": "🦆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird") + `",
-        "` + _lt("duck") + `"
+        "` + _t("bird") + `",
+        "` + _t("duck") + `"
     ],
-    "name": "` + _lt("duck") + `",
+    "name": "` + _t("duck") + `",
     "shortcodes": [
         ":duck:"
     ]
@@ -8040,12 +8040,12 @@ const emojisData3 = `{
     "codepoints": "🦢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird") + `",
-        "` + _lt("cygnet") + `",
-        "` + _lt("swan") + `",
-        "` + _lt("ugly duckling") + `"
+        "` + _t("bird") + `",
+        "` + _t("cygnet") + `",
+        "` + _t("swan") + `",
+        "` + _t("ugly duckling") + `"
     ],
-    "name": "` + _lt("swan") + `",
+    "name": "` + _t("swan") + `",
     "shortcodes": [
         ":swan:"
     ]
@@ -8055,12 +8055,12 @@ const emojisData3 = `{
     "codepoints": "🦉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird of prey") + `",
-        "` + _lt("owl") + `",
-        "` + _lt("wise") + `",
-        "` + _lt("bird") + `"
+        "` + _t("bird of prey") + `",
+        "` + _t("owl") + `",
+        "` + _t("wise") + `",
+        "` + _t("bird") + `"
     ],
-    "name": "` + _lt("owl") + `",
+    "name": "` + _t("owl") + `",
     "shortcodes": [
         ":owl:"
     ]
@@ -8070,11 +8070,11 @@ const emojisData3 = `{
     "codepoints": "🦩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flamboyant") + `",
-        "` + _lt("flamingo") + `",
-        "` + _lt("tropical") + `"
+        "` + _t("flamboyant") + `",
+        "` + _t("flamingo") + `",
+        "` + _t("tropical") + `"
     ],
-    "name": "` + _lt("flamingo") + `",
+    "name": "` + _t("flamingo") + `",
     "shortcodes": [
         ":flamingo:"
     ]
@@ -8084,13 +8084,13 @@ const emojisData3 = `{
     "codepoints": "🦚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird") + `",
-        "` + _lt("ostentatious") + `",
-        "` + _lt("peacock") + `",
-        "` + _lt("peahen") + `",
-        "` + _lt("proud") + `"
+        "` + _t("bird") + `",
+        "` + _t("ostentatious") + `",
+        "` + _t("peacock") + `",
+        "` + _t("peahen") + `",
+        "` + _t("proud") + `"
     ],
-    "name": "` + _lt("peacock") + `",
+    "name": "` + _t("peacock") + `",
     "shortcodes": [
         ":peacock:"
     ]
@@ -8100,12 +8100,12 @@ const emojisData3 = `{
     "codepoints": "🦜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bird") + `",
-        "` + _lt("parrot") + `",
-        "` + _lt("pirate") + `",
-        "` + _lt("talk") + `"
+        "` + _t("bird") + `",
+        "` + _t("parrot") + `",
+        "` + _t("pirate") + `",
+        "` + _t("talk") + `"
     ],
-    "name": "` + _lt("parrot") + `",
+    "name": "` + _t("parrot") + `",
     "shortcodes": [
         ":parrot:"
     ]
@@ -8115,10 +8115,10 @@ const emojisData3 = `{
     "codepoints": "🐸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("frog") + `"
+        "` + _t("face") + `",
+        "` + _t("frog") + `"
     ],
-    "name": "` + _lt("frog") + `",
+    "name": "` + _t("frog") + `",
     "shortcodes": [
         ":frog:"
     ]
@@ -8128,9 +8128,9 @@ const emojisData3 = `{
     "codepoints": "🐊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("crocodile") + `"
+        "` + _t("crocodile") + `"
     ],
-    "name": "` + _lt("crocodile") + `",
+    "name": "` + _t("crocodile") + `",
     "shortcodes": [
         ":crocodile:"
     ]
@@ -8140,11 +8140,11 @@ const emojisData3 = `{
     "codepoints": "🐢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("terrapin") + `",
-        "` + _lt("tortoise") + `",
-        "` + _lt("turtle") + `"
+        "` + _t("terrapin") + `",
+        "` + _t("tortoise") + `",
+        "` + _t("turtle") + `"
     ],
-    "name": "` + _lt("turtle") + `",
+    "name": "` + _t("turtle") + `",
     "shortcodes": [
         ":turtle:"
     ]
@@ -8154,10 +8154,10 @@ const emojisData3 = `{
     "codepoints": "🦎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("lizard") + `",
-        "` + _lt("reptile") + `"
+        "` + _t("lizard") + `",
+        "` + _t("reptile") + `"
     ],
-    "name": "` + _lt("lizard") + `",
+    "name": "` + _t("lizard") + `",
     "shortcodes": [
         ":lizard:"
     ]
@@ -8167,13 +8167,13 @@ const emojisData3 = `{
     "codepoints": "🐍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bearer") + `",
-        "` + _lt("Ophiuchus") + `",
-        "` + _lt("serpent") + `",
-        "` + _lt("snake") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("bearer") + `",
+        "` + _t("Ophiuchus") + `",
+        "` + _t("serpent") + `",
+        "` + _t("snake") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("snake") + `",
+    "name": "` + _t("snake") + `",
     "shortcodes": [
         ":snake:"
     ]
@@ -8183,11 +8183,11 @@ const emojisData3 = `{
     "codepoints": "🐲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dragon") + `",
-        "` + _lt("face") + `",
-        "` + _lt("fairy tale") + `"
+        "` + _t("dragon") + `",
+        "` + _t("face") + `",
+        "` + _t("fairy tale") + `"
     ],
-    "name": "` + _lt("dragon face") + `",
+    "name": "` + _t("dragon face") + `",
     "shortcodes": [
         ":dragon_face:"
     ]
@@ -8197,10 +8197,10 @@ const emojisData3 = `{
     "codepoints": "🐉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dragon") + `",
-        "` + _lt("fairy tale") + `"
+        "` + _t("dragon") + `",
+        "` + _t("fairy tale") + `"
     ],
-    "name": "` + _lt("dragon") + `",
+    "name": "` + _t("dragon") + `",
     "shortcodes": [
         ":dragon:"
     ]
@@ -8210,12 +8210,12 @@ const emojisData3 = `{
     "codepoints": "🦕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("brachiosaurus") + `",
-        "` + _lt("brontosaurus") + `",
-        "` + _lt("diplodocus") + `",
-        "` + _lt("sauropod") + `"
+        "` + _t("brachiosaurus") + `",
+        "` + _t("brontosaurus") + `",
+        "` + _t("diplodocus") + `",
+        "` + _t("sauropod") + `"
     ],
-    "name": "` + _lt("sauropod") + `",
+    "name": "` + _t("sauropod") + `",
     "shortcodes": [
         ":sauropod:"
     ]
@@ -8225,10 +8225,10 @@ const emojisData3 = `{
     "codepoints": "🦖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("T-Rex") + `",
-        "` + _lt("Tyrannosaurus Rex") + `"
+        "` + _t("T-Rex") + `",
+        "` + _t("Tyrannosaurus Rex") + `"
     ],
-    "name": "` + _lt("T-Rex") + `",
+    "name": "` + _t("T-Rex") + `",
     "shortcodes": [
         ":T-Rex:"
     ]
@@ -8238,11 +8238,11 @@ const emojisData3 = `{
     "codepoints": "🐳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("spouting") + `",
-        "` + _lt("whale") + `"
+        "` + _t("face") + `",
+        "` + _t("spouting") + `",
+        "` + _t("whale") + `"
     ],
-    "name": "` + _lt("spouting whale") + `",
+    "name": "` + _t("spouting whale") + `",
     "shortcodes": [
         ":spouting_whale:"
     ]
@@ -8252,9 +8252,9 @@ const emojisData3 = `{
     "codepoints": "🐋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("whale") + `"
+        "` + _t("whale") + `"
     ],
-    "name": "` + _lt("whale") + `",
+    "name": "` + _t("whale") + `",
     "shortcodes": [
         ":whale:"
     ]
@@ -8264,11 +8264,11 @@ const emojisData3 = `{
     "codepoints": "🐬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dolphin") + `",
-        "` + _lt("porpoise") + `",
-        "` + _lt("flipper") + `"
+        "` + _t("dolphin") + `",
+        "` + _t("porpoise") + `",
+        "` + _t("flipper") + `"
     ],
-    "name": "` + _lt("dolphin") + `",
+    "name": "` + _t("dolphin") + `",
     "shortcodes": [
         ":dolphin:"
     ]
@@ -8278,11 +8278,11 @@ const emojisData3 = `{
     "codepoints": "🐟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fish") + `",
-        "` + _lt("Pisces") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("fish") + `",
+        "` + _t("Pisces") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("fish") + `",
+    "name": "` + _t("fish") + `",
     "shortcodes": [
         ":fish:"
     ]
@@ -8292,11 +8292,11 @@ const emojisData3 = `{
     "codepoints": "🐠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fish") + `",
-        "` + _lt("reef fish") + `",
-        "` + _lt("tropical") + `"
+        "` + _t("fish") + `",
+        "` + _t("reef fish") + `",
+        "` + _t("tropical") + `"
     ],
-    "name": "` + _lt("tropical fish") + `",
+    "name": "` + _t("tropical fish") + `",
     "shortcodes": [
         ":tropical_fish:"
     ]
@@ -8306,10 +8306,10 @@ const emojisData3 = `{
     "codepoints": "🐡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blowfish") + `",
-        "` + _lt("fish") + `"
+        "` + _t("blowfish") + `",
+        "` + _t("fish") + `"
     ],
-    "name": "` + _lt("blowfish") + `",
+    "name": "` + _t("blowfish") + `",
     "shortcodes": [
         ":blowfish:"
     ]
@@ -8319,10 +8319,10 @@ const emojisData3 = `{
     "codepoints": "🦈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fish") + `",
-        "` + _lt("shark") + `"
+        "` + _t("fish") + `",
+        "` + _t("shark") + `"
     ],
-    "name": "` + _lt("shark") + `",
+    "name": "` + _t("shark") + `",
     "shortcodes": [
         ":shark:"
     ]
@@ -8332,9 +8332,9 @@ const emojisData3 = `{
     "codepoints": "🐙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("octopus") + `"
+        "` + _t("octopus") + `"
     ],
-    "name": "` + _lt("octopus") + `",
+    "name": "` + _t("octopus") + `",
     "shortcodes": [
         ":octopus:"
     ]
@@ -8344,10 +8344,10 @@ const emojisData3 = `{
     "codepoints": "🐚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("shell") + `",
-        "` + _lt("spiral") + `"
+        "` + _t("shell") + `",
+        "` + _t("spiral") + `"
     ],
-    "name": "` + _lt("spiral shell") + `",
+    "name": "` + _t("spiral shell") + `",
     "shortcodes": [
         ":spiral_shell:"
     ]
@@ -8359,10 +8359,10 @@ const emojisData3 = `{
         ":snail"
     ],
     "keywords": [
-        "` + _lt("mollusc") + `",
-        "` + _lt("snail") + `"
+        "` + _t("mollusc") + `",
+        "` + _t("snail") + `"
     ],
-    "name": "` + _lt("snail") + `",
+    "name": "` + _t("snail") + `",
     "shortcodes": [
         ":snail:"
     ]
@@ -8372,12 +8372,12 @@ const emojisData3 = `{
     "codepoints": "🦋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("butterfly") + `",
-        "` + _lt("insect") + `",
-        "` + _lt("moth") + `",
-        "` + _lt("pretty") + `"
+        "` + _t("butterfly") + `",
+        "` + _t("insect") + `",
+        "` + _t("moth") + `",
+        "` + _t("pretty") + `"
     ],
-    "name": "` + _lt("butterfly") + `",
+    "name": "` + _t("butterfly") + `",
     "shortcodes": [
         ":butterfly:"
     ]
@@ -8387,12 +8387,12 @@ const emojisData3 = `{
     "codepoints": "🐛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bug") + `",
-        "` + _lt("caterpillar") + `",
-        "` + _lt("insect") + `",
-        "` + _lt("worm") + `"
+        "` + _t("bug") + `",
+        "` + _t("caterpillar") + `",
+        "` + _t("insect") + `",
+        "` + _t("worm") + `"
     ],
-    "name": "` + _lt("bug") + `",
+    "name": "` + _t("bug") + `",
     "shortcodes": [
         ":bug:"
     ]
@@ -8402,10 +8402,10 @@ const emojisData3 = `{
     "codepoints": "🐜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ant") + `",
-        "` + _lt("insect") + `"
+        "` + _t("ant") + `",
+        "` + _t("insect") + `"
     ],
-    "name": "` + _lt("ant") + `",
+    "name": "` + _t("ant") + `",
     "shortcodes": [
         ":ant:"
     ]
@@ -8415,11 +8415,11 @@ const emojisData3 = `{
     "codepoints": "🐝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bee") + `",
-        "` + _lt("honeybee") + `",
-        "` + _lt("insect") + `"
+        "` + _t("bee") + `",
+        "` + _t("honeybee") + `",
+        "` + _t("insect") + `"
     ],
-    "name": "` + _lt("honeybee") + `",
+    "name": "` + _t("honeybee") + `",
     "shortcodes": [
         ":honeybee:"
     ]
@@ -8431,13 +8431,13 @@ const emojisData3 = `{
         ":bug"
     ],
     "keywords": [
-        "` + _lt("beetle") + `",
-        "` + _lt("insect") + `",
-        "` + _lt("lady beetle") + `",
-        "` + _lt("ladybird") + `",
-        "` + _lt("ladybug") + `"
+        "` + _t("beetle") + `",
+        "` + _t("insect") + `",
+        "` + _t("lady beetle") + `",
+        "` + _t("ladybird") + `",
+        "` + _t("ladybug") + `"
     ],
-    "name": "` + _lt("lady beetle") + `",
+    "name": "` + _t("lady beetle") + `",
     "shortcodes": [
         ":lady_beetle:"
     ]
@@ -8447,10 +8447,10 @@ const emojisData3 = `{
     "codepoints": "🦗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cricket") + `",
-        "` + _lt("grasshopper") + `"
+        "` + _t("cricket") + `",
+        "` + _t("grasshopper") + `"
     ],
-    "name": "` + _lt("cricket") + `",
+    "name": "` + _t("cricket") + `",
     "shortcodes": [
         ":cricket:"
     ]
@@ -8460,11 +8460,11 @@ const emojisData3 = `{
     "codepoints": "🕷️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arachnid") + `",
-        "` + _lt("spider") + `",
-        "` + _lt("insect") + `"
+        "` + _t("arachnid") + `",
+        "` + _t("spider") + `",
+        "` + _t("insect") + `"
     ],
-    "name": "` + _lt("spider") + `",
+    "name": "` + _t("spider") + `",
     "shortcodes": [
         ":spider:"
     ]
@@ -8474,10 +8474,10 @@ const emojisData3 = `{
     "codepoints": "🕸️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("spider") + `",
-        "` + _lt("web") + `"
+        "` + _t("spider") + `",
+        "` + _t("web") + `"
     ],
-    "name": "` + _lt("spider web") + `",
+    "name": "` + _t("spider web") + `",
     "shortcodes": [
         ":spider_web:"
     ]
@@ -8487,12 +8487,12 @@ const emojisData3 = `{
     "codepoints": "🦂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("scorpio") + `",
-        "` + _lt("Scorpio") + `",
-        "` + _lt("scorpion") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("scorpio") + `",
+        "` + _t("Scorpio") + `",
+        "` + _t("scorpion") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("scorpion") + `",
+    "name": "` + _t("scorpion") + `",
     "shortcodes": [
         ":scorpion:"
     ]
@@ -8502,17 +8502,17 @@ const emojisData3 = `{
     "codepoints": "🦟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dengue") + `",
-        "` + _lt("fever") + `",
-        "` + _lt("insect") + `",
-        "` + _lt("malaria") + `",
-        "` + _lt("mosquito") + `",
-        "` + _lt("mozzie") + `",
-        "` + _lt("virus") + `",
-        "` + _lt("disease") + `",
-        "` + _lt("pest") + `"
+        "` + _t("dengue") + `",
+        "` + _t("fever") + `",
+        "` + _t("insect") + `",
+        "` + _t("malaria") + `",
+        "` + _t("mosquito") + `",
+        "` + _t("mozzie") + `",
+        "` + _t("virus") + `",
+        "` + _t("disease") + `",
+        "` + _t("pest") + `"
     ],
-    "name": "` + _lt("mosquito") + `",
+    "name": "` + _t("mosquito") + `",
     "shortcodes": [
         ":mosquito:"
     ]
@@ -8522,12 +8522,12 @@ const emojisData3 = `{
     "codepoints": "🦠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("amoeba") + `",
-        "` + _lt("bacteria") + `",
-        "` + _lt("microbe") + `",
-        "` + _lt("virus") + `"
+        "` + _t("amoeba") + `",
+        "` + _t("bacteria") + `",
+        "` + _t("microbe") + `",
+        "` + _t("virus") + `"
     ],
-    "name": "` + _lt("microbe") + `",
+    "name": "` + _t("microbe") + `",
     "shortcodes": [
         ":microbe:"
     ]
@@ -8537,10 +8537,10 @@ const emojisData3 = `{
     "codepoints": "💐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bouquet") + `",
-        "` + _lt("flower") + `"
+        "` + _t("bouquet") + `",
+        "` + _t("flower") + `"
     ],
-    "name": "` + _lt("bouquet") + `",
+    "name": "` + _t("bouquet") + `",
     "shortcodes": [
         ":bouquet:"
     ]
@@ -8550,11 +8550,11 @@ const emojisData3 = `{
     "codepoints": "🌸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blossom") + `",
-        "` + _lt("cherry") + `",
-        "` + _lt("flower") + `"
+        "` + _t("blossom") + `",
+        "` + _t("cherry") + `",
+        "` + _t("flower") + `"
     ],
-    "name": "` + _lt("cherry blossom") + `",
+    "name": "` + _t("cherry blossom") + `",
     "shortcodes": [
         ":cherry_blossom:"
     ]
@@ -8564,10 +8564,10 @@ const emojisData3 = `{
     "codepoints": "💮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flower") + `",
-        "` + _lt("white flower") + `"
+        "` + _t("flower") + `",
+        "` + _t("white flower") + `"
     ],
-    "name": "` + _lt("white flower") + `",
+    "name": "` + _t("white flower") + `",
     "shortcodes": [
         ":white_flower:"
     ]
@@ -8577,10 +8577,10 @@ const emojisData3 = `{
     "codepoints": "🏵️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("plant") + `",
-        "` + _lt("rosette") + `"
+        "` + _t("plant") + `",
+        "` + _t("rosette") + `"
     ],
-    "name": "` + _lt("rosette") + `",
+    "name": "` + _t("rosette") + `",
     "shortcodes": [
         ":rosette:"
     ]
@@ -8592,10 +8592,10 @@ const emojisData3 = `{
         ":sunflower"
     ],
     "keywords": [
-        "` + _lt("flower") + `",
-        "` + _lt("rose") + `"
+        "` + _t("flower") + `",
+        "` + _t("rose") + `"
     ],
-    "name": "` + _lt("rose") + `",
+    "name": "` + _t("rose") + `",
     "shortcodes": [
         ":rose:"
     ]
@@ -8605,10 +8605,10 @@ const emojisData3 = `{
     "codepoints": "🥀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flower") + `",
-        "` + _lt("wilted") + `"
+        "` + _t("flower") + `",
+        "` + _t("wilted") + `"
     ],
-    "name": "` + _lt("wilted flower") + `",
+    "name": "` + _t("wilted flower") + `",
     "shortcodes": [
         ":wilted_flower:"
     ]
@@ -8618,10 +8618,10 @@ const emojisData3 = `{
     "codepoints": "🌺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flower") + `",
-        "` + _lt("hibiscus") + `"
+        "` + _t("flower") + `",
+        "` + _t("hibiscus") + `"
     ],
-    "name": "` + _lt("hibiscus") + `",
+    "name": "` + _t("hibiscus") + `",
     "shortcodes": [
         ":hibiscus:"
     ]
@@ -8631,11 +8631,11 @@ const emojisData3 = `{
     "codepoints": "🌻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flower") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sunflower") + `"
+        "` + _t("flower") + `",
+        "` + _t("sun") + `",
+        "` + _t("sunflower") + `"
     ],
-    "name": "` + _lt("sunflower") + `",
+    "name": "` + _t("sunflower") + `",
     "shortcodes": [
         ":sunflower:"
     ]
@@ -8645,10 +8645,10 @@ const emojisData3 = `{
     "codepoints": "🌼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blossom") + `",
-        "` + _lt("flower") + `"
+        "` + _t("blossom") + `",
+        "` + _t("flower") + `"
     ],
-    "name": "` + _lt("blossom") + `",
+    "name": "` + _t("blossom") + `",
     "shortcodes": [
         ":blossom:"
     ]
@@ -8658,10 +8658,10 @@ const emojisData3 = `{
     "codepoints": "🌷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flower") + `",
-        "` + _lt("tulip") + `"
+        "` + _t("flower") + `",
+        "` + _t("tulip") + `"
     ],
-    "name": "` + _lt("tulip") + `",
+    "name": "` + _t("tulip") + `",
     "shortcodes": [
         ":tulip:"
     ]
@@ -8671,10 +8671,10 @@ const emojisData3 = `{
     "codepoints": "🌱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("seedling") + `",
-        "` + _lt("young") + `"
+        "` + _t("seedling") + `",
+        "` + _t("young") + `"
     ],
-    "name": "` + _lt("seedling") + `",
+    "name": "` + _t("seedling") + `",
     "shortcodes": [
         ":seedling:"
     ]
@@ -8684,10 +8684,10 @@ const emojisData3 = `{
     "codepoints": "🌲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("evergreen tree") + `",
-        "` + _lt("tree") + `"
+        "` + _t("evergreen tree") + `",
+        "` + _t("tree") + `"
     ],
-    "name": "` + _lt("evergreen tree") + `",
+    "name": "` + _t("evergreen tree") + `",
     "shortcodes": [
         ":evergreen_ltree:"
     ]
@@ -8697,11 +8697,11 @@ const emojisData3 = `{
     "codepoints": "🌳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("deciduous") + `",
-        "` + _lt("shedding") + `",
-        "` + _lt("tree") + `"
+        "` + _t("deciduous") + `",
+        "` + _t("shedding") + `",
+        "` + _t("tree") + `"
     ],
-    "name": "` + _lt("deciduous tree") + `",
+    "name": "` + _t("deciduous tree") + `",
     "shortcodes": [
         ":deciduous_ltree:"
     ]
@@ -8711,10 +8711,10 @@ const emojisData3 = `{
     "codepoints": "🌴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("palm") + `",
-        "` + _lt("tree") + `"
+        "` + _t("palm") + `",
+        "` + _t("tree") + `"
     ],
-    "name": "` + _lt("palm tree") + `",
+    "name": "` + _t("palm tree") + `",
     "shortcodes": [
         ":palm_ltree:"
     ]
@@ -8724,10 +8724,10 @@ const emojisData3 = `{
     "codepoints": "🌵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cactus") + `",
-        "` + _lt("plant") + `"
+        "` + _t("cactus") + `",
+        "` + _t("plant") + `"
     ],
-    "name": "` + _lt("cactus") + `",
+    "name": "` + _t("cactus") + `",
     "shortcodes": [
         ":cactus:"
     ]
@@ -8737,13 +8737,13 @@ const emojisData3 = `{
     "codepoints": "🌾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ear") + `",
-        "` + _lt("grain") + `",
-        "` + _lt("rice") + `",
-        "` + _lt("sheaf of rice") + `",
-        "` + _lt("sheaf") + `"
+        "` + _t("ear") + `",
+        "` + _t("grain") + `",
+        "` + _t("rice") + `",
+        "` + _t("sheaf of rice") + `",
+        "` + _t("sheaf") + `"
     ],
-    "name": "` + _lt("sheaf of rice") + `",
+    "name": "` + _t("sheaf of rice") + `",
     "shortcodes": [
         ":sheaf_of_rice:"
     ]
@@ -8753,10 +8753,10 @@ const emojisData3 = `{
     "codepoints": "🌿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("herb") + `",
-        "` + _lt("leaf") + `"
+        "` + _t("herb") + `",
+        "` + _t("leaf") + `"
     ],
-    "name": "` + _lt("herb") + `",
+    "name": "` + _t("herb") + `",
     "shortcodes": [
         ":herb:"
     ]
@@ -8766,10 +8766,10 @@ const emojisData3 = `{
     "codepoints": "☘️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("plant") + `",
-        "` + _lt("shamrock") + `"
+        "` + _t("plant") + `",
+        "` + _t("shamrock") + `"
     ],
-    "name": "` + _lt("shamrock") + `",
+    "name": "` + _t("shamrock") + `",
     "shortcodes": [
         ":shamrock:"
     ]
@@ -8781,13 +8781,13 @@ const emojisData3 = `{
         ":clover"
     ],
     "keywords": [
-        "` + _lt("4") + `",
-        "` + _lt("clover") + `",
-        "` + _lt("four") + `",
-        "` + _lt("four-leaf clover") + `",
-        "` + _lt("leaf") + `"
+        "` + _t("4") + `",
+        "` + _t("clover") + `",
+        "` + _t("four") + `",
+        "` + _t("four-leaf clover") + `",
+        "` + _t("leaf") + `"
     ],
-    "name": "` + _lt("four leaf clover") + `",
+    "name": "` + _t("four leaf clover") + `",
     "shortcodes": [
         ":four_leaf_clover:"
     ]
@@ -8797,11 +8797,11 @@ const emojisData3 = `{
     "codepoints": "🍁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("falling") + `",
-        "` + _lt("leaf") + `",
-        "` + _lt("maple") + `"
+        "` + _t("falling") + `",
+        "` + _t("leaf") + `",
+        "` + _t("maple") + `"
     ],
-    "name": "` + _lt("maple leaf") + `",
+    "name": "` + _t("maple leaf") + `",
     "shortcodes": [
         ":maple_leaf:"
     ]
@@ -8811,11 +8811,11 @@ const emojisData3 = `{
     "codepoints": "🍂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fallen leaf") + `",
-        "` + _lt("falling") + `",
-        "` + _lt("leaf") + `"
+        "` + _t("fallen leaf") + `",
+        "` + _t("falling") + `",
+        "` + _t("leaf") + `"
     ],
-    "name": "` + _lt("fallen leaf") + `",
+    "name": "` + _t("fallen leaf") + `",
     "shortcodes": [
         ":fallen_leaf:"
     ]
@@ -8825,13 +8825,13 @@ const emojisData3 = `{
     "codepoints": "🍃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blow") + `",
-        "` + _lt("flutter") + `",
-        "` + _lt("leaf") + `",
-        "` + _lt("leaf fluttering in wind") + `",
-        "` + _lt("wind") + `"
+        "` + _t("blow") + `",
+        "` + _t("flutter") + `",
+        "` + _t("leaf") + `",
+        "` + _t("leaf fluttering in wind") + `",
+        "` + _t("wind") + `"
     ],
-    "name": "` + _lt("leaf fluttering in wind") + `",
+    "name": "` + _t("leaf fluttering in wind") + `",
     "shortcodes": [
         ":leaf_fluttering_in_wind:"
     ]
@@ -8842,11 +8842,11 @@ const emojisData4 = `{
     "codepoints": "🍇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fruit") + `",
-        "` + _lt("grape") + `",
-        "` + _lt("grapes") + `"
+        "` + _t("fruit") + `",
+        "` + _t("grape") + `",
+        "` + _t("grapes") + `"
     ],
-    "name": "` + _lt("grapes") + `",
+    "name": "` + _t("grapes") + `",
     "shortcodes": [
         ":grapes:"
     ]
@@ -8856,10 +8856,10 @@ const emojisData4 = `{
     "codepoints": "🍈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fruit") + `",
-        "` + _lt("melon") + `"
+        "` + _t("fruit") + `",
+        "` + _t("melon") + `"
     ],
-    "name": "` + _lt("melon") + `",
+    "name": "` + _t("melon") + `",
     "shortcodes": [
         ":melon:"
     ]
@@ -8869,10 +8869,10 @@ const emojisData4 = `{
     "codepoints": "🍉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fruit") + `",
-        "` + _lt("watermelon") + `"
+        "` + _t("fruit") + `",
+        "` + _t("watermelon") + `"
     ],
-    "name": "` + _lt("watermelon") + `",
+    "name": "` + _t("watermelon") + `",
     "shortcodes": [
         ":watermelon:"
     ]
@@ -8882,12 +8882,12 @@ const emojisData4 = `{
     "codepoints": "🍊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fruit") + `",
-        "` + _lt("mandarin") + `",
-        "` + _lt("orange") + `",
-        "` + _lt("tangerine") + `"
+        "` + _t("fruit") + `",
+        "` + _t("mandarin") + `",
+        "` + _t("orange") + `",
+        "` + _t("tangerine") + `"
     ],
-    "name": "` + _lt("tangerine") + `",
+    "name": "` + _t("tangerine") + `",
     "shortcodes": [
         ":tangerine:"
     ]
@@ -8897,11 +8897,11 @@ const emojisData4 = `{
     "codepoints": "🍋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("citrus") + `",
-        "` + _lt("fruit") + `",
-        "` + _lt("lemon") + `"
+        "` + _t("citrus") + `",
+        "` + _t("fruit") + `",
+        "` + _t("lemon") + `"
     ],
-    "name": "` + _lt("lemon") + `",
+    "name": "` + _t("lemon") + `",
     "shortcodes": [
         ":lemon:"
     ]
@@ -8913,10 +8913,10 @@ const emojisData4 = `{
         ":banana"
     ],
     "keywords": [
-        "` + _lt("banana") + `",
-        "` + _lt("fruit") + `"
+        "` + _t("banana") + `",
+        "` + _t("fruit") + `"
     ],
-    "name": "` + _lt("banana") + `",
+    "name": "` + _t("banana") + `",
     "shortcodes": [
         ":banana:"
     ]
@@ -8926,10 +8926,10 @@ const emojisData4 = `{
     "codepoints": "🍍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fruit") + `",
-        "` + _lt("pineapple") + `"
+        "` + _t("fruit") + `",
+        "` + _t("pineapple") + `"
     ],
-    "name": "` + _lt("pineapple") + `",
+    "name": "` + _t("pineapple") + `",
     "shortcodes": [
         ":pineapple:"
     ]
@@ -8939,11 +8939,11 @@ const emojisData4 = `{
     "codepoints": "🥭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fruit") + `",
-        "` + _lt("mango") + `",
-        "` + _lt("tropical") + `"
+        "` + _t("fruit") + `",
+        "` + _t("mango") + `",
+        "` + _t("tropical") + `"
     ],
-    "name": "` + _lt("mango") + `",
+    "name": "` + _t("mango") + `",
     "shortcodes": [
         ":mango:"
     ]
@@ -8953,11 +8953,11 @@ const emojisData4 = `{
     "codepoints": "🍎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("apple") + `",
-        "` + _lt("fruit") + `",
-        "` + _lt("red") + `"
+        "` + _t("apple") + `",
+        "` + _t("fruit") + `",
+        "` + _t("red") + `"
     ],
-    "name": "` + _lt("red apple") + `",
+    "name": "` + _t("red apple") + `",
     "shortcodes": [
         ":red_apple:"
     ]
@@ -8967,11 +8967,11 @@ const emojisData4 = `{
     "codepoints": "🍏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("apple") + `",
-        "` + _lt("fruit") + `",
-        "` + _lt("green") + `"
+        "` + _t("apple") + `",
+        "` + _t("fruit") + `",
+        "` + _t("green") + `"
     ],
-    "name": "` + _lt("green apple") + `",
+    "name": "` + _t("green apple") + `",
     "shortcodes": [
         ":green_apple:"
     ]
@@ -8981,10 +8981,10 @@ const emojisData4 = `{
     "codepoints": "🍐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fruit") + `",
-        "` + _lt("pear") + `"
+        "` + _t("fruit") + `",
+        "` + _t("pear") + `"
     ],
-    "name": "` + _lt("pear") + `",
+    "name": "` + _t("pear") + `",
     "shortcodes": [
         ":pear:"
     ]
@@ -8994,10 +8994,10 @@ const emojisData4 = `{
     "codepoints": "🍑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fruit") + `",
-        "` + _lt("peach") + `"
+        "` + _t("fruit") + `",
+        "` + _t("peach") + `"
     ],
-    "name": "` + _lt("peach") + `",
+    "name": "` + _t("peach") + `",
     "shortcodes": [
         ":peach:"
     ]
@@ -9007,13 +9007,13 @@ const emojisData4 = `{
     "codepoints": "🍒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("berries") + `",
-        "` + _lt("cherries") + `",
-        "` + _lt("cherry") + `",
-        "` + _lt("fruit") + `",
-        "` + _lt("red") + `"
+        "` + _t("berries") + `",
+        "` + _t("cherries") + `",
+        "` + _t("cherry") + `",
+        "` + _t("fruit") + `",
+        "` + _t("red") + `"
     ],
-    "name": "` + _lt("cherries") + `",
+    "name": "` + _t("cherries") + `",
     "shortcodes": [
         ":cherries:"
     ]
@@ -9023,11 +9023,11 @@ const emojisData4 = `{
     "codepoints": "🍓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("berry") + `",
-        "` + _lt("fruit") + `",
-        "` + _lt("strawberry") + `"
+        "` + _t("berry") + `",
+        "` + _t("fruit") + `",
+        "` + _t("strawberry") + `"
     ],
-    "name": "` + _lt("strawberry") + `",
+    "name": "` + _t("strawberry") + `",
     "shortcodes": [
         ":strawberry:"
     ]
@@ -9037,12 +9037,12 @@ const emojisData4 = `{
     "codepoints": "🥝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("food") + `",
-        "` + _lt("fruit") + `",
-        "` + _lt("kiwi fruit") + `",
-        "` + _lt("kiwi") + `"
+        "` + _t("food") + `",
+        "` + _t("fruit") + `",
+        "` + _t("kiwi fruit") + `",
+        "` + _t("kiwi") + `"
     ],
-    "name": "` + _lt("kiwi fruit") + `",
+    "name": "` + _t("kiwi fruit") + `",
     "shortcodes": [
         ":kiwi_fruit:"
     ]
@@ -9052,11 +9052,11 @@ const emojisData4 = `{
     "codepoints": "🍅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fruit") + `",
-        "` + _lt("tomato") + `",
-        "` + _lt("vegetable") + `"
+        "` + _t("fruit") + `",
+        "` + _t("tomato") + `",
+        "` + _t("vegetable") + `"
     ],
-    "name": "` + _lt("tomato") + `",
+    "name": "` + _t("tomato") + `",
     "shortcodes": [
         ":tomato:"
     ]
@@ -9066,11 +9066,11 @@ const emojisData4 = `{
     "codepoints": "🥥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("coconut") + `",
-        "` + _lt("palm") + `",
-        "` + _lt("piña colada") + `"
+        "` + _t("coconut") + `",
+        "` + _t("palm") + `",
+        "` + _t("piña colada") + `"
     ],
-    "name": "` + _lt("coconut") + `",
+    "name": "` + _t("coconut") + `",
     "shortcodes": [
         ":coconut:"
     ]
@@ -9080,11 +9080,11 @@ const emojisData4 = `{
     "codepoints": "🥑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("avocado") + `",
-        "` + _lt("food") + `",
-        "` + _lt("fruit") + `"
+        "` + _t("avocado") + `",
+        "` + _t("food") + `",
+        "` + _t("fruit") + `"
     ],
-    "name": "` + _lt("avocado") + `",
+    "name": "` + _t("avocado") + `",
     "shortcodes": [
         ":avocado:"
     ]
@@ -9094,11 +9094,11 @@ const emojisData4 = `{
     "codepoints": "🍆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("aubergine") + `",
-        "` + _lt("eggplant") + `",
-        "` + _lt("vegetable") + `"
+        "` + _t("aubergine") + `",
+        "` + _t("eggplant") + `",
+        "` + _t("vegetable") + `"
     ],
-    "name": "` + _lt("eggplant") + `",
+    "name": "` + _t("eggplant") + `",
     "shortcodes": [
         ":eggplant:"
     ]
@@ -9108,11 +9108,11 @@ const emojisData4 = `{
     "codepoints": "🥔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("food") + `",
-        "` + _lt("potato") + `",
-        "` + _lt("vegetable") + `"
+        "` + _t("food") + `",
+        "` + _t("potato") + `",
+        "` + _t("vegetable") + `"
     ],
-    "name": "` + _lt("potato") + `",
+    "name": "` + _t("potato") + `",
     "shortcodes": [
         ":potato:"
     ]
@@ -9122,11 +9122,11 @@ const emojisData4 = `{
     "codepoints": "🥕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("carrot") + `",
-        "` + _lt("food") + `",
-        "` + _lt("vegetable") + `"
+        "` + _t("carrot") + `",
+        "` + _t("food") + `",
+        "` + _t("vegetable") + `"
     ],
-    "name": "` + _lt("carrot") + `",
+    "name": "` + _t("carrot") + `",
     "shortcodes": [
         ":carrot:"
     ]
@@ -9136,15 +9136,15 @@ const emojisData4 = `{
     "codepoints": "🌽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("corn") + `",
-        "` + _lt("corn on the cob") + `",
-        "` + _lt("sweetcorn") + `",
-        "` + _lt("ear") + `",
-        "` + _lt("ear of corn") + `",
-        "` + _lt("maize") + `",
-        "` + _lt("maze") + `"
+        "` + _t("corn") + `",
+        "` + _t("corn on the cob") + `",
+        "` + _t("sweetcorn") + `",
+        "` + _t("ear") + `",
+        "` + _t("ear of corn") + `",
+        "` + _t("maize") + `",
+        "` + _t("maze") + `"
     ],
-    "name": "` + _lt("ear of corn") + `",
+    "name": "` + _t("ear of corn") + `",
     "shortcodes": [
         ":ear_of_corn:"
     ]
@@ -9154,12 +9154,12 @@ const emojisData4 = `{
     "codepoints": "🌶️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chilli") + `",
-        "` + _lt("hot pepper") + `",
-        "` + _lt("pepper") + `",
-        "` + _lt("hot") + `"
+        "` + _t("chilli") + `",
+        "` + _t("hot pepper") + `",
+        "` + _t("pepper") + `",
+        "` + _t("hot") + `"
     ],
-    "name": "` + _lt("hot pepper") + `",
+    "name": "` + _t("hot pepper") + `",
     "shortcodes": [
         ":hot_pepper:"
     ]
@@ -9169,12 +9169,12 @@ const emojisData4 = `{
     "codepoints": "🥒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cucumber") + `",
-        "` + _lt("food") + `",
-        "` + _lt("pickle") + `",
-        "` + _lt("vegetable") + `"
+        "` + _t("cucumber") + `",
+        "` + _t("food") + `",
+        "` + _t("pickle") + `",
+        "` + _t("vegetable") + `"
     ],
-    "name": "` + _lt("cucumber") + `",
+    "name": "` + _t("cucumber") + `",
     "shortcodes": [
         ":cucumber:"
     ]
@@ -9184,14 +9184,14 @@ const emojisData4 = `{
     "codepoints": "🥬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bok choy") + `",
-        "` + _lt("leafy green") + `",
-        "` + _lt("pak choi") + `",
-        "` + _lt("cabbage") + `",
-        "` + _lt("kale") + `",
-        "` + _lt("lettuce") + `"
+        "` + _t("bok choy") + `",
+        "` + _t("leafy green") + `",
+        "` + _t("pak choi") + `",
+        "` + _t("cabbage") + `",
+        "` + _t("kale") + `",
+        "` + _t("lettuce") + `"
     ],
-    "name": "` + _lt("leafy green") + `",
+    "name": "` + _t("leafy green") + `",
     "shortcodes": [
         ":leafy_green:"
     ]
@@ -9201,10 +9201,10 @@ const emojisData4 = `{
     "codepoints": "🥦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("broccoli") + `",
-        "` + _lt("wild cabbage") + `"
+        "` + _t("broccoli") + `",
+        "` + _t("wild cabbage") + `"
     ],
-    "name": "` + _lt("broccoli") + `",
+    "name": "` + _t("broccoli") + `",
     "shortcodes": [
         ":broccoli:"
     ]
@@ -9214,11 +9214,11 @@ const emojisData4 = `{
     "codepoints": "🧄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flavouring") + `",
-        "` + _lt("garlic") + `",
-        "` + _lt("flavoring") + `"
+        "` + _t("flavouring") + `",
+        "` + _t("garlic") + `",
+        "` + _t("flavoring") + `"
     ],
-    "name": "` + _lt("garlic") + `",
+    "name": "` + _t("garlic") + `",
     "shortcodes": [
         ":garlic:"
     ]
@@ -9228,11 +9228,11 @@ const emojisData4 = `{
     "codepoints": "🧅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flavouring") + `",
-        "` + _lt("onion") + `",
-        "` + _lt("flavoring") + `"
+        "` + _t("flavouring") + `",
+        "` + _t("onion") + `",
+        "` + _t("flavoring") + `"
     ],
-    "name": "` + _lt("onion") + `",
+    "name": "` + _t("onion") + `",
     "shortcodes": [
         ":onion:"
     ]
@@ -9242,10 +9242,10 @@ const emojisData4 = `{
     "codepoints": "🍄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mushroom") + `",
-        "` + _lt("toadstool") + `"
+        "` + _t("mushroom") + `",
+        "` + _t("toadstool") + `"
     ],
-    "name": "` + _lt("mushroom") + `",
+    "name": "` + _t("mushroom") + `",
     "shortcodes": [
         ":mushroom:"
     ]
@@ -9255,14 +9255,14 @@ const emojisData4 = `{
     "codepoints": "🥜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("food") + `",
-        "` + _lt("nut") + `",
-        "` + _lt("nuts") + `",
-        "` + _lt("peanut") + `",
-        "` + _lt("peanuts") + `",
-        "` + _lt("vegetable") + `"
+        "` + _t("food") + `",
+        "` + _t("nut") + `",
+        "` + _t("nuts") + `",
+        "` + _t("peanut") + `",
+        "` + _t("peanuts") + `",
+        "` + _t("vegetable") + `"
     ],
-    "name": "` + _lt("peanuts") + `",
+    "name": "` + _t("peanuts") + `",
     "shortcodes": [
         ":peanuts:"
     ]
@@ -9272,11 +9272,11 @@ const emojisData4 = `{
     "codepoints": "🌰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chestnut") + `",
-        "` + _lt("plant") + `",
-        "` + _lt("nut") + `"
+        "` + _t("chestnut") + `",
+        "` + _t("plant") + `",
+        "` + _t("nut") + `"
     ],
-    "name": "` + _lt("chestnut") + `",
+    "name": "` + _t("chestnut") + `",
     "shortcodes": [
         ":chestnut:"
     ]
@@ -9286,10 +9286,10 @@ const emojisData4 = `{
     "codepoints": "🍞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bread") + `",
-        "` + _lt("loaf") + `"
+        "` + _t("bread") + `",
+        "` + _t("loaf") + `"
     ],
-    "name": "` + _lt("bread") + `",
+    "name": "` + _t("bread") + `",
     "shortcodes": [
         ":bread:"
     ]
@@ -9299,16 +9299,16 @@ const emojisData4 = `{
     "codepoints": "🥐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bread") + `",
-        "` + _lt("breakfast") + `",
-        "` + _lt("croissant") + `",
-        "` + _lt("food") + `",
-        "` + _lt("french") + `",
-        "` + _lt("roll") + `",
-        "` + _lt("crescent roll") + `",
-        "` + _lt("French") + `"
+        "` + _t("bread") + `",
+        "` + _t("breakfast") + `",
+        "` + _t("croissant") + `",
+        "` + _t("food") + `",
+        "` + _t("french") + `",
+        "` + _t("roll") + `",
+        "` + _t("crescent roll") + `",
+        "` + _t("French") + `"
     ],
-    "name": "` + _lt("croissant") + `",
+    "name": "` + _t("croissant") + `",
     "shortcodes": [
         ":croissant:"
     ]
@@ -9318,14 +9318,14 @@ const emojisData4 = `{
     "codepoints": "🥖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baguette") + `",
-        "` + _lt("bread") + `",
-        "` + _lt("food") + `",
-        "` + _lt("french") + `",
-        "` + _lt("French stick") + `",
-        "` + _lt("French") + `"
+        "` + _t("baguette") + `",
+        "` + _t("bread") + `",
+        "` + _t("food") + `",
+        "` + _t("french") + `",
+        "` + _t("French stick") + `",
+        "` + _t("French") + `"
     ],
-    "name": "` + _lt("baguette bread") + `",
+    "name": "` + _t("baguette bread") + `",
     "shortcodes": [
         ":baguette_bread:"
     ]
@@ -9335,10 +9335,10 @@ const emojisData4 = `{
     "codepoints": "🥨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pretzel") + `",
-        "` + _lt("twisted") + `"
+        "` + _t("pretzel") + `",
+        "` + _t("twisted") + `"
     ],
-    "name": "` + _lt("pretzel") + `",
+    "name": "` + _t("pretzel") + `",
     "shortcodes": [
         ":pretzel:"
     ]
@@ -9348,12 +9348,12 @@ const emojisData4 = `{
     "codepoints": "🥯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bagel") + `",
-        "` + _lt("bakery") + `",
-        "` + _lt("breakfast") + `",
-        "` + _lt("schmear") + `"
+        "` + _t("bagel") + `",
+        "` + _t("bakery") + `",
+        "` + _t("breakfast") + `",
+        "` + _t("schmear") + `"
     ],
-    "name": "` + _lt("bagel") + `",
+    "name": "` + _t("bagel") + `",
     "shortcodes": [
         ":bagel:"
     ]
@@ -9363,14 +9363,14 @@ const emojisData4 = `{
     "codepoints": "🥞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("breakfast") + `",
-        "` + _lt("crêpe") + `",
-        "` + _lt("food") + `",
-        "` + _lt("hotcake") + `",
-        "` + _lt("pancake") + `",
-        "` + _lt("pancakes") + `"
+        "` + _t("breakfast") + `",
+        "` + _t("crêpe") + `",
+        "` + _t("food") + `",
+        "` + _t("hotcake") + `",
+        "` + _t("pancake") + `",
+        "` + _t("pancakes") + `"
     ],
-    "name": "` + _lt("pancakes") + `",
+    "name": "` + _t("pancakes") + `",
     "shortcodes": [
         ":pancakes:"
     ]
@@ -9380,15 +9380,15 @@ const emojisData4 = `{
     "codepoints": "🧇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("waffle") + `",
-        "` + _lt("waffle with butter") + `",
-        "` + _lt("breakfast") + `",
-        "` + _lt("indecisive") + `",
-        "` + _lt("iron") + `",
-        "` + _lt("unclear") + `",
-        "` + _lt("vague") + `"
+        "` + _t("waffle") + `",
+        "` + _t("waffle with butter") + `",
+        "` + _t("breakfast") + `",
+        "` + _t("indecisive") + `",
+        "` + _t("iron") + `",
+        "` + _t("unclear") + `",
+        "` + _t("vague") + `"
     ],
-    "name": "` + _lt("waffle") + `",
+    "name": "` + _t("waffle") + `",
     "shortcodes": [
         ":waffle:"
     ]
@@ -9400,10 +9400,10 @@ const emojisData4 = `{
         ":cheese"
     ],
     "keywords": [
-        "` + _lt("cheese") + `",
-        "` + _lt("cheese wedge") + `"
+        "` + _t("cheese") + `",
+        "` + _t("cheese wedge") + `"
     ],
-    "name": "` + _lt("cheese wedge") + `",
+    "name": "` + _t("cheese wedge") + `",
     "shortcodes": [
         ":cheese_wedge:"
     ]
@@ -9413,11 +9413,11 @@ const emojisData4 = `{
     "codepoints": "🍖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bone") + `",
-        "` + _lt("meat") + `",
-        "` + _lt("meat on bone") + `"
+        "` + _t("bone") + `",
+        "` + _t("meat") + `",
+        "` + _t("meat on bone") + `"
     ],
-    "name": "` + _lt("meat on bone") + `",
+    "name": "` + _t("meat on bone") + `",
     "shortcodes": [
         ":meat_on_bone:"
     ]
@@ -9427,13 +9427,13 @@ const emojisData4 = `{
     "codepoints": "🍗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bone") + `",
-        "` + _lt("chicken") + `",
-        "` + _lt("drumstick") + `",
-        "` + _lt("leg") + `",
-        "` + _lt("poultry") + `"
+        "` + _t("bone") + `",
+        "` + _t("chicken") + `",
+        "` + _t("drumstick") + `",
+        "` + _t("leg") + `",
+        "` + _t("poultry") + `"
     ],
-    "name": "` + _lt("poultry leg") + `",
+    "name": "` + _t("poultry leg") + `",
     "shortcodes": [
         ":poultry_leg:"
     ]
@@ -9443,15 +9443,15 @@ const emojisData4 = `{
     "codepoints": "🥩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chop") + `",
-        "` + _lt("cut of meat") + `",
-        "` + _lt("lambchop") + `",
-        "` + _lt("porkchop") + `",
-        "` + _lt("steak") + `",
-        "` + _lt("lamb chop") + `",
-        "` + _lt("pork chop") + `"
+        "` + _t("chop") + `",
+        "` + _t("cut of meat") + `",
+        "` + _t("lambchop") + `",
+        "` + _t("porkchop") + `",
+        "` + _t("steak") + `",
+        "` + _t("lamb chop") + `",
+        "` + _t("pork chop") + `"
     ],
-    "name": "` + _lt("cut of meat") + `",
+    "name": "` + _t("cut of meat") + `",
     "shortcodes": [
         ":cut_of_meat:"
     ]
@@ -9461,12 +9461,12 @@ const emojisData4 = `{
     "codepoints": "🥓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bacon") + `",
-        "` + _lt("breakfast") + `",
-        "` + _lt("food") + `",
-        "` + _lt("meat") + `"
+        "` + _t("bacon") + `",
+        "` + _t("breakfast") + `",
+        "` + _t("food") + `",
+        "` + _t("meat") + `"
     ],
-    "name": "` + _lt("bacon") + `",
+    "name": "` + _t("bacon") + `",
     "shortcodes": [
         ":bacon:"
     ]
@@ -9478,11 +9478,11 @@ const emojisData4 = `{
         ":hamburger"
     ],
     "keywords": [
-        "` + _lt("beefburger") + `",
-        "` + _lt("burger") + `",
-        "` + _lt("hamburger") + `"
+        "` + _t("beefburger") + `",
+        "` + _t("burger") + `",
+        "` + _t("hamburger") + `"
     ],
-    "name": "` + _lt("hamburger") + `",
+    "name": "` + _t("hamburger") + `",
     "shortcodes": [
         ":hamburger:"
     ]
@@ -9494,13 +9494,13 @@ const emojisData4 = `{
         ":fries"
     ],
     "keywords": [
-        "` + _lt("chips") + `",
-        "` + _lt("french fries") + `",
-        "` + _lt("fries") + `",
-        "` + _lt("french") + `",
-        "` + _lt("French") + `"
+        "` + _t("chips") + `",
+        "` + _t("french fries") + `",
+        "` + _t("fries") + `",
+        "` + _t("french") + `",
+        "` + _t("French") + `"
     ],
-    "name": "` + _lt("french fries") + `",
+    "name": "` + _t("french fries") + `",
     "shortcodes": [
         ":french_fries:"
     ]
@@ -9512,11 +9512,11 @@ const emojisData4 = `{
         ":pizza"
     ],
     "keywords": [
-        "` + _lt("cheese") + `",
-        "` + _lt("pizza") + `",
-        "` + _lt("slice") + `"
+        "` + _t("cheese") + `",
+        "` + _t("pizza") + `",
+        "` + _t("slice") + `"
     ],
-    "name": "` + _lt("pizza") + `",
+    "name": "` + _t("pizza") + `",
     "shortcodes": [
         ":pizza:"
     ]
@@ -9526,12 +9526,12 @@ const emojisData4 = `{
     "codepoints": "🌭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("frankfurter") + `",
-        "` + _lt("hot dog") + `",
-        "` + _lt("hotdog") + `",
-        "` + _lt("sausage") + `"
+        "` + _t("frankfurter") + `",
+        "` + _t("hot dog") + `",
+        "` + _t("hotdog") + `",
+        "` + _t("sausage") + `"
     ],
-    "name": "` + _lt("hot dog") + `",
+    "name": "` + _t("hot dog") + `",
     "shortcodes": [
         ":hot_dog:"
     ]
@@ -9541,10 +9541,10 @@ const emojisData4 = `{
     "codepoints": "🥪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bread") + `",
-        "` + _lt("sandwich") + `"
+        "` + _t("bread") + `",
+        "` + _t("sandwich") + `"
     ],
-    "name": "` + _lt("sandwich") + `",
+    "name": "` + _t("sandwich") + `",
     "shortcodes": [
         ":sandwich:"
     ]
@@ -9554,11 +9554,11 @@ const emojisData4 = `{
     "codepoints": "🌮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mexican") + `",
-        "` + _lt("taco") + `",
-        "` + _lt("Mexican") + `"
+        "` + _t("mexican") + `",
+        "` + _t("taco") + `",
+        "` + _t("Mexican") + `"
     ],
-    "name": "` + _lt("taco") + `",
+    "name": "` + _t("taco") + `",
     "shortcodes": [
         ":taco:"
     ]
@@ -9568,12 +9568,12 @@ const emojisData4 = `{
     "codepoints": "🌯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("burrito") + `",
-        "` + _lt("mexican") + `",
-        "` + _lt("wrap") + `",
-        "` + _lt("Mexican") + `"
+        "` + _t("burrito") + `",
+        "` + _t("mexican") + `",
+        "` + _t("wrap") + `",
+        "` + _t("Mexican") + `"
     ],
-    "name": "` + _lt("burrito") + `",
+    "name": "` + _t("burrito") + `",
     "shortcodes": [
         ":burrito:"
     ]
@@ -9583,16 +9583,16 @@ const emojisData4 = `{
     "codepoints": "🥙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("falafel") + `",
-        "` + _lt("flatbread") + `",
-        "` + _lt("food") + `",
-        "` + _lt("gyro") + `",
-        "` + _lt("kebab") + `",
-        "` + _lt("pita") + `",
-        "` + _lt("pita roll") + `",
-        "` + _lt("stuffed") + `"
+        "` + _t("falafel") + `",
+        "` + _t("flatbread") + `",
+        "` + _t("food") + `",
+        "` + _t("gyro") + `",
+        "` + _t("kebab") + `",
+        "` + _t("pita") + `",
+        "` + _t("pita roll") + `",
+        "` + _t("stuffed") + `"
     ],
-    "name": "` + _lt("stuffed flatbread") + `",
+    "name": "` + _t("stuffed flatbread") + `",
     "shortcodes": [
         ":stuffed_flatbread:"
     ]
@@ -9602,12 +9602,12 @@ const emojisData4 = `{
     "codepoints": "🧆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chickpea") + `",
-        "` + _lt("falafel") + `",
-        "` + _lt("meatball") + `",
-        "` + _lt("chick pea") + `"
+        "` + _t("chickpea") + `",
+        "` + _t("falafel") + `",
+        "` + _t("meatball") + `",
+        "` + _t("chick pea") + `"
     ],
-    "name": "` + _lt("falafel") + `",
+    "name": "` + _t("falafel") + `",
     "shortcodes": [
         ":falafel:"
     ]
@@ -9617,11 +9617,11 @@ const emojisData4 = `{
     "codepoints": "🥚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("breakfast") + `",
-        "` + _lt("egg") + `",
-        "` + _lt("food") + `"
+        "` + _t("breakfast") + `",
+        "` + _t("egg") + `",
+        "` + _t("food") + `"
     ],
-    "name": "` + _lt("egg") + `",
+    "name": "` + _t("egg") + `",
     "shortcodes": [
         ":egg:"
     ]
@@ -9631,13 +9631,13 @@ const emojisData4 = `{
     "codepoints": "🍳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("breakfast") + `",
-        "` + _lt("cooking") + `",
-        "` + _lt("egg") + `",
-        "` + _lt("frying") + `",
-        "` + _lt("pan") + `"
+        "` + _t("breakfast") + `",
+        "` + _t("cooking") + `",
+        "` + _t("egg") + `",
+        "` + _t("frying") + `",
+        "` + _t("pan") + `"
     ],
-    "name": "` + _lt("cooking") + `",
+    "name": "` + _t("cooking") + `",
     "shortcodes": [
         ":cooking:"
     ]
@@ -9647,14 +9647,14 @@ const emojisData4 = `{
     "codepoints": "🥘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("casserole") + `",
-        "` + _lt("food") + `",
-        "` + _lt("paella") + `",
-        "` + _lt("pan") + `",
-        "` + _lt("shallow") + `",
-        "` + _lt("shallow pan of food") + `"
+        "` + _t("casserole") + `",
+        "` + _t("food") + `",
+        "` + _t("paella") + `",
+        "` + _t("pan") + `",
+        "` + _t("shallow") + `",
+        "` + _t("shallow pan of food") + `"
     ],
-    "name": "` + _lt("shallow pan of food") + `",
+    "name": "` + _t("shallow pan of food") + `",
     "shortcodes": [
         ":shallow_pan_of_food:"
     ]
@@ -9664,11 +9664,11 @@ const emojisData4 = `{
     "codepoints": "🍲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pot") + `",
-        "` + _lt("pot of food") + `",
-        "` + _lt("stew") + `"
+        "` + _t("pot") + `",
+        "` + _t("pot of food") + `",
+        "` + _t("stew") + `"
     ],
-    "name": "` + _lt("pot of food") + `",
+    "name": "` + _t("pot of food") + `",
     "shortcodes": [
         ":pot_of_food:"
     ]
@@ -9678,12 +9678,12 @@ const emojisData4 = `{
     "codepoints": "🥣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bowl with spoon") + `",
-        "` + _lt("breakfast") + `",
-        "` + _lt("cereal") + `",
-        "` + _lt("congee") + `"
+        "` + _t("bowl with spoon") + `",
+        "` + _t("breakfast") + `",
+        "` + _t("cereal") + `",
+        "` + _t("congee") + `"
     ],
-    "name": "` + _lt("bowl with spoon") + `",
+    "name": "` + _t("bowl with spoon") + `",
     "shortcodes": [
         ":bowl_with_spoon:"
     ]
@@ -9693,12 +9693,12 @@ const emojisData4 = `{
     "codepoints": "🥗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("food") + `",
-        "` + _lt("garden") + `",
-        "` + _lt("salad") + `",
-        "` + _lt("green") + `"
+        "` + _t("food") + `",
+        "` + _t("garden") + `",
+        "` + _t("salad") + `",
+        "` + _t("green") + `"
     ],
-    "name": "` + _lt("green salad") + `",
+    "name": "` + _t("green salad") + `",
     "shortcodes": [
         ":green_salad:"
     ]
@@ -9708,9 +9708,9 @@ const emojisData4 = `{
     "codepoints": "🍿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("popcorn") + `"
+        "` + _t("popcorn") + `"
     ],
-    "name": "` + _lt("popcorn") + `",
+    "name": "` + _t("popcorn") + `",
     "shortcodes": [
         ":popcorn:"
     ]
@@ -9720,10 +9720,10 @@ const emojisData4 = `{
     "codepoints": "🧈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("butter") + `",
-        "` + _lt("dairy") + `"
+        "` + _t("butter") + `",
+        "` + _t("dairy") + `"
     ],
-    "name": "` + _lt("butter") + `",
+    "name": "` + _t("butter") + `",
     "shortcodes": [
         ":butter:"
     ]
@@ -9733,11 +9733,11 @@ const emojisData4 = `{
     "codepoints": "🧂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("condiment") + `",
-        "` + _lt("salt") + `",
-        "` + _lt("shaker") + `"
+        "` + _t("condiment") + `",
+        "` + _t("salt") + `",
+        "` + _t("shaker") + `"
     ],
-    "name": "` + _lt("salt") + `",
+    "name": "` + _t("salt") + `",
     "shortcodes": [
         ":salt:"
     ]
@@ -9747,10 +9747,10 @@ const emojisData4 = `{
     "codepoints": "🥫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("can") + `",
-        "` + _lt("canned food") + `"
+        "` + _t("can") + `",
+        "` + _t("canned food") + `"
     ],
-    "name": "` + _lt("canned food") + `",
+    "name": "` + _t("canned food") + `",
     "shortcodes": [
         ":canned_food:"
     ]
@@ -9760,10 +9760,10 @@ const emojisData4 = `{
     "codepoints": "🍱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bento") + `",
-        "` + _lt("box") + `"
+        "` + _t("bento") + `",
+        "` + _t("box") + `"
     ],
-    "name": "` + _lt("bento box") + `",
+    "name": "` + _t("bento box") + `",
     "shortcodes": [
         ":bento_box:"
     ]
@@ -9773,10 +9773,10 @@ const emojisData4 = `{
     "codepoints": "🍘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cracker") + `",
-        "` + _lt("rice") + `"
+        "` + _t("cracker") + `",
+        "` + _t("rice") + `"
     ],
-    "name": "` + _lt("rice cracker") + `",
+    "name": "` + _t("rice cracker") + `",
     "shortcodes": [
         ":rice_cracker:"
     ]
@@ -9788,11 +9788,11 @@ const emojisData4 = `{
         ":rice_ball"
     ],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("rice") + `"
+        "` + _t("ball") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("rice") + `"
     ],
-    "name": "` + _lt("rice ball") + `",
+    "name": "` + _t("rice ball") + `",
     "shortcodes": [
         ":rice_ball:"
     ]
@@ -9802,10 +9802,10 @@ const emojisData4 = `{
     "codepoints": "🍚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cooked") + `",
-        "` + _lt("rice") + `"
+        "` + _t("cooked") + `",
+        "` + _t("rice") + `"
     ],
-    "name": "` + _lt("cooked rice") + `",
+    "name": "` + _t("cooked rice") + `",
     "shortcodes": [
         ":cooked_rice:"
     ]
@@ -9815,10 +9815,10 @@ const emojisData4 = `{
     "codepoints": "🍛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("curry") + `",
-        "` + _lt("rice") + `"
+        "` + _t("curry") + `",
+        "` + _t("rice") + `"
     ],
-    "name": "` + _lt("curry rice") + `",
+    "name": "` + _t("curry rice") + `",
     "shortcodes": [
         ":curry_rice:"
     ]
@@ -9828,12 +9828,12 @@ const emojisData4 = `{
     "codepoints": "🍜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bowl") + `",
-        "` + _lt("noodle") + `",
-        "` + _lt("ramen") + `",
-        "` + _lt("steaming") + `"
+        "` + _t("bowl") + `",
+        "` + _t("noodle") + `",
+        "` + _t("ramen") + `",
+        "` + _t("steaming") + `"
     ],
-    "name": "` + _lt("steaming bowl") + `",
+    "name": "` + _t("steaming bowl") + `",
     "shortcodes": [
         ":steaming_bowl:"
     ]
@@ -9843,10 +9843,10 @@ const emojisData4 = `{
     "codepoints": "🍝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pasta") + `",
-        "` + _lt("spaghetti") + `"
+        "` + _t("pasta") + `",
+        "` + _t("spaghetti") + `"
     ],
-    "name": "` + _lt("spaghetti") + `",
+    "name": "` + _t("spaghetti") + `",
     "shortcodes": [
         ":spaghetti:"
     ]
@@ -9856,11 +9856,11 @@ const emojisData4 = `{
     "codepoints": "🍠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("potato") + `",
-        "` + _lt("roasted") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("potato") + `",
+        "` + _t("roasted") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("roasted sweet potato") + `",
+    "name": "` + _t("roasted sweet potato") + `",
     "shortcodes": [
         ":roasted_sweet_potato:"
     ]
@@ -9870,13 +9870,13 @@ const emojisData4 = `{
     "codepoints": "🍢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("kebab") + `",
-        "` + _lt("oden") + `",
-        "` + _lt("seafood") + `",
-        "` + _lt("skewer") + `",
-        "` + _lt("stick") + `"
+        "` + _t("kebab") + `",
+        "` + _t("oden") + `",
+        "` + _t("seafood") + `",
+        "` + _t("skewer") + `",
+        "` + _t("stick") + `"
     ],
-    "name": "` + _lt("oden") + `",
+    "name": "` + _t("oden") + `",
     "shortcodes": [
         ":oden:"
     ]
@@ -9888,9 +9888,9 @@ const emojisData4 = `{
         ":sushi"
     ],
     "keywords": [
-        "` + _lt("sushi") + `"
+        "` + _t("sushi") + `"
     ],
-    "name": "` + _lt("sushi") + `",
+    "name": "` + _t("sushi") + `",
     "shortcodes": [
         ":sushi:"
     ]
@@ -9900,13 +9900,13 @@ const emojisData4 = `{
     "codepoints": "🍤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("battered") + `",
-        "` + _lt("fried") + `",
-        "` + _lt("prawn") + `",
-        "` + _lt("shrimp") + `",
-        "` + _lt("tempura") + `"
+        "` + _t("battered") + `",
+        "` + _t("fried") + `",
+        "` + _t("prawn") + `",
+        "` + _t("shrimp") + `",
+        "` + _t("tempura") + `"
     ],
-    "name": "` + _lt("fried shrimp") + `",
+    "name": "` + _t("fried shrimp") + `",
     "shortcodes": [
         ":fried_shrimp:"
     ]
@@ -9916,14 +9916,14 @@ const emojisData4 = `{
     "codepoints": "🍥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cake") + `",
-        "` + _lt("fish") + `",
-        "` + _lt("fish cake with swirl") + `",
-        "` + _lt("pastry") + `",
-        "` + _lt("swirl") + `",
-        "` + _lt("narutomaki") + `"
+        "` + _t("cake") + `",
+        "` + _t("fish") + `",
+        "` + _t("fish cake with swirl") + `",
+        "` + _t("pastry") + `",
+        "` + _t("swirl") + `",
+        "` + _t("narutomaki") + `"
     ],
-    "name": "` + _lt("fish cake with swirl") + `",
+    "name": "` + _t("fish cake with swirl") + `",
     "shortcodes": [
         ":fish_cake_with_swirl:"
     ]
@@ -9933,12 +9933,12 @@ const emojisData4 = `{
     "codepoints": "🥮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("autumn") + `",
-        "` + _lt("festival") + `",
-        "` + _lt("moon cake") + `",
-        "` + _lt("yuèbǐng") + `"
+        "` + _t("autumn") + `",
+        "` + _t("festival") + `",
+        "` + _t("moon cake") + `",
+        "` + _t("yuèbǐng") + `"
     ],
-    "name": "` + _lt("moon cake") + `",
+    "name": "` + _t("moon cake") + `",
     "shortcodes": [
         ":moon_cake:"
     ]
@@ -9948,14 +9948,14 @@ const emojisData4 = `{
     "codepoints": "🍡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dango") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("skewer") + `",
-        "` + _lt("stick") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("dango") + `",
+        "` + _t("dessert") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("skewer") + `",
+        "` + _t("stick") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("dango") + `",
+    "name": "` + _t("dango") + `",
     "shortcodes": [
         ":dango:"
     ]
@@ -9965,16 +9965,16 @@ const emojisData4 = `{
     "codepoints": "🥟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dumpling") + `",
-        "` + _lt("empanada") + `",
-        "` + _lt("gyōza") + `",
-        "` + _lt("pastie") + `",
-        "` + _lt("samosa") + `",
-        "` + _lt("jiaozi") + `",
-        "` + _lt("pierogi") + `",
-        "` + _lt("potsticker") + `"
+        "` + _t("dumpling") + `",
+        "` + _t("empanada") + `",
+        "` + _t("gyōza") + `",
+        "` + _t("pastie") + `",
+        "` + _t("samosa") + `",
+        "` + _t("jiaozi") + `",
+        "` + _t("pierogi") + `",
+        "` + _t("potsticker") + `"
     ],
-    "name": "` + _lt("dumpling") + `",
+    "name": "` + _t("dumpling") + `",
     "shortcodes": [
         ":dumpling:"
     ]
@@ -9984,10 +9984,10 @@ const emojisData4 = `{
     "codepoints": "🥠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fortune cookie") + `",
-        "` + _lt("prophecy") + `"
+        "` + _t("fortune cookie") + `",
+        "` + _t("prophecy") + `"
     ],
-    "name": "` + _lt("fortune cookie") + `",
+    "name": "` + _t("fortune cookie") + `",
     "shortcodes": [
         ":fortune_cookie:"
     ]
@@ -9997,13 +9997,13 @@ const emojisData4 = `{
     "codepoints": "🥡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("takeaway container") + `",
-        "` + _lt("takeout") + `",
-        "` + _lt("oyster pail") + `",
-        "` + _lt("takeout box") + `",
-        "` + _lt("takeaway box") + `"
+        "` + _t("takeaway container") + `",
+        "` + _t("takeout") + `",
+        "` + _t("oyster pail") + `",
+        "` + _t("takeout box") + `",
+        "` + _t("takeaway box") + `"
     ],
-    "name": "` + _lt("takeout box") + `",
+    "name": "` + _t("takeout box") + `",
     "shortcodes": [
         ":takeout_box:"
     ]
@@ -10013,14 +10013,14 @@ const emojisData4 = `{
     "codepoints": "🦀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("crab") + `",
-        "` + _lt("crustacean") + `",
-        "` + _lt("seafood") + `",
-        "` + _lt("shellfish") + `",
-        "` + _lt("Cancer") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("crab") + `",
+        "` + _t("crustacean") + `",
+        "` + _t("seafood") + `",
+        "` + _t("shellfish") + `",
+        "` + _t("Cancer") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("crab") + `",
+    "name": "` + _t("crab") + `",
     "shortcodes": [
         ":crab:"
     ]
@@ -10030,13 +10030,13 @@ const emojisData4 = `{
     "codepoints": "🦞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bisque") + `",
-        "` + _lt("claws") + `",
-        "` + _lt("lobster") + `",
-        "` + _lt("seafood") + `",
-        "` + _lt("shellfish") + `"
+        "` + _t("bisque") + `",
+        "` + _t("claws") + `",
+        "` + _t("lobster") + `",
+        "` + _t("seafood") + `",
+        "` + _t("shellfish") + `"
     ],
-    "name": "` + _lt("lobster") + `",
+    "name": "` + _t("lobster") + `",
     "shortcodes": [
         ":lobster:"
     ]
@@ -10046,14 +10046,14 @@ const emojisData4 = `{
     "codepoints": "🦐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("prawn") + `",
-        "` + _lt("seafood") + `",
-        "` + _lt("shellfish") + `",
-        "` + _lt("shrimp") + `",
-        "` + _lt("food") + `",
-        "` + _lt("small") + `"
+        "` + _t("prawn") + `",
+        "` + _t("seafood") + `",
+        "` + _t("shellfish") + `",
+        "` + _t("shrimp") + `",
+        "` + _t("food") + `",
+        "` + _t("small") + `"
     ],
-    "name": "` + _lt("shrimp") + `",
+    "name": "` + _t("shrimp") + `",
     "shortcodes": [
         ":shrimp:"
     ]
@@ -10063,13 +10063,13 @@ const emojisData4 = `{
     "codepoints": "🦑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("decapod") + `",
-        "` + _lt("seafood") + `",
-        "` + _lt("squid") + `",
-        "` + _lt("food") + `",
-        "` + _lt("molusc") + `"
+        "` + _t("decapod") + `",
+        "` + _t("seafood") + `",
+        "` + _t("squid") + `",
+        "` + _t("food") + `",
+        "` + _t("molusc") + `"
     ],
-    "name": "` + _lt("squid") + `",
+    "name": "` + _t("squid") + `",
     "shortcodes": [
         ":squid:"
     ]
@@ -10079,11 +10079,11 @@ const emojisData4 = `{
     "codepoints": "🦪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("diving") + `",
-        "` + _lt("oyster") + `",
-        "` + _lt("pearl") + `"
+        "` + _t("diving") + `",
+        "` + _t("oyster") + `",
+        "` + _t("pearl") + `"
     ],
-    "name": "` + _lt("oyster") + `",
+    "name": "` + _t("oyster") + `",
     "shortcodes": [
         ":oyster:"
     ]
@@ -10093,16 +10093,16 @@ const emojisData4 = `{
     "codepoints": "🍦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cream") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("ice cream") + `",
-        "` + _lt("soft serve") + `",
-        "` + _lt("sweet") + `",
-        "` + _lt("ice") + `",
-        "` + _lt("icecream") + `",
-        "` + _lt("soft") + `"
+        "` + _t("cream") + `",
+        "` + _t("dessert") + `",
+        "` + _t("ice cream") + `",
+        "` + _t("soft serve") + `",
+        "` + _t("sweet") + `",
+        "` + _t("ice") + `",
+        "` + _t("icecream") + `",
+        "` + _t("soft") + `"
     ],
-    "name": "` + _lt("soft ice cream") + `",
+    "name": "` + _t("soft ice cream") + `",
     "shortcodes": [
         ":soft_ice_cream:"
     ]
@@ -10112,13 +10112,13 @@ const emojisData4 = `{
     "codepoints": "🍧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dessert") + `",
-        "` + _lt("granita") + `",
-        "` + _lt("ice") + `",
-        "` + _lt("sweet") + `",
-        "` + _lt("shaved") + `"
+        "` + _t("dessert") + `",
+        "` + _t("granita") + `",
+        "` + _t("ice") + `",
+        "` + _t("sweet") + `",
+        "` + _t("shaved") + `"
     ],
-    "name": "` + _lt("shaved ice") + `",
+    "name": "` + _t("shaved ice") + `",
     "shortcodes": [
         ":shaved_ice:"
     ]
@@ -10128,13 +10128,13 @@ const emojisData4 = `{
     "codepoints": "🍨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cream") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("ice cream") + `",
-        "` + _lt("sweet") + `",
-        "` + _lt("ice") + `"
+        "` + _t("cream") + `",
+        "` + _t("dessert") + `",
+        "` + _t("ice cream") + `",
+        "` + _t("sweet") + `",
+        "` + _t("ice") + `"
     ],
-    "name": "` + _lt("ice cream") + `",
+    "name": "` + _t("ice cream") + `",
     "shortcodes": [
         ":ice_cream:"
     ]
@@ -10144,13 +10144,13 @@ const emojisData4 = `{
     "codepoints": "🍩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("breakfast") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("donut") + `",
-        "` + _lt("doughnut") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("breakfast") + `",
+        "` + _t("dessert") + `",
+        "` + _t("donut") + `",
+        "` + _t("doughnut") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("doughnut") + `",
+    "name": "` + _t("doughnut") + `",
     "shortcodes": [
         ":doughnut:"
     ]
@@ -10162,12 +10162,12 @@ const emojisData4 = `{
         ":cookie"
     ],
     "keywords": [
-        "` + _lt("biscuit") + `",
-        "` + _lt("cookie") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("biscuit") + `",
+        "` + _t("cookie") + `",
+        "` + _t("dessert") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("cookie") + `",
+    "name": "` + _t("cookie") + `",
     "shortcodes": [
         ":cookie:"
     ]
@@ -10179,14 +10179,14 @@ const emojisData4 = `{
         ":cake"
     ],
     "keywords": [
-        "` + _lt("birthday") + `",
-        "` + _lt("cake") + `",
-        "` + _lt("celebration") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("pastry") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("birthday") + `",
+        "` + _t("cake") + `",
+        "` + _t("celebration") + `",
+        "` + _t("dessert") + `",
+        "` + _t("pastry") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("birthday cake") + `",
+    "name": "` + _t("birthday cake") + `",
     "shortcodes": [
         ":birthday_cake:"
     ]
@@ -10198,14 +10198,14 @@ const emojisData4 = `{
         ":cake_part"
     ],
     "keywords": [
-        "` + _lt("cake") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("pastry") + `",
-        "` + _lt("shortcake") + `",
-        "` + _lt("slice") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("cake") + `",
+        "` + _t("dessert") + `",
+        "` + _t("pastry") + `",
+        "` + _t("shortcake") + `",
+        "` + _t("slice") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("shortcake") + `",
+    "name": "` + _t("shortcake") + `",
     "shortcodes": [
         ":shortcake:"
     ]
@@ -10215,11 +10215,11 @@ const emojisData4 = `{
     "codepoints": "🧁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bakery") + `",
-        "` + _lt("cupcake") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("bakery") + `",
+        "` + _t("cupcake") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("cupcake") + `",
+    "name": "` + _t("cupcake") + `",
     "shortcodes": [
         ":cupcake:"
     ]
@@ -10229,11 +10229,11 @@ const emojisData4 = `{
     "codepoints": "🥧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("filling") + `",
-        "` + _lt("pastry") + `",
-        "` + _lt("pie") + `"
+        "` + _t("filling") + `",
+        "` + _t("pastry") + `",
+        "` + _t("pie") + `"
     ],
-    "name": "` + _lt("pie") + `",
+    "name": "` + _t("pie") + `",
     "shortcodes": [
         ":pie:"
     ]
@@ -10243,12 +10243,12 @@ const emojisData4 = `{
     "codepoints": "🍫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("chocolate") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("bar") + `",
+        "` + _t("chocolate") + `",
+        "` + _t("dessert") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("chocolate bar") + `",
+    "name": "` + _t("chocolate bar") + `",
     "shortcodes": [
         ":chocolate_bar:"
     ]
@@ -10258,12 +10258,12 @@ const emojisData4 = `{
     "codepoints": "🍬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("candy") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("sweet") + `",
-        "` + _lt("sweets") + `"
+        "` + _t("candy") + `",
+        "` + _t("dessert") + `",
+        "` + _t("sweet") + `",
+        "` + _t("sweets") + `"
     ],
-    "name": "` + _lt("candy") + `",
+    "name": "` + _t("candy") + `",
     "shortcodes": [
         ":candy:"
     ]
@@ -10273,12 +10273,12 @@ const emojisData4 = `{
     "codepoints": "🍭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("candy") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("lollipop") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("candy") + `",
+        "` + _t("dessert") + `",
+        "` + _t("lollipop") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("lollipop") + `",
+    "name": "` + _t("lollipop") + `",
     "shortcodes": [
         ":lollipop:"
     ]
@@ -10288,13 +10288,13 @@ const emojisData4 = `{
     "codepoints": "🍮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baked custard") + `",
-        "` + _lt("dessert") + `",
-        "` + _lt("pudding") + `",
-        "` + _lt("sweet") + `",
-        "` + _lt("custard") + `"
+        "` + _t("baked custard") + `",
+        "` + _t("dessert") + `",
+        "` + _t("pudding") + `",
+        "` + _t("sweet") + `",
+        "` + _t("custard") + `"
     ],
-    "name": "` + _lt("custard") + `",
+    "name": "` + _t("custard") + `",
     "shortcodes": [
         ":custard:"
     ]
@@ -10304,12 +10304,12 @@ const emojisData4 = `{
     "codepoints": "🍯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("honey") + `",
-        "` + _lt("honeypot") + `",
-        "` + _lt("pot") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("honey") + `",
+        "` + _t("honeypot") + `",
+        "` + _t("pot") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("honey pot") + `",
+    "name": "` + _t("honey pot") + `",
     "shortcodes": [
         ":honey_pot:"
     ]
@@ -10319,12 +10319,12 @@ const emojisData4 = `{
     "codepoints": "🍼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baby") + `",
-        "` + _lt("bottle") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("milk") + `"
+        "` + _t("baby") + `",
+        "` + _t("bottle") + `",
+        "` + _t("drink") + `",
+        "` + _t("milk") + `"
     ],
-    "name": "` + _lt("baby bottle") + `",
+    "name": "` + _t("baby bottle") + `",
     "shortcodes": [
         ":baby_bottle:"
     ]
@@ -10334,12 +10334,12 @@ const emojisData4 = `{
     "codepoints": "🥛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("drink") + `",
-        "` + _lt("glass") + `",
-        "` + _lt("glass of milk") + `",
-        "` + _lt("milk") + `"
+        "` + _t("drink") + `",
+        "` + _t("glass") + `",
+        "` + _t("glass of milk") + `",
+        "` + _t("milk") + `"
     ],
-    "name": "` + _lt("glass of milk") + `",
+    "name": "` + _t("glass of milk") + `",
     "shortcodes": [
         ":glass_of_milk:"
     ]
@@ -10351,14 +10351,14 @@ const emojisData4 = `{
         ":coffee"
     ],
     "keywords": [
-        "` + _lt("beverage") + `",
-        "` + _lt("coffee") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("hot") + `",
-        "` + _lt("steaming") + `",
-        "` + _lt("tea") + `"
+        "` + _t("beverage") + `",
+        "` + _t("coffee") + `",
+        "` + _t("drink") + `",
+        "` + _t("hot") + `",
+        "` + _t("steaming") + `",
+        "` + _t("tea") + `"
     ],
-    "name": "` + _lt("hot beverage") + `",
+    "name": "` + _t("hot beverage") + `",
     "shortcodes": [
         ":hot_beverage:"
     ]
@@ -10368,14 +10368,14 @@ const emojisData4 = `{
     "codepoints": "🍵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("beverage") + `",
-        "` + _lt("cup") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("tea") + `",
-        "` + _lt("teacup") + `",
-        "` + _lt("teacup without handle") + `"
+        "` + _t("beverage") + `",
+        "` + _t("cup") + `",
+        "` + _t("drink") + `",
+        "` + _t("tea") + `",
+        "` + _t("teacup") + `",
+        "` + _t("teacup without handle") + `"
     ],
-    "name": "` + _lt("teacup without handle") + `",
+    "name": "` + _t("teacup without handle") + `",
     "shortcodes": [
         ":teacup_without_handle:"
     ]
@@ -10385,15 +10385,15 @@ const emojisData4 = `{
     "codepoints": "🍶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("beverage") + `",
-        "` + _lt("bottle") + `",
-        "` + _lt("cup") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("sake") + `",
-        "` + _lt("saké") + `"
+        "` + _t("bar") + `",
+        "` + _t("beverage") + `",
+        "` + _t("bottle") + `",
+        "` + _t("cup") + `",
+        "` + _t("drink") + `",
+        "` + _t("sake") + `",
+        "` + _t("saké") + `"
     ],
-    "name": "` + _lt("sake") + `",
+    "name": "` + _t("sake") + `",
     "shortcodes": [
         ":sake:"
     ]
@@ -10403,14 +10403,14 @@ const emojisData4 = `{
     "codepoints": "🍾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("bottle") + `",
-        "` + _lt("bottle with popping cork") + `",
-        "` + _lt("cork") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("popping") + `"
+        "` + _t("bar") + `",
+        "` + _t("bottle") + `",
+        "` + _t("bottle with popping cork") + `",
+        "` + _t("cork") + `",
+        "` + _t("drink") + `",
+        "` + _t("popping") + `"
     ],
-    "name": "` + _lt("bottle with popping cork") + `",
+    "name": "` + _t("bottle with popping cork") + `",
     "shortcodes": [
         ":bottle_with_popping_cork:"
     ]
@@ -10422,13 +10422,13 @@ const emojisData4 = `{
         ":wine"
     ],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("beverage") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("glass") + `",
-        "` + _lt("wine") + `"
+        "` + _t("bar") + `",
+        "` + _t("beverage") + `",
+        "` + _t("drink") + `",
+        "` + _t("glass") + `",
+        "` + _t("wine") + `"
     ],
-    "name": "` + _lt("wine glass") + `",
+    "name": "` + _t("wine glass") + `",
     "shortcodes": [
         ":wine_glass:"
     ]
@@ -10440,12 +10440,12 @@ const emojisData4 = `{
         ":cocktail"
     ],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("cocktail") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("glass") + `"
+        "` + _t("bar") + `",
+        "` + _t("cocktail") + `",
+        "` + _t("drink") + `",
+        "` + _t("glass") + `"
     ],
-    "name": "` + _lt("cocktail glass") + `",
+    "name": "` + _t("cocktail glass") + `",
     "shortcodes": [
         ":cocktail_glass:"
     ]
@@ -10457,11 +10457,11 @@ const emojisData4 = `{
         ":tropical"
     ],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("tropical") + `"
+        "` + _t("bar") + `",
+        "` + _t("drink") + `",
+        "` + _t("tropical") + `"
     ],
-    "name": "` + _lt("tropical drink") + `",
+    "name": "` + _t("tropical drink") + `",
     "shortcodes": [
         ":tropical_drink:"
     ]
@@ -10473,12 +10473,12 @@ const emojisData4 = `{
         ":beer"
     ],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("beer") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("mug") + `"
+        "` + _t("bar") + `",
+        "` + _t("beer") + `",
+        "` + _t("drink") + `",
+        "` + _t("mug") + `"
     ],
-    "name": "` + _lt("beer mug") + `",
+    "name": "` + _t("beer mug") + `",
     "shortcodes": [
         ":beer_mug:"
     ]
@@ -10490,14 +10490,14 @@ const emojisData4 = `{
         ":beers"
     ],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("beer") + `",
-        "` + _lt("clink") + `",
-        "` + _lt("clinking beer mugs") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("mug") + `"
+        "` + _t("bar") + `",
+        "` + _t("beer") + `",
+        "` + _t("clink") + `",
+        "` + _t("clinking beer mugs") + `",
+        "` + _t("drink") + `",
+        "` + _t("mug") + `"
     ],
-    "name": "` + _lt("clinking beer mugs") + `",
+    "name": "` + _t("clinking beer mugs") + `",
     "shortcodes": [
         ":clinking_beer_mugs:"
     ]
@@ -10507,13 +10507,13 @@ const emojisData4 = `{
     "codepoints": "🥂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebrate") + `",
-        "` + _lt("clink") + `",
-        "` + _lt("clinking glasses") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("glass") + `"
+        "` + _t("celebrate") + `",
+        "` + _t("clink") + `",
+        "` + _t("clinking glasses") + `",
+        "` + _t("drink") + `",
+        "` + _t("glass") + `"
     ],
-    "name": "` + _lt("clinking glasses") + `",
+    "name": "` + _t("clinking glasses") + `",
     "shortcodes": [
         ":clinking_glasses:"
     ]
@@ -10523,13 +10523,13 @@ const emojisData4 = `{
     "codepoints": "🥃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("glass") + `",
-        "` + _lt("liquor") + `",
-        "` + _lt("shot") + `",
-        "` + _lt("tumbler") + `",
-        "` + _lt("whisky") + `"
+        "` + _t("glass") + `",
+        "` + _t("liquor") + `",
+        "` + _t("shot") + `",
+        "` + _t("tumbler") + `",
+        "` + _t("whisky") + `"
     ],
-    "name": "` + _lt("tumbler glass") + `",
+    "name": "` + _t("tumbler glass") + `",
     "shortcodes": [
         ":tumbler_glass:"
     ]
@@ -10539,11 +10539,11 @@ const emojisData4 = `{
     "codepoints": "🥤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cup with straw") + `",
-        "` + _lt("juice") + `",
-        "` + _lt("soda") + `"
+        "` + _t("cup with straw") + `",
+        "` + _t("juice") + `",
+        "` + _t("soda") + `"
     ],
-    "name": "` + _lt("cup with straw") + `",
+    "name": "` + _t("cup with straw") + `",
     "shortcodes": [
         ":cup_with_straw:"
     ]
@@ -10553,16 +10553,16 @@ const emojisData4 = `{
     "codepoints": "🧃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("drink carton") + `",
-        "` + _lt("juice box") + `",
-        "` + _lt("popper") + `",
-        "` + _lt("beverage") + `",
-        "` + _lt("box") + `",
-        "` + _lt("juice") + `",
-        "` + _lt("straw") + `",
-        "` + _lt("sweet") + `"
+        "` + _t("drink carton") + `",
+        "` + _t("juice box") + `",
+        "` + _t("popper") + `",
+        "` + _t("beverage") + `",
+        "` + _t("box") + `",
+        "` + _t("juice") + `",
+        "` + _t("straw") + `",
+        "` + _t("sweet") + `"
     ],
-    "name": "` + _lt("beverage box") + `",
+    "name": "` + _t("beverage box") + `",
     "shortcodes": [
         ":beverage_box:"
     ]
@@ -10572,11 +10572,11 @@ const emojisData4 = `{
     "codepoints": "🧉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("drink") + `",
-        "` + _lt("mate") + `",
-        "` + _lt("maté") + `"
+        "` + _t("drink") + `",
+        "` + _t("mate") + `",
+        "` + _t("maté") + `"
     ],
-    "name": "` + _lt("mate") + `",
+    "name": "` + _t("mate") + `",
     "shortcodes": [
         ":mate:"
     ]
@@ -10586,12 +10586,12 @@ const emojisData4 = `{
     "codepoints": "🧊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cold") + `",
-        "` + _lt("ice") + `",
-        "` + _lt("ice cube") + `",
-        "` + _lt("iceberg") + `"
+        "` + _t("cold") + `",
+        "` + _t("ice") + `",
+        "` + _t("ice cube") + `",
+        "` + _t("iceberg") + `"
     ],
-    "name": "` + _lt("ice") + `",
+    "name": "` + _t("ice") + `",
     "shortcodes": [
         ":ice:"
     ]
@@ -10601,11 +10601,11 @@ const emojisData4 = `{
     "codepoints": "🥢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chopsticks") + `",
-        "` + _lt("pair of chopsticks") + `",
-        "` + _lt("hashi") + `"
+        "` + _t("chopsticks") + `",
+        "` + _t("pair of chopsticks") + `",
+        "` + _t("hashi") + `"
     ],
-    "name": "` + _lt("chopsticks") + `",
+    "name": "` + _t("chopsticks") + `",
     "shortcodes": [
         ":chopsticks:"
     ]
@@ -10615,13 +10615,13 @@ const emojisData4 = `{
     "codepoints": "🍽️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cooking") + `",
-        "` + _lt("fork") + `",
-        "` + _lt("fork and knife with plate") + `",
-        "` + _lt("knife") + `",
-        "` + _lt("plate") + `"
+        "` + _t("cooking") + `",
+        "` + _t("fork") + `",
+        "` + _t("fork and knife with plate") + `",
+        "` + _t("knife") + `",
+        "` + _t("plate") + `"
     ],
-    "name": "` + _lt("fork and knife with plate") + `",
+    "name": "` + _t("fork and knife with plate") + `",
     "shortcodes": [
         ":fork_and_knife_with_plate:"
     ]
@@ -10631,14 +10631,14 @@ const emojisData4 = `{
     "codepoints": "🍴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cooking") + `",
-        "` + _lt("cutlery") + `",
-        "` + _lt("fork") + `",
-        "` + _lt("fork and knife") + `",
-        "` + _lt("knife") + `",
-        "` + _lt("knife and fork") + `"
+        "` + _t("cooking") + `",
+        "` + _t("cutlery") + `",
+        "` + _t("fork") + `",
+        "` + _t("fork and knife") + `",
+        "` + _t("knife") + `",
+        "` + _t("knife and fork") + `"
     ],
-    "name": "` + _lt("fork and knife") + `",
+    "name": "` + _t("fork and knife") + `",
     "shortcodes": [
         ":fork_and_knife:"
     ]
@@ -10648,10 +10648,10 @@ const emojisData4 = `{
     "codepoints": "🥄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("spoon") + `",
-        "` + _lt("tableware") + `"
+        "` + _t("spoon") + `",
+        "` + _t("tableware") + `"
     ],
-    "name": "` + _lt("spoon") + `",
+    "name": "` + _t("spoon") + `",
     "shortcodes": [
         ":spoon:"
     ]
@@ -10661,14 +10661,14 @@ const emojisData4 = `{
     "codepoints": "🔪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cooking") + `",
-        "` + _lt("hocho") + `",
-        "` + _lt("kitchen knife") + `",
-        "` + _lt("knife") + `",
-        "` + _lt("tool") + `",
-        "` + _lt("weapon") + `"
+        "` + _t("cooking") + `",
+        "` + _t("hocho") + `",
+        "` + _t("kitchen knife") + `",
+        "` + _t("knife") + `",
+        "` + _t("tool") + `",
+        "` + _t("weapon") + `"
     ],
-    "name": "` + _lt("kitchen knife") + `",
+    "name": "` + _t("kitchen knife") + `",
     "shortcodes": [
         ":kitchen_knife:"
     ]
@@ -10678,15 +10678,15 @@ const emojisData4 = `{
     "codepoints": "🏺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("amphora") + `",
-        "` + _lt("Aquarius") + `",
-        "` + _lt("cooking") + `",
-        "` + _lt("drink") + `",
-        "` + _lt("jug") + `",
-        "` + _lt("zodiac") + `",
-        "` + _lt("jar") + `"
+        "` + _t("amphora") + `",
+        "` + _t("Aquarius") + `",
+        "` + _t("cooking") + `",
+        "` + _t("drink") + `",
+        "` + _t("jug") + `",
+        "` + _t("zodiac") + `",
+        "` + _t("jar") + `"
     ],
-    "name": "` + _lt("amphora") + `",
+    "name": "` + _t("amphora") + `",
     "shortcodes": [
         ":amphora:"
     ]
@@ -10697,14 +10697,14 @@ const emojisData5 = `{
     "codepoints": "🌍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Africa") + `",
-        "` + _lt("earth") + `",
-        "` + _lt("Europe") + `",
-        "` + _lt("globe") + `",
-        "` + _lt("globe showing Europe-Africa") + `",
-        "` + _lt("world") + `"
+        "` + _t("Africa") + `",
+        "` + _t("earth") + `",
+        "` + _t("Europe") + `",
+        "` + _t("globe") + `",
+        "` + _t("globe showing Europe-Africa") + `",
+        "` + _t("world") + `"
     ],
-    "name": "` + _lt("globe showing Europe-Africa") + `",
+    "name": "` + _t("globe showing Europe-Africa") + `",
     "shortcodes": [
         ":globe_showing_Europe-Africa:"
     ]
@@ -10714,13 +10714,13 @@ const emojisData5 = `{
     "codepoints": "🌎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Americas") + `",
-        "` + _lt("earth") + `",
-        "` + _lt("globe") + `",
-        "` + _lt("globe showing Americas") + `",
-        "` + _lt("world") + `"
+        "` + _t("Americas") + `",
+        "` + _t("earth") + `",
+        "` + _t("globe") + `",
+        "` + _t("globe showing Americas") + `",
+        "` + _t("world") + `"
     ],
-    "name": "` + _lt("globe showing Americas") + `",
+    "name": "` + _t("globe showing Americas") + `",
     "shortcodes": [
         ":globe_showing_Americas:"
     ]
@@ -10730,14 +10730,14 @@ const emojisData5 = `{
     "codepoints": "🌏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Asia") + `",
-        "` + _lt("Australia") + `",
-        "` + _lt("earth") + `",
-        "` + _lt("globe") + `",
-        "` + _lt("globe showing Asia-Australia") + `",
-        "` + _lt("world") + `"
+        "` + _t("Asia") + `",
+        "` + _t("Australia") + `",
+        "` + _t("earth") + `",
+        "` + _t("globe") + `",
+        "` + _t("globe showing Asia-Australia") + `",
+        "` + _t("world") + `"
     ],
-    "name": "` + _lt("globe showing Asia-Australia") + `",
+    "name": "` + _t("globe showing Asia-Australia") + `",
     "shortcodes": [
         ":globe_showing_Asia-Australia:"
     ]
@@ -10747,13 +10747,13 @@ const emojisData5 = `{
     "codepoints": "🌐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("earth") + `",
-        "` + _lt("globe") + `",
-        "` + _lt("globe with meridians") + `",
-        "` + _lt("meridians") + `",
-        "` + _lt("world") + `"
+        "` + _t("earth") + `",
+        "` + _t("globe") + `",
+        "` + _t("globe with meridians") + `",
+        "` + _t("meridians") + `",
+        "` + _t("world") + `"
     ],
-    "name": "` + _lt("globe with meridians") + `",
+    "name": "` + _t("globe with meridians") + `",
     "shortcodes": [
         ":globe_with_meridians:"
     ]
@@ -10763,10 +10763,10 @@ const emojisData5 = `{
     "codepoints": "🗺️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("map") + `",
-        "` + _lt("world") + `"
+        "` + _t("map") + `",
+        "` + _t("world") + `"
     ],
-    "name": "` + _lt("world map") + `",
+    "name": "` + _t("world map") + `",
     "shortcodes": [
         ":world_map:"
     ]
@@ -10776,11 +10776,11 @@ const emojisData5 = `{
     "codepoints": "🗾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Japan") + `",
-        "` + _lt("map") + `",
-        "` + _lt("map of Japan") + `"
+        "` + _t("Japan") + `",
+        "` + _t("map") + `",
+        "` + _t("map of Japan") + `"
     ],
-    "name": "` + _lt("map of Japan") + `",
+    "name": "` + _t("map of Japan") + `",
     "shortcodes": [
         ":map_of_Japan:"
     ]
@@ -10790,12 +10790,12 @@ const emojisData5 = `{
     "codepoints": "🧭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("compass") + `",
-        "` + _lt("magnetic") + `",
-        "` + _lt("navigation") + `",
-        "` + _lt("orienteering") + `"
+        "` + _t("compass") + `",
+        "` + _t("magnetic") + `",
+        "` + _t("navigation") + `",
+        "` + _t("orienteering") + `"
     ],
-    "name": "` + _lt("compass") + `",
+    "name": "` + _t("compass") + `",
     "shortcodes": [
         ":compass:"
     ]
@@ -10805,12 +10805,12 @@ const emojisData5 = `{
     "codepoints": "🏔️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cold") + `",
-        "` + _lt("mountain") + `",
-        "` + _lt("snow") + `",
-        "` + _lt("snow-capped mountain") + `"
+        "` + _t("cold") + `",
+        "` + _t("mountain") + `",
+        "` + _t("snow") + `",
+        "` + _t("snow-capped mountain") + `"
     ],
-    "name": "` + _lt("snow-capped mountain") + `",
+    "name": "` + _t("snow-capped mountain") + `",
     "shortcodes": [
         ":snow-capped_mountain:"
     ]
@@ -10820,9 +10820,9 @@ const emojisData5 = `{
     "codepoints": "⛰️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mountain") + `"
+        "` + _t("mountain") + `"
     ],
-    "name": "` + _lt("mountain") + `",
+    "name": "` + _t("mountain") + `",
     "shortcodes": [
         ":mountain:"
     ]
@@ -10832,11 +10832,11 @@ const emojisData5 = `{
     "codepoints": "🌋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("eruption") + `",
-        "` + _lt("mountain") + `",
-        "` + _lt("volcano") + `"
+        "` + _t("eruption") + `",
+        "` + _t("mountain") + `",
+        "` + _t("volcano") + `"
     ],
-    "name": "` + _lt("volcano") + `",
+    "name": "` + _t("volcano") + `",
     "shortcodes": [
         ":volcano:"
     ]
@@ -10846,14 +10846,14 @@ const emojisData5 = `{
     "codepoints": "🗻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Fuji") + `",
-        "` + _lt("mount Fuji") + `",
-        "` + _lt("mountain") + `",
-        "` + _lt("fuji") + `",
-        "` + _lt("mount fuji") + `",
-        "` + _lt("Mount Fuji") + `"
+        "` + _t("Fuji") + `",
+        "` + _t("mount Fuji") + `",
+        "` + _t("mountain") + `",
+        "` + _t("fuji") + `",
+        "` + _t("mount fuji") + `",
+        "` + _t("Mount Fuji") + `"
     ],
-    "name": "` + _lt("mount fuji") + `",
+    "name": "` + _t("mount fuji") + `",
     "shortcodes": [
         ":mount_fuji:"
     ]
@@ -10863,9 +10863,9 @@ const emojisData5 = `{
     "codepoints": "🏕️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("camping") + `"
+        "` + _t("camping") + `"
     ],
-    "name": "` + _lt("camping") + `",
+    "name": "` + _t("camping") + `",
     "shortcodes": [
         ":camping:"
     ]
@@ -10875,11 +10875,11 @@ const emojisData5 = `{
     "codepoints": "🏖️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("beach") + `",
-        "` + _lt("beach with umbrella") + `",
-        "` + _lt("umbrella") + `"
+        "` + _t("beach") + `",
+        "` + _t("beach with umbrella") + `",
+        "` + _t("umbrella") + `"
     ],
-    "name": "` + _lt("beach with umbrella") + `",
+    "name": "` + _t("beach with umbrella") + `",
     "shortcodes": [
         ":beach_with_umbrella:"
     ]
@@ -10889,9 +10889,9 @@ const emojisData5 = `{
     "codepoints": "🏜️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("desert") + `"
+        "` + _t("desert") + `"
     ],
-    "name": "` + _lt("desert") + `",
+    "name": "` + _t("desert") + `",
     "shortcodes": [
         ":desert:"
     ]
@@ -10901,10 +10901,10 @@ const emojisData5 = `{
     "codepoints": "🏝️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("desert") + `",
-        "` + _lt("island") + `"
+        "` + _t("desert") + `",
+        "` + _t("island") + `"
     ],
-    "name": "` + _lt("desert island") + `",
+    "name": "` + _t("desert island") + `",
     "shortcodes": [
         ":desert_island:"
     ]
@@ -10914,10 +10914,10 @@ const emojisData5 = `{
     "codepoints": "🏞️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("national park") + `",
-        "` + _lt("park") + `"
+        "` + _t("national park") + `",
+        "` + _t("park") + `"
     ],
-    "name": "` + _lt("national park") + `",
+    "name": "` + _t("national park") + `",
     "shortcodes": [
         ":national_park:"
     ]
@@ -10927,10 +10927,10 @@ const emojisData5 = `{
     "codepoints": "🏟️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arena") + `",
-        "` + _lt("stadium") + `"
+        "` + _t("arena") + `",
+        "` + _t("stadium") + `"
     ],
-    "name": "` + _lt("stadium") + `",
+    "name": "` + _t("stadium") + `",
     "shortcodes": [
         ":stadium:"
     ]
@@ -10940,11 +10940,11 @@ const emojisData5 = `{
     "codepoints": "🏛️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("classical") + `",
-        "` + _lt("classical building") + `",
-        "` + _lt("column") + `"
+        "` + _t("classical") + `",
+        "` + _t("classical building") + `",
+        "` + _t("column") + `"
     ],
-    "name": "` + _lt("classical building") + `",
+    "name": "` + _t("classical building") + `",
     "shortcodes": [
         ":classical_building:"
     ]
@@ -10954,10 +10954,10 @@ const emojisData5 = `{
     "codepoints": "🏗️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("building construction") + `",
-        "` + _lt("construction") + `"
+        "` + _t("building construction") + `",
+        "` + _t("construction") + `"
     ],
-    "name": "` + _lt("building construction") + `",
+    "name": "` + _t("building construction") + `",
     "shortcodes": [
         ":building_construction:"
     ]
@@ -10967,13 +10967,13 @@ const emojisData5 = `{
     "codepoints": "🧱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("brick") + `",
-        "` + _lt("bricks") + `",
-        "` + _lt("clay") + `",
-        "` + _lt("mortar") + `",
-        "` + _lt("wall") + `"
+        "` + _t("brick") + `",
+        "` + _t("bricks") + `",
+        "` + _t("clay") + `",
+        "` + _t("mortar") + `",
+        "` + _t("wall") + `"
     ],
-    "name": "` + _lt("brick") + `",
+    "name": "` + _t("brick") + `",
     "shortcodes": [
         ":brick:"
     ]
@@ -10983,9 +10983,9 @@ const emojisData5 = `{
     "codepoints": "🏘️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("houses") + `"
+        "` + _t("houses") + `"
     ],
-    "name": "` + _lt("houses") + `",
+    "name": "` + _t("houses") + `",
     "shortcodes": [
         ":houses:"
     ]
@@ -10995,10 +10995,10 @@ const emojisData5 = `{
     "codepoints": "🏚️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("derelict") + `",
-        "` + _lt("house") + `"
+        "` + _t("derelict") + `",
+        "` + _t("house") + `"
     ],
-    "name": "` + _lt("derelict house") + `",
+    "name": "` + _t("derelict house") + `",
     "shortcodes": [
         ":derelict_house:"
     ]
@@ -11008,10 +11008,10 @@ const emojisData5 = `{
     "codepoints": "🏠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("home") + `",
-        "` + _lt("house") + `"
+        "` + _t("home") + `",
+        "` + _t("house") + `"
     ],
-    "name": "` + _lt("house") + `",
+    "name": "` + _t("house") + `",
     "shortcodes": [
         ":house:"
     ]
@@ -11021,12 +11021,12 @@ const emojisData5 = `{
     "codepoints": "🏡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("garden") + `",
-        "` + _lt("home") + `",
-        "` + _lt("house") + `",
-        "` + _lt("house with garden") + `"
+        "` + _t("garden") + `",
+        "` + _t("home") + `",
+        "` + _t("house") + `",
+        "` + _t("house with garden") + `"
     ],
-    "name": "` + _lt("house with garden") + `",
+    "name": "` + _t("house with garden") + `",
     "shortcodes": [
         ":house_with_garden:"
     ]
@@ -11036,10 +11036,10 @@ const emojisData5 = `{
     "codepoints": "🏢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("building") + `",
-        "` + _lt("office building") + `"
+        "` + _t("building") + `",
+        "` + _t("office building") + `"
     ],
-    "name": "` + _lt("office building") + `",
+    "name": "` + _t("office building") + `",
     "shortcodes": [
         ":office_building:"
     ]
@@ -11049,11 +11049,11 @@ const emojisData5 = `{
     "codepoints": "🏣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese post office") + `",
-        "` + _lt("post") + `"
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese post office") + `",
+        "` + _t("post") + `"
     ],
-    "name": "` + _lt("Japanese post office") + `",
+    "name": "` + _t("Japanese post office") + `",
     "shortcodes": [
         ":Japanese_post_office:"
     ]
@@ -11063,11 +11063,11 @@ const emojisData5 = `{
     "codepoints": "🏤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("European") + `",
-        "` + _lt("post") + `",
-        "` + _lt("post office") + `"
+        "` + _t("European") + `",
+        "` + _t("post") + `",
+        "` + _t("post office") + `"
     ],
-    "name": "` + _lt("post office") + `",
+    "name": "` + _t("post office") + `",
     "shortcodes": [
         ":post_office:"
     ]
@@ -11077,11 +11077,11 @@ const emojisData5 = `{
     "codepoints": "🏥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("doctor") + `",
-        "` + _lt("hospital") + `",
-        "` + _lt("medicine") + `"
+        "` + _t("doctor") + `",
+        "` + _t("hospital") + `",
+        "` + _t("medicine") + `"
     ],
-    "name": "` + _lt("hospital") + `",
+    "name": "` + _t("hospital") + `",
     "shortcodes": [
         ":hospital:"
     ]
@@ -11091,10 +11091,10 @@ const emojisData5 = `{
     "codepoints": "🏦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bank") + `",
-        "` + _lt("building") + `"
+        "` + _t("bank") + `",
+        "` + _t("building") + `"
     ],
-    "name": "` + _lt("bank") + `",
+    "name": "` + _t("bank") + `",
     "shortcodes": [
         ":bank:"
     ]
@@ -11104,10 +11104,10 @@ const emojisData5 = `{
     "codepoints": "🏨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("building") + `",
-        "` + _lt("hotel") + `"
+        "` + _t("building") + `",
+        "` + _t("hotel") + `"
     ],
-    "name": "` + _lt("hotel") + `",
+    "name": "` + _t("hotel") + `",
     "shortcodes": [
         ":hotel:"
     ]
@@ -11117,10 +11117,10 @@ const emojisData5 = `{
     "codepoints": "🏩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hotel") + `",
-        "` + _lt("love") + `"
+        "` + _t("hotel") + `",
+        "` + _t("love") + `"
     ],
-    "name": "` + _lt("love hotel") + `",
+    "name": "` + _t("love hotel") + `",
     "shortcodes": [
         ":love_hotel:"
     ]
@@ -11130,11 +11130,11 @@ const emojisData5 = `{
     "codepoints": "🏪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("convenience") + `",
-        "` + _lt("store") + `",
-        "` + _lt("dépanneur") + `"
+        "` + _t("convenience") + `",
+        "` + _t("store") + `",
+        "` + _t("dépanneur") + `"
     ],
-    "name": "` + _lt("convenience store") + `",
+    "name": "` + _t("convenience store") + `",
     "shortcodes": [
         ":convenience_store:"
     ]
@@ -11144,10 +11144,10 @@ const emojisData5 = `{
     "codepoints": "🏫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("building") + `",
-        "` + _lt("school") + `"
+        "` + _t("building") + `",
+        "` + _t("school") + `"
     ],
-    "name": "` + _lt("school") + `",
+    "name": "` + _t("school") + `",
     "shortcodes": [
         ":school:"
     ]
@@ -11157,10 +11157,10 @@ const emojisData5 = `{
     "codepoints": "🏬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("department") + `",
-        "` + _lt("store") + `"
+        "` + _t("department") + `",
+        "` + _t("store") + `"
     ],
-    "name": "` + _lt("department store") + `",
+    "name": "` + _t("department store") + `",
     "shortcodes": [
         ":department_store:"
     ]
@@ -11170,10 +11170,10 @@ const emojisData5 = `{
     "codepoints": "🏭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("building") + `",
-        "` + _lt("factory") + `"
+        "` + _t("building") + `",
+        "` + _t("factory") + `"
     ],
-    "name": "` + _lt("factory") + `",
+    "name": "` + _t("factory") + `",
     "shortcodes": [
         ":factory:"
     ]
@@ -11183,10 +11183,10 @@ const emojisData5 = `{
     "codepoints": "🏯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("castle") + `",
-        "` + _lt("Japanese") + `"
+        "` + _t("castle") + `",
+        "` + _t("Japanese") + `"
     ],
-    "name": "` + _lt("Japanese castle") + `",
+    "name": "` + _t("Japanese castle") + `",
     "shortcodes": [
         ":Japanese_castle:"
     ]
@@ -11196,10 +11196,10 @@ const emojisData5 = `{
     "codepoints": "🏰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("castle") + `",
-        "` + _lt("European") + `"
+        "` + _t("castle") + `",
+        "` + _t("European") + `"
     ],
-    "name": "` + _lt("castle") + `",
+    "name": "` + _t("castle") + `",
     "shortcodes": [
         ":castle:"
     ]
@@ -11209,11 +11209,11 @@ const emojisData5 = `{
     "codepoints": "💒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chapel") + `",
-        "` + _lt("romance") + `",
-        "` + _lt("wedding") + `"
+        "` + _t("chapel") + `",
+        "` + _t("romance") + `",
+        "` + _t("wedding") + `"
     ],
-    "name": "` + _lt("wedding") + `",
+    "name": "` + _t("wedding") + `",
     "shortcodes": [
         ":wedding:"
     ]
@@ -11223,11 +11223,11 @@ const emojisData5 = `{
     "codepoints": "🗼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Tokyo") + `",
-        "` + _lt("tower") + `",
-        "` + _lt("Tower") + `"
+        "` + _t("Tokyo") + `",
+        "` + _t("tower") + `",
+        "` + _t("Tower") + `"
     ],
-    "name": "` + _lt("Tokyo tower") + `",
+    "name": "` + _t("Tokyo tower") + `",
     "shortcodes": [
         ":Tokyo_ltower:"
     ]
@@ -11237,13 +11237,13 @@ const emojisData5 = `{
     "codepoints": "🗽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("liberty") + `",
-        "` + _lt("statue") + `",
-        "` + _lt("Statue of Liberty") + `",
-        "` + _lt("Liberty") + `",
-        "` + _lt("Statue") + `"
+        "` + _t("liberty") + `",
+        "` + _t("statue") + `",
+        "` + _t("Statue of Liberty") + `",
+        "` + _t("Liberty") + `",
+        "` + _t("Statue") + `"
     ],
-    "name": "` + _lt("Statue of Liberty") + `",
+    "name": "` + _t("Statue of Liberty") + `",
     "shortcodes": [
         ":Statue_of_Liberty:"
     ]
@@ -11253,12 +11253,12 @@ const emojisData5 = `{
     "codepoints": "⛪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Christian") + `",
-        "` + _lt("church") + `",
-        "` + _lt("cross") + `",
-        "` + _lt("religion") + `"
+        "` + _t("Christian") + `",
+        "` + _t("church") + `",
+        "` + _t("cross") + `",
+        "` + _t("religion") + `"
     ],
-    "name": "` + _lt("church") + `",
+    "name": "` + _t("church") + `",
     "shortcodes": [
         ":church:"
     ]
@@ -11268,13 +11268,13 @@ const emojisData5 = `{
     "codepoints": "🕌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Islam") + `",
-        "` + _lt("mosque") + `",
-        "` + _lt("Muslim") + `",
-        "` + _lt("religion") + `",
-        "` + _lt("islam") + `"
+        "` + _t("Islam") + `",
+        "` + _t("mosque") + `",
+        "` + _t("Muslim") + `",
+        "` + _t("religion") + `",
+        "` + _t("islam") + `"
     ],
-    "name": "` + _lt("mosque") + `",
+    "name": "` + _t("mosque") + `",
     "shortcodes": [
         ":mosque:"
     ]
@@ -11284,11 +11284,11 @@ const emojisData5 = `{
     "codepoints": "🛕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hindu") + `",
-        "` + _lt("temple") + `",
-        "` + _lt("Hindu") + `"
+        "` + _t("hindu") + `",
+        "` + _t("temple") + `",
+        "` + _t("Hindu") + `"
     ],
-    "name": "` + _lt("hindu temple") + `",
+    "name": "` + _t("hindu temple") + `",
     "shortcodes": [
         ":hindu_ltemple:"
     ]
@@ -11298,14 +11298,14 @@ const emojisData5 = `{
     "codepoints": "🕍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Jew") + `",
-        "` + _lt("Jewish") + `",
-        "` + _lt("religion") + `",
-        "` + _lt("synagogue") + `",
-        "` + _lt("temple") + `",
-        "` + _lt("shul") + `"
+        "` + _t("Jew") + `",
+        "` + _t("Jewish") + `",
+        "` + _t("religion") + `",
+        "` + _t("synagogue") + `",
+        "` + _t("temple") + `",
+        "` + _t("shul") + `"
     ],
-    "name": "` + _lt("synagogue") + `",
+    "name": "` + _t("synagogue") + `",
     "shortcodes": [
         ":synagogue:"
     ]
@@ -11315,12 +11315,12 @@ const emojisData5 = `{
     "codepoints": "⛩️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("religion") + `",
-        "` + _lt("Shinto") + `",
-        "` + _lt("shrine") + `",
-        "` + _lt("shinto") + `"
+        "` + _t("religion") + `",
+        "` + _t("Shinto") + `",
+        "` + _t("shrine") + `",
+        "` + _t("shinto") + `"
     ],
-    "name": "` + _lt("shinto shrine") + `",
+    "name": "` + _t("shinto shrine") + `",
     "shortcodes": [
         ":shinto_shrine:"
     ]
@@ -11330,14 +11330,14 @@ const emojisData5 = `{
     "codepoints": "🕋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Islam") + `",
-        "` + _lt("Kaaba") + `",
-        "` + _lt("Muslim") + `",
-        "` + _lt("religion") + `",
-        "` + _lt("islam") + `",
-        "` + _lt("kaaba") + `"
+        "` + _t("Islam") + `",
+        "` + _t("Kaaba") + `",
+        "` + _t("Muslim") + `",
+        "` + _t("religion") + `",
+        "` + _t("islam") + `",
+        "` + _t("kaaba") + `"
     ],
-    "name": "` + _lt("kaaba") + `",
+    "name": "` + _t("kaaba") + `",
     "shortcodes": [
         ":kaaba:"
     ]
@@ -11347,9 +11347,9 @@ const emojisData5 = `{
     "codepoints": "⛲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fountain") + `"
+        "` + _t("fountain") + `"
     ],
-    "name": "` + _lt("fountain") + `",
+    "name": "` + _t("fountain") + `",
     "shortcodes": [
         ":fountain:"
     ]
@@ -11359,10 +11359,10 @@ const emojisData5 = `{
     "codepoints": "⛺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("camping") + `",
-        "` + _lt("tent") + `"
+        "` + _t("camping") + `",
+        "` + _t("tent") + `"
     ],
-    "name": "` + _lt("tent") + `",
+    "name": "` + _t("tent") + `",
     "shortcodes": [
         ":tent:"
     ]
@@ -11372,10 +11372,10 @@ const emojisData5 = `{
     "codepoints": "🌁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fog") + `",
-        "` + _lt("foggy") + `"
+        "` + _t("fog") + `",
+        "` + _t("foggy") + `"
     ],
-    "name": "` + _lt("foggy") + `",
+    "name": "` + _t("foggy") + `",
     "shortcodes": [
         ":foggy:"
     ]
@@ -11385,11 +11385,11 @@ const emojisData5 = `{
     "codepoints": "🌃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("night") + `",
-        "` + _lt("night with stars") + `",
-        "` + _lt("star") + `"
+        "` + _t("night") + `",
+        "` + _t("night with stars") + `",
+        "` + _t("star") + `"
     ],
-    "name": "` + _lt("night with stars") + `",
+    "name": "` + _t("night with stars") + `",
     "shortcodes": [
         ":night_with_stars:"
     ]
@@ -11399,10 +11399,10 @@ const emojisData5 = `{
     "codepoints": "🏙️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("city") + `",
-        "` + _lt("cityscape") + `"
+        "` + _t("city") + `",
+        "` + _t("cityscape") + `"
     ],
-    "name": "` + _lt("cityscape") + `",
+    "name": "` + _t("cityscape") + `",
     "shortcodes": [
         ":cityscape:"
     ]
@@ -11412,13 +11412,13 @@ const emojisData5 = `{
     "codepoints": "🌄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("morning") + `",
-        "` + _lt("mountain") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sunrise") + `",
-        "` + _lt("sunrise over mountains") + `"
+        "` + _t("morning") + `",
+        "` + _t("mountain") + `",
+        "` + _t("sun") + `",
+        "` + _t("sunrise") + `",
+        "` + _t("sunrise over mountains") + `"
     ],
-    "name": "` + _lt("sunrise over mountains") + `",
+    "name": "` + _t("sunrise over mountains") + `",
     "shortcodes": [
         ":sunrise_over_mountains:"
     ]
@@ -11428,11 +11428,11 @@ const emojisData5 = `{
     "codepoints": "🌅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("morning") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sunrise") + `"
+        "` + _t("morning") + `",
+        "` + _t("sun") + `",
+        "` + _t("sunrise") + `"
     ],
-    "name": "` + _lt("sunrise") + `",
+    "name": "` + _t("sunrise") + `",
     "shortcodes": [
         ":sunrise:"
     ]
@@ -11442,14 +11442,14 @@ const emojisData5 = `{
     "codepoints": "🌆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("city") + `",
-        "` + _lt("cityscape at dusk") + `",
-        "` + _lt("dusk") + `",
-        "` + _lt("evening") + `",
-        "` + _lt("landscape") + `",
-        "` + _lt("sunset") + `"
+        "` + _t("city") + `",
+        "` + _t("cityscape at dusk") + `",
+        "` + _t("dusk") + `",
+        "` + _t("evening") + `",
+        "` + _t("landscape") + `",
+        "` + _t("sunset") + `"
     ],
-    "name": "` + _lt("cityscape at dusk") + `",
+    "name": "` + _t("cityscape at dusk") + `",
     "shortcodes": [
         ":cityscape_at_dusk:"
     ]
@@ -11459,11 +11459,11 @@ const emojisData5 = `{
     "codepoints": "🌇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dusk") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sunset") + `"
+        "` + _t("dusk") + `",
+        "` + _t("sun") + `",
+        "` + _t("sunset") + `"
     ],
-    "name": "` + _lt("sunset") + `",
+    "name": "` + _t("sunset") + `",
     "shortcodes": [
         ":sunset:"
     ]
@@ -11473,11 +11473,11 @@ const emojisData5 = `{
     "codepoints": "🌉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bridge") + `",
-        "` + _lt("bridge at night") + `",
-        "` + _lt("night") + `"
+        "` + _t("bridge") + `",
+        "` + _t("bridge at night") + `",
+        "` + _t("night") + `"
     ],
-    "name": "` + _lt("bridge at night") + `",
+    "name": "` + _t("bridge at night") + `",
     "shortcodes": [
         ":bridge_at_night:"
     ]
@@ -11487,12 +11487,12 @@ const emojisData5 = `{
     "codepoints": "♨️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hot") + `",
-        "` + _lt("hotsprings") + `",
-        "` + _lt("springs") + `",
-        "` + _lt("steaming") + `"
+        "` + _t("hot") + `",
+        "` + _t("hotsprings") + `",
+        "` + _t("springs") + `",
+        "` + _t("steaming") + `"
     ],
-    "name": "` + _lt("hot springs") + `",
+    "name": "` + _t("hot springs") + `",
     "shortcodes": [
         ":hot_springs:"
     ]
@@ -11502,11 +11502,11 @@ const emojisData5 = `{
     "codepoints": "🎠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("carousel") + `",
-        "` + _lt("horse") + `",
-        "` + _lt("merry-go-round") + `"
+        "` + _t("carousel") + `",
+        "` + _t("horse") + `",
+        "` + _t("merry-go-round") + `"
     ],
-    "name": "` + _lt("carousel horse") + `",
+    "name": "` + _t("carousel horse") + `",
     "shortcodes": [
         ":carousel_horse:"
     ]
@@ -11516,13 +11516,13 @@ const emojisData5 = `{
     "codepoints": "🎡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("amusement park") + `",
-        "` + _lt("ferris") + `",
-        "` + _lt("wheel") + `",
-        "` + _lt("Ferris") + `",
-        "` + _lt("theme park") + `"
+        "` + _t("amusement park") + `",
+        "` + _t("ferris") + `",
+        "` + _t("wheel") + `",
+        "` + _t("Ferris") + `",
+        "` + _t("theme park") + `"
     ],
-    "name": "` + _lt("ferris wheel") + `",
+    "name": "` + _t("ferris wheel") + `",
     "shortcodes": [
         ":ferris_wheel:"
     ]
@@ -11532,11 +11532,11 @@ const emojisData5 = `{
     "codepoints": "🎢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("amusement park") + `",
-        "` + _lt("coaster") + `",
-        "` + _lt("roller") + `"
+        "` + _t("amusement park") + `",
+        "` + _t("coaster") + `",
+        "` + _t("roller") + `"
     ],
-    "name": "` + _lt("roller coaster") + `",
+    "name": "` + _t("roller coaster") + `",
     "shortcodes": [
         ":roller_coaster:"
     ]
@@ -11546,11 +11546,11 @@ const emojisData5 = `{
     "codepoints": "💈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("barber") + `",
-        "` + _lt("haircut") + `",
-        "` + _lt("pole") + `"
+        "` + _t("barber") + `",
+        "` + _t("haircut") + `",
+        "` + _t("pole") + `"
     ],
-    "name": "` + _lt("barber pole") + `",
+    "name": "` + _t("barber pole") + `",
     "shortcodes": [
         ":barber_pole:"
     ]
@@ -11560,11 +11560,11 @@ const emojisData5 = `{
     "codepoints": "🎪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("big top") + `",
-        "` + _lt("circus") + `",
-        "` + _lt("tent") + `"
+        "` + _t("big top") + `",
+        "` + _t("circus") + `",
+        "` + _t("tent") + `"
     ],
-    "name": "` + _lt("circus tent") + `",
+    "name": "` + _t("circus tent") + `",
     "shortcodes": [
         ":circus_ltent:"
     ]
@@ -11574,13 +11574,13 @@ const emojisData5 = `{
     "codepoints": "🚂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("engine") + `",
-        "` + _lt("locomotive") + `",
-        "` + _lt("railway") + `",
-        "` + _lt("steam") + `",
-        "` + _lt("train") + `"
+        "` + _t("engine") + `",
+        "` + _t("locomotive") + `",
+        "` + _t("railway") + `",
+        "` + _t("steam") + `",
+        "` + _t("train") + `"
     ],
-    "name": "` + _lt("locomotive") + `",
+    "name": "` + _t("locomotive") + `",
     "shortcodes": [
         ":locomotive:"
     ]
@@ -11590,16 +11590,16 @@ const emojisData5 = `{
     "codepoints": "🚃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("car") + `",
-        "` + _lt("electric") + `",
-        "` + _lt("railway") + `",
-        "` + _lt("train") + `",
-        "` + _lt("tram") + `",
-        "` + _lt("trolley bus") + `",
-        "` + _lt("trolleybus") + `",
-        "` + _lt("railway carriage") + `"
+        "` + _t("car") + `",
+        "` + _t("electric") + `",
+        "` + _t("railway") + `",
+        "` + _t("train") + `",
+        "` + _t("tram") + `",
+        "` + _t("trolley bus") + `",
+        "` + _t("trolleybus") + `",
+        "` + _t("railway carriage") + `"
     ],
-    "name": "` + _lt("railway car") + `",
+    "name": "` + _t("railway car") + `",
     "shortcodes": [
         ":railway_car:"
     ]
@@ -11609,14 +11609,14 @@ const emojisData5 = `{
     "codepoints": "🚄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("high-speed train") + `",
-        "` + _lt("railway") + `",
-        "` + _lt("shinkansen") + `",
-        "` + _lt("speed") + `",
-        "` + _lt("train") + `",
-        "` + _lt("Shinkansen") + `"
+        "` + _t("high-speed train") + `",
+        "` + _t("railway") + `",
+        "` + _t("shinkansen") + `",
+        "` + _t("speed") + `",
+        "` + _t("train") + `",
+        "` + _t("Shinkansen") + `"
     ],
-    "name": "` + _lt("high-speed train") + `",
+    "name": "` + _t("high-speed train") + `",
     "shortcodes": [
         ":high-speed_ltrain:"
     ]
@@ -11626,14 +11626,14 @@ const emojisData5 = `{
     "codepoints": "🚅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bullet") + `",
-        "` + _lt("railway") + `",
-        "` + _lt("shinkansen") + `",
-        "` + _lt("speed") + `",
-        "` + _lt("train") + `",
-        "` + _lt("Shinkansen") + `"
+        "` + _t("bullet") + `",
+        "` + _t("railway") + `",
+        "` + _t("shinkansen") + `",
+        "` + _t("speed") + `",
+        "` + _t("train") + `",
+        "` + _t("Shinkansen") + `"
     ],
-    "name": "` + _lt("bullet train") + `",
+    "name": "` + _t("bullet train") + `",
     "shortcodes": [
         ":bullet_ltrain:"
     ]
@@ -11643,10 +11643,10 @@ const emojisData5 = `{
     "codepoints": "🚆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("railway") + `",
-        "` + _lt("train") + `"
+        "` + _t("railway") + `",
+        "` + _t("train") + `"
     ],
-    "name": "` + _lt("train") + `",
+    "name": "` + _t("train") + `",
     "shortcodes": [
         ":train:"
     ]
@@ -11656,10 +11656,10 @@ const emojisData5 = `{
     "codepoints": "🚇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("metro") + `",
-        "` + _lt("subway") + `"
+        "` + _t("metro") + `",
+        "` + _t("subway") + `"
     ],
-    "name": "` + _lt("metro") + `",
+    "name": "` + _t("metro") + `",
     "shortcodes": [
         ":metro:"
     ]
@@ -11669,10 +11669,10 @@ const emojisData5 = `{
     "codepoints": "🚈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("light rail") + `",
-        "` + _lt("railway") + `"
+        "` + _t("light rail") + `",
+        "` + _t("railway") + `"
     ],
-    "name": "` + _lt("light rail") + `",
+    "name": "` + _t("light rail") + `",
     "shortcodes": [
         ":light_rail:"
     ]
@@ -11682,11 +11682,11 @@ const emojisData5 = `{
     "codepoints": "🚉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("railway") + `",
-        "` + _lt("station") + `",
-        "` + _lt("train") + `"
+        "` + _t("railway") + `",
+        "` + _t("station") + `",
+        "` + _t("train") + `"
     ],
-    "name": "` + _lt("station") + `",
+    "name": "` + _t("station") + `",
     "shortcodes": [
         ":station:"
     ]
@@ -11696,18 +11696,18 @@ const emojisData5 = `{
     "codepoints": "🚊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("light rail") + `",
-        "` + _lt("oncoming") + `",
-        "` + _lt("oncoming light rail") + `",
-        "` + _lt("tram") + `",
-        "` + _lt("trolleybus") + `",
-        "` + _lt("car") + `",
-        "` + _lt("streetcar") + `",
-        "` + _lt("tramcar") + `",
-        "` + _lt("trolley") + `",
-        "` + _lt("trolley bus") + `"
+        "` + _t("light rail") + `",
+        "` + _t("oncoming") + `",
+        "` + _t("oncoming light rail") + `",
+        "` + _t("tram") + `",
+        "` + _t("trolleybus") + `",
+        "` + _t("car") + `",
+        "` + _t("streetcar") + `",
+        "` + _t("tramcar") + `",
+        "` + _t("trolley") + `",
+        "` + _t("trolley bus") + `"
     ],
-    "name": "` + _lt("tram") + `",
+    "name": "` + _t("tram") + `",
     "shortcodes": [
         ":tram:"
     ]
@@ -11717,10 +11717,10 @@ const emojisData5 = `{
     "codepoints": "🚝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("monorail") + `",
-        "` + _lt("vehicle") + `"
+        "` + _t("monorail") + `",
+        "` + _t("vehicle") + `"
     ],
-    "name": "` + _lt("monorail") + `",
+    "name": "` + _t("monorail") + `",
     "shortcodes": [
         ":monorail:"
     ]
@@ -11730,11 +11730,11 @@ const emojisData5 = `{
     "codepoints": "🚞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("car") + `",
-        "` + _lt("mountain") + `",
-        "` + _lt("railway") + `"
+        "` + _t("car") + `",
+        "` + _t("mountain") + `",
+        "` + _t("railway") + `"
     ],
-    "name": "` + _lt("mountain railway") + `",
+    "name": "` + _t("mountain railway") + `",
     "shortcodes": [
         ":mountain_railway:"
     ]
@@ -11744,15 +11744,15 @@ const emojisData5 = `{
     "codepoints": "🚋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("car") + `",
-        "` + _lt("tram") + `",
-        "` + _lt("trolley bus") + `",
-        "` + _lt("trolleybus") + `",
-        "` + _lt("streetcar") + `",
-        "` + _lt("tramcar") + `",
-        "` + _lt("trolley") + `"
+        "` + _t("car") + `",
+        "` + _t("tram") + `",
+        "` + _t("trolley bus") + `",
+        "` + _t("trolleybus") + `",
+        "` + _t("streetcar") + `",
+        "` + _t("tramcar") + `",
+        "` + _t("trolley") + `"
     ],
-    "name": "` + _lt("tram car") + `",
+    "name": "` + _t("tram car") + `",
     "shortcodes": [
         ":tram_car:"
     ]
@@ -11762,10 +11762,10 @@ const emojisData5 = `{
     "codepoints": "🚌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bus") + `",
-        "` + _lt("vehicle") + `"
+        "` + _t("bus") + `",
+        "` + _t("vehicle") + `"
     ],
-    "name": "` + _lt("bus") + `",
+    "name": "` + _t("bus") + `",
     "shortcodes": [
         ":bus:"
     ]
@@ -11775,10 +11775,10 @@ const emojisData5 = `{
     "codepoints": "🚍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bus") + `",
-        "` + _lt("oncoming") + `"
+        "` + _t("bus") + `",
+        "` + _t("oncoming") + `"
     ],
-    "name": "` + _lt("oncoming bus") + `",
+    "name": "` + _t("oncoming bus") + `",
     "shortcodes": [
         ":oncoming_bus:"
     ]
@@ -11788,13 +11788,13 @@ const emojisData5 = `{
     "codepoints": "🚎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bus") + `",
-        "` + _lt("tram") + `",
-        "` + _lt("trolley") + `",
-        "` + _lt("trolleybus") + `",
-        "` + _lt("streetcar") + `"
+        "` + _t("bus") + `",
+        "` + _t("tram") + `",
+        "` + _t("trolley") + `",
+        "` + _t("trolleybus") + `",
+        "` + _t("streetcar") + `"
     ],
-    "name": "` + _lt("trolleybus") + `",
+    "name": "` + _t("trolleybus") + `",
     "shortcodes": [
         ":trolleybus:"
     ]
@@ -11804,10 +11804,10 @@ const emojisData5 = `{
     "codepoints": "🚐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bus") + `",
-        "` + _lt("minibus") + `"
+        "` + _t("bus") + `",
+        "` + _t("minibus") + `"
     ],
-    "name": "` + _lt("minibus") + `",
+    "name": "` + _t("minibus") + `",
     "shortcodes": [
         ":minibus:"
     ]
@@ -11817,10 +11817,10 @@ const emojisData5 = `{
     "codepoints": "🚑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ambulance") + `",
-        "` + _lt("vehicle") + `"
+        "` + _t("ambulance") + `",
+        "` + _t("vehicle") + `"
     ],
-    "name": "` + _lt("ambulance") + `",
+    "name": "` + _t("ambulance") + `",
     "shortcodes": [
         ":ambulance:"
     ]
@@ -11830,11 +11830,11 @@ const emojisData5 = `{
     "codepoints": "🚒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("engine") + `",
-        "` + _lt("fire") + `",
-        "` + _lt("truck") + `"
+        "` + _t("engine") + `",
+        "` + _t("fire") + `",
+        "` + _t("truck") + `"
     ],
-    "name": "` + _lt("fire engine") + `",
+    "name": "` + _t("fire engine") + `",
     "shortcodes": [
         ":fire_engine:"
     ]
@@ -11844,11 +11844,11 @@ const emojisData5 = `{
     "codepoints": "🚓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("car") + `",
-        "` + _lt("patrol") + `",
-        "` + _lt("police") + `"
+        "` + _t("car") + `",
+        "` + _t("patrol") + `",
+        "` + _t("police") + `"
     ],
-    "name": "` + _lt("police car") + `",
+    "name": "` + _t("police car") + `",
     "shortcodes": [
         ":police_car:"
     ]
@@ -11858,11 +11858,11 @@ const emojisData5 = `{
     "codepoints": "🚔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("car") + `",
-        "` + _lt("oncoming") + `",
-        "` + _lt("police") + `"
+        "` + _t("car") + `",
+        "` + _t("oncoming") + `",
+        "` + _t("police") + `"
     ],
-    "name": "` + _lt("oncoming police car") + `",
+    "name": "` + _t("oncoming police car") + `",
     "shortcodes": [
         ":oncoming_police_car:"
     ]
@@ -11872,10 +11872,10 @@ const emojisData5 = `{
     "codepoints": "🚕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("taxi") + `",
-        "` + _lt("vehicle") + `"
+        "` + _t("taxi") + `",
+        "` + _t("vehicle") + `"
     ],
-    "name": "` + _lt("taxi") + `",
+    "name": "` + _t("taxi") + `",
     "shortcodes": [
         ":taxi:"
     ]
@@ -11885,10 +11885,10 @@ const emojisData5 = `{
     "codepoints": "🚖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("oncoming") + `",
-        "` + _lt("taxi") + `"
+        "` + _t("oncoming") + `",
+        "` + _t("taxi") + `"
     ],
-    "name": "` + _lt("oncoming taxi") + `",
+    "name": "` + _t("oncoming taxi") + `",
     "shortcodes": [
         ":oncoming_ltaxi:"
     ]
@@ -11898,10 +11898,10 @@ const emojisData5 = `{
     "codepoints": "🚗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("automobile") + `",
-        "` + _lt("car") + `"
+        "` + _t("automobile") + `",
+        "` + _t("car") + `"
     ],
-    "name": "` + _lt("automobile") + `",
+    "name": "` + _t("automobile") + `",
     "shortcodes": [
         ":automobile:"
     ]
@@ -11911,11 +11911,11 @@ const emojisData5 = `{
     "codepoints": "🚘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("automobile") + `",
-        "` + _lt("car") + `",
-        "` + _lt("oncoming") + `"
+        "` + _t("automobile") + `",
+        "` + _t("car") + `",
+        "` + _t("oncoming") + `"
     ],
-    "name": "` + _lt("oncoming automobile") + `",
+    "name": "` + _t("oncoming automobile") + `",
     "shortcodes": [
         ":oncoming_automobile:"
     ]
@@ -11925,16 +11925,16 @@ const emojisData5 = `{
     "codepoints": "🚙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("4WD") + `",
-        "` + _lt("four-wheel drive") + `",
-        "` + _lt("recreational") + `",
-        "` + _lt("sport utility") + `",
-        "` + _lt("sport utility vehicle") + `",
-        "` + _lt("4x4") + `",
-        "` + _lt("off-road vehicle") + `",
-        "` + _lt("SUV") + `"
+        "` + _t("4WD") + `",
+        "` + _t("four-wheel drive") + `",
+        "` + _t("recreational") + `",
+        "` + _t("sport utility") + `",
+        "` + _t("sport utility vehicle") + `",
+        "` + _t("4x4") + `",
+        "` + _t("off-road vehicle") + `",
+        "` + _t("SUV") + `"
     ],
-    "name": "` + _lt("sport utility vehicle") + `",
+    "name": "` + _t("sport utility vehicle") + `",
     "shortcodes": [
         ":sport_utility_vehicle:"
     ]
@@ -11944,10 +11944,10 @@ const emojisData5 = `{
     "codepoints": "🚚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("delivery") + `",
-        "` + _lt("truck") + `"
+        "` + _t("delivery") + `",
+        "` + _t("truck") + `"
     ],
-    "name": "` + _lt("delivery truck") + `",
+    "name": "` + _t("delivery truck") + `",
     "shortcodes": [
         ":delivery_ltruck:"
     ]
@@ -11957,13 +11957,13 @@ const emojisData5 = `{
     "codepoints": "🚛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("articulated truck") + `",
-        "` + _lt("lorry") + `",
-        "` + _lt("semi") + `",
-        "` + _lt("truck") + `",
-        "` + _lt("articulated lorry") + `"
+        "` + _t("articulated truck") + `",
+        "` + _t("lorry") + `",
+        "` + _t("semi") + `",
+        "` + _t("truck") + `",
+        "` + _t("articulated lorry") + `"
     ],
-    "name": "` + _lt("articulated lorry") + `",
+    "name": "` + _t("articulated lorry") + `",
     "shortcodes": [
         ":articulated_lorry:"
     ]
@@ -11973,10 +11973,10 @@ const emojisData5 = `{
     "codepoints": "🚜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("tractor") + `",
-        "` + _lt("vehicle") + `"
+        "` + _t("tractor") + `",
+        "` + _t("vehicle") + `"
     ],
-    "name": "` + _lt("tractor") + `",
+    "name": "` + _t("tractor") + `",
     "shortcodes": [
         ":tractor:"
     ]
@@ -11986,10 +11986,10 @@ const emojisData5 = `{
     "codepoints": "🏎️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("car") + `",
-        "` + _lt("racing") + `"
+        "` + _t("car") + `",
+        "` + _t("racing") + `"
     ],
-    "name": "` + _lt("racing car") + `",
+    "name": "` + _t("racing car") + `",
     "shortcodes": [
         ":racing_car:"
     ]
@@ -11999,10 +11999,10 @@ const emojisData5 = `{
     "codepoints": "🏍️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("motorcycle") + `",
-        "` + _lt("racing") + `"
+        "` + _t("motorcycle") + `",
+        "` + _t("racing") + `"
     ],
-    "name": "` + _lt("motorcycle") + `",
+    "name": "` + _t("motorcycle") + `",
     "shortcodes": [
         ":motorcycle:"
     ]
@@ -12012,10 +12012,10 @@ const emojisData5 = `{
     "codepoints": "🛵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("motor") + `",
-        "` + _lt("scooter") + `"
+        "` + _t("motor") + `",
+        "` + _t("scooter") + `"
     ],
-    "name": "` + _lt("motor scooter") + `",
+    "name": "` + _t("motor scooter") + `",
     "shortcodes": [
         ":motor_scooter:"
     ]
@@ -12025,10 +12025,10 @@ const emojisData5 = `{
     "codepoints": "🦽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("manual wheelchair") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("manual wheelchair") + `"
     ],
-    "name": "` + _lt("manual wheelchair") + `",
+    "name": "` + _t("manual wheelchair") + `",
     "shortcodes": [
         ":manual_wheelchair:"
     ]
@@ -12038,12 +12038,12 @@ const emojisData5 = `{
     "codepoints": "🦼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mobility scooter") + `",
-        "` + _lt("accessibility") + `",
-        "` + _lt("motorized wheelchair") + `",
-        "` + _lt("powered wheelchair") + `"
+        "` + _t("mobility scooter") + `",
+        "` + _t("accessibility") + `",
+        "` + _t("motorized wheelchair") + `",
+        "` + _t("powered wheelchair") + `"
     ],
-    "name": "` + _lt("motorized wheelchair") + `",
+    "name": "` + _t("motorized wheelchair") + `",
     "shortcodes": [
         ":motorized_wheelchair:"
     ]
@@ -12053,12 +12053,12 @@ const emojisData5 = `{
     "codepoints": "🛺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("auto rickshaw") + `",
-        "` + _lt("tuk tuk") + `",
-        "` + _lt("tuk-tuk") + `",
-        "` + _lt("tuktuk") + `"
+        "` + _t("auto rickshaw") + `",
+        "` + _t("tuk tuk") + `",
+        "` + _t("tuk-tuk") + `",
+        "` + _t("tuktuk") + `"
     ],
-    "name": "` + _lt("auto rickshaw") + `",
+    "name": "` + _t("auto rickshaw") + `",
     "shortcodes": [
         ":auto_rickshaw:"
     ]
@@ -12070,10 +12070,10 @@ const emojisData5 = `{
         ":bike"
     ],
     "keywords": [
-        "` + _lt("bicycle") + `",
-        "` + _lt("bike") + `"
+        "` + _t("bicycle") + `",
+        "` + _t("bike") + `"
     ],
-    "name": "` + _lt("bicycle") + `",
+    "name": "` + _t("bicycle") + `",
     "shortcodes": [
         ":bicycle:"
     ]
@@ -12083,10 +12083,10 @@ const emojisData5 = `{
     "codepoints": "🛴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("kick") + `",
-        "` + _lt("scooter") + `"
+        "` + _t("kick") + `",
+        "` + _t("scooter") + `"
     ],
-    "name": "` + _lt("kick scooter") + `",
+    "name": "` + _t("kick scooter") + `",
     "shortcodes": [
         ":kick_scooter:"
     ]
@@ -12096,10 +12096,10 @@ const emojisData5 = `{
     "codepoints": "🛹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("board") + `",
-        "` + _lt("skateboard") + `"
+        "` + _t("board") + `",
+        "` + _t("skateboard") + `"
     ],
-    "name": "` + _lt("skateboard") + `",
+    "name": "` + _t("skateboard") + `",
     "shortcodes": [
         ":skateboard:"
     ]
@@ -12109,11 +12109,11 @@ const emojisData5 = `{
     "codepoints": "🚏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bus") + `",
-        "` + _lt("stop") + `",
-        "` + _lt("busstop") + `"
+        "` + _t("bus") + `",
+        "` + _t("stop") + `",
+        "` + _t("busstop") + `"
     ],
-    "name": "` + _lt("bus stop") + `",
+    "name": "` + _t("bus stop") + `",
     "shortcodes": [
         ":bus_stop:"
     ]
@@ -12123,12 +12123,12 @@ const emojisData5 = `{
     "codepoints": "🛣️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("freeway") + `",
-        "` + _lt("highway") + `",
-        "` + _lt("road") + `",
-        "` + _lt("motorway") + `"
+        "` + _t("freeway") + `",
+        "` + _t("highway") + `",
+        "` + _t("road") + `",
+        "` + _t("motorway") + `"
     ],
-    "name": "` + _lt("motorway") + `",
+    "name": "` + _t("motorway") + `",
     "shortcodes": [
         ":motorway:"
     ]
@@ -12138,11 +12138,11 @@ const emojisData5 = `{
     "codepoints": "🛤️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("railway") + `",
-        "` + _lt("railway track") + `",
-        "` + _lt("train") + `"
+        "` + _t("railway") + `",
+        "` + _t("railway track") + `",
+        "` + _t("train") + `"
     ],
-    "name": "` + _lt("railway track") + `",
+    "name": "` + _t("railway track") + `",
     "shortcodes": [
         ":railway_ltrack:"
     ]
@@ -12152,10 +12152,10 @@ const emojisData5 = `{
     "codepoints": "🛢️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("drum") + `",
-        "` + _lt("oil") + `"
+        "` + _t("drum") + `",
+        "` + _t("oil") + `"
     ],
-    "name": "` + _lt("oil drum") + `",
+    "name": "` + _t("oil drum") + `",
     "shortcodes": [
         ":oil_drum:"
     ]
@@ -12165,15 +12165,15 @@ const emojisData5 = `{
     "codepoints": "⛽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("diesel") + `",
-        "` + _lt("fuel") + `",
-        "` + _lt("gas") + `",
-        "` + _lt("petrol pump") + `",
-        "` + _lt("pump") + `",
-        "` + _lt("station") + `",
-        "` + _lt("fuelpump") + `"
+        "` + _t("diesel") + `",
+        "` + _t("fuel") + `",
+        "` + _t("gas") + `",
+        "` + _t("petrol pump") + `",
+        "` + _t("pump") + `",
+        "` + _t("station") + `",
+        "` + _t("fuelpump") + `"
     ],
-    "name": "` + _lt("fuel pump") + `",
+    "name": "` + _t("fuel pump") + `",
     "shortcodes": [
         ":fuel_pump:"
     ]
@@ -12183,13 +12183,13 @@ const emojisData5 = `{
     "codepoints": "🚨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("beacon") + `",
-        "` + _lt("car") + `",
-        "` + _lt("light") + `",
-        "` + _lt("police") + `",
-        "` + _lt("revolving") + `"
+        "` + _t("beacon") + `",
+        "` + _t("car") + `",
+        "` + _t("light") + `",
+        "` + _t("police") + `",
+        "` + _t("revolving") + `"
     ],
-    "name": "` + _lt("police car light") + `",
+    "name": "` + _t("police car light") + `",
     "shortcodes": [
         ":police_car_light:"
     ]
@@ -12199,14 +12199,14 @@ const emojisData5 = `{
     "codepoints": "🚥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("horizontal traffic lights") + `",
-        "` + _lt("lights") + `",
-        "` + _lt("signal") + `",
-        "` + _lt("traffic") + `",
-        "` + _lt("horizontal traffic light") + `",
-        "` + _lt("light") + `"
+        "` + _t("horizontal traffic lights") + `",
+        "` + _t("lights") + `",
+        "` + _t("signal") + `",
+        "` + _t("traffic") + `",
+        "` + _t("horizontal traffic light") + `",
+        "` + _t("light") + `"
     ],
-    "name": "` + _lt("horizontal traffic light") + `",
+    "name": "` + _t("horizontal traffic light") + `",
     "shortcodes": [
         ":horizontal_ltraffic_light:"
     ]
@@ -12216,14 +12216,14 @@ const emojisData5 = `{
     "codepoints": "🚦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("lights") + `",
-        "` + _lt("signal") + `",
-        "` + _lt("traffic") + `",
-        "` + _lt("vertical traffic lights") + `",
-        "` + _lt("light") + `",
-        "` + _lt("vertical traffic light") + `"
+        "` + _t("lights") + `",
+        "` + _t("signal") + `",
+        "` + _t("traffic") + `",
+        "` + _t("vertical traffic lights") + `",
+        "` + _t("light") + `",
+        "` + _t("vertical traffic light") + `"
     ],
-    "name": "` + _lt("vertical traffic light") + `",
+    "name": "` + _t("vertical traffic light") + `",
     "shortcodes": [
         ":vertical_ltraffic_light:"
     ]
@@ -12233,11 +12233,11 @@ const emojisData5 = `{
     "codepoints": "🛑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("octagonal") + `",
-        "` + _lt("sign") + `",
-        "` + _lt("stop") + `"
+        "` + _t("octagonal") + `",
+        "` + _t("sign") + `",
+        "` + _t("stop") + `"
     ],
-    "name": "` + _lt("stop sign") + `",
+    "name": "` + _t("stop sign") + `",
     "shortcodes": [
         ":stop_sign:"
     ]
@@ -12247,10 +12247,10 @@ const emojisData5 = `{
     "codepoints": "🚧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("barrier") + `",
-        "` + _lt("construction") + `"
+        "` + _t("barrier") + `",
+        "` + _t("construction") + `"
     ],
-    "name": "` + _lt("construction") + `",
+    "name": "` + _t("construction") + `",
     "shortcodes": [
         ":construction:"
     ]
@@ -12260,11 +12260,11 @@ const emojisData5 = `{
     "codepoints": "⚓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("anchor") + `",
-        "` + _lt("ship") + `",
-        "` + _lt("tool") + `"
+        "` + _t("anchor") + `",
+        "` + _t("ship") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("anchor") + `",
+    "name": "` + _t("anchor") + `",
     "shortcodes": [
         ":anchor:"
     ]
@@ -12274,13 +12274,13 @@ const emojisData5 = `{
     "codepoints": "⛵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boat") + `",
-        "` + _lt("resort") + `",
-        "` + _lt("sailboat") + `",
-        "` + _lt("sea") + `",
-        "` + _lt("yacht") + `"
+        "` + _t("boat") + `",
+        "` + _t("resort") + `",
+        "` + _t("sailboat") + `",
+        "` + _t("sea") + `",
+        "` + _t("yacht") + `"
     ],
-    "name": "` + _lt("sailboat") + `",
+    "name": "` + _t("sailboat") + `",
     "shortcodes": [
         ":sailboat:"
     ]
@@ -12290,10 +12290,10 @@ const emojisData5 = `{
     "codepoints": "🛶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boat") + `",
-        "` + _lt("canoe") + `"
+        "` + _t("boat") + `",
+        "` + _t("canoe") + `"
     ],
-    "name": "` + _lt("canoe") + `",
+    "name": "` + _t("canoe") + `",
     "shortcodes": [
         ":canoe:"
     ]
@@ -12303,10 +12303,10 @@ const emojisData5 = `{
     "codepoints": "🚤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boat") + `",
-        "` + _lt("speedboat") + `"
+        "` + _t("boat") + `",
+        "` + _t("speedboat") + `"
     ],
-    "name": "` + _lt("speedboat") + `",
+    "name": "` + _t("speedboat") + `",
     "shortcodes": [
         ":speedboat:"
     ]
@@ -12316,10 +12316,10 @@ const emojisData5 = `{
     "codepoints": "🛳️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("passenger") + `",
-        "` + _lt("ship") + `"
+        "` + _t("passenger") + `",
+        "` + _t("ship") + `"
     ],
-    "name": "` + _lt("passenger ship") + `",
+    "name": "` + _t("passenger ship") + `",
     "shortcodes": [
         ":passenger_ship:"
     ]
@@ -12329,11 +12329,11 @@ const emojisData5 = `{
     "codepoints": "⛴️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boat") + `",
-        "` + _lt("ferry") + `",
-        "` + _lt("passenger") + `"
+        "` + _t("boat") + `",
+        "` + _t("ferry") + `",
+        "` + _t("passenger") + `"
     ],
-    "name": "` + _lt("ferry") + `",
+    "name": "` + _t("ferry") + `",
     "shortcodes": [
         ":ferry:"
     ]
@@ -12343,11 +12343,11 @@ const emojisData5 = `{
     "codepoints": "🛥️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boat") + `",
-        "` + _lt("motor boat") + `",
-        "` + _lt("motorboat") + `"
+        "` + _t("boat") + `",
+        "` + _t("motor boat") + `",
+        "` + _t("motorboat") + `"
     ],
-    "name": "` + _lt("motor boat") + `",
+    "name": "` + _t("motor boat") + `",
     "shortcodes": [
         ":motor_boat:"
     ]
@@ -12357,11 +12357,11 @@ const emojisData5 = `{
     "codepoints": "🚢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boat") + `",
-        "` + _lt("passenger") + `",
-        "` + _lt("ship") + `"
+        "` + _t("boat") + `",
+        "` + _t("passenger") + `",
+        "` + _t("ship") + `"
     ],
-    "name": "` + _lt("ship") + `",
+    "name": "` + _t("ship") + `",
     "shortcodes": [
         ":ship:"
     ]
@@ -12371,10 +12371,10 @@ const emojisData5 = `{
     "codepoints": "✈️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("aeroplane") + `",
-        "` + _lt("airplane") + `"
+        "` + _t("aeroplane") + `",
+        "` + _t("airplane") + `"
     ],
-    "name": "` + _lt("airplane") + `",
+    "name": "` + _t("airplane") + `",
     "shortcodes": [
         ":airplane:"
     ]
@@ -12384,11 +12384,11 @@ const emojisData5 = `{
     "codepoints": "🛩️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("aeroplane") + `",
-        "` + _lt("airplane") + `",
-        "` + _lt("small airplane") + `"
+        "` + _t("aeroplane") + `",
+        "` + _t("airplane") + `",
+        "` + _t("small airplane") + `"
     ],
-    "name": "` + _lt("small airplane") + `",
+    "name": "` + _t("small airplane") + `",
     "shortcodes": [
         ":small_airplane:"
     ]
@@ -12398,14 +12398,14 @@ const emojisData5 = `{
     "codepoints": "🛫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("aeroplane") + `",
-        "` + _lt("airplane") + `",
-        "` + _lt("check-in") + `",
-        "` + _lt("departure") + `",
-        "` + _lt("departures") + `",
-        "` + _lt("take-off") + `"
+        "` + _t("aeroplane") + `",
+        "` + _t("airplane") + `",
+        "` + _t("check-in") + `",
+        "` + _t("departure") + `",
+        "` + _t("departures") + `",
+        "` + _t("take-off") + `"
     ],
-    "name": "` + _lt("airplane departure") + `",
+    "name": "` + _t("airplane departure") + `",
     "shortcodes": [
         ":airplane_departure:"
     ]
@@ -12415,14 +12415,14 @@ const emojisData5 = `{
     "codepoints": "🛬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("aeroplane") + `",
-        "` + _lt("airplane") + `",
-        "` + _lt("airplane arrival") + `",
-        "` + _lt("arrivals") + `",
-        "` + _lt("arriving") + `",
-        "` + _lt("landing") + `"
+        "` + _t("aeroplane") + `",
+        "` + _t("airplane") + `",
+        "` + _t("airplane arrival") + `",
+        "` + _t("arrivals") + `",
+        "` + _t("arriving") + `",
+        "` + _t("landing") + `"
     ],
-    "name": "` + _lt("airplane arrival") + `",
+    "name": "` + _t("airplane arrival") + `",
     "shortcodes": [
         ":airplane_arrival:"
     ]
@@ -12432,13 +12432,13 @@ const emojisData5 = `{
     "codepoints": "🪂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hang-glide") + `",
-        "` + _lt("parachute") + `",
-        "` + _lt("parasail") + `",
-        "` + _lt("skydive") + `",
-        "` + _lt("parascend") + `"
+        "` + _t("hang-glide") + `",
+        "` + _t("parachute") + `",
+        "` + _t("parasail") + `",
+        "` + _t("skydive") + `",
+        "` + _t("parascend") + `"
     ],
-    "name": "` + _lt("parachute") + `",
+    "name": "` + _t("parachute") + `",
     "shortcodes": [
         ":parachute:"
     ]
@@ -12448,10 +12448,10 @@ const emojisData5 = `{
     "codepoints": "💺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chair") + `",
-        "` + _lt("seat") + `"
+        "` + _t("chair") + `",
+        "` + _t("seat") + `"
     ],
-    "name": "` + _lt("seat") + `",
+    "name": "` + _t("seat") + `",
     "shortcodes": [
         ":seat:"
     ]
@@ -12461,10 +12461,10 @@ const emojisData5 = `{
     "codepoints": "🚁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("helicopter") + `",
-        "` + _lt("vehicle") + `"
+        "` + _t("helicopter") + `",
+        "` + _t("vehicle") + `"
     ],
-    "name": "` + _lt("helicopter") + `",
+    "name": "` + _t("helicopter") + `",
     "shortcodes": [
         ":helicopter:"
     ]
@@ -12474,11 +12474,11 @@ const emojisData5 = `{
     "codepoints": "🚟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cable") + `",
-        "` + _lt("railway") + `",
-        "` + _lt("suspension") + `"
+        "` + _t("cable") + `",
+        "` + _t("railway") + `",
+        "` + _t("suspension") + `"
     ],
-    "name": "` + _lt("suspension railway") + `",
+    "name": "` + _t("suspension railway") + `",
     "shortcodes": [
         ":suspension_railway:"
     ]
@@ -12488,13 +12488,13 @@ const emojisData5 = `{
     "codepoints": "🚠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cable") + `",
-        "` + _lt("cableway") + `",
-        "` + _lt("gondola") + `",
-        "` + _lt("mountain") + `",
-        "` + _lt("mountain cableway") + `"
+        "` + _t("cable") + `",
+        "` + _t("cableway") + `",
+        "` + _t("gondola") + `",
+        "` + _t("mountain") + `",
+        "` + _t("mountain cableway") + `"
     ],
-    "name": "` + _lt("mountain cableway") + `",
+    "name": "` + _t("mountain cableway") + `",
     "shortcodes": [
         ":mountain_cableway:"
     ]
@@ -12504,13 +12504,13 @@ const emojisData5 = `{
     "codepoints": "🚡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("aerial") + `",
-        "` + _lt("cable") + `",
-        "` + _lt("car") + `",
-        "` + _lt("gondola") + `",
-        "` + _lt("tramway") + `"
+        "` + _t("aerial") + `",
+        "` + _t("cable") + `",
+        "` + _t("car") + `",
+        "` + _t("gondola") + `",
+        "` + _t("tramway") + `"
     ],
-    "name": "` + _lt("aerial tramway") + `",
+    "name": "` + _t("aerial tramway") + `",
     "shortcodes": [
         ":aerial_ltramway:"
     ]
@@ -12520,10 +12520,10 @@ const emojisData5 = `{
     "codepoints": "🛰️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("satellite") + `",
-        "` + _lt("space") + `"
+        "` + _t("satellite") + `",
+        "` + _t("space") + `"
     ],
-    "name": "` + _lt("satellite") + `",
+    "name": "` + _t("satellite") + `",
     "shortcodes": [
         ":satellite:"
     ]
@@ -12533,10 +12533,10 @@ const emojisData5 = `{
     "codepoints": "🚀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("rocket") + `",
-        "` + _lt("space") + `"
+        "` + _t("rocket") + `",
+        "` + _t("space") + `"
     ],
-    "name": "` + _lt("rocket") + `",
+    "name": "` + _t("rocket") + `",
     "shortcodes": [
         ":rocket:"
     ]
@@ -12546,10 +12546,10 @@ const emojisData5 = `{
     "codepoints": "🛸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flying saucer") + `",
-        "` + _lt("UFO") + `"
+        "` + _t("flying saucer") + `",
+        "` + _t("UFO") + `"
     ],
-    "name": "` + _lt("flying saucer") + `",
+    "name": "` + _t("flying saucer") + `",
     "shortcodes": [
         ":flying_saucer:"
     ]
@@ -12559,12 +12559,12 @@ const emojisData5 = `{
     "codepoints": "🛎️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bell") + `",
-        "` + _lt("hotel") + `",
-        "` + _lt("porter") + `",
-        "` + _lt("bellhop") + `"
+        "` + _t("bell") + `",
+        "` + _t("hotel") + `",
+        "` + _t("porter") + `",
+        "` + _t("bellhop") + `"
     ],
-    "name": "` + _lt("bellhop bell") + `",
+    "name": "` + _t("bellhop bell") + `",
     "shortcodes": [
         ":bellhop_bell:"
     ]
@@ -12574,11 +12574,11 @@ const emojisData5 = `{
     "codepoints": "🧳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("luggage") + `",
-        "` + _lt("packing") + `",
-        "` + _lt("travel") + `"
+        "` + _t("luggage") + `",
+        "` + _t("packing") + `",
+        "` + _t("travel") + `"
     ],
-    "name": "` + _lt("luggage") + `",
+    "name": "` + _t("luggage") + `",
     "shortcodes": [
         ":luggage:"
     ]
@@ -12588,12 +12588,12 @@ const emojisData5 = `{
     "codepoints": "⌛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hourglass") + `",
-        "` + _lt("hourglass done") + `",
-        "` + _lt("sand") + `",
-        "` + _lt("timer") + `"
+        "` + _t("hourglass") + `",
+        "` + _t("hourglass done") + `",
+        "` + _t("sand") + `",
+        "` + _t("timer") + `"
     ],
-    "name": "` + _lt("hourglass done") + `",
+    "name": "` + _t("hourglass done") + `",
     "shortcodes": [
         ":hourglass_done:"
     ]
@@ -12603,12 +12603,12 @@ const emojisData5 = `{
     "codepoints": "⏳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hourglass") + `",
-        "` + _lt("hourglass not done") + `",
-        "` + _lt("sand") + `",
-        "` + _lt("timer") + `"
+        "` + _t("hourglass") + `",
+        "` + _t("hourglass not done") + `",
+        "` + _t("sand") + `",
+        "` + _t("timer") + `"
     ],
-    "name": "` + _lt("hourglass not done") + `",
+    "name": "` + _t("hourglass not done") + `",
     "shortcodes": [
         ":hourglass_not_done:"
     ]
@@ -12618,10 +12618,10 @@ const emojisData5 = `{
     "codepoints": "⌚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clock") + `",
-        "` + _lt("watch") + `"
+        "` + _t("clock") + `",
+        "` + _t("watch") + `"
     ],
-    "name": "` + _lt("watch") + `",
+    "name": "` + _t("watch") + `",
     "shortcodes": [
         ":watch:"
     ]
@@ -12631,10 +12631,10 @@ const emojisData5 = `{
     "codepoints": "⏰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("alarm") + `",
-        "` + _lt("clock") + `"
+        "` + _t("alarm") + `",
+        "` + _t("clock") + `"
     ],
-    "name": "` + _lt("alarm clock") + `",
+    "name": "` + _t("alarm clock") + `",
     "shortcodes": [
         ":alarm_clock:"
     ]
@@ -12644,10 +12644,10 @@ const emojisData5 = `{
     "codepoints": "⏱️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clock") + `",
-        "` + _lt("stopwatch") + `"
+        "` + _t("clock") + `",
+        "` + _t("stopwatch") + `"
     ],
-    "name": "` + _lt("stopwatch") + `",
+    "name": "` + _t("stopwatch") + `",
     "shortcodes": [
         ":stopwatch:"
     ]
@@ -12657,10 +12657,10 @@ const emojisData5 = `{
     "codepoints": "⏲️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clock") + `",
-        "` + _lt("timer") + `"
+        "` + _t("clock") + `",
+        "` + _t("timer") + `"
     ],
-    "name": "` + _lt("timer clock") + `",
+    "name": "` + _t("timer clock") + `",
     "shortcodes": [
         ":timer_clock:"
     ]
@@ -12670,10 +12670,10 @@ const emojisData5 = `{
     "codepoints": "🕰️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clock") + `",
-        "` + _lt("mantelpiece clock") + `"
+        "` + _t("clock") + `",
+        "` + _t("mantelpiece clock") + `"
     ],
-    "name": "` + _lt("mantelpiece clock") + `",
+    "name": "` + _t("mantelpiece clock") + `",
     "shortcodes": [
         ":mantelpiece_clock:"
     ]
@@ -12683,14 +12683,14 @@ const emojisData5 = `{
     "codepoints": "🕛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("12") + `",
-        "` + _lt("12:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("o’clock") + `",
-        "` + _lt("twelve") + `"
+        "` + _t("00") + `",
+        "` + _t("12") + `",
+        "` + _t("12:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("o’clock") + `",
+        "` + _t("twelve") + `"
     ],
-    "name": "` + _lt("twelve o’clock") + `",
+    "name": "` + _t("twelve o’clock") + `",
     "shortcodes": [
         ":twelve_o’clock:"
     ]
@@ -12700,16 +12700,16 @@ const emojisData5 = `{
     "codepoints": "🕧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("12") + `",
-        "` + _lt("12:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("twelve") + `",
-        "` + _lt("twelve-thirty") + `",
-        "` + _lt("half past twelve") + `",
-        "` + _lt("12.30") + `"
+        "` + _t("12") + `",
+        "` + _t("12:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("thirty") + `",
+        "` + _t("twelve") + `",
+        "` + _t("twelve-thirty") + `",
+        "` + _t("half past twelve") + `",
+        "` + _t("12.30") + `"
     ],
-    "name": "` + _lt("twelve-thirty") + `",
+    "name": "` + _t("twelve-thirty") + `",
     "shortcodes": [
         ":twelve-thirty:"
     ]
@@ -12719,14 +12719,14 @@ const emojisData5 = `{
     "codepoints": "🕐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("1") + `",
-        "` + _lt("1:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("o’clock") + `",
-        "` + _lt("one") + `"
+        "` + _t("00") + `",
+        "` + _t("1") + `",
+        "` + _t("1:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("o’clock") + `",
+        "` + _t("one") + `"
     ],
-    "name": "` + _lt("one o’clock") + `",
+    "name": "` + _t("one o’clock") + `",
     "shortcodes": [
         ":one_o’clock:"
     ]
@@ -12736,16 +12736,16 @@ const emojisData5 = `{
     "codepoints": "🕜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("1") + `",
-        "` + _lt("1:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("one") + `",
-        "` + _lt("one-thirty") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("half past one") + `",
-        "` + _lt("1.30") + `"
+        "` + _t("1") + `",
+        "` + _t("1:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("one") + `",
+        "` + _t("one-thirty") + `",
+        "` + _t("thirty") + `",
+        "` + _t("half past one") + `",
+        "` + _t("1.30") + `"
     ],
-    "name": "` + _lt("one-thirty") + `",
+    "name": "` + _t("one-thirty") + `",
     "shortcodes": [
         ":one-thirty:"
     ]
@@ -12755,14 +12755,14 @@ const emojisData5 = `{
     "codepoints": "🕑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("2") + `",
-        "` + _lt("2:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("o’clock") + `",
-        "` + _lt("two") + `"
+        "` + _t("00") + `",
+        "` + _t("2") + `",
+        "` + _t("2:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("o’clock") + `",
+        "` + _t("two") + `"
     ],
-    "name": "` + _lt("two o’clock") + `",
+    "name": "` + _t("two o’clock") + `",
     "shortcodes": [
         ":two_o’clock:"
     ]
@@ -12772,16 +12772,16 @@ const emojisData5 = `{
     "codepoints": "🕝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("2") + `",
-        "` + _lt("2:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("two") + `",
-        "` + _lt("two-thirty") + `",
-        "` + _lt("half past two") + `",
-        "` + _lt("2.30") + `"
+        "` + _t("2") + `",
+        "` + _t("2:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("thirty") + `",
+        "` + _t("two") + `",
+        "` + _t("two-thirty") + `",
+        "` + _t("half past two") + `",
+        "` + _t("2.30") + `"
     ],
-    "name": "` + _lt("two-thirty") + `",
+    "name": "` + _t("two-thirty") + `",
     "shortcodes": [
         ":two-thirty:"
     ]
@@ -12791,14 +12791,14 @@ const emojisData5 = `{
     "codepoints": "🕒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("3") + `",
-        "` + _lt("3:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("o’clock") + `",
-        "` + _lt("three") + `"
+        "` + _t("00") + `",
+        "` + _t("3") + `",
+        "` + _t("3:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("o’clock") + `",
+        "` + _t("three") + `"
     ],
-    "name": "` + _lt("three o’clock") + `",
+    "name": "` + _t("three o’clock") + `",
     "shortcodes": [
         ":three_o’clock:"
     ]
@@ -12808,16 +12808,16 @@ const emojisData5 = `{
     "codepoints": "🕞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("3") + `",
-        "` + _lt("3:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("three") + `",
-        "` + _lt("three-thirty") + `",
-        "` + _lt("half past three") + `",
-        "` + _lt("3.30") + `"
+        "` + _t("3") + `",
+        "` + _t("3:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("thirty") + `",
+        "` + _t("three") + `",
+        "` + _t("three-thirty") + `",
+        "` + _t("half past three") + `",
+        "` + _t("3.30") + `"
     ],
-    "name": "` + _lt("three-thirty") + `",
+    "name": "` + _t("three-thirty") + `",
     "shortcodes": [
         ":three-thirty:"
     ]
@@ -12827,14 +12827,14 @@ const emojisData5 = `{
     "codepoints": "🕓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("4") + `",
-        "` + _lt("4:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("four") + `",
-        "` + _lt("o’clock") + `"
+        "` + _t("00") + `",
+        "` + _t("4") + `",
+        "` + _t("4:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("four") + `",
+        "` + _t("o’clock") + `"
     ],
-    "name": "` + _lt("four o’clock") + `",
+    "name": "` + _t("four o’clock") + `",
     "shortcodes": [
         ":four_o’clock:"
     ]
@@ -12844,16 +12844,16 @@ const emojisData5 = `{
     "codepoints": "🕟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("4") + `",
-        "` + _lt("4:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("four") + `",
-        "` + _lt("four-thirty") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("half past four") + `",
-        "` + _lt("4.30") + `"
+        "` + _t("4") + `",
+        "` + _t("4:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("four") + `",
+        "` + _t("four-thirty") + `",
+        "` + _t("thirty") + `",
+        "` + _t("half past four") + `",
+        "` + _t("4.30") + `"
     ],
-    "name": "` + _lt("four-thirty") + `",
+    "name": "` + _t("four-thirty") + `",
     "shortcodes": [
         ":four-thirty:"
     ]
@@ -12863,14 +12863,14 @@ const emojisData5 = `{
     "codepoints": "🕔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("5") + `",
-        "` + _lt("5:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("five") + `",
-        "` + _lt("o’clock") + `"
+        "` + _t("00") + `",
+        "` + _t("5") + `",
+        "` + _t("5:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("five") + `",
+        "` + _t("o’clock") + `"
     ],
-    "name": "` + _lt("five o’clock") + `",
+    "name": "` + _t("five o’clock") + `",
     "shortcodes": [
         ":five_o’clock:"
     ]
@@ -12880,16 +12880,16 @@ const emojisData5 = `{
     "codepoints": "🕠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("5") + `",
-        "` + _lt("5:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("five") + `",
-        "` + _lt("five-thirty") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("half past five") + `",
-        "` + _lt("5.30") + `"
+        "` + _t("5") + `",
+        "` + _t("5:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("five") + `",
+        "` + _t("five-thirty") + `",
+        "` + _t("thirty") + `",
+        "` + _t("half past five") + `",
+        "` + _t("5.30") + `"
     ],
-    "name": "` + _lt("five-thirty") + `",
+    "name": "` + _t("five-thirty") + `",
     "shortcodes": [
         ":five-thirty:"
     ]
@@ -12899,14 +12899,14 @@ const emojisData5 = `{
     "codepoints": "🕕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("6") + `",
-        "` + _lt("6:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("o’clock") + `",
-        "` + _lt("six") + `"
+        "` + _t("00") + `",
+        "` + _t("6") + `",
+        "` + _t("6:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("o’clock") + `",
+        "` + _t("six") + `"
     ],
-    "name": "` + _lt("six o’clock") + `",
+    "name": "` + _t("six o’clock") + `",
     "shortcodes": [
         ":six_o’clock:"
     ]
@@ -12916,16 +12916,16 @@ const emojisData5 = `{
     "codepoints": "🕡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("6") + `",
-        "` + _lt("6:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("six") + `",
-        "` + _lt("six-thirty") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("half past six") + `",
-        "` + _lt("6.30") + `"
+        "` + _t("6") + `",
+        "` + _t("6:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("six") + `",
+        "` + _t("six-thirty") + `",
+        "` + _t("thirty") + `",
+        "` + _t("half past six") + `",
+        "` + _t("6.30") + `"
     ],
-    "name": "` + _lt("six-thirty") + `",
+    "name": "` + _t("six-thirty") + `",
     "shortcodes": [
         ":six-thirty:"
     ]
@@ -12935,14 +12935,14 @@ const emojisData5 = `{
     "codepoints": "🕖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("7") + `",
-        "` + _lt("7:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("o’clock") + `",
-        "` + _lt("seven") + `"
+        "` + _t("00") + `",
+        "` + _t("7") + `",
+        "` + _t("7:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("o’clock") + `",
+        "` + _t("seven") + `"
     ],
-    "name": "` + _lt("seven o’clock") + `",
+    "name": "` + _t("seven o’clock") + `",
     "shortcodes": [
         ":seven_o’clock:"
     ]
@@ -12952,16 +12952,16 @@ const emojisData5 = `{
     "codepoints": "🕢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("7") + `",
-        "` + _lt("7:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("seven") + `",
-        "` + _lt("seven-thirty") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("half past seven") + `",
-        "` + _lt("7.30") + `"
+        "` + _t("7") + `",
+        "` + _t("7:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("seven") + `",
+        "` + _t("seven-thirty") + `",
+        "` + _t("thirty") + `",
+        "` + _t("half past seven") + `",
+        "` + _t("7.30") + `"
     ],
-    "name": "` + _lt("seven-thirty") + `",
+    "name": "` + _t("seven-thirty") + `",
     "shortcodes": [
         ":seven-thirty:"
     ]
@@ -12971,14 +12971,14 @@ const emojisData5 = `{
     "codepoints": "🕗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("8") + `",
-        "` + _lt("8:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("eight") + `",
-        "` + _lt("o’clock") + `"
+        "` + _t("00") + `",
+        "` + _t("8") + `",
+        "` + _t("8:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("eight") + `",
+        "` + _t("o’clock") + `"
     ],
-    "name": "` + _lt("eight o’clock") + `",
+    "name": "` + _t("eight o’clock") + `",
     "shortcodes": [
         ":eight_o’clock:"
     ]
@@ -12988,16 +12988,16 @@ const emojisData5 = `{
     "codepoints": "🕣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("8") + `",
-        "` + _lt("8:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("eight") + `",
-        "` + _lt("eight-thirty") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("half past eight") + `",
-        "` + _lt("8.30") + `"
+        "` + _t("8") + `",
+        "` + _t("8:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("eight") + `",
+        "` + _t("eight-thirty") + `",
+        "` + _t("thirty") + `",
+        "` + _t("half past eight") + `",
+        "` + _t("8.30") + `"
     ],
-    "name": "` + _lt("eight-thirty") + `",
+    "name": "` + _t("eight-thirty") + `",
     "shortcodes": [
         ":eight-thirty:"
     ]
@@ -13007,14 +13007,14 @@ const emojisData5 = `{
     "codepoints": "🕘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("9") + `",
-        "` + _lt("9:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("nine") + `",
-        "` + _lt("o’clock") + `"
+        "` + _t("00") + `",
+        "` + _t("9") + `",
+        "` + _t("9:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("nine") + `",
+        "` + _t("o’clock") + `"
     ],
-    "name": "` + _lt("nine o’clock") + `",
+    "name": "` + _t("nine o’clock") + `",
     "shortcodes": [
         ":nine_o’clock:"
     ]
@@ -13024,16 +13024,16 @@ const emojisData5 = `{
     "codepoints": "🕤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("9") + `",
-        "` + _lt("9:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("nine") + `",
-        "` + _lt("nine-thirty") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("half past nine") + `",
-        "` + _lt("9.30") + `"
+        "` + _t("9") + `",
+        "` + _t("9:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("nine") + `",
+        "` + _t("nine-thirty") + `",
+        "` + _t("thirty") + `",
+        "` + _t("half past nine") + `",
+        "` + _t("9.30") + `"
     ],
-    "name": "` + _lt("nine-thirty") + `",
+    "name": "` + _t("nine-thirty") + `",
     "shortcodes": [
         ":nine-thirty:"
     ]
@@ -13043,14 +13043,14 @@ const emojisData5 = `{
     "codepoints": "🕙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("10") + `",
-        "` + _lt("10:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("o’clock") + `",
-        "` + _lt("ten") + `"
+        "` + _t("00") + `",
+        "` + _t("10") + `",
+        "` + _t("10:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("o’clock") + `",
+        "` + _t("ten") + `"
     ],
-    "name": "` + _lt("ten o’clock") + `",
+    "name": "` + _t("ten o’clock") + `",
     "shortcodes": [
         ":ten_o’clock:"
     ]
@@ -13060,16 +13060,16 @@ const emojisData5 = `{
     "codepoints": "🕥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("10") + `",
-        "` + _lt("10:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("ten") + `",
-        "` + _lt("ten-thirty") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("half past ten") + `",
-        "` + _lt("10.30") + `"
+        "` + _t("10") + `",
+        "` + _t("10:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("ten") + `",
+        "` + _t("ten-thirty") + `",
+        "` + _t("thirty") + `",
+        "` + _t("half past ten") + `",
+        "` + _t("10.30") + `"
     ],
-    "name": "` + _lt("ten-thirty") + `",
+    "name": "` + _t("ten-thirty") + `",
     "shortcodes": [
         ":ten-thirty:"
     ]
@@ -13079,14 +13079,14 @@ const emojisData5 = `{
     "codepoints": "🕚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("00") + `",
-        "` + _lt("11") + `",
-        "` + _lt("11:00") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("eleven") + `",
-        "` + _lt("o’clock") + `"
+        "` + _t("00") + `",
+        "` + _t("11") + `",
+        "` + _t("11:00") + `",
+        "` + _t("clock") + `",
+        "` + _t("eleven") + `",
+        "` + _t("o’clock") + `"
     ],
-    "name": "` + _lt("eleven o’clock") + `",
+    "name": "` + _t("eleven o’clock") + `",
     "shortcodes": [
         ":eleven_o’clock:"
     ]
@@ -13096,16 +13096,16 @@ const emojisData5 = `{
     "codepoints": "🕦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("11") + `",
-        "` + _lt("11:30") + `",
-        "` + _lt("clock") + `",
-        "` + _lt("eleven") + `",
-        "` + _lt("eleven-thirty") + `",
-        "` + _lt("thirty") + `",
-        "` + _lt("half past eleven") + `",
-        "` + _lt("11.30") + `"
+        "` + _t("11") + `",
+        "` + _t("11:30") + `",
+        "` + _t("clock") + `",
+        "` + _t("eleven") + `",
+        "` + _t("eleven-thirty") + `",
+        "` + _t("thirty") + `",
+        "` + _t("half past eleven") + `",
+        "` + _t("11.30") + `"
     ],
-    "name": "` + _lt("eleven-thirty") + `",
+    "name": "` + _t("eleven-thirty") + `",
     "shortcodes": [
         ":eleven-thirty:"
     ]
@@ -13115,11 +13115,11 @@ const emojisData5 = `{
     "codepoints": "🌑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dark") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("new moon") + `"
+        "` + _t("dark") + `",
+        "` + _t("moon") + `",
+        "` + _t("new moon") + `"
     ],
-    "name": "` + _lt("new moon") + `",
+    "name": "` + _t("new moon") + `",
     "shortcodes": [
         ":new_moon:"
     ]
@@ -13129,11 +13129,11 @@ const emojisData5 = `{
     "codepoints": "🌒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("crescent") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("waxing") + `"
+        "` + _t("crescent") + `",
+        "` + _t("moon") + `",
+        "` + _t("waxing") + `"
     ],
-    "name": "` + _lt("waxing crescent moon") + `",
+    "name": "` + _t("waxing crescent moon") + `",
     "shortcodes": [
         ":waxing_crescent_moon:"
     ]
@@ -13143,11 +13143,11 @@ const emojisData5 = `{
     "codepoints": "🌓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("first quarter moon") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("quarter") + `"
+        "` + _t("first quarter moon") + `",
+        "` + _t("moon") + `",
+        "` + _t("quarter") + `"
     ],
-    "name": "` + _lt("first quarter moon") + `",
+    "name": "` + _t("first quarter moon") + `",
     "shortcodes": [
         ":first_quarter_moon:"
     ]
@@ -13157,11 +13157,11 @@ const emojisData5 = `{
     "codepoints": "🌔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gibbous") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("waxing") + `"
+        "` + _t("gibbous") + `",
+        "` + _t("moon") + `",
+        "` + _t("waxing") + `"
     ],
-    "name": "` + _lt("waxing gibbous moon") + `",
+    "name": "` + _t("waxing gibbous moon") + `",
     "shortcodes": [
         ":waxing_gibbous_moon:"
     ]
@@ -13171,10 +13171,10 @@ const emojisData5 = `{
     "codepoints": "🌕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("full") + `",
-        "` + _lt("moon") + `"
+        "` + _t("full") + `",
+        "` + _t("moon") + `"
     ],
-    "name": "` + _lt("full moon") + `",
+    "name": "` + _t("full moon") + `",
     "shortcodes": [
         ":full_moon:"
     ]
@@ -13184,11 +13184,11 @@ const emojisData5 = `{
     "codepoints": "🌖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gibbous") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("waning") + `"
+        "` + _t("gibbous") + `",
+        "` + _t("moon") + `",
+        "` + _t("waning") + `"
     ],
-    "name": "` + _lt("waning gibbous moon") + `",
+    "name": "` + _t("waning gibbous moon") + `",
     "shortcodes": [
         ":waning_gibbous_moon:"
     ]
@@ -13198,11 +13198,11 @@ const emojisData5 = `{
     "codepoints": "🌗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("last quarter moon") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("quarter") + `"
+        "` + _t("last quarter moon") + `",
+        "` + _t("moon") + `",
+        "` + _t("quarter") + `"
     ],
-    "name": "` + _lt("last quarter moon") + `",
+    "name": "` + _t("last quarter moon") + `",
     "shortcodes": [
         ":last_quarter_moon:"
     ]
@@ -13212,11 +13212,11 @@ const emojisData5 = `{
     "codepoints": "🌘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("crescent") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("waning") + `"
+        "` + _t("crescent") + `",
+        "` + _t("moon") + `",
+        "` + _t("waning") + `"
     ],
-    "name": "` + _lt("waning crescent moon") + `",
+    "name": "` + _t("waning crescent moon") + `",
     "shortcodes": [
         ":waning_crescent_moon:"
     ]
@@ -13226,10 +13226,10 @@ const emojisData5 = `{
     "codepoints": "🌙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("crescent") + `",
-        "` + _lt("moon") + `"
+        "` + _t("crescent") + `",
+        "` + _t("moon") + `"
     ],
-    "name": "` + _lt("crescent moon") + `",
+    "name": "` + _t("crescent moon") + `",
     "shortcodes": [
         ":crescent_moon:"
     ]
@@ -13239,11 +13239,11 @@ const emojisData5 = `{
     "codepoints": "🌚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("new moon face") + `"
+        "` + _t("face") + `",
+        "` + _t("moon") + `",
+        "` + _t("new moon face") + `"
     ],
-    "name": "` + _lt("new moon face") + `",
+    "name": "` + _t("new moon face") + `",
     "shortcodes": [
         ":new_moon_face:"
     ]
@@ -13253,12 +13253,12 @@ const emojisData5 = `{
     "codepoints": "🌛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("first quarter moon face") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("quarter") + `"
+        "` + _t("face") + `",
+        "` + _t("first quarter moon face") + `",
+        "` + _t("moon") + `",
+        "` + _t("quarter") + `"
     ],
-    "name": "` + _lt("first quarter moon face") + `",
+    "name": "` + _t("first quarter moon face") + `",
     "shortcodes": [
         ":first_quarter_moon_face:"
     ]
@@ -13268,12 +13268,12 @@ const emojisData5 = `{
     "codepoints": "🌜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("last quarter moon face") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("quarter") + `"
+        "` + _t("face") + `",
+        "` + _t("last quarter moon face") + `",
+        "` + _t("moon") + `",
+        "` + _t("quarter") + `"
     ],
-    "name": "` + _lt("last quarter moon face") + `",
+    "name": "` + _t("last quarter moon face") + `",
     "shortcodes": [
         ":last_quarter_moon_face:"
     ]
@@ -13283,10 +13283,10 @@ const emojisData5 = `{
     "codepoints": "🌡️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("thermometer") + `",
-        "` + _lt("weather") + `"
+        "` + _t("thermometer") + `",
+        "` + _t("weather") + `"
     ],
-    "name": "` + _lt("thermometer") + `",
+    "name": "` + _t("thermometer") + `",
     "shortcodes": [
         ":thermometer:"
     ]
@@ -13298,12 +13298,12 @@ const emojisData5 = `{
         ":sun"
     ],
     "keywords": [
-        "` + _lt("bright") + `",
-        "` + _lt("rays") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sunny") + `"
+        "` + _t("bright") + `",
+        "` + _t("rays") + `",
+        "` + _t("sun") + `",
+        "` + _t("sunny") + `"
     ],
-    "name": "` + _lt("sun") + `",
+    "name": "` + _t("sun") + `",
     "shortcodes": [
         ":sun:"
     ]
@@ -13313,13 +13313,13 @@ const emojisData5 = `{
     "codepoints": "🌝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bright") + `",
-        "` + _lt("face") + `",
-        "` + _lt("full") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("full-moon face") + `"
+        "` + _t("bright") + `",
+        "` + _t("face") + `",
+        "` + _t("full") + `",
+        "` + _t("moon") + `",
+        "` + _t("full-moon face") + `"
     ],
-    "name": "` + _lt("full moon face") + `",
+    "name": "` + _t("full moon face") + `",
     "shortcodes": [
         ":full_moon_face:"
     ]
@@ -13329,12 +13329,12 @@ const emojisData5 = `{
     "codepoints": "🌞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bright") + `",
-        "` + _lt("face") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sun with face") + `"
+        "` + _t("bright") + `",
+        "` + _t("face") + `",
+        "` + _t("sun") + `",
+        "` + _t("sun with face") + `"
     ],
-    "name": "` + _lt("sun with face") + `",
+    "name": "` + _t("sun with face") + `",
     "shortcodes": [
         ":sun_with_face:"
     ]
@@ -13344,11 +13344,11 @@ const emojisData5 = `{
     "codepoints": "🪐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ringed planet") + `",
-        "` + _lt("saturn") + `",
-        "` + _lt("saturnine") + `"
+        "` + _t("ringed planet") + `",
+        "` + _t("saturn") + `",
+        "` + _t("saturnine") + `"
     ],
-    "name": "` + _lt("ringed planet") + `",
+    "name": "` + _t("ringed planet") + `",
     "shortcodes": [
         ":ringed_planet:"
     ]
@@ -13360,9 +13360,9 @@ const emojisData5 = `{
         ":star"
     ],
     "keywords": [
-        "` + _lt("star") + `"
+        "` + _t("star") + `"
     ],
-    "name": "` + _lt("star") + `",
+    "name": "` + _t("star") + `",
     "shortcodes": [
         ":star:"
     ]
@@ -13372,14 +13372,14 @@ const emojisData5 = `{
     "codepoints": "🌟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("glittery") + `",
-        "` + _lt("glow") + `",
-        "` + _lt("glowing star") + `",
-        "` + _lt("shining") + `",
-        "` + _lt("sparkle") + `",
-        "` + _lt("star") + `"
+        "` + _t("glittery") + `",
+        "` + _t("glow") + `",
+        "` + _t("glowing star") + `",
+        "` + _t("shining") + `",
+        "` + _t("sparkle") + `",
+        "` + _t("star") + `"
     ],
-    "name": "` + _lt("glowing star") + `",
+    "name": "` + _t("glowing star") + `",
     "shortcodes": [
         ":glowing_star:"
     ]
@@ -13389,11 +13389,11 @@ const emojisData5 = `{
     "codepoints": "🌠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("falling") + `",
-        "` + _lt("shooting") + `",
-        "` + _lt("star") + `"
+        "` + _t("falling") + `",
+        "` + _t("shooting") + `",
+        "` + _t("star") + `"
     ],
-    "name": "` + _lt("shooting star") + `",
+    "name": "` + _t("shooting star") + `",
     "shortcodes": [
         ":shooting_star:"
     ]
@@ -13403,13 +13403,13 @@ const emojisData5 = `{
     "codepoints": "🌌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Milky Way") + `",
-        "` + _lt("space") + `",
-        "` + _lt("milky way") + `",
-        "` + _lt("Milky") + `",
-        "` + _lt("Way") + `"
+        "` + _t("Milky Way") + `",
+        "` + _t("space") + `",
+        "` + _t("milky way") + `",
+        "` + _t("Milky") + `",
+        "` + _t("Way") + `"
     ],
-    "name": "` + _lt("milky way") + `",
+    "name": "` + _t("milky way") + `",
     "shortcodes": [
         ":milky_way:"
     ]
@@ -13421,10 +13421,10 @@ const emojisData5 = `{
         ":cloud"
     ],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("weather") + `"
+        "` + _t("cloud") + `",
+        "` + _t("weather") + `"
     ],
-    "name": "` + _lt("cloud") + `",
+    "name": "` + _t("cloud") + `",
     "shortcodes": [
         ":cloud:"
     ]
@@ -13436,11 +13436,11 @@ const emojisData5 = `{
         ":partly_sunny:"
     ],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sun behind cloud") + `"
+        "` + _t("cloud") + `",
+        "` + _t("sun") + `",
+        "` + _t("sun behind cloud") + `"
     ],
-    "name": "` + _lt("sun behind cloud") + `",
+    "name": "` + _t("sun behind cloud") + `",
     "shortcodes": [
         ":sun_behind_cloud:"
     ]
@@ -13450,12 +13450,12 @@ const emojisData5 = `{
     "codepoints": "⛈️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("cloud with lightning and rain") + `",
-        "` + _lt("rain") + `",
-        "` + _lt("thunder") + `"
+        "` + _t("cloud") + `",
+        "` + _t("cloud with lightning and rain") + `",
+        "` + _t("rain") + `",
+        "` + _t("thunder") + `"
     ],
-    "name": "` + _lt("cloud with lightning and rain") + `",
+    "name": "` + _t("cloud with lightning and rain") + `",
     "shortcodes": [
         ":cloud_with_lightning_and_rain:"
     ]
@@ -13465,11 +13465,11 @@ const emojisData5 = `{
     "codepoints": "🌤️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sun behind small cloud") + `"
+        "` + _t("cloud") + `",
+        "` + _t("sun") + `",
+        "` + _t("sun behind small cloud") + `"
     ],
-    "name": "` + _lt("sun behind small cloud") + `",
+    "name": "` + _t("sun behind small cloud") + `",
     "shortcodes": [
         ":sun_behind_small_cloud:"
     ]
@@ -13479,11 +13479,11 @@ const emojisData5 = `{
     "codepoints": "🌥️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sun behind large cloud") + `"
+        "` + _t("cloud") + `",
+        "` + _t("sun") + `",
+        "` + _t("sun behind large cloud") + `"
     ],
-    "name": "` + _lt("sun behind large cloud") + `",
+    "name": "` + _t("sun behind large cloud") + `",
     "shortcodes": [
         ":sun_behind_large_cloud:"
     ]
@@ -13493,12 +13493,12 @@ const emojisData5 = `{
     "codepoints": "🌦️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("rain") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("sun behind rain cloud") + `"
+        "` + _t("cloud") + `",
+        "` + _t("rain") + `",
+        "` + _t("sun") + `",
+        "` + _t("sun behind rain cloud") + `"
     ],
-    "name": "` + _lt("sun behind rain cloud") + `",
+    "name": "` + _t("sun behind rain cloud") + `",
     "shortcodes": [
         ":sun_behind_rain_cloud:"
     ]
@@ -13508,11 +13508,11 @@ const emojisData5 = `{
     "codepoints": "🌧️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("cloud with rain") + `",
-        "` + _lt("rain") + `"
+        "` + _t("cloud") + `",
+        "` + _t("cloud with rain") + `",
+        "` + _t("rain") + `"
     ],
-    "name": "` + _lt("cloud with rain") + `",
+    "name": "` + _t("cloud with rain") + `",
     "shortcodes": [
         ":cloud_with_rain:"
     ]
@@ -13522,12 +13522,12 @@ const emojisData5 = `{
     "codepoints": "🌨️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("cloud with snow") + `",
-        "` + _lt("cold") + `",
-        "` + _lt("snow") + `"
+        "` + _t("cloud") + `",
+        "` + _t("cloud with snow") + `",
+        "` + _t("cold") + `",
+        "` + _t("snow") + `"
     ],
-    "name": "` + _lt("cloud with snow") + `",
+    "name": "` + _t("cloud with snow") + `",
     "shortcodes": [
         ":cloud_with_snow:"
     ]
@@ -13537,11 +13537,11 @@ const emojisData5 = `{
     "codepoints": "🌩️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("cloud with lightning") + `",
-        "` + _lt("lightning") + `"
+        "` + _t("cloud") + `",
+        "` + _t("cloud with lightning") + `",
+        "` + _t("lightning") + `"
     ],
-    "name": "` + _lt("cloud with lightning") + `",
+    "name": "` + _t("cloud with lightning") + `",
     "shortcodes": [
         ":cloud_with_lightning:"
     ]
@@ -13551,11 +13551,11 @@ const emojisData5 = `{
     "codepoints": "🌪️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("tornado") + `",
-        "` + _lt("whirlwind") + `"
+        "` + _t("cloud") + `",
+        "` + _t("tornado") + `",
+        "` + _t("whirlwind") + `"
     ],
-    "name": "` + _lt("tornado") + `",
+    "name": "` + _t("tornado") + `",
     "shortcodes": [
         ":tornado:"
     ]
@@ -13565,10 +13565,10 @@ const emojisData5 = `{
     "codepoints": "🌫️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cloud") + `",
-        "` + _lt("fog") + `"
+        "` + _t("cloud") + `",
+        "` + _t("fog") + `"
     ],
-    "name": "` + _lt("fog") + `",
+    "name": "` + _t("fog") + `",
     "shortcodes": [
         ":fog:"
     ]
@@ -13578,12 +13578,12 @@ const emojisData5 = `{
     "codepoints": "🌬️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blow") + `",
-        "` + _lt("cloud") + `",
-        "` + _lt("face") + `",
-        "` + _lt("wind") + `"
+        "` + _t("blow") + `",
+        "` + _t("cloud") + `",
+        "` + _t("face") + `",
+        "` + _t("wind") + `"
     ],
-    "name": "` + _lt("wind face") + `",
+    "name": "` + _t("wind face") + `",
     "shortcodes": [
         ":wind_face:"
     ]
@@ -13593,13 +13593,13 @@ const emojisData5 = `{
     "codepoints": "🌀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cyclone") + `",
-        "` + _lt("dizzy") + `",
-        "` + _lt("hurricane") + `",
-        "` + _lt("twister") + `",
-        "` + _lt("typhoon") + `"
+        "` + _t("cyclone") + `",
+        "` + _t("dizzy") + `",
+        "` + _t("hurricane") + `",
+        "` + _t("twister") + `",
+        "` + _t("typhoon") + `"
     ],
-    "name": "` + _lt("cyclone") + `",
+    "name": "` + _t("cyclone") + `",
     "shortcodes": [
         ":cyclone:"
     ]
@@ -13611,10 +13611,10 @@ const emojisData5 = `{
         ":rainbow"
     ],
     "keywords": [
-        "` + _lt("rain") + `",
-        "` + _lt("rainbow") + `"
+        "` + _t("rain") + `",
+        "` + _t("rainbow") + `"
     ],
-    "name": "` + _lt("rainbow") + `",
+    "name": "` + _t("rainbow") + `",
     "shortcodes": [
         ":rainbow:"
     ]
@@ -13624,12 +13624,12 @@ const emojisData5 = `{
     "codepoints": "🌂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("closed umbrella") + `",
-        "` + _lt("clothing") + `",
-        "` + _lt("rain") + `",
-        "` + _lt("umbrella") + `"
+        "` + _t("closed umbrella") + `",
+        "` + _t("clothing") + `",
+        "` + _t("rain") + `",
+        "` + _t("umbrella") + `"
     ],
-    "name": "` + _lt("closed umbrella") + `",
+    "name": "` + _t("closed umbrella") + `",
     "shortcodes": [
         ":closed_umbrella:"
     ]
@@ -13639,11 +13639,11 @@ const emojisData5 = `{
     "codepoints": "☂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("rain") + `",
-        "` + _lt("umbrella") + `"
+        "` + _t("clothing") + `",
+        "` + _t("rain") + `",
+        "` + _t("umbrella") + `"
     ],
-    "name": "` + _lt("umbrella") + `",
+    "name": "` + _t("umbrella") + `",
     "shortcodes": [
         ":umbrella:"
     ]
@@ -13653,13 +13653,13 @@ const emojisData5 = `{
     "codepoints": "☔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("drop") + `",
-        "` + _lt("rain") + `",
-        "` + _lt("umbrella") + `",
-        "` + _lt("umbrella with rain drops") + `"
+        "` + _t("clothing") + `",
+        "` + _t("drop") + `",
+        "` + _t("rain") + `",
+        "` + _t("umbrella") + `",
+        "` + _t("umbrella with rain drops") + `"
     ],
-    "name": "` + _lt("umbrella with rain drops") + `",
+    "name": "` + _t("umbrella with rain drops") + `",
     "shortcodes": [
         ":umbrella_with_rain_drops:"
     ]
@@ -13669,14 +13669,14 @@ const emojisData5 = `{
     "codepoints": "⛱️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("beach") + `",
-        "` + _lt("sand") + `",
-        "` + _lt("sun") + `",
-        "` + _lt("umbrella") + `",
-        "` + _lt("rain") + `",
-        "` + _lt("umbrella on ground") + `"
+        "` + _t("beach") + `",
+        "` + _t("sand") + `",
+        "` + _t("sun") + `",
+        "` + _t("umbrella") + `",
+        "` + _t("rain") + `",
+        "` + _t("umbrella on ground") + `"
     ],
-    "name": "` + _lt("umbrella on ground") + `",
+    "name": "` + _t("umbrella on ground") + `",
     "shortcodes": [
         ":umbrella_on_ground:"
     ]
@@ -13688,14 +13688,14 @@ const emojisData5 = `{
         ":zap"
     ],
     "keywords": [
-        "` + _lt("danger") + `",
-        "` + _lt("electric") + `",
-        "` + _lt("high voltage") + `",
-        "` + _lt("lightning") + `",
-        "` + _lt("voltage") + `",
-        "` + _lt("zap") + `"
+        "` + _t("danger") + `",
+        "` + _t("electric") + `",
+        "` + _t("high voltage") + `",
+        "` + _t("lightning") + `",
+        "` + _t("voltage") + `",
+        "` + _t("zap") + `"
     ],
-    "name": "` + _lt("high voltage") + `",
+    "name": "` + _t("high voltage") + `",
     "shortcodes": [
         ":high_voltage:"
     ]
@@ -13705,11 +13705,11 @@ const emojisData5 = `{
     "codepoints": "❄️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cold") + `",
-        "` + _lt("snow") + `",
-        "` + _lt("snowflake") + `"
+        "` + _t("cold") + `",
+        "` + _t("snow") + `",
+        "` + _t("snowflake") + `"
     ],
-    "name": "` + _lt("snowflake") + `",
+    "name": "` + _t("snowflake") + `",
     "shortcodes": [
         ":snowflake:"
     ]
@@ -13719,11 +13719,11 @@ const emojisData5 = `{
     "codepoints": "☃️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cold") + `",
-        "` + _lt("snow") + `",
-        "` + _lt("snowman") + `"
+        "` + _t("cold") + `",
+        "` + _t("snow") + `",
+        "` + _t("snowman") + `"
     ],
-    "name": "` + _lt("snowman") + `",
+    "name": "` + _t("snowman") + `",
     "shortcodes": [
         ":snowman:"
     ]
@@ -13733,12 +13733,12 @@ const emojisData5 = `{
     "codepoints": "⛄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cold") + `",
-        "` + _lt("snow") + `",
-        "` + _lt("snowman") + `",
-        "` + _lt("snowman without snow") + `"
+        "` + _t("cold") + `",
+        "` + _t("snow") + `",
+        "` + _t("snowman") + `",
+        "` + _t("snowman without snow") + `"
     ],
-    "name": "` + _lt("snowman without snow") + `",
+    "name": "` + _t("snowman without snow") + `",
     "shortcodes": [
         ":snowman_without_snow:"
     ]
@@ -13748,10 +13748,10 @@ const emojisData5 = `{
     "codepoints": "☄️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("comet") + `",
-        "` + _lt("space") + `"
+        "` + _t("comet") + `",
+        "` + _t("space") + `"
     ],
-    "name": "` + _lt("comet") + `",
+    "name": "` + _t("comet") + `",
     "shortcodes": [
         ":comet:"
     ]
@@ -13763,11 +13763,11 @@ const emojisData5 = `{
         ":fire"
     ],
     "keywords": [
-        "` + _lt("fire") + `",
-        "` + _lt("flame") + `",
-        "` + _lt("tool") + `"
+        "` + _t("fire") + `",
+        "` + _t("flame") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("fire") + `",
+    "name": "` + _t("fire") + `",
     "shortcodes": [
         ":fire:"
     ]
@@ -13777,13 +13777,13 @@ const emojisData5 = `{
     "codepoints": "💧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cold") + `",
-        "` + _lt("comic") + `",
-        "` + _lt("drop") + `",
-        "` + _lt("droplet") + `",
-        "` + _lt("sweat") + `"
+        "` + _t("cold") + `",
+        "` + _t("comic") + `",
+        "` + _t("drop") + `",
+        "` + _t("droplet") + `",
+        "` + _t("sweat") + `"
     ],
-    "name": "` + _lt("droplet") + `",
+    "name": "` + _t("droplet") + `",
     "shortcodes": [
         ":droplet:"
     ]
@@ -13793,11 +13793,11 @@ const emojisData5 = `{
     "codepoints": "🌊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ocean") + `",
-        "` + _lt("water") + `",
-        "` + _lt("wave") + `"
+        "` + _t("ocean") + `",
+        "` + _t("water") + `",
+        "` + _t("wave") + `"
     ],
-    "name": "` + _lt("water wave") + `",
+    "name": "` + _t("water wave") + `",
     "shortcodes": [
         ":water_wave:"
     ]
@@ -13808,15 +13808,15 @@ const emojisData6 = `{
     "codepoints": "🎃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("halloween") + `",
-        "` + _lt("jack") + `",
-        "` + _lt("jack-o-lantern") + `",
-        "` + _lt("lantern") + `",
-        "` + _lt("Halloween") + `",
-        "` + _lt("jack-o’-lantern") + `"
+        "` + _t("celebration") + `",
+        "` + _t("halloween") + `",
+        "` + _t("jack") + `",
+        "` + _t("jack-o-lantern") + `",
+        "` + _t("lantern") + `",
+        "` + _t("Halloween") + `",
+        "` + _t("jack-o’-lantern") + `"
     ],
-    "name": "` + _lt("jack-o-lantern") + `",
+    "name": "` + _t("jack-o-lantern") + `",
     "shortcodes": [
         ":jack-o-lantern:"
     ]
@@ -13826,11 +13826,11 @@ const emojisData6 = `{
     "codepoints": "🎄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("Christmas") + `",
-        "` + _lt("tree") + `"
+        "` + _t("celebration") + `",
+        "` + _t("Christmas") + `",
+        "` + _t("tree") + `"
     ],
-    "name": "` + _lt("Christmas tree") + `",
+    "name": "` + _t("Christmas tree") + `",
     "shortcodes": [
         ":Christmas_ltree:"
     ]
@@ -13840,10 +13840,10 @@ const emojisData6 = `{
     "codepoints": "🎆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("fireworks") + `"
+        "` + _t("celebration") + `",
+        "` + _t("fireworks") + `"
     ],
-    "name": "` + _lt("fireworks") + `",
+    "name": "` + _t("fireworks") + `",
     "shortcodes": [
         ":fireworks:"
     ]
@@ -13853,12 +13853,12 @@ const emojisData6 = `{
     "codepoints": "🎇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("fireworks") + `",
-        "` + _lt("sparkle") + `",
-        "` + _lt("sparkler") + `"
+        "` + _t("celebration") + `",
+        "` + _t("fireworks") + `",
+        "` + _t("sparkle") + `",
+        "` + _t("sparkler") + `"
     ],
-    "name": "` + _lt("sparkler") + `",
+    "name": "` + _t("sparkler") + `",
     "shortcodes": [
         ":sparkler:"
     ]
@@ -13868,12 +13868,12 @@ const emojisData6 = `{
     "codepoints": "🧨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dynamite") + `",
-        "` + _lt("explosive") + `",
-        "` + _lt("firecracker") + `",
-        "` + _lt("fireworks") + `"
+        "` + _t("dynamite") + `",
+        "` + _t("explosive") + `",
+        "` + _t("firecracker") + `",
+        "` + _t("fireworks") + `"
     ],
-    "name": "` + _lt("firecracker") + `",
+    "name": "` + _t("firecracker") + `",
     "shortcodes": [
         ":firecracker:"
     ]
@@ -13883,12 +13883,12 @@ const emojisData6 = `{
     "codepoints": "✨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("*") + `",
-        "` + _lt("sparkle") + `",
-        "` + _lt("sparkles") + `",
-        "` + _lt("star") + `"
+        "` + _t("*") + `",
+        "` + _t("sparkle") + `",
+        "` + _t("sparkles") + `",
+        "` + _t("star") + `"
     ],
-    "name": "` + _lt("sparkles") + `",
+    "name": "` + _t("sparkles") + `",
     "shortcodes": [
         ":sparkles:"
     ]
@@ -13898,10 +13898,10 @@ const emojisData6 = `{
     "codepoints": "🎈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("balloon") + `",
-        "` + _lt("celebration") + `"
+        "` + _t("balloon") + `",
+        "` + _t("celebration") + `"
     ],
-    "name": "` + _lt("balloon") + `",
+    "name": "` + _t("balloon") + `",
     "shortcodes": [
         ":balloon:"
     ]
@@ -13913,13 +13913,13 @@ const emojisData6 = `{
         ":party"
     ],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("party") + `",
-        "` + _lt("popper") + `",
-        "` + _lt("ta-da") + `",
-        "` + _lt("tada") + `"
+        "` + _t("celebration") + `",
+        "` + _t("party") + `",
+        "` + _t("popper") + `",
+        "` + _t("ta-da") + `",
+        "` + _t("tada") + `"
     ],
-    "name": "` + _lt("party popper") + `",
+    "name": "` + _t("party popper") + `",
     "shortcodes": [
         ":party_popper:"
     ]
@@ -13929,11 +13929,11 @@ const emojisData6 = `{
     "codepoints": "🎊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("celebration") + `",
-        "` + _lt("confetti") + `"
+        "` + _t("ball") + `",
+        "` + _t("celebration") + `",
+        "` + _t("confetti") + `"
     ],
-    "name": "` + _lt("confetti ball") + `",
+    "name": "` + _t("confetti ball") + `",
     "shortcodes": [
         ":confetti_ball:"
     ]
@@ -13943,14 +13943,14 @@ const emojisData6 = `{
     "codepoints": "🎋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("banner") + `",
-        "` + _lt("celebration") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("tanabata tree") + `",
-        "` + _lt("tree") + `",
-        "` + _lt("Tanabata tree") + `"
+        "` + _t("banner") + `",
+        "` + _t("celebration") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("tanabata tree") + `",
+        "` + _t("tree") + `",
+        "` + _t("Tanabata tree") + `"
     ],
-    "name": "` + _lt("tanabata tree") + `",
+    "name": "` + _t("tanabata tree") + `",
     "shortcodes": [
         ":tanabata_ltree:"
     ]
@@ -13960,14 +13960,14 @@ const emojisData6 = `{
     "codepoints": "🎍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bamboo") + `",
-        "` + _lt("celebration") + `",
-        "` + _lt("decoration") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("pine") + `",
-        "` + _lt("pine decoration") + `"
+        "` + _t("bamboo") + `",
+        "` + _t("celebration") + `",
+        "` + _t("decoration") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("pine") + `",
+        "` + _t("pine decoration") + `"
     ],
-    "name": "` + _lt("pine decoration") + `",
+    "name": "` + _t("pine decoration") + `",
     "shortcodes": [
         ":pine_decoration:"
     ]
@@ -13977,13 +13977,13 @@ const emojisData6 = `{
     "codepoints": "🎎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("doll") + `",
-        "` + _lt("festival") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese dolls") + `"
+        "` + _t("celebration") + `",
+        "` + _t("doll") + `",
+        "` + _t("festival") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese dolls") + `"
     ],
-    "name": "` + _lt("Japanese dolls") + `",
+    "name": "` + _t("Japanese dolls") + `",
     "shortcodes": [
         ":Japanese_dolls:"
     ]
@@ -13993,14 +13993,14 @@ const emojisData6 = `{
     "codepoints": "🎏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("carp") + `",
-        "` + _lt("celebration") + `",
-        "` + _lt("streamer") + `",
-        "` + _lt("carp wind sock") + `",
-        "` + _lt("Japanese wind socks") + `",
-        "` + _lt("koinobori") + `"
+        "` + _t("carp") + `",
+        "` + _t("celebration") + `",
+        "` + _t("streamer") + `",
+        "` + _t("carp wind sock") + `",
+        "` + _t("Japanese wind socks") + `",
+        "` + _t("koinobori") + `"
     ],
-    "name": "` + _lt("carp streamer") + `",
+    "name": "` + _t("carp streamer") + `",
     "shortcodes": [
         ":carp_streamer:"
     ]
@@ -14010,12 +14010,12 @@ const emojisData6 = `{
     "codepoints": "🎐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bell") + `",
-        "` + _lt("celebration") + `",
-        "` + _lt("chime") + `",
-        "` + _lt("wind") + `"
+        "` + _t("bell") + `",
+        "` + _t("celebration") + `",
+        "` + _t("chime") + `",
+        "` + _t("wind") + `"
     ],
-    "name": "` + _lt("wind chime") + `",
+    "name": "` + _t("wind chime") + `",
     "shortcodes": [
         ":wind_chime:"
     ]
@@ -14025,13 +14025,13 @@ const emojisData6 = `{
     "codepoints": "🎑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("ceremony") + `",
-        "` + _lt("moon") + `",
-        "` + _lt("moon viewing ceremony") + `",
-        "` + _lt("moon-viewing ceremony") + `"
+        "` + _t("celebration") + `",
+        "` + _t("ceremony") + `",
+        "` + _t("moon") + `",
+        "` + _t("moon viewing ceremony") + `",
+        "` + _t("moon-viewing ceremony") + `"
     ],
-    "name": "` + _lt("moon viewing ceremony") + `",
+    "name": "` + _t("moon viewing ceremony") + `",
     "shortcodes": [
         ":moon_viewing_ceremony:"
     ]
@@ -14041,14 +14041,14 @@ const emojisData6 = `{
     "codepoints": "🧧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gift") + `",
-        "` + _lt("good luck") + `",
-        "` + _lt("hóngbāo") + `",
-        "` + _lt("lai see") + `",
-        "` + _lt("money") + `",
-        "` + _lt("red envelope") + `"
+        "` + _t("gift") + `",
+        "` + _t("good luck") + `",
+        "` + _t("hóngbāo") + `",
+        "` + _t("lai see") + `",
+        "` + _t("money") + `",
+        "` + _t("red envelope") + `"
     ],
-    "name": "` + _lt("red envelope") + `",
+    "name": "` + _t("red envelope") + `",
     "shortcodes": [
         ":red_envelope:"
     ]
@@ -14058,10 +14058,10 @@ const emojisData6 = `{
     "codepoints": "🎀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("ribbon") + `"
+        "` + _t("celebration") + `",
+        "` + _t("ribbon") + `"
     ],
-    "name": "` + _lt("ribbon") + `",
+    "name": "` + _t("ribbon") + `",
     "shortcodes": [
         ":ribbon:"
     ]
@@ -14071,13 +14071,13 @@ const emojisData6 = `{
     "codepoints": "🎁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("box") + `",
-        "` + _lt("celebration") + `",
-        "` + _lt("gift") + `",
-        "` + _lt("present") + `",
-        "` + _lt("wrapped") + `"
+        "` + _t("box") + `",
+        "` + _t("celebration") + `",
+        "` + _t("gift") + `",
+        "` + _t("present") + `",
+        "` + _t("wrapped") + `"
     ],
-    "name": "` + _lt("wrapped gift") + `",
+    "name": "` + _t("wrapped gift") + `",
     "shortcodes": [
         ":wrapped_gift:"
     ]
@@ -14087,11 +14087,11 @@ const emojisData6 = `{
     "codepoints": "🎗️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("reminder") + `",
-        "` + _lt("ribbon") + `"
+        "` + _t("celebration") + `",
+        "` + _t("reminder") + `",
+        "` + _t("ribbon") + `"
     ],
-    "name": "` + _lt("reminder ribbon") + `",
+    "name": "` + _t("reminder ribbon") + `",
     "shortcodes": [
         ":reminder_ribbon:"
     ]
@@ -14101,12 +14101,12 @@ const emojisData6 = `{
     "codepoints": "🎟️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("admission") + `",
-        "` + _lt("admission tickets") + `",
-        "` + _lt("entry") + `",
-        "` + _lt("ticket") + `"
+        "` + _t("admission") + `",
+        "` + _t("admission tickets") + `",
+        "` + _t("entry") + `",
+        "` + _t("ticket") + `"
     ],
-    "name": "` + _lt("admission tickets") + `",
+    "name": "` + _t("admission tickets") + `",
     "shortcodes": [
         ":admission_ltickets:"
     ]
@@ -14116,10 +14116,10 @@ const emojisData6 = `{
     "codepoints": "🎫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("admission") + `",
-        "` + _lt("ticket") + `"
+        "` + _t("admission") + `",
+        "` + _t("ticket") + `"
     ],
-    "name": "` + _lt("ticket") + `",
+    "name": "` + _t("ticket") + `",
     "shortcodes": [
         ":ticket:"
     ]
@@ -14129,11 +14129,11 @@ const emojisData6 = `{
     "codepoints": "🎖️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("medal") + `",
-        "` + _lt("military") + `"
+        "` + _t("celebration") + `",
+        "` + _t("medal") + `",
+        "` + _t("military") + `"
     ],
-    "name": "` + _lt("military medal") + `",
+    "name": "` + _t("military medal") + `",
     "shortcodes": [
         ":military_medal:"
     ]
@@ -14145,11 +14145,11 @@ const emojisData6 = `{
         ":trophy"
     ],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("prize") + `",
-        "` + _lt("trophy") + `"
+        "` + _t("celebration") + `",
+        "` + _t("prize") + `",
+        "` + _t("trophy") + `"
     ],
-    "name": "` + _lt("trophy") + `",
+    "name": "` + _t("trophy") + `",
     "shortcodes": [
         ":trophy:"
     ]
@@ -14159,12 +14159,12 @@ const emojisData6 = `{
     "codepoints": "🏅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("medal") + `",
-        "` + _lt("sports") + `",
-        "` + _lt("sports medal") + `"
+        "` + _t("celebration") + `",
+        "` + _t("medal") + `",
+        "` + _t("sports") + `",
+        "` + _t("sports medal") + `"
     ],
-    "name": "` + _lt("sports medal") + `",
+    "name": "` + _t("sports medal") + `",
     "shortcodes": [
         ":sports_medal:"
     ]
@@ -14174,12 +14174,12 @@ const emojisData6 = `{
     "codepoints": "🥇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("1st place medal") + `",
-        "` + _lt("first") + `",
-        "` + _lt("gold") + `",
-        "` + _lt("medal") + `"
+        "` + _t("1st place medal") + `",
+        "` + _t("first") + `",
+        "` + _t("gold") + `",
+        "` + _t("medal") + `"
     ],
-    "name": "` + _lt("1st place medal") + `",
+    "name": "` + _t("1st place medal") + `",
     "shortcodes": [
         ":1st_place_medal:"
     ]
@@ -14189,12 +14189,12 @@ const emojisData6 = `{
     "codepoints": "🥈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("2nd place medal") + `",
-        "` + _lt("medal") + `",
-        "` + _lt("second") + `",
-        "` + _lt("silver") + `"
+        "` + _t("2nd place medal") + `",
+        "` + _t("medal") + `",
+        "` + _t("second") + `",
+        "` + _t("silver") + `"
     ],
-    "name": "` + _lt("2nd place medal") + `",
+    "name": "` + _t("2nd place medal") + `",
     "shortcodes": [
         ":2nd_place_medal:"
     ]
@@ -14204,12 +14204,12 @@ const emojisData6 = `{
     "codepoints": "🥉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("3rd place medal") + `",
-        "` + _lt("bronze") + `",
-        "` + _lt("medal") + `",
-        "` + _lt("third") + `"
+        "` + _t("3rd place medal") + `",
+        "` + _t("bronze") + `",
+        "` + _t("medal") + `",
+        "` + _t("third") + `"
     ],
-    "name": "` + _lt("3rd place medal") + `",
+    "name": "` + _t("3rd place medal") + `",
     "shortcodes": [
         ":3rd_place_medal:"
     ]
@@ -14221,11 +14221,11 @@ const emojisData6 = `{
         ":soccer"
     ],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("football") + `",
-        "` + _lt("soccer") + `"
+        "` + _t("ball") + `",
+        "` + _t("football") + `",
+        "` + _t("soccer") + `"
     ],
-    "name": "` + _lt("soccer ball") + `",
+    "name": "` + _t("soccer ball") + `",
     "shortcodes": [
         ":soccer_ball:"
     ]
@@ -14235,10 +14235,10 @@ const emojisData6 = `{
     "codepoints": "⚾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("baseball") + `"
+        "` + _t("ball") + `",
+        "` + _t("baseball") + `"
     ],
-    "name": "` + _lt("baseball") + `",
+    "name": "` + _t("baseball") + `",
     "shortcodes": [
         ":baseball:"
     ]
@@ -14248,12 +14248,12 @@ const emojisData6 = `{
     "codepoints": "🥎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("glove") + `",
-        "` + _lt("softball") + `",
-        "` + _lt("underarm") + `"
+        "` + _t("ball") + `",
+        "` + _t("glove") + `",
+        "` + _t("softball") + `",
+        "` + _t("underarm") + `"
     ],
-    "name": "` + _lt("softball") + `",
+    "name": "` + _t("softball") + `",
     "shortcodes": [
         ":softball:"
     ]
@@ -14263,11 +14263,11 @@ const emojisData6 = `{
     "codepoints": "🏀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("basketball") + `",
-        "` + _lt("hoop") + `"
+        "` + _t("ball") + `",
+        "` + _t("basketball") + `",
+        "` + _t("hoop") + `"
     ],
-    "name": "` + _lt("basketball") + `",
+    "name": "` + _t("basketball") + `",
     "shortcodes": [
         ":basketball:"
     ]
@@ -14277,11 +14277,11 @@ const emojisData6 = `{
     "codepoints": "🏐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("game") + `",
-        "` + _lt("volleyball") + `"
+        "` + _t("ball") + `",
+        "` + _t("game") + `",
+        "` + _t("volleyball") + `"
     ],
-    "name": "` + _lt("volleyball") + `",
+    "name": "` + _t("volleyball") + `",
     "shortcodes": [
         ":volleyball:"
     ]
@@ -14293,11 +14293,11 @@ const emojisData6 = `{
         ":football"
     ],
     "keywords": [
-        "` + _lt("american") + `",
-        "` + _lt("ball") + `",
-        "` + _lt("football") + `"
+        "` + _t("american") + `",
+        "` + _t("ball") + `",
+        "` + _t("football") + `"
     ],
-    "name": "` + _lt("american football") + `",
+    "name": "` + _t("american football") + `",
     "shortcodes": [
         ":american_football:"
     ]
@@ -14307,15 +14307,15 @@ const emojisData6 = `{
     "codepoints": "🏉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("australian football") + `",
-        "` + _lt("rugby ball") + `",
-        "` + _lt("rugby league") + `",
-        "` + _lt("rugby union") + `",
-        "` + _lt("ball") + `",
-        "` + _lt("football") + `",
-        "` + _lt("rugby") + `"
+        "` + _t("australian football") + `",
+        "` + _t("rugby ball") + `",
+        "` + _t("rugby league") + `",
+        "` + _t("rugby union") + `",
+        "` + _t("ball") + `",
+        "` + _t("football") + `",
+        "` + _t("rugby") + `"
     ],
-    "name": "` + _lt("rugby football") + `",
+    "name": "` + _t("rugby football") + `",
     "shortcodes": [
         ":rugby_football:"
     ]
@@ -14325,11 +14325,11 @@ const emojisData6 = `{
     "codepoints": "🎾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("racquet") + `",
-        "` + _lt("tennis") + `"
+        "` + _t("ball") + `",
+        "` + _t("racquet") + `",
+        "` + _t("tennis") + `"
     ],
-    "name": "` + _lt("tennis") + `",
+    "name": "` + _t("tennis") + `",
     "shortcodes": [
         ":tennis:"
     ]
@@ -14339,12 +14339,12 @@ const emojisData6 = `{
     "codepoints": "🥏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flying disc") + `",
-        "` + _lt("frisbee") + `",
-        "` + _lt("ultimate") + `",
-        "` + _lt("Frisbee") + `"
+        "` + _t("flying disc") + `",
+        "` + _t("frisbee") + `",
+        "` + _t("ultimate") + `",
+        "` + _t("Frisbee") + `"
     ],
-    "name": "` + _lt("flying disc") + `",
+    "name": "` + _t("flying disc") + `",
     "shortcodes": [
         ":flying_disc:"
     ]
@@ -14354,12 +14354,12 @@ const emojisData6 = `{
     "codepoints": "🎳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("game") + `",
-        "` + _lt("tenpin bowling") + `",
-        "` + _lt("bowling") + `"
+        "` + _t("ball") + `",
+        "` + _t("game") + `",
+        "` + _t("tenpin bowling") + `",
+        "` + _t("bowling") + `"
     ],
-    "name": "` + _lt("bowling") + `",
+    "name": "` + _t("bowling") + `",
     "shortcodes": [
         ":bowling:"
     ]
@@ -14369,14 +14369,14 @@ const emojisData6 = `{
     "codepoints": "🏏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("bat") + `",
-        "` + _lt("cricket game") + `",
-        "` + _lt("game") + `",
-        "` + _lt("cricket") + `",
-        "` + _lt("cricket match") + `"
+        "` + _t("ball") + `",
+        "` + _t("bat") + `",
+        "` + _t("cricket game") + `",
+        "` + _t("game") + `",
+        "` + _t("cricket") + `",
+        "` + _t("cricket match") + `"
     ],
-    "name": "` + _lt("cricket game") + `",
+    "name": "` + _t("cricket game") + `",
     "shortcodes": [
         ":cricket_game:"
     ]
@@ -14386,13 +14386,13 @@ const emojisData6 = `{
     "codepoints": "🏑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("field") + `",
-        "` + _lt("game") + `",
-        "` + _lt("hockey") + `",
-        "` + _lt("stick") + `"
+        "` + _t("ball") + `",
+        "` + _t("field") + `",
+        "` + _t("game") + `",
+        "` + _t("hockey") + `",
+        "` + _t("stick") + `"
     ],
-    "name": "` + _lt("field hockey") + `",
+    "name": "` + _t("field hockey") + `",
     "shortcodes": [
         ":field_hockey:"
     ]
@@ -14402,13 +14402,13 @@ const emojisData6 = `{
     "codepoints": "🏒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("game") + `",
-        "` + _lt("hockey") + `",
-        "` + _lt("ice") + `",
-        "` + _lt("puck") + `",
-        "` + _lt("stick") + `"
+        "` + _t("game") + `",
+        "` + _t("hockey") + `",
+        "` + _t("ice") + `",
+        "` + _t("puck") + `",
+        "` + _t("stick") + `"
     ],
-    "name": "` + _lt("ice hockey") + `",
+    "name": "` + _t("ice hockey") + `",
     "shortcodes": [
         ":ice_hockey:"
     ]
@@ -14418,12 +14418,12 @@ const emojisData6 = `{
     "codepoints": "🥍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("goal") + `",
-        "` + _lt("lacrosse") + `",
-        "` + _lt("stick") + `"
+        "` + _t("ball") + `",
+        "` + _t("goal") + `",
+        "` + _t("lacrosse") + `",
+        "` + _t("stick") + `"
     ],
-    "name": "` + _lt("lacrosse") + `",
+    "name": "` + _t("lacrosse") + `",
     "shortcodes": [
         ":lacrosse:"
     ]
@@ -14433,14 +14433,14 @@ const emojisData6 = `{
     "codepoints": "🏓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("bat") + `",
-        "` + _lt("game") + `",
-        "` + _lt("paddle") + `",
-        "` + _lt("ping pong") + `",
-        "` + _lt("table tennis") + `"
+        "` + _t("ball") + `",
+        "` + _t("bat") + `",
+        "` + _t("game") + `",
+        "` + _t("paddle") + `",
+        "` + _t("ping pong") + `",
+        "` + _t("table tennis") + `"
     ],
-    "name": "` + _lt("ping pong") + `",
+    "name": "` + _t("ping pong") + `",
     "shortcodes": [
         ":ping_pong:"
     ]
@@ -14450,13 +14450,13 @@ const emojisData6 = `{
     "codepoints": "🏸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("badminton") + `",
-        "` + _lt("birdie") + `",
-        "` + _lt("game") + `",
-        "` + _lt("racquet") + `",
-        "` + _lt("shuttlecock") + `"
+        "` + _t("badminton") + `",
+        "` + _t("birdie") + `",
+        "` + _t("game") + `",
+        "` + _t("racquet") + `",
+        "` + _t("shuttlecock") + `"
     ],
-    "name": "` + _lt("badminton") + `",
+    "name": "` + _t("badminton") + `",
     "shortcodes": [
         ":badminton:"
     ]
@@ -14466,10 +14466,10 @@ const emojisData6 = `{
     "codepoints": "🥊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boxing") + `",
-        "` + _lt("glove") + `"
+        "` + _t("boxing") + `",
+        "` + _t("glove") + `"
     ],
-    "name": "` + _lt("boxing glove") + `",
+    "name": "` + _t("boxing glove") + `",
     "shortcodes": [
         ":boxing_glove:"
     ]
@@ -14479,14 +14479,14 @@ const emojisData6 = `{
     "codepoints": "🥋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("judo") + `",
-        "` + _lt("karate") + `",
-        "` + _lt("martial arts") + `",
-        "` + _lt("martial arts uniform") + `",
-        "` + _lt("taekwondo") + `",
-        "` + _lt("uniform") + `"
+        "` + _t("judo") + `",
+        "` + _t("karate") + `",
+        "` + _t("martial arts") + `",
+        "` + _t("martial arts uniform") + `",
+        "` + _t("taekwondo") + `",
+        "` + _t("uniform") + `"
     ],
-    "name": "` + _lt("martial arts uniform") + `",
+    "name": "` + _t("martial arts uniform") + `",
     "shortcodes": [
         ":martial_arts_uniform:"
     ]
@@ -14496,11 +14496,11 @@ const emojisData6 = `{
     "codepoints": "🥅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("goal") + `",
-        "` + _lt("goal cage") + `",
-        "` + _lt("net") + `"
+        "` + _t("goal") + `",
+        "` + _t("goal cage") + `",
+        "` + _t("net") + `"
     ],
-    "name": "` + _lt("goal net") + `",
+    "name": "` + _t("goal net") + `",
     "shortcodes": [
         ":goal_net:"
     ]
@@ -14510,12 +14510,12 @@ const emojisData6 = `{
     "codepoints": "⛳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flag") + `",
-        "` + _lt("flag in hole") + `",
-        "` + _lt("golf") + `",
-        "` + _lt("hole") + `"
+        "` + _t("flag") + `",
+        "` + _t("flag in hole") + `",
+        "` + _t("golf") + `",
+        "` + _t("hole") + `"
     ],
-    "name": "` + _lt("flag in hole") + `",
+    "name": "` + _t("flag in hole") + `",
     "shortcodes": [
         ":flag_in_hole:"
     ]
@@ -14525,11 +14525,11 @@ const emojisData6 = `{
     "codepoints": "⛸️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ice") + `",
-        "` + _lt("ice skating") + `",
-        "` + _lt("skate") + `"
+        "` + _t("ice") + `",
+        "` + _t("ice skating") + `",
+        "` + _t("skate") + `"
     ],
-    "name": "` + _lt("ice skate") + `",
+    "name": "` + _t("ice skate") + `",
     "shortcodes": [
         ":ice_skate:"
     ]
@@ -14539,13 +14539,13 @@ const emojisData6 = `{
     "codepoints": "🎣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fish") + `",
-        "` + _lt("fishing") + `",
-        "` + _lt("pole") + `",
-        "` + _lt("rod") + `",
-        "` + _lt("fishing pole") + `"
+        "` + _t("fish") + `",
+        "` + _t("fishing") + `",
+        "` + _t("pole") + `",
+        "` + _t("rod") + `",
+        "` + _t("fishing pole") + `"
     ],
-    "name": "` + _lt("fishing pole") + `",
+    "name": "` + _t("fishing pole") + `",
     "shortcodes": [
         ":fishing_pole:"
     ]
@@ -14555,13 +14555,13 @@ const emojisData6 = `{
     "codepoints": "🤿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("diving") + `",
-        "` + _lt("diving mask") + `",
-        "` + _lt("scuba") + `",
-        "` + _lt("snorkeling") + `",
-        "` + _lt("snorkelling") + `"
+        "` + _t("diving") + `",
+        "` + _t("diving mask") + `",
+        "` + _t("scuba") + `",
+        "` + _t("snorkeling") + `",
+        "` + _t("snorkelling") + `"
     ],
-    "name": "` + _lt("diving mask") + `",
+    "name": "` + _t("diving mask") + `",
     "shortcodes": [
         ":diving_mask:"
     ]
@@ -14571,12 +14571,12 @@ const emojisData6 = `{
     "codepoints": "🎽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("athletics") + `",
-        "` + _lt("running") + `",
-        "` + _lt("sash") + `",
-        "` + _lt("shirt") + `"
+        "` + _t("athletics") + `",
+        "` + _t("running") + `",
+        "` + _t("sash") + `",
+        "` + _t("shirt") + `"
     ],
-    "name": "` + _lt("running shirt") + `",
+    "name": "` + _t("running shirt") + `",
     "shortcodes": [
         ":running_shirt:"
     ]
@@ -14586,12 +14586,12 @@ const emojisData6 = `{
     "codepoints": "🎿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ski") + `",
-        "` + _lt("skiing") + `",
-        "` + _lt("skis") + `",
-        "` + _lt("snow") + `"
+        "` + _t("ski") + `",
+        "` + _t("skiing") + `",
+        "` + _t("skis") + `",
+        "` + _t("snow") + `"
     ],
-    "name": "` + _lt("skis") + `",
+    "name": "` + _t("skis") + `",
     "shortcodes": [
         ":skis:"
     ]
@@ -14601,11 +14601,11 @@ const emojisData6 = `{
     "codepoints": "🛷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("sled") + `",
-        "` + _lt("sledge") + `",
-        "` + _lt("sleigh") + `"
+        "` + _t("sled") + `",
+        "` + _t("sledge") + `",
+        "` + _t("sleigh") + `"
     ],
-    "name": "` + _lt("sled") + `",
+    "name": "` + _t("sled") + `",
     "shortcodes": [
         ":sled:"
     ]
@@ -14615,14 +14615,14 @@ const emojisData6 = `{
     "codepoints": "🥌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("curling") + `",
-        "` + _lt("game") + `",
-        "` + _lt("rock") + `",
-        "` + _lt("stone") + `",
-        "` + _lt("curling stone") + `",
-        "` + _lt("curling rock") + `"
+        "` + _t("curling") + `",
+        "` + _t("game") + `",
+        "` + _t("rock") + `",
+        "` + _t("stone") + `",
+        "` + _t("curling stone") + `",
+        "` + _t("curling rock") + `"
     ],
-    "name": "` + _lt("curling stone") + `",
+    "name": "` + _t("curling stone") + `",
     "shortcodes": [
         ":curling_stone:"
     ]
@@ -14632,14 +14632,14 @@ const emojisData6 = `{
     "codepoints": "🎯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bullseye") + `",
-        "` + _lt("dart") + `",
-        "` + _lt("direct hit") + `",
-        "` + _lt("game") + `",
-        "` + _lt("hit") + `",
-        "` + _lt("target") + `"
+        "` + _t("bullseye") + `",
+        "` + _t("dart") + `",
+        "` + _t("direct hit") + `",
+        "` + _t("game") + `",
+        "` + _t("hit") + `",
+        "` + _t("target") + `"
     ],
-    "name": "` + _lt("bullseye") + `",
+    "name": "` + _t("bullseye") + `",
     "shortcodes": [
         ":bullseye:"
     ]
@@ -14649,11 +14649,11 @@ const emojisData6 = `{
     "codepoints": "🪀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fluctuate") + `",
-        "` + _lt("toy") + `",
-        "` + _lt("yo-yo") + `"
+        "` + _t("fluctuate") + `",
+        "` + _t("toy") + `",
+        "` + _t("yo-yo") + `"
     ],
-    "name": "` + _lt("yo-yo") + `",
+    "name": "` + _t("yo-yo") + `",
     "shortcodes": [
         ":yo-yo:"
     ]
@@ -14663,11 +14663,11 @@ const emojisData6 = `{
     "codepoints": "🪁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fly") + `",
-        "` + _lt("kite") + `",
-        "` + _lt("soar") + `"
+        "` + _t("fly") + `",
+        "` + _t("kite") + `",
+        "` + _t("soar") + `"
     ],
-    "name": "` + _lt("kite") + `",
+    "name": "` + _t("kite") + `",
     "shortcodes": [
         ":kite:"
     ]
@@ -14679,14 +14679,14 @@ const emojisData6 = `{
         ":8ball"
     ],
     "keywords": [
-        "` + _lt("8") + `",
-        "` + _lt("ball") + `",
-        "` + _lt("billiard") + `",
-        "` + _lt("eight") + `",
-        "` + _lt("game") + `",
-        "` + _lt("pool 8 ball") + `"
+        "` + _t("8") + `",
+        "` + _t("ball") + `",
+        "` + _t("billiard") + `",
+        "` + _t("eight") + `",
+        "` + _t("game") + `",
+        "` + _t("pool 8 ball") + `"
     ],
-    "name": "` + _lt("pool 8 ball") + `",
+    "name": "` + _t("pool 8 ball") + `",
     "shortcodes": [
         ":pool_8_ball:"
     ]
@@ -14696,14 +14696,14 @@ const emojisData6 = `{
     "codepoints": "🔮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("crystal") + `",
-        "` + _lt("fairy tale") + `",
-        "` + _lt("fantasy") + `",
-        "` + _lt("fortune") + `",
-        "` + _lt("tool") + `"
+        "` + _t("ball") + `",
+        "` + _t("crystal") + `",
+        "` + _t("fairy tale") + `",
+        "` + _t("fantasy") + `",
+        "` + _t("fortune") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("crystal ball") + `",
+    "name": "` + _t("crystal ball") + `",
     "shortcodes": [
         ":crystal_ball:"
     ]
@@ -14713,16 +14713,16 @@ const emojisData6 = `{
     "codepoints": "🧿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("amulet") + `",
-        "` + _lt("charm") + `",
-        "` + _lt("evil-eye") + `",
-        "` + _lt("nazar") + `",
-        "` + _lt("talisman") + `",
-        "` + _lt("bead") + `",
-        "` + _lt("nazar amulet") + `",
-        "` + _lt("evil eye") + `"
+        "` + _t("amulet") + `",
+        "` + _t("charm") + `",
+        "` + _t("evil-eye") + `",
+        "` + _t("nazar") + `",
+        "` + _t("talisman") + `",
+        "` + _t("bead") + `",
+        "` + _t("nazar amulet") + `",
+        "` + _t("evil eye") + `"
     ],
-    "name": "` + _lt("nazar amulet") + `",
+    "name": "` + _t("nazar amulet") + `",
     "shortcodes": [
         ":nazar_amulet:"
     ]
@@ -14732,11 +14732,11 @@ const emojisData6 = `{
     "codepoints": "🎮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("controller") + `",
-        "` + _lt("game") + `",
-        "` + _lt("video game") + `"
+        "` + _t("controller") + `",
+        "` + _t("game") + `",
+        "` + _t("video game") + `"
     ],
-    "name": "` + _lt("video game") + `",
+    "name": "` + _t("video game") + `",
     "shortcodes": [
         ":video_game:"
     ]
@@ -14746,11 +14746,11 @@ const emojisData6 = `{
     "codepoints": "🕹️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("game") + `",
-        "` + _lt("joystick") + `",
-        "` + _lt("video game") + `"
+        "` + _t("game") + `",
+        "` + _t("joystick") + `",
+        "` + _t("video game") + `"
     ],
-    "name": "` + _lt("joystick") + `",
+    "name": "` + _t("joystick") + `",
     "shortcodes": [
         ":joystick:"
     ]
@@ -14760,13 +14760,13 @@ const emojisData6 = `{
     "codepoints": "🎰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("game") + `",
-        "` + _lt("pokie") + `",
-        "` + _lt("pokies") + `",
-        "` + _lt("slot") + `",
-        "` + _lt("slot machine") + `"
+        "` + _t("game") + `",
+        "` + _t("pokie") + `",
+        "` + _t("pokies") + `",
+        "` + _t("slot") + `",
+        "` + _t("slot machine") + `"
     ],
-    "name": "` + _lt("slot machine") + `",
+    "name": "` + _t("slot machine") + `",
     "shortcodes": [
         ":slot_machine:"
     ]
@@ -14776,11 +14776,11 @@ const emojisData6 = `{
     "codepoints": "🎲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dice") + `",
-        "` + _lt("die") + `",
-        "` + _lt("game") + `"
+        "` + _t("dice") + `",
+        "` + _t("die") + `",
+        "` + _t("game") + `"
     ],
-    "name": "` + _lt("game die") + `",
+    "name": "` + _t("game die") + `",
     "shortcodes": [
         ":game_die:"
     ]
@@ -14790,13 +14790,13 @@ const emojisData6 = `{
     "codepoints": "🧩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clue") + `",
-        "` + _lt("interlocking") + `",
-        "` + _lt("jigsaw") + `",
-        "` + _lt("piece") + `",
-        "` + _lt("puzzle") + `"
+        "` + _t("clue") + `",
+        "` + _t("interlocking") + `",
+        "` + _t("jigsaw") + `",
+        "` + _t("piece") + `",
+        "` + _t("puzzle") + `"
     ],
-    "name": "` + _lt("puzzle piece") + `",
+    "name": "` + _t("puzzle piece") + `",
     "shortcodes": [
         ":puzzle_piece:"
     ]
@@ -14806,13 +14806,13 @@ const emojisData6 = `{
     "codepoints": "🧸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("plaything") + `",
-        "` + _lt("plush") + `",
-        "` + _lt("stuffed") + `",
-        "` + _lt("teddy bear") + `",
-        "` + _lt("toy") + `"
+        "` + _t("plaything") + `",
+        "` + _t("plush") + `",
+        "` + _t("stuffed") + `",
+        "` + _t("teddy bear") + `",
+        "` + _t("toy") + `"
     ],
-    "name": "` + _lt("teddy bear") + `",
+    "name": "` + _t("teddy bear") + `",
     "shortcodes": [
         ":teddy_bear:"
     ]
@@ -14822,11 +14822,11 @@ const emojisData6 = `{
     "codepoints": "♠️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("card") + `",
-        "` + _lt("game") + `",
-        "` + _lt("spade suit") + `"
+        "` + _t("card") + `",
+        "` + _t("game") + `",
+        "` + _t("spade suit") + `"
     ],
-    "name": "` + _lt("spade suit") + `",
+    "name": "` + _t("spade suit") + `",
     "shortcodes": [
         ":spade_suit:"
     ]
@@ -14836,11 +14836,11 @@ const emojisData6 = `{
     "codepoints": "♥️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("card") + `",
-        "` + _lt("game") + `",
-        "` + _lt("heart suit") + `"
+        "` + _t("card") + `",
+        "` + _t("game") + `",
+        "` + _t("heart suit") + `"
     ],
-    "name": "` + _lt("heart suit") + `",
+    "name": "` + _t("heart suit") + `",
     "shortcodes": [
         ":heart_suit:"
     ]
@@ -14850,12 +14850,12 @@ const emojisData6 = `{
     "codepoints": "♦️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("card") + `",
-        "` + _lt("diamond suit") + `",
-        "` + _lt("diamonds") + `",
-        "` + _lt("game") + `"
+        "` + _t("card") + `",
+        "` + _t("diamond suit") + `",
+        "` + _t("diamonds") + `",
+        "` + _t("game") + `"
     ],
-    "name": "` + _lt("diamond suit") + `",
+    "name": "` + _t("diamond suit") + `",
     "shortcodes": [
         ":diamond_suit:"
     ]
@@ -14865,12 +14865,12 @@ const emojisData6 = `{
     "codepoints": "♣️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("card") + `",
-        "` + _lt("club suit") + `",
-        "` + _lt("clubs") + `",
-        "` + _lt("game") + `"
+        "` + _t("card") + `",
+        "` + _t("club suit") + `",
+        "` + _t("clubs") + `",
+        "` + _t("game") + `"
     ],
-    "name": "` + _lt("club suit") + `",
+    "name": "` + _t("club suit") + `",
     "shortcodes": [
         ":club_suit:"
     ]
@@ -14880,12 +14880,12 @@ const emojisData6 = `{
     "codepoints": "♟️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chess") + `",
-        "` + _lt("chess pawn") + `",
-        "` + _lt("dupe") + `",
-        "` + _lt("expendable") + `"
+        "` + _t("chess") + `",
+        "` + _t("chess pawn") + `",
+        "` + _t("dupe") + `",
+        "` + _t("expendable") + `"
     ],
-    "name": "` + _lt("chess pawn") + `",
+    "name": "` + _t("chess pawn") + `",
     "shortcodes": [
         ":chess_pawn:"
     ]
@@ -14895,12 +14895,12 @@ const emojisData6 = `{
     "codepoints": "🃏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("card") + `",
-        "` + _lt("game") + `",
-        "` + _lt("joker") + `",
-        "` + _lt("wildcard") + `"
+        "` + _t("card") + `",
+        "` + _t("game") + `",
+        "` + _t("joker") + `",
+        "` + _t("wildcard") + `"
     ],
-    "name": "` + _lt("joker") + `",
+    "name": "` + _t("joker") + `",
     "shortcodes": [
         ":joker:"
     ]
@@ -14910,14 +14910,14 @@ const emojisData6 = `{
     "codepoints": "🀄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("game") + `",
-        "` + _lt("mahjong") + `",
-        "` + _lt("mahjong red dragon") + `",
-        "` + _lt("red") + `",
-        "` + _lt("Mahjong") + `",
-        "` + _lt("Mahjong red dragon") + `"
+        "` + _t("game") + `",
+        "` + _t("mahjong") + `",
+        "` + _t("mahjong red dragon") + `",
+        "` + _t("red") + `",
+        "` + _t("Mahjong") + `",
+        "` + _t("Mahjong red dragon") + `"
     ],
-    "name": "` + _lt("mahjong red dragon") + `",
+    "name": "` + _t("mahjong red dragon") + `",
     "shortcodes": [
         ":mahjong_red_dragon:"
     ]
@@ -14927,14 +14927,14 @@ const emojisData6 = `{
     "codepoints": "🎴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("card") + `",
-        "` + _lt("flower") + `",
-        "` + _lt("flower playing cards") + `",
-        "` + _lt("game") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("playing") + `"
+        "` + _t("card") + `",
+        "` + _t("flower") + `",
+        "` + _t("flower playing cards") + `",
+        "` + _t("game") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("playing") + `"
     ],
-    "name": "` + _lt("flower playing cards") + `",
+    "name": "` + _t("flower playing cards") + `",
     "shortcodes": [
         ":flower_playing_cards:"
     ]
@@ -14944,14 +14944,14 @@ const emojisData6 = `{
     "codepoints": "🎭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("art") + `",
-        "` + _lt("mask") + `",
-        "` + _lt("performing") + `",
-        "` + _lt("performing arts") + `",
-        "` + _lt("theater") + `",
-        "` + _lt("theatre") + `"
+        "` + _t("art") + `",
+        "` + _t("mask") + `",
+        "` + _t("performing") + `",
+        "` + _t("performing arts") + `",
+        "` + _t("theater") + `",
+        "` + _t("theatre") + `"
     ],
-    "name": "` + _lt("performing arts") + `",
+    "name": "` + _t("performing arts") + `",
     "shortcodes": [
         ":performing_arts:"
     ]
@@ -14961,14 +14961,14 @@ const emojisData6 = `{
     "codepoints": "🖼️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("art") + `",
-        "` + _lt("frame") + `",
-        "` + _lt("framed picture") + `",
-        "` + _lt("museum") + `",
-        "` + _lt("painting") + `",
-        "` + _lt("picture") + `"
+        "` + _t("art") + `",
+        "` + _t("frame") + `",
+        "` + _t("framed picture") + `",
+        "` + _t("museum") + `",
+        "` + _t("painting") + `",
+        "` + _t("picture") + `"
     ],
-    "name": "` + _lt("framed picture") + `",
+    "name": "` + _t("framed picture") + `",
     "shortcodes": [
         ":framed_picture:"
     ]
@@ -14978,13 +14978,13 @@ const emojisData6 = `{
     "codepoints": "🎨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("art") + `",
-        "` + _lt("artist palette") + `",
-        "` + _lt("museum") + `",
-        "` + _lt("painting") + `",
-        "` + _lt("palette") + `"
+        "` + _t("art") + `",
+        "` + _t("artist palette") + `",
+        "` + _t("museum") + `",
+        "` + _t("painting") + `",
+        "` + _t("palette") + `"
     ],
-    "name": "` + _lt("artist palette") + `",
+    "name": "` + _t("artist palette") + `",
     "shortcodes": [
         ":artist_palette:"
     ]
@@ -14994,13 +14994,13 @@ const emojisData6 = `{
     "codepoints": "🧵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("needle") + `",
-        "` + _lt("sewing") + `",
-        "` + _lt("spool") + `",
-        "` + _lt("string") + `",
-        "` + _lt("thread") + `"
+        "` + _t("needle") + `",
+        "` + _t("sewing") + `",
+        "` + _t("spool") + `",
+        "` + _t("string") + `",
+        "` + _t("thread") + `"
     ],
-    "name": "` + _lt("thread") + `",
+    "name": "` + _t("thread") + `",
     "shortcodes": [
         ":thread:"
     ]
@@ -15010,12 +15010,12 @@ const emojisData6 = `{
     "codepoints": "🧶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ball") + `",
-        "` + _lt("crochet") + `",
-        "` + _lt("knit") + `",
-        "` + _lt("yarn") + `"
+        "` + _t("ball") + `",
+        "` + _t("crochet") + `",
+        "` + _t("knit") + `",
+        "` + _t("yarn") + `"
     ],
-    "name": "` + _lt("yarn") + `",
+    "name": "` + _t("yarn") + `",
     "shortcodes": [
         ":yarn:"
     ]
@@ -15026,13 +15026,13 @@ const emojisData7 = `{
     "codepoints": "👓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("eye") + `",
-        "` + _lt("eyeglasses") + `",
-        "` + _lt("eyewear") + `",
-        "` + _lt("glasses") + `"
+        "` + _t("clothing") + `",
+        "` + _t("eye") + `",
+        "` + _t("eyeglasses") + `",
+        "` + _t("eyewear") + `",
+        "` + _t("glasses") + `"
     ],
-    "name": "` + _lt("glasses") + `",
+    "name": "` + _t("glasses") + `",
     "shortcodes": [
         ":glasses:"
     ]
@@ -15042,14 +15042,14 @@ const emojisData7 = `{
     "codepoints": "🕶️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dark") + `",
-        "` + _lt("eye") + `",
-        "` + _lt("eyewear") + `",
-        "` + _lt("glasses") + `",
-        "` + _lt("sunglasses") + `",
-        "` + _lt("sunnies") + `"
+        "` + _t("dark") + `",
+        "` + _t("eye") + `",
+        "` + _t("eyewear") + `",
+        "` + _t("glasses") + `",
+        "` + _t("sunglasses") + `",
+        "` + _t("sunnies") + `"
     ],
-    "name": "` + _lt("sunglasses") + `",
+    "name": "` + _t("sunglasses") + `",
     "shortcodes": [
         ":sunglasses:"
     ]
@@ -15059,12 +15059,12 @@ const emojisData7 = `{
     "codepoints": "🥽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("eye protection") + `",
-        "` + _lt("goggles") + `",
-        "` + _lt("swimming") + `",
-        "` + _lt("welding") + `"
+        "` + _t("eye protection") + `",
+        "` + _t("goggles") + `",
+        "` + _t("swimming") + `",
+        "` + _t("welding") + `"
     ],
-    "name": "` + _lt("goggles") + `",
+    "name": "` + _t("goggles") + `",
     "shortcodes": [
         ":goggles:"
     ]
@@ -15074,12 +15074,12 @@ const emojisData7 = `{
     "codepoints": "🥼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("doctor") + `",
-        "` + _lt("experiment") + `",
-        "` + _lt("lab coat") + `",
-        "` + _lt("scientist") + `"
+        "` + _t("doctor") + `",
+        "` + _t("experiment") + `",
+        "` + _t("lab coat") + `",
+        "` + _t("scientist") + `"
     ],
-    "name": "` + _lt("lab coat") + `",
+    "name": "` + _t("lab coat") + `",
     "shortcodes": [
         ":lab_coat:"
     ]
@@ -15089,15 +15089,15 @@ const emojisData7 = `{
     "codepoints": "🦺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("emergency") + `",
-        "` + _lt("safety") + `",
-        "` + _lt("vest") + `",
-        "` + _lt("hi-vis") + `",
-        "` + _lt("high-vis") + `",
-        "` + _lt("jacket") + `",
-        "` + _lt("life jacket") + `"
+        "` + _t("emergency") + `",
+        "` + _t("safety") + `",
+        "` + _t("vest") + `",
+        "` + _t("hi-vis") + `",
+        "` + _t("high-vis") + `",
+        "` + _t("jacket") + `",
+        "` + _t("life jacket") + `"
     ],
-    "name": "` + _lt("safety vest") + `",
+    "name": "` + _t("safety vest") + `",
     "shortcodes": [
         ":safety_vest:"
     ]
@@ -15107,11 +15107,11 @@ const emojisData7 = `{
     "codepoints": "👔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("necktie") + `",
-        "` + _lt("tie") + `"
+        "` + _t("clothing") + `",
+        "` + _t("necktie") + `",
+        "` + _t("tie") + `"
     ],
-    "name": "` + _lt("necktie") + `",
+    "name": "` + _t("necktie") + `",
     "shortcodes": [
         ":necktie:"
     ]
@@ -15121,15 +15121,15 @@ const emojisData7 = `{
     "codepoints": "👕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("shirt") + `",
-        "` + _lt("t-shirt") + `",
-        "` + _lt("T-shirt") + `",
-        "` + _lt("tee") + `",
-        "` + _lt("tshirt") + `",
-        "` + _lt("tee-shirt") + `"
+        "` + _t("clothing") + `",
+        "` + _t("shirt") + `",
+        "` + _t("t-shirt") + `",
+        "` + _t("T-shirt") + `",
+        "` + _t("tee") + `",
+        "` + _t("tshirt") + `",
+        "` + _t("tee-shirt") + `"
     ],
-    "name": "` + _lt("t-shirt") + `",
+    "name": "` + _t("t-shirt") + `",
     "shortcodes": [
         ":t-shirt:"
     ]
@@ -15139,12 +15139,12 @@ const emojisData7 = `{
     "codepoints": "👖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("jeans") + `",
-        "` + _lt("pants") + `",
-        "` + _lt("trousers") + `"
+        "` + _t("clothing") + `",
+        "` + _t("jeans") + `",
+        "` + _t("pants") + `",
+        "` + _t("trousers") + `"
     ],
-    "name": "` + _lt("jeans") + `",
+    "name": "` + _t("jeans") + `",
     "shortcodes": [
         ":jeans:"
     ]
@@ -15154,10 +15154,10 @@ const emojisData7 = `{
     "codepoints": "🧣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("neck") + `",
-        "` + _lt("scarf") + `"
+        "` + _t("neck") + `",
+        "` + _t("scarf") + `"
     ],
-    "name": "` + _lt("scarf") + `",
+    "name": "` + _t("scarf") + `",
     "shortcodes": [
         ":scarf:"
     ]
@@ -15167,10 +15167,10 @@ const emojisData7 = `{
     "codepoints": "🧤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("gloves") + `",
-        "` + _lt("hand") + `"
+        "` + _t("gloves") + `",
+        "` + _t("hand") + `"
     ],
-    "name": "` + _lt("gloves") + `",
+    "name": "` + _t("gloves") + `",
     "shortcodes": [
         ":gloves:"
     ]
@@ -15180,10 +15180,10 @@ const emojisData7 = `{
     "codepoints": "🧥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("coat") + `",
-        "` + _lt("jacket") + `"
+        "` + _t("coat") + `",
+        "` + _t("jacket") + `"
     ],
-    "name": "` + _lt("coat") + `",
+    "name": "` + _t("coat") + `",
     "shortcodes": [
         ":coat:"
     ]
@@ -15193,10 +15193,10 @@ const emojisData7 = `{
     "codepoints": "🧦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("socks") + `",
-        "` + _lt("stocking") + `"
+        "` + _t("socks") + `",
+        "` + _t("stocking") + `"
     ],
-    "name": "` + _lt("socks") + `",
+    "name": "` + _t("socks") + `",
     "shortcodes": [
         ":socks:"
     ]
@@ -15206,11 +15206,11 @@ const emojisData7 = `{
     "codepoints": "👗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("dress") + `",
-        "` + _lt("woman’s clothes") + `"
+        "` + _t("clothing") + `",
+        "` + _t("dress") + `",
+        "` + _t("woman’s clothes") + `"
     ],
-    "name": "` + _lt("dress") + `",
+    "name": "` + _t("dress") + `",
     "shortcodes": [
         ":dress:"
     ]
@@ -15220,10 +15220,10 @@ const emojisData7 = `{
     "codepoints": "👘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("kimono") + `"
+        "` + _t("clothing") + `",
+        "` + _t("kimono") + `"
     ],
-    "name": "` + _lt("kimono") + `",
+    "name": "` + _t("kimono") + `",
     "shortcodes": [
         ":kimono:"
     ]
@@ -15233,11 +15233,11 @@ const emojisData7 = `{
     "codepoints": "🥻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("dress") + `",
-        "` + _lt("sari") + `"
+        "` + _t("clothing") + `",
+        "` + _t("dress") + `",
+        "` + _t("sari") + `"
     ],
-    "name": "` + _lt("sari") + `",
+    "name": "` + _t("sari") + `",
     "shortcodes": [
         ":sari:"
     ]
@@ -15247,11 +15247,11 @@ const emojisData7 = `{
     "codepoints": "🩱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bathing suit") + `",
-        "` + _lt("one-piece swimsuit") + `",
-        "` + _lt("swimming costume") + `"
+        "` + _t("bathing suit") + `",
+        "` + _t("one-piece swimsuit") + `",
+        "` + _t("swimming costume") + `"
     ],
-    "name": "` + _lt("one-piece swimsuit") + `",
+    "name": "` + _t("one-piece swimsuit") + `",
     "shortcodes": [
         ":one-piece_swimsuit:"
     ]
@@ -15261,16 +15261,16 @@ const emojisData7 = `{
     "codepoints": "🩲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bathers") + `",
-        "` + _lt("briefs") + `",
-        "` + _lt("speedos") + `",
-        "` + _lt("underwear") + `",
-        "` + _lt("bathing suit") + `",
-        "` + _lt("one-piece") + `",
-        "` + _lt("swimsuit") + `",
-        "` + _lt("pants") + `"
+        "` + _t("bathers") + `",
+        "` + _t("briefs") + `",
+        "` + _t("speedos") + `",
+        "` + _t("underwear") + `",
+        "` + _t("bathing suit") + `",
+        "` + _t("one-piece") + `",
+        "` + _t("swimsuit") + `",
+        "` + _t("pants") + `"
     ],
-    "name": "` + _lt("briefs") + `",
+    "name": "` + _t("briefs") + `",
     "shortcodes": [
         ":briefs:"
     ]
@@ -15280,15 +15280,15 @@ const emojisData7 = `{
     "codepoints": "🩳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bathing suit") + `",
-        "` + _lt("boardies") + `",
-        "` + _lt("boardshorts") + `",
-        "` + _lt("shorts") + `",
-        "` + _lt("swim shorts") + `",
-        "` + _lt("underwear") + `",
-        "` + _lt("pants") + `"
+        "` + _t("bathing suit") + `",
+        "` + _t("boardies") + `",
+        "` + _t("boardshorts") + `",
+        "` + _t("shorts") + `",
+        "` + _t("swim shorts") + `",
+        "` + _t("underwear") + `",
+        "` + _t("pants") + `"
     ],
-    "name": "` + _lt("shorts") + `",
+    "name": "` + _t("shorts") + `",
     "shortcodes": [
         ":shorts:"
     ]
@@ -15298,13 +15298,13 @@ const emojisData7 = `{
     "codepoints": "👙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bikini") + `",
-        "` + _lt("clothing") + `",
-        "` + _lt("swim suit") + `",
-        "` + _lt("two-piece") + `",
-        "` + _lt("swim") + `"
+        "` + _t("bikini") + `",
+        "` + _t("clothing") + `",
+        "` + _t("swim suit") + `",
+        "` + _t("two-piece") + `",
+        "` + _t("swim") + `"
     ],
-    "name": "` + _lt("bikini") + `",
+    "name": "` + _t("bikini") + `",
     "shortcodes": [
         ":bikini:"
     ]
@@ -15314,13 +15314,13 @@ const emojisData7 = `{
     "codepoints": "👚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blouse") + `",
-        "` + _lt("clothing") + `",
-        "` + _lt("top") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman’s clothes") + `"
+        "` + _t("blouse") + `",
+        "` + _t("clothing") + `",
+        "` + _t("top") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman’s clothes") + `"
     ],
-    "name": "` + _lt("woman’s clothes") + `",
+    "name": "` + _t("woman’s clothes") + `",
     "shortcodes": [
         ":woman’s_clothes:"
     ]
@@ -15330,12 +15330,12 @@ const emojisData7 = `{
     "codepoints": "👛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessories") + `",
-        "` + _lt("coin") + `",
-        "` + _lt("purse") + `",
-        "` + _lt("clothing") + `"
+        "` + _t("accessories") + `",
+        "` + _t("coin") + `",
+        "` + _t("purse") + `",
+        "` + _t("clothing") + `"
     ],
-    "name": "` + _lt("purse") + `",
+    "name": "` + _t("purse") + `",
     "shortcodes": [
         ":purse:"
     ]
@@ -15345,14 +15345,14 @@ const emojisData7 = `{
     "codepoints": "👜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessories") + `",
-        "` + _lt("bag") + `",
-        "` + _lt("handbag") + `",
-        "` + _lt("tote") + `",
-        "` + _lt("clothing") + `",
-        "` + _lt("purse") + `"
+        "` + _t("accessories") + `",
+        "` + _t("bag") + `",
+        "` + _t("handbag") + `",
+        "` + _t("tote") + `",
+        "` + _t("clothing") + `",
+        "` + _t("purse") + `"
     ],
-    "name": "` + _lt("handbag") + `",
+    "name": "` + _t("handbag") + `",
     "shortcodes": [
         ":handbag:"
     ]
@@ -15362,13 +15362,13 @@ const emojisData7 = `{
     "codepoints": "👝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessories") + `",
-        "` + _lt("bag") + `",
-        "` + _lt("clutch bag") + `",
-        "` + _lt("pouch") + `",
-        "` + _lt("clothing") + `"
+        "` + _t("accessories") + `",
+        "` + _t("bag") + `",
+        "` + _t("clutch bag") + `",
+        "` + _t("pouch") + `",
+        "` + _t("clothing") + `"
     ],
-    "name": "` + _lt("clutch bag") + `",
+    "name": "` + _t("clutch bag") + `",
     "shortcodes": [
         ":clutch_bag:"
     ]
@@ -15378,12 +15378,12 @@ const emojisData7 = `{
     "codepoints": "🛍️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bag") + `",
-        "` + _lt("hotel") + `",
-        "` + _lt("shopping") + `",
-        "` + _lt("shopping bags") + `"
+        "` + _t("bag") + `",
+        "` + _t("hotel") + `",
+        "` + _t("shopping") + `",
+        "` + _t("shopping bags") + `"
     ],
-    "name": "` + _lt("shopping bags") + `",
+    "name": "` + _t("shopping bags") + `",
     "shortcodes": [
         ":shopping_bags:"
     ]
@@ -15393,13 +15393,13 @@ const emojisData7 = `{
     "codepoints": "🎒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("backpack") + `",
-        "` + _lt("bag") + `",
-        "` + _lt("rucksack") + `",
-        "` + _lt("satchel") + `",
-        "` + _lt("school") + `"
+        "` + _t("backpack") + `",
+        "` + _t("bag") + `",
+        "` + _t("rucksack") + `",
+        "` + _t("satchel") + `",
+        "` + _t("school") + `"
     ],
-    "name": "` + _lt("backpack") + `",
+    "name": "` + _t("backpack") + `",
     "shortcodes": [
         ":backpack:"
     ]
@@ -15409,12 +15409,12 @@ const emojisData7 = `{
     "codepoints": "👞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("man") + `",
-        "` + _lt("man’s shoe") + `",
-        "` + _lt("shoe") + `"
+        "` + _t("clothing") + `",
+        "` + _t("man") + `",
+        "` + _t("man’s shoe") + `",
+        "` + _t("shoe") + `"
     ],
-    "name": "` + _lt("man’s shoe") + `",
+    "name": "` + _t("man’s shoe") + `",
     "shortcodes": [
         ":man’s_shoe:"
     ]
@@ -15424,15 +15424,15 @@ const emojisData7 = `{
     "codepoints": "👟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("athletic") + `",
-        "` + _lt("clothing") + `",
-        "` + _lt("runners") + `",
-        "` + _lt("running shoe") + `",
-        "` + _lt("shoe") + `",
-        "` + _lt("sneaker") + `",
-        "` + _lt("trainer") + `"
+        "` + _t("athletic") + `",
+        "` + _t("clothing") + `",
+        "` + _t("runners") + `",
+        "` + _t("running shoe") + `",
+        "` + _t("shoe") + `",
+        "` + _t("sneaker") + `",
+        "` + _t("trainer") + `"
     ],
-    "name": "` + _lt("running shoe") + `",
+    "name": "` + _t("running shoe") + `",
     "shortcodes": [
         ":running_shoe:"
     ]
@@ -15442,12 +15442,12 @@ const emojisData7 = `{
     "codepoints": "🥾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("backpacking") + `",
-        "` + _lt("boot") + `",
-        "` + _lt("camping") + `",
-        "` + _lt("hiking") + `"
+        "` + _t("backpacking") + `",
+        "` + _t("boot") + `",
+        "` + _t("camping") + `",
+        "` + _t("hiking") + `"
     ],
-    "name": "` + _lt("hiking boot") + `",
+    "name": "` + _t("hiking boot") + `",
     "shortcodes": [
         ":hiking_boot:"
     ]
@@ -15457,13 +15457,13 @@ const emojisData7 = `{
     "codepoints": "🥿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ballet flat") + `",
-        "` + _lt("flat shoe") + `",
-        "` + _lt("slip-on") + `",
-        "` + _lt("slipper") + `",
-        "` + _lt("pump") + `"
+        "` + _t("ballet flat") + `",
+        "` + _t("flat shoe") + `",
+        "` + _t("slip-on") + `",
+        "` + _t("slipper") + `",
+        "` + _t("pump") + `"
     ],
-    "name": "` + _lt("flat shoe") + `",
+    "name": "` + _t("flat shoe") + `",
     "shortcodes": [
         ":flat_shoe:"
     ]
@@ -15473,13 +15473,13 @@ const emojisData7 = `{
     "codepoints": "👠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("heel") + `",
-        "` + _lt("high-heeled shoe") + `",
-        "` + _lt("shoe") + `",
-        "` + _lt("woman") + `"
+        "` + _t("clothing") + `",
+        "` + _t("heel") + `",
+        "` + _t("high-heeled shoe") + `",
+        "` + _t("shoe") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("high-heeled shoe") + `",
+    "name": "` + _t("high-heeled shoe") + `",
     "shortcodes": [
         ":high-heeled_shoe:"
     ]
@@ -15489,13 +15489,13 @@ const emojisData7 = `{
     "codepoints": "👡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("sandal") + `",
-        "` + _lt("shoe") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman’s sandal") + `"
+        "` + _t("clothing") + `",
+        "` + _t("sandal") + `",
+        "` + _t("shoe") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman’s sandal") + `"
     ],
-    "name": "` + _lt("woman’s sandal") + `",
+    "name": "` + _t("woman’s sandal") + `",
     "shortcodes": [
         ":woman’s_sandal:"
     ]
@@ -15505,11 +15505,11 @@ const emojisData7 = `{
     "codepoints": "🩰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ballet") + `",
-        "` + _lt("ballet shoes") + `",
-        "` + _lt("dance") + `"
+        "` + _t("ballet") + `",
+        "` + _t("ballet shoes") + `",
+        "` + _t("dance") + `"
     ],
-    "name": "` + _lt("ballet shoes") + `",
+    "name": "` + _t("ballet shoes") + `",
     "shortcodes": [
         ":ballet_shoes:"
     ]
@@ -15519,13 +15519,13 @@ const emojisData7 = `{
     "codepoints": "👢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("boot") + `",
-        "` + _lt("clothing") + `",
-        "` + _lt("shoe") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman’s boot") + `"
+        "` + _t("boot") + `",
+        "` + _t("clothing") + `",
+        "` + _t("shoe") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman’s boot") + `"
     ],
-    "name": "` + _lt("woman’s boot") + `",
+    "name": "` + _t("woman’s boot") + `",
     "shortcodes": [
         ":woman’s_boot:"
     ]
@@ -15535,12 +15535,12 @@ const emojisData7 = `{
     "codepoints": "👑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("crown") + `",
-        "` + _lt("king") + `",
-        "` + _lt("queen") + `"
+        "` + _t("clothing") + `",
+        "` + _t("crown") + `",
+        "` + _t("king") + `",
+        "` + _t("queen") + `"
     ],
-    "name": "` + _lt("crown") + `",
+    "name": "` + _t("crown") + `",
     "shortcodes": [
         ":crown:"
     ]
@@ -15550,12 +15550,12 @@ const emojisData7 = `{
     "codepoints": "👒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("hat") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("woman’s hat") + `"
+        "` + _t("clothing") + `",
+        "` + _t("hat") + `",
+        "` + _t("woman") + `",
+        "` + _t("woman’s hat") + `"
     ],
-    "name": "` + _lt("woman’s hat") + `",
+    "name": "` + _t("woman’s hat") + `",
     "shortcodes": [
         ":woman’s_hat:"
     ]
@@ -15565,12 +15565,12 @@ const emojisData7 = `{
     "codepoints": "🎩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clothing") + `",
-        "` + _lt("hat") + `",
-        "` + _lt("top") + `",
-        "` + _lt("tophat") + `"
+        "` + _t("clothing") + `",
+        "` + _t("hat") + `",
+        "` + _t("top") + `",
+        "` + _t("tophat") + `"
     ],
-    "name": "` + _lt("top hat") + `",
+    "name": "` + _t("top hat") + `",
     "shortcodes": [
         ":top_hat:"
     ]
@@ -15580,13 +15580,13 @@ const emojisData7 = `{
     "codepoints": "🎓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cap") + `",
-        "` + _lt("celebration") + `",
-        "` + _lt("clothing") + `",
-        "` + _lt("graduation") + `",
-        "` + _lt("hat") + `"
+        "` + _t("cap") + `",
+        "` + _t("celebration") + `",
+        "` + _t("clothing") + `",
+        "` + _t("graduation") + `",
+        "` + _t("hat") + `"
     ],
-    "name": "` + _lt("graduation cap") + `",
+    "name": "` + _t("graduation cap") + `",
     "shortcodes": [
         ":graduation_cap:"
     ]
@@ -15596,10 +15596,10 @@ const emojisData7 = `{
     "codepoints": "🧢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baseball cap") + `",
-        "` + _lt("billed cap") + `"
+        "` + _t("baseball cap") + `",
+        "` + _t("billed cap") + `"
     ],
-    "name": "` + _lt("billed cap") + `",
+    "name": "` + _t("billed cap") + `",
     "shortcodes": [
         ":billed_cap:"
     ]
@@ -15609,14 +15609,14 @@ const emojisData7 = `{
     "codepoints": "⛑️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("aid") + `",
-        "` + _lt("cross") + `",
-        "` + _lt("face") + `",
-        "` + _lt("hat") + `",
-        "` + _lt("helmet") + `",
-        "` + _lt("rescue worker’s helmet") + `"
+        "` + _t("aid") + `",
+        "` + _t("cross") + `",
+        "` + _t("face") + `",
+        "` + _t("hat") + `",
+        "` + _t("helmet") + `",
+        "` + _t("rescue worker’s helmet") + `"
     ],
-    "name": "` + _lt("rescue worker’s helmet") + `",
+    "name": "` + _t("rescue worker’s helmet") + `",
     "shortcodes": [
         ":rescue_worker’s_helmet:"
     ]
@@ -15626,13 +15626,13 @@ const emojisData7 = `{
     "codepoints": "📿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("beads") + `",
-        "` + _lt("clothing") + `",
-        "` + _lt("necklace") + `",
-        "` + _lt("prayer") + `",
-        "` + _lt("religion") + `"
+        "` + _t("beads") + `",
+        "` + _t("clothing") + `",
+        "` + _t("necklace") + `",
+        "` + _t("prayer") + `",
+        "` + _t("religion") + `"
     ],
-    "name": "` + _lt("prayer beads") + `",
+    "name": "` + _t("prayer beads") + `",
     "shortcodes": [
         ":prayer_beads:"
     ]
@@ -15642,12 +15642,12 @@ const emojisData7 = `{
     "codepoints": "💄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cosmetics") + `",
-        "` + _lt("lipstick") + `",
-        "` + _lt("make-up") + `",
-        "` + _lt("makeup") + `"
+        "` + _t("cosmetics") + `",
+        "` + _t("lipstick") + `",
+        "` + _t("make-up") + `",
+        "` + _t("makeup") + `"
     ],
-    "name": "` + _lt("lipstick") + `",
+    "name": "` + _t("lipstick") + `",
     "shortcodes": [
         ":lipstick:"
     ]
@@ -15657,10 +15657,10 @@ const emojisData7 = `{
     "codepoints": "💍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("diamond") + `",
-        "` + _lt("ring") + `"
+        "` + _t("diamond") + `",
+        "` + _t("ring") + `"
     ],
-    "name": "` + _lt("ring") + `",
+    "name": "` + _t("ring") + `",
     "shortcodes": [
         ":ring:"
     ]
@@ -15670,13 +15670,13 @@ const emojisData7 = `{
     "codepoints": "💎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("diamond") + `",
-        "` + _lt("gem") + `",
-        "` + _lt("gem stone") + `",
-        "` + _lt("jewel") + `",
-        "` + _lt("gemstone") + `"
+        "` + _t("diamond") + `",
+        "` + _t("gem") + `",
+        "` + _t("gem stone") + `",
+        "` + _t("jewel") + `",
+        "` + _t("gemstone") + `"
     ],
-    "name": "` + _lt("gem stone") + `",
+    "name": "` + _t("gem stone") + `",
     "shortcodes": [
         ":gem_stone:"
     ]
@@ -15686,13 +15686,13 @@ const emojisData7 = `{
     "codepoints": "🔇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mute") + `",
-        "` + _lt("muted speaker") + `",
-        "` + _lt("quiet") + `",
-        "` + _lt("silent") + `",
-        "` + _lt("speaker") + `"
+        "` + _t("mute") + `",
+        "` + _t("muted speaker") + `",
+        "` + _t("quiet") + `",
+        "` + _t("silent") + `",
+        "` + _t("speaker") + `"
     ],
-    "name": "` + _lt("muted speaker") + `",
+    "name": "` + _t("muted speaker") + `",
     "shortcodes": [
         ":muted_speaker:"
     ]
@@ -15702,14 +15702,14 @@ const emojisData7 = `{
     "codepoints": "🔈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("low") + `",
-        "` + _lt("quiet") + `",
-        "` + _lt("soft") + `",
-        "` + _lt("speaker") + `",
-        "` + _lt("volume") + `",
-        "` + _lt("speaker low volume") + `"
+        "` + _t("low") + `",
+        "` + _t("quiet") + `",
+        "` + _t("soft") + `",
+        "` + _t("speaker") + `",
+        "` + _t("volume") + `",
+        "` + _t("speaker low volume") + `"
     ],
-    "name": "` + _lt("speaker low volume") + `",
+    "name": "` + _t("speaker low volume") + `",
     "shortcodes": [
         ":speaker_low_volume:"
     ]
@@ -15719,10 +15719,10 @@ const emojisData7 = `{
     "codepoints": "🔉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("medium") + `",
-        "` + _lt("speaker medium volume") + `"
+        "` + _t("medium") + `",
+        "` + _t("speaker medium volume") + `"
     ],
-    "name": "` + _lt("speaker medium volume") + `",
+    "name": "` + _t("speaker medium volume") + `",
     "shortcodes": [
         ":speaker_medium_volume:"
     ]
@@ -15732,10 +15732,10 @@ const emojisData7 = `{
     "codepoints": "🔊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("loud") + `",
-        "` + _lt("speaker high volume") + `"
+        "` + _t("loud") + `",
+        "` + _t("speaker high volume") + `"
     ],
-    "name": "` + _lt("speaker high volume") + `",
+    "name": "` + _t("speaker high volume") + `",
     "shortcodes": [
         ":speaker_high_volume:"
     ]
@@ -15745,11 +15745,11 @@ const emojisData7 = `{
     "codepoints": "📢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("loud") + `",
-        "` + _lt("loudspeaker") + `",
-        "` + _lt("public address") + `"
+        "` + _t("loud") + `",
+        "` + _t("loudspeaker") + `",
+        "` + _t("public address") + `"
     ],
-    "name": "` + _lt("loudspeaker") + `",
+    "name": "` + _t("loudspeaker") + `",
     "shortcodes": [
         ":loudspeaker:"
     ]
@@ -15759,10 +15759,10 @@ const emojisData7 = `{
     "codepoints": "📣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cheering") + `",
-        "` + _lt("megaphone") + `"
+        "` + _t("cheering") + `",
+        "` + _t("megaphone") + `"
     ],
-    "name": "` + _lt("megaphone") + `",
+    "name": "` + _t("megaphone") + `",
     "shortcodes": [
         ":megaphone:"
     ]
@@ -15774,11 +15774,11 @@ const emojisData7 = `{
         ":postal_horn"
     ],
     "keywords": [
-        "` + _lt("horn") + `",
-        "` + _lt("post") + `",
-        "` + _lt("postal") + `"
+        "` + _t("horn") + `",
+        "` + _t("post") + `",
+        "` + _t("postal") + `"
     ],
-    "name": "` + _lt("postal horn") + `",
+    "name": "` + _t("postal horn") + `",
     "shortcodes": [
         ":postal_horn:"
     ]
@@ -15788,9 +15788,9 @@ const emojisData7 = `{
     "codepoints": "🔔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bell") + `"
+        "` + _t("bell") + `"
     ],
-    "name": "` + _lt("bell") + `",
+    "name": "` + _t("bell") + `",
     "shortcodes": [
         ":bell:"
     ]
@@ -15800,14 +15800,14 @@ const emojisData7 = `{
     "codepoints": "🔕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bell") + `",
-        "` + _lt("bell with slash") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("mute") + `",
-        "` + _lt("quiet") + `",
-        "` + _lt("silent") + `"
+        "` + _t("bell") + `",
+        "` + _t("bell with slash") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("mute") + `",
+        "` + _t("quiet") + `",
+        "` + _t("silent") + `"
     ],
-    "name": "` + _lt("bell with slash") + `",
+    "name": "` + _t("bell with slash") + `",
     "shortcodes": [
         ":bell_with_slash:"
     ]
@@ -15817,11 +15817,11 @@ const emojisData7 = `{
     "codepoints": "🎼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("music") + `",
-        "` + _lt("musical score") + `",
-        "` + _lt("score") + `"
+        "` + _t("music") + `",
+        "` + _t("musical score") + `",
+        "` + _t("score") + `"
     ],
-    "name": "` + _lt("musical score") + `",
+    "name": "` + _t("musical score") + `",
     "shortcodes": [
         ":musical_score:"
     ]
@@ -15833,11 +15833,11 @@ const emojisData7 = `{
         ":music"
     ],
     "keywords": [
-        "` + _lt("music") + `",
-        "` + _lt("musical note") + `",
-        "` + _lt("note") + `"
+        "` + _t("music") + `",
+        "` + _t("musical note") + `",
+        "` + _t("note") + `"
     ],
-    "name": "` + _lt("musical note") + `",
+    "name": "` + _t("musical note") + `",
     "shortcodes": [
         ":musical_note:"
     ]
@@ -15847,12 +15847,12 @@ const emojisData7 = `{
     "codepoints": "🎶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("music") + `",
-        "` + _lt("musical notes") + `",
-        "` + _lt("note") + `",
-        "` + _lt("notes") + `"
+        "` + _t("music") + `",
+        "` + _t("musical notes") + `",
+        "` + _t("note") + `",
+        "` + _t("notes") + `"
     ],
-    "name": "` + _lt("musical notes") + `",
+    "name": "` + _t("musical notes") + `",
     "shortcodes": [
         ":musical_notes:"
     ]
@@ -15862,12 +15862,12 @@ const emojisData7 = `{
     "codepoints": "🎙️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mic") + `",
-        "` + _lt("microphone") + `",
-        "` + _lt("music") + `",
-        "` + _lt("studio") + `"
+        "` + _t("mic") + `",
+        "` + _t("microphone") + `",
+        "` + _t("music") + `",
+        "` + _t("studio") + `"
     ],
-    "name": "` + _lt("studio microphone") + `",
+    "name": "` + _t("studio microphone") + `",
     "shortcodes": [
         ":studio_microphone:"
     ]
@@ -15877,11 +15877,11 @@ const emojisData7 = `{
     "codepoints": "🎚️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("level") + `",
-        "` + _lt("music") + `",
-        "` + _lt("slider") + `"
+        "` + _t("level") + `",
+        "` + _t("music") + `",
+        "` + _t("slider") + `"
     ],
-    "name": "` + _lt("level slider") + `",
+    "name": "` + _t("level slider") + `",
     "shortcodes": [
         ":level_slider:"
     ]
@@ -15891,11 +15891,11 @@ const emojisData7 = `{
     "codepoints": "🎛️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("control") + `",
-        "` + _lt("knobs") + `",
-        "` + _lt("music") + `"
+        "` + _t("control") + `",
+        "` + _t("knobs") + `",
+        "` + _t("music") + `"
     ],
-    "name": "` + _lt("control knobs") + `",
+    "name": "` + _t("control knobs") + `",
     "shortcodes": [
         ":control_knobs:"
     ]
@@ -15907,11 +15907,11 @@ const emojisData7 = `{
         ":microphone"
     ],
     "keywords": [
-        "` + _lt("karaoke") + `",
-        "` + _lt("mic") + `",
-        "` + _lt("microphone") + `"
+        "` + _t("karaoke") + `",
+        "` + _t("mic") + `",
+        "` + _t("microphone") + `"
     ],
-    "name": "` + _lt("microphone") + `",
+    "name": "` + _t("microphone") + `",
     "shortcodes": [
         ":microphone:"
     ]
@@ -15921,10 +15921,10 @@ const emojisData7 = `{
     "codepoints": "🎧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("earbud") + `",
-        "` + _lt("headphone") + `"
+        "` + _t("earbud") + `",
+        "` + _t("headphone") + `"
     ],
-    "name": "` + _lt("headphone") + `",
+    "name": "` + _t("headphone") + `",
     "shortcodes": [
         ":headphone:"
     ]
@@ -15934,13 +15934,13 @@ const emojisData7 = `{
     "codepoints": "📻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("AM") + `",
-        "` + _lt("FM") + `",
-        "` + _lt("radio") + `",
-        "` + _lt("wireless") + `",
-        "` + _lt("video") + `"
+        "` + _t("AM") + `",
+        "` + _t("FM") + `",
+        "` + _t("radio") + `",
+        "` + _t("wireless") + `",
+        "` + _t("video") + `"
     ],
-    "name": "` + _lt("radio") + `",
+    "name": "` + _t("radio") + `",
     "shortcodes": [
         ":radio:"
     ]
@@ -15950,12 +15950,12 @@ const emojisData7 = `{
     "codepoints": "🎷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("instrument") + `",
-        "` + _lt("music") + `",
-        "` + _lt("sax") + `",
-        "` + _lt("saxophone") + `"
+        "` + _t("instrument") + `",
+        "` + _t("music") + `",
+        "` + _t("sax") + `",
+        "` + _t("saxophone") + `"
     ],
-    "name": "` + _lt("saxophone") + `",
+    "name": "` + _t("saxophone") + `",
     "shortcodes": [
         ":saxophone:"
     ]
@@ -15967,11 +15967,11 @@ const emojisData7 = `{
         ":guitar"
     ],
     "keywords": [
-        "` + _lt("guitar") + `",
-        "` + _lt("instrument") + `",
-        "` + _lt("music") + `"
+        "` + _t("guitar") + `",
+        "` + _t("instrument") + `",
+        "` + _t("music") + `"
     ],
-    "name": "` + _lt("guitar") + `",
+    "name": "` + _t("guitar") + `",
     "shortcodes": [
         ":guitar:"
     ]
@@ -15981,14 +15981,14 @@ const emojisData7 = `{
     "codepoints": "🎹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("instrument") + `",
-        "` + _lt("keyboard") + `",
-        "` + _lt("music") + `",
-        "` + _lt("musical keyboard") + `",
-        "` + _lt("organ") + `",
-        "` + _lt("piano") + `"
+        "` + _t("instrument") + `",
+        "` + _t("keyboard") + `",
+        "` + _t("music") + `",
+        "` + _t("musical keyboard") + `",
+        "` + _t("organ") + `",
+        "` + _t("piano") + `"
     ],
-    "name": "` + _lt("musical keyboard") + `",
+    "name": "` + _t("musical keyboard") + `",
     "shortcodes": [
         ":musical_keyboard:"
     ]
@@ -16000,11 +16000,11 @@ const emojisData7 = `{
         ":trumpet"
     ],
     "keywords": [
-        "` + _lt("instrument") + `",
-        "` + _lt("music") + `",
-        "` + _lt("trumpet") + `"
+        "` + _t("instrument") + `",
+        "` + _t("music") + `",
+        "` + _t("trumpet") + `"
     ],
-    "name": "` + _lt("trumpet") + `",
+    "name": "` + _t("trumpet") + `",
     "shortcodes": [
         ":trumpet:"
     ]
@@ -16014,11 +16014,11 @@ const emojisData7 = `{
     "codepoints": "🎻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("instrument") + `",
-        "` + _lt("music") + `",
-        "` + _lt("violin") + `"
+        "` + _t("instrument") + `",
+        "` + _t("music") + `",
+        "` + _t("violin") + `"
     ],
-    "name": "` + _lt("violin") + `",
+    "name": "` + _t("violin") + `",
     "shortcodes": [
         ":violin:"
     ]
@@ -16028,11 +16028,11 @@ const emojisData7 = `{
     "codepoints": "🪕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("banjo") + `",
-        "` + _lt("music") + `",
-        "` + _lt("stringed") + `"
+        "` + _t("banjo") + `",
+        "` + _t("music") + `",
+        "` + _t("stringed") + `"
     ],
-    "name": "` + _lt("banjo") + `",
+    "name": "` + _t("banjo") + `",
     "shortcodes": [
         ":banjo:"
     ]
@@ -16042,12 +16042,12 @@ const emojisData7 = `{
     "codepoints": "🥁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("drum") + `",
-        "` + _lt("drumsticks") + `",
-        "` + _lt("music") + `",
-        "` + _lt("percussions") + `"
+        "` + _t("drum") + `",
+        "` + _t("drumsticks") + `",
+        "` + _t("music") + `",
+        "` + _t("percussions") + `"
     ],
-    "name": "` + _lt("drum") + `",
+    "name": "` + _t("drum") + `",
     "shortcodes": [
         ":drum:"
     ]
@@ -16057,12 +16057,12 @@ const emojisData7 = `{
     "codepoints": "📱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cell") + `",
-        "` + _lt("mobile") + `",
-        "` + _lt("phone") + `",
-        "` + _lt("telephone") + `"
+        "` + _t("cell") + `",
+        "` + _t("mobile") + `",
+        "` + _t("phone") + `",
+        "` + _t("telephone") + `"
     ],
-    "name": "` + _lt("mobile phone") + `",
+    "name": "` + _t("mobile phone") + `",
     "shortcodes": [
         ":mobile_phone:"
     ]
@@ -16072,14 +16072,14 @@ const emojisData7 = `{
     "codepoints": "📲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("cell") + `",
-        "` + _lt("mobile") + `",
-        "` + _lt("mobile phone with arrow") + `",
-        "` + _lt("phone") + `",
-        "` + _lt("receive") + `"
+        "` + _t("arrow") + `",
+        "` + _t("cell") + `",
+        "` + _t("mobile") + `",
+        "` + _t("mobile phone with arrow") + `",
+        "` + _t("phone") + `",
+        "` + _t("receive") + `"
     ],
-    "name": "` + _lt("mobile phone with arrow") + `",
+    "name": "` + _t("mobile phone with arrow") + `",
     "shortcodes": [
         ":mobile_phone_with_arrow:"
     ]
@@ -16089,11 +16089,11 @@ const emojisData7 = `{
     "codepoints": "☎️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("landline") + `",
-        "` + _lt("phone") + `",
-        "` + _lt("telephone") + `"
+        "` + _t("landline") + `",
+        "` + _t("phone") + `",
+        "` + _t("telephone") + `"
     ],
-    "name": "` + _lt("telephone") + `",
+    "name": "` + _t("telephone") + `",
     "shortcodes": [
         ":telephone:"
     ]
@@ -16103,11 +16103,11 @@ const emojisData7 = `{
     "codepoints": "📞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("phone") + `",
-        "` + _lt("receiver") + `",
-        "` + _lt("telephone") + `"
+        "` + _t("phone") + `",
+        "` + _t("receiver") + `",
+        "` + _t("telephone") + `"
     ],
-    "name": "` + _lt("telephone receiver") + `",
+    "name": "` + _t("telephone receiver") + `",
     "shortcodes": [
         ":telephone_receiver:"
     ]
@@ -16117,9 +16117,9 @@ const emojisData7 = `{
     "codepoints": "📟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pager") + `"
+        "` + _t("pager") + `"
     ],
-    "name": "` + _lt("pager") + `",
+    "name": "` + _t("pager") + `",
     "shortcodes": [
         ":pager:"
     ]
@@ -16129,10 +16129,10 @@ const emojisData7 = `{
     "codepoints": "📠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fax") + `",
-        "` + _lt("fax machine") + `"
+        "` + _t("fax") + `",
+        "` + _t("fax machine") + `"
     ],
-    "name": "` + _lt("fax machine") + `",
+    "name": "` + _t("fax machine") + `",
     "shortcodes": [
         ":fax_machine:"
     ]
@@ -16142,9 +16142,9 @@ const emojisData7 = `{
     "codepoints": "🔋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("battery") + `"
+        "` + _t("battery") + `"
     ],
-    "name": "` + _lt("battery") + `",
+    "name": "` + _t("battery") + `",
     "shortcodes": [
         ":battery:"
     ]
@@ -16154,11 +16154,11 @@ const emojisData7 = `{
     "codepoints": "🔌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("electric") + `",
-        "` + _lt("electricity") + `",
-        "` + _lt("plug") + `"
+        "` + _t("electric") + `",
+        "` + _t("electricity") + `",
+        "` + _t("plug") + `"
     ],
-    "name": "` + _lt("electric plug") + `",
+    "name": "` + _t("electric plug") + `",
     "shortcodes": [
         ":electric_plug:"
     ]
@@ -16168,13 +16168,13 @@ const emojisData7 = `{
     "codepoints": "💻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("computer") + `",
-        "` + _lt("laptop") + `",
-        "` + _lt("PC") + `",
-        "` + _lt("personal") + `",
-        "` + _lt("pc") + `"
+        "` + _t("computer") + `",
+        "` + _t("laptop") + `",
+        "` + _t("PC") + `",
+        "` + _t("personal") + `",
+        "` + _t("pc") + `"
     ],
-    "name": "` + _lt("laptop") + `",
+    "name": "` + _t("laptop") + `",
     "shortcodes": [
         ":laptop:"
     ]
@@ -16184,10 +16184,10 @@ const emojisData7 = `{
     "codepoints": "🖥️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("computer") + `",
-        "` + _lt("desktop") + `"
+        "` + _t("computer") + `",
+        "` + _t("desktop") + `"
     ],
-    "name": "` + _lt("desktop computer") + `",
+    "name": "` + _t("desktop computer") + `",
     "shortcodes": [
         ":desktop_computer:"
     ]
@@ -16197,10 +16197,10 @@ const emojisData7 = `{
     "codepoints": "🖨️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("computer") + `",
-        "` + _lt("printer") + `"
+        "` + _t("computer") + `",
+        "` + _t("printer") + `"
     ],
-    "name": "` + _lt("printer") + `",
+    "name": "` + _t("printer") + `",
     "shortcodes": [
         ":printer:"
     ]
@@ -16210,10 +16210,10 @@ const emojisData7 = `{
     "codepoints": "⌨️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("computer") + `",
-        "` + _lt("keyboard") + `"
+        "` + _t("computer") + `",
+        "` + _t("keyboard") + `"
     ],
-    "name": "` + _lt("keyboard") + `",
+    "name": "` + _t("keyboard") + `",
     "shortcodes": [
         ":keyboard:"
     ]
@@ -16223,10 +16223,10 @@ const emojisData7 = `{
     "codepoints": "🖱️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("computer") + `",
-        "` + _lt("computer mouse") + `"
+        "` + _t("computer") + `",
+        "` + _t("computer mouse") + `"
     ],
-    "name": "` + _lt("computer mouse") + `",
+    "name": "` + _t("computer mouse") + `",
     "shortcodes": [
         ":computer_mouse:"
     ]
@@ -16236,10 +16236,10 @@ const emojisData7 = `{
     "codepoints": "🖲️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("computer") + `",
-        "` + _lt("trackball") + `"
+        "` + _t("computer") + `",
+        "` + _t("trackball") + `"
     ],
-    "name": "` + _lt("trackball") + `",
+    "name": "` + _t("trackball") + `",
     "shortcodes": [
         ":trackball:"
     ]
@@ -16249,12 +16249,12 @@ const emojisData7 = `{
     "codepoints": "💽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("computer") + `",
-        "` + _lt("disk") + `",
-        "` + _lt("minidisk") + `",
-        "` + _lt("optical") + `"
+        "` + _t("computer") + `",
+        "` + _t("disk") + `",
+        "` + _t("minidisk") + `",
+        "` + _t("optical") + `"
     ],
-    "name": "` + _lt("computer disk") + `",
+    "name": "` + _t("computer disk") + `",
     "shortcodes": [
         ":computer_disk:"
     ]
@@ -16264,12 +16264,12 @@ const emojisData7 = `{
     "codepoints": "💾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("computer") + `",
-        "` + _lt("disk") + `",
-        "` + _lt("diskette") + `",
-        "` + _lt("floppy") + `"
+        "` + _t("computer") + `",
+        "` + _t("disk") + `",
+        "` + _t("diskette") + `",
+        "` + _t("floppy") + `"
     ],
-    "name": "` + _lt("floppy disk") + `",
+    "name": "` + _t("floppy disk") + `",
     "shortcodes": [
         ":floppy_disk:"
     ]
@@ -16279,12 +16279,12 @@ const emojisData7 = `{
     "codepoints": "💿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("CD") + `",
-        "` + _lt("computer") + `",
-        "` + _lt("disk") + `",
-        "` + _lt("optical") + `"
+        "` + _t("CD") + `",
+        "` + _t("computer") + `",
+        "` + _t("disk") + `",
+        "` + _t("optical") + `"
     ],
-    "name": "` + _lt("optical disk") + `",
+    "name": "` + _t("optical disk") + `",
     "shortcodes": [
         ":optical_disk:"
     ]
@@ -16294,15 +16294,15 @@ const emojisData7 = `{
     "codepoints": "📀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blu-ray") + `",
-        "` + _lt("computer") + `",
-        "` + _lt("disk") + `",
-        "` + _lt("dvd") + `",
-        "` + _lt("DVD") + `",
-        "` + _lt("optical") + `",
-        "` + _lt("Blu-ray") + `"
+        "` + _t("blu-ray") + `",
+        "` + _t("computer") + `",
+        "` + _t("disk") + `",
+        "` + _t("dvd") + `",
+        "` + _t("DVD") + `",
+        "` + _t("optical") + `",
+        "` + _t("Blu-ray") + `"
     ],
-    "name": "` + _lt("dvd") + `",
+    "name": "` + _t("dvd") + `",
     "shortcodes": [
         ":dvd:"
     ]
@@ -16312,10 +16312,10 @@ const emojisData7 = `{
     "codepoints": "🧮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("abacus") + `",
-        "` + _lt("calculation") + `"
+        "` + _t("abacus") + `",
+        "` + _t("calculation") + `"
     ],
-    "name": "` + _lt("abacus") + `",
+    "name": "` + _t("abacus") + `",
     "shortcodes": [
         ":abacus:"
     ]
@@ -16325,11 +16325,11 @@ const emojisData7 = `{
     "codepoints": "🎥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("camera") + `",
-        "` + _lt("cinema") + `",
-        "` + _lt("movie") + `"
+        "` + _t("camera") + `",
+        "` + _t("cinema") + `",
+        "` + _t("movie") + `"
     ],
-    "name": "` + _lt("movie camera") + `",
+    "name": "` + _t("movie camera") + `",
     "shortcodes": [
         ":movie_camera:"
     ]
@@ -16339,12 +16339,12 @@ const emojisData7 = `{
     "codepoints": "🎞️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cinema") + `",
-        "` + _lt("film") + `",
-        "` + _lt("frames") + `",
-        "` + _lt("movie") + `"
+        "` + _t("cinema") + `",
+        "` + _t("film") + `",
+        "` + _t("frames") + `",
+        "` + _t("movie") + `"
     ],
-    "name": "` + _lt("film frames") + `",
+    "name": "` + _t("film frames") + `",
     "shortcodes": [
         ":film_frames:"
     ]
@@ -16354,13 +16354,13 @@ const emojisData7 = `{
     "codepoints": "📽️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cinema") + `",
-        "` + _lt("film") + `",
-        "` + _lt("movie") + `",
-        "` + _lt("projector") + `",
-        "` + _lt("video") + `"
+        "` + _t("cinema") + `",
+        "` + _t("film") + `",
+        "` + _t("movie") + `",
+        "` + _t("projector") + `",
+        "` + _t("video") + `"
     ],
-    "name": "` + _lt("film projector") + `",
+    "name": "` + _t("film projector") + `",
     "shortcodes": [
         ":film_projector:"
     ]
@@ -16372,13 +16372,13 @@ const emojisData7 = `{
         ":clapper"
     ],
     "keywords": [
-        "` + _lt("clapper") + `",
-        "` + _lt("clapper board") + `",
-        "` + _lt("clapperboard") + `",
-        "` + _lt("film") + `",
-        "` + _lt("movie") + `"
+        "` + _t("clapper") + `",
+        "` + _t("clapper board") + `",
+        "` + _t("clapperboard") + `",
+        "` + _t("film") + `",
+        "` + _t("movie") + `"
     ],
-    "name": "` + _lt("clapper board") + `",
+    "name": "` + _t("clapper board") + `",
     "shortcodes": [
         ":clapper_board:"
     ]
@@ -16388,12 +16388,12 @@ const emojisData7 = `{
     "codepoints": "📺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("television") + `",
-        "` + _lt("TV") + `",
-        "` + _lt("video") + `",
-        "` + _lt("tv") + `"
+        "` + _t("television") + `",
+        "` + _t("TV") + `",
+        "` + _t("video") + `",
+        "` + _t("tv") + `"
     ],
-    "name": "` + _lt("television") + `",
+    "name": "` + _t("television") + `",
     "shortcodes": [
         ":television:"
     ]
@@ -16403,10 +16403,10 @@ const emojisData7 = `{
     "codepoints": "📷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("camera") + `",
-        "` + _lt("video") + `"
+        "` + _t("camera") + `",
+        "` + _t("video") + `"
     ],
-    "name": "` + _lt("camera") + `",
+    "name": "` + _t("camera") + `",
     "shortcodes": [
         ":camera:"
     ]
@@ -16416,12 +16416,12 @@ const emojisData7 = `{
     "codepoints": "📸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("camera") + `",
-        "` + _lt("camera with flash") + `",
-        "` + _lt("flash") + `",
-        "` + _lt("video") + `"
+        "` + _t("camera") + `",
+        "` + _t("camera with flash") + `",
+        "` + _t("flash") + `",
+        "` + _t("video") + `"
     ],
-    "name": "` + _lt("camera with flash") + `",
+    "name": "` + _t("camera with flash") + `",
     "shortcodes": [
         ":camera_with_flash:"
     ]
@@ -16431,10 +16431,10 @@ const emojisData7 = `{
     "codepoints": "📹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("camera") + `",
-        "` + _lt("video") + `"
+        "` + _t("camera") + `",
+        "` + _t("video") + `"
     ],
-    "name": "` + _lt("video camera") + `",
+    "name": "` + _t("video camera") + `",
     "shortcodes": [
         ":video_camera:"
     ]
@@ -16444,13 +16444,13 @@ const emojisData7 = `{
     "codepoints": "📼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("tape") + `",
-        "` + _lt("VHS") + `",
-        "` + _lt("video") + `",
-        "` + _lt("videocassette") + `",
-        "` + _lt("vhs") + `"
+        "` + _t("tape") + `",
+        "` + _t("VHS") + `",
+        "` + _t("video") + `",
+        "` + _t("videocassette") + `",
+        "` + _t("vhs") + `"
     ],
-    "name": "` + _lt("videocassette") + `",
+    "name": "` + _t("videocassette") + `",
     "shortcodes": [
         ":videocassette:"
     ]
@@ -16460,13 +16460,13 @@ const emojisData7 = `{
     "codepoints": "🔍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("glass") + `",
-        "` + _lt("magnifying") + `",
-        "` + _lt("magnifying glass tilted left") + `",
-        "` + _lt("search") + `",
-        "` + _lt("tool") + `"
+        "` + _t("glass") + `",
+        "` + _t("magnifying") + `",
+        "` + _t("magnifying glass tilted left") + `",
+        "` + _t("search") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("magnifying glass tilted left") + `",
+    "name": "` + _t("magnifying glass tilted left") + `",
     "shortcodes": [
         ":magnifying_glass_ltilted_left:"
     ]
@@ -16476,13 +16476,13 @@ const emojisData7 = `{
     "codepoints": "🔎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("glass") + `",
-        "` + _lt("magnifying") + `",
-        "` + _lt("magnifying glass tilted right") + `",
-        "` + _lt("search") + `",
-        "` + _lt("tool") + `"
+        "` + _t("glass") + `",
+        "` + _t("magnifying") + `",
+        "` + _t("magnifying glass tilted right") + `",
+        "` + _t("search") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("magnifying glass tilted right") + `",
+    "name": "` + _t("magnifying glass tilted right") + `",
     "shortcodes": [
         ":magnifying_glass_ltilted_right:"
     ]
@@ -16492,10 +16492,10 @@ const emojisData7 = `{
     "codepoints": "🕯️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("candle") + `",
-        "` + _lt("light") + `"
+        "` + _t("candle") + `",
+        "` + _t("light") + `"
     ],
-    "name": "` + _lt("candle") + `",
+    "name": "` + _t("candle") + `",
     "shortcodes": [
         ":candle:"
     ]
@@ -16505,14 +16505,14 @@ const emojisData7 = `{
     "codepoints": "💡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bulb") + `",
-        "` + _lt("comic") + `",
-        "` + _lt("electric") + `",
-        "` + _lt("globe") + `",
-        "` + _lt("idea") + `",
-        "` + _lt("light") + `"
+        "` + _t("bulb") + `",
+        "` + _t("comic") + `",
+        "` + _t("electric") + `",
+        "` + _t("globe") + `",
+        "` + _t("idea") + `",
+        "` + _t("light") + `"
     ],
-    "name": "` + _lt("light bulb") + `",
+    "name": "` + _t("light bulb") + `",
     "shortcodes": [
         ":light_bulb:"
     ]
@@ -16522,13 +16522,13 @@ const emojisData7 = `{
     "codepoints": "🔦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("electric") + `",
-        "` + _lt("flashlight") + `",
-        "` + _lt("light") + `",
-        "` + _lt("tool") + `",
-        "` + _lt("torch") + `"
+        "` + _t("electric") + `",
+        "` + _t("flashlight") + `",
+        "` + _t("light") + `",
+        "` + _t("tool") + `",
+        "` + _t("torch") + `"
     ],
-    "name": "` + _lt("flashlight") + `",
+    "name": "` + _t("flashlight") + `",
     "shortcodes": [
         ":flashlight:"
     ]
@@ -16538,13 +16538,13 @@ const emojisData7 = `{
     "codepoints": "🏮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("lantern") + `",
-        "` + _lt("light") + `",
-        "` + _lt("red") + `",
-        "` + _lt("red paper lantern") + `"
+        "` + _t("bar") + `",
+        "` + _t("lantern") + `",
+        "` + _t("light") + `",
+        "` + _t("red") + `",
+        "` + _t("red paper lantern") + `"
     ],
-    "name": "` + _lt("red paper lantern") + `",
+    "name": "` + _t("red paper lantern") + `",
     "shortcodes": [
         ":red_paper_lantern:"
     ]
@@ -16554,11 +16554,11 @@ const emojisData7 = `{
     "codepoints": "🪔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("diya") + `",
-        "` + _lt("lamp") + `",
-        "` + _lt("oil") + `"
+        "` + _t("diya") + `",
+        "` + _t("lamp") + `",
+        "` + _t("oil") + `"
     ],
-    "name": "` + _lt("diya lamp") + `",
+    "name": "` + _t("diya lamp") + `",
     "shortcodes": [
         ":diya_lamp:"
     ]
@@ -16568,13 +16568,13 @@ const emojisData7 = `{
     "codepoints": "📔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("book") + `",
-        "` + _lt("cover") + `",
-        "` + _lt("decorated") + `",
-        "` + _lt("notebook") + `",
-        "` + _lt("notebook with decorative cover") + `"
+        "` + _t("book") + `",
+        "` + _t("cover") + `",
+        "` + _t("decorated") + `",
+        "` + _t("notebook") + `",
+        "` + _t("notebook with decorative cover") + `"
     ],
-    "name": "` + _lt("notebook with decorative cover") + `",
+    "name": "` + _t("notebook with decorative cover") + `",
     "shortcodes": [
         ":notebook_with_decorative_cover:"
     ]
@@ -16584,10 +16584,10 @@ const emojisData7 = `{
     "codepoints": "📕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("book") + `",
-        "` + _lt("closed") + `"
+        "` + _t("book") + `",
+        "` + _t("closed") + `"
     ],
-    "name": "` + _lt("closed book") + `",
+    "name": "` + _t("closed book") + `",
     "shortcodes": [
         ":closed_book:"
     ]
@@ -16597,10 +16597,10 @@ const emojisData7 = `{
     "codepoints": "📖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("book") + `",
-        "` + _lt("open") + `"
+        "` + _t("book") + `",
+        "` + _t("open") + `"
     ],
-    "name": "` + _lt("open book") + `",
+    "name": "` + _t("open book") + `",
     "shortcodes": [
         ":open_book:"
     ]
@@ -16610,10 +16610,10 @@ const emojisData7 = `{
     "codepoints": "📗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("book") + `",
-        "` + _lt("green") + `"
+        "` + _t("book") + `",
+        "` + _t("green") + `"
     ],
-    "name": "` + _lt("green book") + `",
+    "name": "` + _t("green book") + `",
     "shortcodes": [
         ":green_book:"
     ]
@@ -16623,10 +16623,10 @@ const emojisData7 = `{
     "codepoints": "📘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blue") + `",
-        "` + _lt("book") + `"
+        "` + _t("blue") + `",
+        "` + _t("book") + `"
     ],
-    "name": "` + _lt("blue book") + `",
+    "name": "` + _t("blue book") + `",
     "shortcodes": [
         ":blue_book:"
     ]
@@ -16636,10 +16636,10 @@ const emojisData7 = `{
     "codepoints": "📙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("book") + `",
-        "` + _lt("orange") + `"
+        "` + _t("book") + `",
+        "` + _t("orange") + `"
     ],
-    "name": "` + _lt("orange book") + `",
+    "name": "` + _t("orange book") + `",
     "shortcodes": [
         ":orange_book:"
     ]
@@ -16649,10 +16649,10 @@ const emojisData7 = `{
     "codepoints": "📚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("book") + `",
-        "` + _lt("books") + `"
+        "` + _t("book") + `",
+        "` + _t("books") + `"
     ],
-    "name": "` + _lt("books") + `",
+    "name": "` + _t("books") + `",
     "shortcodes": [
         ":books:"
     ]
@@ -16662,9 +16662,9 @@ const emojisData7 = `{
     "codepoints": "📓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("notebook") + `"
+        "` + _t("notebook") + `"
     ],
-    "name": "` + _lt("notebook") + `",
+    "name": "` + _t("notebook") + `",
     "shortcodes": [
         ":notebook:"
     ]
@@ -16674,10 +16674,10 @@ const emojisData7 = `{
     "codepoints": "📒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ledger") + `",
-        "` + _lt("notebook") + `"
+        "` + _t("ledger") + `",
+        "` + _t("notebook") + `"
     ],
-    "name": "` + _lt("ledger") + `",
+    "name": "` + _t("ledger") + `",
     "shortcodes": [
         ":ledger:"
     ]
@@ -16687,12 +16687,12 @@ const emojisData7 = `{
     "codepoints": "📃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("curl") + `",
-        "` + _lt("document") + `",
-        "` + _lt("page") + `",
-        "` + _lt("page with curl") + `"
+        "` + _t("curl") + `",
+        "` + _t("document") + `",
+        "` + _t("page") + `",
+        "` + _t("page with curl") + `"
     ],
-    "name": "` + _lt("page with curl") + `",
+    "name": "` + _t("page with curl") + `",
     "shortcodes": [
         ":page_with_curl:"
     ]
@@ -16702,10 +16702,10 @@ const emojisData7 = `{
     "codepoints": "📜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("paper") + `",
-        "` + _lt("scroll") + `"
+        "` + _t("paper") + `",
+        "` + _t("scroll") + `"
     ],
-    "name": "` + _lt("scroll") + `",
+    "name": "` + _t("scroll") + `",
     "shortcodes": [
         ":scroll:"
     ]
@@ -16715,11 +16715,11 @@ const emojisData7 = `{
     "codepoints": "📄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("document") + `",
-        "` + _lt("page") + `",
-        "` + _lt("page facing up") + `"
+        "` + _t("document") + `",
+        "` + _t("page") + `",
+        "` + _t("page facing up") + `"
     ],
-    "name": "` + _lt("page facing up") + `",
+    "name": "` + _t("page facing up") + `",
     "shortcodes": [
         ":page_facing_up:"
     ]
@@ -16729,11 +16729,11 @@ const emojisData7 = `{
     "codepoints": "📰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("news") + `",
-        "` + _lt("newspaper") + `",
-        "` + _lt("paper") + `"
+        "` + _t("news") + `",
+        "` + _t("newspaper") + `",
+        "` + _t("paper") + `"
     ],
-    "name": "` + _lt("newspaper") + `",
+    "name": "` + _t("newspaper") + `",
     "shortcodes": [
         ":newspaper:"
     ]
@@ -16743,13 +16743,13 @@ const emojisData7 = `{
     "codepoints": "🗞️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("news") + `",
-        "` + _lt("newspaper") + `",
-        "` + _lt("paper") + `",
-        "` + _lt("rolled") + `",
-        "` + _lt("rolled-up newspaper") + `"
+        "` + _t("news") + `",
+        "` + _t("newspaper") + `",
+        "` + _t("paper") + `",
+        "` + _t("rolled") + `",
+        "` + _t("rolled-up newspaper") + `"
     ],
-    "name": "` + _lt("rolled-up newspaper") + `",
+    "name": "` + _t("rolled-up newspaper") + `",
     "shortcodes": [
         ":rolled-up_newspaper:"
     ]
@@ -16759,12 +16759,12 @@ const emojisData7 = `{
     "codepoints": "📑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bookmark") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("marker") + `",
-        "` + _lt("tabs") + `"
+        "` + _t("bookmark") + `",
+        "` + _t("mark") + `",
+        "` + _t("marker") + `",
+        "` + _t("tabs") + `"
     ],
-    "name": "` + _lt("bookmark tabs") + `",
+    "name": "` + _t("bookmark tabs") + `",
     "shortcodes": [
         ":bookmark_ltabs:"
     ]
@@ -16774,10 +16774,10 @@ const emojisData7 = `{
     "codepoints": "🔖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bookmark") + `",
-        "` + _lt("mark") + `"
+        "` + _t("bookmark") + `",
+        "` + _t("mark") + `"
     ],
-    "name": "` + _lt("bookmark") + `",
+    "name": "` + _t("bookmark") + `",
     "shortcodes": [
         ":bookmark:"
     ]
@@ -16787,9 +16787,9 @@ const emojisData7 = `{
     "codepoints": "🏷️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("label") + `"
+        "` + _t("label") + `"
     ],
-    "name": "` + _lt("label") + `",
+    "name": "` + _t("label") + `",
     "shortcodes": [
         ":label:"
     ]
@@ -16799,12 +16799,12 @@ const emojisData7 = `{
     "codepoints": "💰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bag") + `",
-        "` + _lt("dollar") + `",
-        "` + _lt("money") + `",
-        "` + _lt("moneybag") + `"
+        "` + _t("bag") + `",
+        "` + _t("dollar") + `",
+        "` + _t("money") + `",
+        "` + _t("moneybag") + `"
     ],
-    "name": "` + _lt("money bag") + `",
+    "name": "` + _t("money bag") + `",
     "shortcodes": [
         ":money_bag:"
     ]
@@ -16814,14 +16814,14 @@ const emojisData7 = `{
     "codepoints": "💴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("banknote") + `",
-        "` + _lt("bill") + `",
-        "` + _lt("currency") + `",
-        "` + _lt("money") + `",
-        "` + _lt("note") + `",
-        "` + _lt("yen") + `"
+        "` + _t("banknote") + `",
+        "` + _t("bill") + `",
+        "` + _t("currency") + `",
+        "` + _t("money") + `",
+        "` + _t("note") + `",
+        "` + _t("yen") + `"
     ],
-    "name": "` + _lt("yen banknote") + `",
+    "name": "` + _t("yen banknote") + `",
     "shortcodes": [
         ":yen_banknote:"
     ]
@@ -16831,14 +16831,14 @@ const emojisData7 = `{
     "codepoints": "💵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("banknote") + `",
-        "` + _lt("bill") + `",
-        "` + _lt("currency") + `",
-        "` + _lt("dollar") + `",
-        "` + _lt("money") + `",
-        "` + _lt("note") + `"
+        "` + _t("banknote") + `",
+        "` + _t("bill") + `",
+        "` + _t("currency") + `",
+        "` + _t("dollar") + `",
+        "` + _t("money") + `",
+        "` + _t("note") + `"
     ],
-    "name": "` + _lt("dollar banknote") + `",
+    "name": "` + _t("dollar banknote") + `",
     "shortcodes": [
         ":dollar_banknote:"
     ]
@@ -16848,14 +16848,14 @@ const emojisData7 = `{
     "codepoints": "💶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("banknote") + `",
-        "` + _lt("bill") + `",
-        "` + _lt("currency") + `",
-        "` + _lt("euro") + `",
-        "` + _lt("money") + `",
-        "` + _lt("note") + `"
+        "` + _t("banknote") + `",
+        "` + _t("bill") + `",
+        "` + _t("currency") + `",
+        "` + _t("euro") + `",
+        "` + _t("money") + `",
+        "` + _t("note") + `"
     ],
-    "name": "` + _lt("euro banknote") + `",
+    "name": "` + _t("euro banknote") + `",
     "shortcodes": [
         ":euro_banknote:"
     ]
@@ -16865,15 +16865,15 @@ const emojisData7 = `{
     "codepoints": "💷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("banknote") + `",
-        "` + _lt("bill") + `",
-        "` + _lt("currency") + `",
-        "` + _lt("money") + `",
-        "` + _lt("note") + `",
-        "` + _lt("pound") + `",
-        "` + _lt("sterling") + `"
+        "` + _t("banknote") + `",
+        "` + _t("bill") + `",
+        "` + _t("currency") + `",
+        "` + _t("money") + `",
+        "` + _t("note") + `",
+        "` + _t("pound") + `",
+        "` + _t("sterling") + `"
     ],
-    "name": "` + _lt("pound banknote") + `",
+    "name": "` + _t("pound banknote") + `",
     "shortcodes": [
         ":pound_banknote:"
     ]
@@ -16883,14 +16883,14 @@ const emojisData7 = `{
     "codepoints": "💸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("banknote") + `",
-        "` + _lt("bill") + `",
-        "` + _lt("fly") + `",
-        "` + _lt("money") + `",
-        "` + _lt("money with wings") + `",
-        "` + _lt("wings") + `"
+        "` + _t("banknote") + `",
+        "` + _t("bill") + `",
+        "` + _t("fly") + `",
+        "` + _t("money") + `",
+        "` + _t("money with wings") + `",
+        "` + _t("wings") + `"
     ],
-    "name": "` + _lt("money with wings") + `",
+    "name": "` + _t("money with wings") + `",
     "shortcodes": [
         ":money_with_wings:"
     ]
@@ -16900,11 +16900,11 @@ const emojisData7 = `{
     "codepoints": "💳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("card") + `",
-        "` + _lt("credit") + `",
-        "` + _lt("money") + `"
+        "` + _t("card") + `",
+        "` + _t("credit") + `",
+        "` + _t("money") + `"
     ],
-    "name": "` + _lt("credit card") + `",
+    "name": "` + _t("credit card") + `",
     "shortcodes": [
         ":credit_card:"
     ]
@@ -16914,13 +16914,13 @@ const emojisData7 = `{
     "codepoints": "🧾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accounting") + `",
-        "` + _lt("bookkeeping") + `",
-        "` + _lt("evidence") + `",
-        "` + _lt("proof") + `",
-        "` + _lt("receipt") + `"
+        "` + _t("accounting") + `",
+        "` + _t("bookkeeping") + `",
+        "` + _t("evidence") + `",
+        "` + _t("proof") + `",
+        "` + _t("receipt") + `"
     ],
-    "name": "` + _lt("receipt") + `",
+    "name": "` + _t("receipt") + `",
     "shortcodes": [
         ":receipt:"
     ]
@@ -16930,15 +16930,15 @@ const emojisData7 = `{
     "codepoints": "💹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chart") + `",
-        "` + _lt("chart increasing with yen") + `",
-        "` + _lt("graph") + `",
-        "` + _lt("graph increasing with yen") + `",
-        "` + _lt("growth") + `",
-        "` + _lt("money") + `",
-        "` + _lt("yen") + `"
+        "` + _t("chart") + `",
+        "` + _t("chart increasing with yen") + `",
+        "` + _t("graph") + `",
+        "` + _t("graph increasing with yen") + `",
+        "` + _t("growth") + `",
+        "` + _t("money") + `",
+        "` + _t("yen") + `"
     ],
-    "name": "` + _lt("chart increasing with yen") + `",
+    "name": "` + _t("chart increasing with yen") + `",
     "shortcodes": [
         ":chart_increasing_with_yen:"
     ]
@@ -16948,12 +16948,12 @@ const emojisData7 = `{
     "codepoints": "✉️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("email") + `",
-        "` + _lt("envelope") + `",
-        "` + _lt("letter") + `",
-        "` + _lt("e-mail") + `"
+        "` + _t("email") + `",
+        "` + _t("envelope") + `",
+        "` + _t("letter") + `",
+        "` + _t("e-mail") + `"
     ],
-    "name": "` + _lt("envelope") + `",
+    "name": "` + _t("envelope") + `",
     "shortcodes": [
         ":envelope:"
     ]
@@ -16963,12 +16963,12 @@ const emojisData7 = `{
     "codepoints": "📧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("e-mail") + `",
-        "` + _lt("email") + `",
-        "` + _lt("letter") + `",
-        "` + _lt("mail") + `"
+        "` + _t("e-mail") + `",
+        "` + _t("email") + `",
+        "` + _t("letter") + `",
+        "` + _t("mail") + `"
     ],
-    "name": "` + _lt("e-mail") + `",
+    "name": "` + _t("e-mail") + `",
     "shortcodes": [
         ":e-mail:"
     ]
@@ -16978,14 +16978,14 @@ const emojisData7 = `{
     "codepoints": "📨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("e-mail") + `",
-        "` + _lt("email") + `",
-        "` + _lt("envelope") + `",
-        "` + _lt("incoming") + `",
-        "` + _lt("letter") + `",
-        "` + _lt("receive") + `"
+        "` + _t("e-mail") + `",
+        "` + _t("email") + `",
+        "` + _t("envelope") + `",
+        "` + _t("incoming") + `",
+        "` + _t("letter") + `",
+        "` + _t("receive") + `"
     ],
-    "name": "` + _lt("incoming envelope") + `",
+    "name": "` + _t("incoming envelope") + `",
     "shortcodes": [
         ":incoming_envelope:"
     ]
@@ -16995,14 +16995,14 @@ const emojisData7 = `{
     "codepoints": "📩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("e-mail") + `",
-        "` + _lt("email") + `",
-        "` + _lt("envelope") + `",
-        "` + _lt("envelope with arrow") + `",
-        "` + _lt("outgoing") + `"
+        "` + _t("arrow") + `",
+        "` + _t("e-mail") + `",
+        "` + _t("email") + `",
+        "` + _t("envelope") + `",
+        "` + _t("envelope with arrow") + `",
+        "` + _t("outgoing") + `"
     ],
-    "name": "` + _lt("envelope with arrow") + `",
+    "name": "` + _t("envelope with arrow") + `",
     "shortcodes": [
         ":envelope_with_arrow:"
     ]
@@ -17012,15 +17012,15 @@ const emojisData7 = `{
     "codepoints": "📤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("box") + `",
-        "` + _lt("letter") + `",
-        "` + _lt("mail") + `",
-        "` + _lt("out tray") + `",
-        "` + _lt("outbox") + `",
-        "` + _lt("sent") + `",
-        "` + _lt("tray") + `"
+        "` + _t("box") + `",
+        "` + _t("letter") + `",
+        "` + _t("mail") + `",
+        "` + _t("out tray") + `",
+        "` + _t("outbox") + `",
+        "` + _t("sent") + `",
+        "` + _t("tray") + `"
     ],
-    "name": "` + _lt("outbox tray") + `",
+    "name": "` + _t("outbox tray") + `",
     "shortcodes": [
         ":outbox_ltray:"
     ]
@@ -17030,15 +17030,15 @@ const emojisData7 = `{
     "codepoints": "📥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("box") + `",
-        "` + _lt("in tray") + `",
-        "` + _lt("inbox") + `",
-        "` + _lt("letter") + `",
-        "` + _lt("mail") + `",
-        "` + _lt("receive") + `",
-        "` + _lt("tray") + `"
+        "` + _t("box") + `",
+        "` + _t("in tray") + `",
+        "` + _t("inbox") + `",
+        "` + _t("letter") + `",
+        "` + _t("mail") + `",
+        "` + _t("receive") + `",
+        "` + _t("tray") + `"
     ],
-    "name": "` + _lt("inbox tray") + `",
+    "name": "` + _t("inbox tray") + `",
     "shortcodes": [
         ":inbox_ltray:"
     ]
@@ -17048,11 +17048,11 @@ const emojisData7 = `{
     "codepoints": "📦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("box") + `",
-        "` + _lt("package") + `",
-        "` + _lt("parcel") + `"
+        "` + _t("box") + `",
+        "` + _t("package") + `",
+        "` + _t("parcel") + `"
     ],
-    "name": "` + _lt("package") + `",
+    "name": "` + _t("package") + `",
     "shortcodes": [
         ":package:"
     ]
@@ -17062,18 +17062,18 @@ const emojisData7 = `{
     "codepoints": "📫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("closed") + `",
-        "` + _lt("closed letterbox with raised flag") + `",
-        "` + _lt("mail") + `",
-        "` + _lt("mailbox") + `",
-        "` + _lt("postbox") + `",
-        "` + _lt("closed mailbox with raised flag") + `",
-        "` + _lt("closed postbox with raised flag") + `",
-        "` + _lt("letterbox") + `",
-        "` + _lt("post") + `",
-        "` + _lt("post box") + `"
+        "` + _t("closed") + `",
+        "` + _t("closed letterbox with raised flag") + `",
+        "` + _t("mail") + `",
+        "` + _t("mailbox") + `",
+        "` + _t("postbox") + `",
+        "` + _t("closed mailbox with raised flag") + `",
+        "` + _t("closed postbox with raised flag") + `",
+        "` + _t("letterbox") + `",
+        "` + _t("post") + `",
+        "` + _t("post box") + `"
     ],
-    "name": "` + _lt("closed mailbox with raised flag") + `",
+    "name": "` + _t("closed mailbox with raised flag") + `",
     "shortcodes": [
         ":closed_mailbox_with_raised_flag:"
     ]
@@ -17083,19 +17083,19 @@ const emojisData7 = `{
     "codepoints": "📪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("closed") + `",
-        "` + _lt("closed letterbox with lowered flag") + `",
-        "` + _lt("lowered") + `",
-        "` + _lt("mail") + `",
-        "` + _lt("mailbox") + `",
-        "` + _lt("postbox") + `",
-        "` + _lt("closed mailbox with lowered flag") + `",
-        "` + _lt("closed postbox with lowered flag") + `",
-        "` + _lt("letterbox") + `",
-        "` + _lt("post box") + `",
-        "` + _lt("post") + `"
+        "` + _t("closed") + `",
+        "` + _t("closed letterbox with lowered flag") + `",
+        "` + _t("lowered") + `",
+        "` + _t("mail") + `",
+        "` + _t("mailbox") + `",
+        "` + _t("postbox") + `",
+        "` + _t("closed mailbox with lowered flag") + `",
+        "` + _t("closed postbox with lowered flag") + `",
+        "` + _t("letterbox") + `",
+        "` + _t("post box") + `",
+        "` + _t("post") + `"
     ],
-    "name": "` + _lt("closed mailbox with lowered flag") + `",
+    "name": "` + _t("closed mailbox with lowered flag") + `",
     "shortcodes": [
         ":closed_mailbox_with_lowered_flag:"
     ]
@@ -17105,17 +17105,17 @@ const emojisData7 = `{
     "codepoints": "📬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mail") + `",
-        "` + _lt("mailbox") + `",
-        "` + _lt("open") + `",
-        "` + _lt("open letterbox with raised flag") + `",
-        "` + _lt("postbox") + `",
-        "` + _lt("open mailbox with raised flag") + `",
-        "` + _lt("open postbox with raised flag") + `",
-        "` + _lt("post") + `",
-        "` + _lt("post box") + `"
+        "` + _t("mail") + `",
+        "` + _t("mailbox") + `",
+        "` + _t("open") + `",
+        "` + _t("open letterbox with raised flag") + `",
+        "` + _t("postbox") + `",
+        "` + _t("open mailbox with raised flag") + `",
+        "` + _t("open postbox with raised flag") + `",
+        "` + _t("post") + `",
+        "` + _t("post box") + `"
     ],
-    "name": "` + _lt("open mailbox with raised flag") + `",
+    "name": "` + _t("open mailbox with raised flag") + `",
     "shortcodes": [
         ":open_mailbox_with_raised_flag:"
     ]
@@ -17125,18 +17125,18 @@ const emojisData7 = `{
     "codepoints": "📭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("lowered") + `",
-        "` + _lt("mail") + `",
-        "` + _lt("mailbox") + `",
-        "` + _lt("open") + `",
-        "` + _lt("open letterbox with lowered flag") + `",
-        "` + _lt("postbox") + `",
-        "` + _lt("open mailbox with lowered flag") + `",
-        "` + _lt("open postbox with lowered flag") + `",
-        "` + _lt("post") + `",
-        "` + _lt("post box") + `"
+        "` + _t("lowered") + `",
+        "` + _t("mail") + `",
+        "` + _t("mailbox") + `",
+        "` + _t("open") + `",
+        "` + _t("open letterbox with lowered flag") + `",
+        "` + _t("postbox") + `",
+        "` + _t("open mailbox with lowered flag") + `",
+        "` + _t("open postbox with lowered flag") + `",
+        "` + _t("post") + `",
+        "` + _t("post box") + `"
     ],
-    "name": "` + _lt("open mailbox with lowered flag") + `",
+    "name": "` + _t("open mailbox with lowered flag") + `",
     "shortcodes": [
         ":open_mailbox_with_lowered_flag:"
     ]
@@ -17146,13 +17146,13 @@ const emojisData7 = `{
     "codepoints": "📮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mail") + `",
-        "` + _lt("mailbox") + `",
-        "` + _lt("postbox") + `",
-        "` + _lt("post") + `",
-        "` + _lt("post box") + `"
+        "` + _t("mail") + `",
+        "` + _t("mailbox") + `",
+        "` + _t("postbox") + `",
+        "` + _t("post") + `",
+        "` + _t("post box") + `"
     ],
-    "name": "` + _lt("postbox") + `",
+    "name": "` + _t("postbox") + `",
     "shortcodes": [
         ":postbox:"
     ]
@@ -17162,11 +17162,11 @@ const emojisData7 = `{
     "codepoints": "🗳️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ballot") + `",
-        "` + _lt("ballot box with ballot") + `",
-        "` + _lt("box") + `"
+        "` + _t("ballot") + `",
+        "` + _t("ballot box with ballot") + `",
+        "` + _t("box") + `"
     ],
-    "name": "` + _lt("ballot box with ballot") + `",
+    "name": "` + _t("ballot box with ballot") + `",
     "shortcodes": [
         ":ballot_box_with_ballot:"
     ]
@@ -17176,9 +17176,9 @@ const emojisData7 = `{
     "codepoints": "✏️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pencil") + `"
+        "` + _t("pencil") + `"
     ],
-    "name": "` + _lt("pencil") + `",
+    "name": "` + _t("pencil") + `",
     "shortcodes": [
         ":pencil:"
     ]
@@ -17188,11 +17188,11 @@ const emojisData7 = `{
     "codepoints": "✒️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("black nib") + `",
-        "` + _lt("nib") + `",
-        "` + _lt("pen") + `"
+        "` + _t("black nib") + `",
+        "` + _t("nib") + `",
+        "` + _t("pen") + `"
     ],
-    "name": "` + _lt("black nib") + `",
+    "name": "` + _t("black nib") + `",
     "shortcodes": [
         ":black_nib:"
     ]
@@ -17202,10 +17202,10 @@ const emojisData7 = `{
     "codepoints": "🖋️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fountain") + `",
-        "` + _lt("pen") + `"
+        "` + _t("fountain") + `",
+        "` + _t("pen") + `"
     ],
-    "name": "` + _lt("fountain pen") + `",
+    "name": "` + _t("fountain pen") + `",
     "shortcodes": [
         ":fountain_pen:"
     ]
@@ -17215,10 +17215,10 @@ const emojisData7 = `{
     "codepoints": "🖊️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ballpoint") + `",
-        "` + _lt("pen") + `"
+        "` + _t("ballpoint") + `",
+        "` + _t("pen") + `"
     ],
-    "name": "` + _lt("pen") + `",
+    "name": "` + _t("pen") + `",
     "shortcodes": [
         ":pen:"
     ]
@@ -17228,10 +17228,10 @@ const emojisData7 = `{
     "codepoints": "🖌️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("paintbrush") + `",
-        "` + _lt("painting") + `"
+        "` + _t("paintbrush") + `",
+        "` + _t("painting") + `"
     ],
-    "name": "` + _lt("paintbrush") + `",
+    "name": "` + _t("paintbrush") + `",
     "shortcodes": [
         ":paintbrush:"
     ]
@@ -17241,9 +17241,9 @@ const emojisData7 = `{
     "codepoints": "🖍️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("crayon") + `"
+        "` + _t("crayon") + `"
     ],
-    "name": "` + _lt("crayon") + `",
+    "name": "` + _t("crayon") + `",
     "shortcodes": [
         ":crayon:"
     ]
@@ -17253,10 +17253,10 @@ const emojisData7 = `{
     "codepoints": "📝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("memo") + `",
-        "` + _lt("pencil") + `"
+        "` + _t("memo") + `",
+        "` + _t("pencil") + `"
     ],
-    "name": "` + _lt("memo") + `",
+    "name": "` + _t("memo") + `",
     "shortcodes": [
         ":memo:"
     ]
@@ -17266,9 +17266,9 @@ const emojisData7 = `{
     "codepoints": "💼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("briefcase") + `"
+        "` + _t("briefcase") + `"
     ],
-    "name": "` + _lt("briefcase") + `",
+    "name": "` + _t("briefcase") + `",
     "shortcodes": [
         ":briefcase:"
     ]
@@ -17278,10 +17278,10 @@ const emojisData7 = `{
     "codepoints": "📁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("file") + `",
-        "` + _lt("folder") + `"
+        "` + _t("file") + `",
+        "` + _t("folder") + `"
     ],
-    "name": "` + _lt("file folder") + `",
+    "name": "` + _t("file folder") + `",
     "shortcodes": [
         ":file_folder:"
     ]
@@ -17291,11 +17291,11 @@ const emojisData7 = `{
     "codepoints": "📂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("file") + `",
-        "` + _lt("folder") + `",
-        "` + _lt("open") + `"
+        "` + _t("file") + `",
+        "` + _t("folder") + `",
+        "` + _t("open") + `"
     ],
-    "name": "` + _lt("open file folder") + `",
+    "name": "` + _t("open file folder") + `",
     "shortcodes": [
         ":open_file_folder:"
     ]
@@ -17305,11 +17305,11 @@ const emojisData7 = `{
     "codepoints": "🗂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("card") + `",
-        "` + _lt("dividers") + `",
-        "` + _lt("index") + `"
+        "` + _t("card") + `",
+        "` + _t("dividers") + `",
+        "` + _t("index") + `"
     ],
-    "name": "` + _lt("card index dividers") + `",
+    "name": "` + _t("card index dividers") + `",
     "shortcodes": [
         ":card_index_dividers:"
     ]
@@ -17319,10 +17319,10 @@ const emojisData7 = `{
     "codepoints": "📅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("calendar") + `",
-        "` + _lt("date") + `"
+        "` + _t("calendar") + `",
+        "` + _t("date") + `"
     ],
-    "name": "` + _lt("calendar") + `",
+    "name": "` + _t("calendar") + `",
     "shortcodes": [
         ":calendar:"
     ]
@@ -17332,10 +17332,10 @@ const emojisData7 = `{
     "codepoints": "📆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("calendar") + `",
-        "` + _lt("tear-off calendar") + `"
+        "` + _t("calendar") + `",
+        "` + _t("tear-off calendar") + `"
     ],
-    "name": "` + _lt("tear-off calendar") + `",
+    "name": "` + _t("tear-off calendar") + `",
     "shortcodes": [
         ":tear-off_calendar:"
     ]
@@ -17345,12 +17345,12 @@ const emojisData7 = `{
     "codepoints": "🗒️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("note") + `",
-        "` + _lt("pad") + `",
-        "` + _lt("spiral") + `",
-        "` + _lt("spiral notepad") + `"
+        "` + _t("note") + `",
+        "` + _t("pad") + `",
+        "` + _t("spiral") + `",
+        "` + _t("spiral notepad") + `"
     ],
-    "name": "` + _lt("spiral notepad") + `",
+    "name": "` + _t("spiral notepad") + `",
     "shortcodes": [
         ":spiral_notepad:"
     ]
@@ -17360,11 +17360,11 @@ const emojisData7 = `{
     "codepoints": "🗓️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("calendar") + `",
-        "` + _lt("pad") + `",
-        "` + _lt("spiral") + `"
+        "` + _t("calendar") + `",
+        "` + _t("pad") + `",
+        "` + _t("spiral") + `"
     ],
-    "name": "` + _lt("spiral calendar") + `",
+    "name": "` + _t("spiral calendar") + `",
     "shortcodes": [
         ":spiral_calendar:"
     ]
@@ -17374,11 +17374,11 @@ const emojisData7 = `{
     "codepoints": "📇",
     "emoticons": [],
     "keywords": [
-        "` + _lt("card") + `",
-        "` + _lt("index") + `",
-        "` + _lt("rolodex") + `"
+        "` + _t("card") + `",
+        "` + _t("index") + `",
+        "` + _t("rolodex") + `"
     ],
-    "name": "` + _lt("card index") + `",
+    "name": "` + _t("card index") + `",
     "shortcodes": [
         ":card_index:"
     ]
@@ -17388,15 +17388,15 @@ const emojisData7 = `{
     "codepoints": "📈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chart") + `",
-        "` + _lt("chart increasing") + `",
-        "` + _lt("graph") + `",
-        "` + _lt("graph increasing") + `",
-        "` + _lt("growth") + `",
-        "` + _lt("trend") + `",
-        "` + _lt("upward") + `"
+        "` + _t("chart") + `",
+        "` + _t("chart increasing") + `",
+        "` + _t("graph") + `",
+        "` + _t("graph increasing") + `",
+        "` + _t("growth") + `",
+        "` + _t("trend") + `",
+        "` + _t("upward") + `"
     ],
-    "name": "` + _lt("chart increasing") + `",
+    "name": "` + _t("chart increasing") + `",
     "shortcodes": [
         ":chart_increasing:"
     ]
@@ -17406,14 +17406,14 @@ const emojisData7 = `{
     "codepoints": "📉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chart") + `",
-        "` + _lt("chart decreasing") + `",
-        "` + _lt("down") + `",
-        "` + _lt("graph") + `",
-        "` + _lt("graph decreasing") + `",
-        "` + _lt("trend") + `"
+        "` + _t("chart") + `",
+        "` + _t("chart decreasing") + `",
+        "` + _t("down") + `",
+        "` + _t("graph") + `",
+        "` + _t("graph decreasing") + `",
+        "` + _t("trend") + `"
     ],
-    "name": "` + _lt("chart decreasing") + `",
+    "name": "` + _t("chart decreasing") + `",
     "shortcodes": [
         ":chart_decreasing:"
     ]
@@ -17423,11 +17423,11 @@ const emojisData7 = `{
     "codepoints": "📊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("chart") + `",
-        "` + _lt("graph") + `"
+        "` + _t("bar") + `",
+        "` + _t("chart") + `",
+        "` + _t("graph") + `"
     ],
-    "name": "` + _lt("bar chart") + `",
+    "name": "` + _t("bar chart") + `",
     "shortcodes": [
         ":bar_chart:"
     ]
@@ -17437,9 +17437,9 @@ const emojisData7 = `{
     "codepoints": "📋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clipboard") + `"
+        "` + _t("clipboard") + `"
     ],
-    "name": "` + _lt("clipboard") + `",
+    "name": "` + _t("clipboard") + `",
     "shortcodes": [
         ":clipboard:"
     ]
@@ -17451,11 +17451,11 @@ const emojisData7 = `{
         ":pin"
     ],
     "keywords": [
-        "` + _lt("drawing-pin") + `",
-        "` + _lt("pin") + `",
-        "` + _lt("pushpin") + `"
+        "` + _t("drawing-pin") + `",
+        "` + _t("pin") + `",
+        "` + _t("pushpin") + `"
     ],
-    "name": "` + _lt("pushpin") + `",
+    "name": "` + _t("pushpin") + `",
     "shortcodes": [
         ":pushpin:"
     ]
@@ -17465,12 +17465,12 @@ const emojisData7 = `{
     "codepoints": "📍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pin") + `",
-        "` + _lt("pushpin") + `",
-        "` + _lt("round drawing-pin") + `",
-        "` + _lt("round pushpin") + `"
+        "` + _t("pin") + `",
+        "` + _t("pushpin") + `",
+        "` + _t("round drawing-pin") + `",
+        "` + _t("round pushpin") + `"
     ],
-    "name": "` + _lt("round pushpin") + `",
+    "name": "` + _t("round pushpin") + `",
     "shortcodes": [
         ":round_pushpin:"
     ]
@@ -17480,9 +17480,9 @@ const emojisData7 = `{
     "codepoints": "📎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("paperclip") + `"
+        "` + _t("paperclip") + `"
     ],
-    "name": "` + _lt("paperclip") + `",
+    "name": "` + _t("paperclip") + `",
     "shortcodes": [
         ":paperclip:"
     ]
@@ -17492,11 +17492,11 @@ const emojisData7 = `{
     "codepoints": "🖇️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("link") + `",
-        "` + _lt("linked paperclips") + `",
-        "` + _lt("paperclip") + `"
+        "` + _t("link") + `",
+        "` + _t("linked paperclips") + `",
+        "` + _t("paperclip") + `"
     ],
-    "name": "` + _lt("linked paperclips") + `",
+    "name": "` + _t("linked paperclips") + `",
     "shortcodes": [
         ":linked_paperclips:"
     ]
@@ -17506,11 +17506,11 @@ const emojisData7 = `{
     "codepoints": "📏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ruler") + `",
-        "` + _lt("straight edge") + `",
-        "` + _lt("straight ruler") + `"
+        "` + _t("ruler") + `",
+        "` + _t("straight edge") + `",
+        "` + _t("straight ruler") + `"
     ],
-    "name": "` + _lt("straight ruler") + `",
+    "name": "` + _t("straight ruler") + `",
     "shortcodes": [
         ":straight_ruler:"
     ]
@@ -17520,13 +17520,13 @@ const emojisData7 = `{
     "codepoints": "📐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ruler") + `",
-        "` + _lt("set") + `",
-        "` + _lt("triangle") + `",
-        "` + _lt("triangular ruler") + `",
-        "` + _lt("set square") + `"
+        "` + _t("ruler") + `",
+        "` + _t("set") + `",
+        "` + _t("triangle") + `",
+        "` + _t("triangular ruler") + `",
+        "` + _t("set square") + `"
     ],
-    "name": "` + _lt("triangular ruler") + `",
+    "name": "` + _t("triangular ruler") + `",
     "shortcodes": [
         ":triangular_ruler:"
     ]
@@ -17536,11 +17536,11 @@ const emojisData7 = `{
     "codepoints": "✂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cutting") + `",
-        "` + _lt("scissors") + `",
-        "` + _lt("tool") + `"
+        "` + _t("cutting") + `",
+        "` + _t("scissors") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("scissors") + `",
+    "name": "` + _t("scissors") + `",
     "shortcodes": [
         ":scissors:"
     ]
@@ -17550,11 +17550,11 @@ const emojisData7 = `{
     "codepoints": "🗃️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("box") + `",
-        "` + _lt("card") + `",
-        "` + _lt("file") + `"
+        "` + _t("box") + `",
+        "` + _t("card") + `",
+        "` + _t("file") + `"
     ],
-    "name": "` + _lt("card file box") + `",
+    "name": "` + _t("card file box") + `",
     "shortcodes": [
         ":card_file_box:"
     ]
@@ -17564,11 +17564,11 @@ const emojisData7 = `{
     "codepoints": "🗄️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cabinet") + `",
-        "` + _lt("file") + `",
-        "` + _lt("filing") + `"
+        "` + _t("cabinet") + `",
+        "` + _t("file") + `",
+        "` + _t("filing") + `"
     ],
-    "name": "` + _lt("file cabinet") + `",
+    "name": "` + _t("file cabinet") + `",
     "shortcodes": [
         ":file_cabinet:"
     ]
@@ -17578,9 +17578,9 @@ const emojisData7 = `{
     "codepoints": "🗑️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("wastebasket") + `"
+        "` + _t("wastebasket") + `"
     ],
-    "name": "` + _lt("wastebasket") + `",
+    "name": "` + _t("wastebasket") + `",
     "shortcodes": [
         ":wastebasket:"
     ]
@@ -17590,11 +17590,11 @@ const emojisData7 = `{
     "codepoints": "🔒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("closed") + `",
-        "` + _lt("locked") + `",
-        "` + _lt("padlock") + `"
+        "` + _t("closed") + `",
+        "` + _t("locked") + `",
+        "` + _t("padlock") + `"
     ],
-    "name": "` + _lt("locked") + `",
+    "name": "` + _t("locked") + `",
     "shortcodes": [
         ":locked:"
     ]
@@ -17604,13 +17604,13 @@ const emojisData7 = `{
     "codepoints": "🔓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("lock") + `",
-        "` + _lt("open") + `",
-        "` + _lt("unlock") + `",
-        "` + _lt("unlocked") + `",
-        "` + _lt("padlock") + `"
+        "` + _t("lock") + `",
+        "` + _t("open") + `",
+        "` + _t("unlock") + `",
+        "` + _t("unlocked") + `",
+        "` + _t("padlock") + `"
     ],
-    "name": "` + _lt("unlocked") + `",
+    "name": "` + _t("unlocked") + `",
     "shortcodes": [
         ":unlocked:"
     ]
@@ -17620,14 +17620,14 @@ const emojisData7 = `{
     "codepoints": "🔏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ink") + `",
-        "` + _lt("lock") + `",
-        "` + _lt("locked with pen") + `",
-        "` + _lt("nib") + `",
-        "` + _lt("pen") + `",
-        "` + _lt("privacy") + `"
+        "` + _t("ink") + `",
+        "` + _t("lock") + `",
+        "` + _t("locked with pen") + `",
+        "` + _t("nib") + `",
+        "` + _t("pen") + `",
+        "` + _t("privacy") + `"
     ],
-    "name": "` + _lt("locked with pen") + `",
+    "name": "` + _t("locked with pen") + `",
     "shortcodes": [
         ":locked_with_pen:"
     ]
@@ -17637,13 +17637,13 @@ const emojisData7 = `{
     "codepoints": "🔐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("closed") + `",
-        "` + _lt("key") + `",
-        "` + _lt("lock") + `",
-        "` + _lt("locked with key") + `",
-        "` + _lt("secure") + `"
+        "` + _t("closed") + `",
+        "` + _t("key") + `",
+        "` + _t("lock") + `",
+        "` + _t("locked with key") + `",
+        "` + _t("secure") + `"
     ],
-    "name": "` + _lt("locked with key") + `",
+    "name": "` + _t("locked with key") + `",
     "shortcodes": [
         ":locked_with_key:"
     ]
@@ -17655,11 +17655,11 @@ const emojisData7 = `{
         ":key"
     ],
     "keywords": [
-        "` + _lt("key") + `",
-        "` + _lt("lock") + `",
-        "` + _lt("password") + `"
+        "` + _t("key") + `",
+        "` + _t("lock") + `",
+        "` + _t("password") + `"
     ],
-    "name": "` + _lt("key") + `",
+    "name": "` + _t("key") + `",
     "shortcodes": [
         ":key:"
     ]
@@ -17669,12 +17669,12 @@ const emojisData7 = `{
     "codepoints": "🗝️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clue") + `",
-        "` + _lt("key") + `",
-        "` + _lt("lock") + `",
-        "` + _lt("old") + `"
+        "` + _t("clue") + `",
+        "` + _t("key") + `",
+        "` + _t("lock") + `",
+        "` + _t("old") + `"
     ],
-    "name": "` + _lt("old key") + `",
+    "name": "` + _t("old key") + `",
     "shortcodes": [
         ":old_key:"
     ]
@@ -17684,10 +17684,10 @@ const emojisData7 = `{
     "codepoints": "🔨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hammer") + `",
-        "` + _lt("tool") + `"
+        "` + _t("hammer") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("hammer") + `",
+    "name": "` + _t("hammer") + `",
     "shortcodes": [
         ":hammer:"
     ]
@@ -17697,13 +17697,13 @@ const emojisData7 = `{
     "codepoints": "🪓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("axe") + `",
-        "` + _lt("chop") + `",
-        "` + _lt("hatchet") + `",
-        "` + _lt("split") + `",
-        "` + _lt("wood") + `"
+        "` + _t("axe") + `",
+        "` + _t("chop") + `",
+        "` + _t("hatchet") + `",
+        "` + _t("split") + `",
+        "` + _t("wood") + `"
     ],
-    "name": "` + _lt("axe") + `",
+    "name": "` + _t("axe") + `",
     "shortcodes": [
         ":axe:"
     ]
@@ -17713,11 +17713,11 @@ const emojisData7 = `{
     "codepoints": "⛏️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mining") + `",
-        "` + _lt("pick") + `",
-        "` + _lt("tool") + `"
+        "` + _t("mining") + `",
+        "` + _t("pick") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("pick") + `",
+    "name": "` + _t("pick") + `",
     "shortcodes": [
         ":pick:"
     ]
@@ -17727,12 +17727,12 @@ const emojisData7 = `{
     "codepoints": "⚒️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hammer") + `",
-        "` + _lt("hammer and pick") + `",
-        "` + _lt("pick") + `",
-        "` + _lt("tool") + `"
+        "` + _t("hammer") + `",
+        "` + _t("hammer and pick") + `",
+        "` + _t("pick") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("hammer and pick") + `",
+    "name": "` + _t("hammer and pick") + `",
     "shortcodes": [
         ":hammer_and_pick:"
     ]
@@ -17742,14 +17742,14 @@ const emojisData7 = `{
     "codepoints": "🛠️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("hammer") + `",
-        "` + _lt("hammer and spanner") + `",
-        "` + _lt("hammer and wrench") + `",
-        "` + _lt("spanner") + `",
-        "` + _lt("tool") + `",
-        "` + _lt("wrench") + `"
+        "` + _t("hammer") + `",
+        "` + _t("hammer and spanner") + `",
+        "` + _t("hammer and wrench") + `",
+        "` + _t("spanner") + `",
+        "` + _t("tool") + `",
+        "` + _t("wrench") + `"
     ],
-    "name": "` + _lt("hammer and wrench") + `",
+    "name": "` + _t("hammer and wrench") + `",
     "shortcodes": [
         ":hammer_and_wrench:"
     ]
@@ -17759,11 +17759,11 @@ const emojisData7 = `{
     "codepoints": "🗡️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dagger") + `",
-        "` + _lt("knife") + `",
-        "` + _lt("weapon") + `"
+        "` + _t("dagger") + `",
+        "` + _t("knife") + `",
+        "` + _t("weapon") + `"
     ],
-    "name": "` + _lt("dagger") + `",
+    "name": "` + _t("dagger") + `",
     "shortcodes": [
         ":dagger:"
     ]
@@ -17773,11 +17773,11 @@ const emojisData7 = `{
     "codepoints": "⚔️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("crossed") + `",
-        "` + _lt("swords") + `",
-        "` + _lt("weapon") + `"
+        "` + _t("crossed") + `",
+        "` + _t("swords") + `",
+        "` + _t("weapon") + `"
     ],
-    "name": "` + _lt("crossed swords") + `",
+    "name": "` + _t("crossed swords") + `",
     "shortcodes": [
         ":crossed_swords:"
     ]
@@ -17787,17 +17787,17 @@ const emojisData7 = `{
     "codepoints": "🔫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("toy") + `",
-        "` + _lt("water pistol") + `",
-        "` + _lt("gun") + `",
-        "` + _lt("handgun") + `",
-        "` + _lt("pistol") + `",
-        "` + _lt("revolver") + `",
-        "` + _lt("tool") + `",
-        "` + _lt("water") + `",
-        "` + _lt("weapon") + `"
+        "` + _t("toy") + `",
+        "` + _t("water pistol") + `",
+        "` + _t("gun") + `",
+        "` + _t("handgun") + `",
+        "` + _t("pistol") + `",
+        "` + _t("revolver") + `",
+        "` + _t("tool") + `",
+        "` + _t("water") + `",
+        "` + _t("weapon") + `"
     ],
-    "name": "` + _lt("water pistol") + `",
+    "name": "` + _t("water pistol") + `",
     "shortcodes": [
         ":water_pistol:"
     ]
@@ -17807,14 +17807,14 @@ const emojisData7 = `{
     "codepoints": "🏹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("archer") + `",
-        "` + _lt("arrow") + `",
-        "` + _lt("bow") + `",
-        "` + _lt("bow and arrow") + `",
-        "` + _lt("Sagittarius") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("archer") + `",
+        "` + _t("arrow") + `",
+        "` + _t("bow") + `",
+        "` + _t("bow and arrow") + `",
+        "` + _t("Sagittarius") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("bow and arrow") + `",
+    "name": "` + _t("bow and arrow") + `",
     "shortcodes": [
         ":bow_and_arrow:"
     ]
@@ -17824,10 +17824,10 @@ const emojisData7 = `{
     "codepoints": "🛡️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("shield") + `",
-        "` + _lt("weapon") + `"
+        "` + _t("shield") + `",
+        "` + _t("weapon") + `"
     ],
-    "name": "` + _lt("shield") + `",
+    "name": "` + _t("shield") + `",
     "shortcodes": [
         ":shield:"
     ]
@@ -17837,11 +17837,11 @@ const emojisData7 = `{
     "codepoints": "🔧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("spanner") + `",
-        "` + _lt("tool") + `",
-        "` + _lt("wrench") + `"
+        "` + _t("spanner") + `",
+        "` + _t("tool") + `",
+        "` + _t("wrench") + `"
     ],
-    "name": "` + _lt("wrench") + `",
+    "name": "` + _t("wrench") + `",
     "shortcodes": [
         ":wrench:"
     ]
@@ -17851,12 +17851,12 @@ const emojisData7 = `{
     "codepoints": "🔩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bolt") + `",
-        "` + _lt("nut") + `",
-        "` + _lt("nut and bolt") + `",
-        "` + _lt("tool") + `"
+        "` + _t("bolt") + `",
+        "` + _t("nut") + `",
+        "` + _t("nut and bolt") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("nut and bolt") + `",
+    "name": "` + _t("nut and bolt") + `",
     "shortcodes": [
         ":nut_and_bolt:"
     ]
@@ -17866,12 +17866,12 @@ const emojisData7 = `{
     "codepoints": "⚙️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cog") + `",
-        "` + _lt("cogwheel") + `",
-        "` + _lt("gear") + `",
-        "` + _lt("tool") + `"
+        "` + _t("cog") + `",
+        "` + _t("cogwheel") + `",
+        "` + _t("gear") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("gear") + `",
+    "name": "` + _t("gear") + `",
     "shortcodes": [
         ":gear:"
     ]
@@ -17881,12 +17881,12 @@ const emojisData7 = `{
     "codepoints": "🗜️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("clamp") + `",
-        "` + _lt("compress") + `",
-        "` + _lt("tool") + `",
-        "` + _lt("vice") + `"
+        "` + _t("clamp") + `",
+        "` + _t("compress") + `",
+        "` + _t("tool") + `",
+        "` + _t("vice") + `"
     ],
-    "name": "` + _lt("clamp") + `",
+    "name": "` + _t("clamp") + `",
     "shortcodes": [
         ":clamp:"
     ]
@@ -17896,13 +17896,13 @@ const emojisData7 = `{
     "codepoints": "⚖️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("balance") + `",
-        "` + _lt("justice") + `",
-        "` + _lt("Libra") + `",
-        "` + _lt("scale") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("balance") + `",
+        "` + _t("justice") + `",
+        "` + _t("Libra") + `",
+        "` + _t("scale") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("balance scale") + `",
+    "name": "` + _t("balance scale") + `",
     "shortcodes": [
         ":balance_scale:"
     ]
@@ -17912,13 +17912,13 @@ const emojisData7 = `{
     "codepoints": "🦯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("accessibility") + `",
-        "` + _lt("long mobility cane") + `",
-        "` + _lt("white cane") + `",
-        "` + _lt("blind") + `",
-        "` + _lt("guide cane") + `"
+        "` + _t("accessibility") + `",
+        "` + _t("long mobility cane") + `",
+        "` + _t("white cane") + `",
+        "` + _t("blind") + `",
+        "` + _t("guide cane") + `"
     ],
-    "name": "` + _lt("white cane") + `",
+    "name": "` + _t("white cane") + `",
     "shortcodes": [
         ":white_cane:"
     ]
@@ -17928,9 +17928,9 @@ const emojisData7 = `{
     "codepoints": "🔗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("link") + `"
+        "` + _t("link") + `"
     ],
-    "name": "` + _lt("link") + `",
+    "name": "` + _t("link") + `",
     "shortcodes": [
         ":link:"
     ]
@@ -17940,10 +17940,10 @@ const emojisData7 = `{
     "codepoints": "⛓️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chain") + `",
-        "` + _lt("chains") + `"
+        "` + _t("chain") + `",
+        "` + _t("chains") + `"
     ],
-    "name": "` + _lt("chains") + `",
+    "name": "` + _t("chains") + `",
     "shortcodes": [
         ":chains:"
     ]
@@ -17953,12 +17953,12 @@ const emojisData7 = `{
     "codepoints": "🧰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chest") + `",
-        "` + _lt("mechanic") + `",
-        "` + _lt("tool") + `",
-        "` + _lt("toolbox") + `"
+        "` + _t("chest") + `",
+        "` + _t("mechanic") + `",
+        "` + _t("tool") + `",
+        "` + _t("toolbox") + `"
     ],
-    "name": "` + _lt("toolbox") + `",
+    "name": "` + _t("toolbox") + `",
     "shortcodes": [
         ":toolbox:"
     ]
@@ -17968,12 +17968,12 @@ const emojisData7 = `{
     "codepoints": "🧲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("attraction") + `",
-        "` + _lt("horseshoe") + `",
-        "` + _lt("magnet") + `",
-        "` + _lt("magnetic") + `"
+        "` + _t("attraction") + `",
+        "` + _t("horseshoe") + `",
+        "` + _t("magnet") + `",
+        "` + _t("magnetic") + `"
     ],
-    "name": "` + _lt("magnet") + `",
+    "name": "` + _t("magnet") + `",
     "shortcodes": [
         ":magnet:"
     ]
@@ -17983,11 +17983,11 @@ const emojisData7 = `{
     "codepoints": "⚗️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("alembic") + `",
-        "` + _lt("chemistry") + `",
-        "` + _lt("tool") + `"
+        "` + _t("alembic") + `",
+        "` + _t("chemistry") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("alembic") + `",
+    "name": "` + _t("alembic") + `",
     "shortcodes": [
         ":alembic:"
     ]
@@ -17997,14 +17997,14 @@ const emojisData7 = `{
     "codepoints": "🧪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chemist") + `",
-        "` + _lt("chemistry") + `",
-        "` + _lt("experiment") + `",
-        "` + _lt("lab") + `",
-        "` + _lt("science") + `",
-        "` + _lt("test tube") + `"
+        "` + _t("chemist") + `",
+        "` + _t("chemistry") + `",
+        "` + _t("experiment") + `",
+        "` + _t("lab") + `",
+        "` + _t("science") + `",
+        "` + _t("test tube") + `"
     ],
-    "name": "` + _lt("test tube") + `",
+    "name": "` + _t("test tube") + `",
     "shortcodes": [
         ":test_ltube:"
     ]
@@ -18014,14 +18014,14 @@ const emojisData7 = `{
     "codepoints": "🧫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bacteria") + `",
-        "` + _lt("biologist") + `",
-        "` + _lt("biology") + `",
-        "` + _lt("culture") + `",
-        "` + _lt("lab") + `",
-        "` + _lt("petri dish") + `"
+        "` + _t("bacteria") + `",
+        "` + _t("biologist") + `",
+        "` + _t("biology") + `",
+        "` + _t("culture") + `",
+        "` + _t("lab") + `",
+        "` + _t("petri dish") + `"
     ],
-    "name": "` + _lt("petri dish") + `",
+    "name": "` + _t("petri dish") + `",
     "shortcodes": [
         ":petri_dish:"
     ]
@@ -18031,15 +18031,15 @@ const emojisData7 = `{
     "codepoints": "🧬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("biologist") + `",
-        "` + _lt("dna") + `",
-        "` + _lt("DNA") + `",
-        "` + _lt("evolution") + `",
-        "` + _lt("gene") + `",
-        "` + _lt("genetics") + `",
-        "` + _lt("life") + `"
+        "` + _t("biologist") + `",
+        "` + _t("dna") + `",
+        "` + _t("DNA") + `",
+        "` + _t("evolution") + `",
+        "` + _t("gene") + `",
+        "` + _t("genetics") + `",
+        "` + _t("life") + `"
     ],
-    "name": "` + _lt("dna") + `",
+    "name": "` + _t("dna") + `",
     "shortcodes": [
         ":dna:"
     ]
@@ -18049,11 +18049,11 @@ const emojisData7 = `{
     "codepoints": "🔬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("microscope") + `",
-        "` + _lt("science") + `",
-        "` + _lt("tool") + `"
+        "` + _t("microscope") + `",
+        "` + _t("science") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("microscope") + `",
+    "name": "` + _t("microscope") + `",
     "shortcodes": [
         ":microscope:"
     ]
@@ -18063,11 +18063,11 @@ const emojisData7 = `{
     "codepoints": "🔭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("science") + `",
-        "` + _lt("telescope") + `",
-        "` + _lt("tool") + `"
+        "` + _t("science") + `",
+        "` + _t("telescope") + `",
+        "` + _t("tool") + `"
     ],
-    "name": "` + _lt("telescope") + `",
+    "name": "` + _t("telescope") + `",
     "shortcodes": [
         ":telescope:"
     ]
@@ -18077,11 +18077,11 @@ const emojisData7 = `{
     "codepoints": "📡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("antenna") + `",
-        "` + _lt("dish") + `",
-        "` + _lt("satellite") + `"
+        "` + _t("antenna") + `",
+        "` + _t("dish") + `",
+        "` + _t("satellite") + `"
     ],
-    "name": "` + _lt("satellite antenna") + `",
+    "name": "` + _t("satellite antenna") + `",
     "shortcodes": [
         ":satellite_antenna:"
     ]
@@ -18091,15 +18091,15 @@ const emojisData7 = `{
     "codepoints": "💉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("medicine") + `",
-        "` + _lt("needle") + `",
-        "` + _lt("shot") + `",
-        "` + _lt("sick") + `",
-        "` + _lt("syringe") + `",
-        "` + _lt("ill") + `",
-        "` + _lt("injection") + `"
+        "` + _t("medicine") + `",
+        "` + _t("needle") + `",
+        "` + _t("shot") + `",
+        "` + _t("sick") + `",
+        "` + _t("syringe") + `",
+        "` + _t("ill") + `",
+        "` + _t("injection") + `"
     ],
-    "name": "` + _lt("syringe") + `",
+    "name": "` + _t("syringe") + `",
     "shortcodes": [
         ":syringe:"
     ]
@@ -18109,14 +18109,14 @@ const emojisData7 = `{
     "codepoints": "🩸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bleed") + `",
-        "` + _lt("blood donation") + `",
-        "` + _lt("drop of blood") + `",
-        "` + _lt("injury") + `",
-        "` + _lt("medicine") + `",
-        "` + _lt("menstruation") + `"
+        "` + _t("bleed") + `",
+        "` + _t("blood donation") + `",
+        "` + _t("drop of blood") + `",
+        "` + _t("injury") + `",
+        "` + _t("medicine") + `",
+        "` + _t("menstruation") + `"
     ],
-    "name": "` + _lt("drop of blood") + `",
+    "name": "` + _t("drop of blood") + `",
     "shortcodes": [
         ":drop_of_blood:"
     ]
@@ -18126,12 +18126,12 @@ const emojisData7 = `{
     "codepoints": "💊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("doctor") + `",
-        "` + _lt("medicine") + `",
-        "` + _lt("pill") + `",
-        "` + _lt("sick") + `"
+        "` + _t("doctor") + `",
+        "` + _t("medicine") + `",
+        "` + _t("pill") + `",
+        "` + _t("sick") + `"
     ],
-    "name": "` + _lt("pill") + `",
+    "name": "` + _t("pill") + `",
     "shortcodes": [
         ":pill:"
     ]
@@ -18141,15 +18141,15 @@ const emojisData7 = `{
     "codepoints": "🩹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("adhesive bandage") + `",
-        "` + _lt("bandage") + `",
-        "` + _lt("bandaid") + `",
-        "` + _lt("dressing") + `",
-        "` + _lt("injury") + `",
-        "` + _lt("plaster") + `",
-        "` + _lt("sticking plaster") + `"
+        "` + _t("adhesive bandage") + `",
+        "` + _t("bandage") + `",
+        "` + _t("bandaid") + `",
+        "` + _t("dressing") + `",
+        "` + _t("injury") + `",
+        "` + _t("plaster") + `",
+        "` + _t("sticking plaster") + `"
     ],
-    "name": "` + _lt("adhesive bandage") + `",
+    "name": "` + _t("adhesive bandage") + `",
     "shortcodes": [
         ":adhesive_bandage:"
     ]
@@ -18159,12 +18159,12 @@ const emojisData7 = `{
     "codepoints": "🩺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("doctor") + `",
-        "` + _lt("heart") + `",
-        "` + _lt("medicine") + `",
-        "` + _lt("stethoscope") + `"
+        "` + _t("doctor") + `",
+        "` + _t("heart") + `",
+        "` + _t("medicine") + `",
+        "` + _t("stethoscope") + `"
     ],
-    "name": "` + _lt("stethoscope") + `",
+    "name": "` + _t("stethoscope") + `",
     "shortcodes": [
         ":stethoscope:"
     ]
@@ -18174,9 +18174,9 @@ const emojisData7 = `{
     "codepoints": "🚪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("door") + `"
+        "` + _t("door") + `"
     ],
-    "name": "` + _lt("door") + `",
+    "name": "` + _t("door") + `",
     "shortcodes": [
         ":door:"
     ]
@@ -18186,11 +18186,11 @@ const emojisData7 = `{
     "codepoints": "🛏️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bed") + `",
-        "` + _lt("hotel") + `",
-        "` + _lt("sleep") + `"
+        "` + _t("bed") + `",
+        "` + _t("hotel") + `",
+        "` + _t("sleep") + `"
     ],
-    "name": "` + _lt("bed") + `",
+    "name": "` + _t("bed") + `",
     "shortcodes": [
         ":bed:"
     ]
@@ -18200,14 +18200,14 @@ const emojisData7 = `{
     "codepoints": "🛋️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("couch") + `",
-        "` + _lt("couch and lamp") + `",
-        "` + _lt("hotel") + `",
-        "` + _lt("lamp") + `",
-        "` + _lt("sofa") + `",
-        "` + _lt("sofa and lamp") + `"
+        "` + _t("couch") + `",
+        "` + _t("couch and lamp") + `",
+        "` + _t("hotel") + `",
+        "` + _t("lamp") + `",
+        "` + _t("sofa") + `",
+        "` + _t("sofa and lamp") + `"
     ],
-    "name": "` + _lt("couch and lamp") + `",
+    "name": "` + _t("couch and lamp") + `",
     "shortcodes": [
         ":couch_and_lamp:"
     ]
@@ -18217,11 +18217,11 @@ const emojisData7 = `{
     "codepoints": "🪑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("chair") + `",
-        "` + _lt("seat") + `",
-        "` + _lt("sit") + `"
+        "` + _t("chair") + `",
+        "` + _t("seat") + `",
+        "` + _t("sit") + `"
     ],
-    "name": "` + _lt("chair") + `",
+    "name": "` + _t("chair") + `",
     "shortcodes": [
         ":chair:"
     ]
@@ -18231,13 +18231,13 @@ const emojisData7 = `{
     "codepoints": "🚽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("facilities") + `",
-        "` + _lt("loo") + `",
-        "` + _lt("toilet") + `",
-        "` + _lt("WC") + `",
-        "` + _lt("lavatory") + `"
+        "` + _t("facilities") + `",
+        "` + _t("loo") + `",
+        "` + _t("toilet") + `",
+        "` + _t("WC") + `",
+        "` + _t("lavatory") + `"
     ],
-    "name": "` + _lt("toilet") + `",
+    "name": "` + _t("toilet") + `",
     "shortcodes": [
         ":toilet:"
     ]
@@ -18247,10 +18247,10 @@ const emojisData7 = `{
     "codepoints": "🚿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("shower") + `",
-        "` + _lt("water") + `"
+        "` + _t("shower") + `",
+        "` + _t("water") + `"
     ],
-    "name": "` + _lt("shower") + `",
+    "name": "` + _t("shower") + `",
     "shortcodes": [
         ":shower:"
     ]
@@ -18260,10 +18260,10 @@ const emojisData7 = `{
     "codepoints": "🛁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bath") + `",
-        "` + _lt("bathtub") + `"
+        "` + _t("bath") + `",
+        "` + _t("bathtub") + `"
     ],
-    "name": "` + _lt("bathtub") + `",
+    "name": "` + _t("bathtub") + `",
     "shortcodes": [
         ":bathtub:"
     ]
@@ -18273,12 +18273,12 @@ const emojisData7 = `{
     "codepoints": "🪒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("razor") + `",
-        "` + _lt("sharp") + `",
-        "` + _lt("shave") + `",
-        "` + _lt("cut-throat") + `"
+        "` + _t("razor") + `",
+        "` + _t("sharp") + `",
+        "` + _t("shave") + `",
+        "` + _t("cut-throat") + `"
     ],
-    "name": "` + _lt("razor") + `",
+    "name": "` + _t("razor") + `",
     "shortcodes": [
         ":razor:"
     ]
@@ -18288,14 +18288,14 @@ const emojisData7 = `{
     "codepoints": "🧴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("lotion") + `",
-        "` + _lt("lotion bottle") + `",
-        "` + _lt("moisturizer") + `",
-        "` + _lt("shampoo") + `",
-        "` + _lt("sunscreen") + `",
-        "` + _lt("moisturiser") + `"
+        "` + _t("lotion") + `",
+        "` + _t("lotion bottle") + `",
+        "` + _t("moisturizer") + `",
+        "` + _t("shampoo") + `",
+        "` + _t("sunscreen") + `",
+        "` + _t("moisturiser") + `"
     ],
-    "name": "` + _lt("lotion bottle") + `",
+    "name": "` + _t("lotion bottle") + `",
     "shortcodes": [
         ":lotion_bottle:"
     ]
@@ -18305,12 +18305,12 @@ const emojisData7 = `{
     "codepoints": "🧷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("nappy") + `",
-        "` + _lt("punk rock") + `",
-        "` + _lt("safety pin") + `",
-        "` + _lt("diaper") + `"
+        "` + _t("nappy") + `",
+        "` + _t("punk rock") + `",
+        "` + _t("safety pin") + `",
+        "` + _t("diaper") + `"
     ],
-    "name": "` + _lt("safety pin") + `",
+    "name": "` + _t("safety pin") + `",
     "shortcodes": [
         ":safety_pin:"
     ]
@@ -18320,12 +18320,12 @@ const emojisData7 = `{
     "codepoints": "🧹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("broom") + `",
-        "` + _lt("cleaning") + `",
-        "` + _lt("sweeping") + `",
-        "` + _lt("witch") + `"
+        "` + _t("broom") + `",
+        "` + _t("cleaning") + `",
+        "` + _t("sweeping") + `",
+        "` + _t("witch") + `"
     ],
-    "name": "` + _lt("broom") + `",
+    "name": "` + _t("broom") + `",
     "shortcodes": [
         ":broom:"
     ]
@@ -18335,12 +18335,12 @@ const emojisData7 = `{
     "codepoints": "🧺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("basket") + `",
-        "` + _lt("farming") + `",
-        "` + _lt("laundry") + `",
-        "` + _lt("picnic") + `"
+        "` + _t("basket") + `",
+        "` + _t("farming") + `",
+        "` + _t("laundry") + `",
+        "` + _t("picnic") + `"
     ],
-    "name": "` + _lt("basket") + `",
+    "name": "` + _t("basket") + `",
     "shortcodes": [
         ":basket:"
     ]
@@ -18350,12 +18350,12 @@ const emojisData7 = `{
     "codepoints": "🧻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("paper towels") + `",
-        "` + _lt("roll of paper") + `",
-        "` + _lt("toilet paper") + `",
-        "` + _lt("toilet roll") + `"
+        "` + _t("paper towels") + `",
+        "` + _t("roll of paper") + `",
+        "` + _t("toilet paper") + `",
+        "` + _t("toilet roll") + `"
     ],
-    "name": "` + _lt("roll of paper") + `",
+    "name": "` + _t("roll of paper") + `",
     "shortcodes": [
         ":roll_of_paper:"
     ]
@@ -18365,14 +18365,14 @@ const emojisData7 = `{
     "codepoints": "🧼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("bathing") + `",
-        "` + _lt("cleaning") + `",
-        "` + _lt("lather") + `",
-        "` + _lt("soap") + `",
-        "` + _lt("soapdish") + `"
+        "` + _t("bar") + `",
+        "` + _t("bathing") + `",
+        "` + _t("cleaning") + `",
+        "` + _t("lather") + `",
+        "` + _t("soap") + `",
+        "` + _t("soapdish") + `"
     ],
-    "name": "` + _lt("soap") + `",
+    "name": "` + _t("soap") + `",
     "shortcodes": [
         ":soap:"
     ]
@@ -18382,12 +18382,12 @@ const emojisData7 = `{
     "codepoints": "🧽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("absorbing") + `",
-        "` + _lt("cleaning") + `",
-        "` + _lt("porous") + `",
-        "` + _lt("sponge") + `"
+        "` + _t("absorbing") + `",
+        "` + _t("cleaning") + `",
+        "` + _t("porous") + `",
+        "` + _t("sponge") + `"
     ],
-    "name": "` + _lt("sponge") + `",
+    "name": "` + _t("sponge") + `",
     "shortcodes": [
         ":sponge:"
     ]
@@ -18397,12 +18397,12 @@ const emojisData7 = `{
     "codepoints": "🧯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("extinguish") + `",
-        "` + _lt("fire") + `",
-        "` + _lt("fire extinguisher") + `",
-        "` + _lt("quench") + `"
+        "` + _t("extinguish") + `",
+        "` + _t("fire") + `",
+        "` + _t("fire extinguisher") + `",
+        "` + _t("quench") + `"
     ],
-    "name": "` + _lt("fire extinguisher") + `",
+    "name": "` + _t("fire extinguisher") + `",
     "shortcodes": [
         ":fire_extinguisher:"
     ]
@@ -18412,12 +18412,12 @@ const emojisData7 = `{
     "codepoints": "🛒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cart") + `",
-        "` + _lt("shopping") + `",
-        "` + _lt("trolley") + `",
-        "` + _lt("basket") + `"
+        "` + _t("cart") + `",
+        "` + _t("shopping") + `",
+        "` + _t("trolley") + `",
+        "` + _t("basket") + `"
     ],
-    "name": "` + _lt("shopping cart") + `",
+    "name": "` + _t("shopping cart") + `",
     "shortcodes": [
         ":shopping_cart:"
     ]
@@ -18427,10 +18427,10 @@ const emojisData7 = `{
     "codepoints": "🚬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cigarette") + `",
-        "` + _lt("smoking") + `"
+        "` + _t("cigarette") + `",
+        "` + _t("smoking") + `"
     ],
-    "name": "` + _lt("cigarette") + `",
+    "name": "` + _t("cigarette") + `",
     "shortcodes": [
         ":cigarette:"
     ]
@@ -18440,10 +18440,10 @@ const emojisData7 = `{
     "codepoints": "⚰️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("coffin") + `",
-        "` + _lt("death") + `"
+        "` + _t("coffin") + `",
+        "` + _t("death") + `"
     ],
-    "name": "` + _lt("coffin") + `",
+    "name": "` + _t("coffin") + `",
     "shortcodes": [
         ":coffin:"
     ]
@@ -18453,12 +18453,12 @@ const emojisData7 = `{
     "codepoints": "⚱️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ashes") + `",
-        "` + _lt("death") + `",
-        "` + _lt("funeral") + `",
-        "` + _lt("urn") + `"
+        "` + _t("ashes") + `",
+        "` + _t("death") + `",
+        "` + _t("funeral") + `",
+        "` + _t("urn") + `"
     ],
-    "name": "` + _lt("funeral urn") + `",
+    "name": "` + _t("funeral urn") + `",
     "shortcodes": [
         ":funeral_urn:"
     ]
@@ -18468,12 +18468,12 @@ const emojisData7 = `{
     "codepoints": "🗿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("face") + `",
-        "` + _lt("moai") + `",
-        "` + _lt("moyai") + `",
-        "` + _lt("statue") + `"
+        "` + _t("face") + `",
+        "` + _t("moai") + `",
+        "` + _t("moyai") + `",
+        "` + _t("statue") + `"
     ],
-    "name": "` + _lt("moai") + `",
+    "name": "` + _t("moai") + `",
     "shortcodes": [
         ":moai:"
     ]
@@ -18484,13 +18484,13 @@ const emojisData8 = `{
     "codepoints": "🏧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ATM") + `",
-        "` + _lt("ATM sign") + `",
-        "` + _lt("automated") + `",
-        "` + _lt("bank") + `",
-        "` + _lt("teller") + `"
+        "` + _t("ATM") + `",
+        "` + _t("ATM sign") + `",
+        "` + _t("automated") + `",
+        "` + _t("bank") + `",
+        "` + _t("teller") + `"
     ],
-    "name": "` + _lt("ATM sign") + `",
+    "name": "` + _t("ATM sign") + `",
     "shortcodes": [
         ":ATM_sign:"
     ]
@@ -18500,13 +18500,13 @@ const emojisData8 = `{
     "codepoints": "🚮",
     "emoticons": [],
     "keywords": [
-        "` + _lt("litter") + `",
-        "` + _lt("litter bin") + `",
-        "` + _lt("litter in bin sign") + `",
-        "` + _lt("garbage") + `",
-        "` + _lt("trash") + `"
+        "` + _t("litter") + `",
+        "` + _t("litter bin") + `",
+        "` + _t("litter in bin sign") + `",
+        "` + _t("garbage") + `",
+        "` + _t("trash") + `"
     ],
-    "name": "` + _lt("litter in bin sign") + `",
+    "name": "` + _t("litter in bin sign") + `",
     "shortcodes": [
         ":litter_in_bin_sign:"
     ]
@@ -18516,11 +18516,11 @@ const emojisData8 = `{
     "codepoints": "🚰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("drinking") + `",
-        "` + _lt("potable") + `",
-        "` + _lt("water") + `"
+        "` + _t("drinking") + `",
+        "` + _t("potable") + `",
+        "` + _t("water") + `"
     ],
-    "name": "` + _lt("potable water") + `",
+    "name": "` + _t("potable water") + `",
     "shortcodes": [
         ":potable_water:"
     ]
@@ -18530,11 +18530,11 @@ const emojisData8 = `{
     "codepoints": "♿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("access") + `",
-        "` + _lt("disabled access") + `",
-        "` + _lt("wheelchair symbol") + `"
+        "` + _t("access") + `",
+        "` + _t("disabled access") + `",
+        "` + _t("wheelchair symbol") + `"
     ],
-    "name": "` + _lt("wheelchair symbol") + `",
+    "name": "` + _t("wheelchair symbol") + `",
     "shortcodes": [
         ":wheelchair_symbol:"
     ]
@@ -18544,18 +18544,18 @@ const emojisData8 = `{
     "codepoints": "🚹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bathroom") + `",
-        "` + _lt("lavatory") + `",
-        "` + _lt("man") + `",
-        "` + _lt("men’s room") + `",
-        "` + _lt("restroom") + `",
-        "` + _lt("toilet") + `",
-        "` + _lt("WC") + `",
-        "` + _lt("men’s") + `",
-        "` + _lt("washroom") + `",
-        "` + _lt("wc") + `"
+        "` + _t("bathroom") + `",
+        "` + _t("lavatory") + `",
+        "` + _t("man") + `",
+        "` + _t("men’s room") + `",
+        "` + _t("restroom") + `",
+        "` + _t("toilet") + `",
+        "` + _t("WC") + `",
+        "` + _t("men’s") + `",
+        "` + _t("washroom") + `",
+        "` + _t("wc") + `"
     ],
-    "name": "` + _lt("men’s room") + `",
+    "name": "` + _t("men’s room") + `",
     "shortcodes": [
         ":men’s_room:"
     ]
@@ -18565,21 +18565,21 @@ const emojisData8 = `{
     "codepoints": "🚺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ladies room") + `",
-        "` + _lt("lavatory") + `",
-        "` + _lt("restroom") + `",
-        "` + _lt("wc") + `",
-        "` + _lt("woman") + `",
-        "` + _lt("women’s room") + `",
-        "` + _lt("women’s toilet") + `",
-        "` + _lt("bathroom") + `",
-        "` + _lt("toilet") + `",
-        "` + _lt("WC") + `",
-        "` + _lt("ladies’ room") + `",
-        "` + _lt("washroom") + `",
-        "` + _lt("women’s") + `"
+        "` + _t("ladies room") + `",
+        "` + _t("lavatory") + `",
+        "` + _t("restroom") + `",
+        "` + _t("wc") + `",
+        "` + _t("woman") + `",
+        "` + _t("women’s room") + `",
+        "` + _t("women’s toilet") + `",
+        "` + _t("bathroom") + `",
+        "` + _t("toilet") + `",
+        "` + _t("WC") + `",
+        "` + _t("ladies’ room") + `",
+        "` + _t("washroom") + `",
+        "` + _t("women’s") + `"
     ],
-    "name": "` + _lt("women’s room") + `",
+    "name": "` + _t("women’s room") + `",
     "shortcodes": [
         ":women’s_room:"
     ]
@@ -18589,14 +18589,14 @@ const emojisData8 = `{
     "codepoints": "🚻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bathroom") + `",
-        "` + _lt("lavatory") + `",
-        "` + _lt("restroom") + `",
-        "` + _lt("toilet") + `",
-        "` + _lt("WC") + `",
-        "` + _lt("washroom") + `"
+        "` + _t("bathroom") + `",
+        "` + _t("lavatory") + `",
+        "` + _t("restroom") + `",
+        "` + _t("toilet") + `",
+        "` + _t("WC") + `",
+        "` + _t("washroom") + `"
     ],
-    "name": "` + _lt("restroom") + `",
+    "name": "` + _t("restroom") + `",
     "shortcodes": [
         ":restroom:"
     ]
@@ -18606,12 +18606,12 @@ const emojisData8 = `{
     "codepoints": "🚼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baby") + `",
-        "` + _lt("baby symbol") + `",
-        "` + _lt("change room") + `",
-        "` + _lt("changing") + `"
+        "` + _t("baby") + `",
+        "` + _t("baby symbol") + `",
+        "` + _t("change room") + `",
+        "` + _t("changing") + `"
     ],
-    "name": "` + _lt("baby symbol") + `",
+    "name": "` + _t("baby symbol") + `",
     "shortcodes": [
         ":baby_symbol:"
     ]
@@ -18621,18 +18621,18 @@ const emojisData8 = `{
     "codepoints": "🚾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("amenities") + `",
-        "` + _lt("bathroom") + `",
-        "` + _lt("restroom") + `",
-        "` + _lt("toilet") + `",
-        "` + _lt("water closet") + `",
-        "` + _lt("wc") + `",
-        "` + _lt("WC") + `",
-        "` + _lt("closet") + `",
-        "` + _lt("lavatory") + `",
-        "` + _lt("water") + `"
+        "` + _t("amenities") + `",
+        "` + _t("bathroom") + `",
+        "` + _t("restroom") + `",
+        "` + _t("toilet") + `",
+        "` + _t("water closet") + `",
+        "` + _t("wc") + `",
+        "` + _t("WC") + `",
+        "` + _t("closet") + `",
+        "` + _t("lavatory") + `",
+        "` + _t("water") + `"
     ],
-    "name": "` + _lt("water closet") + `",
+    "name": "` + _t("water closet") + `",
     "shortcodes": [
         ":water_closet:"
     ]
@@ -18642,12 +18642,12 @@ const emojisData8 = `{
     "codepoints": "🛂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("border") + `",
-        "` + _lt("control") + `",
-        "` + _lt("passport") + `",
-        "` + _lt("security") + `"
+        "` + _t("border") + `",
+        "` + _t("control") + `",
+        "` + _t("passport") + `",
+        "` + _t("security") + `"
     ],
-    "name": "` + _lt("passport control") + `",
+    "name": "` + _t("passport control") + `",
     "shortcodes": [
         ":passport_control:"
     ]
@@ -18657,9 +18657,9 @@ const emojisData8 = `{
     "codepoints": "🛃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("customs") + `"
+        "` + _t("customs") + `"
     ],
-    "name": "` + _lt("customs") + `",
+    "name": "` + _t("customs") + `",
     "shortcodes": [
         ":customs:"
     ]
@@ -18669,10 +18669,10 @@ const emojisData8 = `{
     "codepoints": "🛄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baggage") + `",
-        "` + _lt("claim") + `"
+        "` + _t("baggage") + `",
+        "` + _t("claim") + `"
     ],
-    "name": "` + _lt("baggage claim") + `",
+    "name": "` + _t("baggage claim") + `",
     "shortcodes": [
         ":baggage_claim:"
     ]
@@ -18682,12 +18682,12 @@ const emojisData8 = `{
     "codepoints": "🛅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("baggage") + `",
-        "` + _lt("left luggage") + `",
-        "` + _lt("locker") + `",
-        "` + _lt("luggage") + `"
+        "` + _t("baggage") + `",
+        "` + _t("left luggage") + `",
+        "` + _t("locker") + `",
+        "` + _t("luggage") + `"
     ],
-    "name": "` + _lt("left luggage") + `",
+    "name": "` + _t("left luggage") + `",
     "shortcodes": [
         ":left_luggage:"
     ]
@@ -18697,9 +18697,9 @@ const emojisData8 = `{
     "codepoints": "⚠️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("warning") + `"
+        "` + _t("warning") + `"
     ],
-    "name": "` + _lt("warning") + `",
+    "name": "` + _t("warning") + `",
     "shortcodes": [
         ":warning:"
     ]
@@ -18709,13 +18709,13 @@ const emojisData8 = `{
     "codepoints": "🚸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("child") + `",
-        "` + _lt("children crossing") + `",
-        "` + _lt("crossing") + `",
-        "` + _lt("pedestrian") + `",
-        "` + _lt("traffic") + `"
+        "` + _t("child") + `",
+        "` + _t("children crossing") + `",
+        "` + _t("crossing") + `",
+        "` + _t("pedestrian") + `",
+        "` + _t("traffic") + `"
     ],
-    "name": "` + _lt("children crossing") + `",
+    "name": "` + _t("children crossing") + `",
     "shortcodes": [
         ":children_crossing:"
     ]
@@ -18725,15 +18725,15 @@ const emojisData8 = `{
     "codepoints": "⛔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("denied") + `",
-        "` + _lt("entry") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("no") + `",
-        "` + _lt("prohibited") + `",
-        "` + _lt("traffic") + `",
-        "` + _lt("not") + `"
+        "` + _t("denied") + `",
+        "` + _t("entry") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("no") + `",
+        "` + _t("prohibited") + `",
+        "` + _t("traffic") + `",
+        "` + _t("not") + `"
     ],
-    "name": "` + _lt("no entry") + `",
+    "name": "` + _t("no entry") + `",
     "shortcodes": [
         ":no_entry:"
     ]
@@ -18743,14 +18743,14 @@ const emojisData8 = `{
     "codepoints": "🚫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("denied") + `",
-        "` + _lt("entry") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("no") + `",
-        "` + _lt("prohibited") + `",
-        "` + _lt("not") + `"
+        "` + _t("denied") + `",
+        "` + _t("entry") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("no") + `",
+        "` + _t("prohibited") + `",
+        "` + _t("not") + `"
     ],
-    "name": "` + _lt("prohibited") + `",
+    "name": "` + _t("prohibited") + `",
     "shortcodes": [
         ":prohibited:"
     ]
@@ -18760,14 +18760,14 @@ const emojisData8 = `{
     "codepoints": "🚳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bicycle") + `",
-        "` + _lt("bike") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("no") + `",
-        "` + _lt("no bicycles") + `",
-        "` + _lt("prohibited") + `"
+        "` + _t("bicycle") + `",
+        "` + _t("bike") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("no") + `",
+        "` + _t("no bicycles") + `",
+        "` + _t("prohibited") + `"
     ],
-    "name": "` + _lt("no bicycles") + `",
+    "name": "` + _t("no bicycles") + `",
     "shortcodes": [
         ":no_bicycles:"
     ]
@@ -18777,14 +18777,14 @@ const emojisData8 = `{
     "codepoints": "🚭",
     "emoticons": [],
     "keywords": [
-        "` + _lt("denied") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("no") + `",
-        "` + _lt("prohibited") + `",
-        "` + _lt("smoking") + `",
-        "` + _lt("not") + `"
+        "` + _t("denied") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("no") + `",
+        "` + _t("prohibited") + `",
+        "` + _t("smoking") + `",
+        "` + _t("not") + `"
     ],
-    "name": "` + _lt("no smoking") + `",
+    "name": "` + _t("no smoking") + `",
     "shortcodes": [
         ":no_smoking:"
     ]
@@ -18794,15 +18794,15 @@ const emojisData8 = `{
     "codepoints": "🚯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("denied") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("litter") + `",
-        "` + _lt("no") + `",
-        "` + _lt("no littering") + `",
-        "` + _lt("prohibited") + `",
-        "` + _lt("not") + `"
+        "` + _t("denied") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("litter") + `",
+        "` + _t("no") + `",
+        "` + _t("no littering") + `",
+        "` + _t("prohibited") + `",
+        "` + _t("not") + `"
     ],
-    "name": "` + _lt("no littering") + `",
+    "name": "` + _t("no littering") + `",
     "shortcodes": [
         ":no_littering:"
     ]
@@ -18812,12 +18812,12 @@ const emojisData8 = `{
     "codepoints": "🚱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("non-drinkable water") + `",
-        "` + _lt("non-drinking") + `",
-        "` + _lt("non-potable") + `",
-        "` + _lt("water") + `"
+        "` + _t("non-drinkable water") + `",
+        "` + _t("non-drinking") + `",
+        "` + _t("non-potable") + `",
+        "` + _t("water") + `"
     ],
-    "name": "` + _lt("non-potable water") + `",
+    "name": "` + _t("non-potable water") + `",
     "shortcodes": [
         ":non-potable_water:"
     ]
@@ -18827,15 +18827,15 @@ const emojisData8 = `{
     "codepoints": "🚷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("denied") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("no") + `",
-        "` + _lt("no pedestrians") + `",
-        "` + _lt("pedestrian") + `",
-        "` + _lt("prohibited") + `",
-        "` + _lt("not") + `"
+        "` + _t("denied") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("no") + `",
+        "` + _t("no pedestrians") + `",
+        "` + _t("pedestrian") + `",
+        "` + _t("prohibited") + `",
+        "` + _t("not") + `"
     ],
-    "name": "` + _lt("no pedestrians") + `",
+    "name": "` + _t("no pedestrians") + `",
     "shortcodes": [
         ":no_pedestrians:"
     ]
@@ -18845,14 +18845,14 @@ const emojisData8 = `{
     "codepoints": "📵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cell") + `",
-        "` + _lt("forbidden") + `",
-        "` + _lt("mobile") + `",
-        "` + _lt("no") + `",
-        "` + _lt("no mobile phones") + `",
-        "` + _lt("phone") + `"
+        "` + _t("cell") + `",
+        "` + _t("forbidden") + `",
+        "` + _t("mobile") + `",
+        "` + _t("no") + `",
+        "` + _t("no mobile phones") + `",
+        "` + _t("phone") + `"
     ],
-    "name": "` + _lt("no mobile phones") + `",
+    "name": "` + _t("no mobile phones") + `",
     "shortcodes": [
         ":no_mobile_phones:"
     ]
@@ -18862,14 +18862,14 @@ const emojisData8 = `{
     "codepoints": "🔞",
     "emoticons": [],
     "keywords": [
-        "` + _lt("18") + `",
-        "` + _lt("age restriction") + `",
-        "` + _lt("eighteen") + `",
-        "` + _lt("no one under eighteen") + `",
-        "` + _lt("prohibited") + `",
-        "` + _lt("underage") + `"
+        "` + _t("18") + `",
+        "` + _t("age restriction") + `",
+        "` + _t("eighteen") + `",
+        "` + _t("no one under eighteen") + `",
+        "` + _t("prohibited") + `",
+        "` + _t("underage") + `"
     ],
-    "name": "` + _lt("no one under eighteen") + `",
+    "name": "` + _t("no one under eighteen") + `",
     "shortcodes": [
         ":no_one_under_eighteen:"
     ]
@@ -18879,10 +18879,10 @@ const emojisData8 = `{
     "codepoints": "☢️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("radioactive") + `",
-        "` + _lt("sign") + `"
+        "` + _t("radioactive") + `",
+        "` + _t("sign") + `"
     ],
-    "name": "` + _lt("radioactive") + `",
+    "name": "` + _t("radioactive") + `",
     "shortcodes": [
         ":radioactive:"
     ]
@@ -18892,10 +18892,10 @@ const emojisData8 = `{
     "codepoints": "☣️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("biohazard") + `",
-        "` + _lt("sign") + `"
+        "` + _t("biohazard") + `",
+        "` + _t("sign") + `"
     ],
-    "name": "` + _lt("biohazard") + `",
+    "name": "` + _t("biohazard") + `",
     "shortcodes": [
         ":biohazard:"
     ]
@@ -18905,14 +18905,14 @@ const emojisData8 = `{
     "codepoints": "⬆️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("cardinal") + `",
-        "` + _lt("direction") + `",
-        "` + _lt("north") + `",
-        "` + _lt("up") + `",
-        "` + _lt("up arrow") + `"
+        "` + _t("arrow") + `",
+        "` + _t("cardinal") + `",
+        "` + _t("direction") + `",
+        "` + _t("north") + `",
+        "` + _t("up") + `",
+        "` + _t("up arrow") + `"
     ],
-    "name": "` + _lt("up arrow") + `",
+    "name": "` + _t("up arrow") + `",
     "shortcodes": [
         ":up_arrow:"
     ]
@@ -18922,13 +18922,13 @@ const emojisData8 = `{
     "codepoints": "↗️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("direction") + `",
-        "` + _lt("intercardinal") + `",
-        "` + _lt("northeast") + `",
-        "` + _lt("up-right arrow") + `"
+        "` + _t("arrow") + `",
+        "` + _t("direction") + `",
+        "` + _t("intercardinal") + `",
+        "` + _t("northeast") + `",
+        "` + _t("up-right arrow") + `"
     ],
-    "name": "` + _lt("up-right arrow") + `",
+    "name": "` + _t("up-right arrow") + `",
     "shortcodes": [
         ":up-right_arrow:"
     ]
@@ -18938,13 +18938,13 @@ const emojisData8 = `{
     "codepoints": "➡️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("cardinal") + `",
-        "` + _lt("direction") + `",
-        "` + _lt("east") + `",
-        "` + _lt("right arrow") + `"
+        "` + _t("arrow") + `",
+        "` + _t("cardinal") + `",
+        "` + _t("direction") + `",
+        "` + _t("east") + `",
+        "` + _t("right arrow") + `"
     ],
-    "name": "` + _lt("right arrow") + `",
+    "name": "` + _t("right arrow") + `",
     "shortcodes": [
         ":right_arrow:"
     ]
@@ -18954,13 +18954,13 @@ const emojisData8 = `{
     "codepoints": "↘️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("direction") + `",
-        "` + _lt("down-right arrow") + `",
-        "` + _lt("intercardinal") + `",
-        "` + _lt("southeast") + `"
+        "` + _t("arrow") + `",
+        "` + _t("direction") + `",
+        "` + _t("down-right arrow") + `",
+        "` + _t("intercardinal") + `",
+        "` + _t("southeast") + `"
     ],
-    "name": "` + _lt("down-right arrow") + `",
+    "name": "` + _t("down-right arrow") + `",
     "shortcodes": [
         ":down-right_arrow:"
     ]
@@ -18970,13 +18970,13 @@ const emojisData8 = `{
     "codepoints": "⬇️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("cardinal") + `",
-        "` + _lt("direction") + `",
-        "` + _lt("down") + `",
-        "` + _lt("south") + `"
+        "` + _t("arrow") + `",
+        "` + _t("cardinal") + `",
+        "` + _t("direction") + `",
+        "` + _t("down") + `",
+        "` + _t("south") + `"
     ],
-    "name": "` + _lt("down arrow") + `",
+    "name": "` + _t("down arrow") + `",
     "shortcodes": [
         ":down_arrow:"
     ]
@@ -18986,13 +18986,13 @@ const emojisData8 = `{
     "codepoints": "↙️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("direction") + `",
-        "` + _lt("down-left arrow") + `",
-        "` + _lt("intercardinal") + `",
-        "` + _lt("southwest") + `"
+        "` + _t("arrow") + `",
+        "` + _t("direction") + `",
+        "` + _t("down-left arrow") + `",
+        "` + _t("intercardinal") + `",
+        "` + _t("southwest") + `"
     ],
-    "name": "` + _lt("down-left arrow") + `",
+    "name": "` + _t("down-left arrow") + `",
     "shortcodes": [
         ":down-left_arrow:"
     ]
@@ -19002,13 +19002,13 @@ const emojisData8 = `{
     "codepoints": "⬅️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("cardinal") + `",
-        "` + _lt("direction") + `",
-        "` + _lt("left arrow") + `",
-        "` + _lt("west") + `"
+        "` + _t("arrow") + `",
+        "` + _t("cardinal") + `",
+        "` + _t("direction") + `",
+        "` + _t("left arrow") + `",
+        "` + _t("west") + `"
     ],
-    "name": "` + _lt("left arrow") + `",
+    "name": "` + _t("left arrow") + `",
     "shortcodes": [
         ":left_arrow:"
     ]
@@ -19018,13 +19018,13 @@ const emojisData8 = `{
     "codepoints": "↖️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("direction") + `",
-        "` + _lt("intercardinal") + `",
-        "` + _lt("northwest") + `",
-        "` + _lt("up-left arrow") + `"
+        "` + _t("arrow") + `",
+        "` + _t("direction") + `",
+        "` + _t("intercardinal") + `",
+        "` + _t("northwest") + `",
+        "` + _t("up-left arrow") + `"
     ],
-    "name": "` + _lt("up-left arrow") + `",
+    "name": "` + _t("up-left arrow") + `",
     "shortcodes": [
         ":up-left_arrow:"
     ]
@@ -19034,10 +19034,10 @@ const emojisData8 = `{
     "codepoints": "↕️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("up-down arrow") + `"
+        "` + _t("arrow") + `",
+        "` + _t("up-down arrow") + `"
     ],
-    "name": "` + _lt("up-down arrow") + `",
+    "name": "` + _t("up-down arrow") + `",
     "shortcodes": [
         ":up-down_arrow:"
     ]
@@ -19047,10 +19047,10 @@ const emojisData8 = `{
     "codepoints": "↔️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("left-right arrow") + `"
+        "` + _t("arrow") + `",
+        "` + _t("left-right arrow") + `"
     ],
-    "name": "` + _lt("left-right arrow") + `",
+    "name": "` + _t("left-right arrow") + `",
     "shortcodes": [
         ":left-right_arrow:"
     ]
@@ -19060,10 +19060,10 @@ const emojisData8 = `{
     "codepoints": "↩️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("right arrow curving left") + `"
+        "` + _t("arrow") + `",
+        "` + _t("right arrow curving left") + `"
     ],
-    "name": "` + _lt("right arrow curving left") + `",
+    "name": "` + _t("right arrow curving left") + `",
     "shortcodes": [
         ":right_arrow_curving_left:"
     ]
@@ -19073,10 +19073,10 @@ const emojisData8 = `{
     "codepoints": "↪️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("left arrow curving right") + `"
+        "` + _t("arrow") + `",
+        "` + _t("left arrow curving right") + `"
     ],
-    "name": "` + _lt("left arrow curving right") + `",
+    "name": "` + _t("left arrow curving right") + `",
     "shortcodes": [
         ":left_arrow_curving_right:"
     ]
@@ -19086,10 +19086,10 @@ const emojisData8 = `{
     "codepoints": "⤴️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("right arrow curving up") + `"
+        "` + _t("arrow") + `",
+        "` + _t("right arrow curving up") + `"
     ],
-    "name": "` + _lt("right arrow curving up") + `",
+    "name": "` + _t("right arrow curving up") + `",
     "shortcodes": [
         ":right_arrow_curving_up:"
     ]
@@ -19099,11 +19099,11 @@ const emojisData8 = `{
     "codepoints": "⤵️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("down") + `",
-        "` + _lt("right arrow curving down") + `"
+        "` + _t("arrow") + `",
+        "` + _t("down") + `",
+        "` + _t("right arrow curving down") + `"
     ],
-    "name": "` + _lt("right arrow curving down") + `",
+    "name": "` + _t("right arrow curving down") + `",
     "shortcodes": [
         ":right_arrow_curving_down:"
     ]
@@ -19113,12 +19113,12 @@ const emojisData8 = `{
     "codepoints": "🔃",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("clockwise") + `",
-        "` + _lt("clockwise vertical arrows") + `",
-        "` + _lt("reload") + `"
+        "` + _t("arrow") + `",
+        "` + _t("clockwise") + `",
+        "` + _t("clockwise vertical arrows") + `",
+        "` + _t("reload") + `"
     ],
-    "name": "` + _lt("clockwise vertical arrows") + `",
+    "name": "` + _t("clockwise vertical arrows") + `",
     "shortcodes": [
         ":clockwise_vertical_arrows:"
     ]
@@ -19128,14 +19128,14 @@ const emojisData8 = `{
     "codepoints": "🔄",
     "emoticons": [],
     "keywords": [
-        "` + _lt("anticlockwise") + `",
-        "` + _lt("arrow") + `",
-        "` + _lt("counterclockwise") + `",
-        "` + _lt("counterclockwise arrows button") + `",
-        "` + _lt("withershins") + `",
-        "` + _lt("anticlockwise arrows button") + `"
+        "` + _t("anticlockwise") + `",
+        "` + _t("arrow") + `",
+        "` + _t("counterclockwise") + `",
+        "` + _t("counterclockwise arrows button") + `",
+        "` + _t("withershins") + `",
+        "` + _t("anticlockwise arrows button") + `"
     ],
-    "name": "` + _lt("counterclockwise arrows button") + `",
+    "name": "` + _t("counterclockwise arrows button") + `",
     "shortcodes": [
         ":counterclockwise_arrows_button:"
     ]
@@ -19145,10 +19145,10 @@ const emojisData8 = `{
     "codepoints": "🔙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("BACK") + `"
+        "` + _t("arrow") + `",
+        "` + _t("BACK") + `"
     ],
-    "name": "` + _lt("BACK arrow") + `",
+    "name": "` + _t("BACK arrow") + `",
     "shortcodes": [
         ":BACK_arrow:"
     ]
@@ -19158,10 +19158,10 @@ const emojisData8 = `{
     "codepoints": "🔚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("END") + `"
+        "` + _t("arrow") + `",
+        "` + _t("END") + `"
     ],
-    "name": "` + _lt("END arrow") + `",
+    "name": "` + _t("END arrow") + `",
     "shortcodes": [
         ":END_arrow:"
     ]
@@ -19171,12 +19171,12 @@ const emojisData8 = `{
     "codepoints": "🔛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("ON") + `",
-        "` + _lt("ON!") + `"
+        "` + _t("arrow") + `",
+        "` + _t("mark") + `",
+        "` + _t("ON") + `",
+        "` + _t("ON!") + `"
     ],
-    "name": "` + _lt("ON! arrow") + `",
+    "name": "` + _t("ON! arrow") + `",
     "shortcodes": [
         ":ON!_arrow:"
     ]
@@ -19186,10 +19186,10 @@ const emojisData8 = `{
     "codepoints": "🔜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("SOON") + `"
+        "` + _t("arrow") + `",
+        "` + _t("SOON") + `"
     ],
-    "name": "` + _lt("SOON arrow") + `",
+    "name": "` + _t("SOON arrow") + `",
     "shortcodes": [
         ":SOON_arrow:"
     ]
@@ -19199,11 +19199,11 @@ const emojisData8 = `{
     "codepoints": "🔝",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("TOP") + `",
-        "` + _lt("up") + `"
+        "` + _t("arrow") + `",
+        "` + _t("TOP") + `",
+        "` + _t("up") + `"
     ],
-    "name": "` + _lt("TOP arrow") + `",
+    "name": "` + _t("TOP arrow") + `",
     "shortcodes": [
         ":TOP_arrow:"
     ]
@@ -19213,11 +19213,11 @@ const emojisData8 = `{
     "codepoints": "🛐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("place of worship") + `",
-        "` + _lt("religion") + `",
-        "` + _lt("worship") + `"
+        "` + _t("place of worship") + `",
+        "` + _t("religion") + `",
+        "` + _t("worship") + `"
     ],
-    "name": "` + _lt("place of worship") + `",
+    "name": "` + _t("place of worship") + `",
     "shortcodes": [
         ":place_of_worship:"
     ]
@@ -19227,11 +19227,11 @@ const emojisData8 = `{
     "codepoints": "⚛️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("atheist") + `",
-        "` + _lt("atom") + `",
-        "` + _lt("atom symbol") + `"
+        "` + _t("atheist") + `",
+        "` + _t("atom") + `",
+        "` + _t("atom symbol") + `"
     ],
-    "name": "` + _lt("atom symbol") + `",
+    "name": "` + _t("atom symbol") + `",
     "shortcodes": [
         ":atom_symbol:"
     ]
@@ -19241,11 +19241,11 @@ const emojisData8 = `{
     "codepoints": "🕉️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Hindu") + `",
-        "` + _lt("om") + `",
-        "` + _lt("religion") + `"
+        "` + _t("Hindu") + `",
+        "` + _t("om") + `",
+        "` + _t("religion") + `"
     ],
-    "name": "` + _lt("om") + `",
+    "name": "` + _t("om") + `",
     "shortcodes": [
         ":om:"
     ]
@@ -19255,16 +19255,16 @@ const emojisData8 = `{
     "codepoints": "✡️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("David") + `",
-        "` + _lt("Jew") + `",
-        "` + _lt("Jewish") + `",
-        "` + _lt("religion") + `",
-        "` + _lt("star") + `",
-        "` + _lt("star of David") + `",
-        "` + _lt("Judaism") + `",
-        "` + _lt("Star of David") + `"
+        "` + _t("David") + `",
+        "` + _t("Jew") + `",
+        "` + _t("Jewish") + `",
+        "` + _t("religion") + `",
+        "` + _t("star") + `",
+        "` + _t("star of David") + `",
+        "` + _t("Judaism") + `",
+        "` + _t("Star of David") + `"
     ],
-    "name": "` + _lt("star of David") + `",
+    "name": "` + _t("star of David") + `",
     "shortcodes": [
         ":star_of_David:"
     ]
@@ -19274,13 +19274,13 @@ const emojisData8 = `{
     "codepoints": "☸️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Buddhist") + `",
-        "` + _lt("dharma") + `",
-        "` + _lt("religion") + `",
-        "` + _lt("wheel") + `",
-        "` + _lt("wheel of dharma") + `"
+        "` + _t("Buddhist") + `",
+        "` + _t("dharma") + `",
+        "` + _t("religion") + `",
+        "` + _t("wheel") + `",
+        "` + _t("wheel of dharma") + `"
     ],
-    "name": "` + _lt("wheel of dharma") + `",
+    "name": "` + _t("wheel of dharma") + `",
     "shortcodes": [
         ":wheel_of_dharma:"
     ]
@@ -19290,15 +19290,15 @@ const emojisData8 = `{
     "codepoints": "☯️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("religion") + `",
-        "` + _lt("tao") + `",
-        "` + _lt("taoist") + `",
-        "` + _lt("yang") + `",
-        "` + _lt("yin") + `",
-        "` + _lt("Tao") + `",
-        "` + _lt("Taoist") + `"
+        "` + _t("religion") + `",
+        "` + _t("tao") + `",
+        "` + _t("taoist") + `",
+        "` + _t("yang") + `",
+        "` + _t("yin") + `",
+        "` + _t("Tao") + `",
+        "` + _t("Taoist") + `"
     ],
-    "name": "` + _lt("yin yang") + `",
+    "name": "` + _t("yin yang") + `",
     "shortcodes": [
         ":yin_yang:"
     ]
@@ -19308,13 +19308,13 @@ const emojisData8 = `{
     "codepoints": "✝️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Christian") + `",
-        "` + _lt("cross") + `",
-        "` + _lt("religion") + `",
-        "` + _lt("latin cross") + `",
-        "` + _lt("Latin cross") + `"
+        "` + _t("Christian") + `",
+        "` + _t("cross") + `",
+        "` + _t("religion") + `",
+        "` + _t("latin cross") + `",
+        "` + _t("Latin cross") + `"
     ],
-    "name": "` + _lt("latin cross") + `",
+    "name": "` + _t("latin cross") + `",
     "shortcodes": [
         ":latin_cross:"
     ]
@@ -19324,13 +19324,13 @@ const emojisData8 = `{
     "codepoints": "☦️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Christian") + `",
-        "` + _lt("cross") + `",
-        "` + _lt("orthodox cross") + `",
-        "` + _lt("religion") + `",
-        "` + _lt("Orthodox cross") + `"
+        "` + _t("Christian") + `",
+        "` + _t("cross") + `",
+        "` + _t("orthodox cross") + `",
+        "` + _t("religion") + `",
+        "` + _t("Orthodox cross") + `"
     ],
-    "name": "` + _lt("orthodox cross") + `",
+    "name": "` + _t("orthodox cross") + `",
     "shortcodes": [
         ":orthodox_cross:"
     ]
@@ -19340,13 +19340,13 @@ const emojisData8 = `{
     "codepoints": "☪️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("islam") + `",
-        "` + _lt("Muslim") + `",
-        "` + _lt("religion") + `",
-        "` + _lt("star and crescent") + `",
-        "` + _lt("Islam") + `"
+        "` + _t("islam") + `",
+        "` + _t("Muslim") + `",
+        "` + _t("religion") + `",
+        "` + _t("star and crescent") + `",
+        "` + _t("Islam") + `"
     ],
-    "name": "` + _lt("star and crescent") + `",
+    "name": "` + _t("star and crescent") + `",
     "shortcodes": [
         ":star_and_crescent:"
     ]
@@ -19356,10 +19356,10 @@ const emojisData8 = `{
     "codepoints": "☮️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("peace") + `",
-        "` + _lt("peace symbol") + `"
+        "` + _t("peace") + `",
+        "` + _t("peace symbol") + `"
     ],
-    "name": "` + _lt("peace symbol") + `",
+    "name": "` + _t("peace symbol") + `",
     "shortcodes": [
         ":peace_symbol:"
     ]
@@ -19369,12 +19369,12 @@ const emojisData8 = `{
     "codepoints": "🕎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("candelabrum") + `",
-        "` + _lt("candlestick") + `",
-        "` + _lt("menorah") + `",
-        "` + _lt("religion") + `"
+        "` + _t("candelabrum") + `",
+        "` + _t("candlestick") + `",
+        "` + _t("menorah") + `",
+        "` + _t("religion") + `"
     ],
-    "name": "` + _lt("menorah") + `",
+    "name": "` + _t("menorah") + `",
     "shortcodes": [
         ":menorah:"
     ]
@@ -19384,11 +19384,11 @@ const emojisData8 = `{
     "codepoints": "🔯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dotted six-pointed star") + `",
-        "` + _lt("fortune") + `",
-        "` + _lt("star") + `"
+        "` + _t("dotted six-pointed star") + `",
+        "` + _t("fortune") + `",
+        "` + _t("star") + `"
     ],
-    "name": "` + _lt("dotted six-pointed star") + `",
+    "name": "` + _t("dotted six-pointed star") + `",
     "shortcodes": [
         ":dotted_six-pointed_star:"
     ]
@@ -19398,11 +19398,11 @@ const emojisData8 = `{
     "codepoints": "♈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Aries") + `",
-        "` + _lt("ram") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("Aries") + `",
+        "` + _t("ram") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Aries") + `",
+    "name": "` + _t("Aries") + `",
     "shortcodes": [
         ":Aries:"
     ]
@@ -19412,12 +19412,12 @@ const emojisData8 = `{
     "codepoints": "♉",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bull") + `",
-        "` + _lt("ox") + `",
-        "` + _lt("Taurus") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("bull") + `",
+        "` + _t("ox") + `",
+        "` + _t("Taurus") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Taurus") + `",
+    "name": "` + _t("Taurus") + `",
     "shortcodes": [
         ":Taurus:"
     ]
@@ -19427,11 +19427,11 @@ const emojisData8 = `{
     "codepoints": "♊",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Gemini") + `",
-        "` + _lt("twins") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("Gemini") + `",
+        "` + _t("twins") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Gemini") + `",
+    "name": "` + _t("Gemini") + `",
     "shortcodes": [
         ":Gemini:"
     ]
@@ -19441,11 +19441,11 @@ const emojisData8 = `{
     "codepoints": "♋",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Cancer") + `",
-        "` + _lt("crab") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("Cancer") + `",
+        "` + _t("crab") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Cancer") + `",
+    "name": "` + _t("Cancer") + `",
     "shortcodes": [
         ":Cancer:"
     ]
@@ -19455,11 +19455,11 @@ const emojisData8 = `{
     "codepoints": "♌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Leo") + `",
-        "` + _lt("lion") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("Leo") + `",
+        "` + _t("lion") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Leo") + `",
+    "name": "` + _t("Leo") + `",
     "shortcodes": [
         ":Leo:"
     ]
@@ -19469,11 +19469,11 @@ const emojisData8 = `{
     "codepoints": "♍",
     "emoticons": [],
     "keywords": [
-        "` + _lt("virgin") + `",
-        "` + _lt("Virgo") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("virgin") + `",
+        "` + _t("Virgo") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Virgo") + `",
+    "name": "` + _t("Virgo") + `",
     "shortcodes": [
         ":Virgo:"
     ]
@@ -19483,13 +19483,13 @@ const emojisData8 = `{
     "codepoints": "♎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("balance") + `",
-        "` + _lt("justice") + `",
-        "` + _lt("Libra") + `",
-        "` + _lt("scales") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("balance") + `",
+        "` + _t("justice") + `",
+        "` + _t("Libra") + `",
+        "` + _t("scales") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Libra") + `",
+    "name": "` + _t("Libra") + `",
     "shortcodes": [
         ":Libra:"
     ]
@@ -19499,13 +19499,13 @@ const emojisData8 = `{
     "codepoints": "♏",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Scorpio") + `",
-        "` + _lt("scorpion") + `",
-        "` + _lt("scorpius") + `",
-        "` + _lt("zodiac") + `",
-        "` + _lt("Scorpius") + `"
+        "` + _t("Scorpio") + `",
+        "` + _t("scorpion") + `",
+        "` + _t("scorpius") + `",
+        "` + _t("zodiac") + `",
+        "` + _t("Scorpius") + `"
     ],
-    "name": "` + _lt("Scorpio") + `",
+    "name": "` + _t("Scorpio") + `",
     "shortcodes": [
         ":Scorpio:"
     ]
@@ -19515,12 +19515,12 @@ const emojisData8 = `{
     "codepoints": "♐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("archer") + `",
-        "` + _lt("centaur") + `",
-        "` + _lt("Sagittarius") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("archer") + `",
+        "` + _t("centaur") + `",
+        "` + _t("Sagittarius") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Sagittarius") + `",
+    "name": "` + _t("Sagittarius") + `",
     "shortcodes": [
         ":Sagittarius:"
     ]
@@ -19530,11 +19530,11 @@ const emojisData8 = `{
     "codepoints": "♑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Capricorn") + `",
-        "` + _lt("goat") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("Capricorn") + `",
+        "` + _t("goat") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Capricorn") + `",
+    "name": "` + _t("Capricorn") + `",
     "shortcodes": [
         ":Capricorn:"
     ]
@@ -19544,13 +19544,13 @@ const emojisData8 = `{
     "codepoints": "♒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Aquarius") + `",
-        "` + _lt("water bearer") + `",
-        "` + _lt("zodiac") + `",
-        "` + _lt("bearer") + `",
-        "` + _lt("water") + `"
+        "` + _t("Aquarius") + `",
+        "` + _t("water bearer") + `",
+        "` + _t("zodiac") + `",
+        "` + _t("bearer") + `",
+        "` + _t("water") + `"
     ],
-    "name": "` + _lt("Aquarius") + `",
+    "name": "` + _t("Aquarius") + `",
     "shortcodes": [
         ":Aquarius:"
     ]
@@ -19560,11 +19560,11 @@ const emojisData8 = `{
     "codepoints": "♓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fish") + `",
-        "` + _lt("Pisces") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("fish") + `",
+        "` + _t("Pisces") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Pisces") + `",
+    "name": "` + _t("Pisces") + `",
     "shortcodes": [
         ":Pisces:"
     ]
@@ -19574,13 +19574,13 @@ const emojisData8 = `{
     "codepoints": "⛎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bearer") + `",
-        "` + _lt("Ophiuchus") + `",
-        "` + _lt("serpent") + `",
-        "` + _lt("snake") + `",
-        "` + _lt("zodiac") + `"
+        "` + _t("bearer") + `",
+        "` + _t("Ophiuchus") + `",
+        "` + _t("serpent") + `",
+        "` + _t("snake") + `",
+        "` + _t("zodiac") + `"
     ],
-    "name": "` + _lt("Ophiuchus") + `",
+    "name": "` + _t("Ophiuchus") + `",
     "shortcodes": [
         ":Ophiuchus:"
     ]
@@ -19590,11 +19590,11 @@ const emojisData8 = `{
     "codepoints": "🔀",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("crossed") + `",
-        "` + _lt("shuffle tracks button") + `"
+        "` + _t("arrow") + `",
+        "` + _t("crossed") + `",
+        "` + _t("shuffle tracks button") + `"
     ],
-    "name": "` + _lt("shuffle tracks button") + `",
+    "name": "` + _t("shuffle tracks button") + `",
     "shortcodes": [
         ":shuffle_ltracks_button:"
     ]
@@ -19604,12 +19604,12 @@ const emojisData8 = `{
     "codepoints": "🔁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("clockwise") + `",
-        "` + _lt("repeat") + `",
-        "` + _lt("repeat button") + `"
+        "` + _t("arrow") + `",
+        "` + _t("clockwise") + `",
+        "` + _t("repeat") + `",
+        "` + _t("repeat button") + `"
     ],
-    "name": "` + _lt("repeat button") + `",
+    "name": "` + _t("repeat button") + `",
     "shortcodes": [
         ":repeat_button:"
     ]
@@ -19619,12 +19619,12 @@ const emojisData8 = `{
     "codepoints": "🔂",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("clockwise") + `",
-        "` + _lt("once") + `",
-        "` + _lt("repeat single button") + `"
+        "` + _t("arrow") + `",
+        "` + _t("clockwise") + `",
+        "` + _t("once") + `",
+        "` + _t("repeat single button") + `"
     ],
-    "name": "` + _lt("repeat single button") + `",
+    "name": "` + _t("repeat single button") + `",
     "shortcodes": [
         ":repeat_single_button:"
     ]
@@ -19634,13 +19634,13 @@ const emojisData8 = `{
     "codepoints": "▶️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("play") + `",
-        "` + _lt("play button") + `",
-        "` + _lt("right") + `",
-        "` + _lt("triangle") + `"
+        "` + _t("arrow") + `",
+        "` + _t("play") + `",
+        "` + _t("play button") + `",
+        "` + _t("right") + `",
+        "` + _t("triangle") + `"
     ],
-    "name": "` + _lt("play button") + `",
+    "name": "` + _t("play button") + `",
     "shortcodes": [
         ":play_button:"
     ]
@@ -19650,14 +19650,14 @@ const emojisData8 = `{
     "codepoints": "⏩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fast forward button") + `",
-        "` + _lt("arrow") + `",
-        "` + _lt("double") + `",
-        "` + _lt("fast") + `",
-        "` + _lt("fast-forward button") + `",
-        "` + _lt("forward") + `"
+        "` + _t("fast forward button") + `",
+        "` + _t("arrow") + `",
+        "` + _t("double") + `",
+        "` + _t("fast") + `",
+        "` + _t("fast-forward button") + `",
+        "` + _t("forward") + `"
     ],
-    "name": "` + _lt("fast-forward button") + `",
+    "name": "` + _t("fast-forward button") + `",
     "shortcodes": [
         ":fast-forward_button:"
     ]
@@ -19667,13 +19667,13 @@ const emojisData8 = `{
     "codepoints": "⏭️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("next scene") + `",
-        "` + _lt("next track") + `",
-        "` + _lt("next track button") + `",
-        "` + _lt("triangle") + `"
+        "` + _t("arrow") + `",
+        "` + _t("next scene") + `",
+        "` + _t("next track") + `",
+        "` + _t("next track button") + `",
+        "` + _t("triangle") + `"
     ],
-    "name": "` + _lt("next track button") + `",
+    "name": "` + _t("next track button") + `",
     "shortcodes": [
         ":next_ltrack_button:"
     ]
@@ -19683,14 +19683,14 @@ const emojisData8 = `{
     "codepoints": "⏯️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("pause") + `",
-        "` + _lt("play") + `",
-        "` + _lt("play or pause button") + `",
-        "` + _lt("right") + `",
-        "` + _lt("triangle") + `"
+        "` + _t("arrow") + `",
+        "` + _t("pause") + `",
+        "` + _t("play") + `",
+        "` + _t("play or pause button") + `",
+        "` + _t("right") + `",
+        "` + _t("triangle") + `"
     ],
-    "name": "` + _lt("play or pause button") + `",
+    "name": "` + _t("play or pause button") + `",
     "shortcodes": [
         ":play_or_pause_button:"
     ]
@@ -19700,13 +19700,13 @@ const emojisData8 = `{
     "codepoints": "◀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("left") + `",
-        "` + _lt("reverse") + `",
-        "` + _lt("reverse button") + `",
-        "` + _lt("triangle") + `"
+        "` + _t("arrow") + `",
+        "` + _t("left") + `",
+        "` + _t("reverse") + `",
+        "` + _t("reverse button") + `",
+        "` + _t("triangle") + `"
     ],
-    "name": "` + _lt("reverse button") + `",
+    "name": "` + _t("reverse button") + `",
     "shortcodes": [
         ":reverse_button:"
     ]
@@ -19716,12 +19716,12 @@ const emojisData8 = `{
     "codepoints": "⏪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("double") + `",
-        "` + _lt("fast reverse button") + `",
-        "` + _lt("rewind") + `"
+        "` + _t("arrow") + `",
+        "` + _t("double") + `",
+        "` + _t("fast reverse button") + `",
+        "` + _t("rewind") + `"
     ],
-    "name": "` + _lt("fast reverse button") + `",
+    "name": "` + _t("fast reverse button") + `",
     "shortcodes": [
         ":fast_reverse_button:"
     ]
@@ -19731,13 +19731,13 @@ const emojisData8 = `{
     "codepoints": "⏮️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("last track button") + `",
-        "` + _lt("previous scene") + `",
-        "` + _lt("previous track") + `",
-        "` + _lt("triangle") + `"
+        "` + _t("arrow") + `",
+        "` + _t("last track button") + `",
+        "` + _t("previous scene") + `",
+        "` + _t("previous track") + `",
+        "` + _t("triangle") + `"
     ],
-    "name": "` + _lt("last track button") + `",
+    "name": "` + _t("last track button") + `",
     "shortcodes": [
         ":last_ltrack_button:"
     ]
@@ -19747,13 +19747,13 @@ const emojisData8 = `{
     "codepoints": "🔼",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("button") + `",
-        "` + _lt("red") + `",
-        "` + _lt("upwards button") + `",
-        "` + _lt("upward button") + `"
+        "` + _t("arrow") + `",
+        "` + _t("button") + `",
+        "` + _t("red") + `",
+        "` + _t("upwards button") + `",
+        "` + _t("upward button") + `"
     ],
-    "name": "` + _lt("upwards button") + `",
+    "name": "` + _t("upwards button") + `",
     "shortcodes": [
         ":upwards_button:"
     ]
@@ -19763,11 +19763,11 @@ const emojisData8 = `{
     "codepoints": "⏫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("double") + `",
-        "` + _lt("fast up button") + `"
+        "` + _t("arrow") + `",
+        "` + _t("double") + `",
+        "` + _t("fast up button") + `"
     ],
-    "name": "` + _lt("fast up button") + `",
+    "name": "` + _t("fast up button") + `",
     "shortcodes": [
         ":fast_up_button:"
     ]
@@ -19777,14 +19777,14 @@ const emojisData8 = `{
     "codepoints": "🔽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("button") + `",
-        "` + _lt("down") + `",
-        "` + _lt("downwards button") + `",
-        "` + _lt("red") + `",
-        "` + _lt("downward button") + `"
+        "` + _t("arrow") + `",
+        "` + _t("button") + `",
+        "` + _t("down") + `",
+        "` + _t("downwards button") + `",
+        "` + _t("red") + `",
+        "` + _t("downward button") + `"
     ],
-    "name": "` + _lt("downwards button") + `",
+    "name": "` + _t("downwards button") + `",
     "shortcodes": [
         ":downwards_button:"
     ]
@@ -19794,12 +19794,12 @@ const emojisData8 = `{
     "codepoints": "⏬",
     "emoticons": [],
     "keywords": [
-        "` + _lt("arrow") + `",
-        "` + _lt("double") + `",
-        "` + _lt("down") + `",
-        "` + _lt("fast down button") + `"
+        "` + _t("arrow") + `",
+        "` + _t("double") + `",
+        "` + _t("down") + `",
+        "` + _t("fast down button") + `"
     ],
-    "name": "` + _lt("fast down button") + `",
+    "name": "` + _t("fast down button") + `",
     "shortcodes": [
         ":fast_down_button:"
     ]
@@ -19809,13 +19809,13 @@ const emojisData8 = `{
     "codepoints": "⏸️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bar") + `",
-        "` + _lt("double") + `",
-        "` + _lt("pause") + `",
-        "` + _lt("pause button") + `",
-        "` + _lt("vertical") + `"
+        "` + _t("bar") + `",
+        "` + _t("double") + `",
+        "` + _t("pause") + `",
+        "` + _t("pause button") + `",
+        "` + _t("vertical") + `"
     ],
-    "name": "` + _lt("pause button") + `",
+    "name": "` + _t("pause button") + `",
     "shortcodes": [
         ":pause_button:"
     ]
@@ -19825,11 +19825,11 @@ const emojisData8 = `{
     "codepoints": "⏹️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("square") + `",
-        "` + _lt("stop") + `",
-        "` + _lt("stop button") + `"
+        "` + _t("square") + `",
+        "` + _t("stop") + `",
+        "` + _t("stop button") + `"
     ],
-    "name": "` + _lt("stop button") + `",
+    "name": "` + _t("stop button") + `",
     "shortcodes": [
         ":stop_button:"
     ]
@@ -19839,11 +19839,11 @@ const emojisData8 = `{
     "codepoints": "⏺️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("circle") + `",
-        "` + _lt("record") + `",
-        "` + _lt("record button") + `"
+        "` + _t("circle") + `",
+        "` + _t("record") + `",
+        "` + _t("record button") + `"
     ],
-    "name": "` + _lt("record button") + `",
+    "name": "` + _t("record button") + `",
     "shortcodes": [
         ":record_button:"
     ]
@@ -19853,10 +19853,10 @@ const emojisData8 = `{
     "codepoints": "⏏️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("eject") + `",
-        "` + _lt("eject button") + `"
+        "` + _t("eject") + `",
+        "` + _t("eject button") + `"
     ],
-    "name": "` + _lt("eject button") + `",
+    "name": "` + _t("eject button") + `",
     "shortcodes": [
         ":eject_button:"
     ]
@@ -19866,12 +19866,12 @@ const emojisData8 = `{
     "codepoints": "🎦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("camera") + `",
-        "` + _lt("cinema") + `",
-        "` + _lt("film") + `",
-        "` + _lt("movie") + `"
+        "` + _t("camera") + `",
+        "` + _t("cinema") + `",
+        "` + _t("film") + `",
+        "` + _t("movie") + `"
     ],
-    "name": "` + _lt("cinema") + `",
+    "name": "` + _t("cinema") + `",
     "shortcodes": [
         ":cinema:"
     ]
@@ -19881,12 +19881,12 @@ const emojisData8 = `{
     "codepoints": "🔅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("brightness") + `",
-        "` + _lt("dim") + `",
-        "` + _lt("dim button") + `",
-        "` + _lt("low") + `"
+        "` + _t("brightness") + `",
+        "` + _t("dim") + `",
+        "` + _t("dim button") + `",
+        "` + _t("low") + `"
     ],
-    "name": "` + _lt("dim button") + `",
+    "name": "` + _t("dim button") + `",
     "shortcodes": [
         ":dim_button:"
     ]
@@ -19896,12 +19896,12 @@ const emojisData8 = `{
     "codepoints": "🔆",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bright button") + `",
-        "` + _lt("brightness") + `",
-        "` + _lt("brightness button") + `",
-        "` + _lt("bright") + `"
+        "` + _t("bright button") + `",
+        "` + _t("brightness") + `",
+        "` + _t("brightness button") + `",
+        "` + _t("bright") + `"
     ],
-    "name": "` + _lt("bright button") + `",
+    "name": "` + _t("bright button") + `",
     "shortcodes": [
         ":bright_button:"
     ]
@@ -19911,14 +19911,14 @@ const emojisData8 = `{
     "codepoints": "📶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("antenna") + `",
-        "` + _lt("antenna bars") + `",
-        "` + _lt("bar") + `",
-        "` + _lt("cell") + `",
-        "` + _lt("mobile") + `",
-        "` + _lt("phone") + `"
+        "` + _t("antenna") + `",
+        "` + _t("antenna bars") + `",
+        "` + _t("bar") + `",
+        "` + _t("cell") + `",
+        "` + _t("mobile") + `",
+        "` + _t("phone") + `"
     ],
-    "name": "` + _lt("antenna bars") + `",
+    "name": "` + _t("antenna bars") + `",
     "shortcodes": [
         ":antenna_bars:"
     ]
@@ -19928,15 +19928,15 @@ const emojisData8 = `{
     "codepoints": "📳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cell") + `",
-        "` + _lt("mobile") + `",
-        "` + _lt("mode") + `",
-        "` + _lt("phone") + `",
-        "` + _lt("telephone") + `",
-        "` + _lt("vibration") + `",
-        "` + _lt("vibrate") + `"
+        "` + _t("cell") + `",
+        "` + _t("mobile") + `",
+        "` + _t("mode") + `",
+        "` + _t("phone") + `",
+        "` + _t("telephone") + `",
+        "` + _t("vibration") + `",
+        "` + _t("vibrate") + `"
     ],
-    "name": "` + _lt("vibration mode") + `",
+    "name": "` + _t("vibration mode") + `",
     "shortcodes": [
         ":vibration_mode:"
     ]
@@ -19946,13 +19946,13 @@ const emojisData8 = `{
     "codepoints": "📴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("cell") + `",
-        "` + _lt("mobile") + `",
-        "` + _lt("off") + `",
-        "` + _lt("phone") + `",
-        "` + _lt("telephone") + `"
+        "` + _t("cell") + `",
+        "` + _t("mobile") + `",
+        "` + _t("off") + `",
+        "` + _t("phone") + `",
+        "` + _t("telephone") + `"
     ],
-    "name": "` + _lt("mobile phone off") + `",
+    "name": "` + _t("mobile phone off") + `",
     "shortcodes": [
         ":mobile_phone_off:"
     ]
@@ -19962,10 +19962,10 @@ const emojisData8 = `{
     "codepoints": "♀️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("female sign") + `",
-        "` + _lt("woman") + `"
+        "` + _t("female sign") + `",
+        "` + _t("woman") + `"
     ],
-    "name": "` + _lt("female sign") + `",
+    "name": "` + _t("female sign") + `",
     "shortcodes": [
         ":female_sign:"
     ]
@@ -19975,10 +19975,10 @@ const emojisData8 = `{
     "codepoints": "♂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("male sign") + `",
-        "` + _lt("man") + `"
+        "` + _t("male sign") + `",
+        "` + _t("man") + `"
     ],
-    "name": "` + _lt("male sign") + `",
+    "name": "` + _t("male sign") + `",
     "shortcodes": [
         ":male_sign:"
     ]
@@ -19988,15 +19988,15 @@ const emojisData8 = `{
     "codepoints": "✖️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("×") + `",
-        "` + _lt("cancel") + `",
-        "` + _lt("multiplication") + `",
-        "` + _lt("multiply") + `",
-        "` + _lt("sign") + `",
-        "` + _lt("x") + `",
-        "` + _lt("heavy multiplication sign") + `"
+        "` + _t("×") + `",
+        "` + _t("cancel") + `",
+        "` + _t("multiplication") + `",
+        "` + _t("multiply") + `",
+        "` + _t("sign") + `",
+        "` + _t("x") + `",
+        "` + _t("heavy multiplication sign") + `"
     ],
-    "name": "` + _lt("multiply") + `",
+    "name": "` + _t("multiply") + `",
     "shortcodes": [
         ":multiply:"
     ]
@@ -20006,15 +20006,15 @@ const emojisData8 = `{
     "codepoints": "➕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("+") + `",
-        "` + _lt("add") + `",
-        "` + _lt("addition") + `",
-        "` + _lt("math") + `",
-        "` + _lt("maths") + `",
-        "` + _lt("plus") + `",
-        "` + _lt("sign") + `"
+        "` + _t("+") + `",
+        "` + _t("add") + `",
+        "` + _t("addition") + `",
+        "` + _t("math") + `",
+        "` + _t("maths") + `",
+        "` + _t("plus") + `",
+        "` + _t("sign") + `"
     ],
-    "name": "` + _lt("plus") + `",
+    "name": "` + _t("plus") + `",
     "shortcodes": [
         ":plus:"
     ]
@@ -20024,17 +20024,17 @@ const emojisData8 = `{
     "codepoints": "➖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("-") + `",
-        "` + _lt("–") + `",
-        "` + _lt("math") + `",
-        "` + _lt("maths") + `",
-        "` + _lt("minus") + `",
-        "` + _lt("sign") + `",
-        "` + _lt("subtraction") + `",
-        "` + _lt("−") + `",
-        "` + _lt("heavy minus sign") + `"
+        "` + _t("-") + `",
+        "` + _t("–") + `",
+        "` + _t("math") + `",
+        "` + _t("maths") + `",
+        "` + _t("minus") + `",
+        "` + _t("sign") + `",
+        "` + _t("subtraction") + `",
+        "` + _t("−") + `",
+        "` + _t("heavy minus sign") + `"
     ],
-    "name": "` + _lt("minus") + `",
+    "name": "` + _t("minus") + `",
     "shortcodes": [
         ":minus:"
     ]
@@ -20044,13 +20044,13 @@ const emojisData8 = `{
     "codepoints": "➗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("÷") + `",
-        "` + _lt("divide") + `",
-        "` + _lt("division") + `",
-        "` + _lt("math") + `",
-        "` + _lt("sign") + `"
+        "` + _t("÷") + `",
+        "` + _t("divide") + `",
+        "` + _t("division") + `",
+        "` + _t("math") + `",
+        "` + _t("sign") + `"
     ],
-    "name": "` + _lt("divide") + `",
+    "name": "` + _t("divide") + `",
     "shortcodes": [
         ":divide:"
     ]
@@ -20060,14 +20060,14 @@ const emojisData8 = `{
     "codepoints": "♾️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("eternal") + `",
-        "` + _lt("forever") + `",
-        "` + _lt("infinity") + `",
-        "` + _lt("unbound") + `",
-        "` + _lt("universal") + `",
-        "` + _lt("unbounded") + `"
+        "` + _t("eternal") + `",
+        "` + _t("forever") + `",
+        "` + _t("infinity") + `",
+        "` + _t("unbound") + `",
+        "` + _t("universal") + `",
+        "` + _t("unbounded") + `"
     ],
-    "name": "` + _lt("infinity") + `",
+    "name": "` + _t("infinity") + `",
     "shortcodes": [
         ":infinity:"
     ]
@@ -20077,15 +20077,15 @@ const emojisData8 = `{
     "codepoints": "‼️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("double exclamation mark") + `",
-        "` + _lt("exclamation") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("punctuation") + `",
-        "` + _lt("!") + `",
-        "` + _lt("!!") + `",
-        "` + _lt("bangbang") + `"
+        "` + _t("double exclamation mark") + `",
+        "` + _t("exclamation") + `",
+        "` + _t("mark") + `",
+        "` + _t("punctuation") + `",
+        "` + _t("!") + `",
+        "` + _t("!!") + `",
+        "` + _t("bangbang") + `"
     ],
-    "name": "` + _lt("double exclamation mark") + `",
+    "name": "` + _t("double exclamation mark") + `",
     "shortcodes": [
         ":double_exclamation_mark:"
     ]
@@ -20095,17 +20095,17 @@ const emojisData8 = `{
     "codepoints": "⁉️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("exclamation") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("punctuation") + `",
-        "` + _lt("question") + `",
-        "` + _lt("!") + `",
-        "` + _lt("!?") + `",
-        "` + _lt("?") + `",
-        "` + _lt("interrobang") + `",
-        "` + _lt("exclamation question mark") + `"
+        "` + _t("exclamation") + `",
+        "` + _t("mark") + `",
+        "` + _t("punctuation") + `",
+        "` + _t("question") + `",
+        "` + _t("!") + `",
+        "` + _t("!?") + `",
+        "` + _t("?") + `",
+        "` + _t("interrobang") + `",
+        "` + _t("exclamation question mark") + `"
     ],
-    "name": "` + _lt("exclamation question mark") + `",
+    "name": "` + _t("exclamation question mark") + `",
     "shortcodes": [
         ":exclamation_question_mark:"
     ]
@@ -20115,13 +20115,13 @@ const emojisData8 = `{
     "codepoints": "❓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("?") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("punctuation") + `",
-        "` + _lt("question") + `",
-        "` + _lt("red question mark") + `"
+        "` + _t("?") + `",
+        "` + _t("mark") + `",
+        "` + _t("punctuation") + `",
+        "` + _t("question") + `",
+        "` + _t("red question mark") + `"
     ],
-    "name": "` + _lt("red question mark") + `",
+    "name": "` + _t("red question mark") + `",
     "shortcodes": [
         ":red_question_mark:"
     ]
@@ -20131,14 +20131,14 @@ const emojisData8 = `{
     "codepoints": "❔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("?") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("outlined") + `",
-        "` + _lt("punctuation") + `",
-        "` + _lt("question") + `",
-        "` + _lt("white question mark") + `"
+        "` + _t("?") + `",
+        "` + _t("mark") + `",
+        "` + _t("outlined") + `",
+        "` + _t("punctuation") + `",
+        "` + _t("question") + `",
+        "` + _t("white question mark") + `"
     ],
-    "name": "` + _lt("white question mark") + `",
+    "name": "` + _t("white question mark") + `",
     "shortcodes": [
         ":white_question_mark:"
     ]
@@ -20148,14 +20148,14 @@ const emojisData8 = `{
     "codepoints": "❕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("!") + `",
-        "` + _lt("exclamation") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("outlined") + `",
-        "` + _lt("punctuation") + `",
-        "` + _lt("white exclamation mark") + `"
+        "` + _t("!") + `",
+        "` + _t("exclamation") + `",
+        "` + _t("mark") + `",
+        "` + _t("outlined") + `",
+        "` + _t("punctuation") + `",
+        "` + _t("white exclamation mark") + `"
     ],
-    "name": "` + _lt("white exclamation mark") + `",
+    "name": "` + _t("white exclamation mark") + `",
     "shortcodes": [
         ":white_exclamation_mark:"
     ]
@@ -20165,13 +20165,13 @@ const emojisData8 = `{
     "codepoints": "❗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("!") + `",
-        "` + _lt("exclamation") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("punctuation") + `",
-        "` + _lt("red exclamation mark") + `"
+        "` + _t("!") + `",
+        "` + _t("exclamation") + `",
+        "` + _t("mark") + `",
+        "` + _t("punctuation") + `",
+        "` + _t("red exclamation mark") + `"
     ],
-    "name": "` + _lt("red exclamation mark") + `",
+    "name": "` + _t("red exclamation mark") + `",
     "shortcodes": [
         ":red_exclamation_mark:"
     ]
@@ -20181,11 +20181,11 @@ const emojisData8 = `{
     "codepoints": "〰️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("dash") + `",
-        "` + _lt("punctuation") + `",
-        "` + _lt("wavy") + `"
+        "` + _t("dash") + `",
+        "` + _t("punctuation") + `",
+        "` + _t("wavy") + `"
     ],
-    "name": "` + _lt("wavy dash") + `",
+    "name": "` + _t("wavy dash") + `",
     "shortcodes": [
         ":wavy_dash:"
     ]
@@ -20195,12 +20195,12 @@ const emojisData8 = `{
     "codepoints": "💱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("bank") + `",
-        "` + _lt("currency") + `",
-        "` + _lt("exchange") + `",
-        "` + _lt("money") + `"
+        "` + _t("bank") + `",
+        "` + _t("currency") + `",
+        "` + _t("exchange") + `",
+        "` + _t("money") + `"
     ],
-    "name": "` + _lt("currency exchange") + `",
+    "name": "` + _t("currency exchange") + `",
     "shortcodes": [
         ":currency_exchange:"
     ]
@@ -20210,12 +20210,12 @@ const emojisData8 = `{
     "codepoints": "💲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("currency") + `",
-        "` + _lt("dollar") + `",
-        "` + _lt("heavy dollar sign") + `",
-        "` + _lt("money") + `"
+        "` + _t("currency") + `",
+        "` + _t("dollar") + `",
+        "` + _t("heavy dollar sign") + `",
+        "` + _t("money") + `"
     ],
-    "name": "` + _lt("heavy dollar sign") + `",
+    "name": "` + _t("heavy dollar sign") + `",
     "shortcodes": [
         ":heavy_dollar_sign:"
     ]
@@ -20225,12 +20225,12 @@ const emojisData8 = `{
     "codepoints": "⚕️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("aesculapius") + `",
-        "` + _lt("medical symbol") + `",
-        "` + _lt("medicine") + `",
-        "` + _lt("staff") + `"
+        "` + _t("aesculapius") + `",
+        "` + _t("medical symbol") + `",
+        "` + _t("medicine") + `",
+        "` + _t("staff") + `"
     ],
-    "name": "` + _lt("medical symbol") + `",
+    "name": "` + _t("medical symbol") + `",
     "shortcodes": [
         ":medical_symbol:"
     ]
@@ -20240,10 +20240,10 @@ const emojisData8 = `{
     "codepoints": "♻️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("recycle") + `",
-        "` + _lt("recycling symbol") + `"
+        "` + _t("recycle") + `",
+        "` + _t("recycling symbol") + `"
     ],
-    "name": "` + _lt("recycling symbol") + `",
+    "name": "` + _t("recycling symbol") + `",
     "shortcodes": [
         ":recycling_symbol:"
     ]
@@ -20253,9 +20253,9 @@ const emojisData8 = `{
     "codepoints": "⚜️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("fleur-de-lis") + `"
+        "` + _t("fleur-de-lis") + `"
     ],
-    "name": "` + _lt("fleur-de-lis") + `",
+    "name": "` + _t("fleur-de-lis") + `",
     "shortcodes": [
         ":fleur-de-lis:"
     ]
@@ -20265,13 +20265,13 @@ const emojisData8 = `{
     "codepoints": "🔱",
     "emoticons": [],
     "keywords": [
-        "` + _lt("anchor") + `",
-        "` + _lt("emblem") + `",
-        "` + _lt("ship") + `",
-        "` + _lt("tool") + `",
-        "` + _lt("trident") + `"
+        "` + _t("anchor") + `",
+        "` + _t("emblem") + `",
+        "` + _t("ship") + `",
+        "` + _t("tool") + `",
+        "` + _t("trident") + `"
     ],
-    "name": "` + _lt("trident emblem") + `",
+    "name": "` + _t("trident emblem") + `",
     "shortcodes": [
         ":trident_emblem:"
     ]
@@ -20281,10 +20281,10 @@ const emojisData8 = `{
     "codepoints": "📛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("badge") + `",
-        "` + _lt("name") + `"
+        "` + _t("badge") + `",
+        "` + _t("name") + `"
     ],
-    "name": "` + _lt("name badge") + `",
+    "name": "` + _t("name badge") + `",
     "shortcodes": [
         ":name_badge:"
     ]
@@ -20294,13 +20294,13 @@ const emojisData8 = `{
     "codepoints": "🔰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("beginner") + `",
-        "` + _lt("chevron") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese symbol for beginner") + `",
-        "` + _lt("leaf") + `"
+        "` + _t("beginner") + `",
+        "` + _t("chevron") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese symbol for beginner") + `",
+        "` + _t("leaf") + `"
     ],
-    "name": "` + _lt("Japanese symbol for beginner") + `",
+    "name": "` + _t("Japanese symbol for beginner") + `",
     "shortcodes": [
         ":Japanese_symbol_for_beginner:"
     ]
@@ -20310,13 +20310,13 @@ const emojisData8 = `{
     "codepoints": "⭕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("circle") + `",
-        "` + _lt("hollow red circle") + `",
-        "` + _lt("large") + `",
-        "` + _lt("o") + `",
-        "` + _lt("red") + `"
+        "` + _t("circle") + `",
+        "` + _t("hollow red circle") + `",
+        "` + _t("large") + `",
+        "` + _t("o") + `",
+        "` + _t("red") + `"
     ],
-    "name": "` + _lt("hollow red circle") + `",
+    "name": "` + _t("hollow red circle") + `",
     "shortcodes": [
         ":hollow_red_circle:"
     ]
@@ -20326,13 +20326,13 @@ const emojisData8 = `{
     "codepoints": "✅",
     "emoticons": [],
     "keywords": [
-        "` + _lt("✓") + `",
-        "` + _lt("button") + `",
-        "` + _lt("check") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("tick") + `"
+        "` + _t("✓") + `",
+        "` + _t("button") + `",
+        "` + _t("check") + `",
+        "` + _t("mark") + `",
+        "` + _t("tick") + `"
     ],
-    "name": "` + _lt("check mark button") + `",
+    "name": "` + _t("check mark button") + `",
     "shortcodes": [
         ":check_mark_button:"
     ]
@@ -20342,15 +20342,15 @@ const emojisData8 = `{
     "codepoints": "☑️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ballot") + `",
-        "` + _lt("box") + `",
-        "` + _lt("check box with check") + `",
-        "` + _lt("tick") + `",
-        "` + _lt("tick box with tick") + `",
-        "` + _lt("✓") + `",
-        "` + _lt("check") + `"
+        "` + _t("ballot") + `",
+        "` + _t("box") + `",
+        "` + _t("check box with check") + `",
+        "` + _t("tick") + `",
+        "` + _t("tick box with tick") + `",
+        "` + _t("✓") + `",
+        "` + _t("check") + `"
     ],
-    "name": "` + _lt("check box with check") + `",
+    "name": "` + _t("check box with check") + `",
     "shortcodes": [
         ":check_box_with_check:"
     ]
@@ -20360,14 +20360,14 @@ const emojisData8 = `{
     "codepoints": "✔️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("check mark") + `",
-        "` + _lt("heavy tick mark") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("tick") + `",
-        "` + _lt("✓") + `",
-        "` + _lt("check") + `"
+        "` + _t("check mark") + `",
+        "` + _t("heavy tick mark") + `",
+        "` + _t("mark") + `",
+        "` + _t("tick") + `",
+        "` + _t("✓") + `",
+        "` + _t("check") + `"
     ],
-    "name": "` + _lt("check mark") + `",
+    "name": "` + _t("check mark") + `",
     "shortcodes": [
         ":check_mark:"
     ]
@@ -20377,15 +20377,15 @@ const emojisData8 = `{
     "codepoints": "❌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("×") + `",
-        "` + _lt("cancel") + `",
-        "` + _lt("cross") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("multiplication") + `",
-        "` + _lt("multiply") + `",
-        "` + _lt("x") + `"
+        "` + _t("×") + `",
+        "` + _t("cancel") + `",
+        "` + _t("cross") + `",
+        "` + _t("mark") + `",
+        "` + _t("multiplication") + `",
+        "` + _t("multiply") + `",
+        "` + _t("x") + `"
     ],
-    "name": "` + _lt("cross mark") + `",
+    "name": "` + _t("cross mark") + `",
     "shortcodes": [
         ":cross_mark:"
     ]
@@ -20395,13 +20395,13 @@ const emojisData8 = `{
     "codepoints": "❎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("×") + `",
-        "` + _lt("cross mark button") + `",
-        "` + _lt("mark") + `",
-        "` + _lt("square") + `",
-        "` + _lt("x") + `"
+        "` + _t("×") + `",
+        "` + _t("cross mark button") + `",
+        "` + _t("mark") + `",
+        "` + _t("square") + `",
+        "` + _t("x") + `"
     ],
-    "name": "` + _lt("cross mark button") + `",
+    "name": "` + _t("cross mark button") + `",
     "shortcodes": [
         ":cross_mark_button:"
     ]
@@ -20411,11 +20411,11 @@ const emojisData8 = `{
     "codepoints": "➰",
     "emoticons": [],
     "keywords": [
-        "` + _lt("curl") + `",
-        "` + _lt("curly loop") + `",
-        "` + _lt("loop") + `"
+        "` + _t("curl") + `",
+        "` + _t("curly loop") + `",
+        "` + _t("loop") + `"
     ],
-    "name": "` + _lt("curly loop") + `",
+    "name": "` + _t("curly loop") + `",
     "shortcodes": [
         ":curly_loop:"
     ]
@@ -20425,12 +20425,12 @@ const emojisData8 = `{
     "codepoints": "➿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("curl") + `",
-        "` + _lt("double") + `",
-        "` + _lt("double curly loop") + `",
-        "` + _lt("loop") + `"
+        "` + _t("curl") + `",
+        "` + _t("double") + `",
+        "` + _t("double curly loop") + `",
+        "` + _t("loop") + `"
     ],
-    "name": "` + _lt("double curly loop") + `",
+    "name": "` + _t("double curly loop") + `",
     "shortcodes": [
         ":double_curly_loop:"
     ]
@@ -20440,11 +20440,11 @@ const emojisData8 = `{
     "codepoints": "〽️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mark") + `",
-        "` + _lt("part") + `",
-        "` + _lt("part alternation mark") + `"
+        "` + _t("mark") + `",
+        "` + _t("part") + `",
+        "` + _t("part alternation mark") + `"
     ],
-    "name": "` + _lt("part alternation mark") + `",
+    "name": "` + _t("part alternation mark") + `",
     "shortcodes": [
         ":part_alternation_mark:"
     ]
@@ -20454,11 +20454,11 @@ const emojisData8 = `{
     "codepoints": "✳️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("*") + `",
-        "` + _lt("asterisk") + `",
-        "` + _lt("eight-spoked asterisk") + `"
+        "` + _t("*") + `",
+        "` + _t("asterisk") + `",
+        "` + _t("eight-spoked asterisk") + `"
     ],
-    "name": "` + _lt("eight-spoked asterisk") + `",
+    "name": "` + _t("eight-spoked asterisk") + `",
     "shortcodes": [
         ":eight-spoked_asterisk:"
     ]
@@ -20468,11 +20468,11 @@ const emojisData8 = `{
     "codepoints": "✴️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("*") + `",
-        "` + _lt("eight-pointed star") + `",
-        "` + _lt("star") + `"
+        "` + _t("*") + `",
+        "` + _t("eight-pointed star") + `",
+        "` + _t("star") + `"
     ],
-    "name": "` + _lt("eight-pointed star") + `",
+    "name": "` + _t("eight-pointed star") + `",
     "shortcodes": [
         ":eight-pointed_star:"
     ]
@@ -20482,10 +20482,10 @@ const emojisData8 = `{
     "codepoints": "❇️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("*") + `",
-        "` + _lt("sparkle") + `"
+        "` + _t("*") + `",
+        "` + _t("sparkle") + `"
     ],
-    "name": "` + _lt("sparkle") + `",
+    "name": "` + _t("sparkle") + `",
     "shortcodes": [
         ":sparkle:"
     ]
@@ -20495,10 +20495,10 @@ const emojisData8 = `{
     "codepoints": "©️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("C") + `",
-        "` + _lt("copyright") + `"
+        "` + _t("C") + `",
+        "` + _t("copyright") + `"
     ],
-    "name": "` + _lt("copyright") + `",
+    "name": "` + _t("copyright") + `",
     "shortcodes": [
         ":copyright:"
     ]
@@ -20508,12 +20508,12 @@ const emojisData8 = `{
     "codepoints": "®️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("R") + `",
-        "` + _lt("registered") + `",
-        "` + _lt("r") + `",
-        "` + _lt("trademark") + `"
+        "` + _t("R") + `",
+        "` + _t("registered") + `",
+        "` + _t("r") + `",
+        "` + _t("trademark") + `"
     ],
-    "name": "` + _lt("registered") + `",
+    "name": "` + _t("registered") + `",
     "shortcodes": [
         ":registered:"
     ]
@@ -20523,12 +20523,12 @@ const emojisData8 = `{
     "codepoints": "™️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mark") + `",
-        "` + _lt("TM") + `",
-        "` + _lt("trade mark") + `",
-        "` + _lt("trademark") + `"
+        "` + _t("mark") + `",
+        "` + _t("TM") + `",
+        "` + _t("trade mark") + `",
+        "` + _t("trademark") + `"
     ],
-    "name": "` + _lt("trade mark") + `",
+    "name": "` + _t("trade mark") + `",
     "shortcodes": [
         ":trade_mark:"
     ]
@@ -20538,9 +20538,9 @@ const emojisData8 = `{
     "codepoints": "#️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: #") + `",
+    "name": "` + _t("keycap: #") + `",
     "shortcodes": [
         ":keycap:_#:"
     ]
@@ -20550,9 +20550,9 @@ const emojisData8 = `{
     "codepoints": "*️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: *") + `",
+    "name": "` + _t("keycap: *") + `",
     "shortcodes": [
         ":keycap:_*:"
     ]
@@ -20562,9 +20562,9 @@ const emojisData8 = `{
     "codepoints": "0️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 0") + `",
+    "name": "` + _t("keycap: 0") + `",
     "shortcodes": [
         ":keycap:_0:"
     ]
@@ -20574,9 +20574,9 @@ const emojisData8 = `{
     "codepoints": "1️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 1") + `",
+    "name": "` + _t("keycap: 1") + `",
     "shortcodes": [
         ":keycap:_1:"
     ]
@@ -20586,9 +20586,9 @@ const emojisData8 = `{
     "codepoints": "2️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 2") + `",
+    "name": "` + _t("keycap: 2") + `",
     "shortcodes": [
         ":keycap:_2:"
     ]
@@ -20598,9 +20598,9 @@ const emojisData8 = `{
     "codepoints": "3️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 3") + `",
+    "name": "` + _t("keycap: 3") + `",
     "shortcodes": [
         ":keycap:_3:"
     ]
@@ -20610,9 +20610,9 @@ const emojisData8 = `{
     "codepoints": "4️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 4") + `",
+    "name": "` + _t("keycap: 4") + `",
     "shortcodes": [
         ":keycap:_4:"
     ]
@@ -20622,9 +20622,9 @@ const emojisData8 = `{
     "codepoints": "5️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 5") + `",
+    "name": "` + _t("keycap: 5") + `",
     "shortcodes": [
         ":keycap:_5:"
     ]
@@ -20634,9 +20634,9 @@ const emojisData8 = `{
     "codepoints": "6️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 6") + `",
+    "name": "` + _t("keycap: 6") + `",
     "shortcodes": [
         ":keycap:_6:"
     ]
@@ -20646,9 +20646,9 @@ const emojisData8 = `{
     "codepoints": "7️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 7") + `",
+    "name": "` + _t("keycap: 7") + `",
     "shortcodes": [
         ":keycap:_7:"
     ]
@@ -20658,9 +20658,9 @@ const emojisData8 = `{
     "codepoints": "8️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 8") + `",
+    "name": "` + _t("keycap: 8") + `",
     "shortcodes": [
         ":keycap:_8:"
     ]
@@ -20670,9 +20670,9 @@ const emojisData8 = `{
     "codepoints": "9️⃣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 9") + `",
+    "name": "` + _t("keycap: 9") + `",
     "shortcodes": [
         ":keycap:_9:"
     ]
@@ -20682,9 +20682,9 @@ const emojisData8 = `{
     "codepoints": "🔟",
     "emoticons": [],
     "keywords": [
-        "` + _lt("keycap") + `"
+        "` + _t("keycap") + `"
     ],
-    "name": "` + _lt("keycap: 10") + `",
+    "name": "` + _t("keycap: 10") + `",
     "shortcodes": [
         ":keycap:_10:"
     ]
@@ -20694,15 +20694,15 @@ const emojisData8 = `{
     "codepoints": "🔠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("input Latin uppercase") + `",
-        "` + _lt("ABCD") + `",
-        "` + _lt("input") + `",
-        "` + _lt("latin") + `",
-        "` + _lt("letters") + `",
-        "` + _lt("uppercase") + `",
-        "` + _lt("Latin") + `"
+        "` + _t("input Latin uppercase") + `",
+        "` + _t("ABCD") + `",
+        "` + _t("input") + `",
+        "` + _t("latin") + `",
+        "` + _t("letters") + `",
+        "` + _t("uppercase") + `",
+        "` + _t("Latin") + `"
     ],
-    "name": "` + _lt("input latin uppercase") + `",
+    "name": "` + _t("input latin uppercase") + `",
     "shortcodes": [
         ":input_latin_uppercase:"
     ]
@@ -20712,15 +20712,15 @@ const emojisData8 = `{
     "codepoints": "🔡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("input Latin lowercase") + `",
-        "` + _lt("abcd") + `",
-        "` + _lt("input") + `",
-        "` + _lt("latin") + `",
-        "` + _lt("letters") + `",
-        "` + _lt("lowercase") + `",
-        "` + _lt("Latin") + `"
+        "` + _t("input Latin lowercase") + `",
+        "` + _t("abcd") + `",
+        "` + _t("input") + `",
+        "` + _t("latin") + `",
+        "` + _t("letters") + `",
+        "` + _t("lowercase") + `",
+        "` + _t("Latin") + `"
     ],
-    "name": "` + _lt("input latin lowercase") + `",
+    "name": "` + _t("input latin lowercase") + `",
     "shortcodes": [
         ":input_latin_lowercase:"
     ]
@@ -20730,11 +20730,11 @@ const emojisData8 = `{
     "codepoints": "🔢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("1234") + `",
-        "` + _lt("input") + `",
-        "` + _lt("numbers") + `"
+        "` + _t("1234") + `",
+        "` + _t("input") + `",
+        "` + _t("numbers") + `"
     ],
-    "name": "` + _lt("input numbers") + `",
+    "name": "` + _t("input numbers") + `",
     "shortcodes": [
         ":input_numbers:"
     ]
@@ -20744,11 +20744,11 @@ const emojisData8 = `{
     "codepoints": "🔣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("〒♪&%") + `",
-        "` + _lt("input") + `",
-        "` + _lt("input symbols") + `"
+        "` + _t("〒♪&%") + `",
+        "` + _t("input") + `",
+        "` + _t("input symbols") + `"
     ],
-    "name": "` + _lt("input symbols") + `",
+    "name": "` + _t("input symbols") + `",
     "shortcodes": [
         ":input_symbols:"
     ]
@@ -20758,15 +20758,15 @@ const emojisData8 = `{
     "codepoints": "🔤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("input Latin letters") + `",
-        "` + _lt("abc") + `",
-        "` + _lt("alphabet") + `",
-        "` + _lt("input") + `",
-        "` + _lt("latin") + `",
-        "` + _lt("letters") + `",
-        "` + _lt("Latin") + `"
+        "` + _t("input Latin letters") + `",
+        "` + _t("abc") + `",
+        "` + _t("alphabet") + `",
+        "` + _t("input") + `",
+        "` + _t("latin") + `",
+        "` + _t("letters") + `",
+        "` + _t("Latin") + `"
     ],
-    "name": "` + _lt("input latin letters") + `",
+    "name": "` + _t("input latin letters") + `",
     "shortcodes": [
         ":input_latin_letters:"
     ]
@@ -20776,11 +20776,11 @@ const emojisData8 = `{
     "codepoints": "🅰️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("A") + `",
-        "` + _lt("A button (blood type)") + `",
-        "` + _lt("blood type") + `"
+        "` + _t("A") + `",
+        "` + _t("A button (blood type)") + `",
+        "` + _t("blood type") + `"
     ],
-    "name": "` + _lt("A button (blood type)") + `",
+    "name": "` + _t("A button (blood type)") + `",
     "shortcodes": [
         ":A_button_(blood_ltype):"
     ]
@@ -20790,11 +20790,11 @@ const emojisData8 = `{
     "codepoints": "🆎",
     "emoticons": [],
     "keywords": [
-        "` + _lt("AB") + `",
-        "` + _lt("AB button (blood type)") + `",
-        "` + _lt("blood type") + `"
+        "` + _t("AB") + `",
+        "` + _t("AB button (blood type)") + `",
+        "` + _t("blood type") + `"
     ],
-    "name": "` + _lt("AB button (blood type)") + `",
+    "name": "` + _t("AB button (blood type)") + `",
     "shortcodes": [
         ":AB_button_(blood_ltype):"
     ]
@@ -20804,11 +20804,11 @@ const emojisData8 = `{
     "codepoints": "🅱️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("B") + `",
-        "` + _lt("B button (blood type)") + `",
-        "` + _lt("blood type") + `"
+        "` + _t("B") + `",
+        "` + _t("B button (blood type)") + `",
+        "` + _t("blood type") + `"
     ],
-    "name": "` + _lt("B button (blood type)") + `",
+    "name": "` + _t("B button (blood type)") + `",
     "shortcodes": [
         ":B_button_(blood_ltype):"
     ]
@@ -20818,10 +20818,10 @@ const emojisData8 = `{
     "codepoints": "🆑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("CL") + `",
-        "` + _lt("CL button") + `"
+        "` + _t("CL") + `",
+        "` + _t("CL button") + `"
     ],
-    "name": "` + _lt("CL button") + `",
+    "name": "` + _t("CL button") + `",
     "shortcodes": [
         ":CL_button:"
     ]
@@ -20831,10 +20831,10 @@ const emojisData8 = `{
     "codepoints": "🆒",
     "emoticons": [],
     "keywords": [
-        "` + _lt("COOL") + `",
-        "` + _lt("COOL button") + `"
+        "` + _t("COOL") + `",
+        "` + _t("COOL button") + `"
     ],
-    "name": "` + _lt("COOL button") + `",
+    "name": "` + _t("COOL button") + `",
     "shortcodes": [
         ":COOL_button:"
     ]
@@ -20844,10 +20844,10 @@ const emojisData8 = `{
     "codepoints": "🆓",
     "emoticons": [],
     "keywords": [
-        "` + _lt("FREE") + `",
-        "` + _lt("FREE button") + `"
+        "` + _t("FREE") + `",
+        "` + _t("FREE button") + `"
     ],
-    "name": "` + _lt("FREE button") + `",
+    "name": "` + _t("FREE button") + `",
     "shortcodes": [
         ":FREE_button:"
     ]
@@ -20857,10 +20857,10 @@ const emojisData8 = `{
     "codepoints": "ℹ️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("i") + `",
-        "` + _lt("information") + `"
+        "` + _t("i") + `",
+        "` + _t("information") + `"
     ],
-    "name": "` + _lt("information") + `",
+    "name": "` + _t("information") + `",
     "shortcodes": [
         ":information:"
     ]
@@ -20870,11 +20870,11 @@ const emojisData8 = `{
     "codepoints": "🆔",
     "emoticons": [],
     "keywords": [
-        "` + _lt("ID") + `",
-        "` + _lt("ID button") + `",
-        "` + _lt("identity") + `"
+        "` + _t("ID") + `",
+        "` + _t("ID button") + `",
+        "` + _t("identity") + `"
     ],
-    "name": "` + _lt("ID button") + `",
+    "name": "` + _t("ID button") + `",
     "shortcodes": [
         ":ID_button:"
     ]
@@ -20884,11 +20884,11 @@ const emojisData8 = `{
     "codepoints": "Ⓜ️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("circle") + `",
-        "` + _lt("circled M") + `",
-        "` + _lt("M") + `"
+        "` + _t("circle") + `",
+        "` + _t("circled M") + `",
+        "` + _t("M") + `"
     ],
-    "name": "` + _lt("circled M") + `",
+    "name": "` + _t("circled M") + `",
     "shortcodes": [
         ":circled_M:"
     ]
@@ -20898,10 +20898,10 @@ const emojisData8 = `{
     "codepoints": "🆕",
     "emoticons": [],
     "keywords": [
-        "` + _lt("NEW") + `",
-        "` + _lt("NEW button") + `"
+        "` + _t("NEW") + `",
+        "` + _t("NEW button") + `"
     ],
-    "name": "` + _lt("NEW button") + `",
+    "name": "` + _t("NEW button") + `",
     "shortcodes": [
         ":NEW_button:"
     ]
@@ -20911,10 +20911,10 @@ const emojisData8 = `{
     "codepoints": "🆖",
     "emoticons": [],
     "keywords": [
-        "` + _lt("NG") + `",
-        "` + _lt("NG button") + `"
+        "` + _t("NG") + `",
+        "` + _t("NG button") + `"
     ],
-    "name": "` + _lt("NG button") + `",
+    "name": "` + _t("NG button") + `",
     "shortcodes": [
         ":NG_button:"
     ]
@@ -20924,11 +20924,11 @@ const emojisData8 = `{
     "codepoints": "🅾️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blood type") + `",
-        "` + _lt("O") + `",
-        "` + _lt("O button (blood type)") + `"
+        "` + _t("blood type") + `",
+        "` + _t("O") + `",
+        "` + _t("O button (blood type)") + `"
     ],
-    "name": "` + _lt("O button (blood type)") + `",
+    "name": "` + _t("O button (blood type)") + `",
     "shortcodes": [
         ":O_button_(blood_ltype):"
     ]
@@ -20938,10 +20938,10 @@ const emojisData8 = `{
     "codepoints": "🆗",
     "emoticons": [],
     "keywords": [
-        "` + _lt("OK") + `",
-        "` + _lt("OK button") + `"
+        "` + _t("OK") + `",
+        "` + _t("OK button") + `"
     ],
-    "name": "` + _lt("OK button") + `",
+    "name": "` + _t("OK button") + `",
     "shortcodes": [
         ":OK_button:"
     ]
@@ -20951,11 +20951,11 @@ const emojisData8 = `{
     "codepoints": "🅿️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("P") + `",
-        "` + _lt("P button") + `",
-        "` + _lt("parking") + `"
+        "` + _t("P") + `",
+        "` + _t("P button") + `",
+        "` + _t("parking") + `"
     ],
-    "name": "` + _lt("P button") + `",
+    "name": "` + _t("P button") + `",
     "shortcodes": [
         ":P_button:"
     ]
@@ -20965,11 +20965,11 @@ const emojisData8 = `{
     "codepoints": "🆘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("help") + `",
-        "` + _lt("SOS") + `",
-        "` + _lt("SOS button") + `"
+        "` + _t("help") + `",
+        "` + _t("SOS") + `",
+        "` + _t("SOS button") + `"
     ],
-    "name": "` + _lt("SOS button") + `",
+    "name": "` + _t("SOS button") + `",
     "shortcodes": [
         ":SOS_button:"
     ]
@@ -20979,12 +20979,12 @@ const emojisData8 = `{
     "codepoints": "🆙",
     "emoticons": [],
     "keywords": [
-        "` + _lt("mark") + `",
-        "` + _lt("UP") + `",
-        "` + _lt("UP!") + `",
-        "` + _lt("UP! button") + `"
+        "` + _t("mark") + `",
+        "` + _t("UP") + `",
+        "` + _t("UP!") + `",
+        "` + _t("UP! button") + `"
     ],
-    "name": "` + _lt("UP! button") + `",
+    "name": "` + _t("UP! button") + `",
     "shortcodes": [
         ":UP!_button:"
     ]
@@ -20994,11 +20994,11 @@ const emojisData8 = `{
     "codepoints": "🆚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("versus") + `",
-        "` + _lt("VS") + `",
-        "` + _lt("VS button") + `"
+        "` + _t("versus") + `",
+        "` + _t("VS") + `",
+        "` + _t("VS button") + `"
     ],
-    "name": "` + _lt("VS button") + `",
+    "name": "` + _t("VS button") + `",
     "shortcodes": [
         ":VS_button:"
     ]
@@ -21008,13 +21008,13 @@ const emojisData8 = `{
     "codepoints": "🈁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“here”") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “here” button") + `",
-        "` + _lt("katakana") + `",
-        "` + _lt("ココ") + `"
+        "` + _t("“here”") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “here” button") + `",
+        "` + _t("katakana") + `",
+        "` + _t("ココ") + `"
     ],
-    "name": "` + _lt("Japanese “here” button") + `",
+    "name": "` + _t("Japanese “here” button") + `",
     "shortcodes": [
         ":Japanese_“here”_button:"
     ]
@@ -21024,13 +21024,13 @@ const emojisData8 = `{
     "codepoints": "🈂️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“service charge”") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “service charge” button") + `",
-        "` + _lt("katakana") + `",
-        "` + _lt("サ") + `"
+        "` + _t("“service charge”") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “service charge” button") + `",
+        "` + _t("katakana") + `",
+        "` + _t("サ") + `"
     ],
-    "name": "` + _lt("Japanese “service charge” button") + `",
+    "name": "` + _t("Japanese “service charge” button") + `",
     "shortcodes": [
         ":Japanese_“service_charge”_button:"
     ]
@@ -21040,13 +21040,13 @@ const emojisData8 = `{
     "codepoints": "🈷️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“monthly amount”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “monthly amount” button") + `",
-        "` + _lt("月") + `"
+        "` + _t("“monthly amount”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “monthly amount” button") + `",
+        "` + _t("月") + `"
     ],
-    "name": "` + _lt("Japanese “monthly amount” button") + `",
+    "name": "` + _t("Japanese “monthly amount” button") + `",
     "shortcodes": [
         ":Japanese_“monthly_amount”_button:"
     ]
@@ -21056,13 +21056,13 @@ const emojisData8 = `{
     "codepoints": "🈶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“not free of charge”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “not free of charge” button") + `",
-        "` + _lt("有") + `"
+        "` + _t("“not free of charge”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “not free of charge” button") + `",
+        "` + _t("有") + `"
     ],
-    "name": "` + _lt("Japanese “not free of charge” button") + `",
+    "name": "` + _t("Japanese “not free of charge” button") + `",
     "shortcodes": [
         ":Japanese_“not_free_of_charge”_button:"
     ]
@@ -21072,13 +21072,13 @@ const emojisData8 = `{
     "codepoints": "🈯",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“reserved”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “reserved” button") + `",
-        "` + _lt("指") + `"
+        "` + _t("“reserved”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “reserved” button") + `",
+        "` + _t("指") + `"
     ],
-    "name": "` + _lt("Japanese “reserved” button") + `",
+    "name": "` + _t("Japanese “reserved” button") + `",
     "shortcodes": [
         ":Japanese_“reserved”_button:"
     ]
@@ -21088,13 +21088,13 @@ const emojisData8 = `{
     "codepoints": "🉐",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“bargain”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “bargain” button") + `",
-        "` + _lt("得") + `"
+        "` + _t("“bargain”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “bargain” button") + `",
+        "` + _t("得") + `"
     ],
-    "name": "` + _lt("Japanese “bargain” button") + `",
+    "name": "` + _t("Japanese “bargain” button") + `",
     "shortcodes": [
         ":Japanese_“bargain”_button:"
     ]
@@ -21104,13 +21104,13 @@ const emojisData8 = `{
     "codepoints": "🈹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“discount”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “discount” button") + `",
-        "` + _lt("割") + `"
+        "` + _t("“discount”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “discount” button") + `",
+        "` + _t("割") + `"
     ],
-    "name": "` + _lt("Japanese “discount” button") + `",
+    "name": "` + _t("Japanese “discount” button") + `",
     "shortcodes": [
         ":Japanese_“discount”_button:"
     ]
@@ -21120,13 +21120,13 @@ const emojisData8 = `{
     "codepoints": "🈚",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“free of charge”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “free of charge” button") + `",
-        "` + _lt("無") + `"
+        "` + _t("“free of charge”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “free of charge” button") + `",
+        "` + _t("無") + `"
     ],
-    "name": "` + _lt("Japanese “free of charge” button") + `",
+    "name": "` + _t("Japanese “free of charge” button") + `",
     "shortcodes": [
         ":Japanese_“free_of_charge”_button:"
     ]
@@ -21136,13 +21136,13 @@ const emojisData8 = `{
     "codepoints": "🈲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“prohibited”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “prohibited” button") + `",
-        "` + _lt("禁") + `"
+        "` + _t("“prohibited”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “prohibited” button") + `",
+        "` + _t("禁") + `"
     ],
-    "name": "` + _lt("Japanese “prohibited” button") + `",
+    "name": "` + _t("Japanese “prohibited” button") + `",
     "shortcodes": [
         ":Japanese_“prohibited”_button:"
     ]
@@ -21152,13 +21152,13 @@ const emojisData8 = `{
     "codepoints": "🉑",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“acceptable”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “acceptable” button") + `",
-        "` + _lt("可") + `"
+        "` + _t("“acceptable”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “acceptable” button") + `",
+        "` + _t("可") + `"
     ],
-    "name": "` + _lt("Japanese “acceptable” button") + `",
+    "name": "` + _t("Japanese “acceptable” button") + `",
     "shortcodes": [
         ":Japanese_“acceptable”_button:"
     ]
@@ -21168,13 +21168,13 @@ const emojisData8 = `{
     "codepoints": "🈸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“application”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “application” button") + `",
-        "` + _lt("申") + `"
+        "` + _t("“application”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “application” button") + `",
+        "` + _t("申") + `"
     ],
-    "name": "` + _lt("Japanese “application” button") + `",
+    "name": "` + _t("Japanese “application” button") + `",
     "shortcodes": [
         ":Japanese_“application”_button:"
     ]
@@ -21184,13 +21184,13 @@ const emojisData8 = `{
     "codepoints": "🈴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“passing grade”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “passing grade” button") + `",
-        "` + _lt("合") + `"
+        "` + _t("“passing grade”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “passing grade” button") + `",
+        "` + _t("合") + `"
     ],
-    "name": "` + _lt("Japanese “passing grade” button") + `",
+    "name": "` + _t("Japanese “passing grade” button") + `",
     "shortcodes": [
         ":Japanese_“passing_grade”_button:"
     ]
@@ -21200,13 +21200,13 @@ const emojisData8 = `{
     "codepoints": "🈳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“vacancy”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “vacancy” button") + `",
-        "` + _lt("空") + `"
+        "` + _t("“vacancy”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “vacancy” button") + `",
+        "` + _t("空") + `"
     ],
-    "name": "` + _lt("Japanese “vacancy” button") + `",
+    "name": "` + _t("Japanese “vacancy” button") + `",
     "shortcodes": [
         ":Japanese_“vacancy”_button:"
     ]
@@ -21216,13 +21216,13 @@ const emojisData8 = `{
     "codepoints": "㊗️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“congratulations”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “congratulations” button") + `",
-        "` + _lt("祝") + `"
+        "` + _t("“congratulations”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “congratulations” button") + `",
+        "` + _t("祝") + `"
     ],
-    "name": "` + _lt("Japanese “congratulations” button") + `",
+    "name": "` + _t("Japanese “congratulations” button") + `",
     "shortcodes": [
         ":Japanese_“congratulations”_button:"
     ]
@@ -21232,13 +21232,13 @@ const emojisData8 = `{
     "codepoints": "㊙️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“secret”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “secret” button") + `",
-        "` + _lt("秘") + `"
+        "` + _t("“secret”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “secret” button") + `",
+        "` + _t("秘") + `"
     ],
-    "name": "` + _lt("Japanese “secret” button") + `",
+    "name": "` + _t("Japanese “secret” button") + `",
     "shortcodes": [
         ":Japanese_“secret”_button:"
     ]
@@ -21248,13 +21248,13 @@ const emojisData8 = `{
     "codepoints": "🈺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“open for business”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “open for business” button") + `",
-        "` + _lt("営") + `"
+        "` + _t("“open for business”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “open for business” button") + `",
+        "` + _t("営") + `"
     ],
-    "name": "` + _lt("Japanese “open for business” button") + `",
+    "name": "` + _t("Japanese “open for business” button") + `",
     "shortcodes": [
         ":Japanese_“open_for_business”_button:"
     ]
@@ -21264,13 +21264,13 @@ const emojisData8 = `{
     "codepoints": "🈵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("“no vacancy”") + `",
-        "` + _lt("ideograph") + `",
-        "` + _lt("Japanese") + `",
-        "` + _lt("Japanese “no vacancy” button") + `",
-        "` + _lt("満") + `"
+        "` + _t("“no vacancy”") + `",
+        "` + _t("ideograph") + `",
+        "` + _t("Japanese") + `",
+        "` + _t("Japanese “no vacancy” button") + `",
+        "` + _t("満") + `"
     ],
-    "name": "` + _lt("Japanese “no vacancy” button") + `",
+    "name": "` + _t("Japanese “no vacancy” button") + `",
     "shortcodes": [
         ":Japanese_“no_vacancy”_button:"
     ]
@@ -21280,11 +21280,11 @@ const emojisData8 = `{
     "codepoints": "🔴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("circle") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("red") + `"
+        "` + _t("circle") + `",
+        "` + _t("geometric") + `",
+        "` + _t("red") + `"
     ],
-    "name": "` + _lt("red circle") + `",
+    "name": "` + _t("red circle") + `",
     "shortcodes": [
         ":red_circle:"
     ]
@@ -21294,10 +21294,10 @@ const emojisData8 = `{
     "codepoints": "🟠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("circle") + `",
-        "` + _lt("orange") + `"
+        "` + _t("circle") + `",
+        "` + _t("orange") + `"
     ],
-    "name": "` + _lt("orange circle") + `",
+    "name": "` + _t("orange circle") + `",
     "shortcodes": [
         ":orange_circle:"
     ]
@@ -21307,10 +21307,10 @@ const emojisData8 = `{
     "codepoints": "🟡",
     "emoticons": [],
     "keywords": [
-        "` + _lt("circle") + `",
-        "` + _lt("yellow") + `"
+        "` + _t("circle") + `",
+        "` + _t("yellow") + `"
     ],
-    "name": "` + _lt("yellow circle") + `",
+    "name": "` + _t("yellow circle") + `",
     "shortcodes": [
         ":yellow_circle:"
     ]
@@ -21320,10 +21320,10 @@ const emojisData8 = `{
     "codepoints": "🟢",
     "emoticons": [],
     "keywords": [
-        "` + _lt("circle") + `",
-        "` + _lt("green") + `"
+        "` + _t("circle") + `",
+        "` + _t("green") + `"
     ],
-    "name": "` + _lt("green circle") + `",
+    "name": "` + _t("green circle") + `",
     "shortcodes": [
         ":green_circle:"
     ]
@@ -21333,11 +21333,11 @@ const emojisData8 = `{
     "codepoints": "🔵",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blue") + `",
-        "` + _lt("circle") + `",
-        "` + _lt("geometric") + `"
+        "` + _t("blue") + `",
+        "` + _t("circle") + `",
+        "` + _t("geometric") + `"
     ],
-    "name": "` + _lt("blue circle") + `",
+    "name": "` + _t("blue circle") + `",
     "shortcodes": [
         ":blue_circle:"
     ]
@@ -21347,10 +21347,10 @@ const emojisData8 = `{
     "codepoints": "🟣",
     "emoticons": [],
     "keywords": [
-        "` + _lt("circle") + `",
-        "` + _lt("purple") + `"
+        "` + _t("circle") + `",
+        "` + _t("purple") + `"
     ],
-    "name": "` + _lt("purple circle") + `",
+    "name": "` + _t("purple circle") + `",
     "shortcodes": [
         ":purple_circle:"
     ]
@@ -21360,10 +21360,10 @@ const emojisData8 = `{
     "codepoints": "🟤",
     "emoticons": [],
     "keywords": [
-        "` + _lt("brown") + `",
-        "` + _lt("circle") + `"
+        "` + _t("brown") + `",
+        "` + _t("circle") + `"
     ],
-    "name": "` + _lt("brown circle") + `",
+    "name": "` + _t("brown circle") + `",
     "shortcodes": [
         ":brown_circle:"
     ]
@@ -21373,11 +21373,11 @@ const emojisData8 = `{
     "codepoints": "⚫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("black circle") + `",
-        "` + _lt("circle") + `",
-        "` + _lt("geometric") + `"
+        "` + _t("black circle") + `",
+        "` + _t("circle") + `",
+        "` + _t("geometric") + `"
     ],
-    "name": "` + _lt("black circle") + `",
+    "name": "` + _t("black circle") + `",
     "shortcodes": [
         ":black_circle:"
     ]
@@ -21387,11 +21387,11 @@ const emojisData8 = `{
     "codepoints": "⚪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("circle") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("white circle") + `"
+        "` + _t("circle") + `",
+        "` + _t("geometric") + `",
+        "` + _t("white circle") + `"
     ],
-    "name": "` + _lt("white circle") + `",
+    "name": "` + _t("white circle") + `",
     "shortcodes": [
         ":white_circle:"
     ]
@@ -21401,10 +21401,10 @@ const emojisData8 = `{
     "codepoints": "🟥",
     "emoticons": [],
     "keywords": [
-        "` + _lt("red") + `",
-        "` + _lt("square") + `"
+        "` + _t("red") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("red square") + `",
+    "name": "` + _t("red square") + `",
     "shortcodes": [
         ":red_square:"
     ]
@@ -21414,10 +21414,10 @@ const emojisData8 = `{
     "codepoints": "🟧",
     "emoticons": [],
     "keywords": [
-        "` + _lt("orange") + `",
-        "` + _lt("square") + `"
+        "` + _t("orange") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("orange square") + `",
+    "name": "` + _t("orange square") + `",
     "shortcodes": [
         ":orange_square:"
     ]
@@ -21427,10 +21427,10 @@ const emojisData8 = `{
     "codepoints": "🟨",
     "emoticons": [],
     "keywords": [
-        "` + _lt("square") + `",
-        "` + _lt("yellow") + `"
+        "` + _t("square") + `",
+        "` + _t("yellow") + `"
     ],
-    "name": "` + _lt("yellow square") + `",
+    "name": "` + _t("yellow square") + `",
     "shortcodes": [
         ":yellow_square:"
     ]
@@ -21440,10 +21440,10 @@ const emojisData8 = `{
     "codepoints": "🟩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("green") + `",
-        "` + _lt("square") + `"
+        "` + _t("green") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("green square") + `",
+    "name": "` + _t("green square") + `",
     "shortcodes": [
         ":green_square:"
     ]
@@ -21453,10 +21453,10 @@ const emojisData8 = `{
     "codepoints": "🟦",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blue") + `",
-        "` + _lt("square") + `"
+        "` + _t("blue") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("blue square") + `",
+    "name": "` + _t("blue square") + `",
     "shortcodes": [
         ":blue_square:"
     ]
@@ -21466,10 +21466,10 @@ const emojisData8 = `{
     "codepoints": "🟪",
     "emoticons": [],
     "keywords": [
-        "` + _lt("purple") + `",
-        "` + _lt("square") + `"
+        "` + _t("purple") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("purple square") + `",
+    "name": "` + _t("purple square") + `",
     "shortcodes": [
         ":purple_square:"
     ]
@@ -21479,10 +21479,10 @@ const emojisData8 = `{
     "codepoints": "🟫",
     "emoticons": [],
     "keywords": [
-        "` + _lt("brown") + `",
-        "` + _lt("square") + `"
+        "` + _t("brown") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("brown square") + `",
+    "name": "` + _t("brown square") + `",
     "shortcodes": [
         ":brown_square:"
     ]
@@ -21492,11 +21492,11 @@ const emojisData8 = `{
     "codepoints": "⬛",
     "emoticons": [],
     "keywords": [
-        "` + _lt("black large square") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("square") + `"
+        "` + _t("black large square") + `",
+        "` + _t("geometric") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("black large square") + `",
+    "name": "` + _t("black large square") + `",
     "shortcodes": [
         ":black_large_square:"
     ]
@@ -21506,11 +21506,11 @@ const emojisData8 = `{
     "codepoints": "⬜",
     "emoticons": [],
     "keywords": [
-        "` + _lt("geometric") + `",
-        "` + _lt("square") + `",
-        "` + _lt("white large square") + `"
+        "` + _t("geometric") + `",
+        "` + _t("square") + `",
+        "` + _t("white large square") + `"
     ],
-    "name": "` + _lt("white large square") + `",
+    "name": "` + _t("white large square") + `",
     "shortcodes": [
         ":white_large_square:"
     ]
@@ -21520,11 +21520,11 @@ const emojisData8 = `{
     "codepoints": "◼️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("black medium square") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("square") + `"
+        "` + _t("black medium square") + `",
+        "` + _t("geometric") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("black medium square") + `",
+    "name": "` + _t("black medium square") + `",
     "shortcodes": [
         ":black_medium_square:"
     ]
@@ -21534,11 +21534,11 @@ const emojisData8 = `{
     "codepoints": "◻️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("geometric") + `",
-        "` + _lt("square") + `",
-        "` + _lt("white medium square") + `"
+        "` + _t("geometric") + `",
+        "` + _t("square") + `",
+        "` + _t("white medium square") + `"
     ],
-    "name": "` + _lt("white medium square") + `",
+    "name": "` + _t("white medium square") + `",
     "shortcodes": [
         ":white_medium_square:"
     ]
@@ -21548,11 +21548,11 @@ const emojisData8 = `{
     "codepoints": "◾",
     "emoticons": [],
     "keywords": [
-        "` + _lt("black medium-small square") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("square") + `"
+        "` + _t("black medium-small square") + `",
+        "` + _t("geometric") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("black medium-small square") + `",
+    "name": "` + _t("black medium-small square") + `",
     "shortcodes": [
         ":black_medium-small_square:"
     ]
@@ -21562,11 +21562,11 @@ const emojisData8 = `{
     "codepoints": "◽",
     "emoticons": [],
     "keywords": [
-        "` + _lt("geometric") + `",
-        "` + _lt("square") + `",
-        "` + _lt("white medium-small square") + `"
+        "` + _t("geometric") + `",
+        "` + _t("square") + `",
+        "` + _t("white medium-small square") + `"
     ],
-    "name": "` + _lt("white medium-small square") + `",
+    "name": "` + _t("white medium-small square") + `",
     "shortcodes": [
         ":white_medium-small_square:"
     ]
@@ -21576,11 +21576,11 @@ const emojisData8 = `{
     "codepoints": "▪️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("black small square") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("square") + `"
+        "` + _t("black small square") + `",
+        "` + _t("geometric") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("black small square") + `",
+    "name": "` + _t("black small square") + `",
     "shortcodes": [
         ":black_small_square:"
     ]
@@ -21590,11 +21590,11 @@ const emojisData8 = `{
     "codepoints": "▫️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("geometric") + `",
-        "` + _lt("square") + `",
-        "` + _lt("white small square") + `"
+        "` + _t("geometric") + `",
+        "` + _t("square") + `",
+        "` + _t("white small square") + `"
     ],
-    "name": "` + _lt("white small square") + `",
+    "name": "` + _t("white small square") + `",
     "shortcodes": [
         ":white_small_square:"
     ]
@@ -21604,12 +21604,12 @@ const emojisData8 = `{
     "codepoints": "🔶",
     "emoticons": [],
     "keywords": [
-        "` + _lt("diamond") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("large orange diamond") + `",
-        "` + _lt("orange") + `"
+        "` + _t("diamond") + `",
+        "` + _t("geometric") + `",
+        "` + _t("large orange diamond") + `",
+        "` + _t("orange") + `"
     ],
-    "name": "` + _lt("large orange diamond") + `",
+    "name": "` + _t("large orange diamond") + `",
     "shortcodes": [
         ":large_orange_diamond:"
     ]
@@ -21619,12 +21619,12 @@ const emojisData8 = `{
     "codepoints": "🔷",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blue") + `",
-        "` + _lt("diamond") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("large blue diamond") + `"
+        "` + _t("blue") + `",
+        "` + _t("diamond") + `",
+        "` + _t("geometric") + `",
+        "` + _t("large blue diamond") + `"
     ],
-    "name": "` + _lt("large blue diamond") + `",
+    "name": "` + _t("large blue diamond") + `",
     "shortcodes": [
         ":large_blue_diamond:"
     ]
@@ -21634,12 +21634,12 @@ const emojisData8 = `{
     "codepoints": "🔸",
     "emoticons": [],
     "keywords": [
-        "` + _lt("diamond") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("orange") + `",
-        "` + _lt("small orange diamond") + `"
+        "` + _t("diamond") + `",
+        "` + _t("geometric") + `",
+        "` + _t("orange") + `",
+        "` + _t("small orange diamond") + `"
     ],
-    "name": "` + _lt("small orange diamond") + `",
+    "name": "` + _t("small orange diamond") + `",
     "shortcodes": [
         ":small_orange_diamond:"
     ]
@@ -21649,12 +21649,12 @@ const emojisData8 = `{
     "codepoints": "🔹",
     "emoticons": [],
     "keywords": [
-        "` + _lt("blue") + `",
-        "` + _lt("diamond") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("small blue diamond") + `"
+        "` + _t("blue") + `",
+        "` + _t("diamond") + `",
+        "` + _t("geometric") + `",
+        "` + _t("small blue diamond") + `"
     ],
-    "name": "` + _lt("small blue diamond") + `",
+    "name": "` + _t("small blue diamond") + `",
     "shortcodes": [
         ":small_blue_diamond:"
     ]
@@ -21664,11 +21664,11 @@ const emojisData8 = `{
     "codepoints": "🔺",
     "emoticons": [],
     "keywords": [
-        "` + _lt("geometric") + `",
-        "` + _lt("red") + `",
-        "` + _lt("red triangle pointed up") + `"
+        "` + _t("geometric") + `",
+        "` + _t("red") + `",
+        "` + _t("red triangle pointed up") + `"
     ],
-    "name": "` + _lt("red triangle pointed up") + `",
+    "name": "` + _t("red triangle pointed up") + `",
     "shortcodes": [
         ":red_ltriangle_pointed_up:"
     ]
@@ -21678,12 +21678,12 @@ const emojisData8 = `{
     "codepoints": "🔻",
     "emoticons": [],
     "keywords": [
-        "` + _lt("down") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("red") + `",
-        "` + _lt("red triangle pointed down") + `"
+        "` + _t("down") + `",
+        "` + _t("geometric") + `",
+        "` + _t("red") + `",
+        "` + _t("red triangle pointed down") + `"
     ],
-    "name": "` + _lt("red triangle pointed down") + `",
+    "name": "` + _t("red triangle pointed down") + `",
     "shortcodes": [
         ":red_ltriangle_pointed_down:"
     ]
@@ -21693,13 +21693,13 @@ const emojisData8 = `{
     "codepoints": "💠",
     "emoticons": [],
     "keywords": [
-        "` + _lt("comic") + `",
-        "` + _lt("diamond") + `",
-        "` + _lt("diamond with a dot") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("inside") + `"
+        "` + _t("comic") + `",
+        "` + _t("diamond") + `",
+        "` + _t("diamond with a dot") + `",
+        "` + _t("geometric") + `",
+        "` + _t("inside") + `"
     ],
-    "name": "` + _lt("diamond with a dot") + `",
+    "name": "` + _t("diamond with a dot") + `",
     "shortcodes": [
         ":diamond_with_a_dot:"
     ]
@@ -21709,11 +21709,11 @@ const emojisData8 = `{
     "codepoints": "🔘",
     "emoticons": [],
     "keywords": [
-        "` + _lt("button") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("radio") + `"
+        "` + _t("button") + `",
+        "` + _t("geometric") + `",
+        "` + _t("radio") + `"
     ],
-    "name": "` + _lt("radio button") + `",
+    "name": "` + _t("radio button") + `",
     "shortcodes": [
         ":radio_button:"
     ]
@@ -21723,13 +21723,13 @@ const emojisData8 = `{
     "codepoints": "🔳",
     "emoticons": [],
     "keywords": [
-        "` + _lt("button") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("outlined") + `",
-        "` + _lt("square") + `",
-        "` + _lt("white square button") + `"
+        "` + _t("button") + `",
+        "` + _t("geometric") + `",
+        "` + _t("outlined") + `",
+        "` + _t("square") + `",
+        "` + _t("white square button") + `"
     ],
-    "name": "` + _lt("white square button") + `",
+    "name": "` + _t("white square button") + `",
     "shortcodes": [
         ":white_square_button:"
     ]
@@ -21739,12 +21739,12 @@ const emojisData8 = `{
     "codepoints": "🔲",
     "emoticons": [],
     "keywords": [
-        "` + _lt("black square button") + `",
-        "` + _lt("button") + `",
-        "` + _lt("geometric") + `",
-        "` + _lt("square") + `"
+        "` + _t("black square button") + `",
+        "` + _t("button") + `",
+        "` + _t("geometric") + `",
+        "` + _t("square") + `"
     ],
-    "name": "` + _lt("black square button") + `",
+    "name": "` + _t("black square button") + `",
     "shortcodes": [
         ":black_square_button:"
     ]
@@ -21754,13 +21754,13 @@ const emojisData8 = `{
     "codepoints": "🏁",
     "emoticons": [],
     "keywords": [
-        "` + _lt("checkered") + `",
-        "` + _lt("chequered") + `",
-        "` + _lt("chequered flag") + `",
-        "` + _lt("racing") + `",
-        "` + _lt("checkered flag") + `"
+        "` + _t("checkered") + `",
+        "` + _t("chequered") + `",
+        "` + _t("chequered flag") + `",
+        "` + _t("racing") + `",
+        "` + _t("checkered flag") + `"
     ],
-    "name": "` + _lt("chequered flag") + `",
+    "name": "` + _t("chequered flag") + `",
     "shortcodes": [
         ":chequered_flag:"
     ]
@@ -21770,11 +21770,11 @@ const emojisData8 = `{
     "codepoints": "🚩",
     "emoticons": [],
     "keywords": [
-        "` + _lt("post") + `",
-        "` + _lt("triangular flag") + `",
-        "` + _lt("red flag") + `"
+        "` + _t("post") + `",
+        "` + _t("triangular flag") + `",
+        "` + _t("red flag") + `"
     ],
-    "name": "` + _lt("triangular flag") + `",
+    "name": "` + _t("triangular flag") + `",
     "shortcodes": [
         ":triangular_flag:"
     ]
@@ -21784,13 +21784,13 @@ const emojisData8 = `{
     "codepoints": "🎌",
     "emoticons": [],
     "keywords": [
-        "` + _lt("celebration") + `",
-        "` + _lt("cross") + `",
-        "` + _lt("crossed") + `",
-        "` + _lt("crossed flags") + `",
-        "` + _lt("Japanese") + `"
+        "` + _t("celebration") + `",
+        "` + _t("cross") + `",
+        "` + _t("crossed") + `",
+        "` + _t("crossed flags") + `",
+        "` + _t("Japanese") + `"
     ],
-    "name": "` + _lt("crossed flags") + `",
+    "name": "` + _t("crossed flags") + `",
     "shortcodes": [
         ":crossed_flags:"
     ]
@@ -21800,10 +21800,10 @@ const emojisData8 = `{
     "codepoints": "🏴",
     "emoticons": [],
     "keywords": [
-        "` + _lt("black flag") + `",
-        "` + _lt("waving") + `"
+        "` + _t("black flag") + `",
+        "` + _t("waving") + `"
     ],
-    "name": "` + _lt("black flag") + `",
+    "name": "` + _t("black flag") + `",
     "shortcodes": [
         ":black_flag:"
     ]
@@ -21813,11 +21813,11 @@ const emojisData8 = `{
     "codepoints": "🏳️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("waving") + `",
-        "` + _lt("white flag") + `",
-        "` + _lt("surrender") + `"
+        "` + _t("waving") + `",
+        "` + _t("white flag") + `",
+        "` + _t("surrender") + `"
     ],
-    "name": "` + _lt("white flag") + `",
+    "name": "` + _t("white flag") + `",
     "shortcodes": [
         ":white_flag:"
     ]
@@ -21827,11 +21827,11 @@ const emojisData8 = `{
     "codepoints": "🏳️‍🌈",
     "emoticons": [],
     "keywords": [
-        "` + _lt("pride") + `",
-        "` + _lt("rainbow") + `",
-        "` + _lt("rainbow flag") + `"
+        "` + _t("pride") + `",
+        "` + _t("rainbow") + `",
+        "` + _t("rainbow flag") + `"
     ],
-    "name": "` + _lt("rainbow flag") + `",
+    "name": "` + _t("rainbow flag") + `",
     "shortcodes": [
         ":rainbow_flag:"
     ]
@@ -21841,13 +21841,13 @@ const emojisData8 = `{
     "codepoints": "🏴‍☠️",
     "emoticons": [],
     "keywords": [
-        "` + _lt("Jolly Roger") + `",
-        "` + _lt("pirate") + `",
-        "` + _lt("pirate flag") + `",
-        "` + _lt("plunder") + `",
-        "` + _lt("treasure") + `"
+        "` + _t("Jolly Roger") + `",
+        "` + _t("pirate") + `",
+        "` + _t("pirate flag") + `",
+        "` + _t("plunder") + `",
+        "` + _t("treasure") + `"
     ],
-    "name": "` + _lt("pirate flag") + `",
+    "name": "` + _t("pirate flag") + `",
     "shortcodes": [
         ":pirate_flag:"
     ]
@@ -21857,9 +21857,9 @@ const emojisData8 = `{
     "codepoints": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flag") + `"
+        "` + _t("flag") + `"
     ],
-    "name": "` + _lt("flag: England") + `",
+    "name": "` + _t("flag: England") + `",
     "shortcodes": [
         ":england:"
     ]
@@ -21869,9 +21869,9 @@ const emojisData8 = `{
     "codepoints": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flag") + `"
+        "` + _t("flag") + `"
     ],
-    "name": "` + _lt("flag: Scotland") + `",
+    "name": "` + _t("flag: Scotland") + `",
     "shortcodes": [
         ":scotland:"
     ]
@@ -21881,9 +21881,9 @@ const emojisData8 = `{
     "codepoints": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
     "emoticons": [],
     "keywords": [
-        "` + _lt("flag") + `"
+        "` + _t("flag") + `"
     ],
-    "name": "` + _lt("flag: Wales") + `",
+    "name": "` + _t("flag: Wales") + `",
     "shortcodes": [
         ":wales:"
     ]

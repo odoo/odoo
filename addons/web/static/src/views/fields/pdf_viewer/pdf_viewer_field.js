@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -87,7 +87,7 @@ export class PdfViewerField extends Component {
 
 export const pdfViewerField = {
     component: PdfViewerField,
-    displayName: _lt("PDF Viewer"),
+    displayName: _t("PDF Viewer"),
     supportedTypes: ["binary"],
     extractProps: ({ attrs, options }) => ({
         fileNameField: attrs.filename,

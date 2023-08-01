@@ -5,7 +5,7 @@ import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
 import { escape, sprintf } from "@web/core/utils/strings";
@@ -241,15 +241,15 @@ export class StatusBarField extends Component {
 
 export const statusBarField = {
     component: StatusBarField,
-    displayName: _lt("Status"),
+    displayName: _t("Status"),
     supportedOptions: [
         {
-            label: _lt("Clickable"),
+            label: _t("Clickable"),
             name: "clickable",
             type: "boolean",
         },
         {
-            label: _lt("Fold field"),
+            label: _t("Fold field"),
             name: "fold_field",
             type: "string",
         },

@@ -2,7 +2,7 @@
 
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * This is a special kind of error popup as it introduces
@@ -12,9 +12,9 @@ export class OfflineErrorPopup extends ErrorPopup {
     static template = "point_of_sale.OfflineErrorPopup";
     static dontShow = false;
     static defaultProps = {
-        confirmText: _lt("Continue with limited functionalities"),
-        title: _lt("You're offline"),
-        body: _lt(
+        confirmText: _t("Continue with limited functionalities"),
+        title: _t("You're offline"),
+        body: _t(
             "Meanwhile connection is back, Odoo Point of Sale will operate limited operations. Check your connection or continue with limited functionalities"
         ),
     };

@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { floatField, FloatField } from "../float/float_field";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 
 export class FloatFactorField extends FloatField {
     static props = {
@@ -33,7 +33,7 @@ export const floatFactorField = {
     supportedOptions: [
         ...floatField.supportedOptions,
         {
-            label: _lt("Factor"),
+            label: _t("Factor"),
             name: "factor",
             type: "number",
         },

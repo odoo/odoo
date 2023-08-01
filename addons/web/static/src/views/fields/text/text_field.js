@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useAutoresize } from "@web/core/utils/autoresize";
 import { useSpellCheck } from "@web/core/utils/hooks";
@@ -66,10 +66,10 @@ export class TextField extends Component {
 
 export const textField = {
     component: TextField,
-    displayName: _lt("Multiline Text"),
+    displayName: _t("Multiline Text"),
     supportedOptions: [
         {
-            label: _lt("Enable line breaks"),
+            label: _t("Enable line breaks"),
             name: "line_breaks",
             type: "boolean",
             default: true,

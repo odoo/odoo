@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { CharField, charField } from "@web/views/fields/char/char_field";
@@ -56,7 +56,7 @@ SlidesViewer.template = "mrp.SlidesViewer";
 export const slidesViewer = {
     ...charField,
     component: SlidesViewer,
-    displayName: _lt("Google Slides Viewer"),
+    displayName: _t("Google Slides Viewer"),
 };
 
 registry.category("fields").add("embed_viewer", slidesViewer);

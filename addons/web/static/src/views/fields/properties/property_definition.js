@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { PropertyValue } from "./property_value";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -81,16 +81,16 @@ export class PropertyDefinition extends Component {
      */
     get availablePropertyTypes() {
         return [
-            ["char", _lt("Text")],
-            ["boolean", _lt("Checkbox")],
-            ["integer", _lt("Integer")],
-            ["float", _lt("Decimal")],
-            ["date", _lt("Date")],
-            ["datetime", _lt("Date & Time")],
-            ["selection", _lt("Selection")],
-            ["tags", _lt("Tags")],
-            ["many2one", _lt("Many2one")],
-            ["many2many", _lt("Many2many")],
+            ["char", _t("Text")],
+            ["boolean", _t("Checkbox")],
+            ["integer", _t("Integer")],
+            ["float", _t("Decimal")],
+            ["date", _t("Date")],
+            ["datetime", _t("Date & Time")],
+            ["selection", _t("Selection")],
+            ["tags", _t("Tags")],
+            ["many2one", _t("Many2one")],
+            ["many2many", _t("Many2many")],
         ];
     }
 
@@ -342,7 +342,7 @@ export class PropertyDefinition extends Component {
             } catch {
                 // can not read the ir.model
                 this.state.resModelDescription = sprintf(
-                    _lt('You do not have access to the model "%s".'),
+                    _t('You do not have access to the model "%s".'),
                     newModel
                 );
             }

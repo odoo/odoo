@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { formatDateTime } from "@web/core/l10n/dates";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { selectionField, SelectionField } from "../selection/selection_field";
 
@@ -17,7 +17,7 @@ export class TimezoneMismatchField extends SelectionField {
     static defaultProps = {
         ...super.defaultProps,
         tzOffsetField: "tz_offset",
-        mismatchTitle: _lt(
+        mismatchTitle: _t(
             "Timezone Mismatch : This timezone is different from that of your browser.\nPlease, set the same timezone as your browser's to avoid time discrepancies in your system."
         ),
     };
