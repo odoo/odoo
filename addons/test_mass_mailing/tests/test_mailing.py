@@ -221,11 +221,11 @@ class TestMassMailing(TestMassMailCommon):
                          'partner': customer_fmt,
                          'trace_status': 'sent'},
                         {'email': '"Unicode Customer" <test.customer.😊@example.com>',
-                         # double encapsulation, not good
-                         'email_to_recipients': [[f'"{customer_unic.name}" <"Unicode Customer" <test.customer.format@example.com>>']],
-                         'failure_type': 'mail_email_invalid',
+                         # mail to avoids double encapsulation
+                         'email_to_recipients': [[f'"{customer_unic.name}" <test.customer.😊@example.com>']],
+                         'failure_type': False,
                          'partner': customer_unic,
-                         'trace_status': 'cancel'},  # email_re usage forbids mailing to unicode
+                         'trace_status': 'sent'},
                         {'email': 'TEST.CUSTOMER.CASE@EXAMPLE.COM',
                          'email_to_recipients': [[f'"{customer_case.name}" <test.customer.case@example.com>']],
                          'failure_type': False,
@@ -254,8 +254,8 @@ class TestMassMailing(TestMassMailCommon):
                         {'email': 'record.😊@example.com',
                          'email_to_mail': 'record.😊@example.com',
                          'email_to_recipients': [['record.😊@example.com']],
-                         'failure_type': 'mail_email_invalid',
-                         'trace_status': 'cancel'},  # email_re usage forbids mailing to unicode
+                         'failure_type': False,
+                         'trace_status': 'sent'},
                         {'email': 'test.record.case@example.com',
                          'email_to_mail': 'test.record.case@example.com',
                          'email_to_recipients': [['test.record.case@example.com']],
