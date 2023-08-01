@@ -322,6 +322,7 @@ class TestChartTemplate(TransactionCase):
         """ Ensures children_tax_ids are correctly generated when updating taxes with
         amount_type='group'.
         """
+<<<<<<< HEAD
         def local_get_data(self, template_code):
             data = test_get_data(self, template_code)
             normal_tax_xmlids = ['test_tax_3_template', 'test_tax_4_template']
@@ -337,6 +338,16 @@ class TestChartTemplate(TransactionCase):
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
+||||||| parent of a2c1094400e (temp)
+        group_tax_name = 'Group Tax name 1 TEST'
+        self._create_group_tax_template('account.test_group_tax_test_template', group_tax_name, chart_template_id=self.chart_template.id)
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+=======
+        # Both parent and its two children should be created.
+        group_tax_name = 'Group Tax name 1 TEST'
+        self._create_group_tax_template('account.test_group_tax_test_template', group_tax_name, chart_template_id=self.chart_template.id)
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+>>>>>>> a2c1094400e (temp)
 
         parent_tax = self.env['account.tax'].search([
             ('company_id', '=', self.company_1.id),
@@ -349,6 +360,28 @@ class TestChartTemplate(TransactionCase):
         self.assertEqual(len(parent_tax), 1, "The parent tax should have been created.")
         self.assertEqual(len(children_taxes), 2, "Two children should have been created.")
         self.assertEqual(parent_tax.children_tax_ids.ids, children_taxes.ids, "The parent and its children taxes should be linked together.")
+
+        # Parent exists - only the two children should be created.
+        children_taxes.unlink()
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+        children_taxes = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', 'like', f'{group_tax_name}_%'),
+        ])
+        self.assertEqual(len(children_taxes), 2, "Two children should be re-created.")
+        self.assertEqual(parent_tax.children_tax_ids.ids, children_taxes.ids,
+                         "The parent and its children taxes should be linked together.")
+
+        # Children exist - only the parent should be created.
+        parent_tax.unlink()
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+        parent_tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', group_tax_name),
+        ])
+        self.assertEqual(len(parent_tax), 1, "The parent tax should have been re-created.")
+        self.assertEqual(parent_tax.children_tax_ids.ids, children_taxes.ids,
+                         "The parent and its children taxes should be linked together.")
 
     def test_update_taxes_children_tax_ids_inactive(self):
         """ Ensure tax templates are correctly generated when updating taxes with children taxes,
