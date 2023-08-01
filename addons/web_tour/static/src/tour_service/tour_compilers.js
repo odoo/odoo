@@ -57,7 +57,7 @@ function findExtraTrigger(selector, shadowDOM) {
     return getFirstVisibleElement($el).get(0);
 }
 
-function findStepTriggers(step) {
+export function findStepTriggers(step) {
     const triggerEl = findTrigger(step.trigger, step.in_modal, step.shadow_dom);
     const altEl = findTrigger(step.alt_trigger, step.in_modal, step.shadow_dom);
     const skipEl = findTrigger(step.skip_trigger, step.in_modal, step.shadow_dom);
@@ -209,78 +209,72 @@ function setupListeners({
     };
 }
 
-/** @type {TourStepCompiler} */
-export function compileStepManual(stepIndex, step, options) {
-    const { tour, pointer, onStepConsummed } = options;
-    let proceedWith = null;
-    let removeListeners = () => {};
+let tourTimeout;
+export class TourCompiler {
+    constructor(tour, mode, options) {
+        this.tour = tour;
+        this.mode = mode;
+        this.options = options;
 
-    return [
-        {
-            action: () => console.log(step.trigger),
+        if (mode === "auto") {
+            this.compileStep = this._compileStepAuto.bind(this);
+        } else {
+            this.compileStep = this._compileStepManual.bind(this);
+        }
+        this.setup();
+    }
+
+    setup() {}
+
+    compile() {
+        return this.compileTourToMacro();
+    }
+
+/**
+ * @param {import("./tour_service").Tour} tour
+ * @param {object} options
+ * @param {TourStep[]} options.filteredSteps
+ * @param {TourStepCompiler} options.stepCompiler
+ * @param {*} options.pointer
+ * @param {number} options.stepDelay
+ * @param {boolean} options.keepWatchBrowser
+ * @param {number} options.showPointerDuration
+ * @param {number} options.checkDelay
+ * @param {(import("./tour_service").Tour) => void} options.onTourEnd
+ */
+compileTourToMacro() {
+    const tour = this.tour;
+    const { checkDelay, filteredSteps, onTourEnd } = this.options;
+    const currentStepIndex = tourState.get(tour.name, "currentIndex");
+
+    const macro = {
+        ...tour,
+        checkDelay,
+    }
+
+    const stepsToMacro = filteredSteps.map((step, index) => {
+        if (index < currentStepIndex) {
+            return [];
+        }
+        return this.compileStep(index, step);
+    })
+
+    macro.steps = stepsToMacro.flat();
+    macro.steps.push({
+        action() {
+            tourState.clear(tour.name);
+            onTourEnd(tour);
+            clearTimeout(tourTimeout);
         },
-        {
-            trigger: () => {
-                removeListeners();
-
-                if (proceedWith) {
-                    return proceedWith;
-                }
-
-                const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
-
-                if (skipEl) {
-                    return skipEl;
-                }
-
-                const stepEl = extraTriggerOkay && (triggerEl || altEl);
-
-                if (stepEl && canContinue(stepEl, step)) {
-                    const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
-                    const anchorEl = getAnchorEl(stepEl, consumeEvent);
-                    const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
-
-                    const updatePointer = () => {
-                        pointer.setState({
-                            onMouseEnter: () => debouncedToggleOpen(true),
-                            onMouseLeave: () => debouncedToggleOpen(false),
-                        });
-                        pointer.pointTo(anchorEl, step);
-                    };
-
-                    removeListeners = setupListeners({
-                        anchorEl,
-                        consumeEvent,
-                        onMouseEnter: () => pointer.showContent(true),
-                        onMouseLeave: () => pointer.showContent(false),
-                        onScroll: updatePointer,
-                        onConsume: () => {
-                            proceedWith = stepEl;
-                            pointer.hide();
-                        },
-                    });
-
-                    updatePointer();
-                } else {
-                    pointer.hide();
-                }
-            },
-            action: () => {
-                tourState.set(tour.name, "currentIndex", stepIndex + 1);
-                pointer.hide();
-                proceedWith = null;
-                onStepConsummed(tour, step);
-            },
-        },
-    ];
+    })
+    return macro;
 }
 
-let tourTimeout;
-
 /** @type {TourStepCompiler} */
-export function compileStepAuto(stepIndex, step, options) {
-    const { tour, pointer, stepDelay, keepWatchBrowser, showPointerDuration, onStepConsummed } = options;
+_compileStepAuto(stepIndex, step) {
+    const { pointer, stepDelay, keepWatchBrowser, showPointerDuration, onStepConsummed } = this.options;
     let skipAction = false;
+    const tour = this.tour;
     return [
         {
             action: async () => {
@@ -373,61 +367,79 @@ export function compileStepAuto(stepIndex, step, options) {
     ];
 }
 
-/**
- * @param {import("./tour_service").Tour} tour
- * @param {object} options
- * @param {TourStep[]} options.filteredSteps
- * @param {TourStepCompiler} options.stepCompiler
- * @param {*} options.pointer
- * @param {number} options.stepDelay
- * @param {boolean} options.keepWatchBrowser
- * @param {number} options.showPointerDuration
- * @param {number} options.checkDelay
- * @param {(import("./tour_service").Tour) => void} options.onTourEnd
- */
-export function compileTourToMacro(tour, options) {
-    const {
-        filteredSteps,
-        stepCompiler,
-        pointer,
-        stepDelay,
-        keepWatchBrowser,
-        showPointerDuration,
-        checkDelay,
-        onStepConsummed,
-        onTourEnd,
-    } = options;
-    const currentStepIndex = tourState.get(tour.name, "currentIndex");
-    return {
-        ...tour,
-        checkDelay,
-        steps: filteredSteps
-            .reduce((newSteps, step, i) => {
-                if (i < currentStepIndex) {
-                    // Don't include steps before the current index because they're already done.
-                    return newSteps;
-                } else {
-                    return [
-                        ...newSteps,
-                        ...stepCompiler(i, step, {
-                            tour,
-                            pointer,
-                            stepDelay,
-                            keepWatchBrowser,
-                            showPointerDuration,
-                            onStepConsummed,
-                        }),
-                    ];
+/** @type {TourStepCompiler} */
+_compileStepManual(stepIndex, step) {
+    const tour = this.tour;
+    const { pointer, onStepConsummed } = this.options;
+    let proceedWith = null;
+    let removeListeners = () => {};
+
+    return [
+        {
+            action: () => console.log(step.trigger),
+        },
+        {
+            trigger: () => {
+                removeListeners();
+
+                if (proceedWith) {
+                    return proceedWith;
                 }
-            }, [])
-            .concat([
-                {
-                    action() {
-                        tourState.clear(tour.name);
-                        onTourEnd(tour);
-                        clearTimeout(tourTimeout);
-                    },
-                },
-            ]),
-    };
+
+                const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
+
+                if (skipEl) {
+                    return skipEl;
+                }
+
+                const stepEl = extraTriggerOkay && (triggerEl || altEl);
+
+                if (stepEl && canContinue(stepEl, step)) {
+                    const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
+                    const anchorEl = getAnchorEl(stepEl, consumeEvent);
+                    const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
+
+                    const updatePointer = () => {
+                        pointer.setState({
+                            onMouseEnter: () => debouncedToggleOpen(true),
+                            onMouseLeave: () => debouncedToggleOpen(false),
+                        });
+                        pointer.pointTo(anchorEl, step);
+                    };
+
+                    removeListeners = setupListeners({
+                        anchorEl,
+                        consumeEvent,
+                        onMouseEnter: () => pointer.showContent(true),
+                        onMouseLeave: () => pointer.showContent(false),
+                        onScroll: updatePointer,
+                        onConsume: () => {
+                            proceedWith = stepEl;
+                            pointer.hide();
+                        },
+                    });
+
+                    updatePointer();
+                } else {
+                    pointer.hide();
+                }
+            },
+            action: () => {
+                tourState.set(tour.name, "currentIndex", stepIndex + 1);
+                pointer.hide();
+                proceedWith = null;
+                onStepConsummed(tour, step);
+            },
+        },
+    ];
 }
+
+}
+
+
+
+
+
+
+
+
