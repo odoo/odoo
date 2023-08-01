@@ -26,5 +26,29 @@
                 </div>
             </t>
         </xpath>
+        <xpath expr="//div[@class='before-footer']" position="after">
+            <br/>
+            <table t-if="props.data?.l10n_in_hsn_summary and props.data.headerData.company.country_id?.code === 'IN'" style="width:100%;">
+                <tr>
+                    <th class="text-center fw-bolder" colspan="6">--- HSN Summary ---</th>
+                </tr>
+                <tr>
+                    <th class="text-center">HSN Code</th>
+                    <th class="text-center">Rate%</th>
+                    <th class="text-center">CGST</th>
+                    <th class="text-center">SGST</th>
+                    <th class="text-center">IGST</th>
+                    <th class="text-center">CESS</th>
+                </tr>
+                <tr t-foreach="props.data.l10n_in_hsn_summary" t-as="line" t-key="line_index">
+                    <td class="text-center"><t t-out="line_value.l10n_in_hsn_code"/></td>
+                    <td class="text-center"><t t-out="line_value.gst_rate"/> %</td>
+                    <td class="text-center"><t t-out="line_value.CGST.amount"/></td>
+                    <td class="text-center"><t t-out="line_value.SGST.amount"/></td>
+                    <td class="text-center"><t t-out="line_value.IGST.amount"/></td>
+                    <td class="text-center"><t t-out="line_value.CESS.amount"/></td>
+                </tr>
+            </table>
+        </xpath>
     </t>
 </templates>
