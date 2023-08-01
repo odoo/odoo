@@ -18,39 +18,39 @@ export class TimeOffDialogFormController extends FormController {
     }
 
     get record() {
-        return this.model.root.data;
+        return this.model.root;
     }
 
     async onClick(action) {
-        const args = (action === 'action_approve') ? [this.record.id, false] : [this.record.id];
+        const args = (action === 'action_approve') ? [this.record.resId, false] : [this.record.resId];
         await this.orm.call("hr.leave", action, args);
         this.props.onLeaveUpdated();
     }
 
     get canApprove() {
-        return !this.model.root.isNew && (this.record.can_approve && ['confirm', 'refuse',].includes(this.record.state));
+        return !this.model.root.isNew && (this.record.data.can_approve && ['confirm', 'refuse',].includes(this.record.data.state));
     }
 
     get canValidate() {
-        return !this.model.root.isNew && (this.record.can_approve && this.record.state === 'validate1');
+        return !this.model.root.isNew && (this.record.data.can_approve && this.record.data.state === 'validate1');
     }
 
     get canRefuse() {
-        return !this.model.root.isNew && (this.record.can_approve && this.record.state && ['confirm', 'validate1', 'validate'].includes(this.record.state));
+        return !this.model.root.isNew && (this.record.data.can_approve && this.record.data.state && ['confirm', 'validate1', 'validate'].includes(this.record.data.state));
     }
 
     deleteRecord() {
-        this.props.onRecordDeleted(this.record)
+        this.props.onRecordDeleted(this.record.data)
         this.props.onCancelLeave();
-        if (this.record.can_cancel) {
-            this.leaveCancelWizard(this.record.id, () => {
+        if (this.record.data.can_cancel) {
+            this.leaveCancelWizard(this.record.resId, () => {
                 this.props.onLeaveCancelled();
             });
         }
     }
 
     get canDelete() {
-        return !this.model.root.isNew && (this.record.can_cancel || this.record.state && !['validate', 'refuse'].includes(this.record.state));
+        return !this.model.root.isNew && (this.record.data.can_cancel || this.record.data.state && !['validate', 'refuse'].includes(this.record.data.state));
     }
 }
 
