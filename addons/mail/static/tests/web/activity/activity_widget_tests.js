@@ -160,7 +160,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
         },
         {
             display_name: "Meet FP",
-            date_deadline: serializeDate(DateTime.now().plus({days:1})), // tomorrow
+            date_deadline: serializeDate(DateTime.now().plus({ days: 1 })), // tomorrow
             can_write: true,
             state: "planned",
             user_id: pyEnv.currentUserId,

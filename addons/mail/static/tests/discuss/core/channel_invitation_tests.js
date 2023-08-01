@@ -47,7 +47,9 @@ QUnit.test("can invite users in channel from chat window", async (assert) => {
     await click("[title='Open Actions Menu']");
     await click("[title='Add Users']");
     assert.containsOnce($, ".o-discuss-ChannelInvitation");
-    await click("div:contains(TestPartner) input[type='checkbox']");
+    await click(
+        ".o-discuss-ChannelInvitation-selectable:contains(TestPartner) input[type='checkbox']"
+    );
     await click("[title='Invite to Channel']");
     assert.containsNone($, ".o-discuss-ChannelInvitation");
     assert.containsOnce(
