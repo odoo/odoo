@@ -391,7 +391,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     newLine.set_quantity( - decreasedQuantity, true);
                     order.add_orderline(newLine);
                 }
+                return true;
             }
+            return false;
         }
         async onClickPartner() {
             // IMPROVEMENT: This code snippet is very similar to selectPartner of PaymentScreen.
