@@ -23,6 +23,7 @@ Odoo Web tours.
         'web.assets_frontend': [
             'web_tour/static/src/tour_pointer/**/*',
             'web_tour/static/src/tour_service/**/*',
+            'web_tour/static/src/tour_interaction/**/*',
         ],
         'web.qunit_suite_tests': [
             'web_tour/static/tests/**/*',
