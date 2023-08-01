@@ -2547,10 +2547,14 @@ export class MockServer {
                 case "many2one": {
                     for (const record of records) {
                         if (record[fieldName] !== false) {
-                            const displayName = record[fieldName][1];
-                            record[fieldName] = { id: record[fieldName][0] };
-                            if (relatedFields && relatedFields.display_name) {
-                                record[fieldName].display_name = displayName;
+                            if (!relatedFields) {
+                                record[fieldName] = record[fieldName][0];
+                            } else {
+                                const displayName = record[fieldName][1];
+                                record[fieldName] = { id: record[fieldName][0] };
+                                if ("display_name" in relatedFields) {
+                                    record[fieldName].display_name = displayName;
+                                }
                             }
                         }
                     }
