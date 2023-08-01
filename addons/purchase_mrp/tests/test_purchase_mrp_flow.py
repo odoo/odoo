@@ -4,6 +4,7 @@
 from odoo.tests.common import Form, TransactionCase
 from odoo.tests import tagged
 from odoo import fields
+from datetime import timedelta
 
 
 @tagged('post_install', '-at_install')
@@ -671,3 +672,42 @@ class TestPurchaseMrpFlow(TransactionCase):
         kits.bom_ids.company_id = False
         self.kit_parent.action_compute_bom_days()
         self.assertEqual(self.kit_parent.days_to_prepare_mo, 1)
+
+    def test_orderpoint_with_manufacture_security_lead_time(self):
+        """
+        Test that a manufacturing order is created with the correct date_start
+        when we have an order point with the preferred route set to "manufacture"
+        and the current company has a manufacturing security lead time set.
+        """
+        # set purchase security lead time to 20 days
+        self.env.company.po_lead = 20
+        # set manufacturing security lead time to 25 days
+        self.env.company.manufacturing_lead = 25
+        product = self.env['product.product'].create({
+            'name': 'super product',
+            'type': 'product',
+            #set route to manufacture + buy
+            'route_ids': [
+                (4, self.env.ref('mrp.route_warehouse0_manufacture').id),
+                (4, self.env.ref('purchase_stock.route_warehouse0_buy').id)
+            ],
+            'produce_delay': 1,
+            'seller_ids': [(0, 0, {
+                'partner_id': self.env['res.partner'].create({'name': 'super vendor'}).id,
+                'min_qty': 1,
+                'price': 1,
+            })],
+        })
+        # create a orderpoint to generate a need of the product with perefered route manufacture
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'qty_to_order': 5,
+            'warehouse_id': self.env.ref('stock.warehouse0').id,
+            'route_id': self.env.ref('mrp.route_warehouse0_manufacture').id,
+        })
+        # lead_days_date should be today + manufacturing security lead time + product manufacturing lead time
+        self.assertEqual(orderpoint.lead_days_date, (fields.Date.today() + timedelta(days=25) + timedelta(days=1)))
+        orderpoint.action_replenish()
+        mo = self.env['mrp.production'].search([('product_id', '=', product.id)])
+        self.assertEqual(mo.product_uom_qty, 5)
+        self.assertEqual(mo.date_planned_start.date(), fields.Date.today())
