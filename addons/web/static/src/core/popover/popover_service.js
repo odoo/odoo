@@ -47,6 +47,7 @@ export const popoverService = {
                         class: options.popoverClass,
                         position: options.position,
                         onPositioned: options.onPositioned,
+                        fixedPosition: options.fixedPosition,
                     },
                 },
                 { onRemove: options.onClose }

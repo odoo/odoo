@@ -11,6 +11,7 @@ export class Popover extends Component {
             onPositioned: this.props.onPositioned || this.onPositioned.bind(this),
             position: this.props.position,
             popper: "ref",
+            fixedPosition: this.props.fixedPosition,
         });
     }
     onPositioned(el, { direction, variant }) {
@@ -35,6 +36,9 @@ export class Popover extends Component {
 
         // reset all arrow classes
         const arrowEl = el.querySelector(".popover-arrow");
+        if (!arrowEl) {
+            return;
+        }
         arrowEl.className = "popover-arrow";
         switch (position) {
             case "tm": // top-middle
@@ -96,6 +100,10 @@ Popover.props = {
     },
     onPositioned: {
         type: Function,
+        optional: true,
+    },
+    fixedPosition: {
+        type: Boolean,
         optional: true,
     },
     target: {
