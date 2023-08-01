@@ -37,26 +37,24 @@ export function copyRegistry(source, target) {
     for (const [name, service] of source.getEntries()) {
         target.add(name, service);
     }
-    source.addEventListener("UPDATE", ({ operation, key, value }) => {
-        if (operation === "add") {
-            target.add(key, value);
-        }
-    });
 }
 
 // Copy registries before they are cleared by the test setup in
 // order to restore them during `getWebClientReady`.
 const mailServicesRegistry = registry.category("mail.services");
 const webServicesRegistry = registry.category("services");
-copyRegistry(webServicesRegistry, mailServicesRegistry);
 
 const mailMainComponentsRegistry = registry.category("mail.main_components");
 const webMainComponentsRegistry = registry.category("main_components");
-copyRegistry(webMainComponentsRegistry, mailMainComponentsRegistry);
 
 const mailSystrayRegistry = registry.category("mail.systray");
 const webSystrayRegistry = registry.category("systray");
-copyRegistry(webSystrayRegistry, mailSystrayRegistry);
+
+QUnit.begin(() => {
+    copyRegistry(webServicesRegistry, mailServicesRegistry);
+    copyRegistry(webMainComponentsRegistry, mailMainComponentsRegistry);
+    copyRegistry(webSystrayRegistry, mailSystrayRegistry);
+});
 
 /**
  * @returns function that returns an `XMLHttpRequest`-like object whose response
