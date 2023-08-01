@@ -12,7 +12,10 @@ To print UPI Qr code add UPI id in company and tick "QR Codes" in configuration
   """,
     'category': 'Accounting/Localizations',
     'depends': ['l10n_in'],
-    'data': ['views/res_company_views.xml'],
+    'data': [
+        'views/res_company_views.xml',
+        'views/report_invoice.xml',
+    ],
     'license': 'LGPL-3',
     'auto_install': True,
 }
