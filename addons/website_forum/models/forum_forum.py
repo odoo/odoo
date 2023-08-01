@@ -29,7 +29,7 @@ class Forum(models.Model):
     @api.model
     def _get_default_welcome_message(self):
         return Markup("""
-                <h1 style="text-align: center;clear-both"><font style="font-size: 62px; font-weight: bold;">%(message_intro)s</font></h1>
+                <h2 class="display-3-fs" style="text-align: center;clear-both;font-weight: bold;">%(message_intro)s</h2>
                 <div class="text-white">
                     <p class="lead o_default_snippet_text" style="text-align: center;">%(message_post)s</p>
                     <p style="text-align: center;">

@@ -320,7 +320,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     wTourUtils.clickOnElement("mega menu", "iframe header .o_mega_menu_toggle"),
     wTourUtils.changeOption("MegaMenuLayout", "we-toggler"),
     wTourUtils.changeOption("MegaMenuLayout", '[data-select-label="Cards"]'),
-    wTourUtils.clickOnElement("card's text", "iframe header .s_mega_menu_cards font"),
+    wTourUtils.clickOnElement("card's text", "iframe header .s_mega_menu_cards p"),
     {
         content: "Enter an URL",
         trigger: "#o_link_dialog_url_input",
@@ -328,7 +328,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check nothing is lost",
-        trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p font)",
+        trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p)",
         run: () => {}, // This is a check.
     },
     ...wTourUtils.clickOnSave(),
