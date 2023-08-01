@@ -50,7 +50,7 @@ export class MassMailingFullWidthViewController extends formView.Controller {
         if (!$iframe.length || !$iframe.contents().length) {
             return;
         }
-        const hasIframeChanged = $iframe !== this.$iframe;
+        const hasIframeChanged = !this.$iframe || !this.$iframe.length || $iframe[0] !== this.$iframe[0];
         this.$iframe = $iframe;
         this._resizeMailingEditorIframe();
 
@@ -109,11 +109,11 @@ export class MassMailingFullWidthViewController extends formView.Controller {
      * @private
      */
     _onToggleFullscreen() {
+        const isFullscreen = this._isFullScreen();
         const $iframeDoc = this.$iframe.contents();
         const html = $iframeDoc.find('html').get(0);
         html.scrollTop = 0;
-        html.classList.toggle('o_fullscreen');
-        const isFullscreen = this._isFullScreen();
+        html.classList.toggle('o_fullscreen', isFullscreen);
         const wysiwyg = $iframeDoc.find('.note-editable').data('wysiwyg');
         if (wysiwyg && wysiwyg.snippetsMenu) {
             // Restore the appropriate scrollable depending on the mode.
