@@ -24,8 +24,8 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._get_partner_address_vals(partner)
 
-        if partner.country_code == 'RO' and partner.state_id:
-            vals["country_subentity"] = 'RO-' + partner.state_id.code
+        if partner.state_id:
+            vals["country_subentity"] = partner.country_code + '-' + partner.state_id.code
 
         return vals
 
@@ -65,18 +65,17 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
                 f"ciusro_{partner_type}_vat_required": self._check_required_fields(partner, 'vat'),
                 f"ciusro_{partner_type}_city_required": self._check_required_fields(partner, 'city'),
                 f"ciusro_{partner_type}_street_required": self._check_required_fields(partner, 'street'),
+                f"ciusro_{partner_type}_state_id_required": self._check_required_fields(partner, 'state_id'),
             })
 
-            if partner.country_code == 'RO':
-                if not partner.state_id:
-                    constraints[f"ciusro_{partner_type}_state_id_required"] = \
-                        _("The following partner's state ID is missing: %s") % partner.name
-
-                if partner.state_id and partner.state_id.code == 'B' and partner.city not in SECTOR_RO_CODES:
-                    constraints[f"ciusro_{partner_type}_invalid_city_name"] = _(
-                        "The following partner's city name is invalid: %s. "
-                        "If partner's state is București, the city name must be 'SECTORX', "
-                        "where X is a number between 1-6"
-                    ) % partner.name
+            if (partner.country_code == 'RO'
+                    and partner.state_id
+                    and partner.state_id.code == 'B'
+                    and partner.city not in SECTOR_RO_CODES):
+                constraints[f"ciusro_{partner_type}_invalid_city_name"] = _(
+                    "The following partner's city name is invalid: %s. "
+                    "If partner's state is București, the city name must be 'SECTORX', "
+                    "where X is a number between 1-6"
+                ) % partner.name
 
         return constraints

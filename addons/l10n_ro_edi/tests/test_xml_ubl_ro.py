@@ -177,14 +177,13 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
     #     attachment = self.create_invoice_attachment(self.partner_a.id)
     #     self.post_anaf(attachment)
 
-    # Required fields for seller and buyer: vat, city, street
+    # Required fields for seller and buyer: vat, city, street, state_id
     def test_required_fields(self):
         def write_and_test(field_name, value):
             prev_value = self.company_data["company"][field_name]
             self.company_data["company"].write({field_name: value})
             self.partner_a.write({field_name: value})
             attachment = self.create_invoice_attachment(self.partner_a.id)
-            print(f"writing {field_name} to {str(value)}")
             self.post_anaf(attachment)
             self.company_data["company"].write({field_name: prev_value})
             self.partner_a.write({field_name: prev_value})
@@ -194,7 +193,14 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
         write_and_test('vat', None)
         write_and_test('city', None)
         write_and_test('street', None)
+        write_and_test('state_id', None)
         self.company_data["company"].write({"state_id": self.env.ref("base.RO_B")})
         self.partner_a.write({"state_id": self.env.ref("base.RO_B")})
         write_and_test('city', 'SECTORLOL')
-        write_and_test('city', 'SECTOR1')
+
+    def test_foreign_partner(self):
+        attachment = self.create_invoice_attachment(self.partner_b.id)
+        self.post_anaf(attachment)
+        self.partner_b.write({'state_id': self.env.ref('base.state_id_be')})
+        attachment = self.create_invoice_attachment(self.partner_b.id)
+        self.post_anaf(attachment, True)
