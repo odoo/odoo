@@ -2,15 +2,15 @@
     <div t-name="spreadsheet.FigureComponent" t-inherit="o-spreadsheet-FigureComponent" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('o-figure-menu-item')]" position="before">
             <div
-                t-if="hasOdooMenu and !env.isDashboard()"
+                t-if="hasOdooAction and !env.isDashboard()"
                 class="o-figure-menu-item o-chart-external-link"
-                t-on-click="navigateToOdooMenu">
+                t-on-click="executeOdooAction">
                 <span class="fa fa-external-link" />
             </div>
         </xpath>
         <xpath expr="//div[hasclass('o-figure')]" position="attributes">
             <attribute name="t-on-click">() => this.onClick()</attribute>
-            <attribute name="t-att-role">env.isDashboard() and hasOdooMenu ? "button" : ""</attribute>
+            <attribute name="t-att-role">env.isDashboard() and hasOdooAction ? "button" : ""</attribute>
         </xpath>
     </div>
 </odoo>
