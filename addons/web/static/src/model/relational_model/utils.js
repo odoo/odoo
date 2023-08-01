@@ -285,8 +285,11 @@ export function getFieldsSpec(
             properties.push(fieldName);
         }
         // M2O
-        if (fields[fieldName].type === "many2one" && invisible !== true) {
-            fieldsSpec[fieldName].fields = { display_name: {} };
+        if (fields[fieldName].type === "many2one") {
+            fieldsSpec[fieldName].fields = {};
+            if (invisible !== true) {
+                fieldsSpec[fieldName].fields.display_name = {};
+            }
         }
         if (["many2one", "one2many", "many2many"].includes(fields[fieldName].type)) {
             let context = activeFields[fieldName].context;
@@ -367,11 +370,8 @@ export function parseServerValue(field, value) {
         }
         case "many2one": {
             if (Array.isArray(value)) {
+                // Used for web_read_group, where the value is an array of [id, display_name]
                 return value;
-            }
-            if (Number.isInteger(value)) {
-                // for always invisible many2ones, unity directly returns the id, not a pair
-                return [value, ""];
             }
             return value ? [value.id, value.display_name] : false;
         }
