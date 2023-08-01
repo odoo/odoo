@@ -46,7 +46,6 @@ import {
 
 var qweb = core.qweb;
 var _t = core._t;
-const _lt = core._lt;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const descendants = OdooEditorLib.descendants;
 const { DateTime } = luxon;
@@ -958,7 +957,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     events: {
         'click': '_onClick',
     },
-    PLACEHOLDER_TEXT: _lt("None"),
+    PLACEHOLDER_TEXT: _t("None"),
 
     /**
      * @override

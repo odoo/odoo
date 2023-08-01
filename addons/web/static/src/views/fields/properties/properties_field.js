@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 import { uuid } from "../../utils";
@@ -193,8 +193,8 @@ export class PropertiesField extends Component {
         if (targetIndex < 0 || targetIndex >= propertiesValues.length) {
             this.notification.add(
                 direction === "down"
-                    ? _lt("This field is already last")
-                    : _lt("This field is already first"),
+                    ? _t("This field is already last")
+                    : _t("This field is already first"),
                 { type: "warning" }
             );
             return;
@@ -236,7 +236,7 @@ export class PropertiesField extends Component {
         event.preventDefault();
         if (!(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
-                _lt("You need to be able to edit parent first to configure property fields"),
+                _t("You need to be able to edit parent first to configure property fields"),
                 { type: "warning" }
             );
             return;
@@ -277,15 +277,15 @@ export class PropertiesField extends Component {
     onPropertyDelete(propertyName) {
         this.popover.close();
         const dialogProps = {
-            title: _lt("Delete Property Field"),
+            title: _t("Delete Property Field"),
             body: sprintf(
-                _lt(
+                _t(
                     'Are you sure you want to delete this property field? It will be removed for everyone using the "%s" %s.'
                 ),
                 this.parentName,
                 this.parentString
             ),
-            confirmLabel: _lt("Delete"),
+            confirmLabel: _t("Delete"),
             confirm: () => {
                 const propertiesDefinitions = this.propertiesList;
                 propertiesDefinitions.find(
@@ -301,7 +301,7 @@ export class PropertiesField extends Component {
     async onPropertyCreate() {
         if (!(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
-                _lt("You need to be able to edit parent first to configure property fields"),
+                _t("You need to be able to edit parent first to configure property fields"),
                 { type: "warning" }
             );
             return;
@@ -315,7 +315,7 @@ export class PropertiesField extends Component {
             // do not allow to add new field until we set a label on the previous one
             this.propertiesRef.el.closest(".o_field_properties").classList.add("o_field_invalid");
 
-            this.notification.add(_lt("Please complete your properties before adding a new one"), {
+            this.notification.add(_t("Please complete your properties before adding a new one"), {
                 type: "warning",
             });
             return;
@@ -325,7 +325,7 @@ export class PropertiesField extends Component {
 
         propertiesDefinitions.push({
             name: uuid(),
-            string: sprintf(_lt("Property %s"), propertiesDefinitions.length + 1),
+            string: sprintf(_t("Property %s"), propertiesDefinitions.length + 1),
             type: "char",
             definition_changed: true,
         });
@@ -557,7 +557,7 @@ export class PropertiesField extends Component {
 
 export const propertiesField = {
     component: PropertiesField,
-    displayName: _lt("Properties"),
+    displayName: _t("Properties"),
     supportedTypes: ["properties"],
     extractProps({ attrs }, dynamicInfo) {
         return {

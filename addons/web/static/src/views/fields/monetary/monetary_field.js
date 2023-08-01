@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { formatMonetary } from "../formatters";
 import { parseMonetary } from "../parsers";
 import { useInputField } from "../input_field_hook";
@@ -93,13 +93,13 @@ export const monetaryField = {
     supportedOptions: [
         {
             name: "currency_field",
-            label: _lt("Currency"),
+            label: _t("Currency"),
             type: "field",
             availableTypes: ["many2one"],
         },
     ],
     supportedTypes: ["monetary", "float"],
-    displayName: _lt("Monetary"),
+    displayName: _t("Monetary"),
     extractProps: ({ attrs, options }) => ({
         currencyField: options.currency_field,
         inputType: attrs.type,

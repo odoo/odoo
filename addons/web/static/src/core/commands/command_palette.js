@@ -2,7 +2,7 @@
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
@@ -22,8 +22,8 @@ import {
     useExternalListener,
 } from "@odoo/owl";
 
-const DEFAULT_PLACEHOLDER = _lt("Search...");
-const DEFAULT_EMPTY_MESSAGE = _lt("No result found");
+const DEFAULT_PLACEHOLDER = _t("Search...");
+const DEFAULT_EMPTY_MESSAGE = _t("No result found");
 const FUZZY_NAMESPACES = ["default"];
 
 /**

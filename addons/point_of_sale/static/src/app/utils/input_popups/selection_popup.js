@@ -1,14 +1,14 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useState } from "@odoo/owl";
 
 export class SelectionPopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.SelectionPopup";
     static defaultProps = {
-        cancelText: _lt("Cancel"),
-        title: _lt("Select"),
+        cancelText: _t("Cancel"),
+        title: _t("Select"),
         body: "",
         list: [],
         confirmKey: false,

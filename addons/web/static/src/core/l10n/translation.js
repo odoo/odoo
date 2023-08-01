@@ -58,17 +58,17 @@ class LazyTranslatedString extends String {
  * strings we're using with a translation mark here so the extractor can do its
  * job.
  */
-_lt("less than a minute ago");
-_lt("about a minute ago");
-_lt("%d minutes ago");
-_lt("about an hour ago");
-_lt("%d hours ago");
-_lt("a day ago");
-_lt("%d days ago");
-_lt("about a month ago");
-_lt("%d months ago");
-_lt("about a year ago");
-_lt("%d years ago");
+_t("less than a minute ago");
+_t("about a minute ago");
+_t("%d minutes ago");
+_t("about an hour ago");
+_t("%d hours ago");
+_t("a day ago");
+_t("%d days ago");
+_t("about a month ago");
+_t("%d months ago");
+_t("about a year ago");
+_t("%d years ago");
 
 /**
  * Load the installed languages long names and code

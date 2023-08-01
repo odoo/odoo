@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { PhoneField, phoneField, formPhoneField } from "@web/views/fields/phone/phone_field";
 import { SendSMSButton } from '@sms/components/sms_button/sms_button';
@@ -27,7 +27,7 @@ const patchDescr = {
         return props;
     },
     supportedOptions: [{
-        label: _lt("Enable SMS"),
+        label: _t("Enable SMS"),
         name: "enable_sms",
         type: "boolean",
         default: true,

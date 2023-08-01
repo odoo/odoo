@@ -6,7 +6,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { download } from "@web/core/network/download";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 
 import { Component } from "@odoo/owl";
 export class BinaryField extends Component {
@@ -73,10 +73,10 @@ export const listBinaryField = {
 
 export const binaryField = {
     component: BinaryField,
-    displayName: _lt("File"),
+    displayName: _t("File"),
     supportedOptions: [
         {
-            label: _lt("Accepted file extensions"),
+            label: _t("Accepted file extensions"),
             name: "accepted_file_extensions",
             type: "string",
         },

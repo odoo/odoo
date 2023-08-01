@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 
 import { Component } from "@odoo/owl";
 
@@ -40,4 +40,4 @@ export default class ToursDialog extends Component {
 }
 ToursDialog.template = "web_tour.ToursDialog";
 ToursDialog.components = { Dialog };
-ToursDialog.title = _lt("Tours");
+ToursDialog.title = _t("Tours");

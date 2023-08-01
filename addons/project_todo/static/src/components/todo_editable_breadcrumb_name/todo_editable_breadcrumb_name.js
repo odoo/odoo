@@ -2,14 +2,14 @@
 
 import { useState, onRendered, useRef } from "@odoo/owl";
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { CharField } from "@web/views/fields/char/char_field";
 import { useAutoresize } from "@web/core/utils/autoresize";
 
 export class TodoEditableBreadcrumbName extends CharField {
     setup() {
         super.setup();
-        this.placeholder = _lt("Untitled to-do");;
+        this.placeholder = _t("Untitled to-do");;
         this.input = useRef("input");
 
         this.stateTodo = useState({

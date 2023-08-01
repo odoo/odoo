@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
  /**
@@ -31,7 +31,7 @@ export class ProductDiscountField extends FloatField {
         const isFirstOrderLine = this.props.record.resId === orderLines[0].data.id;
         if (isFirstOrderLine && sameValue(orderLines)) {
             this.dialogService.add(ConfirmationDialog, {
-                body: _lt("Do you want to apply this value to all lines?"),
+                body: _t("Do you want to apply this value to all lines?"),
                 confirm: () => {
                     const commands = orderLines.slice(1).map((line) => {
                         return {
@@ -62,7 +62,7 @@ ProductDiscountField.template = "sale.ProductDiscountField";
 export const productDiscountField = {
     ...floatField,
     component: ProductDiscountField,
-    displayName: _lt("Disc.%"),
+    displayName: _t("Disc.%"),
 };
 
 registry.category("fields").add("sol_discount", productDiscountField)

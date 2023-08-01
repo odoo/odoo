@@ -8,7 +8,7 @@ import { usePosition } from "@web/core/position_hook";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { shallowEqual } from "@web/core/utils/arrays";
 import { sprintf } from "@web/core/utils/strings";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
@@ -22,12 +22,12 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 const { Component, useState, useRef, useExternalListener, onWillStart, onPatched } = owl;
 
 const PLAN_APPLICABILITY = {
-    mandatory: _lt("Mandatory"),
-    optional: _lt("Optional"),
+    mandatory: _t("Mandatory"),
+    optional: _t("Optional"),
 }
 const PLAN_STATUS = {
-    invalid: _lt("Invalid"),
-    ok: _lt("OK"),
+    invalid: _t("Invalid"),
+    ok: _t("OK"),
 }
 export class AnalyticDistribution extends Component {
     setup(){

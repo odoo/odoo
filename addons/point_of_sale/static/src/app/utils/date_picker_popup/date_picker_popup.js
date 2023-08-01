@@ -1,15 +1,15 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { onMounted, useRef, useState } from "@odoo/owl";
 
 export class DatePickerPopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.DatePickerPopup";
     static defaultProps = {
-        confirmText: _lt("Confirm"),
-        cancelText: _lt("Discard"),
-        title: _lt("DatePicker"),
+        confirmText: _t("Confirm"),
+        cancelText: _t("Discard"),
+        title: _t("DatePicker"),
     };
 
     setup() {

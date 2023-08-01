@@ -2,7 +2,7 @@
 
 import { Component, onWillUnmount } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
@@ -76,7 +76,7 @@ export class Many2ManyCheckboxesField extends Component {
 
 export const many2ManyCheckboxesField = {
     component: Many2ManyCheckboxesField,
-    displayName: _lt("Checkboxes"),
+    displayName: _t("Checkboxes"),
     supportedTypes: ["many2many"],
     isEmpty: () => false,
     extractProps(fieldInfo, dynamicInfo) {

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import {_lt} from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import snippetsEditor from "@web_editor/js/editor/snippets.editor";
 
 export const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
@@ -17,7 +17,7 @@ export const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
         DESIGN: 'design',
     }),
     optionsTabStructure: [
-        ['design-options', _lt("Design Options")],
+        ['design-options', _t("Design Options")],
     ],
 
     //--------------------------------------------------------------------------

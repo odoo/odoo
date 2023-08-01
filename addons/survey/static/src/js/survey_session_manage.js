@@ -5,16 +5,16 @@ import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
 import SurveySessionChart from "@survey/js/survey_session_chart";
 import SurveySessionTextAnswers from "@survey/js/survey_session_text_answers";
 import SurveySessionLeaderBoard from "@survey/js/survey_session_leaderboard";
-import {_lt} from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 
 const nextPageTooltips = {
-    closingWords: _lt('End of Survey'),
-    leaderboard: _lt('Show Leaderboard'),
-    leaderboardFinal: _lt('Show Final Leaderboard'),
-    nextQuestion: _lt('Next'),
-    results: _lt('Show Correct Answer(s)'),
-    startScreen: _lt('Start'),
-    userInputs: _lt('Show Results'),
+    closingWords: _t('End of Survey'),
+    leaderboard: _t('Show Leaderboard'),
+    leaderboardFinal: _t('Show Final Leaderboard'),
+    nextQuestion: _t('Next'),
+    results: _t('Show Correct Answer(s)'),
+    startScreen: _t('Start'),
+    userInputs: _t('Show Results'),
 };
 
 publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPreloadImageMixin, {
@@ -102,7 +102,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             container: 'body',
             offset: '0, 3',
             content: function () {
-                return _lt("Copied!");
+                return _t("Copied!");
             }
         });
 
@@ -412,7 +412,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             // Display last screen if leaderboard activated
             this.isLastQuestion = true;
             this._setupLeaderboard().then(function () {
-                self.$('.o_survey_session_leaderboard_title').text(_lt('Final Leaderboard'));
+                self.$('.o_survey_session_leaderboard_title').text(_t('Final Leaderboard'));
                 self.$('.o_survey_session_navigation_next').addClass('d-none');
                 self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
                 self.leaderBoard.showLeaderboard(false, false);

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 
@@ -24,7 +24,7 @@ export class BooleanField extends Component {
 
 export const booleanField = {
     component: BooleanField,
-    displayName: _lt("Checkbox"),
+    displayName: _t("Checkbox"),
     supportedTypes: ["boolean"],
     isEmpty: () => false,
 };

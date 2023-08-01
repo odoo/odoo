@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Dialog } from "../dialog/dialog";
-import { _lt } from "../l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useChildRef } from "@web/core/utils/hooks";
 
 import { Component } from "@odoo/owl";
@@ -73,10 +73,10 @@ ConfirmationDialog.props = {
     cancelLabel: { type: String, optional: true },
 };
 ConfirmationDialog.defaultProps = {
-    confirmLabel: _lt("Ok"),
-    cancelLabel: _lt("Cancel"),
+    confirmLabel: _t("Ok"),
+    cancelLabel: _t("Cancel"),
     confirmClass: "btn-primary",
-    title: _lt("Confirmation"),
+    title: _t("Confirmation"),
 };
 
 export class AlertDialog extends ConfirmationDialog {}
@@ -87,5 +87,5 @@ AlertDialog.props = {
 };
 AlertDialog.defaultProps = {
     ...ConfirmationDialog.defaultProps,
-    title: _lt("Alert"),
+    title: _t("Alert"),
 };

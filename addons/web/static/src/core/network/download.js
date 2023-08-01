@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "../l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { makeErrorFromResponse, ConnectionLostError } from "@web/core/network/rpc_service";
 import { browser } from "@web/core/browser/browser";
 
@@ -371,7 +371,7 @@ function _download(data, filename, mimetype) {
             anchor.href = url;
             anchor.setAttribute("download", fileName);
             anchor.className = "download-js-link";
-            anchor.innerText = _lt("downloading...");
+            anchor.innerText = _t("downloading...");
             anchor.style.display = "none";
             document.body.appendChild(anchor);
             setTimeout(() => {

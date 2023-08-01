@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Component } from "@odoo/owl";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
@@ -84,7 +84,7 @@ export class SelectionField extends Component {
 
 export const selectionField = {
     component: SelectionField,
-    displayName: _lt("Selection"),
+    displayName: _t("Selection"),
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps({ attrs }, dynamicInfo) {

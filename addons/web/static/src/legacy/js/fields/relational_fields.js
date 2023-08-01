@@ -25,7 +25,6 @@ import { uniqueId } from "@web/core/utils/functions";
 import { sortBy } from "@web/core/utils/arrays";
 
 var _t = core._t;
-var _lt = core._lt;
 var qweb = core.qweb;
 
 //------------------------------------------------------------------------------
@@ -73,7 +72,7 @@ var M2ODialog = Dialog.extend({
 });
 
 var FieldMany2One = AbstractField.extend({
-    description: _lt("Many2one"),
+    description: _t("Many2one"),
     supportedFieldTypes: ['many2one'],
     template: 'FieldMany2One',
     custom_events: Object.assign({}, AbstractField.prototype.custom_events, {
@@ -976,7 +975,7 @@ const Many2OneAvatar = FieldMany2One.extend({
 //------------------------------------------------------------------------------
 
 var FieldMany2ManyTags = AbstractField.extend({
-    description: _lt("Tags"),
+    description: _t("Tags"),
     tag_template: "FieldMany2ManyTag",
     className: "o_field_many2manytags",
     supportedFieldTypes: ['many2many'],
@@ -1416,7 +1415,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
  * of type 'selection' and 'many2one'.
  */
 var FieldSelection = AbstractField.extend({
-    description: _lt("Selection"),
+    description: _t("Selection"),
     template: 'web.Legacy.FieldSelection',
     specialData: "_fetchSpecialRelation",
     supportedFieldTypes: ['selection'],
@@ -1546,7 +1545,7 @@ var FieldSelection = AbstractField.extend({
 });
 
 var FieldRadio = FieldSelection.extend({
-    description: _lt("Radio"),
+    description: _t("Radio"),
     template: null,
     className: 'o_field_radio',
     tagName: 'div',

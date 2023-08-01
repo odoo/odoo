@@ -1,6 +1,6 @@
 /** @odoo-modules **/
 
-import {qweb, _t, _lt} from "@web/legacy/js/services/core";
+import {qweb, _t} from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import weSnippetEditor from "@web_editor/js/editor/snippets.editor";
 import wSnippetOptions from "@website/js/editor/snippets.options";
@@ -25,14 +25,14 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         THEME: 'theme',
     }),
     optionsTabStructure: [
-        ['theme-colors', _lt("Colors")],
-        ['website-settings', _lt("Website")],
-        ['theme-paragraph', _lt("Paragraph")],
-        ['theme-headings', _lt("Headings")],
-        ['theme-button', _lt("Button")],
-        ['theme-link', _lt("Link")],
-        ['theme-input', _lt("Input Fields")],
-        ['theme-advanced', _lt("Advanced")],
+        ['theme-colors', _t("Colors")],
+        ['website-settings', _t("Website")],
+        ['theme-paragraph', _t("Paragraph")],
+        ['theme-headings', _t("Headings")],
+        ['theme-button', _t("Button")],
+        ['theme-link', _t("Link")],
+        ['theme-input', _t("Input Fields")],
+        ['theme-advanced', _t("Advanced")],
     ],
 
     /**

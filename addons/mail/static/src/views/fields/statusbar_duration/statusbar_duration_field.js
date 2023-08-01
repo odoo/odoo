@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatDuration } from "@web/views/fields/formatters";
 import {
@@ -44,7 +44,7 @@ export class StatusBarDurationField extends StatusBarField {
 export const statusBarDurationField = {
     ...statusBarField,
     component: StatusBarDurationField,
-    displayName: _lt("Status with time"),
+    displayName: _t("Status with time"),
     supportedTypes: ["many2one"],
     fieldDependencies: [{ name: "duration_tracking", type: "JSON" }],
 };

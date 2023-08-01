@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
@@ -70,7 +70,7 @@ export const many2ManyBinaryField = {
     component: Many2ManyBinaryField,
     supportedOptions: [
         {
-            label: _lt("Accepted file extensions"),
+            label: _t("Accepted file extensions"),
             name: "accepted_file_extensions",
             type: "string",
         },

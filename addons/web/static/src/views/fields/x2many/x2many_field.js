@@ -2,7 +2,7 @@
 
 import { makeContext } from "@web/core/context";
 import { evalDomain } from "@web/core/domain";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
@@ -285,7 +285,7 @@ export class X2ManyField extends Component {
 
 export const x2ManyField = {
     component: X2ManyField,
-    displayName: _lt("Relational table"),
+    displayName: _t("Relational table"),
     supportedTypes: ["one2many", "many2many"],
     useSubView: true,
     extractProps: (

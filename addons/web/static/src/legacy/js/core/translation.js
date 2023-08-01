@@ -2,7 +2,6 @@
 /** @odoo-module **/
 
 import Class from "@web/legacy/js/core/class";
-import { _lt } from "@web/core/l10n/translation";
 
 var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# */{
     init: function() {
@@ -118,6 +117,5 @@ export var _t = new TranslationDataBase().build_translation_function();
 
 export default {
     _t: _t,
-    _lt: _lt,
     TranslationDataBase: TranslationDataBase,
 };

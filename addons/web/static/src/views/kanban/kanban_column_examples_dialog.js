@@ -2,7 +2,7 @@
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 
 import { Component, useRef } from "@odoo/owl";
 
@@ -60,4 +60,4 @@ export class KanbanColumnExamplesDialog extends Component {
 }
 KanbanColumnExamplesDialog.template = "web.KanbanColumnExamplesDialog";
 KanbanColumnExamplesDialog.components = { Dialog, Notebook };
-KanbanColumnExamplesDialog.title = _lt("Kanban Examples");
+KanbanColumnExamplesDialog.title = _t("Kanban Examples");

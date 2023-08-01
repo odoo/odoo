@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { archParseBoolean } from "@web/views/utils";
 import { formatChar } from "../formatters";
@@ -66,7 +66,7 @@ export class CharField extends Component {
 
 export const charField = {
     component: CharField,
-    displayName: _lt("Text"),
+    displayName: _t("Text"),
     supportedTypes: ["char"],
     extractProps: ({ attrs, options }) => ({
         isPassword: archParseBoolean(attrs.password),
