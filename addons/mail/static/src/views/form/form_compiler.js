@@ -52,7 +52,7 @@ function compileChatter(node, params) {
         saveRecord: "() => __comp__.saveButtonClicked and __comp__.saveButtonClicked()",
     });
     const chatterContainerHookXml = createElement("div");
-    chatterContainerHookXml.classList.add("o-mail-Form-chatter");
+    chatterContainerHookXml.classList.add("o-mail-Form-chatter", "z-index-0");
     append(chatterContainerHookXml, chatterContainerXml);
     return chatterContainerHookXml;
 }
