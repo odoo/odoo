@@ -10443,10 +10443,6 @@ QUnit.module("Fields", (hooks) => {
                 mockRPC(route, args) {
                     assert.step(args.method);
                 },
-                // we set a fieldDebounce to precisely mock the behavior of the webclient: changes are
-                // not sent to the model at keystrokes, but when the input is left
-
-                // legacyParams: { fieldDebounce: 5000 }, // WOWL keep this in view API?
             });
 
             await addRow(target);

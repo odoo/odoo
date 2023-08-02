@@ -2,6 +2,7 @@
 
     import { NameAndSignature } from "@web/legacy/js/widgets/name_and_signature";
     import testUtils from "@web/../tests/legacy/helpers/test_utils";
+
     const MockedNameAndSignature = NameAndSignature.extend({
         events: {
             ...NameAndSignature.prototype.events,
@@ -14,10 +15,10 @@
     async function MockedNameAndSignatureGenerator (options) {
         const parent = $("#qunit-fixture");
         const mockedNameAndSignature = new MockedNameAndSignature(parent, options);
-        await testUtils.mock.addMockEnvironment(mockedNameAndSignature, {
-            mockRPC: function (route, args) {
-                if (route == "/web/sign/get_fonts/") {
-                    return Promise.resolve();
+        testUtils.mock.intercept(mockedNameAndSignature, 'call_service', function ({ data }) {
+            if (data.service === "ajax" && data.method === "rpc") {
+                if (data.args[0] === "/web/sign/get_fonts/") {
+                    data.callback(Promise.resolve());
                 }
             }
         });

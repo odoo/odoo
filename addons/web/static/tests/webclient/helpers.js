@@ -6,21 +6,12 @@ import { ormService } from "@web/core/orm_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { legacyServiceProvider } from "@web/legacy/legacy_service_provider";
-import {
-    makeLegacyNotificationService,
-    mapLegacyEnvToWowlEnv,
-    makeLegacySessionService,
-} from "@web/legacy/utils";
-import { makeLegacyActionManagerService } from "@web/legacy/backend_utils";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { effectService } from "@web/core/effects/effect_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { WebClient } from "@web/webclient/webclient";
-import AbstractService from "@web/legacy/js/core/abstract_service";
-import core from "@web/legacy/js/services/core";
-import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import {
@@ -31,15 +22,10 @@ import {
     makeFakeHTTPService,
     makeFakeUserService,
 } from "../helpers/mock_services";
-import { getFixture, mount, nextTick, patchWithCleanup } from "../helpers/utils";
-import session from "web.session";
-import LegacyMockServer from "@web/../tests/legacy/helpers/mock_server";
-import Widget from "@web/legacy/js/core/widget";
+import { getFixture, mount, nextTick } from "../helpers/utils";
 import { uiService } from "@web/core/ui/ui_service";
 import { commandService } from "@web/core/commands/command_service";
-import { ConnectionAbortedError } from "@web/core/network/rpc_service";
 import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favorite_item";
-import { standaloneAdapter } from "@web/legacy/js/owl_compatibility";
 import { overlayService } from "@web/core/overlay/overlay_service";
 
 import { Component, xml } from "@odoo/owl";
@@ -100,87 +86,6 @@ export function setupWebClientRegistries() {
 }
 
 /**
- * Remove this as soon as we drop the legacy support
- */
-export async function addLegacyMockEnvironment(env, legacyParams = {}) {
-    // setup a legacy env
-    let localSession;
-    if (legacyParams && legacyParams.getTZOffset) {
-        patchWithCleanup(session, {
-            getTZOffset: legacyParams.getTZOffset,
-        });
-        localSession = { getTZOffset: legacyParams.getTZOffset };
-    }
-
-    const baseEnv = { bus: core.bus, session: localSession };
-    const legacyEnv = makeTestEnvironment(Object.assign(baseEnv, legacyParams.env));
-
-    if (legacyParams.serviceRegistry) {
-        const legacyServiceMap = core.serviceRegistry.map;
-        core.serviceRegistry.map = legacyParams.serviceRegistry.map;
-        // notification isn't a deployed service, but it is added by `makeTestEnvironment`.
-        // Here, we want full control on the deployed services, so we simply remove it.
-        delete legacyEnv.services.notification;
-        AbstractService.prototype.deployServices(legacyEnv);
-        registerCleanup(() => {
-            core.serviceRegistry.map = legacyServiceMap;
-        });
-    }
-
-    Component.env = legacyEnv;
-    mapLegacyEnvToWowlEnv(legacyEnv, env);
-    function patchLegacySession() {
-        const userContext = Object.getOwnPropertyDescriptor(session, "user_context");
-        registerCleanup(() => {
-            Object.defineProperty(session, "user_context", userContext);
-        });
-    }
-    patchLegacySession();
-    serviceRegistry.add("legacy_session", makeLegacySessionService(legacyEnv, session));
-    // deploy the legacyActionManagerService (in Wowl env)
-    const legacyActionManagerService = makeLegacyActionManagerService(legacyEnv);
-    serviceRegistry.add("legacy_action_manager", legacyActionManagerService);
-    serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
-    // deploy wowl services into the legacy env.
-    const wowlToLegacyServiceMappers = registry.category("wowlToLegacyServiceMappers").getEntries();
-    for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
-        serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
-    }
-
-    if (legacyParams.withLegacyMockServer) {
-        const adapter = standaloneAdapter({ Component });
-        registerCleanup(() => adapter.__owl__.app.destroy());
-        adapter.env = legacyEnv;
-        const W = Widget.extend({ do_push_state() {} });
-        const widget = new W(adapter);
-        const legacyMockServer = new LegacyMockServer(legacyParams.models, { widget });
-        const originalRPC = env.services.rpc;
-        const rpc = async (...args) => {
-            try {
-                return await originalRPC(...args);
-            } catch (e) {
-                if (e.message.includes("Unimplemented")) {
-                    return legacyMockServer._performRpc(...args);
-                } else {
-                    throw e;
-                }
-            }
-        };
-        env.services.rpc = function () {
-            let rejectFn;
-            const rpcProm = new Promise((resolve, reject) => {
-                rejectFn = reject;
-                rpc(...arguments)
-                    .then(resolve)
-                    .catch(reject);
-            });
-            rpcProm.abort = () => rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
-            return rpcProm;
-        };
-    }
-}
-
-/**
  * This method create a web client instance properly configured.
  *
  * Note that the returned web client will be automatically cleaned up after the
@@ -191,26 +96,12 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
 export async function createWebClient(params) {
     setupWebClientRegistries();
 
-    const legacyParams = params.legacyParams;
     params.serverData = params.serverData || {};
-    const models = params.serverData.models;
-    if (legacyParams && legacyParams.withLegacyMockServer && models) {
-        legacyParams.models = Object.assign({}, models);
-        // In lagacy, data may not be sole models, but can contain some other variables
-        // So we filter them out for our WOWL mockServer
-        Object.entries(legacyParams.models).forEach(([k, v]) => {
-            if (!(v instanceof Object) || !("fields" in v)) {
-                delete models[k];
-            }
-        });
-    }
-
     const mockRPC = params.mockRPC || undefined;
     const env = await makeTestEnv({
         serverData: params.serverData,
         mockRPC,
     });
-    await addLegacyMockEnvironment(env, legacyParams);
 
     const WebClientClass = params.WebClientClass || WebClient;
     const target = params && params.target ? params.target : getFixture();

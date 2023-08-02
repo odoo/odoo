@@ -15,13 +15,7 @@ const ROUTES_TO_IGNORE = [
     "/web/dataset/call_kw/res.users/load_views",
     "/web/dataset/call_kw/res.users/systray_get_activities",
 ];
-const WEBCLIENT_PARAMETER_NAMES = new Set([
-    "legacyParams",
-    "mockRPC",
-    "serverData",
-    "target",
-    "webClientClass",
-]);
+const WEBCLIENT_PARAMETER_NAMES = new Set(["mockRPC", "serverData", "target", "webClientClass"]);
 const SERVICES_PARAMETER_NAMES = new Set([
     "legacyServices",
     "loadingBaseDelayDuration",
@@ -129,17 +123,14 @@ export const setupManager = {
      */
     setupServiceRegistries({ loadingBaseDelayDuration = 0, messagingBus, services = {} } = {}) {
         const OriginalAudio = window.Audio;
-        patchWithCleanup(
-            window,
-            {
-                Audio: function () {
-                    const audio = new OriginalAudio();
-                    audio.preload = "none";
-                    audio.play = () => {};
-                    return audio;
-                },
-            }
-        );
+        patchWithCleanup(window, {
+            Audio: function () {
+                const audio = new OriginalAudio();
+                audio.preload = "none";
+                audio.play = () => {};
+                return audio;
+            },
+        });
         patchWithCleanup(session, { show_effect: true });
         services["messagingValues"] = services["messagingValues"] ?? {
             start() {
