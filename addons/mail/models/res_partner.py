@@ -64,7 +64,7 @@ class Partner(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
-    def _mail_get_partners(self):
+    def _mail_get_partners(self, introspect_fields=False):
         return dict((partner.id, partner) for partner in self)
 
     def _message_get_suggested_recipients(self):

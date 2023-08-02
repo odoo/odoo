@@ -48,7 +48,7 @@ class TestMailThreadInternals(TestMailThreadInternalsCommon):
             with self.subTest(test_record=test_record):
                 is_portal = test_record._name != 'mail.test.simple'
                 has_customer = test_record._name != 'mail.test.portal.no.partner'
-                partner_fnames = test_record._mail_get_partner_fields()
+                partner_fnames = test_record._mail_get_partner_fields(introspect_fields=False)
 
                 if is_portal:
                     self.assertFalse(
