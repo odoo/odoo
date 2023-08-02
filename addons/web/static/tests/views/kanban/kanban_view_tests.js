@@ -12577,13 +12577,13 @@ QUnit.module("Views", (hooks) => {
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
                 (el) => el.innerText
             ),
-            ["blip", "blip", "yop", "gnap"]
+            ["blip", "yop", "blip", "gnap"]
         );
         assert.verifySteps(["resequence"]);
 
         // try again
         await dragAndDrop(".o_kanban_record:nth-child(2)", ".o_kanban_record:nth-child(3)");
-        -assert.verifySteps([]);
+        assert.verifySteps([]);
 
         def.resolve();
         await nextTick();

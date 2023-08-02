@@ -268,18 +268,17 @@ export class DynamicList extends DataPoint {
 
     async _resequence(originalList, resModel, movedId, targetId) {
         if (this.resModel === resModel && !this.canResequence()) {
-            return originalList;
+            return;
         }
         const handleField = this.resModel === resModel ? this.handleField : DEFAULT_HANDLE_FIELD;
-        const dataPoints = [...originalList];
         const order = this.orderBy.find((o) => o.name === handleField);
         const asc = !order || order.asc;
 
         // Find indices
-        const fromIndex = dataPoints.findIndex((d) => d.id === movedId);
+        const fromIndex = originalList.findIndex((d) => d.id === movedId);
         let toIndex = 0;
         if (targetId !== null) {
-            const targetIndex = dataPoints.findIndex((d) => d.id === targetId);
+            const targetIndex = originalList.findIndex((d) => d.id === targetId);
             toIndex = fromIndex > targetIndex ? targetIndex + 1 : targetIndex;
         }
 
@@ -288,13 +287,13 @@ export class DynamicList extends DataPoint {
         // Determine which records/groups need to be modified
         const firstIndex = Math.min(fromIndex, toIndex);
         const lastIndex = Math.max(fromIndex, toIndex) + 1;
-        let reorderAll = dataPoints.some(
+        let reorderAll = originalList.some(
             (dp) => this._getDPFieldValue(dp, handleField) === undefined
         );
         if (!reorderAll) {
             let lastSequence = (asc ? -1 : 1) * Infinity;
-            for (let index = 0; index < dataPoints.length; index++) {
-                const sequence = getSequence(dataPoints[index]);
+            for (let index = 0; index < originalList.length; index++) {
+                const sequence = getSequence(originalList[index]);
                 if (
                     ((index < firstIndex || index >= lastIndex) &&
                         ((asc && lastSequence >= sequence) ||
@@ -308,11 +307,11 @@ export class DynamicList extends DataPoint {
         }
 
         // Perform the resequence in the list of records/groups
-        const [dp] = dataPoints.splice(fromIndex, 1);
-        dataPoints.splice(toIndex, 0, dp);
+        const [dp] = originalList.splice(fromIndex, 1);
+        originalList.splice(toIndex, 0, dp);
 
         // Creates the list of records/groups to modify
-        let toReorder = dataPoints;
+        let toReorder = originalList;
         if (!reorderAll) {
             toReorder = toReorder.slice(firstIndex, lastIndex).filter((r) => r.id !== movedId);
             if (fromIndex < toIndex) {
@@ -341,22 +340,20 @@ export class DynamicList extends DataPoint {
         }
         const wasResequenced = await this.model.rpc("/web/dataset/resequence", params);
         if (!wasResequenced) {
-            return originalList;
+            return;
         }
 
         // Read the actual values set by the server and update the records/groups
         const kwargs = { context: this.context };
         const result = await this.model.orm.read(resModel, resIds, [handleField], kwargs);
         for (const dpData of result) {
-            const dp = dataPoints.find((d) => this._getDPresId(d) === dpData.id);
+            const dp = originalList.find((d) => this._getDPresId(d) === dpData.id);
             if (dp instanceof Record) {
                 dp._applyValues(dpData);
             } else {
                 dp[handleField] = dpData[handleField];
             }
         }
-
-        return dataPoints;
     }
 
     async _toggleArchive(isSelected, state) {

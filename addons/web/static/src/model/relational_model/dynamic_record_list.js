@@ -88,12 +88,7 @@ export class DynamicRecordList extends DynamicList {
     async resequence(movedRecordId, targetRecordId) {
         return this.model.mutex.exec(
             async () =>
-                (this.records = await this._resequence(
-                    this.records,
-                    this.resModel,
-                    movedRecordId,
-                    targetRecordId
-                ))
+                await this._resequence(this.records, this.resModel, movedRecordId, targetRecordId)
         );
     }
 
