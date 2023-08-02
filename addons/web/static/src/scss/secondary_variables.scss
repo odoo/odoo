@@ -36,3 +36,8 @@ $o-datepicker-week-bg-color: lighten($o-datepicker-week-color, 30%) !default;
 // is the minimal width of the default form view design for md/lg sizes
 $o-form-sheet-min-width: 990px !default;
 $o-form-separator-color: invert($o-view-background-color, 10%) !default;
+
+$o-caret-down: url("data:image/svg+xml," +
+"<svg xmlns='http://www.w3.org/2000/svg' width='7' height='4' viewBox='0 0 7 4'>" +
+    "<polygon fill='%23#{str-slice(#{$o-main-text-color}, 2)}' points='3.5 4 7 0 0 0'/>" +
+"</svg>");

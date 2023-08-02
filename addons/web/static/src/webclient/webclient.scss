@@ -162,17 +162,13 @@ select {
   outline: none;
 }
 select {
-  $-down-arrow: url("data:image/svg+xml," +
-    "<svg xmlns='http://www.w3.org/2000/svg' width='7' height='4' viewBox='0 0 7 4'>" +
-        "<polygon fill='%23#{str-slice(#{$o-main-text-color}, 2)}' points='3.5 4 7 0 0 0'/>" +
-    "</svg>");
 
   // FIXME buggy 'padding-left'
   cursor: pointer;
   min-width: 50px;
 
   appearance: none;
-  background: transparent $-down-arrow no-repeat right center;
+  background: transparent $o-caret-down no-repeat right center;
   border-radius: 0; // webkit OSX browsers have a border-radius on select
 
   color: $o-main-text-color;
