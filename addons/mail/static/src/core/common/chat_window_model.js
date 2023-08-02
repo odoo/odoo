@@ -8,8 +8,8 @@ export class ChatWindow {
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
 
-    /** @type {import("@mail/core/common/thread_model").Thread.localId} */
-    threadLocalId;
+    /** @type {import("@mail/core/common/thread_model").Thread.objectId} */
+    threadObjectId;
     autofocus = 0;
     folded = false;
     hidden = false;
@@ -27,11 +27,11 @@ export class ChatWindow {
     }
 
     get thread() {
-        return this._store.threads[this.threadLocalId];
+        return this._store.threads[this.threadObjectId];
     }
 
     set thread(thread) {
-        this.threadLocalId = thread?.localId;
+        this.threadObjectId = thread?.objectId;
     }
 
     get displayName() {

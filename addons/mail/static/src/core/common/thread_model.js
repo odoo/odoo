@@ -139,8 +139,8 @@ export class Thread {
             type: data.type,
             _store: store,
         });
-        store.threads[this.localId] = this;
-        return store.threads[this.localId];
+        store.threads[this.objectId] = this;
+        return store.threads[this.objectId];
     }
 
     get accessRestrictedToGroupText() {
@@ -286,7 +286,7 @@ export class Thread {
         return null;
     }
 
-    get localId() {
+    get objectId() {
         return createObjectId("Thread", this.model, this.id);
     }
 

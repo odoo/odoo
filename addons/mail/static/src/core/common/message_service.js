@@ -401,33 +401,33 @@ export class MessageService {
             reaction._store = this.store;
         }
         const personasToUnlink = new Set();
-        const alreadyKnownPersonaIds = new Set(reaction.personaLocalIds);
+        const alreadyKnownPersonaIds = new Set(reaction.personaObjectIds);
         for (const rawPartner of data.partners) {
             const [command, partnerData] = Array.isArray(rawPartner)
                 ? rawPartner
                 : ["insert", rawPartner];
             const persona = this.personaService.insert({ ...partnerData, type: "partner" });
-            if (command === "insert" && !alreadyKnownPersonaIds.has(persona.localId)) {
-                reaction.personaLocalIds.push(persona.localId);
+            if (command === "insert" && !alreadyKnownPersonaIds.has(persona.objectId)) {
+                reaction.personaObjectIds.push(persona.objectId);
             } else if (command !== "insert") {
-                personasToUnlink.add(persona.localId);
+                personasToUnlink.add(persona.objectId);
             }
         }
         for (const rawGuest of data.guests) {
             const [command, guestData] = Array.isArray(rawGuest) ? rawGuest : ["insert", rawGuest];
             const persona = this.personaService.insert({ ...guestData, type: "guest" });
-            if (command === "insert" && !alreadyKnownPersonaIds.has(persona.localId)) {
-                reaction.personaLocalIds.push(persona.localId);
+            if (command === "insert" && !alreadyKnownPersonaIds.has(persona.objectId)) {
+                reaction.personaObjectIds.push(persona.objectId);
             } else if (command !== "insert") {
-                personasToUnlink.add(persona.localId);
+                personasToUnlink.add(persona.objectId);
             }
         }
         Object.assign(reaction, {
             count: data.count,
             content: data.content,
             messageId: data.message.id,
-            personaLocalIds: reaction.personaLocalIds.filter(
-                (localId) => !personasToUnlink.has(localId)
+            personaObjectIds: reaction.personaObjectIds.filter(
+                (objectId) => !personasToUnlink.has(objectId)
             ),
         });
         return reaction;

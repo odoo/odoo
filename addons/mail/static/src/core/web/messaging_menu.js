@@ -148,7 +148,7 @@ export class MessagingMenu extends Component {
             if (a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
                 return b.newestPersistentMessage.datetime - a.newestPersistentMessage.datetime;
             }
-            return b.localId > a.localId ? 1 : -1;
+            return b.objectId > a.objectId ? 1 : -1;
         });
     }
 
@@ -282,15 +282,15 @@ export class MessagingMenu extends Component {
         this.store.discuss.activeTab = tabId;
         if (
             this.store.discuss.activeTab === "mailbox" &&
-            (!this.store.discuss.threadLocalId ||
-                this.store.threads[this.store.discuss.threadLocalId].type !== "mailbox")
+            (!this.store.discuss.threadObjectId ||
+                this.store.threads[this.store.discuss.threadObjectId].type !== "mailbox")
         ) {
             this.threadService.setDiscussThread(
                 Object.values(this.store.threads).find((thread) => thread.id === "inbox")
             );
         }
         if (this.store.discuss.activeTab !== "mailbox") {
-            this.store.discuss.threadLocalId = null;
+            this.store.discuss.threadObjectId = null;
         }
     }
 

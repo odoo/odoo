@@ -22,7 +22,7 @@ patch(ThreadService.prototype, {
                 });
             }
             if (isUnknown) {
-                this.store.discuss.livechat.threads.push(thread.localId);
+                this.store.discuss.livechat.threads.push(thread.objectId);
                 this.sortChannels();
             }
         }
@@ -41,7 +41,7 @@ patch(ThreadService.prototype, {
     },
     remove(thread) {
         if (thread.type === "livechat") {
-            removeFromArray(this.store.discuss.livechat.threads, thread.localId);
+            removeFromArray(this.store.discuss.livechat.threads, thread.objectId);
         }
         super.remove(thread);
     },
@@ -67,9 +67,9 @@ patch(ThreadService.prototype, {
     sortChannels() {
         super.sortChannels();
         // Live chats are sorted by most recent interest date time in the sidebar.
-        this.store.discuss.livechat.threads.sort((localId_1, localId_2) => {
-            const thread1 = this.store.threads[localId_1];
-            const thread2 = this.store.threads[localId_2];
+        this.store.discuss.livechat.threads.sort((objectId_1, objectId_2) => {
+            const thread1 = this.store.threads[objectId_1];
+            const thread2 = this.store.threads[objectId_2];
             return thread2.lastInterestDateTime?.ts - thread1.lastInterestDateTime?.ts;
         });
     },
@@ -81,11 +81,11 @@ patch(ThreadService.prototype, {
         const oldestUnreadThread =
             this.store.threads[
                 Object.values(this.store.discuss.livechat.threads)
-                    .filter((localId) => this.store.threads[localId].isUnread)
+                    .filter((objectId) => this.store.threads[objectId].isUnread)
                     .sort(
-                        (localId_1, localId_2) =>
-                            this.store.threads[localId_1].lastInterestDateTime?.ts -
-                            this.store.threads[localId_2].lastInterestDateTime?.ts
+                        (objectId_1, objectId_2) =>
+                            this.store.threads[objectId_1].lastInterestDateTime?.ts -
+                            this.store.threads[objectId_2].lastInterestDateTime?.ts
                     )[0]
             ];
         if (!oldestUnreadThread) {

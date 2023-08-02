@@ -31,17 +31,17 @@ export class PersonaService {
      * @returns {import("@mail/core/common/persona_model").Persona}
      */
     insert(data) {
-        const localId = createObjectId("Persona", data.type, data.id);
-        let persona = this.store.personas[localId];
+        const objectId = createObjectId("Persona", data.type, data.id);
+        let persona = this.store.personas[objectId];
         if (!persona) {
             persona = new Persona();
             persona._store = this.store;
-            persona.localId = localId;
-            this.store.personas[localId] = persona;
+            persona.objectId = objectId;
+            this.store.personas[objectId] = persona;
         }
         this.update(persona, data);
         // return reactive version
-        return this.store.personas[localId];
+        return this.store.personas[objectId];
     }
 
     update(persona, data) {

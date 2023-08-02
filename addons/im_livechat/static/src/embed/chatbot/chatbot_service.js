@@ -224,7 +224,7 @@ export class ChatBotService {
     async _processUserAnswer(message) {
         if (
             !this.active ||
-            message.originThread.localId !== this.livechatService.thread?.localId ||
+            message.originThread.objectId !== this.livechatService.thread?.objectId ||
             !this.currentStep?.expectAnswer
         ) {
             return;

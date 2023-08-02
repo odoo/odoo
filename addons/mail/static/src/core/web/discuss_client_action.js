@@ -46,7 +46,7 @@ export class DiscussClientAction extends Component {
         const rawActiveId =
             props.action.context.active_id ??
             props.action.params?.active_id ??
-            this.store.discuss.threadLocalId?.replace(",", "_") ??
+            this.store.discuss.threadObjectId?.replace(",", "_") ??
             "mail.box_inbox";
         const activeId =
             typeof rawActiveId === "number" ? `discuss.channel_${rawActiveId}` : rawActiveId;
@@ -55,8 +55,8 @@ export class DiscussClientAction extends Component {
             // legacy format (sent in old emails, shared links, ...)
             model = "discuss.channel";
         }
-        const activeThreadLocalId = createObjectId("Thread", model, id);
-        if (activeThreadLocalId !== this.store.discuss.threadLocalId) {
+        const activeThreadObjectId = createObjectId("Thread", model, id);
+        if (activeThreadObjectId !== this.store.discuss.threadObjectId) {
             const thread =
                 this.store.threads[createObjectId("Thread", model, id)] ??
                 (await this.threadService.fetchChannel(parseInt(id)));

@@ -60,7 +60,7 @@
                     <t t-component="threadActions.activeAction.component" t-props="{ ...threadActions.activeAction.componentProps, thread }"/>
                 </div>
                 <t t-else="">
-                    <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
+                    <Thread isInChatWindow="true" thread="thread" t-key="thread.objectId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
                     <Composer composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>
                 </t>
             </t>

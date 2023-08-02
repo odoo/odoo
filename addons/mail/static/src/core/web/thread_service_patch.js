@@ -103,13 +103,13 @@ patch(ThreadService.prototype, {
         return result;
     },
     getThread(resModel, resId) {
-        const localId = createObjectId("Thread", resModel, resId);
-        if (localId in this.store.threads) {
+        const objectId = createObjectId("Thread", resModel, resId);
+        if (objectId in this.store.threads) {
             if (resId === false) {
-                return this.store.threads[localId];
+                return this.store.threads[objectId];
             }
             // to force a reload
-            this.store.threads[localId].status = "new";
+            this.store.threads[objectId].status = "new";
         }
         const thread = this.insert({
             id: resId,
@@ -178,7 +178,9 @@ patch(ThreadService.prototype, {
         thread.suggestedRecipients = recipients;
     },
     async leaveChannel(channel) {
-        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === channel.localId);
+        const chatWindow = this.store.chatWindows.find(
+            (c) => c.threadObjectId === channel.objectId
+        );
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }
@@ -236,7 +238,7 @@ patch(ThreadService.prototype, {
         delete this.store.followers[follower.id];
     },
     unpin(thread) {
-        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === thread.localId);
+        const chatWindow = this.store.chatWindows.find((c) => c.threadObjectId === thread.objectId);
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }

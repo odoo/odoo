@@ -54,7 +54,7 @@ export class AttachmentService {
                 model: threadData.model,
                 id: threadData.id,
             });
-            attachment.originThreadLocalId = createObjectId(
+            attachment.originThreadObjectId = createObjectId(
                 "Thread",
                 threadData.model,
                 threadData.id

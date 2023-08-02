@@ -81,7 +81,7 @@ export class ChatWindowService {
      */
     insert(data = {}) {
         const chatWindow = this.store.chatWindows.find(
-            (c) => c.threadLocalId === data.thread?.localId
+            (c) => c.threadObjectId === data.thread?.objectId
         );
         if (!chatWindow) {
             const chatWindow = new ChatWindow(this.store, data);

@@ -6,7 +6,7 @@ discussSidebarCategoriesRegistry.add(
     "livechats",
     {
         predicate: (store) =>
-            store.discuss.livechat.threads.some((localId) => store.threads[localId]?.is_pinned),
+            store.discuss.livechat.threads.some((objectId) => store.threads[objectId]?.is_pinned),
         value: (store) => store.discuss.livechat,
     },
     { sequence: 20 }

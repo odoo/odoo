@@ -67,7 +67,7 @@ export class CallParticipantCard extends Component {
     get showConnectionState() {
         return Boolean(
             this.isOfActiveCall &&
-                !(this.rtcSession.channelMember?.persona.localId === this.store.self?.localId) &&
+                !(this.rtcSession.channelMember?.persona.objectId === this.store.self?.objectId) &&
                 !HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
         );
     }

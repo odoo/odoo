@@ -6,24 +6,24 @@ import { createObjectId } from "@mail/utils/common/misc";
  * @class ChannelMember
  * @typedef Data
  * @property {number} id
- * @property {string} personaLocalId
+ * @property {string} personaObjectId
  * @property {number} threadId
  */
 export class ChannelMember {
     /** @type {number} */
     id;
-    personaLocalId;
+    personaObjectId;
     rtcSessionId;
     threadId;
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
 
     get persona() {
-        return this._store.personas[this.personaLocalId];
+        return this._store.personas[this.personaObjectId];
     }
 
     set persona(persona) {
-        this.personaLocalId = persona?.localId;
+        this.personaObjectId = persona?.objectId;
     }
 
     get rtcSession() {

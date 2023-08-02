@@ -123,8 +123,8 @@ export class Messaging {
     async searchPartners(searchStr = "", limit = 10) {
         let partners = [];
         const searchTerm = cleanTerm(searchStr);
-        for (const localId in this.store.personas) {
-            const persona = this.store.personas[localId];
+        for (const objectId in this.store.personas) {
+            const persona = this.store.personas[objectId];
             if (persona.type !== "partner") {
                 continue;
             }

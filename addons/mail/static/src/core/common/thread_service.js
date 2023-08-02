@@ -432,7 +432,7 @@ export class ThreadService {
     }
 
     unpin(thread) {
-        if (this.store.discuss.threadLocalId === thread.localId) {
+        if (this.store.discuss.threadObjectId === thread.objectId) {
             this.router.replaceState({ active_id: undefined });
         }
         if (thread.model !== "discuss.channel") {
@@ -459,9 +459,9 @@ export class ThreadService {
             const thread2 = this.store.threads[id2];
             return String.prototype.localeCompare.call(thread1.name, thread2.name);
         });
-        this.store.discuss.chats.threads.sort((localId_1, localId_2) => {
-            const thread1 = this.store.threads[localId_1];
-            const thread2 = this.store.threads[localId_2];
+        this.store.discuss.chats.threads.sort((objectId_1, objectId_2) => {
+            const thread1 = this.store.threads[objectId_1];
+            const thread2 = this.store.threads[objectId_2];
             return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
         });
     }
@@ -629,7 +629,7 @@ export class ThreadService {
      * @param {boolean} pushState
      */
     setDiscussThread(thread, pushState = true) {
-        this.store.discuss.threadLocalId = thread.localId;
+        this.store.discuss.threadObjectId = thread.objectId;
         const activeId =
             typeof thread.id === "string"
                 ? `mail.box_${thread.id}`
@@ -647,9 +647,9 @@ export class ThreadService {
     }
 
     remove(thread) {
-        removeFromArray(this.store.discuss.chats.threads, thread.localId);
-        removeFromArray(this.store.discuss.channels.threads, thread.localId);
-        delete this.store.threads[thread.localId];
+        removeFromArray(this.store.discuss.chats.threads, thread.objectId);
+        removeFromArray(this.store.discuss.channels.threads, thread.objectId);
+        delete this.store.threads[thread.objectId];
     }
 
     /**
@@ -766,14 +766,14 @@ export class ThreadService {
         }
         if (
             thread.type === "channel" &&
-            !this.store.discuss.channels.threads.includes(thread.localId)
+            !this.store.discuss.channels.threads.includes(thread.objectId)
         ) {
-            this.store.discuss.channels.threads.push(thread.localId);
+            this.store.discuss.channels.threads.push(thread.objectId);
         } else if (
             (thread.type === "chat" || thread.type === "group") &&
-            !this.store.discuss.chats.threads.includes(thread.localId)
+            !this.store.discuss.chats.threads.includes(thread.objectId)
         ) {
-            this.store.discuss.chats.threads.push(thread.localId);
+            this.store.discuss.chats.threads.push(thread.objectId);
         }
         if (!thread.type && !["mail.box", "discuss.channel"].includes(thread.model)) {
             thread.type = "chatter";
@@ -792,9 +792,9 @@ export class ThreadService {
         if (!("model" in data)) {
             throw new Error("Cannot insert thread: model is missing in data");
         }
-        const localId = createObjectId("Thread", data.model, data.id);
-        if (localId in this.store.threads) {
-            const thread = this.store.threads[localId];
+        const objectId = createObjectId("Thread", data.model, data.id);
+        if (objectId in this.store.threads) {
+            const thread = this.store.threads[objectId];
             this.update(thread, data);
             return thread;
         }
@@ -807,14 +807,14 @@ export class ThreadService {
         onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
         onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
         onChange(thread, "is_pinned", () => {
-            if (!thread.is_pinned && this.store.discuss.threadLocalId === thread.localId) {
-                this.store.discuss.threadLocalId = null;
+            if (!thread.is_pinned && this.store.discuss.threadObjectId === thread.objectId) {
+                this.store.discuss.threadObjectId = null;
             }
         });
         this.update(thread, data);
         this.insertComposer({ thread });
         // return reactive version.
-        return this.store.threads[thread.localId];
+        return this.store.threads[thread.objectId];
     }
 
     /**
@@ -1024,8 +1024,8 @@ export class ThreadService {
     }
 
     getDiscussSidebarCategoryCounter(categoryId) {
-        return this.store.discuss[categoryId].threads.reduce((acc, threadLocalId) => {
-            const channel = this.store.threads[threadLocalId];
+        return this.store.discuss[categoryId].threads.reduce((acc, threadObjectId) => {
+            const channel = this.store.threads[threadObjectId];
             if (categoryId === "channels") {
                 return channel.message_needaction_counter > 0 ? acc + 1 : acc;
             } else {

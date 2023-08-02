@@ -303,15 +303,15 @@ export class Rtc {
                 record: data.rtc_inviting_session,
             });
             thread.invitingRtcSessionId = data.rtc_inviting_session.id;
-            if (!this.store.ringingThreads.includes(thread.localId)) {
-                this.store.ringingThreads.push(thread.localId);
+            if (!this.store.ringingThreads.includes(thread.objectId)) {
+                this.store.ringingThreads.push(thread.objectId);
             }
         }
         if ("rtcInvitingSession" in data) {
             if (Array.isArray(data.rtcInvitingSession)) {
                 if (data.rtcInvitingSession[0][0] === "unlink") {
                     thread.invitingRtcSessionId = undefined;
-                    removeFromArray(this.store.ringingThreads, thread.localId);
+                    removeFromArray(this.store.ringingThreads, thread.objectId);
                 }
                 return;
             }
@@ -320,7 +320,7 @@ export class Rtc {
                 record: data.rtcInvitingSession,
             });
             thread.invitingRtcSessionId = data.rtcInvitingSession.id;
-            this.store.ringingThreads.push(thread.localId);
+            this.store.ringingThreads.push(thread.objectId);
         }
         if ("rtcSessions" in data) {
             this.env.bus.trigger("RTC-SERVICE:UPDATE_RTC_SESSIONS", {

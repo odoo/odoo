@@ -69,8 +69,8 @@ export class DiscussCoreCommon {
                     model: "discuss.channel",
                 });
                 this.threadService.remove(thread);
-                if (thread.localId === this.store.discuss.threadLocalId) {
-                    this.store.discuss.threadLocalId = undefined;
+                if (thread.objectId === this.store.discuss.threadObjectId) {
+                    this.store.discuss.threadObjectId = undefined;
                 }
                 this.notificationService.add(
                     sprintf(_t("You unsubscribed from %s."), thread.displayName),

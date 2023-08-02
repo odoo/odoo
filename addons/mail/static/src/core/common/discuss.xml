@@ -62,8 +62,8 @@
             </div>
             <div class="overflow-auto bg-view d-flex flex-grow-1" t-ref="core">
                 <div class="d-flex flex-column flex-grow-1">
-                    <Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
-                    <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.isNote ? 'note' : 'message') : undefined"/>
+                    <Thread thread="thread" t-key="thread.objectId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
+                    <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.objectId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.isNote ? 'note' : 'message') : undefined"/>
                 </div>
                 <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="h-100 border-start o-mail-Discuss-inspector">
                     <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
@@ -93,7 +93,7 @@
 <t t-name="mail.MobileMailbox" owl="1">
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
-            'active o-active shadow-none': store.discuss.threadLocalId === mailbox.localId,
+            'active o-active shadow-none': store.discuss.threadObjectId === mailbox.objectId,
         }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-esc="mailbox.name"
     />
 </t>

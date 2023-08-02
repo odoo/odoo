@@ -110,7 +110,7 @@
                     </FileUploader>
                 </div>
             </div>
-            <Thread t-if="props.hasMessageList" thread="state.thread" t-key="state.thread.localId" order="'desc'" hasScrollAdjust="!props.hasMessageListScrollAdjust" jumpPresent="state.jumpThreadPresent"/>
+            <Thread t-if="props.hasMessageList" thread="state.thread" t-key="state.thread.objectId" order="'desc'" hasScrollAdjust="!props.hasMessageListScrollAdjust" jumpPresent="state.jumpThreadPresent"/>
         </div>
     </div>
 </t>

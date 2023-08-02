@@ -175,7 +175,7 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
         if (waitUntilMessagesLoaded) {
             const messagesLoadedPromise = makeDeferred();
             const store = webClient.env.services["mail.store"];
-            const thread = store.threads[store.discuss.threadLocalId];
+            const thread = store.threads[store.discuss.threadObjectId];
             if (thread.isLoaded) {
                 messagesLoadedPromise.resolve();
             }

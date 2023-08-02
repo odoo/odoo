@@ -14,7 +14,7 @@ export class Attachment {
     id;
     mimetype;
     name;
-    originThreadLocalId;
+    originThreadObjectId;
     type;
     /** @type {string} */
     tmpUrl;
@@ -27,7 +27,7 @@ export class Attachment {
 
     /** @type {import("@mail/core/common/thread_model").Thread} */
     get originThread() {
-        return this._store.threads[this.originThreadLocalId];
+        return this._store.threads[this.originThreadObjectId];
     }
 
     get isDeletable() {

@@ -12,7 +12,7 @@
 
 export class Persona {
     /** @type {string} */
-    localId;
+    objectId;
     /** @type {number} */
     id;
     /** @type {'partner' | 'guest'} */

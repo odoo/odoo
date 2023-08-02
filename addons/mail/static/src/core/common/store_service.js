@@ -105,7 +105,7 @@ export class Store {
     discuss = {
         activeTab: "all", // can be 'mailbox', 'all', 'channel' or 'chat'
         isActive: false,
-        threadLocalId: null,
+        threadObjectId: null,
         channels: {
             extraClass: "o-mail-DiscussSidebarCategory-channel",
             id: "channels",
@@ -165,7 +165,7 @@ export const storeService = {
             if (!services.ui.isSmall) {
                 res.discuss.activeTab = "all";
             } else {
-                res.discuss.activeTab = res.threads[res.discuss.threadLocalId]?.type ?? "all";
+                res.discuss.activeTab = res.threads[res.discuss.threadObjectId]?.type ?? "all";
             }
         });
         return res;
