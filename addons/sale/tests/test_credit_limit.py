@@ -1,10 +1,11 @@
-from odoo.addons.sale.tests.common import SaleCommon
 from odoo.fields import Command
 from odoo.tests import tagged
 
+from .common import TestSaleCommon
+
 
 @tagged('post_install', '-at_install')
-class TestSaleOrderCreditLimit(SaleCommon):
+class TestSaleOrderCreditLimit(TestSaleCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -13,7 +14,7 @@ class TestSaleOrderCreditLimit(SaleCommon):
         cls.env.company.account_use_credit_limit = True
 
         buck_currency = cls.env['res.currency'].create({
-            'name': 'Test Buck ',
+            'name': 'TB',
             'symbol': 'TB',
         })
         cls.env['res.currency.rate'].create({
@@ -29,18 +30,36 @@ class TestSaleOrderCreditLimit(SaleCommon):
         })
 
     def test_credit_limit_multicurrency(self):
-        self.partner.use_partner_credit_limit = True
-        self.partner.credit_limit = 50
+        self.partner_a.credit_limit = 50
 
-        self.product.lst_price = 45
-
-        order = self.empty_order
-        order.pricelist_id = self.buck_pricelist
-
-        self.empty_order.order_line = [
-            Command.create({
-                'product_id': self.product.id,
-                'product_uom_qty': 1.0,
-            }),
-        ]
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.buck_pricelist.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 1,
+                    'price_unit': 45.0,
+                    'tax_id': False,
+                })
+            ]
+        })
+        self.assertEqual(order.amount_total / order.currency_rate, 22.5)
         self.assertEqual(order.partner_credit_warning, '')
+
+        order.write({
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 1,
+                    'price_unit': 65.0,
+                    'tax_id': False,
+                })
+            ],
+        })
+        self.assertEqual(order.amount_total / order.currency_rate, 55)
+        self.assertEqual(
+            order.partner_credit_warning,
+            "partner_a has reached its Credit Limit of : $\xa050.00\n"
+            "Total amount due (including this document) : $\xa055.00"
+        )
