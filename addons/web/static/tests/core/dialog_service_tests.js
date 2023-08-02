@@ -210,7 +210,7 @@ QUnit.test("dialog component crashes", async (assert) => {
     const prom = makeDeferred();
     patchWithCleanup(ErrorDialog.prototype, {
         setup() {
-            this._super();
+            super.setup();
             onMounted(() => {
                 prom.resolve();
             });

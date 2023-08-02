@@ -8,7 +8,7 @@ import { LinkPopoverWidget } from '@web_editor/js/wysiwyg/widgets/link_popover_w
 
 
 
-patch(LinkPopoverWidget.prototype, 'website_link_popower_widget', {
+patch(LinkPopoverWidget.prototype, {
     /**
      * @override
      */
@@ -24,7 +24,7 @@ patch(LinkPopoverWidget.prototype, 'website_link_popower_widget', {
         }
         this.$el.on('click', '.o_we_full_url, .o_we_url_link', this._onPreviewLinkClick.bind(this));
 
-        return this._super(...arguments);
+        return super.start(...arguments);
     },
 
     //--------------------------------------------------------------------------

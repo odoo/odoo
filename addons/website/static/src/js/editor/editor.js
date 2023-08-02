@@ -5,9 +5,9 @@ import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import wUtils from "@website/js/utils";
 
-patch(LinkDialog.prototype, "editor.js", {
+patch(LinkDialog.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.rpc = useService("rpc");
     },
     /**
@@ -15,11 +15,11 @@ patch(LinkDialog.prototype, "editor.js", {
      *
      * @override
      */
-    start: async function () {
+    async start() {
         const options = {
             body: this.$link && this.$link[0].ownerDocument.body,
         };
-        const result = await this._super.apply(this, arguments);
+        const result = await super.start(...arguments);
         // wUtils.autocompleteWithPages rely on a widget that has a _rpc and
         // trigger_up method.
         const fakeWidget = {

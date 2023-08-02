@@ -14,9 +14,9 @@ const { useEffect } = owl;
  * (or 2 seconds by default) when typing ends.
  *
  */
-const onchangeOnKeydownMixin = {
+const onchangeOnKeydownMixin = () => ({
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
 
         if (this.props.onchangeOnKeydown) {
             const input = this.input || this.textareaRef;
@@ -34,10 +34,10 @@ const onchangeOnKeydownMixin = {
         const input = this.input || this.textareaRef;
         input.el.dispatchEvent(new Event("change"));
     },
-};
+});
 
-patch(CharField.prototype, "char_field_onchange_on_keydown", onchangeOnKeydownMixin);
-patch(TextField.prototype, "text_field_onchange_on_keydown", onchangeOnKeydownMixin);
+patch(CharField.prototype, onchangeOnKeydownMixin());
+patch(TextField.prototype, onchangeOnKeydownMixin());
 
 CharField.props = {
     ...CharField.props,

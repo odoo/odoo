@@ -15,7 +15,7 @@ Object.assign(Composer.components, { GifPicker });
 /** @type {Composer} */
 const composerPatch = {
     setup() {
-        this._super();
+        super.setup();
         Object.assign(this.KEYBOARD, { GIF: "Gif" });
         onExternalClick("gif-picker", () => (this.state.keyboard = this.KEYBOARD.NONE));
         this.ui = useState(useService("ui"));
@@ -30,7 +30,7 @@ const composerPatch = {
      */
     isEventHandledByPicker(ev) {
         return (
-            this._super(ev) ||
+            super.isEventHandledByPicker(ev) ||
             isEventHandled(ev, "Composer.onClickAddGif") ||
             isEventHandled(ev, "GifPicker.onClick")
         );
@@ -53,4 +53,4 @@ const composerPatch = {
         });
     },
 };
-patch(Composer.prototype, "GifPicker", composerPatch);
+patch(Composer.prototype, composerPatch);

@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { patch } from '@web/core/utils/patch';
 import { registry } from '@web/core/registry';
 
 import { kanbanView } from '@web/views/kanban/kanban_view';
@@ -19,8 +18,7 @@ export class LunchKanbanRecord extends KanbanRecord {
     }
 }
 
-export class LunchKanbanRenderer extends KanbanRenderer {}
-patch(LunchKanbanRenderer.prototype, 'lunch_kanban_renderer_mixin', LunchRendererMixin);
+export class LunchKanbanRenderer extends LunchRendererMixin(KanbanRenderer) {}
 
 LunchKanbanRenderer.template = 'lunch.KanbanRenderer';
 LunchKanbanRenderer.components = {

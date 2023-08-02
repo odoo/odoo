@@ -5,9 +5,9 @@ import { patch } from "@web/core/utils/patch";
 import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 
-patch(ActivityMenu.prototype, "calendar", {
+patch(ActivityMenu.prototype, {
     async fetchSystrayActivities() {
-        await this._super();
+        await super.fetchSystrayActivities();
         for (const group of Object.values(this.store.activityGroups)) {
             if (group.type === "meeting") {
                 for (const meeting of group.meetings) {
@@ -31,7 +31,7 @@ patch(ActivityMenu.prototype, "calendar", {
                 clearBreadcrumbs: true,
             });
         } else {
-            this._super(...arguments);
+            super.openActivityGroup(...arguments);
         }
     },
 });

@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { patch } from '@web/core/utils/patch';
+import { patch } from "@web/core/utils/patch";
 import { formatFloatTime, formatFloat } from "@web/views/fields/formatters";
 import { ProjectRightSidePanel } from '@project/components/project_right_side_panel/project_right_side_panel';
 
-patch(ProjectRightSidePanel.prototype, '@sale_project/components/project_right_side_panel/project_right_side_panel', {
+patch(ProjectRightSidePanel.prototype, {
     async _loadAdditionalSalesOrderItems() {
         const offset = this.state.data.sale_items.data.length;
         const totalRecords = this.state.data.sale_items.total;

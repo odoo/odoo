@@ -5,7 +5,7 @@ import "@mail/../tests/helpers/mock_server/models/res_partner"; // ensure mail o
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "im_livechat/models/res_partner", {
+patch(MockServer.prototype, {
     /**
      * @override
      */
@@ -19,13 +19,13 @@ patch(MockServer.prototype, "im_livechat/models/res_partner", {
             ["channel_type", "=", "livechat"],
             ["channel_member_ids", "in", members.map((member) => member.id)],
         ]);
-        return [...this._super(ids), ...livechats];
+        return [...super._mockResPartner_GetChannelsAsMember(ids), ...livechats];
     },
     /**
      * @override
      */
     _mockResPartnerSearchForChannelInvite(search_term, channel_id, limit = 30) {
-        const result = this._super(search_term, channel_id, limit);
+        const result = super._mockResPartnerSearchForChannelInvite(search_term, channel_id, limit);
         const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channel_id]]);
         if (channel.channel_type !== "livechat") {
             return result;

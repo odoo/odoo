@@ -3,11 +3,11 @@
 import { Orderline } from "@point_of_sale/app/screens/product_screen/orderline/orderline";
 import { patch } from "@web/core/utils/patch";
 
-patch(Orderline.prototype, "pos_loyalty.Orderline", {
+patch(Orderline.prototype, {
     get addedClasses() {
         return Object.assign(
             { "program-reward": this.props.line.is_reward_line },
-            this._super(...arguments)
+            super.addedClasses
         );
     },
     _isGiftCardOrEWalletReward() {

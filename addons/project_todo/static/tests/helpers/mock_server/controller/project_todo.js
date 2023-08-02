@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { patch } from '@web/core/utils/patch';
+import { patch } from "@web/core/utils/patch";
 import { MockServer } from '@web/../tests/helpers/mock_server';
 
 import { date_to_str } from '@web/legacy/js/core/time';
 
-patch(MockServer.prototype, 'project_todo/controller/project_todo', {
+patch(MockServer.prototype, {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -17,7 +17,7 @@ patch(MockServer.prototype, 'project_todo/controller/project_todo', {
         if (route === '/project_todo/new') {
             return this._mockRouteTodoNew(args);
         }
-        return this._super(...arguments);
+        return super._performRPC(...arguments);
     },
 
     //--------------------------------------------------------------------------

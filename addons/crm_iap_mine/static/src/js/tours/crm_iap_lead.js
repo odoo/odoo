@@ -9,9 +9,9 @@ import "@crm/js/tours/crm";
 import { patch } from "@web/core/utils/patch";
 var _t = core._t;
 
-patch(registry.category("web_tour.tours").get("crm_tour"), "patch_crm_tour", {
+patch(registry.category("web_tour.tours").get("crm_tour"), {
     steps() {
-        const originalSteps = this._super();
+        const originalSteps = super.steps();
         const DragOppToWonStepIndex = originalSteps.findIndex(
             (step) => step.id === "drag_opportunity_to_won_step"
         );

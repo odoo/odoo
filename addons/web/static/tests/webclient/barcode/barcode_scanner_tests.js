@@ -72,13 +72,13 @@ QUnit.test("Barcode scanner crop overlay", async (assert) => {
 
     patchWithCleanup(BarcodeDialog.prototype, {
         async isVideoReady() {
-            return this._super(...arguments).then(() => {
+            return super.isVideoReady(...arguments).then(() => {
                 videoReady.resolve();
             });
         },
         onResize(overlayInfo) {
             assert.step(JSON.stringify(overlayInfo));
-            return this._super(...arguments);
+            return super.onResize(...arguments);
         },
     });
 

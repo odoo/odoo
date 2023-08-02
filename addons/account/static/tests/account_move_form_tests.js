@@ -32,7 +32,7 @@ QUnit.module("Views", {}, function (hooks) {
         });
         patchWithCleanup(AccountMoveFormRenderer.prototype, {
             saveBeforeTabChange() {
-                this._super();
+                super.saveBeforeTabChange();
                 assert.step("tab saved");
             },
         });

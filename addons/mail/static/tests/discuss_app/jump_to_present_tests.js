@@ -17,7 +17,7 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
-            return this._super(true);
+            return super.scrollIntoView(true);
         },
     });
     const pyEnv = await startServer();
@@ -56,7 +56,7 @@ QUnit.test("Jump to old reply should prompt jump to presence", async (assert) =>
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
-            return this._super(true);
+            return super.scrollIntoView(true);
         },
     });
     const pyEnv = await startServer();

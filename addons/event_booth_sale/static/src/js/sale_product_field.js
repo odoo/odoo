@@ -5,24 +5,24 @@ import { x2ManyCommands } from "@web/core/orm_service";
 import { patch } from "@web/core/utils/patch";
 
 
-patch(SaleOrderLineProductField.prototype, 'event_booth_sale', {
+patch(SaleOrderLineProductField.prototype, {
 
     async _onProductUpdate() {
-        this._super(...arguments);
+        super._onProductUpdate(...arguments);
         if (this.props.record.data.product_type === 'event_booth') {
             this._openEventBoothConfigurator(false);
         }
     },
 
     _editLineConfiguration() {
-        this._super(...arguments);
+        super._editLineConfiguration(...arguments);
         if (this.props.record.data.product_type === 'event_booth') {
             this._openEventBoothConfigurator(true);
         }
     },
 
     get isConfigurableLine() {
-        return this._super(...arguments) || this.props.record.data.product_type === 'event_booth';
+        return super.isConfigurableLine || this.props.record.data.product_type === 'event_booth';
     },
 
     async _openEventBoothConfigurator(edit) {

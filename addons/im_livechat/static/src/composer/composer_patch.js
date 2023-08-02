@@ -4,13 +4,13 @@ import { Composer } from "@mail/core/common/composer";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Composer.prototype, "im_livechat", {
+patch(Composer.prototype, {
     get allowUpload() {
-        return this.thread?.type !== "livechat" && this._super();
+        return this.thread?.type !== "livechat" && super.allowUpload;
     },
 
     onKeydown(ev) {
-        this._super(ev);
+        super.onKeydown(ev);
         if (
             ev.key === "Tab" &&
             this.thread?.type === "livechat" &&

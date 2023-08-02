@@ -3,7 +3,7 @@
 import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
 import { patch } from "@web/core/utils/patch";
 
-patch(ClosePosPopup.prototype, "l10n_fr_pos_cert.ClosePosPopup", {
+patch(ClosePosPopup.prototype, {
     sessionIsOutdated() {
         let isOutdated = false;
         if (this.pos.is_french_country() && this.pos.pos_session.start_at) {
@@ -15,6 +15,6 @@ patch(ClosePosPopup.prototype, "l10n_fr_pos_cert.ClosePosPopup", {
         return isOutdated;
     },
     canCancel() {
-        return this._super(...arguments) && !this.sessionIsOutdated();
+        return super.canCancel(...arguments) && !this.sessionIsOutdated();
     },
 });

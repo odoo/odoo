@@ -13,16 +13,16 @@ const commandRegistry = registry.category("discuss.channel_commands");
 export const SHORT_TYPING = 5000;
 export const LONG_TYPING = 50000;
 
-patch(Composer, "discuss/typing/common", {
+patch(Composer, {
     components: { ...Composer.components, Typing },
 });
 
-patch(Composer.prototype, "discuss/typing/common", {
+patch(Composer.prototype, {
     /**
      * @override
      */
     setup() {
-        this._super();
+        super.setup();
         this.typingNotified = false;
         this.stopTypingDebounced = useDebounced(this.stopTyping.bind(this), SHORT_TYPING);
     },
@@ -71,7 +71,7 @@ patch(Composer.prototype, "discuss/typing/common", {
      * @override
      */
     async sendMessage() {
-        await this._super();
+        await super.sendMessage();
         this.stopTyping();
     },
     stopTyping() {

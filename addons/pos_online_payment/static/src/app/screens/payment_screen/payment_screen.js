@@ -8,7 +8,7 @@ import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { sprintf } from "@web/core/utils/strings";
 
-patch(PaymentScreen.prototype, "pos_online_payment.PaymentScreen", {
+patch(PaymentScreen.prototype, {
     getRemainingOnlinePaymentLines() {
         return this.paymentLines.filter(
             (line) => line.payment_method.is_online_payment && line.get_payment_status() !== "done"
@@ -40,7 +40,7 @@ patch(PaymentScreen.prototype, "pos_online_payment.PaymentScreen", {
     },
     //@override
     async _isOrderValid(isForceValidate) {
-        if (!await this._super(...arguments)) {
+        if (!await super._isOrderValid(...arguments)) {
             return false;
         }
 

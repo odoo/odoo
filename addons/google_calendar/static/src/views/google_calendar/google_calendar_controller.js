@@ -5,9 +5,9 @@ import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-patch(AttendeeCalendarController.prototype, "google_calendar_google_calendar_controller", {
+patch(AttendeeCalendarController.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.dialog = useService("dialog");
         this.notification = useService("notification");
     },

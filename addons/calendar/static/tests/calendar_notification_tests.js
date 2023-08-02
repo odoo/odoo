@@ -27,7 +27,7 @@ QUnit.module("Calendar Notification", (hooks) => {
         serviceRegistry.add("multi_tab", multiTabService);
         patchWithCleanup(browser, {
             setTimeout(fn) {
-                this._super(fn, 0);
+                super.setTimeout(fn, 0);
             },
         });
     });

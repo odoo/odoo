@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/res_fake", {
+patch(MockServer.prototype, {
     /**
      * Simulates `_message_get_suggested_recipients` on `res.fake`.
      *
@@ -42,6 +42,6 @@ patch(MockServer.prototype, "mail/models/res_fake", {
         if (model === "res.fake") {
             return new Map(ids.map((id) => [id, "Custom Default Subject"]));
         }
-        return this._super(model, ids);
+        return super.mockMailThread_MessageComputeSubject(model, ids);
     },
 });

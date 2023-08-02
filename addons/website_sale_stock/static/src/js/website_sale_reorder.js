@@ -4,12 +4,12 @@ import { ReorderDialog } from "@website_sale/js/website_sale_reorder";
 import { patch } from "@web/core/utils/patch";
 import { sprintf } from "@web/core/utils/strings";
 
-patch(ReorderDialog.prototype, "website_sale_stock_reorder", {
+patch(ReorderDialog.prototype, {
     /**
      * @override
      */
     async onWillStartHandler() {
-        const res = await this._super(...arguments);
+        const res = await super.onWillStartHandler(...arguments);
         for (const product of this.content.products) {
             this.stockCheckCombinationInfo(product);
         }
@@ -20,7 +20,7 @@ patch(ReorderDialog.prototype, "website_sale_stock_reorder", {
      * @override
      */
     async loadProductCombinationInfo(product) {
-        await this._super(...arguments);
+        await super.loadProductCombinationInfo(...arguments);
     },
 
     stockCheckCombinationInfo(product) {
@@ -55,7 +55,7 @@ patch(ReorderDialog.prototype, "website_sale_stock_reorder", {
         if (product.hasOwnProperty("max_quantity_available") && !product.max_quantity_available) {
             return this.env._t("This product is out of stock.");
         }
-        return this._super(...arguments);
+        return super.getWarningForProduct(...arguments);
     },
 
     /**
@@ -74,6 +74,6 @@ patch(ReorderDialog.prototype, "website_sale_stock_reorder", {
             product.qty_warning = false;
             product.stock_warning = false;
         }
-        this._super(product, newQty);
+        super.changeProductQty(product, newQty);
     },
 });

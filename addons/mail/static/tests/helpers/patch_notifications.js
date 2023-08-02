@@ -18,7 +18,7 @@ export function patchBrowserNotification(permission = "default", requestPermissi
     const notificationQueries = [];
     patchWithCleanup(browser.navigator.permissions, {
         async query({ name }) {
-            const result = await this._super(...arguments);
+            const result = await super.query(...arguments);
             if (name === "notifications") {
                 Object.defineProperty(result, "state", {
                     get: () => (permission === "default" ? "prompt" : permission),
@@ -33,7 +33,7 @@ export function patchBrowserNotification(permission = "default", requestPermissi
         isPatched: true,
         requestPermission() {
             if (!requestPermissionResult) {
-                return this._super(...arguments);
+                return super.requestPermission(...arguments);
             }
             this.permission = requestPermissionResult;
             for (const query of notificationQueries) {

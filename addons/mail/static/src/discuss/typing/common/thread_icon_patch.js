@@ -6,16 +6,16 @@ import { useTypingService } from "@mail/discuss/typing/common/typing_service";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(ThreadIcon, "discuss/typing/common", {
+patch(ThreadIcon, {
     components: { ...ThreadIcon.components, Typing },
 });
 
-patch(ThreadIcon.prototype, "discuss/typing/common", {
+patch(ThreadIcon.prototype, {
     /**
      * @override
      */
     setup() {
-        this._super();
+        super.setup();
         this.typingService = useTypingService();
     },
 });

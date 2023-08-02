@@ -5,7 +5,7 @@ import "@mail/../tests/helpers/mock_server/models/discuss_channel_member"; // en
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "im_livechat/models/discuss_channel_member", {
+patch(MockServer.prototype, {
     /**
      * @override
      */
@@ -37,6 +37,6 @@ patch(MockServer.prototype, "im_livechat/models/discuss_channel_member", {
             }
             return data;
         }
-        return this._super(ids);
+        return super._mockDiscussChannelMember_GetPartnerData(ids);
     },
 });

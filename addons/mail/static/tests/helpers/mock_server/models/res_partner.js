@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/res_partner", {
+patch(MockServer.prototype, {
     async _performRPC(route, args) {
         if (args.model === "res.partner" && args.method === "im_search") {
             const name = args.args[0] || args.kwargs.search;
@@ -26,7 +26,7 @@ patch(MockServer.prototype, "mail/models/res_partner", {
         ) {
             return this._mockResPartnerGetMentionSuggestionsFromChannel(args);
         }
-        return this._super(route, args);
+        return super._performRPC(route, args);
     },
 
     /**

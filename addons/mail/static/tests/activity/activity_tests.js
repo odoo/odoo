@@ -521,7 +521,7 @@ QUnit.test("activity click on edit", async (assert) => {
             assert.strictEqual(action.type, "ir.actions.act_window");
             assert.strictEqual(action.res_model, "mail.activity");
             assert.strictEqual(action.res_id, activityId);
-            return this._super(...arguments);
+            return super.doAction(...arguments);
         },
     });
     assert.containsOnce($, ".o-mail-Activity");

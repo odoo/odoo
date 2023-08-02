@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/mail_message", {
+patch(MockServer.prototype, {
     async _performRPC(route, args) {
         if (args.model === "mail.message" && args.method === "mark_all_as_read") {
             const domain = args.args[0] || args.kwargs.domain;
@@ -24,7 +24,7 @@ patch(MockServer.prototype, "mail/models/mail_message", {
         if (args.model === "mail.message" && args.method === "unstar_all") {
             return this._mockMailMessageUnstarAll();
         }
-        return this._super(route, args);
+        return super._performRPC(route, args);
     },
     /**
      * Simulates `_message_reaction` on `mail.message`.

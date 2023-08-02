@@ -122,7 +122,7 @@ QUnit.module("Views", (hooks) => {
         const ToyController = viewRegistry.get("toy").Controller;
         patchWithCleanup(ToyController.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,false,toy"]);
                 assert.deepEqual(fields, {});
@@ -160,7 +160,7 @@ QUnit.module("Views", (hooks) => {
         const ToyController = viewRegistry.get("toy").Controller;
         patchWithCleanup(ToyController.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,1,toy"]);
                 assert.deepEqual(fields, {});
@@ -197,7 +197,7 @@ QUnit.module("Views", (hooks) => {
         const ToyController = viewRegistry.get("toy").Controller;
         patchWithCleanup(ToyController.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,1,toy"]);
                 assert.deepEqual(fields, {});
@@ -238,7 +238,7 @@ QUnit.module("Views", (hooks) => {
             const ToyController = viewRegistry.get("toy").Controller;
             patchWithCleanup(ToyController.prototype, {
                 setup() {
-                    this._super();
+                    super.setup();
                     const { arch, fields, info } = this.props;
                     assert.strictEqual(arch, serverData.views["animal,false,toy"]);
                     assert.deepEqual(fields, {});
@@ -281,7 +281,7 @@ QUnit.module("Views", (hooks) => {
         const ToyController = viewRegistry.get("toy").Controller;
         patchWithCleanup(ToyController.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,1,toy"]);
                 assert.deepEqual(fields, {});
@@ -327,7 +327,7 @@ QUnit.module("Views", (hooks) => {
         const ToyController = viewRegistry.get("toy").Controller;
         patchWithCleanup(ToyController.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, `<toy>Specific arch content</toy>`);
                 assert.deepEqual(fields, {});
@@ -360,7 +360,7 @@ QUnit.module("Views", (hooks) => {
         const ToyController = viewRegistry.get("toy").Controller;
         patchWithCleanup(ToyController.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,false,toy"]);
                 assert.deepEqual(fields, {});
@@ -400,7 +400,7 @@ QUnit.module("Views", (hooks) => {
             const ToyController = viewRegistry.get("toy").Controller;
             patchWithCleanup(ToyController.prototype, {
                 setup() {
-                    this._super();
+                    super.setup();
                     const { arch, fields, info } = this.props;
                     assert.strictEqual(arch, `<toy>Specific arch content</toy>`);
                     assert.deepEqual(fields, {});
@@ -443,7 +443,7 @@ QUnit.module("Views", (hooks) => {
             const ToyController = viewRegistry.get("toy").Controller;
             patchWithCleanup(ToyController.prototype, {
                 setup() {
-                    this._super();
+                    super.setup();
                     const { arch, fields, info } = this.props;
                     assert.strictEqual(arch, `<toy>Specific arch content</toy>`);
                     assert.deepEqual(fields, {});
@@ -479,7 +479,7 @@ QUnit.module("Views", (hooks) => {
         const ToyController = viewRegistry.get("toy").Controller;
         patchWithCleanup(ToyController.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 const { irFilters, searchViewArch, searchViewFields, searchViewId } =
                     this.props.info;
                 assert.strictEqual(searchViewArch, serverData.views["animal,false,search"]);
@@ -523,7 +523,7 @@ QUnit.module("Views", (hooks) => {
             const ToyController = viewRegistry.get("toy").Controller;
             patchWithCleanup(ToyController.prototype, {
                 setup() {
-                    this._super();
+                    super.setup();
                     const { irFilters, searchViewArch, searchViewFields, searchViewId } =
                         this.props.info;
                     assert.strictEqual(searchViewArch, `<search/>`);
@@ -563,7 +563,7 @@ QUnit.module("Views", (hooks) => {
             const ToyController = viewRegistry.get("toy").Controller;
             patchWithCleanup(ToyController.prototype, {
                 setup() {
-                    this._super();
+                    super.setup();
                     const { irFilters, searchViewArch, searchViewFields, searchViewId } =
                         this.props.info;
                     assert.strictEqual(searchViewArch, `<search/>`);
@@ -602,7 +602,7 @@ QUnit.module("Views", (hooks) => {
             const ToyController = viewRegistry.get("toy").Controller;
             patchWithCleanup(ToyController.prototype, {
                 setup() {
-                    this._super();
+                    super.setup();
                     const { irFilters, searchViewArch, searchViewFields, searchViewId } =
                         this.props.info;
                     assert.strictEqual(searchViewArch, `<search/>`);
@@ -663,7 +663,7 @@ QUnit.module("Views", (hooks) => {
             const ToyController = viewRegistry.get("toy").Controller;
             patchWithCleanup(ToyController.prototype, {
                 setup() {
-                    this._super();
+                    super.setup();
                     const { irFilters, searchViewArch, searchViewFields, searchViewId } =
                         this.props.info;
                     assert.strictEqual(searchViewArch, `<search/>`);

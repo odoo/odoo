@@ -12,7 +12,7 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 
 const fieldRegistry = registry.category("fields");
 
-patch(X2ManyFieldDialog.prototype, "chatbot_script_step_sequence", {
+patch(X2ManyFieldDialog.prototype, {
     /**
      * Dirty patching of the 'X2ManyFieldDialog'.
      * It is done to force the "save and new" to close the dialog first, and then click again on
@@ -24,7 +24,7 @@ patch(X2ManyFieldDialog.prototype, "chatbot_script_step_sequence", {
      */
     async save({ saveAndNew }) {
         if (this.record.resModel !== "chatbot.script.step") {
-            return this._super(...arguments);
+            return super.save(...arguments);
         }
 
         if (await this.record.checkValidity()) {

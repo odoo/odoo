@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { patch } from '@web/core/utils/patch';
+import { patch } from "@web/core/utils/patch";
 import { VideoSelector } from '@web_editor/components/media_dialog/video_selector';
 import wTourUtils from '@website/js/tours/tour_utils';
 
@@ -23,12 +23,12 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
             // specific to an URL only, it is acceptable).
             // TODO if we ever give the possibility to upload its own videos,
             // this won't be necessary anymore.
-            patch(VideoSelector.prototype, "Video selector patch", {
+            patch(VideoSelector.prototype, {
                 async _getVideoURLData(src, options) {
                     if (src === VIDEO_URL || src === 'about:blank') {
                         return {platform: 'youtube', embed_url: 'about:blank'};
                     }
-                    return this._super(...arguments);
+                    return super._getVideoURLData(...arguments);
                 },
             });
         },

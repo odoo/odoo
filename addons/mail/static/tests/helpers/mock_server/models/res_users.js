@@ -4,12 +4,12 @@ import { patch } from "@web/core/utils/patch";
 import { date_to_str } from "@web/legacy/js/core/time";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/res_users", {
+patch(MockServer.prototype, {
     async _performRPC(route, args) {
         if (args.model === "res.users" && args.method === "systray_get_activities") {
             return this._mockResUsersSystrayGetActivities();
         }
-        return this._super(route, args);
+        return super._performRPC(route, args);
     },
     /**
      * Simulates `_init_messaging` on `res.users`.

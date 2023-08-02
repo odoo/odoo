@@ -58,7 +58,7 @@ QUnit.module("Tour service", (hooks) => {
         let macroEngines = [];
         patchWithCleanup(MacroEngine.prototype, {
             start() {
-                this._super(...arguments);
+                super.start(...arguments);
                 macroEngines.push(this);
             }
         });

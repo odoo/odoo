@@ -9,7 +9,7 @@ import { formatDate } from "@web/core/l10n/dates";
 import { Command } from "@mail/../tests/helpers/command";
 const { DateTime } = luxon;
 
-patch(MockServer.prototype, "mail/models/discuss_channel", {
+patch(MockServer.prototype, {
     async _performRPC(route, args) {
         if (args.model === "discuss.channel" && args.method === "execute_command_help") {
             return this._mockDiscussChannelExecuteCommandHelp(args.args[0], args.model);
@@ -113,7 +113,7 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
         if (args.model === "discuss.channel" && args.method === "get_mention_suggestions") {
             return this._mockDiscussChannelGetMentionSuggestions(args);
         }
-        return this._super(route, args);
+        return super._performRPC(route, args);
     },
 
     /**

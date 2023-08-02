@@ -7,9 +7,9 @@ import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
-patch(ActivityMenu.prototype, "todo", {
+patch(ActivityMenu.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.rpc = useService("rpc");
         this.state = useState({ addingTodo: false });
         this.todoInputRef = useRef("todoInput");
@@ -35,7 +35,7 @@ patch(ActivityMenu.prototype, "todo", {
     },
 
     sortActivityGroups() {
-        this._super();
+        super.sortActivityGroups();
         this.store.activityGroups.sort((g1, g2) => {
             if (g1.model === "project.task" ? true : false) {
                 return -1;
