@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import field_utils from "@web/legacy/js/fields/field_utils";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { formatDateTime, parseDate, parseDateTime} from "@web/legacy/js/core/dates";
 import time from "@web/legacy/js/core/time";
 import config from "@web/legacy/js/services/config";
 import core from "@web/legacy/js/services/core";
@@ -805,7 +805,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     *   return params = { 'dateQuestionId' : '2019-05-23', 'datetimeQuestionId' : '2019-05-23 14:05:12' }
     */
     _prepareSubmitDates: function (params, questionId, value, isDateTime) {
-        var momentDate = isDateTime ? field_utils.parse.datetime(value, null, {timezone: true}) : field_utils.parse.date(value);
+        var momentDate = isDateTime ? parseDateTime(value, null, {timezone: true}) : parseDate(value);
         var formattedDate = momentDate ? momentDate.toJSON() : '';
         params[questionId] = formattedDate;
         return params;
@@ -1071,7 +1071,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     },
 
     _formatDateTime: function (datetimeValue, format) {
-        return moment(field_utils.format.datetime(moment(datetimeValue), null, {timezone: true}), format);
+        return moment(formatDateTime(moment(datetimeValue), null, {timezone: true}), format);
     },
 
     _initResultWidget: function () {

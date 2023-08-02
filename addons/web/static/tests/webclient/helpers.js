@@ -19,7 +19,6 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { WebClient } from "@web/webclient/webclient";
 import AbstractService from "@web/legacy/js/core/abstract_service";
-import basicFields from "@web/legacy/js/fields/basic_fields";
 import core from "@web/legacy/js/services/core";
 import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
 import { registerCleanup } from "../helpers/cleanup";
@@ -147,11 +146,6 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
     for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
         serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
     }
-    // patch DebouncedField delay
-    const debouncedField = basicFields.DebouncedField;
-    const initialDebouncedVal = debouncedField.prototype.DEBOUNCE;
-    debouncedField.prototype.DEBOUNCE = 0;
-    registerCleanup(() => (debouncedField.prototype.DEBOUNCE = initialDebouncedVal));
 
     if (legacyParams.withLegacyMockServer) {
         const adapter = standaloneAdapter({ Component });

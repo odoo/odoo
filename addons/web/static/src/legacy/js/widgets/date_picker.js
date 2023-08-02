@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import core from "@web/legacy/js/services/core";
-import field_utils from "@web/legacy/js/fields/field_utils";
+import { formatDate, formatDateTime, parseDate, parseDateTime } from "@web/legacy/js/core/dates";
 import time from "@web/legacy/js/core/time";
 import Widget from "@web/legacy/js/core/widget";
 
@@ -221,7 +221,10 @@ var DateWidget = Widget.extend({
      * @returns {string}
      */
     _formatClient: function (v) {
-        return field_utils.format[this.type_of_date](v, null, {timezone: false});
+        if (this.type_of_date === "date") {
+            return formatDate(v, null, {timezone: false});
+        }
+        return formatDateTime(v, null, {timezone: false});
     },
     /**
      * @private
@@ -229,7 +232,10 @@ var DateWidget = Widget.extend({
      * @returns {Moment}
      */
     _parseClient: function (v) {
-        return field_utils.parse[this.type_of_date](v, null, {timezone: false});
+        if (this.type_of_date === "date") {
+            return parseDate(v, null, {timezone: false});
+        }
+        return parseDateTime(v, null, {timezone: false});
     },
     /**
      * @private

@@ -56,7 +56,6 @@ QUnit.module("module dependencies", {}, () => {
                 "@web/views/fields/many2one/many2one_field": [
                     "@web/webclient/barcode/barcode_scanner",
                 ],
-                "@web/views/pivot/pivot_renderer": ["@web/legacy/js/fields/field_utils"],
                 "@web/views/view_hook": ["@web/webclient/actions/action_hook"],
             },
             "View modules only depend on core, search and model"
