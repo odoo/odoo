@@ -113,7 +113,7 @@ class PosSession(models.Model):
             if cash_payment_method:
                 total_cash_payment = 0.0
                 last_session = session.search([('config_id', '=', session.config_id.id), ('id', '<', session.id)], limit=1)
-                result = self.env['pos.payment']._read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], aggregates=['amount:sum'])
+                result = self.env['pos.payment']._read_group(['&', '&', ('pos_order_id.state', '!=', 'cancel'), ('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], aggregates=['amount:sum'])
                 total_cash_payment = result[0][0] or 0.0
                 if session.state == 'closed':
                     session.cash_register_total_entry_encoding = session.cash_real_transaction + total_cash_payment
@@ -129,6 +129,7 @@ class PosSession(models.Model):
 
     @api.depends('order_ids.payment_ids.amount')
     def _compute_total_payments_amount(self):
+        ## The total amount of payments for the session takes into account the payments of cancelled orders... Is it expected ?
         result = self.env['pos.payment']._read_group([('session_id', 'in', self.ids)], ['session_id'], ['amount:sum'])
         session_amount_map = {session.id: amount for session, amount in result}
         for session in self:
@@ -183,6 +184,7 @@ class PosSession(models.Model):
                 raise ValidationError(_("You cannot create a session before the accounting lock date."))
 
     def _check_invoices_are_posted(self):
+        ## is it intended to consider even cancelled orders here ?
         unposted_invoices = self.order_ids.sudo().with_company(self.company_id).account_move.filtered(lambda x: x.state != 'posted')
         if unposted_invoices:
             raise UserError(_('You cannot close the POS when invoices are not posted.\n'
@@ -289,7 +291,7 @@ class PosSession(models.Model):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         self.ensure_one()
         sudo = self.user_has_groups('point_of_sale.group_pos_user')
-        if self.order_ids or self.sudo().statement_line_ids:
+        if self._get_valid_orders() or self.sudo().statement_line_ids:
             self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
             if self.state == 'closed':
                 raise UserError(_('This session is already closed.'))
@@ -298,7 +300,7 @@ class PosSession(models.Model):
             cash_difference_before_statements = self.cash_register_difference
             if self.update_stock_at_closing:
                 self._create_picking_at_end_of_session()
-                self.order_ids.filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
+                self._get_valid_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
             try:
                 with self.env.cr.savepoint():
                     data = self.with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
@@ -595,7 +597,7 @@ class PosSession(models.Model):
         else:
             session_destination_id = picking_type.default_location_dest_id.id
 
-        for order in self.order_ids:
+        for order in self._get_valid_orders():
             if order.company_id.anglo_saxon_accounting and order.is_invoiced or order.shipping_date:
                 continue
             destination_id = order.partner_id.property_stock_customer.id or session_destination_id
@@ -691,7 +693,7 @@ class PosSession(models.Model):
         rounded_globally = self.company_id.tax_calculation_rounding_method == 'round_globally'
         pos_receivable_account = self.company_id.account_default_pos_receivable_account_id
         currency_rounding = self.currency_id.rounding
-        for order in self.order_ids:
+        for order in self._get_valid_orders():
             order_is_invoiced = order.is_invoiced
             for payment in order.payment_ids:
                 amount = payment.amount
@@ -1138,7 +1140,7 @@ class PosSession(models.Model):
 
         # reconcile stock output lines
         pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
-        pickings |= self.order_ids.filtered(lambda o: not o.is_invoiced).mapped('picking_ids')
+        pickings |= self._get_valid_orders().filtered(lambda o: not o.is_invoiced).mapped('picking_ids')
         stock_moves = self.env['stock.move'].search([('picking_id', 'in', pickings.ids)])
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
@@ -1454,9 +1456,10 @@ class PosSession(models.Model):
         return self.env['account.move.line'].search([('ref', 'in', diff_lines_ref)]).mapped('move_id')
 
     def _get_related_account_moves(self):
-        pickings = self.picking_ids | self.order_ids.mapped('picking_ids')
-        invoices = self.mapped('order_ids.account_move')
-        invoice_payments = self.mapped('order_ids.payment_ids.account_move_id')
+        valid_orders = self._get_valid_orders()
+        pickings = self.picking_ids | valid_orders.mapped('picking_ids')
+        invoices = valid_orders.mapped('account_move')
+        invoice_payments = valid_orders.mapped('payment_ids.account_move_id')
         stock_account_moves = pickings.mapped('move_ids.account_move_ids')
         cash_moves = self.statement_line_ids.mapped('move_id')
         bank_payment_moves = self.bank_payment_ids.mapped('move_id')
@@ -2060,6 +2063,7 @@ class PosSession(models.Model):
 
     def get_total_discount(self):
         amount = 0
+        ## taking into account cancelled orders, is it expected ?
         for line in self.env['pos.order.line'].search([('order_id', 'in', self.order_ids.ids), ('discount', '>', 0)]):
             original_price = line.tax_ids.compute_all(line.price_unit, line.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id)['total_included']
             amount += original_price - line.price_subtotal_incl
@@ -2146,6 +2150,8 @@ class PosSession(models.Model):
             'successful': allowed,
         }
 
+    def _get_valid_orders(self):
+        return self.order_ids.filtered(lambda o: o.state != 'cancel')
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
