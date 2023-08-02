@@ -4,10 +4,10 @@ import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
+    contains,
     insertText,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
@@ -1112,9 +1112,9 @@ QUnit.test("Group unread counter up to date after mention is marked as seen", as
     ]);
     const { openDiscuss } = await start();
     openDiscuss();
-    await waitUntil(".o-mail-DiscussSidebarChannel .o-discuss-badge");
+    await contains(".o-mail-DiscussSidebarChannel .o-discuss-badge");
     click(".o-mail-DiscussSidebarChannel");
-    await waitUntil(".o-discuss-badge", 0);
+    await contains(".o-discuss-badge", 0);
 });
 
 QUnit.test("Unpinning channel closes its chat window", async (assert) => {

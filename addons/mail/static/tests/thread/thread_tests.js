@@ -4,6 +4,7 @@ import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
+    contains,
     dragenterFiles,
     insertText,
     isScrolledTo,
@@ -11,7 +12,6 @@ import {
     nextAnimationFrame,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { config as transitionConfig } from "@web/core/transition";
@@ -267,10 +267,10 @@ QUnit.test(
                 thread_model: "discuss.channel",
             })
         );
-        await waitUntil(".o-mail-Message");
+        await contains(".o-mail-Message");
         assert.verifySteps(["rpc:channel_fetch"]);
         $(".o-mail-Composer-input")[0].focus();
-        await waitUntil("span:contains(New messages)", 0);
+        await contains("span:contains(New messages)", 0);
         assert.verifySteps(["rpc:set_last_seen_message"]);
     }
 );
@@ -893,12 +893,12 @@ QUnit.test("Thread messages are only loaded once", async (assert) => {
         },
     ]);
     openDiscuss();
-    (await waitUntil(".o-mail-DiscussSidebarChannel:eq(0)")).click();
-    await waitUntil(".o-mail-Message:contains(channel1)");
-    (await waitUntil(".o-mail-DiscussSidebarChannel:eq(1)")).click();
-    await waitUntil(".o-mail-Message:contains(channel2)");
-    (await waitUntil(".o-mail-DiscussSidebarChannel:eq(0)")).click();
-    await waitUntil(".o-mail-Message:contains(channel1)");
+    (await contains(".o-mail-DiscussSidebarChannel:eq(0)")).click();
+    await contains(".o-mail-Message:contains(channel1)");
+    (await contains(".o-mail-DiscussSidebarChannel:eq(1)")).click();
+    await contains(".o-mail-Message:contains(channel2)");
+    (await contains(".o-mail-DiscussSidebarChannel:eq(0)")).click();
+    await contains(".o-mail-Message:contains(channel1)");
     assert.verifySteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
 
@@ -945,10 +945,10 @@ QUnit.test(
             id: channelId,
             message: formattedMessage,
         });
-        await waitUntil("button:contains(Inbox) .badge:contains(1)");
+        await contains("button:contains(Inbox) .badge:contains(1)");
         click("button:contains(General)");
-        await waitUntil(".o-discuss-badge", 0);
-        await waitUntil("button:contains(Inbox) .badge", 0);
+        await contains(".o-discuss-badge", 0);
+        await contains("button:contains(Inbox) .badge", 0);
         assert.verifySteps(["mark-all-messages-as-read"]);
     }
 );

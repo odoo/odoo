@@ -3,10 +3,10 @@
 import {
     afterNextRender,
     click,
+    contains,
     createFile,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { date_to_str } from "@web/legacy/js/core/time";
@@ -75,8 +75,8 @@ QUnit.test("activity can upload a document", async (assert) => {
     });
     assert.containsOnce($, ".o-mail-Activity-info:contains('Upload Document')");
     inputFiles($(".o-mail-Activity .o_input_file")[0], [file]);
-    await waitUntil(".o-mail-Activity-info:contains('Upload Document')", 0);
-    await waitUntil("button[aria-label='Attach files']:contains(1)");
+    await contains(".o-mail-Activity-info:contains('Upload Document')", 0);
+    await contains("button[aria-label='Attach files']:contains(1)");
 });
 
 QUnit.test("activity simplest layout", async (assert) => {

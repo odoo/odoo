@@ -5,7 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { loadDefaultConfig, setCookie, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { waitUntil } from "@mail/../tests/helpers/test_utils";
+import { contains } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("thread service");
 
@@ -32,7 +32,7 @@ QUnit.test("new message from operator displays unread counter", async (assert) =
             thread_model: "discuss.channel",
         })
     );
-    await waitUntil(".o-mail-ChatWindow-header:contains(1)");
+    await contains(".o-mail-ChatWindow-header:contains(1)");
 });
 
 QUnit.test("focus on unread livechat marks it as read", async (assert) => {
@@ -58,7 +58,7 @@ QUnit.test("focus on unread livechat marks it as read", async (assert) => {
             thread_model: "discuss.channel",
         })
     );
-    await waitUntil(".o-mail-Thread-newMessage ~ .o-mail-Message:contains(Are you there?)");
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message:contains(Are you there?)");
     $(".o-mail-Composer-input").trigger("focus");
-    await waitUntil(".o-mail-Thread-newMessage", 0);
+    await contains(".o-mail-Thread-newMessage", 0);
 });

@@ -4,10 +4,10 @@ import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
+    contains,
     mockGetMedia,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
@@ -60,11 +60,11 @@ QUnit.test("should not display call UI when no more members (self disconnect)", 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    (await waitUntil(".o-mail-Discuss-header button[title='Start a Call']")).click();
-    await waitUntil(".o-discuss-Call");
+    (await contains(".o-mail-Discuss-header button[title='Start a Call']")).click();
+    await contains(".o-discuss-Call");
 
     click(".o-discuss-CallActionList button[aria-label='Disconnect']");
-    await waitUntil(".o-discuss-Call", 0);
+    await contains(".o-discuss-Call", 0);
 });
 
 QUnit.test("show call UI in chat window when in call", async (assert) => {
@@ -202,8 +202,8 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     mockGetMedia();
     const { openDiscuss } = await start();
     openDiscuss();
-    (await waitUntil("button:contains(Start a meeting)")).click();
-    await waitUntil(".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
-    await waitUntil(".o-discuss-Call");
-    await waitUntil(".o-discuss-ChannelInvitation");
+    (await contains("button:contains(Start a meeting)")).click();
+    await contains(".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
+    await contains(".o-discuss-Call");
+    await contains(".o-discuss-ChannelInvitation");
 });

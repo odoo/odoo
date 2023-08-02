@@ -679,7 +679,7 @@ export const click = getClick({ afterNextRender });
  * @param {string} selector
  * @param {number} [count=1]
  */
-export function waitUntil(selector, count = 1) {
+export function until(selector, count = 1) {
     const res = $(selector);
     const resMessage = `Found ${count} occurrence(s) of ${selector}`;
     if (res.length === count) {
