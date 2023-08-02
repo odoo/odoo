@@ -26,5 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'account_account_template_0_112011',
                 'income_currency_exchange_account_id': 'account_account_template_0_450001',
                 'expense_currency_exchange_account_id': 'account_account_template_0_530004',
+                'account_sale_tax_id': 'account_tax_template_IV_0',
+                'account_purchase_tax_id': 'account_tax_template_IV_1',
             },
         }

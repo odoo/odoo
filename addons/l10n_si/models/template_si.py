@@ -30,5 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'gd_acc_125000',
                 'income_currency_exchange_account_id': 'gd_acc_777000',
                 'expense_currency_exchange_account_id': 'gd_acc_484000',
+                'account_sale_tax_id': 'gd_taxr_3',
+                'account_purchase_tax_id': 'gd_taxp_3',
             },
         }

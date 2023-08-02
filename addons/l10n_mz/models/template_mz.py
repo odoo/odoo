@@ -29,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'l10n_mz_account_6941',
                 'account_journal_early_pay_discount_loss_account_id': 'l10n_mz_account_695',
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_mz_account_785',
+                'account_sale_tax_id': 'vat_sale_16',
+                'account_purchase_tax_id': 'vat_purch_16_inventories',
             },
         }

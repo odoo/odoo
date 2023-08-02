@@ -31,5 +31,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_tn_709',
                 'default_cash_difference_income_account_id': 'l10n_tn_756',
                 'default_cash_difference_expense_account_id': 'l10n_tn_655',
+                'account_sale_tax_id': 'l10n_tn_tax_vat_sale_19',
+                'account_purchase_tax_id': 'l10n_tn_tax_vat_purchase_19_other_local',
             },
         }
