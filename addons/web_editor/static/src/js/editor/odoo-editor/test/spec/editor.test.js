@@ -3275,6 +3275,35 @@ X[]
                     contentAfter: `<p>[]abcd</p>`,
                 });
             });
+            it('should not remove contenteditable false elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore:
+                        `<div>
+                            <div><div class="oe_unremovable"><p>[abc</p></div></div>
+                            <a class="o_not_editable" contenteditable="false" title="Previous">
+                                <span class="visually-hidden o_default_snippet_text">Previous</span>
+                            </a>]
+                            <a class="o_not_editable" contenteditable="false" title="Next">
+                                <span class="visually-hidden o_default_snippet_text">Next</span>
+                            </a>
+                        </div>
+                        `,
+                    stepFunction: async editor => {
+                        await deleteBackward(editor);
+                    },
+                    contentAfter:
+                        `<div>
+                            <div><div class="oe_unremovable"><p>[]<br></p></div></div>
+                            <a class="o_not_editable" contenteditable="false" title="Previous">
+                                <span class="visually-hidden o_default_snippet_text">Previous</span>
+                            </a>
+                            <a class="o_not_editable" contenteditable="false" title="Next">
+                                <span class="visually-hidden o_default_snippet_text">Next</span>
+                            </a>
+                        </div>
+                        `,
+                })
+            });
             describe('Nested editable zone (inside contenteditable=false element)', () => {
                 it('should extend the range to fully include contenteditable=false that are partially selected at the end of the range', async () => {
                     await testEditor(BasicEditor, {
