@@ -70,6 +70,7 @@ class PaymentTransaction(models.Model):
             'CURRENCY': self.currency_id.name,
             'LANGUAGE': self.partner_lang or 'en_US',
             'EMAIL': self.partner_email or '',
+            'CN': self.partner_name or '',  # Cardholder Name
             'OWNERADDRESS': self.partner_address or '',
             'OWNERZIP': self.partner_zip or '',
             'OWNERTOWN': self.partner_city or '',
