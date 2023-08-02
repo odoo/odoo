@@ -447,6 +447,8 @@ export class Record extends DataPoint {
             return value ? serializeDateTime(value) : false;
         } else if (fieldType === "char" || fieldType === "text") {
             return value !== "" ? value : false;
+        } else if (fieldType === "html") {
+            return value && value.length ? value : false;
         } else if (fieldType === "many2one") {
             return value ? value[0] : false;
         } else if (fieldType === "reference") {
