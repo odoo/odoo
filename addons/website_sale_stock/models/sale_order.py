@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
         product = self.env['product.product'].browse(product_id)
         if product.type == 'product' and not product.allow_out_of_stock_order:
             product_qty_in_cart, available_qty = self._get_cart_and_free_qty(
-                line=order_line, product=product, **kwargs
+                line=order_line, product=product
             )
 
             old_qty = order_line.product_uom_qty if order_line else 0
@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
                 return allowed_line_qty, order_line.shop_warning or self.shop_warning
         return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
 
-    def _get_cart_and_free_qty(self, line=None, product=None, **kwargs):
+    def _get_cart_and_free_qty(self, line=None, product=None):
         """ Get cart quantity and free quantity for given product or line's product.
 
         Note: self.ensure_one()
@@ -60,13 +60,11 @@ class SaleOrder(models.Model):
         self.ensure_one()
         if not line and not product:
             return 0, 0
-        cart_qty = sum(
-            self._get_common_product_lines(line, product, **kwargs).mapped('product_uom_qty')
-        )
+        cart_qty = sum(self._get_common_product_lines(line, product).mapped('product_uom_qty'))
         free_qty = (product or line.product_id).with_context(warehouse=self.warehouse_id.id).free_qty
         return cart_qty, free_qty
 
-    def _get_common_product_lines(self, line=None, product=None, **kwargs):
+    def _get_common_product_lines(self, line=None, product=None):
         """ Get the lines with the same product or line's product
 
         :param SaleOrderLine line: The optional line
