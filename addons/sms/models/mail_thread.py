@@ -42,15 +42,6 @@ class MailThread(models.AbstractModel):
     def _search_message_has_sms_error(self, operator, operand):
         return ['&', ('message_ids.has_sms_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
-    def _sms_get_default_partners(self):
-        """ This method will likely need to be overridden by inherited models.
-               :returns partners: recordset of res.partner
-        """
-        partners = self.env['res.partner']
-        for fname in self._mail_get_partner_fields():
-            partners = partners.union(*self.mapped(fname))  # ensure ordering
-        return partners
-
     def _sms_get_recipients_info(self, force_field=False, partner_fallback=True):
         """" Get SMS recipient information on current record set. This method
         checks for numbers and sanitation in order to centralize computation.
@@ -65,11 +56,11 @@ class MailThread(models.AbstractModel):
         :param force_field: either give a specific field to find phone number, either
             generic heuristic is used to find one based on ``_phone_get_number_fields``;
         :param partner_fallback: if no value found in the record, check its customer
-            values based on ``_sms_get_default_partners``;
+            values based on ``_mail_get_partners``;
 
         :return dict: record.id: {
             'partner': a res.partner recordset that is the customer (void or singleton)
-                linked to the recipient. See ``_sms_get_default_partners``;
+                linked to the recipient. See ``_mail_get_partners``;
             'sanitized': sanitized number to use (coming from record's field or partner's
                 phone fields). Set to False is number impossible to parse and format;
             'number': original number before sanitation;
@@ -84,9 +75,9 @@ class MailThread(models.AbstractModel):
         tocheck_fields = [force_field] if force_field else self._phone_get_number_fields()
         for record in self:
             all_numbers = [record[fname] for fname in tocheck_fields if fname in record]
-            all_partners = record._sms_get_default_partners()
+            all_partners = record._mail_get_partners()[record.id]
 
-            valid_number = False
+            valid_number, fname = False, False
             for fname in [f for f in tocheck_fields if f in record]:
                 valid_number = record._phone_format(fname=fname)
                 if valid_number:
