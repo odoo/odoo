@@ -1156,7 +1156,7 @@ class HrExpenseSheet(models.Model):
 
         self.activity_update()
 
-        return {move.expense_sheet_id.id: move for move in moves}
+        return moves
 
     def _prepare_payment_vals(self):
         self.ensure_one()
