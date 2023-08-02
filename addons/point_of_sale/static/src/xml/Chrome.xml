@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="Chrome" owl="1">
-        <div class="pos" t-att-class="{ 'big-scrollbars': pos.hasBigScrollBars }">
+        <div class="pos" t-att-class="{ 'big-scrollbars': pos.globalState.hasBigScrollBars }">
             <div class="pos-receipt-print"></div>
             <Navbar showCashMoveButton="showCashMoveButton"/>
             <div class="pos-content">
