@@ -115,10 +115,10 @@ QUnit.test("Searching for a GIF", async (assert) => {
             }
         },
     });
-    await openDiscuss(channelId);
-    await click("button[aria-label='GIFs']");
-    await insertText("input[placeholder='Search for a gif']", "search");
-    assert.containsOnce($, "i[aria-label='back']");
+    openDiscuss(channelId);
+    (await waitUntil("button[aria-label='GIFs']")).click();
+    insertText((await waitUntil("input[placeholder='Search for a gif']"))[0], "search");
+    await waitUntil("i[aria-label='back']");
     await waitUntil(".o-discuss-Gif", 2);
 });
 
@@ -135,9 +135,9 @@ QUnit.test("Open a GIF category trigger the search for the category", async (ass
             }
         },
     });
-    await openDiscuss(channelId);
-    await click("button[aria-label='GIFs']");
-    await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
+    openDiscuss(channelId);
+    (await waitUntil("button[aria-label='GIFs']")).click();
+    (await waitUntil("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']")).click();
     await waitUntil(".o-discuss-Gif", 2);
     assert.strictEqual(
         document.querySelector("input[placeholder='Search for a gif']").value,

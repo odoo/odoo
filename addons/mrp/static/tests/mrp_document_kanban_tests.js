@@ -3,7 +3,6 @@
 import testUtils from '@web/../tests/legacy/helpers/test_utils';
 import { registry } from "@web/core/registry";
 import {
-    click,
     getFixture,
     nextTick,
 } from '@web/../tests/helpers/utils';
@@ -224,19 +223,14 @@ QUnit.module('MrpDocumentsKanbanView', {
                 </kanban>`
         };
         const { openView } = await start({ serverData: { views } });
-        await openView({
-            res_model: 'mrp.document',
-            views: [[false, 'kanban']],
+        openView({
+            res_model: "mrp.document",
+            views: [[false, "kanban"]],
         });
-        assert.containsOnce(target, ".o_kanban_previewer");
-
-        await click(target.querySelector(".o_kanban_previewer"));
-        await waitUntil('.o-FileViewer');
-        assert.containsOnce(target, '.o-FileViewer');
-        assert.containsOnce(target, '.o-FileViewer-headerButton .fa-times');
-
-        await click(target, '.o-FileViewer-headerButton .fa-times');
-        assert.containsNone(target, '.o-FileViewer');
+        (await waitUntil(".o_kanban_previewer")).click();
+        await waitUntil(".o-FileViewer");
+        (await waitUntil(".o-FileViewer-headerButton .fa-times")).click();
+        await waitUntil(".o-FileViewer", 0);
     });
 });
 

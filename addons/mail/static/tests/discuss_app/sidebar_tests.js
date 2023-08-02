@@ -1111,9 +1111,9 @@ QUnit.test("Group unread counter up to date after mention is marked as seen", as
         },
     ]);
     const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel .o-discuss-badge");
-    await click(".o-mail-DiscussSidebarChannel");
+    openDiscuss();
+    await waitUntil(".o-mail-DiscussSidebarChannel .o-discuss-badge");
+    click(".o-mail-DiscussSidebarChannel");
     await waitUntil(".o-discuss-badge", 0);
 });
 

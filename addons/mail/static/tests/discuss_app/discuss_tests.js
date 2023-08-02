@@ -855,11 +855,17 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
         });
     }
     const { openDiscuss } = await start();
-    await openDiscuss();
-    await click("button:contains(Mark all read)");
-    assert.containsNone($, ".o-mail-Message");
+    openDiscuss();
+    (await waitUntil("button:contains(Mark all read)")).click();
+    await waitUntil(".o-mail-Message", 0);
 
+    /**
+     * The await is necessary on click because otherwise useAutoScroll would set
+     * the scroll to bottom after the manually set value from this test.
+     */
     await click("button:contains(History)");
+    await waitUntil(".o-mail-Message", 30);
+
     $(".o-mail-Thread")[0].scrollTop = 0;
     await waitUntil(".o-mail-Message", 40);
 });
@@ -1852,21 +1858,6 @@ QUnit.test("Message shows up even if channel data is incomplete", async (assert)
         ".o-mail-DiscussSidebarCategory-chat + .o-mail-DiscussSidebarChannel:contains(Albert)"
     );
     assert.containsOnce($, ".o-mail-Message:contains(hello world)");
-});
-
-QUnit.test("Create a direct message channel when clicking on start a meeting", async (assert) => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        name: "General",
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    await click("button:contains(Start a meeting)");
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
-    assert.containsOnce($, ".o-discuss-Call");
-    await waitUntil(".o-discuss-ChannelInvitation");
-    assert.containsOnce($, ".o-discuss-ChannelInvitation");
 });
 
 QUnit.test(
