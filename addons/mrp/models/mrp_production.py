@@ -1986,6 +1986,10 @@ class MrpProduction(models.Model):
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
             return self._action_generate_backorder_wizard(quantity_issues)
+
+        for production in self:
+            if production.product_tracking in ('lot', 'serial') and not production.lot_producing_id:
+                raise UserError(_('You need to supply a Lot/Serial Number for the final product.'))
         return True
 
     def _button_mark_done_sanity_checks(self):
