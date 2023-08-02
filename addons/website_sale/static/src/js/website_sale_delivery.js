@@ -94,7 +94,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         const currentCarrierChecked = docCarrier.closest("li").getElementsByTagName("input")[0].checked;
         const span = document.createElement("em");
         if (!currentCarrierChecked || this.carriers.length == 1) {
-            span.textContent = "select to see available Pick-Up Locations";
+            span.textContent = _t("select to see available Pick-Up Locations");
             span.classList.add("text-muted");
         }
         docCarrier.appendChild(span);
