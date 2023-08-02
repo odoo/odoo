@@ -23,6 +23,10 @@ function getAbsoluteElementPosition(element) {
     return { height: elRect.height, width: elRect.width, top: absTop, left: absLeft };
 }
 
+function objectToStyle(obj) {
+    return Object.entries(obj).map(([k,v]) => `${k}:${v}`).join(";")
+}
+
 const useDialogDraggable = makeDraggableHook({
     name: "useDialogDraggable",
     onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
@@ -122,7 +126,16 @@ class HighlightOverlay extends Component {
 
     getOverlayStyle(overlay) {
         const { height, width, top, left, color } = overlay;
-        return `position: absolute;top: ${top}px;left:${left}px;height:${height}px;width:${width}px;border: dashed ${color}; animation: 500ms infinite overlay-pulse;"`;
+        const style = {
+            position: "absolute",
+            top: `${top}px`,
+            left: `${left}px`,
+            height: `${height}px`,
+            width: `${width}px`,
+            border: `dashed ${color}`,
+            animation: "500ms infinite alternate element-size-pulse",
+        };
+        return objectToStyle(style);
     }
 }
 
@@ -172,7 +185,16 @@ class TourInteraction extends Component {
     }
 
     get contentStyle() {
-        return `top: ${this.position.top}px; left: ${this.position.left}px; width: 300px; z-index:9999; opacity: 0.8;cursor:move;`;
+        const { top, left } = this.position;
+        const style = {
+            top: `${top}px`,
+            left: `${left}px`,
+            width: "300px",
+            "z-index": "9999",
+            opacity: "0.8",
+            cursor: "move",
+        }
+        return objectToStyle(style);
     }
 
     getTour(tourName) {
