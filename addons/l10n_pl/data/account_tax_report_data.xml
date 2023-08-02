@@ -93,33 +93,33 @@
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_line_kraj_3_lub_5" model="account.report.line">
-                        <field name="name">Base - Supply of goods/services, domestic, 3% or 5%</field>
+                    <record id="account_tax_report_line_kraj_5" model="account.report.line">
+                        <field name="name">Base - Supply of goods/services, domestic, 5%</field>
                         <field name="code">PLTAXC_04_15</field>
                         <field name="expression_ids">
-                            <record id="account_tax_report_line_kraj_3_lub_5_tag" model="account.report.expression">
+                            <record id="account_tax_report_line_kraj_5_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">K_15</field>
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_line_kraj_7_lub_8" model="account.report.line">
-                        <field name="name">Base - Supply of goods/services, domestic, 7% or 8%</field>
+                    <record id="account_tax_report_line_kraj_8" model="account.report.line">
+                        <field name="name">Base - Supply of goods/services, domestic, 8%</field>
                         <field name="code">PLTAXC_05_17</field>
                         <field name="expression_ids">
-                            <record id="account_tax_report_line_kraj_7_lub_8_tag" model="account.report.expression">
+                            <record id="account_tax_report_line_kraj_8_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">K_17</field>
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_line_kraj_22_lub_23" model="account.report.line">
-                        <field name="name">Base - Supply of goods/services, domestic, 22% or 23%</field>
+                    <record id="account_tax_report_line_kraj_23" model="account.report.line">
+                        <field name="name">Base - Supply of goods/services, domestic, 23%</field>
                         <field name="code">PLTAXC_06_19</field>
                         <field name="expression_ids">
-                            <record id="account_tax_report_line_kraj_22_lub_23_tag" model="account.report.expression">
+                            <record id="account_tax_report_line_kraj_23_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">K_19</field>
@@ -298,33 +298,33 @@
                         <field name="code">PLTAXC</field>
                         <field name="aggregation_formula">PLTAXC_04_16.balance + PLTAXC_05_18.balance + PLTAXC_06_20.balance + PLTAXC_09_24.formula + PLTAXC_10_26.balance + PLTAXC_11_28.balance + PLTAXC_12_32.balance + PLTAXC_12_33.balance + PLTAXC_01_34.balance</field>
                         <field name="children_ids">
-                            <record id="account_tax_report_line_podatek_kraj_3_lub_5" model="account.report.line">
-                                <field name="name">Tax - Supply of goods/services, domestic, 3% or 5%</field>
+                            <record id="account_tax_report_line_podatek_kraj_5" model="account.report.line">
+                                <field name="name">Tax - Supply of goods/services, domestic, 5%</field>
                                 <field name="code">PLTAXC_04_16</field>
                                 <field name="expression_ids">
-                                    <record id="account_tax_report_line_podatek_kraj_3_lub_5_tag" model="account.report.expression">
+                                    <record id="account_tax_report_line_podatek_kraj_5_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">K_16</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="account_tax_report_line_podatek_kraj_7_lub_8" model="account.report.line">
-                                <field name="name">Tax - Supply of goods/services, domestic, 7% or 8%</field>
+                            <record id="account_tax_report_line_podatek_kraj_8" model="account.report.line">
+                                <field name="name">Tax - Supply of goods/services, domestic, 8%</field>
                                 <field name="code">PLTAXC_05_18</field>
                                 <field name="expression_ids">
-                                    <record id="account_tax_report_line_podatek_kraj_7_lub_8_tag" model="account.report.expression">
+                                    <record id="account_tax_report_line_podatek_kraj_8_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">K_18</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="account_tax_report_line_podatek_kraj_22_lub_23" model="account.report.line">
-                                <field name="name">Tax - Supply of goods/services, domestic, 22% or 23%</field>
+                            <record id="account_tax_report_line_podatek_kraj_23" model="account.report.line">
+                                <field name="name">Tax - Supply of goods/services, domestic, 23%</field>
                                 <field name="code">PLTAXC_06_20</field>
                                 <field name="expression_ids">
-                                    <record id="account_tax_report_line_podatek_kraj_22_lub_23_tag" model="account.report.expression">
+                                    <record id="account_tax_report_line_podatek_kraj_23_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">K_20</field>
