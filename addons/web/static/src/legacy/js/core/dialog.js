@@ -4,8 +4,8 @@ import core from "@web/legacy/js/services/core";
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
 import { _t } from "@web/core/l10n/translation";
-
-var QWeb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
+import { uniqueId } from "@web/core/utils/functions";
 
 /**
  * A useful class to handle dialogs.
@@ -113,13 +113,14 @@ var Dialog = Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             // Render modal once xml dependencies are loaded
-            self.$modal = $(QWeb.render('web.DialogWidget', {
+            self.$modal = $(renderToElement('web.DialogWidget', {
                 fullscreen: self.fullscreen,
                 title: self.title,
                 subtitle: self.subtitle,
                 technical: self.technical,
                 renderHeader: self.renderHeader,
                 renderFooter: self.renderFooter,
+                uniqueId: uniqueId("modal_"),
             }));
             switch (self.size) {
                 case 'extra-large':
@@ -385,7 +386,7 @@ var Dialog = Widget.extend({
                     $primaryButton.tooltip({
                         delay: {show: 200, hide:0},
                         title: function(){
-                            return QWeb.render('FormButton.tooltip',{title:$primaryButton.text().toUpperCase()});
+                            return renderToElement('FormButton.tooltip',{title:$primaryButton.text().toUpperCase()});
                         },
                         trigger: 'manual',
                     });

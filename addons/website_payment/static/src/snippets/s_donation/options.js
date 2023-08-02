@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import {_t, qweb} from "@web/legacy/js/services/core";
+import { _t } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import options from '@web_editor/js/editor/snippets.options';
 
 options.registry.Donation = options.Class.extend({
@@ -280,7 +281,7 @@ options.registry.Donation = options.Class.extend({
         }
         if (rebuild) {
             if (layout === "slider" && !$slider.length) {
-                const sliderTemplate = $(qweb.render('website_payment.donation.slider', {
+                const sliderTemplate = $(renderToElement('website_payment.donation.slider', {
                     minimum_amount: this.$target[0].dataset.minimumAmount,
                     maximum_amount: this.$target[0].dataset.maximumAmount,
                     slider_step: this.$target[0].dataset.sliderStep,
@@ -303,7 +304,7 @@ options.registry.Donation = options.Class.extend({
                     });
                 }
             }
-            const $prefilledButtons = $(qweb.render(`website_payment.donation.prefilledButtons${showDescriptions ? 'Descriptions' : ''}`, {
+            const $prefilledButtons = $(renderToElement(`website_payment.donation.prefilledButtons${showDescriptions ? 'Descriptions' : ''}`, {
                 prefilled_buttons: donationAmounts,
                 custom_input: layout === "freeAmount",
                 minimum_amount: this.$target[0].dataset.minimumAmount,

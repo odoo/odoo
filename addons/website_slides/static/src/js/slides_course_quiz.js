@@ -2,7 +2,8 @@
 
     import publicWidget from '@web/legacy/js/public/public_widget';
     import Dialog from '@web/legacy/js/core/dialog';
-    import  { qweb as QWeb, _t } from "@web/legacy/js/services/core";
+    import  { _t } from "@web/core/l10n/translation";
+    import { renderToElement } from "@web/core/utils/render";
     import session from 'web.session';
     import { Markup } from "@web/legacy/js/core/utils";
     import CourseJoin from '@website_slides/js/slides_course_join';
@@ -298,8 +299,8 @@
          */
         _renderValidationInfo: function () {
             var $validationElem = this.$('.o_wslides_js_lesson_quiz_validation');
-            $validationElem.html(
-                QWeb.render('slide.slide.quiz.validation', {'widget': this})
+            $validationElem.empty().append(
+                renderToElement('slide.slide.quiz.validation', {'widget': this})
             );
         },
         /*

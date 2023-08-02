@@ -2,7 +2,8 @@
 
 import publicWidget from '@web/legacy/js/public/public_widget';
 import Dialog from "@web/legacy/js/core/dialog";
-import {_t, qweb} from "@web/legacy/js/services/core";
+import { _t } from "@web/legacy/js/services/core";
+import { renderToString } from "@web/core/utils/render";
 import session from "web.session";
 
 publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
@@ -26,7 +27,7 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
         const self = this;
         const d_description = new Dialog(self, {
             title: _t('New API Key'),
-            $content: qweb.render('portal.keydescription'),
+            $content: renderToString('portal.keydescription'),
             buttons: [{text: _t('Confirm'), classes: 'btn-primary', close: true, click: async () => {
                 var description = d_description.el.querySelector('[name="description"]').value;
                 var wizard_id = await this._rpc({
@@ -44,7 +45,7 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
                 );
                 const d_show = new Dialog(self, {
                     title: _t('API Key Ready'),
-                    $content: qweb.render('portal.keyshow', {key: res.context.default_key}),
+                    $content: renderToString('portal.keyshow', {key: res.context.default_key}),
                     buttons: [{text: _t('Close'), clases: 'btn-primary', close: true}],
                 });
                 d_show.on('closed', this, () => {
@@ -132,7 +133,7 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
         function handleRevokeSessions(rpc, wrapped) {
             return wrapped.then((inst) => {
                 const check_id = inst.res_id
-                var $content = $(qweb.render("portal.revoke_all_devices_popup_template"));
+                var $content = $(renderToString("portal.revoke_all_devices_popup_template"));
                 return new Promise((resolve) => {
                     var dialog = new Dialog(this, {
                         title: _t("Log out from all devices?"),
@@ -210,7 +211,7 @@ export function handleCheckIdentity(rpc, wrapped) {
         return new Promise((resolve, reject) => {
             const d = new Dialog(null, {
                 title: _t("Security Control"),
-                $content: qweb.render('portal.identitycheck'),
+                $content: renderToString('portal.identitycheck'),
                 buttons: [{
                     text: _t("Confirm Password"), classes: 'btn btn-primary',
                     // nb: if click & close, waits for click to resolve before closing

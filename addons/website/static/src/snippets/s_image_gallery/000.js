@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
 import { uniqueId } from "@web/core/utils/functions";
-import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { renderToElement } from "@web/core/utils/render";
 
-var qweb = core.qweb;
 
 const GalleryWidget = publicWidget.Widget.extend({
 
@@ -45,7 +44,7 @@ const GalleryWidget = publicWidget.Widget.extend({
         var $img = ($cur.is('img') === true) ? $cur : $cur.closest('img');
 
         const milliseconds = $cur.closest('.s_image_gallery').data('interval') || false;
-        this.$modal = $(qweb.render('website.gallery.slideshow.lightbox', {
+        this.$modal = $(renderToElement('website.gallery.slideshow.lightbox', {
             images: $images.get(),
             index: $images.index($img),
             dim: dimensions,

@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import { Markup } from "@web/legacy/js/core/utils";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { escape } from "@web/core/utils/strings";
-
-var qweb = core.qweb;
 
 publicWidget.registry.twitter = publicWidget.Widget.extend({
     selector: '.twitter',
@@ -28,7 +26,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
             $timeline.empty();
 
             if (data.error) {
-                $timeline.append(qweb.render('website.Twitter.Error', {data: data}));
+                $timeline.append(renderToElement('website.Twitter.Error', {data: data}));
                 return;
             }
 
@@ -67,7 +65,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                         }
                     ));
 
-                return qweb.render('website.Twitter.Tweet', {tweet: tweet});
+                return renderToElement('website.Twitter.Tweet', {tweet: tweet});
 
                 function _makeLink(url, text) {
                     return Markup`<a href="${url}" target="_blank" rel="noreferrer noopener">${text}</a>`;
@@ -77,7 +75,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
             var f = Math.floor(tweets.length / 3);
             var tweetSlices = [tweets.slice(0, f).join(' '), tweets.slice(f, f * 2).join(' '), tweets.slice(f * 2, tweets.length).join(' ')];
 
-            self.$scroller = $(qweb.render('website.Twitter.Scroller')).appendTo($timeline);
+            self.$scroller = $(renderToElement('website.Twitter.Scroller')).appendTo($timeline);
             self.$scroller.find('div[id^="scroller"]').toArray().forEach((element, index) => {
                 var $scrollWrapper = $('<div/>', {class: 'scrollWrapper'});
                 var $scrollableArea = $('<div/>', {class: 'scrollableArea'});

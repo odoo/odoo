@@ -1,7 +1,7 @@
 /** @odoo-module **/
 'use strict';
 
-import {qweb} from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import {descendants, preserveCursor} from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 const rowSize = 50; // 50px.
 // Maximum number of rows that can be added when dragging a grid item.
@@ -44,11 +44,11 @@ export function _addBackgroundGrid(rowEl, gridHeight) {
     const gridProp = _getGridProperties(rowEl);
     const rowCount = Math.max(rowEl.dataset.rowCount, gridHeight);
 
-    const backgroundGrid = qweb.render('web_editor.background_grid', {
+    const backgroundGrid = renderToElement('web_editor.background_grid', {
         rowCount: rowCount + 1, rowGap: gridProp.rowGap, rowSize: gridProp.rowSize,
         columnGap: gridProp.columnGap, columnSize: gridProp.columnSize,
     });
-    rowEl.insertAdjacentHTML("afterbegin", backgroundGrid);
+    rowEl.prepend(backgroundGrid);
     return rowEl.firstElementChild;
 }
 /**

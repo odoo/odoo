@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import core from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import time from "@web/legacy/js/core/time";
 import SESSION_CHART_COLORS from "@survey/js/survey_session_colors";
-
-var QWeb = core.qweb;
 
 publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
     init: function (parent, options) {
@@ -47,7 +45,7 @@ publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
                     textValue = moment(textValue).format(time.getLangDatetimeFormat());
                 }
 
-                var $textAnswer = $(QWeb.render('survey.survey_session_text_answer', {
+                var $textAnswer = $(renderToElement('survey.survey_session_text_answer', {
                     value: textValue,
                     borderColor: `rgb(${SESSION_CHART_COLORS[self.answerIds.length % 10]})`
                 }));

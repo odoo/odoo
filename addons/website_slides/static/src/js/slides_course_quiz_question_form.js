@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
 import publicWidget from '@web/legacy/js/public/public_widget';
-import core from "@web/legacy/js/services/core";
 import { _t } from "@web/core/l10n/translation";
-var QWeb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 /**
  * This Widget is responsible of displaying the question inputs when adding a new question or when updating an
@@ -88,7 +87,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
      * @private
      */
     _addAnswerLine: function (ev) {
-        $(ev.currentTarget).closest('.o_wslides_js_quiz_answer').after(QWeb.render('slide.quiz.answer.line'));
+        $(ev.currentTarget).closest('.o_wslides_js_quiz_answer').after(renderToElement('slide.quiz.answer.line'));
     },
 
     /**

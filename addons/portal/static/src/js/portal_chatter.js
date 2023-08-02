@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
 import core from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import dom from "@web/legacy/js/core/dom";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import portalComposer from "@portal/js/portal_composer";
 import { Markup } from "@web/legacy/js/core/utils";
 import { range } from "@web/core/utils/numbers";
-
-var qweb = core.qweb;
 
 /**
  * Widget PortalChatter
@@ -260,13 +259,13 @@ var PortalChatter = publicWidget.Widget.extend({
         };
     },
     _renderMessages: function () {
-        this.$('.o_portal_chatter_messages').html(qweb.render("portal.chatter_messages", {widget: this}));
+        this.$('.o_portal_chatter_messages').empty().append(renderToElement("portal.chatter_messages", {widget: this}));
     },
     _renderMessageCount: function () {
-        this.$('.o_message_counter').replaceWith(qweb.render("portal.chatter_message_count", {widget: this}));
+        this.$('.o_message_counter').replaceWith(renderToElement("portal.chatter_message_count", {widget: this}));
     },
     _renderPager: function () {
-        this.$('.o_portal_chatter_pager').replaceWith(qweb.render("portal.pager", {widget: this}));
+        this.$('.o_portal_chatter_pager').replaceWith(renderToElement("portal.pager", {widget: this}));
     },
 
     //--------------------------------------------------------------------------
