@@ -886,10 +886,10 @@ QUnit.test("chat should show unread counter on receiving new messages", async (a
         ],
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner1)");
-    assert.containsNone($, ".o-mail-NotificationItem .badge:contains('1')");
+    click(".o_menu_systray i[aria-label='Messages']");
+    await waitUntil(".o-mail-NotificationItem");
+    await waitUntil(".o-mail-NotificationItem:contains(Partner1)");
+    await waitUntil(".o-mail-NotificationItem .badge:contains('1')", 0);
     // simulate receiving a new message
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {

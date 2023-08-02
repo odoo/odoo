@@ -844,10 +844,9 @@ QUnit.test("remove an uploading attachment", async (assert) => {
     });
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
     await waitUntil(".o-mail-AttachmentCard.o-isUploading");
-    assert.containsOnce($, ".o-mail-AttachmentCard.o-isUploading");
 
-    await click(".o-mail-AttachmentCard-unlink");
-    assert.containsNone($, ".o-mail-Composer .o-mail-AttachmentCard");
+    click(".o-mail-AttachmentCard-unlink");
+    await waitUntil(".o-mail-Composer .o-mail-AttachmentCard", 0);
 });
 
 QUnit.test("Show a thread name in the recipient status text.", async (assert) => {
@@ -947,25 +946,30 @@ QUnit.test(
                 }
             },
         });
-        await openDiscuss(channelId);
-        const file1 = await createFile({
-            name: "text1.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        });
-        const file2 = await createFile({
-            name: "text2.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        });
-        inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file1, file2]);
-        await waitUntil(".o-mail-AttachmentCard:contains(text1.txt)");
-        await waitUntil(".o-mail-AttachmentCard:contains(text2.txt)");
-        await click(".o-mail-AttachmentCard-unlink:eq(1)");
+        openDiscuss(channelId);
+        const [input, file1, file2] = await Promise.all([
+            waitUntil(".o-mail-Composer-coreMain .o_input_file"),
+            createFile({
+                name: "text1.txt",
+                content: "hello, world",
+                contentType: "text/plain",
+            }),
+            createFile({
+                name: "text2.txt",
+                content: "hello, world",
+                contentType: "text/plain",
+            }),
+        ]);
+        inputFiles(input[0], [file1, file2]);
+        await waitUntil(".o-mail-AttachmentCard.o-isUploading:contains(text1.txt)");
+        await waitUntil(".o-mail-AttachmentCard.o-isUploading:contains(text2.txt)");
+
+        click(".o-mail-AttachmentCard-unlink:eq(1)");
+        await waitUntil(".o-mail-AttachmentCard:contains(text2.txt)", 0);
 
         // Simulates the completion of the upload of the first attachment
-        await afterNextRender(() => uploadPromise.resolve());
-        assert.containsOnce($, '.o-mail-AttachmentCard:contains("text1.txt")');
+        uploadPromise.resolve();
+        await waitUntil('.o-mail-AttachmentCard:not(.o-isUploading):contains("text1.txt")');
     }
 );
 

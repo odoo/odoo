@@ -395,21 +395,26 @@ QUnit.test(
             channel_type: "channel",
             name: "channel1",
         });
-        pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             body: "Hello world",
             res_id: channelId,
             message_type: "comment",
             model: "discuss.channel",
         });
+        pyEnv["mail.message"].create({
+            body: "Hello world",
+            res_id: channelId,
+            message_type: "comment",
+            model: "discuss.channel",
+            parent_id: messageId,
+        });
         const { openDiscuss } = await start();
-        await openDiscuss(channelId);
-        await click("[title='Reply']");
-        await editInput(document.body, ".o-mail-Composer-input", "FooBarFoo");
-        await triggerHotkey("Enter", false);
-        await click(".o-mail-Message [title='Expand']");
-        await click(".o-mail-Message [title='Edit']");
-        await editInput(document.body, ".o-mail-Message .o-mail-Composer-input", "Goodbye World");
-        await triggerHotkey("Enter", false);
+        openDiscuss(channelId);
+        (await waitUntil(".o-mail-Message [title='Expand']", 2))[0].click();
+        (await waitUntil(".o-mail-Message [title='Edit']")).click();
+        const input = (await waitUntil(".o-mail-Message .o-mail-Composer-input"))[0];
+        insertText(input, "Goodbye World", { replace: true });
+        triggerHotkey("Enter", false);
         await waitUntil(".o-mail-MessageInReply-message:contains(Goodbye World)");
         assert.strictEqual($(".o-mail-MessageInReply-message")[0].innerText, "Goodbye World");
     }

@@ -536,20 +536,19 @@ function pasteFiles(el, files) {
  * @param {Object} [param2 = {}]
  * @param {boolean} [param2.replace = false]
  */
-export async function insertText(selector, content, { replace = false } = {}) {
+export async function insertText(target, content, { replace = false } = {}) {
+    if (typeof target === "string") {
+        target = document.querySelector(target);
+    }
     await afterNextRender(() => {
         if (replace) {
-            document.querySelector(selector).value = "";
+            target.value = "";
         }
-        document.querySelector(selector).focus();
+        target.focus();
         for (const char of content) {
             document.execCommand("insertText", false, char);
-            document
-                .querySelector(selector)
-                .dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
-            document
-                .querySelector(selector)
-                .dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
+            target.dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
+            target.dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
         }
     });
 }
@@ -678,25 +677,32 @@ export const click = getClick({ afterNextRender });
  * Function that wait until a selector is present in the DOM
  *
  * @param {string} selector
+ * @param {number} [count=1]
  */
 export function waitUntil(selector, count = 1) {
+    const res = $(selector);
+    const resMessage = `Found ${count} occurrence(s) of ${selector}`;
+    if (res.length === count) {
+        QUnit.assert.ok(true, resMessage);
+        return Promise.resolve(res);
+    }
     return new Promise((resolve, reject) => {
-        if ($(selector).length === count) {
-            return resolve($(selector));
-        }
         const timer = setTimeout(() => {
             observer.disconnect();
-            reject(new Error(`Waited 5 second for ${selector}`));
-            console.error(`Waited 5 second for ${selector}`);
+            const res = $(selector);
+            const message = `Waited 5 second for ${count} occurrence(s) of ${selector}. Found ${res.length} instead.`;
+            QUnit.assert.ok(false, message);
+            reject(new Error(message));
         }, 5000);
-        const observer = new MutationObserver((mutations) => {
-            if ($(selector).length === count) {
-                resolve($(selector));
+        const observer = new MutationObserver(() => {
+            const res = $(selector);
+            if (res.length === count) {
+                QUnit.assert.ok(true, resMessage);
+                resolve(res);
                 observer.disconnect();
                 clearTimeout(timer);
             }
         });
-
         observer.observe(document.body, {
             attributes: true,
             childList: true,

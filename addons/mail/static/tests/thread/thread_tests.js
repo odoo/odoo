@@ -260,20 +260,17 @@ QUnit.test(
                 }
             },
         });
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await afterNextRender(async () =>
-            pyEnv.withUser(userId, () =>
-                env.services.rpc("/mail/message/post", {
-                    post_data: { body: "new message", message_type: "comment" },
-                    thread_id: channelId,
-                    thread_model: "discuss.channel",
-                })
-            )
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "new message", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
         );
-        assert.verifySteps(["rpc:channel_fetch"]);
-
-        $(".o-mail-Composer-input")[0].focus();
         await waitUntil(".o-mail-Message");
+        assert.verifySteps(["rpc:channel_fetch"]);
+        $(".o-mail-Composer-input")[0].focus();
+        await waitUntil("span:contains(New messages)", 0);
         assert.verifySteps(["rpc:set_last_seen_message"]);
     }
 );
@@ -895,12 +892,12 @@ QUnit.test("Thread messages are only loaded once", async (assert) => {
             body: "Message on channel2",
         },
     ]);
-    await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel:eq(0)");
+    openDiscuss();
+    (await waitUntil(".o-mail-DiscussSidebarChannel:eq(0)")).click();
     await waitUntil(".o-mail-Message:contains(channel1)");
-    await click(".o-mail-DiscussSidebarChannel:eq(1)");
+    (await waitUntil(".o-mail-DiscussSidebarChannel:eq(1)")).click();
     await waitUntil(".o-mail-Message:contains(channel2)");
-    await click(".o-mail-DiscussSidebarChannel:eq(0)");
+    (await waitUntil(".o-mail-DiscussSidebarChannel:eq(0)")).click();
     await waitUntil(".o-mail-Message:contains(channel1)");
     assert.verifySteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
@@ -949,7 +946,7 @@ QUnit.test(
             message: formattedMessage,
         });
         await waitUntil("button:contains(Inbox) .badge:contains(1)");
-        await click("button:contains(General)");
+        click("button:contains(General)");
         await waitUntil(".o-discuss-badge", 0);
         await waitUntil("button:contains(Inbox) .badge", 0);
         assert.verifySteps(["mark-all-messages-as-read"]);
