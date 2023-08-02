@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { intersection } from "@web/core/utils/arrays";
-import core from "@web/legacy/js/services/core";
+import { csrf_token, _t } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 
-const { qweb, _t } = core;
 
 /**
  * Allows to load anchors from a page.
@@ -193,7 +193,7 @@ function prompt(options, _qweb) {
     options.field_name = options.field_name || options[type];
 
     var def = new Promise(function (resolve, reject) {
-        var dialog = $(qweb.render(_qweb, options)).appendTo('body');
+        var dialog = $(renderToElement(_qweb, options)).appendTo('body');
         options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
         field.val(options['default']); // dict notation for IE<9
@@ -290,8 +290,8 @@ function sendRequest(route, params) {
         form.setAttribute('target', '_top');
     }
 
-    if (core.csrf_token) {
-        _addInput(form, 'csrf_token', core.csrf_token);
+    if (csrf_token) {
+        _addInput(form, 'csrf_token', csrf_token);
     }
 
     for (const key in params) {

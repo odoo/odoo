@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import dom from "@web/legacy/js/core/dom";
-import core from "@web/legacy/js/services/core";
 import {setCookie} from "@web/legacy/js/core/cookie_utils";
 import Dialog from "@web/legacy/js/core/dialog";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
@@ -10,7 +9,7 @@ import { Markup } from '@web/legacy/js/core/utils';
 import session from "web.session";
 import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
-var qweb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
@@ -647,7 +646,7 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
             Object.values(o).forEach((r) => {
                 r.content = $('<p>' + $(r.content).html() + '</p>').text().substring(0, 250);
             });
-            self.$('div.post_spam').html(qweb.render('website_forum.spam_search_name', {
+            self.$('div.post_spam').empty().append(renderToElement('website_forum.spam_search_name', {
                 posts: o,
             }));
         });
