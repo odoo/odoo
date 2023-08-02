@@ -42,6 +42,33 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
 
         return vals_list
 
+    def _get_partner_party_tax_scheme_vals_list(self, partner, role):
+        # EXTENDS account.edi.xml.ubl_bis3
+        vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
+
+        if not partner.vat and partner.company_registry:
+            company_registry = partner.company_registry
+            if not company_registry.startswith(partner.country_code):
+                company_registry = partner.country_code + company_registry
+
+            return [{
+                'company_id': company_registry,
+                'TaxScheme_vals': {},
+                'tax_scheme_id': 'VAT',
+            }]
+
+        return vals_list
+
+    def _get_partner_party_legal_entity_vals_list(self, partner):
+        # EXTENDS account.edi.xml.ubl_bis3
+        vals_list = super()._get_partner_party_legal_entity_vals_list(partner)
+
+        if not partner.vat and partner.company_registry:
+            for vals in vals_list:
+                vals['company_id'] = partner.company_registry
+
+        return vals_list
+
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._export_invoice_vals(invoice)
@@ -56,17 +83,23 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         return vals
 
     def _export_invoice_constraints(self, invoice, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
         constraints = super()._export_invoice_constraints(invoice, vals)
 
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
 
             constraints.update({
-                f"ciusro_{partner_type}_vat_required": self._check_required_fields(partner, 'vat'),
                 f"ciusro_{partner_type}_city_required": self._check_required_fields(partner, 'city'),
                 f"ciusro_{partner_type}_street_required": self._check_required_fields(partner, 'street'),
                 f"ciusro_{partner_type}_state_id_required": self._check_required_fields(partner, 'state_id'),
             })
+
+            if not partner.vat and not partner.company_registry:
+                constraints[f"ciusro_{partner_type}_tax_identifier_required"] = _(
+                    "The following partner doesn't have a VAT nor Company ID: %s. "
+                    "At least one of them is required. "
+                ) % partner.name
 
             if (partner.country_code == 'RO'
                     and partner.state_id
@@ -75,7 +108,7 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
                 constraints[f"ciusro_{partner_type}_invalid_city_name"] = _(
                     "The following partner's city name is invalid: %s. "
                     "If partner's state is București, the city name must be 'SECTORX', "
-                    "where X is a number between 1-6"
+                    "where X is a number between 1-6. "
                 ) % partner.name
 
         return constraints
