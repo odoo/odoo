@@ -5253,6 +5253,7 @@ registry.layout_column = SnippetOptionWidget.extend({
         }
 
         this._resizeColumns($row.children());
+        $row.addClass('d-flex justify-content-center');
         this.trigger_up('cover_update');
     },
     /**
@@ -5264,16 +5265,12 @@ registry.layout_column = SnippetOptionWidget.extend({
     _resizeColumns: function ($columns) {
         const colsLength = $columns.length;
         var colSize = Math.floor(12 / colsLength) || 1;
-        var colOffset = Math.floor((12 - colSize * colsLength) / 2);
         var colClass = 'col-lg-' + colSize;
         _.each($columns, function (column) {
             var $column = $(column);
             $column.attr('class', $column.attr('class').replace(/\b(col|offset)-lg(-\d+)?\b/g, ''));
             $column.addClass(colClass);
         });
-        if (colOffset) {
-            $columns.first().addClass('offset-lg-' + colOffset);
-        }
     },
     /**
      * Toggles the normal mode.
