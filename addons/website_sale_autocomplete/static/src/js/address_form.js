@@ -3,7 +3,7 @@
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { DropPrevious } from '@web/legacy/js/core/concurrency';
 import { debounce } from "@web/core/utils/timing";
-import { qweb as QWeb } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 
 publicWidget.registry.AddressForm = publicWidget.Widget.extend({
     selector: '.oe_cart .checkout_autoformat:has(input[name="street"][data-autocomplete-enabled="1"])',
@@ -55,9 +55,9 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
                     }
                 })).then((response) => {
                     this._hideAutocomplete(inputContainer);
-                    inputContainer.appendChild($(QWeb.render("website_sale_autocomplete.AutocompleteDropDown", {
+                    inputContainer.appendChild(renderToElement("website_sale_autocomplete.AutocompleteDropDown", {
                         results: response.results
-                    }))[0]);
+                    }));
                     if (response.session_id) {
                         this.sessionId = response.session_id;
                     }

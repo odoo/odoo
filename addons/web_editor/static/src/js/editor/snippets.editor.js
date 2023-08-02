@@ -11,7 +11,6 @@ import SmoothScrollOnDrag from "@web_editor/js/editor/smooth_scroll_on_drag";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 import { escape } from "@web/core/utils/strings";
-const QWeb = core.qweb;
 import { closestElement, isUnremovable } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
@@ -25,6 +24,7 @@ import {
 } from "@odoo/owl";
 import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
 import { _t } from "@web/core/l10n/translation";
+import { renderToElement } from "@web/core/utils/render";
 
 let cacheSnippetTemplate = {};
 
@@ -706,7 +706,7 @@ var SnippetEditor = Widget.extend({
             $element = $element.parent();
         }
 
-        var $optionsSection = $(core.qweb.render('web_editor.customize_block_options_section', {
+        var $optionsSection = $(renderToElement('web_editor.customize_block_options_section', {
             name: this.getName(),
         })).data('editor', this);
         const $optionsSectionBtnGroup = $optionsSection.find('we-top-button-group');
@@ -4329,9 +4329,9 @@ var SnippetsMenu = Widget.extend({
         $(this.customizePanel).append(this._$toolbarContainer);
 
         // Create table-options custom container.
-        const $customizeTableBlock = $(QWeb.render('web_editor.toolbar.table-options'));
-        this.options.wysiwyg.odooEditor.bindExecCommand($customizeTableBlock[0]);
-        $(this.customizePanel).append($customizeTableBlock);
+        const customizeTableBlock = renderToElement('web_editor.toolbar.table-options');
+        this.options.wysiwyg.odooEditor.bindExecCommand(customizeTableBlock);
+        $(this.customizePanel).append(customizeTableBlock);
         $title.append(this._toolbarWrapperEl.querySelector('#removeFormat'));
         this._$toolbarContainer.append(this._toolbarWrapperEl);
 

@@ -3,7 +3,8 @@
 /* global YT, Vimeo */
 
     import publicWidget from '@web/legacy/js/public/public_widget';
-    import  { qweb as QWeb, _t } from "@web/legacy/js/services/core";
+    import  { _t } from "@web/legacy/js/services/core";
+    import { renderToElement } from "@web/core/utils/render";
     import { Markup } from "@web/legacy/js/core/utils";
     import config from '@web/legacy/js/services/config';
 
@@ -670,7 +671,7 @@
 
             // render slide content
             if (['document', 'infographic'].includes(slide.category)) {
-                $content.html(QWeb.render('website.slides.fullscreen.content', {widget: this}));
+                $content.empty().append(renderToElement('website.slides.fullscreen.content', {widget: this}));
             } else if (slide.category === 'video' && slide.videoSourceType === 'youtube') {
                 this.videoPlayer = new VideoPlayerYouTube(this, slide);
                 return this.videoPlayer.appendTo($content);
@@ -678,7 +679,7 @@
                 this.videoPlayer = new VideoPlayerVimeo(this, slide);
                 return this.videoPlayer.appendTo($content);
             } else if (slide.category === 'video' && slide.videoSourceType === 'google_drive') {
-                $content.html(QWeb.render('website.slides.fullscreen.video.google_drive', {widget: this}));
+                $content.empty().append(renderToElement('website.slides.fullscreen.video.google_drive', {widget: this}));
             } else if (slide.category === 'article'){
                 var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto');
                 $(slide.htmlContent).appendTo($wpContainer);

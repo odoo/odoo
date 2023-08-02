@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import core from "@web/legacy/js/services/core";
-const QWeb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend({
     selector: '.o_wevent_create_room_button',
@@ -20,7 +19,7 @@ publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend
                 route: "/event/active_langs",
             });
 
-            this.$createModal = $(QWeb.render(
+            this.$createModal = $(renderToElement(
                 'event_meet_create_room_modal',
                 {
                     csrf_token: odoo.csrf_token,

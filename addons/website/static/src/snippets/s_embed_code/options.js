@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import Dialog from '@web/legacy/js/core/dialog';
-import core from "@web/legacy/js/services/core";
 import options from '@web_editor/js/editor/snippets.options';
 import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
+import { renderToElement } from "@web/core/utils/render";
 
 options.registry.EmbedCode = options.Class.extend({
     //--------------------------------------------------------------------------
@@ -24,7 +24,7 @@ options.registry.EmbedCode = options.Class.extend({
         });
 
         await new Promise(resolve => {
-            const $content = $(core.qweb.render('website.custom_code_dialog_content'));
+            const $content = $(renderToElement('website.custom_code_dialog_content'));
             const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], code || '');
             const dialog = new Dialog(this, {
                 title: _t("Edit embedded code"),

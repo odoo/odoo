@@ -2,7 +2,6 @@
 
 import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
-import core from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
 import rpc from "@web/legacy/js/core/rpc";
@@ -43,8 +42,8 @@ import {
     convertCSSColorToRgba,
     normalizeCSSColor,
  } from '@web/core/utils/colors';
+import { renderToElement } from "@web/core/utils/render";
 
-var qweb = core.qweb;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const descendants = OdooEditorLib.descendants;
 const { DateTime } = luxon;
@@ -7593,7 +7592,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @private
      */
     _initOverlay: function () {
-        this.$backgroundOverlay = $(qweb.render('web_editor.background_position_overlay'));
+        this.$backgroundOverlay = $(renderToElement('web_editor.background_position_overlay'));
         this.$overlayContent = this.$backgroundOverlay.find('.o_we_overlay_content');
         this.$overlayBackground = this.$overlayContent.find('.o_overlay_background');
 
@@ -8001,7 +8000,7 @@ registry.VersionControl = SnippetOptionWidget.extend({
             onSuccess: snippetVersions => {
                 const isUpToDate = snippetVersions && ['vjs', 'vcss', 'vxml'].every(key => this.$target[0].dataset[key] === snippetVersions[key]);
                 if (!isUpToDate) {
-                    this.$el.prepend(qweb.render('web_editor.outdated_block_message'));
+                    this.$el.prepend(renderToElement('web_editor.outdated_block_message'));
                 }
             },
         });

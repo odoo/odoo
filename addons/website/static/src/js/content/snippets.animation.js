@@ -10,13 +10,11 @@ import { escape } from "@web/core/utils/strings";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import Class from "@web/legacy/js/core/class";
 import config from "@web/legacy/js/services/config";
-import core from "@web/legacy/js/services/core";
 import dom from "@web/legacy/js/core/dom";
 import mixins from "@web/legacy/js/core/mixins";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import wUtils from "@website/js/utils";
-
-var qweb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 // Initialize fallbacks for the use of requestAnimationFrame,
 // cancelAnimationFrame and performance.now()
@@ -873,7 +871,7 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
      */
     _appendBgVideo: function () {
         var $oldContainer = this.$bgVideoContainer || this.$('> .o_bg_video_container');
-        this.$bgVideoContainer = $(qweb.render('website.background.video', {
+        this.$bgVideoContainer = $(renderToElement('website.background.video', {
             videoSrc: this.videoSrc,
             iframeID: this.iframeID,
         }));
@@ -912,7 +910,7 @@ registry.socialShare = publicWidget.Widget.extend({
      */
     _render: function () {
         this.$el.popover({
-            content: qweb.render('website.social_hover', {medias: this.socialList}),
+            content: renderToElement('website.social_hover', {medias: this.socialList}),
             placement: 'bottom',
             container: this.$el,
             html: true,

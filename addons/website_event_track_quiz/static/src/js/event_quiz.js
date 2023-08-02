@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-
 import publicWidget from "@web/legacy/js/public/public_widget";
-import core from "@web/legacy/js/services/core";
 import session from "web.session";
 import { _t } from "@web/core/l10n/translation";
-var QWeb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 /**
  * This widget is responsible of displaying quiz questions and propositions. Submitting the quiz will fetch the
@@ -158,16 +156,14 @@ var Quiz = publicWidget.Widget.extend({
                         $answer.find('i.fa-times-circle').removeClass('d-none');
                     }
                     if (answer.awarded_points > 0) {
-                        var $badge = QWeb.render('quiz.badge', {'answer': answer});
-                        $answer.append($badge);
+                        $answer.append(renderToElement('quiz.badge', {'answer': answer}));
                     }
                 } else {
                     $answer.find('i.fa-circle').removeClass('d-none');
                 }
             });
             var $list = $question.find('.list-group');
-            var $comment = QWeb.render('quiz.comment', {'answer': answer});
-            $list.append($comment);
+            $list.append(renderToElement('quiz.comment', {'answer': answer}));
         });
     },
 
@@ -177,8 +173,8 @@ var Quiz = publicWidget.Widget.extend({
         */
     _renderValidationInfo: function () {
         var $validationElem = this.$('.o_quiz_js_quiz_validation');
-        $validationElem.html(
-            QWeb.render('quiz.validation', {'widget': this})
+        $validationElem.empty().append(
+            renderToElement('quiz.validation', {'widget': this})
         );
     },
 

@@ -30,6 +30,7 @@ import { _t } from "@web/core/l10n/translation";
 const serviceRegistry = registry.category("services");
 import { Component, App, whenReady } from "@odoo/owl";
 import { omit } from '@web/core/utils/objects';
+import { renderToString } from '@web/core/utils/render';
 
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
 // wait for them in PublicRoot)
@@ -409,6 +410,7 @@ export async function createPublicRoot(RootWidget) {
         translateFn: _t,
         translatableAttributes: ["data-tooltip"],
     });
+    renderToString.app = app;
     setLoadXmlDefaultApp(app);
     const [root] = await Promise.all([
         app.mount(document.body),

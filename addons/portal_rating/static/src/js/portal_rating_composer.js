@@ -3,7 +3,8 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import session from "web.session";
 import portalComposer from "@portal/js/portal_composer";
-import {_t, qweb} from "@web/legacy/js/services/core";
+import { _t } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 
 const PortalComposer = portalComposer.PortalComposer;
 
@@ -59,7 +60,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         if (this.options.hide_rating_avg) {
             this.$('.o_rating_popup_composer_stars').empty();
         } else {
-            const ratingAverage = qweb.render(
+            const ratingAverage = renderToElement(
                 'portal_rating.rating_stars_static', {
                 inline_mode: true,
                 widget: this,
@@ -69,12 +70,12 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         }
 
         // Append the modal
-        const modal = qweb.render(
+        const modal = renderToElement(
             'portal_rating.PopupComposer', {
             inline_mode: true,
             widget: this,
             val: this.rating_avg,
-        });
+        }) || '';
         this.$('.o_rating_popup_composer_modal').html(modal);
 
         if (this._composer) {

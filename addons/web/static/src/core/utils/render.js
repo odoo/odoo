@@ -6,6 +6,14 @@ export function renderToElement(template, context = {}) {
     return render(template, context).firstElementChild;
 }
 
+export function renderToFragment(template, context = {}) {
+    const frag = document.createDocumentFragment();
+    for (const el of [...render(template, context).children]) {
+        frag.appendChild(el);
+    }
+    return frag;
+}
+
 /**
  * renders a template with an (optional) context and outputs it as a string
  *
