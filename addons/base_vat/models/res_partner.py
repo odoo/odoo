@@ -207,7 +207,7 @@ class ResPartner(models.Model):
                     elif isinstance(e, InvalidComponent):
                         msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vies_vat_to_check)
                     partner._origin.message_post(body=msg)
-                _logger.exception("The VAT number %s failed VIES check.", partner.vies_vat_to_check)
+                _logger.warning("The VAT number %s failed VIES check.", partner.vies_vat_to_check, exc_info=True)
                 partner.vies_valid = False
 
     @api.model
