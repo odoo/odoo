@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    clickSave,
+    editInput,
+    getFixture,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { htmlField } from "@web/views/fields/html/html_field";
@@ -291,4 +297,34 @@ QUnit.module("Fields", ({ beforeEach }) => {
             "spellcheck is re-enabled once the field is focused"
         );
     });
+
+    QUnit.test(
+        "Setting an html field to empty string is saved as a false value",
+        async function (assert) {
+            assert.expect(1);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="txt" />
+                            </group>
+                        </sheet>
+                    </form>`,
+                resId: 1,
+                mockRPC(route, { args, method }) {
+                    if (method === "write") {
+                        assert.strictEqual(args[1].txt, false, "the txt value should be false");
+                    }
+                },
+            });
+
+            await editInput(target, ".o_field_widget[name=txt] textarea", "");
+            await clickSave(target);
+        }
+    );
 });
