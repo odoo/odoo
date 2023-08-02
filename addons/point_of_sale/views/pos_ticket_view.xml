@@ -58,7 +58,7 @@
                                         <t t-if="partner.company_name">
                                             , <t t-out="partner.company_name"/>
                                         </t><br />
-                                        <t t-if="partner.vat">
+                                        <t id="partner_vat" t-if="partner.vat">
                                             <t t-out="partner.vat" /><br />
                                         </t>
                                         <t t-out="partner_address"/> <a role="button" t-att-href="address_url" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a>
@@ -88,7 +88,7 @@
                         </t>
                         <t t-else="">
                             <div class="row mt-4">
-                                <div class="col-12">
+                                <div class="col-12" id="get_info_div">
                                     <h4>Please enter your billing information <small class="text-muted">or</small> <a role="button" t-att-href="'/web/login?redirect=/pos/ticket/validate?access_token=%s' % access_token" style="margin-top: -11px"> Sign in</a>:</h4>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                             </t>
                         </t>
                         <div class="row mt-4">
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-4" id="get_my_invoice">
                                 <t t-if="user_is_connected and not partner_address">
                                     <button class="btn btn-primary w-100" disabled="True">Get my invoice</button>
                                 </t>
