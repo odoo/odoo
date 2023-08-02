@@ -86,7 +86,7 @@ export class DynamicGroupList extends DynamicList {
         const targetGroup = this.groups.find((g) => g.id === targetGroupId);
         if (dataGroupId === targetGroupId) {
             // move a record inside the same group
-            targetGroup.list.records = await targetGroup.list._resequence(
+            await targetGroup.list._resequence(
                 targetGroup.list.records,
                 this.resModel,
                 dataRecordId,
@@ -125,7 +125,7 @@ export class DynamicGroupList extends DynamicList {
             throw e;
         }
         if (!targetGroup.isFolded) {
-            targetGroup.list.records = await targetGroup.list._resequence(
+            await targetGroup.list._resequence(
                 targetGroup.list.records,
                 this.resModel,
                 dataRecordId,
@@ -140,7 +140,7 @@ export class DynamicGroupList extends DynamicList {
         }
 
         return this.model.mutex.exec(async () => {
-            this.groups = await this._resequence(
+            await this._resequence(
                 this.groups,
                 this.groupByField.relation,
                 movedGroupId,
@@ -220,12 +220,8 @@ export class DynamicGroupList extends DynamicList {
         const group = this._createGroupDatapoint(data);
         if (lastGroup) {
             const groups = [...this.groups, group];
-            this.groups = await this._resequence(
-                groups,
-                this.groupByField.relation,
-                group.id,
-                lastGroup.id
-            );
+            await this._resequence(groups, this.groupByField.relation, group.id, lastGroup.id);
+            this.groups = groups;
         } else {
             this.groups.push(group);
         }
