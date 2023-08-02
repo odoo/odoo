@@ -5,6 +5,8 @@ import core from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import QWeb from "@web/legacy/js/core/qweb";
 import Widget from "@web/legacy/js/core/widget";
+import session from "web.session";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
 QUnit.module('core', {}, function () {
@@ -401,17 +403,18 @@ QUnit.module('core', {}, function () {
 
         var def;
         var parent = new Widget();
-        await testUtils.mock.addMockEnvironment(parent, {
-            session: {
-                rpc: function () {
-                    def = testUtils.makeTestPromise();
-                    def.abort = def.reject;
-                    return def;
-                },
+        patchWithCleanup(session, {
+            rpc: () => {
+                def = testUtils.makeTestPromise();
+                def.abort = def.reject;
+                return def;
             },
-            services: {
-                ajax: AjaxService
-            },
+        });
+        var ajaxService = new AjaxService();
+        testUtils.mock.intercept(parent, 'call_service', function ({ data }) {
+            if (data.service === "ajax" && data.method === "rpc") {
+                data.callback(ajaxService.rpc(...data.args));
+            }
         });
         var widget = new Widget(parent);
 

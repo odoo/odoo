@@ -4242,7 +4242,6 @@ QUnit.module("Fields", (hooks) => {
         };
         const webClient = await createWebClient({
             serverData,
-            legacyParams: { withLegacyMockServer: true },
             mockRPC: function (route, args) {
                 if (args.method === "get_formview_action") {
                     assert.step("get_formview_action");

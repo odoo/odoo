@@ -7,12 +7,7 @@ import Widget from "@web/legacy/js/core/widget";
 var ESCAPE_KEY = $.Event("keyup", { which: 27 });
 
 async function createEmptyParent(debug) {
-    var widget = new Widget();
-
-    await testUtils.mock.addMockEnvironment(widget, {
-        debug: debug || false,
-    });
-    return widget;
+    return new Widget();
 }
 
 QUnit.module('core', {}, function () {

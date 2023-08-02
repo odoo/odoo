@@ -17,7 +17,6 @@
 
     const makeTestPromise = testUtils.makeTestPromise;
     const nextTick = testUtils.nextTick;
-    const addMockEnvironmentOwl = testUtils.mock.addMockEnvironmentOwl;
 
     const {
         Component,
@@ -426,40 +425,6 @@
             assert.verifySteps(['a', 'b']);
         });
 
-        QUnit.test("sub widget that calls _rpc", async function (assert) {
-            assert.expect(3);
-
-            const MyWidget = Widget.extend({
-                willStart: function () {
-                    return this._rpc({ route: 'some/route', params: { val: 2 } });
-                },
-            });
-            class Parent extends LegacyComponent {
-                constructor() {
-                    super(...arguments);
-                    this.MyWidget = MyWidget;
-                }
-            }
-            Parent.template = xml`
-                <div>
-                    <ComponentAdapter Component="MyWidget"/>
-                </div>`;
-            Parent.components = { ComponentAdapter };
-            const cleanUp = await addMockEnvironmentOwl(Parent, {
-                mockRPC: function (route, args) {
-                    assert.step(`${route} ${args.val}`);
-                    return Promise.resolve();
-                },
-            });
-
-            const target = getFixture();
-            const parent = await mount(Parent, target, { env: owl.Component.env });
-
-            assert.strictEqual(parent.el.innerHTML, '<div></div>');
-            assert.verifySteps(['some/route 2']);
-            cleanUp();
-        });
-
         QUnit.test("sub widget that calls a service", async function (assert) {
             assert.expect(1);
 
@@ -499,34 +464,6 @@
 
             const target = getFixture();
             await mount(Parent, target, { env });
-        });
-
-        QUnit.test("sub widget that requests the session", async function (assert) {
-            assert.expect(1);
-
-            const MyWidget = Widget.extend({
-                start: function () {
-                    assert.strictEqual(this.getSession().key, 'value');
-                },
-            });
-            class Parent extends LegacyComponent {
-                constructor() {
-                    super(...arguments);
-                    this.MyWidget = MyWidget;
-                }
-            }
-            Parent.template = xml`
-                <div>
-                    <ComponentAdapter Component="MyWidget"/>
-                </div>`;
-            Parent.components = { ComponentAdapter };
-            const cleanUp = await addMockEnvironmentOwl(Parent, {
-                session: { key: 'value' },
-            });
-
-            const target = getFixture();
-            await mount(Parent, target, { env: owl.Component.env });
-            cleanUp();
         });
 
         QUnit.test("sub widgets in a t-if/t-else", async function (assert) {
