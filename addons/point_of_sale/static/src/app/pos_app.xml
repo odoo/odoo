@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
+<<<<<<< HEAD:addons/point_of_sale/static/src/app/pos_app.xml
     <t t-name="point_of_sale.Chrome" owl="1">
         <div class="pos" t-att-class="{ 'big-scrollbars': pos.hasBigScrollBars }">
+||||||| parent of 59f6f51fd6f (temp):addons/point_of_sale/static/src/xml/Chrome.xml
+    <t t-name="Chrome" owl="1">
+        <div class="pos" t-att-class="{ 'big-scrollbars': pos.hasBigScrollBars }">
+=======
+    <t t-name="Chrome" owl="1">
+        <div class="pos" t-att-class="{ 'big-scrollbars': pos.globalState.hasBigScrollBars }">
+>>>>>>> 59f6f51fd6f (temp):addons/point_of_sale/static/src/xml/Chrome.xml
             <div class="pos-receipt-print"></div>
             <Navbar />
             <div class="pos-content">
