@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="website_payment.donation.prefilledButtons">
         <div class="s_donation_prefilled_buttons mb-2">
-            <t t-foreach="prefilled_buttons" t-as="prefilled_button_value">
+            <t t-foreach="prefilled_buttons" t-as="prefilled_button_value" t-key="prefilled_button_value_index">
                 <button class="s_donation_btn btn btn-outline-primary btn-lg mb-2 me-1 o_not_editable"
                         type="button"
                         contenteditable="false"
@@ -16,7 +16,7 @@
     </t>
     <t t-name="website_payment.donation.prefilledButtonsDescriptions">
         <div class="s_donation_prefilled_buttons my-4">
-            <t t-foreach="prefilled_buttons" t-as="prefilled_button">
+            <t t-foreach="prefilled_buttons" t-as="prefilled_button" t-key="prefilled_button_value_index">
                 <div class="s_donation_btn_description d-sm-flex align-items-center my-3 o_not_editable o_translate_mode_hidden" contenteditable="false">
                     <button class="s_donation_btn btn btn-outline-primary btn-lg me-3"
                             type="button"

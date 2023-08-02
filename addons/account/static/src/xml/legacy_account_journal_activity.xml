@@ -3,7 +3,7 @@
 <templates>
 
      <t t-name="accountJournalDashboardActivity">
-        <t t-foreach="activities" t-as="activity">
+        <t t-foreach="activities" t-as="activity" t-key="activity_index">
             <div class="row">
                 <div class="col-8 o_mail_activity">
                     <a href="#" t-att-class="(activity.status == 'late' ? 'o_activity_color_overdue ' : ' ') + (activity.activity_category == 'tax_report' ? 'o_open_vat_report' : 'see_activity')" t-att-data-res-id="activity.res_id" t-att-data-id="activity.id" t-att-data-model="activity.res_model">
