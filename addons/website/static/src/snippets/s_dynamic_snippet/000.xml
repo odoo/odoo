@@ -5,9 +5,9 @@
         <t t-set="colClass" t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / chunkSize).toString()"/>
         <t t-set="rowIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/chunkSize)).keys())"/>
         <t t-set="colIndexGenerator" t-value="Array.from(Array(chunkSize).keys())"/>
-        <t t-foreach="rowIndexGenerator" t-as="rowIndex">
+        <t t-foreach="rowIndexGenerator" t-as="rowIndex" t-key="rowIndex_index">
             <div t-attf-class="row my-4 #{extraClasses}">
-                <t t-foreach="colIndexGenerator" t-as="colIndex">
+                <t t-foreach="colIndexGenerator" t-as="colIndex" t-key="colIndex_index">
                     <t t-if="(rowIndex * chunkSize + colIndex) &lt; data.length">
                         <div t-attf-class="#{colClass}">
                             <t t-out="data[rowIndex * chunkSize + colIndex]"/>

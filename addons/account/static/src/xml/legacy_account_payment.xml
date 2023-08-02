@@ -10,7 +10,7 @@
                 </div>
             </t>
             <table style="width:100%;">
-                <t t-foreach="lines" t-as="line">
+                <t t-foreach="lines" t-as="line" t-key="line_index">
                     <tr>
                     <t t-if="outstanding">
                         <td>
