@@ -27,7 +27,7 @@ class MailThread(models.AbstractModel):
         if not portal_enabled:
             return groups
 
-        customer = self._mail_get_partners()[self.id]
+        customer = self._mail_get_partners(introspect_fields=False)[self.id]
         if customer:
             access_token = self._portal_ensure_token()
             local_msg_vals = dict(msg_vals or {})

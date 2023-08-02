@@ -53,7 +53,7 @@ class MailTestFieldType(models.Model):
             self = self.with_context(default_type='first')
         return super(MailTestFieldType, self).create(vals_list)
 
-    def _mail_get_partner_fields(self):
+    def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
 
@@ -69,7 +69,7 @@ class MailTestLang(models.Model):
     customer_id = fields.Many2one('res.partner')
     lang = fields.Char('Lang')
 
-    def _mail_get_partner_fields(self):
+    def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
