@@ -4,14 +4,9 @@ import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 
-import { Many2OneAvatarEmployee } from "@hr/js/m2x_avatar_employee";
 import { dom } from "@web/../tests/legacy/helpers/test_utils";
 
-QUnit.module("M2XAvatarEmployee", {
-    beforeEach() {
-        Many2OneAvatarEmployee.prototype.partnerIds = {};
-    },
-});
+QUnit.module("M2XAvatarEmployee");
 
 QUnit.test("many2one_avatar_employee widget in list view", async function (assert) {
     const pyEnv = await startServer();
