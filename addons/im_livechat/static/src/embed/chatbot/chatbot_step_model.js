@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { DiscussModel } from "@mail/core/common/discuss_model";
 import { assignDefined } from "@mail/utils/common/misc";
 
 /**
@@ -26,7 +27,7 @@ import { assignDefined } from "@mail/utils/common/misc";
  * @property {boolean} [hasAnswer]
  */
 
-export class ChatbotStep {
+export class ChatbotStep extends DiscussModel {
     /** @type {number} */
     id;
     /** @type {StepAnswer[]} */
@@ -44,6 +45,7 @@ export class ChatbotStep {
      * @param {IChatbotStep} data
      */
     constructor(data) {
+        super(data);
         assignDefined(this, data, [
             "answers",
             "id",

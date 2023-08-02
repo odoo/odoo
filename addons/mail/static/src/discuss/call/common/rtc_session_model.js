@@ -1,8 +1,9 @@
 /* @odoo-module */
 
+import { DiscussModel } from "@mail/core/common/discuss_model";
 import { createObjectId } from "@mail/utils/common/misc";
 
-export class RtcSession {
+export class RtcSession extends DiscussModel {
     // Server data
     channelId;
     channelMemberId;

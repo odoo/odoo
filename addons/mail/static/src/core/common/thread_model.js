@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { DiscussModel } from "@mail/core/common/discuss_model";
 import { ScrollPosition } from "@mail/core/common/scroll_position_model";
 import { createObjectId } from "@mail/utils/common/misc";
 
@@ -20,7 +21,7 @@ import { sprintf } from "@web/core/utils/strings";
  * @property {boolean} checked
  */
 
-export class Thread {
+export class Thread extends DiscussModel {
     /** @type {number} */
     id;
     /** @type {string} */
@@ -133,6 +134,7 @@ export class Thread {
     is_editable;
 
     constructor(store, data) {
+        super(store, data);
         Object.assign(this, {
             id: data.id,
             model: data.model,

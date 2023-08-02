@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { DiscussModel } from "@mail/core/common/discuss_model";
 import { createObjectId } from "@mail/utils/common/misc";
 
 /**
@@ -9,7 +10,7 @@ import { createObjectId } from "@mail/utils/common/misc";
  * @property {string} personaObjectId
  * @property {number} threadId
  */
-export class ChannelMember {
+export class ChannelMember extends DiscussModel {
     /** @type {number} */
     id;
     personaObjectId;

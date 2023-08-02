@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { DiscussModel } from "@mail/core/common/discuss_model";
+
 /**
  * @typedef Data
  * @property {string} activity_category
@@ -30,7 +32,7 @@
  * @property {[number, string]} write_uid
  */
 
-export class Activity {
+export class Activity extends DiscussModel {
     /** @type {string} */
     activity_category;
     /** @type {[number, string]} */
@@ -94,6 +96,7 @@ export class Activity {
      * @returns {Activity}
      */
     constructor(store, id) {
+        super(store, id);
         Object.assign(this, {
             id,
             _store: store,

@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { DiscussModel } from "@mail/core/common/discuss_model";
 import { assignDefined } from "@mail/utils/common/misc";
 
 /**
@@ -11,7 +12,7 @@ import { assignDefined } from "@mail/utils/common/misc";
  * @property {number} [welcome_step_index]
  */
 
-export class Chatbot {
+export class Chatbot extends DiscussModel {
     /** @type {string} */
     name;
     /** @type {number} */
@@ -27,6 +28,7 @@ export class Chatbot {
      * @param {IChatbot} data
      */
     constructor(data) {
+        super(data);
         assignDefined(this, data, [
             "name",
             "partnerId",

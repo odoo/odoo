@@ -1,6 +1,8 @@
 /* @odoo-module */
 
-export class MessageReactions {
+import { DiscussModel } from "@mail/core/common/discuss_model";
+
+export class MessageReactions extends DiscussModel {
     /** @type {string} */
     content;
     /** @type {number} */

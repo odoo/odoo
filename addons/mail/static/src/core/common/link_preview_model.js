@@ -1,6 +1,8 @@
 /* @odoo-module */
 
-export class LinkPreview {
+import { DiscussModel } from "@mail/core/common/discuss_model";
+
+export class LinkPreview extends DiscussModel {
     /** @type {number} */
     id;
     /** @type {Object} */
@@ -25,6 +27,7 @@ export class LinkPreview {
      * @returns {LinkPreview}
      */
     constructor(data) {
+        super(data);
         Object.assign(this, data);
     }
 

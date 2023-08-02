@@ -1,6 +1,8 @@
 /* @odoo-module */
 
-export class CannedResponse {
+import { DiscussModel } from "@mail/core/common/discuss_model";
+
+export class CannedResponse extends DiscussModel {
     /** @type {number} */
     id;
     /** @type {string} */

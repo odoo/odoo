@@ -1,8 +1,10 @@
 /* @odoo-module */
 
+import { DiscussModel } from "@mail/core/common/discuss_model";
+
 import { _t } from "@web/core/l10n/translation";
 
-export class Notification {
+export class Notification extends DiscussModel {
     /** @type {number} */
     id;
     /** @type {number} */
@@ -19,6 +21,7 @@ export class Notification {
     _store;
 
     constructor(store, data) {
+        super(store, data);
         Object.assign(this, {
             id: data.id,
             _store: store,

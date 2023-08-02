@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { DiscussModel } from "@mail/core/common/discuss_model";
+
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
  * @typedef Data
@@ -10,7 +12,7 @@
  * @property {ImStatus} im_status
  */
 
-export class Persona {
+export class Persona extends DiscussModel {
     /** @type {string} */
     objectId;
     /** @type {number} */

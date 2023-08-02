@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { DiscussModel } from "@mail/core/common/discuss_model";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { createObjectId } from "@mail/utils/common/misc";
 
@@ -12,7 +13,7 @@ import { url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
 
-export class Message {
+export class Message extends DiscussModel {
     /** @type {Object[]} */
     attachments = [];
     /** @type {import("@mail/core/common/persona_model").Persona} */
