@@ -106,10 +106,7 @@ class ResPartnerBank(models.Model):
         :param structured_communication: Structured communication to add to the payment when generating one with the QR-code
         """
         params = self._get_qr_code_generation_params(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
-        if params:
-            params['type'] = params.pop('barcode_type')
-            return '/report/barcode/?' + werkzeug.urls.url_encode(params)
-        return None
+        return '/report/barcode/?' + werkzeug.urls.url_encode(params) if params else None
 
     def _get_qr_code_base64(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         """ Hook for extension, to support the different QR generation methods.
