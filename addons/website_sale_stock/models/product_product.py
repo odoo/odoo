@@ -21,9 +21,7 @@ class ProductProduct(models.Model):
             # so we check for it
             cart = website and request and hasattr(request, 'website') and website.sale_get_order() or None
             if cart:
-                return sum(
-                    cart._get_common_product_lines(product=self).mapped('product_uom_qty')
-                )
+                return sum(cart._get_common_product_lines(product=self).mapped('product_uom_qty'))
         return 0
 
     def _is_sold_out(self):
