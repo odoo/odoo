@@ -87,7 +87,7 @@ class MailTestRating(models.Model):
             elif not rating.phone_nbr:
                 rating.phone_nbr = False
 
-    def _mail_get_partner_fields(self):
+    def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
     def _phone_get_number_fields(self):
@@ -116,7 +116,7 @@ class MailTestRatingThread(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer')
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
 
-    def _mail_get_partner_fields(self):
+    def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
     def _rating_get_partner(self):
