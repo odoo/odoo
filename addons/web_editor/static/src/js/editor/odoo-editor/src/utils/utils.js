@@ -788,18 +788,28 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
     // A selection spanning multiple nodes and ending at position 0 of a node,
     // like the one resulting from a triple click, is corrected so that it ends
     // at the last position of the previous node instead.
-    const endLeaf = firstLeaf(end);
-    const beforeEnd = endLeaf.previousSibling;
-    if (
+    let endLeaf = firstLeaf(end);
+    let beforeEnd = endLeaf.previousSibling;
+    while (
         correctTripleClick &&
-        !endOffset &&
+        (nodeSize(end) && !endOffset) &&
         (start !== end || startOffset !== endOffset) &&
+<<<<<<< HEAD
         (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleTextNode(beforeEnd) && !isZWS(beforeEnd)))
+||||||| parent of b79cd3e3f621 (temp)
+        (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleStr(beforeEnd)))
+=======
+        (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleStr(beforeEnd)) || !beforeEnd.isContentEditable)
+>>>>>>> b79cd3e3f621 (temp)
     ) {
         const previous = previousLeaf(endLeaf, editable, true);
-        if (previous && closestElement(previous).isContentEditable) {
+        if (previous && !closestElement(previous).classList.contains('visually-hidden') && isVisibleStr(previous)) {
             [end, endOffset] = [previous, nodeSize(previous)];
+        } else if (previous) {
+            [end, endOffset] = [previous, 0];
         }
+        endLeaf = firstLeaf(end);
+        beforeEnd = endLeaf.previousSibling;
     }
 
     if (select) {
