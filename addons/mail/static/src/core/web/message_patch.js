@@ -3,16 +3,17 @@
 import { Message } from "@mail/core/common/message";
 import { markEventHandled } from "@web/core/utils/misc";
 
-import { getCurrency } from "@web/core/currency";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import {
+    formatChar,
+    formatFloat,
+    formatInteger,
+    formatMonetary,
+    formatText,
+} from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-import fieldUtils from "@web/legacy/js/fields/field_utils";
-
-const format = fieldUtils.format
-const formatters = registry.category("formatters");
 
 patch(Message.prototype, {
     setup() {
@@ -62,32 +63,29 @@ patch(Message.prototype, {
             case "char":
             case "many2one":
             case "selection":
-                return format.char(trackingValue.value);
+                return formatChar(trackingValue.value);
             case "date":
                 if (trackingValue.value) {
                     return luxon.DateTime.fromISO(trackingValue.value, { zone: "utc" })
                         .setZone("system")
                         .toLocaleString({ locale: this.userService.lang.replace("_", "-") });
                 }
-                return format.date(trackingValue.value);
+                return formatDate(trackingValue.value);
             case "datetime": {
                 const value = trackingValue.value
                     ? deserializeDateTime(trackingValue.value)
                     : trackingValue.value;
-                return formatters.get("datetime")(value);
+                return formatDateTime(value);
             }
             case "float":
-                return format.float(trackingValue.value);
+                return formatFloat(trackingValue.value);
             case "integer":
-                return format.integer(trackingValue.value);
+                return formatInteger(trackingValue.value);
             case "text":
-                return format.text(trackingValue.value);
+                return formatText(trackingValue.value);
             case "monetary":
-                return format.monetary(trackingValue.value, undefined, {
-                    currency: trackingValue.currencyId
-                        ? getCurrency(trackingValue.currencyId)
-                        : undefined,
-                    forceString: true,
+                return formatMonetary(trackingValue.value, {
+                    currencyId: trackingValue.currencyId,
                 });
             default:
                 return trackingValue.value;
