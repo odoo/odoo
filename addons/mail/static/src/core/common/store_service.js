@@ -9,6 +9,29 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 
 export class Store {
+    /** @type {Object.<number, import("@mail/core/web/activity_model").Activity>} */
+    Activity = {};
+    /** @type {Object.<number, import("@mail/core/common/attachment_model").Attachment>} */
+    Attachment = {};
+    CannedResponse = [];
+    /** @type {Object.<number, import("@mail/core/common/channel_member_model").ChannelMember>} */
+    ChannelMember = {};
+    /** @type {import("@mail/core/common/chat_window_model").ChatWindow[]} */
+    ChatWindow = [];
+    /** @type {Object.<number, import("@mail/core/common/follower_model").Follower>} */
+    Follower = {};
+    /** @type {Object.<number, import("@mail/core/common/message_model").Message>} */
+    Message = {};
+    /** @type {Object.<number, import("@mail/core/common/notification_model").Notification>} */
+    Notification = {};
+    NotificationGroup = [];
+    /** @type {Object.<number, import("@mail/core/common/persona_model").Persona>} */
+    Persona = {};
+    /** @type {Object.<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
+    RtcSession = {};
+    /** @type {Object.<string, import("@mail/core/common/thread_model").Thread>} */
+    Thread = {};
+
     constructor(env) {
         this.setup(env);
         this.lastChannelSubscription = "";
@@ -71,24 +94,11 @@ export class Store {
      */
     inPublicPage = false;
 
-    /** @type {Object.<number, import("@mail/core/common/channel_member_model").ChannelMember>} */
-    ChannelMember = {};
     companyName = "";
-
-    /** @type {Object.<number, import("@mail/core/common/notification_model").Notification>} */
-    Notification = {};
-    NotificationGroup = [];
-
-    /** @type {Object.<number, import("@mail/core/common/follower_model").Follower>} */
-    Follower = {};
 
     /** @type {import("@mail/core/common/persona_model").Persona} */
     odoobot = null;
-    /** @type {Object.<number, import("@mail/core/common/persona_model").Persona>} */
-    Persona = {};
 
-    /** @type {Object.<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
-    RtcSession = {};
     users = {};
     internalUserGroupId = null;
     registeredImStatusPartners = null;
@@ -136,22 +146,8 @@ export class Store {
         /** @type {import("@mail/core/common/thread_model").Thread} */
         history: null,
     };
-    CannedResponse = [];
 
-    /** @type {Object.<number, import("@mail/core/web/activity_model").Activity>} */
-    Activity = {};
     activityCounter = 0;
-    /** @type {Object.<number, import("@mail/core/common/attachment_model").Attachment>} */
-    Attachment = {};
-
-    /** @type {import("@mail/core/common/chat_window_model").ChatWindow[]} */
-    ChatWindow = [];
-
-    /** @type {Object.<number, import("@mail/core/common/message_model").Message>} */
-    Message = {};
-
-    /** @type {Object.<string, import("@mail/core/common/thread_model").Thread>} */
-    Thread = {};
 
     isMessagingReady = false;
 }
