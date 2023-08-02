@@ -1142,17 +1142,8 @@ class MailCommon(common.TransactionCase, MailCase):
             } for idx in range(count)
         ]
 
-        partner_fname = False
-        if 'partner_id' in cls.env[model]:
-            partner_fname = 'partner_id'
-        elif hasattr(cls.env[model], '_mail_get_partner_fields'):
-            partner_fnames = cls.env[model]._mail_get_partner_fields()
-            if partner_fnames:
-                partner_fname = partner_fnames[0]
-        elif 'customer_id' in cls.env[model]:
-            partner_fname = 'customer_id'
-
-        if partner_fname:
+        partner_fnames = cls.env[model]._mail_get_partner_fields(introspect_fields=True)
+        if partner_fname := partner_fnames[0] if partner_fnames else False:
             partners = cls.env['res.partner'].with_context(**cls._test_context).create([{
                 'name': f'Partner_{idx}',
                 'email': f'{prefix}test_partner_{idx}@example.com',

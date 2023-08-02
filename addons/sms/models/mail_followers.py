@@ -14,8 +14,8 @@ class Followers(models.Model):
 
         if pids is None and records:
             records_pids = dict(
-                (record.id, record._sms_get_default_partners().ids)
-                for record in records
+                (rec_id, partners.ids)
+                for rec_id, partners in records._mail_get_partners().items()
             )
         elif pids and records:
             records_pids = dict((record.id, pids) for record in records)

@@ -18,7 +18,7 @@ class IrModel(models.Model):
         for model in self:
             if model.is_mail_thread:
                 ModelObject = self.env[model.model]
-                potential_fields = ModelObject._sms_get_number_fields() + ModelObject._sms_get_partner_fields()
+                potential_fields = ModelObject._phone_get_number_fields() + ModelObject._mail_get_partner_fields()
                 if any(fname in ModelObject._fields for fname in potential_fields):
                     model.is_mail_thread_sms = True
                     continue
@@ -31,7 +31,7 @@ class IrModel(models.Model):
             if model.model not in self.env:
                 continue
             ModelObject = self.env[model.model]
-            potential_fields = ModelObject._sms_get_number_fields() + ModelObject._sms_get_partner_fields()
+            potential_fields = ModelObject._phone_get_number_fields() + ModelObject._mail_get_partner_fields()
             if any(fname in ModelObject._fields for fname in potential_fields):
                 valid_models |= model
 

@@ -21,17 +21,10 @@ class WebsiteForm(form.WebsiteForm):
             return request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1)
         return request.env['res.country']
 
-    def _get_phone_fields_to_validate(self):
-        return ['phone', 'mobile']
-
     # Check and insert values from the form on the model <model> + validation phone fields
     def _handle_website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
-        if model_record and hasattr(request.env[model_name], '_phone_format') or hasattr(request.env[model_name], 'phone_get_sanitized_number'):
-            # filter on either custom _phone_format method, either phone_get_sanitized_number but directly
-            # call phone_format from phone validation herebelow to simplify things as we don't have real
-            # records but a dictionary of value at this point (record.phone_get_sanitized_number would
-            # not work)
+        if model_record:
             try:
                 data = self.extract_data(model_record, request.params)
             except:
@@ -39,7 +32,7 @@ class WebsiteForm(form.WebsiteForm):
                 pass
             else:
                 record = data.get('record', {})
-                phone_fields = self._get_phone_fields_to_validate()
+                phone_fields = request.env[model_name]._phone_get_number_fields()
                 country = request.env['res.country'].browse(record.get('country_id'))
                 contact_country = country if country.exists() else self._get_country()
                 for phone_field in phone_fields:
@@ -76,7 +69,9 @@ class WebsiteForm(form.WebsiteForm):
                 # or if both numbers (after formating) are the same. This way we get additional phone
                 # if possible, without modifying an existing one. (see inverse function on model crm.lead)
                 if values_phone and visitor_partner.phone:
-                    if visitor_partner._phone_format(visitor_partner.phone) == values_phone:
+                    if values_phone == visitor_partner.phone:
+                        values['partner_id'] = visitor_partner.id
+                    elif (visitor_partner._phone_format('phone') or visitor_partner.phone) == values_phone:
                         values['partner_id'] = visitor_partner.id
                 else:
                     values['partner_id'] = visitor_partner.id
