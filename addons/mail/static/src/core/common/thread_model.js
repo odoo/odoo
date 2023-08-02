@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { ScrollPosition } from "@mail/core/common/scroll_position_model";
-import { createLocalId } from "@mail/utils/common/misc";
+import { createObjectId } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -220,7 +220,8 @@ export class Thread {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
                 this.customName ||
-                this._store.personas[createLocalId("partner", this.chatPartnerId)].nameOrDisplayName
+                this._store.personas[createObjectId("Persona", "partner", this.chatPartnerId)]
+                    .nameOrDisplayName
             );
         }
         if (this.type === "group" && !this.name) {
@@ -286,7 +287,7 @@ export class Thread {
     }
 
     get localId() {
-        return createLocalId(this.model, this.id);
+        return createObjectId("Thread", this.model, this.id);
     }
 
     get needactionCounter() {

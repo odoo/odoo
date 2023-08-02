@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Persona } from "@mail/core/common/persona_model";
-import { assignDefined, createLocalId, nullifyClearCommands } from "@mail/utils/common/misc";
+import { assignDefined, createObjectId, nullifyClearCommands } from "@mail/utils/common/misc";
 
 import { registry } from "@web/core/registry";
 
@@ -31,7 +31,7 @@ export class PersonaService {
      * @returns {import("@mail/core/common/persona_model").Persona}
      */
     insert(data) {
-        const localId = createLocalId(data.type, data.id);
+        const localId = createObjectId("Persona", data.type, data.id);
         let persona = this.store.personas[localId];
         if (!persona) {
             persona = new Persona();

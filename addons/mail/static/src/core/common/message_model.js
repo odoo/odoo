@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { createLocalId } from "@mail/utils/common/misc";
+import { createObjectId } from "@mail/utils/common/misc";
 
 import { toRaw } from "@odoo/owl";
 
@@ -168,7 +168,7 @@ export class Message {
     }
 
     get originThread() {
-        return this._store.threads[createLocalId(this.resModel, this.resId)];
+        return this._store.threads[createObjectId("Thread", this.resModel, this.resId)];
     }
 
     get resUrl() {

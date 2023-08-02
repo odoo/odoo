@@ -2,7 +2,7 @@
 
 import { Attachment } from "@mail/core/common/attachment_model";
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
-import { assignDefined, createLocalId } from "@mail/utils/common/misc";
+import { assignDefined, createObjectId } from "@mail/utils/common/misc";
 
 import { registry } from "@web/core/registry";
 
@@ -54,7 +54,11 @@ export class AttachmentService {
                 model: threadData.model,
                 id: threadData.id,
             });
-            attachment.originThreadLocalId = createLocalId(threadData.model, threadData.id);
+            attachment.originThreadLocalId = createObjectId(
+                "Thread",
+                threadData.model,
+                threadData.id
+            );
             const thread = attachment.originThread;
             if (!thread.attachments.includes(attachment)) {
                 thread.attachments.push(attachment);

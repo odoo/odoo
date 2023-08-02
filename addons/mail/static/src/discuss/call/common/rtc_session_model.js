@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { createLocalId } from "@mail/utils/common/misc";
+import { createObjectId } from "@mail/utils/common/misc";
 
 export class RtcSession {
     // Server data
@@ -48,7 +48,7 @@ export class RtcSession {
     }
 
     get channel() {
-        return this._store.threads[createLocalId("discuss.channel", this.channelId)];
+        return this._store.threads[createObjectId("Thread", "discuss.channel", this.channelId)];
     }
 
     get isMute() {

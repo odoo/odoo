@@ -4,7 +4,7 @@ import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
 
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { createLocalId, onChange } from "@mail/utils/common/misc";
+import { createObjectId, onChange } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -109,7 +109,7 @@ patch(ThreadService.prototype, {
     },
 
     insert(data) {
-        const isUnknown = !(createLocalId(data.model, data.id) in this.store.threads);
+        const isUnknown = !(createObjectId("Thread", data.model, data.id) in this.store.threads);
         const thread = super.insert(...arguments);
         if (thread.type === "livechat" && isUnknown) {
             if (

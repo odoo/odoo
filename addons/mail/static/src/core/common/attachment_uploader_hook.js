@@ -5,7 +5,7 @@ import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { createLocalId } from "@mail/utils/common/misc";
+import { createObjectId } from "@mail/utils/common/misc";
 
 function dataUrlToBlob(data, type) {
     const binData = window.atob(data);
@@ -123,7 +123,7 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
         }
         const threadId = parseInt(upload.data.get("thread_id"));
         const threadModel = upload.data.get("thread_model");
-        const originThread = store.threads[createLocalId(threadModel, threadId)];
+        const originThread = store.threads[createObjectId("Thread", threadModel, threadId)];
         const attachment = attachmentService.insert({
             ...response,
             extension: upload.title.split(".").pop(),

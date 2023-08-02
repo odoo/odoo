@@ -12,7 +12,7 @@ import {
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import {
     assignDefined,
-    createLocalId,
+    createObjectId,
     onChange,
     nullifyClearCommands,
 } from "@mail/utils/common/misc";
@@ -354,7 +354,8 @@ export class ThreadService {
         if (ids.length) {
             const previews = await this.orm.call("discuss.channel", "channel_fetch_preview", [ids]);
             for (const preview of previews) {
-                const thread = this.store.threads[createLocalId("discuss.channel", preview.id)];
+                const thread =
+                    this.store.threads[createObjectId("Thread", "discuss.channel", preview.id)];
                 const data = Object.assign(preview.last_message, {
                     body: markup(preview.last_message.body),
                 });
@@ -791,7 +792,7 @@ export class ThreadService {
         if (!("model" in data)) {
             throw new Error("Cannot insert thread: model is missing in data");
         }
-        const localId = createLocalId(data.model, data.id);
+        const localId = createObjectId("Thread", data.model, data.id);
         if (localId in this.store.threads) {
             const thread = this.store.threads[localId];
             this.update(thread, data);

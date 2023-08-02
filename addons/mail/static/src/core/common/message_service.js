@@ -7,7 +7,7 @@ import { NotificationGroup } from "@mail/core/common/notification_group_model";
 import { Notification } from "@mail/core/common/notification_model";
 import { removeFromArrayWithPredicate, replaceArrayWithCompare } from "@mail/utils/common/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
-import { assignDefined, createLocalId } from "@mail/utils/common/misc";
+import { assignDefined, createObjectId } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -104,7 +104,7 @@ export class MessageService {
         const rawMentionedPartnerIds = rawMentions.partnerIds || [];
         const rawMentionedThreadIds = rawMentions.threadIds || [];
         for (const partnerId of rawMentionedPartnerIds) {
-            const partner = this.store.personas[createLocalId("partner", partnerId)];
+            const partner = this.store.personas[createObjectId("Persona", "partner", partnerId)];
             const index = body.indexOf(`@${partner.name}`);
             if (index === -1) {
                 continue;
@@ -112,7 +112,8 @@ export class MessageService {
             partners.push(partner);
         }
         for (const threadId of rawMentionedThreadIds) {
-            const thread = this.store.threads[createLocalId("discuss.channel", threadId)];
+            const thread =
+                this.store.threads[createObjectId("Thread", "discuss.channel", threadId)];
             const index = body.indexOf(`#${thread.displayName}`);
             if (index === -1) {
                 continue;

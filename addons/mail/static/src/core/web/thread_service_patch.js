@@ -3,7 +3,7 @@
 import { Follower } from "@mail/core/common/follower_model";
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { parseEmail } from "@mail/js/utils";
-import { createLocalId } from "@mail/utils/common/misc";
+import { createObjectId } from "@mail/utils/common/misc";
 
 import { markup, toRaw } from "@odoo/owl";
 
@@ -103,7 +103,7 @@ patch(ThreadService.prototype, {
         return result;
     },
     getThread(resModel, resId) {
-        const localId = createLocalId(resModel, resId);
+        const localId = createObjectId("Thread", resModel, resId);
         if (localId in this.store.threads) {
             if (resId === false) {
                 return this.store.threads[localId];

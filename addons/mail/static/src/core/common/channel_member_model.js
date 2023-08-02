@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { createLocalId } from "@mail/utils/common/misc";
+import { createObjectId } from "@mail/utils/common/misc";
 
 /**
  * @class ChannelMember
@@ -31,7 +31,7 @@ export class ChannelMember {
     }
 
     get thread() {
-        return this._store.threads[createLocalId("discuss.channel", this.threadId)];
+        return this._store.threads[createObjectId("Thread", "discuss.channel", this.threadId)];
     }
 
     /**

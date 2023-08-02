@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { createLocalId } from "@mail/utils/common/misc";
+import { createObjectId } from "@mail/utils/common/misc";
 import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -89,7 +89,7 @@ export class DiscussCoreWeb {
         this.busService.subscribe("mail.record/insert", async (payload) => {
             if (payload.Thread) {
                 const data = payload.Thread;
-                const thread = this.store.threads[createLocalId(data.model, data.id)];
+                const thread = this.store.threads[createObjectId("Thread", data.model, data.id)];
                 if (data.serverFoldState && thread && data.serverFoldState !== thread.state) {
                     thread.state = data.serverFoldState;
                     if (thread.state === "closed") {

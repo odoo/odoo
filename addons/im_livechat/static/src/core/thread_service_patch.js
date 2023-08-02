@@ -2,13 +2,13 @@
 
 import { ThreadService } from "@mail/core/common/thread_service";
 import { removeFromArray } from "@mail/utils/common/arrays";
-import { assignDefined, createLocalId } from "@mail/utils/common/misc";
+import { assignDefined, createObjectId } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, {
     insert(data) {
-        const isUnknown = !(createLocalId(data.model, data.id) in this.store.threads);
+        const isUnknown = !(createObjectId("Thread", data.model, data.id) in this.store.threads);
         const thread = super.insert(data);
         if (thread.type === "livechat") {
             if (data?.channel) {

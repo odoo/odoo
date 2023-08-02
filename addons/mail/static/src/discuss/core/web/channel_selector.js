@@ -4,7 +4,7 @@ import { useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useDiscussCoreCommon } from "@mail/discuss/core/common/discuss_core_common_service";
 import { cleanTerm } from "@mail/utils/common/format";
-import { createLocalId } from "@mail/utils/common/misc";
+import { createObjectId } from "@mail/utils/common/misc";
 
 import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 
@@ -234,7 +234,7 @@ export class ChannelSelector extends Component {
     get tagsList() {
         const res = [];
         for (const partnerId of this.state.selectedPartners) {
-            const partner = this.store.personas[createLocalId("partner", partnerId)];
+            const partner = this.store.personas[createObjectId("Persona", "partner", partnerId)];
             res.push({
                 id: partner.id,
                 text: partner.name,

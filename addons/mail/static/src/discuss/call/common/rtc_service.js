@@ -4,7 +4,7 @@ import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
 import { RtcSession } from "@mail/discuss/call/common/rtc_session_model";
 import { removeFromArray } from "@mail/utils/common/arrays";
-import { closeStream, createLocalId, onChange } from "@mail/utils/common/misc";
+import { closeStream, createObjectId, onChange } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
@@ -203,38 +203,46 @@ export class Rtc {
                 session.playAudio();
             }
         });
-        browser.addEventListener("keydown", (ev) => {
-            if (
-                !this.state.channel ||
-                this.userSettingsService.isRegisteringKey ||
-                !this.userSettingsService.usePushToTalk ||
-                !this.userSettingsService.isPushToTalkKey(ev)
-            ) {
-                return;
-            }
-            browser.clearTimeout(this.state.pttReleaseTimeout);
-            if (!this.state.selfSession.isTalking && !this.state.selfSession.isMute) {
-                this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
-            }
-            this.setTalking(true);
-        }, { capture: true });
-        browser.addEventListener("keyup", (ev) => {
-            if (
-                !this.state.channel ||
-                !this.userSettingsService.usePushToTalk ||
-                !this.userSettingsService.isPushToTalkKey(ev, { ignoreModifiers: true }) ||
-                !this.state.selfSession.isTalking
-            ) {
-                return;
-            }
-            if (!this.state.selfSession.isMute) {
-                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
-            }
-            this.state.pttReleaseTimeout = browser.setTimeout(
-                () => this.setTalking(false),
-                this.userSettingsService.voiceActiveDuration || 0
-            );
-        }, { capture: true });
+        browser.addEventListener(
+            "keydown",
+            (ev) => {
+                if (
+                    !this.state.channel ||
+                    this.userSettingsService.isRegisteringKey ||
+                    !this.userSettingsService.usePushToTalk ||
+                    !this.userSettingsService.isPushToTalkKey(ev)
+                ) {
+                    return;
+                }
+                browser.clearTimeout(this.state.pttReleaseTimeout);
+                if (!this.state.selfSession.isTalking && !this.state.selfSession.isMute) {
+                    this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
+                }
+                this.setTalking(true);
+            },
+            { capture: true }
+        );
+        browser.addEventListener(
+            "keyup",
+            (ev) => {
+                if (
+                    !this.state.channel ||
+                    !this.userSettingsService.usePushToTalk ||
+                    !this.userSettingsService.isPushToTalkKey(ev, { ignoreModifiers: true }) ||
+                    !this.state.selfSession.isTalking
+                ) {
+                    return;
+                }
+                if (!this.state.selfSession.isMute) {
+                    this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
+                }
+                this.state.pttReleaseTimeout = browser.setTimeout(
+                    () => this.setTalking(false),
+                    this.userSettingsService.voiceActiveDuration || 0
+                );
+            },
+            { capture: true }
+        );
 
         browser.addEventListener("pagehide", () => {
             if (this.state.channel) {
@@ -1439,8 +1447,9 @@ export class Rtc {
             if (this.state.selfSession && session.id === this.state.selfSession.id) {
                 this.endCall();
             }
-            delete this.store.threads[createLocalId("discuss.channel", session.channelId)]
-                ?.rtcSessions[id];
+            delete this.store.threads[
+                createObjectId("Thread", "discuss.channel", session.channelId)
+            ]?.rtcSessions[id];
             this.disconnect(session);
         }
         delete this.store.rtcSessions[id];
@@ -1505,7 +1514,7 @@ export class Rtc {
     }
 
     updateRtcSessions(channelId, sessionsData, command) {
-        const channel = this.store.threads[createLocalId("discuss.channel", channelId)];
+        const channel = this.store.threads[createObjectId("Thread", "discuss.channel", channelId)];
         if (!channel) {
             return;
         }

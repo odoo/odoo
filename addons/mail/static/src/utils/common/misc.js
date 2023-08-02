@@ -2,7 +2,7 @@
 
 import { reactive } from "@odoo/owl";
 
-export function createLocalId(...args) {
+export function createObjectId(...args) {
     return args.join(",");
 }
 
@@ -38,7 +38,6 @@ export function isDragSourceExternalFile(dataTransfer) {
     }
     return false;
 }
-
 
 /**
  * @param {Object} target
