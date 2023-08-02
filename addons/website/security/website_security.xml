@@ -90,4 +90,26 @@
     </record>
 
     </data>
+
+    <!-- Website Page Controller: exposing arbitrary models -->
+    <record id="website_page_controller_expose" model="res.groups">
+        <field name="name">Public access to arbitrary exposed model</field>
+        <field name="category_id" ref="base.module_category_website_website"/>
+    </record>
+
+    <record id="base.group_public" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('website.website_page_controller_expose'))]"/>
+    </record>
+
+    <record id="base.group_portal" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('website.website_page_controller_expose'))]"/>
+    </record>
+
+    <record id="website_page_controller_rule_public" model="ir.rule">
+        <field name="name">website.controller.page: portal/public: read published pages</field>
+        <field name="model_id" ref="website.model_website_controller_page"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('website.website_page_controller_expose'))]"/>
+    </record>
+
 </odoo>

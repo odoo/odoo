@@ -31,3 +31,15 @@ class TestModel(models.Model):
             'icon': 'fa-check-square-o',
             'order': 'name asc, id desc',
         }
+
+
+class TestModelExposed(models.Model):
+    _name = "test.model.exposed"
+    _inherit = [
+        'website.seo.metadata',
+        'website.published.mixin',
+    ]
+    _description = 'Website Model Test Exposed'
+    _rec_name = "name"
+
+    name = fields.Char()
