@@ -641,7 +641,7 @@ class SaleOrder(models.Model):
             if show_warning:
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
                     order,
-                    current_amount=(order.amount_total * order.currency_rate),
+                    current_amount=(order.amount_total / order.currency_rate),
                 )
 
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
