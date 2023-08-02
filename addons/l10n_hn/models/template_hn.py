@@ -29,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'cta710101',
                 'account_journal_early_pay_discount_loss_account_id': 'cta620202',
                 'account_journal_early_pay_discount_gain_account_id': 'cta420102',
+                'account_sale_tax_id': 'impuestos_plantilla_isv_por_pagar',
+                'account_purchase_tax_id': 'impuestos_plantilla_isv_por_cobrar',
             },
         }

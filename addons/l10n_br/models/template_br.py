@@ -31,5 +31,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'br_3_11_01_09_01_40',
                 'account_journal_early_pay_discount_loss_account_id': 'account_template_31101010202',
                 'account_journal_early_pay_discount_gain_account_id': 'account_template_30101050148',
+                'account_sale_tax_id': 'tax_template_out_icms_interno17',
+                'account_purchase_tax_id': 'tax_template_in_icms_interno17',
             },
         }

@@ -35,6 +35,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'ec_early_pay_discount_gain',
                 'default_cash_difference_income_account_id': 'ec_income_cash_difference',
                 'default_cash_difference_expense_account_id': 'ec_expense_cash_difference',
+                'account_sale_tax_id': 'tax_vat_411_goods',
+                'account_purchase_tax_id': 'tax_vat_510_sup_01',
             },
         }
 

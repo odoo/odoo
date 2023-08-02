@@ -35,5 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'tw_512400',
                 'default_cash_difference_income_account_id': 'tw_718500',
                 'default_cash_difference_expense_account_id': 'tw_718600',
+                'account_sale_tax_id': 'tw_tax_sale_5',
+                'account_purchase_tax_id': 'tw_tax_purchase_5',
             },
         }

@@ -28,5 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'co_puc_530505',
                 'account_journal_early_pay_discount_loss_account_id': 'co_puc_530535',
                 'account_journal_early_pay_discount_gain_account_id': 'co_puc_421040',
+                'account_sale_tax_id': 'l10n_co_tax_8',
+                'account_purchase_tax_id': 'l10n_co_tax_1',
             },
         }

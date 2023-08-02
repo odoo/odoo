@@ -40,5 +40,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_income_account_id': 'l10n_jp_999002',
                 'account_journal_early_pay_discount_loss_account_id': 'l10n_jp_510200',
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_jp_425000',
+                'account_sale_tax_id': 'l10n_jp_tax_sale_exc_10',
+                'account_purchase_tax_id': 'l10n_jp_tax_purchase_exc_10',
             },
         }

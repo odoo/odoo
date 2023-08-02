@@ -21,28 +21,21 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('ca_2023', 'res.company')
     def _get_ca_res_company(self):
-        company = self.env.company
 
-        def get_default_taxes():
-            """ Finds the correct default sale and purchase tax according to the company province """
-            if company.state_id.code == 'BC':
-                return 'gstpst_sale_tax_12_bc', 'gstpst_purchase_tax_12_bc'
-            elif company.state_id.code == 'MB':
-                return 'gstpst_sale_tax_12_mb', 'gstpst_purchase_tax_12_mb'
-            elif company.state_id.code in {'NB', 'NL', 'NS', 'PE'}:
-                return 'hst_sale_tax_15', 'hst_purchase_tax_15'
-            elif company.state_id.code == 'ON':
-                return 'hst_sale_tax_13', 'hst_purchase_tax_13'
-            elif company.state_id.code == 'SK':
-                return 'gstpst_sale_tax_11', 'gstpst_purchase_tax_11'
-            elif company.state_id.code == 'QC':
-                return 'gstqst_sale_tax_14975', 'gstqst_purchase_tax_14975'
-            else:
-                return 'gst_sale_tax_5', 'gst_purchase_tax_5'
+        default_sales_tax, default_purchase_tax = {
+            'BC': ('gstpst_sale_tax_12_bc', 'gstpst_purchase_tax_12_bc'),
+            'MB': ('gstpst_sale_tax_12_mb', 'gstpst_purchase_tax_12_mb'),
+            'QC': ('gstqst_sale_tax_14975', 'gstqst_purchase_tax_14975'),
+            'SK': ('gstpst_sale_tax_11', 'gstpst_purchase_tax_11'),
+            'ON': ('hst_sale_tax_13', 'hst_purchase_tax_13'),
+            'NB': ('hst_sale_tax_15', 'hst_purchase_tax_15'),
+            'NL': ('hst_sale_tax_15', 'hst_purchase_tax_15'),
+            'NS': ('hst_sale_tax_15', 'hst_purchase_tax_15'),
+            'PE': ('hst_sale_tax_15', 'hst_purchase_tax_15'),
+        }.get(self.env.company.state_id.code, ('gst_sale_tax_5', 'gst_purchase_tax_5'))
 
-        default_sales_tax, default_purchase_tax = get_default_taxes()
         return {
-            company.id: {
+            self.env.company.id: {
                 'account_fiscal_country_id': 'base.ca',
                 'bank_account_code_prefix': '11131',
                 'cash_account_code_prefix': '11121',

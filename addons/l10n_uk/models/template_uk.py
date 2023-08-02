@@ -30,5 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': '1104',
                 'income_currency_exchange_account_id': '7700',
                 'expense_currency_exchange_account_id': '7700',
+                'account_sale_tax_id': 'ST11',
+                'account_purchase_tax_id': 'PT11',
             },
         }

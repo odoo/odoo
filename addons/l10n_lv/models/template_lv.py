@@ -35,5 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_payment_credit_account_id': 'a26293',
                 'default_cash_difference_income_account_id': 'a8199',
                 'default_cash_difference_expense_account_id': 'a8299',
+                'account_sale_tax_id': 'tax_sale_vat_21',
+                'account_purchase_tax_id': 'tax_purchase_vat_21',
             },
         }

@@ -26,5 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'a_recv_pos',
                 'income_currency_exchange_account_id': 'a_income_gain',
                 'expense_currency_exchange_account_id': 'a_exp_loss',
+                'account_sale_tax_id': 'tax_output_vat',
+                'account_purchase_tax_id': 'tax_input_vat',
             },
         }

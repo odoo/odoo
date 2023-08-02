@@ -34,5 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'ua_psbp_366',
                 'income_currency_exchange_account_id': 'ua_psbp_711',
                 'expense_currency_exchange_account_id': 'ua_psbp_942',
+                'account_sale_tax_id': 'sale_tax_template_vat20_psbo',
+                'account_purchase_tax_id': 'purchase_tax_template_vat20_psbo',
             },
         }

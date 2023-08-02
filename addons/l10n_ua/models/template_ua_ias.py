@@ -34,5 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'ua_ias_1122',
                 'income_currency_exchange_account_id': 'ua_ias_2100',
                 'expense_currency_exchange_account_id': 'ua_ias_2500',
+                'account_sale_tax_id': 'sale_tax_template_vat20',
+                'account_purchase_tax_id': 'purchase_tax_template_vat20',
             },
         }

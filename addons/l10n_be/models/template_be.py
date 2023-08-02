@@ -30,6 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_suspense_account_id': 'a499',
                 'account_journal_early_pay_discount_loss_account_id': 'a657000',
                 'account_journal_early_pay_discount_gain_account_id': 'a757000',
+                'account_sale_tax_id': 'attn_VAT-OUT-21-L',
+                'account_purchase_tax_id': 'attn_VAT-IN-V81-21',
             },
         }
 

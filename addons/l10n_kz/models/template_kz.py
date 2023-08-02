@@ -30,6 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'kz6291',
                 'default_cash_difference_income_account_id': 'kz6210',
                 'default_cash_difference_expense_account_id': 'kz7410',
+                'account_sale_tax_id': 'l10n_kz_tax_vat_12_sale',
+                'account_purchase_tax_id': 'l10n_kz_tax_vat_12_purchase',
             },
         }
 

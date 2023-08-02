@@ -34,5 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'a3960',
                 'account_journal_early_pay_discount_loss_account_id': 'a9993',
                 'account_journal_early_pay_discount_gain_account_id': 'a9994',
+                'account_sale_tax_id': 'sale_tax_25_goods',
+                'account_purchase_tax_id': 'purchase_tax_25_goods',
             },
         }

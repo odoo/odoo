@@ -34,5 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'dk_coa_3610',
                 'account_journal_early_pay_discount_loss_account_id': 'dk_coa_3790',
                 'account_journal_early_pay_discount_gain_account_id': 'dk_coa_3570',
+                'account_sale_tax_id': 'tax110',
+                'account_purchase_tax_id': 'tax400',
             },
         }

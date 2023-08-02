@@ -37,5 +37,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'chart_at_template_8350',
                 'external_report_layout_id': 'l10n_din5008.external_layout_din5008',
                 'paperformat_id': 'l10n_din5008.paperformat_euro_din',
+                'account_sale_tax_id': 'account_tax_template_sales_20_code022',
+                'account_purchase_tax_id': 'account_tax_template_purchase_20_code060',
             },
         }

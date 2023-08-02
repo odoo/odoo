@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.fields import Command
 from odoo.tests import tagged
 
 
@@ -31,7 +32,13 @@ class TestEdiJson(AccountTestInvoicingCommon):
             "country_id": cls.env.ref("base.in").id,
             "l10n_in_gst_treatment": "regular",
         })
-        cls.product_a.write({"l10n_in_hsn_code": "01111"})
+        sgst_sale_5 = cls.env["account.chart.template"].ref("sgst_sale_5")
+        sgst_purchase_5 = cls.env["account.chart.template"].ref("sgst_purchase_5")
+        cls.product_a.write({
+            "l10n_in_hsn_code": "01111",
+            'taxes_id': sgst_sale_5,
+            'supplier_taxes_id': sgst_purchase_5,
+        })
         cls.product_a2 = cls.env['product.product'].create({
             'name': 'product_a2',
             'uom_id': cls.env.ref('uom.product_uom_unit').id,
@@ -39,8 +46,8 @@ class TestEdiJson(AccountTestInvoicingCommon):
             'standard_price': 1000.0,
             'property_account_income_id': cls.company_data['default_account_revenue'].id,
             'property_account_expense_id': cls.company_data['default_account_expense'].id,
-            'taxes_id': [(6, 0, cls.tax_sale_a.ids)],
-            'supplier_taxes_id': [(6, 0, cls.tax_purchase_a.ids)],
+            'taxes_id': [Command.set(sgst_sale_5.ids)],
+            'supplier_taxes_id': [Command.set(sgst_purchase_5.ids)],
             "l10n_in_hsn_code": "01111",
         })
         cls.product_a_discount = cls.env['product.product'].create({
@@ -50,8 +57,8 @@ class TestEdiJson(AccountTestInvoicingCommon):
             'standard_price': 400.0,
             'property_account_income_id': cls.company_data['default_account_revenue'].id,
             'property_account_expense_id': cls.company_data['default_account_expense'].id,
-            'taxes_id': [(6, 0, cls.tax_sale_a.ids)],
-            'supplier_taxes_id': [(6, 0, cls.tax_purchase_a.ids)],
+            'taxes_id': [Command.set(sgst_sale_5.ids)],
+            'supplier_taxes_id': [Command.set(sgst_purchase_5.ids)],
             "l10n_in_hsn_code": "01111",
         })
         gst_with_cess = cls.env.ref("account.%s_sgst_sale_12" % (cls.company_data["company"].id)
@@ -63,8 +70,8 @@ class TestEdiJson(AccountTestInvoicingCommon):
             "standard_price": 800.0,
             "property_account_income_id": cls.company_data["default_account_revenue"].id,
             "property_account_expense_id": cls.company_data["default_account_expense"].id,
-            "taxes_id": [(6, 0, gst_with_cess.ids)],
-            "supplier_taxes_id": [(6, 0, cls.tax_purchase_a.ids)],
+            "taxes_id": [Command.set(gst_with_cess.ids)],
+            "supplier_taxes_id": [Command.set(sgst_purchase_5.ids)],
             "l10n_in_hsn_code": "02222",
         })
         rounding = cls.env["account.cash.rounding"].create({

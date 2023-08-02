@@ -29,6 +29,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'sa_account_102012',
                 'income_currency_exchange_account_id': 'sa_account_400053',
                 'expense_currency_exchange_account_id': 'sa_account_500011',
+                'account_sale_tax_id': 'sa_sales_tax_15',
+                'account_purchase_tax_id': 'sa_purchase_tax_15',
             },
         }
 

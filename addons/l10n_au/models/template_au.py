@@ -40,5 +40,7 @@ class AccountChartTemplate(models.AbstractModel):
                 # Changing the opening date to the first day of the fiscal year.
                 # This way the opening entries will be set to the 30th of June.
                 'account_opening_date': fields.Date.context_today(self).replace(month=7, day=1),
+                'account_sale_tax_id': 'au_tax_sale_10',
+                'account_purchase_tax_id': 'au_tax_purchase_10_service',
             },
         }
