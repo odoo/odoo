@@ -23,6 +23,7 @@ class View(models.Model):
 
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', 'view_id')
+    controller_page_ids = fields.One2many('website.controller.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
     track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
     visibility = fields.Selection([('', 'All'), ('connected', 'Signed In'), ('restricted_group', 'Restricted Group'), ('password', 'With Password')], default='')

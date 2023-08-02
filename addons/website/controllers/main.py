@@ -380,6 +380,11 @@ class Website(Home):
             ]
         }
 
+    @http.route('/website/save_session_layout_mode', type='json', auth='public', website=True)
+    def save_session_layout_mode(self, layout_mode, view_id):
+        assert layout_mode in ('grid', 'list'), "Invalid layout mode"
+        request.session[f'website_{view_id}_layout_mode'] = layout_mode
+
     @http.route('/website/snippet/filters', type='json', auth='public', website=True)
     def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False):
         dynamic_filter = request.env['website.snippet.filter'].sudo().search(
