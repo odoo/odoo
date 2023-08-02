@@ -11,7 +11,6 @@
 
 import AbstractStorageService from "@web/legacy/js/core/abstract_storage_service";
 import AjaxService from "@web/legacy/js/services/ajax_service";
-import basic_fields from "@web/legacy/js/fields/basic_fields";
 import Bus from "@web/legacy/js/core/bus";
 import config from "@web/legacy/js/services/config";
 import core from "@web/legacy/js/services/core";
@@ -26,7 +25,6 @@ import { assets } from "@web/core/assets";
 
 import { Component } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
-const DebouncedField = basic_fields.DebouncedField;
 
 
 //------------------------------------------------------------------------------
@@ -308,9 +306,6 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
         });
     }
 
-    // make sure the debounce value for input fields is set to 0
-    const initialDebounceValue = DebouncedField.prototype.DEBOUNCE;
-    DebouncedField.prototype.DEBOUNCE = params.fieldDebounce || 0;
     const initialDOMDebounceValue = dom.DEBOUNCE;
     dom.DEBOUNCE = 0;
 
@@ -345,7 +340,6 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
             }
         });
 
-        DebouncedField.prototype.DEBOUNCE = initialDebounceValue;
         dom.DEBOUNCE = initialDOMDebounceValue;
 
         // clear the caches (e.g. data_manager, ModelFieldSelector) at the end

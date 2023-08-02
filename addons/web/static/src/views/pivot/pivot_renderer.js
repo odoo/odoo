@@ -7,7 +7,6 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { formatPercentage } from "@web/views/fields/formatters";
 import { PivotGroupByMenu } from "@web/views/pivot/pivot_group_by_menu";
-import fieldUtils from "@web/legacy/js/fields/field_utils";
 
 import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
 import { download } from "@web/core/network/download";
@@ -41,12 +40,7 @@ export class PivotRenderer extends Component {
             const fieldType = field.type;
             formatType = ["many2one", "reference"].includes(fieldType) ? "integer" : fieldType;
         }
-        //If the formatter is not found on the registry, search on the legacy fieldUtils.format.
-        //This must be removed when all the formatters will be on the registry
-        const formatter = formatters.get(formatType, null) || fieldUtils.format[formatType];
-        if (!formatter) {
-            throw new Error(`${formatType} is not a defined formatter!`);
-        }
+        const formatter = formatters.get(formatType);
         return formatter(cell.value, field);
     }
     /**
