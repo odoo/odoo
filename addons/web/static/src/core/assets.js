@@ -69,9 +69,16 @@ export const _loadCSS = (assets.loadCSS = memoize(function loadCSS(url, retryCou
         linkEl.addEventListener("load", () => resolve(true));
         linkEl.addEventListener("error", async () => {
             if (retryCount < assets.retries.count) {
-                await new Promise(resolve => setTimeout(resolve, assets.retries.delay + assets.retries.extraDelay * retryCount));
+                await new Promise((resolve) =>
+                    setTimeout(
+                        resolve,
+                        assets.retries.delay + assets.retries.extraDelay * retryCount
+                    )
+                );
                 linkEl.remove();
-                loadCSS(url, retryCount + 1).then(resolve).catch(reject);
+                loadCSS(url, retryCount + 1)
+                    .then(resolve)
+                    .catch(reject);
             } else {
                 reject(new AssetsLoadingError(`The loading of ${url} failed`));
             }
@@ -105,8 +112,7 @@ export const _loadXML = (assets.loadXML = function loadXML(xml, app = defaultApp
         throw new Error(doc.querySelector("parsererror").textContent.trim());
     }
 
-    for (const element of doc.querySelectorAll("templates > [t-name][owl]")) {
-        element.removeAttribute("owl");
+    for (const element of doc.querySelectorAll("templates > [t-name]")) {
         const name = element.getAttribute("t-name");
         const previous = templates.querySelector(`[t-name="${name}"]`);
         if (previous) {
