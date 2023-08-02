@@ -142,13 +142,10 @@ class ImLivechatChannel(models.Model):
             if visitor_user and visitor_user.active and operator and visitor_user != operator:  # valid session user (not public)
                 members_to_add.append(Command.create({'partner_id': visitor_user.partner_id.id}))
 
-        if chatbot_script:
-            name = chatbot_script.title
-        else:
-            name = ' '.join([
-                visitor_user.display_name if visitor_user else anonymous_name,
-                operator.livechat_username if operator.livechat_username else operator.name
-            ])
+        name = visitor_user.display_name if visitor_user else anonymous_name
+        country = self.env['res.country'].browse(country_id)
+        if country.name:
+            name = f'{name} ({country.name})'
 
         return {
             'channel_member_ids': members_to_add,

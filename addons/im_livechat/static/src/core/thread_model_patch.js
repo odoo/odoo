@@ -50,21 +50,6 @@ patch(Thread.prototype, "im_livechat", {
         return correspondent;
     },
 
-    get displayName() {
-        if (this.type !== "livechat" || !this.correspondent) {
-            return this._super();
-        }
-        if (!this.correspondent.is_public && this.correspondent.country) {
-            return `${this.getMemberName(this.correspondent)} (${this.correspondent.country.name})`;
-        }
-        if (this.channel?.anonymous_country) {
-            return `${this.getMemberName(this.correspondent)} (${
-                this.channel.anonymous_country.name
-            })`;
-        }
-        return this.getMemberName(this.correspondent);
-    },
-
     get imgUrl() {
         if (this.type !== "livechat") {
             return this._super();

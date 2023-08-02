@@ -23,6 +23,13 @@ patch(Thread.prototype, "im_livechat", {
         return this.newestMessage?.isSelfAuthored;
     },
 
+    get displayName() {
+        if (this.type !== "livechat") {
+            return this._super();
+        }
+        return this.operator.name;
+    },
+
     get imgUrl() {
         if (this.type !== "livechat") {
             return this._super();

@@ -23,6 +23,7 @@ patch(MockServer.prototype, "website_livechat/models/website_visitor", {
             }
             const livechatId = this.pyEnv["discuss.channel"].create({
                 anonymous_name: visitor_name,
+                name: visitor_name,
                 channel_member_ids: membersToAdd,
                 channel_type: "livechat",
                 livechat_operator_id: this.currentPartnerId,

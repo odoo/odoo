@@ -18,7 +18,7 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
         display_name: `Visitor #${visitorId}`,
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: `Visitor #${visitorId}`,
+        name: `Visitor #${visitorId}`,
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -36,7 +36,10 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     );
     assert.containsOnce($, ".o-website_livechat-VisitorBanner .o-mail-ImStatus");
     assert.containsOnce($, ".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
-    assert.containsOnce($, `.o-website_livechat-VisitorBanner span:contains(Visitor #${visitorId})`);
+    assert.containsOnce(
+        $,
+        `.o-website_livechat-VisitorBanner span:contains(Visitor #${visitorId})`
+    );
     assert.containsOnce($, "span:contains(English)");
     assert.containsOnce($, "span>:contains(General website)");
     assert.containsOnce($, "span:contains(Home → Contact)");
@@ -54,7 +57,7 @@ QUnit.test("Livechat with non-logged visitor should show visitor banner", async 
         website_name: "General website",
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #11",
+        name: "Visitor #11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -82,6 +85,7 @@ QUnit.test("Livechat with logged visitor should show visitor banner", async (ass
         website_name: "General website",
     });
     const channelId = pyEnv["discuss.channel"].create({
+        name: "Partner Visitor",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
@@ -100,7 +104,7 @@ QUnit.test("Livechat without visitor should not show visitor banner", async (ass
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Harry" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #11",
+        name: "Visitor #11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],

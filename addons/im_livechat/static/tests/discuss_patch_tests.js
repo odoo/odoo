@@ -13,7 +13,7 @@ QUnit.module("discuss (patch)");
 QUnit.test("No call buttons", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -30,7 +30,7 @@ QUnit.test("No call buttons", async (assert) => {
 QUnit.test("No reaction button", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
         channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
@@ -49,7 +49,7 @@ QUnit.test("No reaction button", async (assert) => {
 QUnit.test("No reply button", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
         channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
@@ -73,7 +73,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
         user_ids: [pyEnv.currentUserId],
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor (Belgium)",
+        name: "Visitor (Belgium)",
         channel_member_ids: [
             [0, 0, { is_pinned: false, partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -109,7 +109,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
 QUnit.test("reaction button should not be present on livechat", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
         channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
@@ -125,7 +125,7 @@ QUnit.test("reaction button should not be present on livechat", async (assert) =
 QUnit.test("invite button should be present on livechat", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -144,7 +144,7 @@ QUnit.test(
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create([
             {
-                anonymous_name: "Visitor 11",
+                name: "Visitor 11",
                 channel_member_ids: [
                     [
                         0,
@@ -160,7 +160,7 @@ QUnit.test(
                 livechat_operator_id: pyEnv.currentPartnerId,
             },
             {
-                anonymous_name: "Visitor 12",
+                name: "Visitor 12",
                 channel_member_ids: [
                     [
                         0,

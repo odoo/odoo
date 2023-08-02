@@ -15,7 +15,7 @@ QUnit.test("Thread name unchanged when inviting new users", async (assert) => {
         user_ids: [userId],
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #20",
+        name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ partner_id: pyEnv.publicPartnerId }),

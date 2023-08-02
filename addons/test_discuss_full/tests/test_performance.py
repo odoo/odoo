@@ -873,7 +873,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'last_interest_dt': self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_livechat_1._channel_last_message_ids()),
                     'message_needaction_counter': 0,
-                    'name': 'test1 Ernest Employee',
+                    'name': 'test1 (India)',
                     'operator_pid': (self.users[0].partner_id.id, 'Ernest Employee'),
                     'rtcSessions': [('insert', [])],
                     'seen_partners_info': [
@@ -955,7 +955,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'last_interest_dt': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_livechat_2._channel_last_message_ids()),
                     'message_needaction_counter': 0,
-                    'name': 'anon 2 Ernest Employee',
+                    'name': 'anon 2 (Belgium)',
                     'operator_pid': (self.users[0].partner_id.id, 'Ernest Employee'),
                     'rtcSessions': [('insert', [])],
                     'seen_partners_info': [

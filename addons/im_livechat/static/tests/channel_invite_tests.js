@@ -15,7 +15,6 @@ QUnit.test("Can invite a partner to a livechat channel", async (assert) => {
         user_ids: [userId],
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 20",
         name: "Visitor 20",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
@@ -49,7 +48,7 @@ QUnit.test("Available operators come first", async (assert) => {
         available_operator_ids: [Command.create({ partner_id: ronId })],
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #1",
+        name: "Visitor #1",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ partner_id: pyEnv.publicPartnerId }),
@@ -78,7 +77,7 @@ QUnit.test("Partners invited most frequently by the current user come first", as
         user_ids: [pyEnv["res.users"].create({ name: "Albert" })],
     });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #1",
+        name: "Visitor #1",
         channel_type: "livechat",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
@@ -87,7 +86,7 @@ QUnit.test("Partners invited most frequently by the current user come first", as
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #2",
+        name: "Visitor #2",
         channel_type: "livechat",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),

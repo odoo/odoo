@@ -82,7 +82,7 @@ class TestImLivechatMessage(HttpCase):
                 'ratingText': record_rating.rating_text,
             },
             'recipients': [],
-            'record_name': "test1 Ernest Employee",
+            'record_name': "test1",
             'res_id': channel_livechat_1.id,
             'scheduledDatetime': False,
             'sms_ids': [],

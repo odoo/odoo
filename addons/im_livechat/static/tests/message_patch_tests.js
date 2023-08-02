@@ -10,6 +10,7 @@ QUnit.test("redirect to author (open profile) in livechat", async (assert) => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
+        name: "Visitor 20",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ partner_id: partnerId }),

@@ -8,6 +8,7 @@ QUnit.test("Public website visitor is typing", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
+        name: "Visitor 20",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],

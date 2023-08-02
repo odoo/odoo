@@ -8,7 +8,7 @@ QUnit.module("messaging menu (patch)");
 QUnit.test('livechats should be in "chat" filter', async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -30,7 +30,7 @@ QUnit.test('livechats should be in "livechat" tab in mobile', async (assert) => 
     patchUiSize({ height: 360, width: 640 });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],

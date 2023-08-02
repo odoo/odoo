@@ -21,7 +21,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({
-            anonymous_name: "Visitor 11",
+            name: "Visitor 11",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: pyEnv.publicPartnerId }],

@@ -77,7 +77,7 @@ class WebsiteVisitor(models.Model):
                 'channel_type': 'livechat',
                 'country_id': country.id,
                 'anonymous_name': visitor_name,
-                'name': ', '.join([visitor_name, operator.livechat_username if operator.livechat_username else operator.name]),
+                'name': visitor_name,
                 'livechat_visitor_id': visitor.id,
                 'livechat_active': True,
             })

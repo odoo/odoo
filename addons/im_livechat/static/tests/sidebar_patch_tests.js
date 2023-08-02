@@ -10,7 +10,7 @@ QUnit.module("discuss sidebar (patch)");
 QUnit.test("Unknown visitor", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -22,29 +22,6 @@ QUnit.test("Unknown visitor", async (assert) => {
     await openDiscuss();
     assert.containsOnce($, ".o-mail-DiscussSidebar .o-mail-DiscussSidebarCategory-livechat");
     assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Visitor 11)");
-});
-
-QUnit.test("Known user with country", async (assert) => {
-    const pyEnv = await startServer();
-    const countryId = pyEnv["res.country"].create({
-        code: "be",
-        name: "Belgium",
-    });
-    const partnerId = pyEnv["res.partner"].create({
-        country_id: countryId,
-        name: "Jean",
-    });
-    pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
-        ],
-        channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Jean (Belgium))");
 });
 
 QUnit.test("Do not show channel when visitor is typing", async (assert) => {
@@ -88,7 +65,7 @@ QUnit.test("Do not show channel when visitor is typing", async (assert) => {
 QUnit.test("Close should update the value on the server", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -121,7 +98,7 @@ QUnit.test("Close should update the value on the server", async (assert) => {
 QUnit.test("Open should update the value on the server", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -154,7 +131,7 @@ QUnit.test("Open should update the value on the server", async (assert) => {
 QUnit.test("Open from the bus", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -189,7 +166,7 @@ QUnit.test("Open from the bus", async (assert) => {
 QUnit.test("Close from the bus", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -224,7 +201,7 @@ QUnit.test("Close from the bus", async (assert) => {
 QUnit.test("Smiley face avatar for an anonymous livechat item", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -245,6 +222,7 @@ QUnit.test("Partner profile picture for livechat item linked to a partner", asyn
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jean" });
     const channelId = pyEnv["discuss.channel"].create({
+        name: "Jean",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
@@ -264,7 +242,7 @@ QUnit.test("Partner profile picture for livechat item linked to a partner", asyn
 QUnit.test("No counter if the category is unfolded and with unread messages", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [
                 0,
@@ -291,7 +269,7 @@ QUnit.test("No counter if the category is unfolded and with unread messages", as
 QUnit.test("No counter if category is folded and without unread messages", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -317,7 +295,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({
-            anonymous_name: "Visitor 11",
+            name: "Visitor 11",
             channel_member_ids: [
                 [
                     0,
@@ -348,7 +326,7 @@ QUnit.test(
 QUnit.test("Close manually by clicking the title", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -375,7 +353,7 @@ QUnit.test("Close manually by clicking the title", async (assert) => {
 QUnit.test("Open manually by clicking the title", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -405,7 +383,7 @@ QUnit.test("Open manually by clicking the title", async (assert) => {
 QUnit.test("Category item should be invisible if the category is closed", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -431,7 +409,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({
-            anonymous_name: "Visitor 11",
+            name: "Visitor 11",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -461,7 +439,7 @@ QUnit.test(
 QUnit.test("Clicking on unpin button unpins the channel", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -484,7 +462,7 @@ QUnit.test("Message unread counter", async (assert) => {
     const partnerId = pyEnv["res.partner"].create({ name: "Harry" });
     const userId = pyEnv["res.users"].create({ name: "Harry", partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
+        name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],

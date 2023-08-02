@@ -52,20 +52,22 @@ patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
         } else {
             membersToAdd.push([0, 0, { partner_id: this.publicPartnerId }]);
         }
-        const membersName = [
-            visitor_user ? visitor_user.display_name : anonymous_name,
-            operator.livechat_username ? operator.livechat_username : operator.name,
-        ];
+        let name = visitor_user ? visitor_user.display_name : anonymous_name;
+        const country = country_id
+            ? this.pyEnv["res.country"].searchRead([["id", "=", country_id]])[0]
+            : false;
+        if (country) {
+            name = `${name} (${country.name})`;
+        }
         return {
             channel_partner_ids: [operator_partner_id],
             channel_member_ids: membersToAdd,
             livechat_active: true,
             livechat_operator_id: operator_partner_id,
             livechat_channel_id: id,
-            anonymous_name: user_id ? false : anonymous_name,
             country_id: country_id,
             channel_type: "livechat",
-            name: membersName.join(" "),
+            name,
         };
     },
     /**
