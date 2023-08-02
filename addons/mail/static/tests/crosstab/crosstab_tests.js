@@ -3,9 +3,9 @@
 import {
     afterNextRender,
     click,
+    contains,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { triggerHotkey, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -190,14 +190,14 @@ QUnit.test("Message delete notification", async (assert) => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    (await waitUntil("[title='Expand']")).click();
-    (await waitUntil("[title='Mark as Todo']")).click();
-    await waitUntil("button:contains(Inbox) .badge");
-    await waitUntil("button:contains(Starred) .badge");
+    (await contains("[title='Expand']")).click();
+    (await contains("[title='Mark as Todo']")).click();
+    await contains("button:contains(Inbox) .badge");
+    await contains("button:contains(Starred) .badge");
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/delete", {
         message_ids: [messageId],
     });
-    await waitUntil(".o-mail-Message", 0);
-    await waitUntil("button:contains(Inbox) .badge", 0);
-    await waitUntil("button:contains(Starred) .badge", 0);
+    await contains(".o-mail-Message", 0);
+    await contains("button:contains(Inbox) .badge", 0);
+    await contains("button:contains(Starred) .badge", 0);
 });

@@ -7,7 +7,7 @@ import {
 } from "@mail/core/common/chat_window_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { start, startServer, click, waitUntil } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("chat window manager");
 
@@ -122,7 +122,7 @@ QUnit.test(
         await click(".o-mail-NotificationItem:contains(channel-C)");
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem:contains(channel-D)");
-        await waitUntil(
+        await contains(
             ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close Chat Window']"
         );
         assert.containsN($, ".o-mail-ChatWindow", 2);

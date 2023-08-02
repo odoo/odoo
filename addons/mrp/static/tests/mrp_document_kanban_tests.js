@@ -7,11 +7,7 @@ import {
     nextTick,
 } from '@web/../tests/helpers/utils';
 import { setupViewRegistries } from "@web/../tests/views/helpers";
-import {
-    start,
-    startServer,
-    waitUntil,
-} from '@mail/../tests/helpers/test_utils';
+import { contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
 
@@ -227,10 +223,10 @@ QUnit.module('MrpDocumentsKanbanView', {
             res_model: "mrp.document",
             views: [[false, "kanban"]],
         });
-        (await waitUntil(".o_kanban_previewer")).click();
-        await waitUntil(".o-FileViewer");
-        (await waitUntil(".o-FileViewer-headerButton .fa-times")).click();
-        await waitUntil(".o-FileViewer", 0);
+        (await contains(".o_kanban_previewer")).click();
+        await contains(".o-FileViewer");
+        (await contains(".o-FileViewer-headerButton .fa-times")).click();
+        await contains(".o-FileViewer", 0);
     });
 });
 
