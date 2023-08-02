@@ -25,7 +25,7 @@ export class ThreadIcon extends Component {
     }
 
     get chatPartner() {
-        return this.store.Persona[
+        return this.store.Persona.records[
             createObjectId("Persona", "partner", this.props.thread.chatPartnerId)
         ];
     }

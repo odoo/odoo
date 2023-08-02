@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 import { createObjectId } from "@mail/utils/common/misc";
 
 export class RtcSession extends DiscussModel {
@@ -45,11 +49,13 @@ export class RtcSession extends DiscussModel {
     logStep;
 
     get channelMember() {
-        return this._store.ChannelMember[this.channelMemberId];
+        return this._store.ChannelMember.records[this.channelMemberId];
     }
 
     get channel() {
-        return this._store.Thread[createObjectId("Thread", "discuss.channel", this.channelId)];
+        return this._store.Thread.records[
+            createObjectId("Thread", "discuss.channel", this.channelId)
+        ];
     }
 
     get isMute() {
@@ -141,3 +147,12 @@ export class RtcSession extends DiscussModel {
         }
     }
 }
+
+export class RtcSessionManager extends DiscussModelManager {
+    /** @type {typeof RtcSession} */
+    class;
+    /** @type {Object.<number, RtcSession>} */
+    records = {};
+}
+
+discussModelRegistry.add("RtcSession", [RtcSession, RtcSessionManager]);

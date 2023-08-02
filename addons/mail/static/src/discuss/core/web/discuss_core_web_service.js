@@ -89,11 +89,12 @@ export class DiscussCoreWeb {
         this.busService.subscribe("mail.record/insert", async (payload) => {
             if (payload.Thread) {
                 const data = payload.Thread;
-                const thread = this.store.Thread[createObjectId("Thread", data.model, data.id)];
+                const thread =
+                    this.store.Thread.records[createObjectId("Thread", data.model, data.id)];
                 if (data.serverFoldState && thread && data.serverFoldState !== thread.state) {
                     thread.state = data.serverFoldState;
                     if (thread.state === "closed") {
-                        const chatWindow = this.store.ChatWindow.find(
+                        const chatWindow = this.store.ChatWindow.records.find(
                             (chatWindow) => chatWindow.threadObjectId === thread.objectId
                         );
                         if (chatWindow) {

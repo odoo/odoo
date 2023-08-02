@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 
 /**
  * @typedef Data
@@ -32,3 +36,12 @@ export class Follower extends DiscussModel {
             : hasWriteAccess;
     }
 }
+
+export class FollowerManager extends DiscussModelManager {
+    /** @type {typeof Follower} */
+    class;
+    /** @type {Object.<number, Follower>} */
+    records = {};
+}
+
+discussModelRegistry.add("Follower", [Follower, FollowerManager]);

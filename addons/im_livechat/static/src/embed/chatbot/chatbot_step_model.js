@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 import { assignDefined } from "@mail/utils/common/misc";
 
 /**
@@ -77,3 +81,12 @@ export class ChatbotStep extends DiscussModel {
         );
     }
 }
+
+export class ChatbotStepManager extends DiscussModelManager {
+    /** @type {typeof ChatbotStep} */
+    class;
+    /** @type {Object.<string, ChatbotStep>} */
+    records = {};
+}
+
+discussModelRegistry.add("ChatbotStep", [ChatbotStep, ChatbotStepManager]);

@@ -35,7 +35,7 @@ export class MailCoreWeb {
                         author: this.store.user,
                     })
                 );
-                this.store.NotificationGroup.sort(
+                this.store.NotificationGroup.records.sort(
                     (n1, n2) => n2.lastMessage.id - n1.lastMessage.id
                 );
             });
@@ -94,7 +94,7 @@ export class MailCoreWeb {
                     // Furthermore, server should not send back all messageIds marked as read
                     // but something like last read messageId or something like that.
                     // (just imagine you mark 1000 messages as read ... )
-                    const message = this.store.Message[messageId];
+                    const message = this.store.Message.records[messageId];
                     if (!message) {
                         continue;
                     }

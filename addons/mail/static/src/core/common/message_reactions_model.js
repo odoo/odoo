@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 
 export class MessageReactions extends DiscussModel {
     /** @type {string} */
@@ -16,6 +20,15 @@ export class MessageReactions extends DiscussModel {
 
     /** @type {import("@mail/core/common/persona_model").Persona[]} */
     get personas() {
-        return this.personaObjectIds.map((objectId) => this._store.Persona[objectId]);
+        return this.personaObjectIds.map((objectId) => this._store.Persona.records[objectId]);
     }
 }
+
+export class MessageReactionsManager extends DiscussModelManager {
+    /** @type {typeof MessageReactions} */
+    class;
+    /** @type {Object.<number, MessageReactions>} */
+    records = {};
+}
+
+discussModelRegistry.add("MessageReactions", [MessageReactions, MessageReactionsManager]);

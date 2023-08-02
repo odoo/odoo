@@ -36,7 +36,7 @@ export class LivechatButton extends Component {
             this.livechatService.available &&
             !this.livechatService.shouldRestoreSession &&
             this.livechatService.state !== SESSION_STATE.CLOSED &&
-            this.store.ChatWindow.length === 0
+            this.store.ChatWindow.records.length === 0
         );
     }
 

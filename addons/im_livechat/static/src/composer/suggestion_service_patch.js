@@ -31,15 +31,17 @@ patch(SuggestionService.prototype, {
     },
 
     searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
-        const cannedResponses = this.store.CannedResponse.filter((cannedResponse) => {
-            return cleanTerm(cannedResponse.name).includes(cleanedSearchTerm);
-        }).map(({ id, name, substitution }) => {
-            return {
-                id,
-                name,
-                substitution: _t(substitution),
-            };
-        });
+        const cannedResponses = this.store.CannedResponse.records
+            .filter((cannedResponse) => {
+                return cleanTerm(cannedResponse.name).includes(cleanedSearchTerm);
+            })
+            .map(({ id, name, substitution }) => {
+                return {
+                    id,
+                    name,
+                    substitution: _t(substitution),
+                };
+            });
         const sortFunc = (c1, c2) => {
             const cleanedName1 = cleanTerm(c1.name);
             const cleanedName2 = cleanTerm(c2.name);

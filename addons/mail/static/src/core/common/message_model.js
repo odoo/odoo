@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { createObjectId } from "@mail/utils/common/misc";
 
@@ -169,7 +173,7 @@ export class Message extends DiscussModel {
     }
 
     get originThread() {
-        return this._store.Thread[createObjectId("Thread", this.resModel, this.resId)];
+        return this._store.Thread.records[createObjectId("Thread", this.resModel, this.resId)];
     }
 
     get resUrl() {
@@ -243,3 +247,12 @@ export class Message extends DiscussModel {
         );
     }
 }
+
+export class MessageManager extends DiscussModelManager {
+    /** @type {typeof Message} */
+    class;
+    /** @type {Object.<number, Message>} */
+    records = {};
+}
+
+discussModelRegistry.add("Message", [Message, MessageManager]);

@@ -5,7 +5,7 @@
         <div class="o-discuss-CallInvitations position-absolute top-0 end-0 d-flex flex-column p-2">
             <t t-if="rtc.ringingThreads">
                 <t t-foreach="rtc.ringingThreads" t-as="threadObjectId" t-key="threadObjectId">
-                    <t t-set="thread" t-value="store.Thread[threadObjectId]"/>
+                    <t t-set="thread" t-value="store.Thread.records[threadObjectId]"/>
                     <CallInvitation t-if="thread" thread="thread"/>
                 </t>
             </t>

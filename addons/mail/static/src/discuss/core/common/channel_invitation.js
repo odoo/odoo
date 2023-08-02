@@ -127,7 +127,7 @@ export class ChannelInvitation extends Component {
                     return _t("Invite");
                 }
                 if (this.state.selectedPartners.length === 1) {
-                    const alreadyChat = Object.values(this.store.Thread).some(
+                    const alreadyChat = Object.values(this.store.Thread.records).some(
                         (thread) => thread.chatPartnerId === this.state.selectedPartners[0].id
                     );
                     if (alreadyChat) {

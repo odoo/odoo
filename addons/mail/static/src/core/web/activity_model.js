@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 
 /**
  * @typedef Data
@@ -101,7 +105,16 @@ export class Activity extends DiscussModel {
             id,
             _store: store,
         });
-        store.Activity[id] = this;
-        return store.Activity[id];
+        store.Activity.records[id] = this;
+        return store.Activity.records[id];
     }
 }
+
+export class ActivityManager extends DiscussModelManager {
+    /** @type {typeof Activity} */
+    class;
+    /** @type {Object.<number, Activity>} */
+    records = {};
+}
+
+discussModelRegistry.add("Activity", [Activity, ActivityManager]);

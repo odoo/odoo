@@ -155,7 +155,9 @@ QUnit.test("Channel member count update after user joined", async (assert) => {
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     const thread =
-        env.services["mail.store"].Thread[createObjectId("Thread", "discuss.channel", channelId)];
+        env.services["mail.store"].Thread.records[
+            createObjectId("Thread", "discuss.channel", channelId)
+        ];
     assert.strictEqual(thread.memberCount, 1);
     await click("[title='Show Member List']");
     await click("[title='Add Users']");
@@ -178,7 +180,9 @@ QUnit.test("Channel member count update after user left", async (assert) => {
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     const thread =
-        env.services["mail.store"].Thread[createObjectId("Thread", "discuss.channel", channelId)];
+        env.services["mail.store"].Thread.records[
+            createObjectId("Thread", "discuss.channel", channelId)
+        ];
     assert.strictEqual(thread.memberCount, 2);
     await env.services.orm.call("discuss.channel", "action_unfollow", [channelId], {
         context: { mockedUserId: userId },

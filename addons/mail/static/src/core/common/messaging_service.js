@@ -123,8 +123,8 @@ export class Messaging {
     async searchPartners(searchStr = "", limit = 10) {
         let partners = [];
         const searchTerm = cleanTerm(searchStr);
-        for (const objectId in this.store.Persona) {
-            const persona = this.store.Persona[objectId];
+        for (const objectId in this.store.Persona.records) {
+            const persona = this.store.Persona.records[objectId];
             if (persona.type !== "partner") {
                 continue;
             }
@@ -160,10 +160,10 @@ export class Messaging {
     }
 
     insertCannedResponse(data) {
-        let cannedResponse = this.store.CannedResponse[data.id];
+        let cannedResponse = this.store.CannedResponse.records[data.id];
         if (!cannedResponse) {
-            this.store.CannedResponse[data.id] = new CannedResponse();
-            cannedResponse = this.store.CannedResponse[data.id];
+            this.store.CannedResponse.records[data.id] = new CannedResponse();
+            cannedResponse = this.store.CannedResponse.records[data.id];
         }
         Object.assign(cannedResponse, {
             id: data.id,

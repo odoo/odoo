@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 
 export class ScrollPosition extends DiscussModel {
     /** @type {number|undefined} */
@@ -22,3 +26,12 @@ export class ScrollPosition extends DiscussModel {
         return this.top !== undefined || this.left !== undefined;
     }
 }
+
+export class ScrollPositionManager extends DiscussModelManager {
+    /** @type {typeof ScrollPosition} */
+    class;
+    /** @type {Object.<number, ScrollPosition>} */
+    records = {};
+}
+
+discussModelRegistry.add("ScrollPosition", [ScrollPosition, ScrollPositionManager]);

@@ -38,7 +38,7 @@ export class ChatWindowService {
     }
 
     openNewMessage() {
-        if (this.store.ChatWindow.some(({ thread }) => !thread)) {
+        if (this.store.ChatWindow.records.some(({ thread }) => !thread)) {
             // New message chat window is already opened.
             return;
         }
@@ -46,18 +46,18 @@ export class ChatWindowService {
     }
 
     closeNewMessage() {
-        const newMessageChatWindow = this.store.ChatWindow.find(({ thread }) => !thread);
+        const newMessageChatWindow = this.store.ChatWindow.records.find(({ thread }) => !thread);
         if (newMessageChatWindow) {
             this.close(newMessageChatWindow);
         }
     }
 
     get visible() {
-        return this.store.ChatWindow.filter((chatWindow) => !chatWindow.hidden);
+        return this.store.ChatWindow.records.filter((chatWindow) => !chatWindow.hidden);
     }
 
     get hidden() {
-        return this.store.ChatWindow.filter((chatWindow) => chatWindow.hidden);
+        return this.store.ChatWindow.records.filter((chatWindow) => chatWindow.hidden);
     }
 
     get maxVisible() {
@@ -80,7 +80,7 @@ export class ChatWindowService {
      * @returns {ChatWindow}
      */
     insert(data = {}) {
-        const chatWindow = this.store.ChatWindow.find(
+        const chatWindow = this.store.ChatWindow.records.find(
             (c) => c.threadObjectId === data.thread?.objectId
         );
         if (!chatWindow) {
@@ -88,28 +88,28 @@ export class ChatWindowService {
             assignDefined(chatWindow, data);
             let index;
             if (!data.replaceNewMessageChatWindow) {
-                if (this.maxVisible <= this.store.ChatWindow.length) {
+                if (this.maxVisible <= this.store.ChatWindow.records.length) {
                     const swaped = this.visible[this.visible.length - 1];
                     index = this.visible.length - 1;
                     this.hide(swaped);
                 } else {
-                    index = this.store.ChatWindow.length;
+                    index = this.store.ChatWindow.records.length;
                 }
             } else {
-                const newMessageChatWindowIndex = this.store.ChatWindow.findIndex(
+                const newMessageChatWindowIndex = this.store.ChatWindow.records.findIndex(
                     (chatWindow) => !chatWindow.thread
                 );
                 index =
                     newMessageChatWindowIndex !== -1
                         ? newMessageChatWindowIndex
-                        : this.store.ChatWindow.length;
+                        : this.store.ChatWindow.records.length;
             }
-            this.store.ChatWindow.splice(
+            this.store.ChatWindow.records.splice(
                 index,
                 data.replaceNewMessageChatWindow ? 1 : 0,
                 chatWindow
             );
-            return this.store.ChatWindow[index]; // return reactive version
+            return this.store.ChatWindow.records[index]; // return reactive version
         }
         assignDefined(chatWindow, data);
         return chatWindow;
@@ -146,21 +146,21 @@ export class ChatWindowService {
     }
 
     close(chatWindow, { escape = false } = {}) {
-        if (this.maxVisible < this.store.ChatWindow.length) {
+        if (this.maxVisible < this.store.ChatWindow.records.length) {
             const swaped = this.hidden[0];
             swaped.hidden = false;
             swaped.folded = false;
         }
-        const index = this.store.ChatWindow.findIndex((c) => c === chatWindow);
+        const index = this.store.ChatWindow.records.findIndex((c) => c === chatWindow);
         if (index > -1) {
-            this.store.ChatWindow.splice(index, 1);
+            this.store.ChatWindow.records.splice(index, 1);
         }
         const thread = chatWindow.thread;
         if (thread) {
             thread.state = "closed";
         }
-        if (escape && this.store.ChatWindow.length > 0) {
-            this.focus(this.store.ChatWindow[index - 1]);
+        if (escape && this.store.ChatWindow.records.length > 0) {
+            this.focus(this.store.ChatWindow.records[index - 1]);
         }
     }
 }

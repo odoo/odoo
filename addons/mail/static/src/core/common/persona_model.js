@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -43,3 +47,12 @@ export class Persona extends DiscussModel {
         return this.email.substring(0, this.email.lastIndexOf("@"));
     }
 }
+
+export class PersonaManager extends DiscussModelManager {
+    /** @type {typeof Persona} */
+    class;
+    /** @type {Object.<number, Persona>} */
+    records = {};
+}
+
+discussModelRegistry.add("Persona", [Persona, PersonaManager]);

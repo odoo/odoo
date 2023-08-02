@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 import { createObjectId } from "@mail/utils/common/misc";
 
 /**
@@ -20,7 +24,7 @@ export class ChannelMember extends DiscussModel {
     _store;
 
     get persona() {
-        return this._store.Persona[this.personaObjectId];
+        return this._store.Persona.records[this.personaObjectId];
     }
 
     set persona(persona) {
@@ -28,11 +32,13 @@ export class ChannelMember extends DiscussModel {
     }
 
     get rtcSession() {
-        return this._store.RtcSession[this.rtcSessionId];
+        return this._store.RtcSession.records[this.rtcSessionId];
     }
 
     get thread() {
-        return this._store.Thread[createObjectId("Thread", "discuss.channel", this.threadId)];
+        return this._store.Thread.records[
+            createObjectId("Thread", "discuss.channel", this.threadId)
+        ];
     }
 
     /**
@@ -42,3 +48,12 @@ export class ChannelMember extends DiscussModel {
         return this.persona.lang_name;
     }
 }
+
+export class ChannelMemberManager extends DiscussModelManager {
+    /** @type {typeof ChannelMember} */
+    class;
+    /** @type {Object.<number, ChannelMember>} */
+    records = {};
+}
+
+discussModelRegistry.add("ChannelMember", [ChannelMember, ChannelMemberManager]);

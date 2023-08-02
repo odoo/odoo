@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 import { ScrollPosition } from "@mail/core/common/scroll_position_model";
 import { createObjectId } from "@mail/utils/common/misc";
 
@@ -141,8 +145,8 @@ export class Thread extends DiscussModel {
             type: data.type,
             _store: store,
         });
-        store.Thread[this.objectId] = this;
-        return store.Thread[this.objectId];
+        store.Thread.records[this.objectId] = this;
+        return store.Thread.records[this.objectId];
     }
 
     get accessRestrictedToGroupText() {
@@ -155,7 +159,7 @@ export class Thread extends DiscussModel {
     }
 
     get activeRtcSession() {
-        return this._store.RtcSession[this.activeRtcSessionId];
+        return this._store.RtcSession.records[this.activeRtcSessionId];
     }
 
     set activeRtcSession(session) {
@@ -222,8 +226,9 @@ export class Thread extends DiscussModel {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
                 this.customName ||
-                this._store.Persona[createObjectId("Persona", "partner", this.chatPartnerId)]
-                    .nameOrDisplayName
+                this._store.Persona.records[
+                    createObjectId("Persona", "partner", this.chatPartnerId)
+                ].nameOrDisplayName
             );
         }
         if (this.type === "group" && !this.name) {
@@ -419,7 +424,7 @@ export class Thread extends DiscussModel {
     }
 
     get rtcInvitingSession() {
-        return this._store.RtcSession[this.invitingRtcSessionId];
+        return this._store.RtcSession.records[this.invitingRtcSessionId];
     }
 
     get hasNeedactionMessages() {
@@ -427,7 +432,9 @@ export class Thread extends DiscussModel {
     }
 
     get videoCount() {
-        return Object.values(this.RtcSession).filter((session) => session.videoStream).length;
+        return Object.values(this._store.RtcSession.records).filter(
+            (session) => session.videoStream
+        ).length;
     }
 
     get lastInterestDateTime() {
@@ -450,6 +457,15 @@ export class Thread extends DiscussModel {
         if (previousMessages.length === 0) {
             return false;
         }
-        return this._store.Message[Math.max(...previousMessages.map((m) => m.id))];
+        return this._store.Message.records[Math.max(...previousMessages.map((m) => m.id))];
     }
 }
+
+export class ThreadManager extends DiscussModelManager {
+    /** @type {typeof Thread} */
+    class;
+    /** @type {Object.<string, Thread>} */
+    records = {};
+}
+
+discussModelRegistry.add("Thread", [Thread, ThreadManager]);

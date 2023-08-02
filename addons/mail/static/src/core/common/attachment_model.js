@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 import { assignDefined } from "@mail/utils/common/misc";
 
 import { url } from "@web/core/utils/urls";
@@ -28,7 +32,7 @@ export class Attachment extends DiscussModel {
 
     /** @type {import("@mail/core/common/thread_model").Thread} */
     get originThread() {
-        return this._store.Thread[this.originThreadObjectId];
+        return this._store.Thread.records[this.originThreadObjectId];
     }
 
     get isDeletable() {
@@ -140,3 +144,12 @@ export class Attachment extends DiscussModel {
         );
     }
 }
+
+export class AttachmentManager extends DiscussModelManager {
+    /** @type {typeof Attachment} */
+    class;
+    /** @type {Object.<number, Attachment>} */
+    records = {};
+}
+
+discussModelRegistry.add("Attachment", [Attachment, AttachmentManager]);

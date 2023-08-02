@@ -36,14 +36,14 @@ export class MailCoreCommon {
                 if (messageData) {
                     this.messageService.insert({ ...messageData });
                 }
-                const attachment = this.store.Attachment[attachmentId];
+                const attachment = this.store.Attachment.records[attachmentId];
                 if (attachment) {
                     this.attachmentService.remove(attachment);
                 }
             });
             this.busService.subscribe("mail.link.preview/delete", (payload) => {
                 const { id, message_id } = payload;
-                const message = this.store.Message[message_id];
+                const message = this.store.Message.records[message_id];
                 if (message) {
                     removeFromArrayWithPredicate(
                         message.linkPreviews,
@@ -53,11 +53,11 @@ export class MailCoreCommon {
             });
             this.busService.subscribe("mail.message/delete", (payload) => {
                 for (const messageId of payload.message_ids) {
-                    const message = this.store.Message[messageId];
+                    const message = this.store.Message.records[messageId];
                     if (!message) {
                         continue;
                     }
-                    delete this.store.Message[messageId];
+                    delete this.store.Message.records[messageId];
                     if (message.originThread) {
                         removeFromArrayWithPredicate(
                             message.originThread.messages,
@@ -109,14 +109,14 @@ export class MailCoreCommon {
                 const { LinkPreview: linkPreviews } = payload;
                 if (linkPreviews) {
                     for (const linkPreview of linkPreviews) {
-                        this.store.Message[linkPreview.message.id]?.linkPreviews.push(
+                        this.store.Message.records[linkPreview.message.id]?.linkPreviews.push(
                             new LinkPreview(linkPreview)
                         );
                     }
                 }
                 const { Message: messageData } = payload;
                 if (messageData) {
-                    const isStarred = this.store.Message[messageData.id]?.isStarred;
+                    const isStarred = this.store.Message.records[messageData.id]?.isStarred;
                     const message = this.messageService.insert({
                         ...messageData,
                         body: messageData.body ? markup(messageData.body) : messageData.body,

@@ -31,12 +31,12 @@
                 <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true"/>
             </div>
             <t t-foreach="filteredThreads(category)" t-as="threadObjectId" t-key="threadObjectId" t-call="mail.DiscussSidebarChannel">
-                <t t-set="thread" t-value="store.Thread[threadObjectId]"/>
+                <t t-set="thread" t-value="store.Thread.records[threadObjectId]"/>
             </t>
         </t>
         <t t-elif="category.threads.includes(store.discuss.threadObjectId)" t-call="mail.DiscussSidebarChannel">
             <t t-set="threadObjectId" t-value="store.discuss.threadObjectId"/>
-            <t t-set="thread" t-value="store.Thread[threadObjectId]"/>
+            <t t-set="thread" t-value="store.Thread.records[threadObjectId]"/>
         </t>
     </t>
 

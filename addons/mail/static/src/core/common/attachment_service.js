@@ -18,10 +18,10 @@ export class AttachmentService {
         if (!("id" in data)) {
             throw new Error("Cannot insert attachment: id is missing in data");
         }
-        let attachment = this.store.Attachment[data.id];
+        let attachment = this.store.Attachment.records[data.id];
         if (!attachment) {
-            this.store.Attachment[data.id] = new Attachment();
-            attachment = this.store.Attachment[data.id];
+            this.store.Attachment.records[data.id] = new Attachment();
+            attachment = this.store.Attachment.records[data.id];
             Object.assign(attachment, { _store: this.store, id: data.id });
         }
         this.update(attachment, data);
@@ -73,14 +73,14 @@ export class AttachmentService {
      * @param {Attachment} attachment
      */
     remove(attachment) {
-        delete this.store.Attachment[attachment.id];
+        delete this.store.Attachment.records[attachment.id];
         if (attachment.originThread) {
             removeFromArrayWithPredicate(
                 attachment.originThread.attachments,
                 ({ id }) => id === attachment.id
             );
         }
-        for (const message of Object.values(this.store.Message)) {
+        for (const message of Object.values(this.store.Message.records)) {
             removeFromArrayWithPredicate(message.attachments, ({ id }) => id === attachment.id);
             if (message.composer) {
                 removeFromArrayWithPredicate(
@@ -89,7 +89,7 @@ export class AttachmentService {
                 );
             }
         }
-        for (const thread of Object.values(this.store.Thread)) {
+        for (const thread of Object.values(this.store.Thread.records)) {
             removeFromArrayWithPredicate(
                 thread.composer.attachments,
                 ({ id }) => id === attachment.id

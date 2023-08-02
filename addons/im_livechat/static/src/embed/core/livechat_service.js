@@ -206,7 +206,7 @@ export class LivechatService {
      * @returns {import("@mail/core/common/thread_model").Thread|undefined}
      */
     get thread() {
-        return Object.values(this.store.Thread).find(({ type }) => type === "livechat");
+        return Object.values(this.store.Thread.records).find(({ type }) => type === "livechat");
     }
 
     get visitorUid() {

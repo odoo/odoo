@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 
 export class LinkPreview extends DiscussModel {
     /** @type {number} */
@@ -47,3 +51,12 @@ export class LinkPreview extends DiscussModel {
         return !this.isImage && !this.isVideo;
     }
 }
+
+export class LinkPreviewManager extends DiscussModelManager {
+    /** @type {typeof LinkPreview} */
+    class;
+    /** @type {Object.<number, LinkPreview>} */
+    records = {};
+}
+
+discussModelRegistry.add("LinkPreview", [LinkPreview, LinkPreviewManager]);

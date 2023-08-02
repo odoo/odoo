@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -24,10 +28,10 @@ export class NotificationGroup extends DiscussModel {
     constructor(store) {
         super(store);
         this._store = store;
-        this._store.NotificationGroup.push(this);
+        this._store.NotificationGroup.records.push(this);
         this.id = nextId++;
         // return reactive
-        return store.NotificationGroup.find((group) => group === this);
+        return store.NotificationGroup.records.find((group) => group === this);
     }
 
     get iconSrc() {
@@ -39,10 +43,19 @@ export class NotificationGroup extends DiscussModel {
     }
 
     get lastMessage() {
-        return this._store.Message[this.lastMessageId];
+        return this._store.Message.records[this.lastMessageId];
     }
 
     get datetime() {
         return this.lastMessage?.datetime;
     }
 }
+
+export class NotificationGroupManager extends DiscussModelManager {
+    /** @type {typeof NotificationGroup} */
+    class;
+    /** @type {NotificationGroup[]} */
+    records = [];
+}
+
+discussModelRegistry.add("NotificationGroup", [NotificationGroup, NotificationGroupManager]);

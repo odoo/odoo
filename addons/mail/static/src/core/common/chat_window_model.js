@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -30,7 +34,7 @@ export class ChatWindow extends DiscussModel {
     }
 
     get thread() {
-        return this._store.Thread[this.threadObjectId];
+        return this._store.Thread.records[this.threadObjectId];
     }
 
     set thread(thread) {
@@ -45,3 +49,12 @@ export class ChatWindow extends DiscussModel {
         return !this.folded && !this.hidden;
     }
 }
+
+export class ChatWindowManager extends DiscussModelManager {
+    /** @type {typeof ChatWindow} */
+    class;
+    /** @type {ChatWindow[]} */
+    records = [];
+}
+
+discussModelRegistry.add("ChatWindow", [ChatWindow, ChatWindowManager]);

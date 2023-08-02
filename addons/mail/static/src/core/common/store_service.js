@@ -7,30 +7,33 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
+import { DiscussModel, DiscussModelManager, discussModelRegistry } from "./discuss_model";
 
 export class Store {
-    /** @type {Object.<number, import("@mail/core/web/activity_model").Activity>} */
-    Activity = {};
-    /** @type {Object.<number, import("@mail/core/common/attachment_model").Attachment>} */
-    Attachment = {};
-    CannedResponse = [];
-    /** @type {Object.<number, import("@mail/core/common/channel_member_model").ChannelMember>} */
-    ChannelMember = {};
-    /** @type {import("@mail/core/common/chat_window_model").ChatWindow[]} */
-    ChatWindow = [];
-    /** @type {Object.<number, import("@mail/core/common/follower_model").Follower>} */
-    Follower = {};
-    /** @type {Object.<number, import("@mail/core/common/message_model").Message>} */
-    Message = {};
-    /** @type {Object.<number, import("@mail/core/common/notification_model").Notification>} */
-    Notification = {};
-    NotificationGroup = [];
-    /** @type {Object.<number, import("@mail/core/common/persona_model").Persona>} */
-    Persona = {};
-    /** @type {Object.<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
-    RtcSession = {};
-    /** @type {Object.<string, import("@mail/core/common/thread_model").Thread>} */
-    Thread = {};
+    /** @type {import("@mail/core/web/activity_model").ActivityManager} */
+    Activity;
+    /** @type {import("@mail/core/common/attachment_model").AttachmentManager} */
+    Attachment;
+    /** @type {import("@mail/core/common/canned_response_model").CannedResponseManager} */
+    CannedResponse;
+    /** @type {import("@mail/core/common/channel_member_model").ChannelMemberManager} */
+    ChannelMember;
+    /** @type {import("@mail/core/common/chat_window_model").ChatWindowManager} */
+    ChatWindow;
+    /** @type {import("@mail/core/common/follower_model").FollowerManager} */
+    Follower;
+    /** @type {import("@mail/core/common/message_model").MessageManager} */
+    Message;
+    /** @type {import("@mail/core/common/notification_model").NotificationManager} */
+    Notification;
+    /** @type {import("@mail/core/common/notification_group_model").NotificationGroupManager} */
+    NotificationGroup;
+    /** @type {import("@mail/core/common/persona_model").PersonaManager} */
+    Persona;
+    /** @type {import("@mail/discuss/call/common/rtc_session_model").RtcSessionManager} */
+    RtcSession;
+    /** @type {import("@mail/core/common/thread_model").ThreadManager} */
+    Thread;
 
     constructor(env) {
         this.setup(env);
@@ -45,9 +48,9 @@ export class Store {
 
     updateBusSubscription() {
         const channelIds = [];
-        const ids = Object.keys(this.threads).sort(); // Ensure channels processed in same order.
+        const ids = Object.keys(this.Thread.records).sort(); // Ensure channels processed in same order.
         for (const id of ids) {
-            const thread = this.threads[id];
+            const thread = this.Thread.records[id];
             if (thread.model === "discuss.channel" && thread.hasSelfAsMember) {
                 channelIds.push(id);
             }
@@ -156,12 +159,30 @@ export const storeService = {
     dependencies: ["bus_service", "ui"],
     start(env, services) {
         const res = reactive(new Store(env, services));
-        onChange(res, "threads", () => res.updateBusSubscription());
+        for (const [Model, ModelManager] of discussModelRegistry.getAll()) {
+            if (!(Model.prototype instanceof DiscussModel)) {
+                throw new Error("1st parameter of `discussModelRegistry` must be a `DiscussModel`");
+            }
+            if (!(ModelManager.prototype instanceof DiscussModelManager)) {
+                throw new Error(
+                    "2nd parameter of `discussModelRegistry` must be a `DiscussModelManager`"
+                );
+            }
+            if (res[Model.name]) {
+                throw new Error(
+                    `There must be no duplicated Discuss Model Names (duplicate found: ${Model.name})`
+                );
+            }
+            ModelManager.class = Model;
+            res[Model.name] = new ModelManager(res);
+        }
+        onChange(res.Thread, "records", () => res.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             if (!services.ui.isSmall) {
                 res.discuss.activeTab = "all";
             } else {
-                res.discuss.activeTab = res.threads[res.discuss.threadObjectId]?.type ?? "all";
+                res.discuss.activeTab =
+                    res.Thread.records[res.discuss.threadObjectId]?.type ?? "all";
             }
         });
         return res;

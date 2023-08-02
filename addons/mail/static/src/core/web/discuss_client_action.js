@@ -46,7 +46,7 @@ export class DiscussClientAction extends Component {
         const rawActiveId =
             props.action.context.active_id ??
             props.action.params?.active_id ??
-            this.store.discuss.threadObjectId?.replace(",", "_") ??
+            this.store.discuss.threadObjectId?.split(",").slice(1).join(",").replace(",", "_") ??
             "mail.box_inbox";
         const activeId =
             typeof rawActiveId === "number" ? `discuss.channel_${rawActiveId}` : rawActiveId;
@@ -58,7 +58,7 @@ export class DiscussClientAction extends Component {
         const activeThreadObjectId = createObjectId("Thread", model, id);
         if (activeThreadObjectId !== this.store.discuss.threadObjectId) {
             const thread =
-                this.store.Thread[createObjectId("Thread", model, id)] ??
+                this.store.Thread.records[createObjectId("Thread", model, id)] ??
                 (await this.threadService.fetchChannel(parseInt(id)));
             if (!thread.is_pinned) {
                 await this.threadService.pin(thread);

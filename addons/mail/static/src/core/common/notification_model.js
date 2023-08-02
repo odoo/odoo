@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { DiscussModel } from "@mail/core/common/discuss_model";
+import {
+    DiscussModel,
+    DiscussModelManager,
+    discussModelRegistry,
+} from "@mail/core/common/discuss_model";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -29,7 +33,7 @@ export class Notification extends DiscussModel {
     }
 
     get message() {
-        return this._store.Message[this.messageId];
+        return this._store.Message.records[this.messageId];
     }
 
     get isFailure() {
@@ -79,3 +83,12 @@ export class Notification extends DiscussModel {
         return "";
     }
 }
+
+export class NotificationManager extends DiscussModelManager {
+    /** @type {typeof NotificationGroup} */
+    class;
+    /** @type {Object.<number, Notification>} */
+    records = {};
+}
+
+discussModelRegistry.add("Notification", [Notification, NotificationManager]);
