@@ -75,8 +75,6 @@
             'web/static/src/env.js',
 
             'web/static/lib/jquery.scrollTo/jquery.scrollTo.js',
-            'web/static/lib/py.js/lib/py.js',
-            'web/static/lib/py.js/lib/py_extras.js',
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
 
             'web/static/src/legacy/scss/fields.scss',
@@ -97,9 +95,6 @@
             'web/static/src/legacy/root_widget.js',
             'web/static/src/legacy/backend_utils.js',
             'web/static/src/legacy/utils.js',
-            'web/static/src/legacy/js/core/domain.js',
-            'web/static/src/legacy/js/core/py_utils.js',
-            'web/static/src/legacy/js/core/context.js',
             'web/static/src/legacy/js/core/dates.js',
             'web/static/src/legacy/js/core/misc.js',
             'web/static/src/legacy/js/services/session.js',

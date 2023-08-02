@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
+import { Domain } from "@web/core/domain";
 import { unique } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
 import Class from "@web/legacy/js/core/class";
-import Domain from "@web/legacy/js/core/domain";
-import pyUtils from "@web/legacy/js/core/py_utils";
+import { evaluateExpr } from "@web/core/py_js/py";
 import {
     parseDateTime,
     serializeDate,
@@ -277,7 +277,7 @@ var MockServer = Class.extend({
      * @returns {boolean}
      */
     _evaluateDomain: function (domain, fieldValues) {
-        return new Domain(domain).compute(fieldValues);
+        return new Domain(domain).contains(fieldValues);
     },
     /**
      * helper: read a string describing an arch, and returns a simulated
@@ -367,7 +367,7 @@ var MockServer = Class.extend({
             // 'transfer_node_to_modifiers' simulation
             var attrs = node.getAttribute('attrs');
             if (attrs) {
-                attrs = pyUtils.py_eval(attrs);
+                attrs = evaluateExpr(attrs);
                 Object.assign(modifiers, attrs);
             }
 
@@ -383,8 +383,7 @@ var MockServer = Class.extend({
             modifiersNames.forEach((a) => {
                 var mod = node.getAttribute(a);
                 if (mod) {
-                    var pyevalContext = window.py.dict.fromJSON(context || {});
-                    var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true: false;
+                    var v = evaluateExpr(mod, context || {}) ? true: false;
                     if (inTreeView && !inListHeader && a === 'invisible') {
                         modifiers.column_invisible = v;
                     } else if (v || !(a in modifiers) || !Array.isArray(modifiers[a])) {

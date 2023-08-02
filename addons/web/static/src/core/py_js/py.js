@@ -16,8 +16,8 @@ export { formatAST } from "./py_utils";
 
 /**
  * Parses an expression into a valid AST representation
- 
- * @param {string} expr 
+
+ * @param {string} expr
  * @returns { AST }
  */
 export function parseExpr(expr) {
