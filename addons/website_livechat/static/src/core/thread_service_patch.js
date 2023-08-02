@@ -4,9 +4,9 @@ import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { ThreadService } from "@mail/core/common/thread_service";
 import { patch } from "@web/core/utils/patch";
 
-patch(ThreadService.prototype, "website_livechat", {
+patch(ThreadService.prototype, {
     update(thread, data) {
-        this._super(thread, data);
+        super.update(thread, data);
         if (data?.visitor) {
             thread.visitor = this.personaService.insert({
                 ...data.visitor,
@@ -26,6 +26,6 @@ patch(ThreadService.prototype, "website_livechat", {
                   )}/avatar_128`
                 : DEFAULT_AVATAR;
         }
-        return this._super(persona, thread);
+        return super.avatarUrl(persona, thread);
     },
 });

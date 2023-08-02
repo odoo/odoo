@@ -89,7 +89,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         patchWithCleanup(DropdownItem.prototype, {
             onClick(ev) {
                 assert.ok(!ev.defaultPrevented);
-                this._super(...arguments);
+                super.onClick(...arguments);
                 const href = ev.target.getAttribute("href");
                 // defaultPrevented only if props.href is defined
                 assert.ok(href !== null ? ev.defaultPrevented : !ev.defaultPrevented);
@@ -184,7 +184,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         patchWithCleanup(Dropdown.prototype, {
             close() {
                 assert.step("dropdown will close");
-                this._super();
+                super.close();
             },
         });
         class Parent extends Component {
@@ -994,7 +994,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.expect(9);
         patchWithCleanup(Dropdown.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 const isSubmenu = Boolean(this.parentDropdown);
                 if (isSubmenu) {
                     onMounted(() => {
@@ -1123,7 +1123,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         let hotkeyRegistrationsCount = 0;
         patchWithCleanup(env.services.hotkey, {
             add() {
-                const remove = this._super(...arguments);
+                const remove = super.add(...arguments);
                 hotkeyRegistrationsCount += 1;
                 return () => {
                     remove();

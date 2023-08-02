@@ -3,16 +3,16 @@
 import { PaymentStripe } from "@pos_stripe/app/payment_stripe";
 import { patch } from "@web/core/utils/patch";
 
-patch(PaymentStripe.prototype, "pos_restaurant_stripe.PaymentStripe", {
-    captureAfterPayment: async function (processPayment, line) {
+patch(PaymentStripe.prototype, {
+    async captureAfterPayment(processPayment, line) {
         // Don't capture if the customer can tip, in that case we
         // will capture later.
         if (!this.canBeAdjusted(line.cid)) {
-            return this._super(...arguments);
+            return super.captureAfterPayment(...arguments);
         }
     },
 
-    canBeAdjusted: function (cid) {
+    canBeAdjusted(cid) {
         var order = this.pos.get_order();
         var line = order.get_paymentline(cid);
         return (

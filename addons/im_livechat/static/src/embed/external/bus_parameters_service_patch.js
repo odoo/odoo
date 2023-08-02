@@ -6,10 +6,10 @@ import { serverUrl } from "@im_livechat/embed/livechat_data";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(busParametersService, "im_livechat", {
+patch(busParametersService, {
     start() {
         return {
-            ...this._super(...arguments),
+            ...super.start(...arguments),
             serverURL: serverUrl.replace(/\/+$/, ""),
         };
     },

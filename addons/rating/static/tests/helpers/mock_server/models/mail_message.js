@@ -5,12 +5,12 @@ import '@mail/../tests/helpers/mock_server/models/mail_message'; // ensure mail 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, 'rating/models/mail_message', {
+patch(MockServer.prototype, {
     /**
      * @override
      */
     _mockMailMessageMessageFormat(ids) {
-        const formattedMessages = this._super(...arguments);
+        const formattedMessages = super._mockMailMessageMessageFormat(...arguments);
         for (const formattedMessage of formattedMessages) {
             const [rating] = this.getRecords('rating.rating', [
                 ['message_id', '=', formattedMessage.id],

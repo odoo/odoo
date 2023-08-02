@@ -4,9 +4,9 @@ import { ChatWindow } from "@mail/core/common/chat_window";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(ChatWindow.prototype, "im_livechat", {
+patch(ChatWindow.prototype, {
     close(options) {
-        this._super(options);
+        super.close(options);
         if (
             this.thread?.type === "livechat" &&
             this.thread.isLoaded &&

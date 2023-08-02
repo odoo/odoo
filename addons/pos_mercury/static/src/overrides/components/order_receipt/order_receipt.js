@@ -3,7 +3,7 @@
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/receipt";
 import { patch } from "@web/core/utils/patch";
 
-patch(OrderReceipt.prototype, "pos_mercury.OrderReceipt", {
+patch(OrderReceipt.prototype, {
     /**
      * The receipt has signature if one of the paymentlines
      * is paid with mercury.

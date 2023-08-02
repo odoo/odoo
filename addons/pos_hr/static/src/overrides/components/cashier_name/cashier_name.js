@@ -4,9 +4,9 @@ import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name
 import { patch } from "@web/core/utils/patch";
 import { useCashierSelector } from "@pos_hr/app/select_cashier_mixin";
 
-patch(CashierName.prototype, "pos_hr.CashierName", {
+patch(CashierName.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.selectCashier = useCashierSelector();
     },
     //@Override
@@ -15,13 +15,13 @@ patch(CashierName.prototype, "pos_hr.CashierName", {
             const cashier = this.pos.get_cashier();
             return `/web/image/hr.employee/${cashier.id}/avatar_128`;
         }
-        return this._super(...arguments);
+        return super.avatar;
     },
     //@Override
     get cssClass() {
         if (this.pos.config.module_pos_hr) {
             return { oe_status: true };
         }
-        return this._super(...arguments);
+        return super.cssClass;
     },
 });

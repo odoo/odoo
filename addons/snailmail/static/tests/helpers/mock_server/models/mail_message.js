@@ -5,7 +5,7 @@ import '@mail/../tests/helpers/mock_server/models/mail_message'; // ensure mail 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, 'snailmail/models/mail_message', {
+patch(MockServer.prototype, {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ patch(MockServer.prototype, 'snailmail/models/mail_message', {
             // random value returned in order for the mock server to know that this route is implemented.
             return true;
         }
-        return this._super(...arguments);
+        return super._performRPC(...arguments);
     },
 
     //--------------------------------------------------------------------------

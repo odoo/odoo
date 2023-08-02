@@ -1127,7 +1127,7 @@ QUnit.module("Fields", (hooks) => {
              * @override
              */
             setup() {
-                this._super();
+                super.setup();
                 assert.step(this.props.resModel);
             },
         });

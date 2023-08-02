@@ -9,11 +9,11 @@ import { debounce } from "@web/core/utils/timing";
 
 const LINK_DEBOUNCE = 1000;
 
-patch(LinkTools.prototype, 'website/static/src/js/editor/widget_link.js', {
+patch(LinkTools.prototype, {
     setup() {
         this.rpc = useService('rpc');
         this.rpc = this.env.services.rpc;
-        return this._super.apply(this, arguments);
+        return super.setup(...arguments);
     },
     /**
      *
@@ -21,7 +21,7 @@ patch(LinkTools.prototype, 'website/static/src/js/editor/widget_link.js', {
      */
     onWillStart() {
         this._adaptPageAnchor = debounce(this._adaptPageAnchor, LINK_DEBOUNCE);
-        return this._super.apply(this, arguments);
+        return super.onWillStart(...arguments);
     },
     /**
      * Allows the URL input to propose existing website pages.
@@ -29,7 +29,7 @@ patch(LinkTools.prototype, 'website/static/src/js/editor/widget_link.js', {
      * @override
      */
     async start() {
-        var def = await this._super.apply(this, arguments);
+        var def = await super.start(...arguments);
         const options = {
             position: {
                 collision: 'flip flipfit',
@@ -105,7 +105,7 @@ patch(LinkTools.prototype, 'website/static/src/js/editor/widget_link.js', {
      * @override
      */
     _onURLInput() {
-        this._super.apply(this, arguments);
+        super._onURLInput(...arguments);
         this._adaptPageAnchor();
     },
     /**
@@ -122,6 +122,6 @@ patch(LinkTools.prototype, 'website/static/src/js/editor/widget_link.js', {
             }
             $urlInput.val(urlInputValue + anchorValue);
         }
-        this._super(...arguments);
+        super._onPickSelectOption(...arguments);
     },
 });

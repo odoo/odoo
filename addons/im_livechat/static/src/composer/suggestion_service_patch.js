@@ -6,11 +6,11 @@ import { cleanTerm } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-patch(SuggestionService.prototype, "im_livechat", {
+patch(SuggestionService.prototype, {
     getSupportedDelimiters(thread) {
         return thread?.model !== "discuss.channel" || thread.type === "livechat"
-            ? [...this._super(...arguments), [":"]]
-            : this._super(...arguments);
+            ? [...super.getSupportedDelimiters(...arguments), [":"]]
+            : super.getSupportedDelimiters(...arguments);
     },
     /**
      * Returns suggestions that match the given search term from specified type.
@@ -27,7 +27,7 @@ patch(SuggestionService.prototype, "im_livechat", {
         if (delimiter === ":") {
             return this.searchCannedResponseSuggestions(cleanTerm(term), sort);
         }
-        return this._super(...arguments);
+        return super.searchSuggestions(...arguments);
     },
 
     searchCannedResponseSuggestions(cleanedSearchTerm, sort) {

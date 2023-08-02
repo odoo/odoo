@@ -57,7 +57,7 @@ export async function makeParent(Child, options = {}) {
 
     patchWithCleanup(env.services.popover, {
         add(...args) {
-            const result = this._super(...args);
+            const result = super.add(...args);
             if (options.onPopoverAdded) {
                 options.onPopoverAdded(...args);
             }

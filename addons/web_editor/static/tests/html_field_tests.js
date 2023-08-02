@@ -129,8 +129,8 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         let togglePromiseId = 0;
         const writePromise = makeDeferred();
         patchWithCleanup(HtmlField.prototype, {
-            setup: function () {
-                this._super(...arguments);
+            setup() {
+                super.setup(...arguments);
                 onRendered(() => {
                     if (codeViewState !== this.state.showCodeView) {
                         togglePromises[togglePromiseId].resolve();
@@ -297,7 +297,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         // Patch to get the controller instance.
         patchWithCleanup(FormController.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 formController = this;
             }
         });
@@ -306,7 +306,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const htmlFieldPromise = makeDeferred();
         patchWithCleanup(HtmlField.prototype, {
             async startWysiwyg() {
-                await this._super(...arguments);
+                await super.startWysiwyg(...arguments);
                 await nextTick();
                 htmlFieldPromise.resolve(this);
             }
@@ -460,7 +460,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const htmlFieldPromise = makeDeferred();
         patchWithCleanup(HtmlField.prototype, {
             async startWysiwyg() {
-                await this._super(...arguments);
+                await super.startWysiwyg(...arguments);
                 await nextTick();
                 htmlFieldPromise.resolve(this);
             }
@@ -471,7 +471,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         };
         patchWithCleanup(OdooEditor.prototype, {
             historyStep() {
-                this._super(...arguments);
+                super.historyStep(...arguments);
                 if (historyStepPromise) {
                     historyStepPromise.resolve();
                 }
@@ -523,7 +523,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const htmlFieldPromise = makeDeferred();
         patchWithCleanup(HtmlField.prototype, {
             async startWysiwyg() {
-                await this._super(...arguments);
+                await super.startWysiwyg(...arguments);
                 await nextTick();
                 htmlFieldPromise.resolve(this);
             }
@@ -534,7 +534,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         };
         patchWithCleanup(OdooEditor.prototype, {
             historyStep() {
-                this._super(...arguments);
+                super.historyStep(...arguments);
                 if (historyStepPromise) {
                     historyStepPromise.resolve();
                 }
@@ -586,7 +586,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const htmlFieldPromise = makeDeferred();
         patchWithCleanup(HtmlField.prototype, {
             async startWysiwyg() {
-                await this._super(...arguments);
+                await super.startWysiwyg(...arguments);
                 await nextTick();
                 htmlFieldPromise.resolve(this);
             }
@@ -597,7 +597,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         };
         patchWithCleanup(OdooEditor.prototype, {
             historyStep() {
-                this._super(...arguments);
+                super.historyStep(...arguments);
                 if (historyStepPromise) {
                     historyStepPromise.resolve();
                 }

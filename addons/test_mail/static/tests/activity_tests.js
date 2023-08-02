@@ -533,7 +533,7 @@ QUnit.module("test_mail", {}, function () {
             async load(params) {
                 // force params to have a groupBy set, the model should ignore this value during the load
                 params.groupBy = ["user_id"];
-                await this._super(params);
+                await super.load(params);
             },
         });
 
@@ -728,7 +728,7 @@ QUnit.module("test_mail", {}, function () {
 
         patchWithCleanup(ActivityRenderer.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 owl.onMounted(() => {
                     assert.step("mounted");
                 });

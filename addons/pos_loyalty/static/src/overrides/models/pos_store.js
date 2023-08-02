@@ -12,9 +12,8 @@ import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
 
 const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long run memory issues and (to some extent) invalid data
 
-patch(PosStore.prototype, "pos_loyalty.PosStore", {
+patch(PosStore.prototype, {
     async addProductFromUi(product, options) {
-        const _super = this._super;
         const order = this.get_order();
         const linkedProgramIds = this.productId2ProgramIds[product.id] || [];
         const linkedPrograms = linkedProgramIds.map((id) => this.program_by_id[id]);
@@ -65,7 +64,7 @@ patch(PosStore.prototype, "pos_loyalty.PosStore", {
                 }
             }
         }
-        await _super(product, options);
+        await super.addProductFromUi(product, options);
         await order._updatePrograms();
         if (rewardsToApply.length == 1) {
             const reward = rewardsToApply[0];
@@ -209,7 +208,7 @@ patch(PosStore.prototype, "pos_loyalty.PosStore", {
             reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
         }
 
-        await this._super(loadedData);
+        await super._processData(loadedData);
         this.productId2ProgramIds = loadedData["product_id_to_program_ids"];
         this.programs = loadedData["loyalty.program"] || []; //TODO: rename to `loyaltyPrograms` etc
         this.rules = loadedData["loyalty.rule"] || [];
@@ -217,7 +216,7 @@ patch(PosStore.prototype, "pos_loyalty.PosStore", {
     },
 
     _loadProductProduct(products) {
-        this._super(...arguments);
+        super._loadProductProduct(...arguments);
 
         for (const reward of this.rewards) {
             this.compute_discount_product_ids(reward, products);
@@ -286,13 +285,13 @@ patch(PosStore.prototype, "pos_loyalty.PosStore", {
         }
     },
     async load_server_data() {
-        await this._super(...arguments);
+        await super.load_server_data(...arguments);
         if (this.selectedOrder) {
             this.selectedOrder._updateRewards();
         }
     },
     set_order(order) {
-        const result = this._super(...arguments);
+        const result = super.set_order(...arguments);
         // FIXME - JCB: This is a temporary fix.
         // When an order is selected, it doesn't always contain the reward lines.
         // And the list of active programs are not always correct. This is because
@@ -371,7 +370,7 @@ patch(PosStore.prototype, "pos_loyalty.PosStore", {
         return loyaltyCards;
     },
     addPartners(partners) {
-        const result = this._super(partners);
+        const result = super.addPartners(partners);
         // cache the loyalty cards of the partners
         for (const partner of partners) {
             for (const [couponId, { code, program_id, points }] of Object.entries(

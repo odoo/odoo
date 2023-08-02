@@ -506,11 +506,11 @@ QUnit.module("ActionManager", (hooks) => {
         patchWithCleanup(browser.sessionStorage, {
             getItem(k) {
                 assert.step(`getItem session ${k}`);
-                return this._super(k);
+                return super.getItem(k);
             },
             setItem(k, v) {
                 assert.step(`setItem session ${k}`);
-                return this._super(k, v);
+                return super.setItem(k, v);
             },
         });
         const mockRPC = async (route, { method, kwargs }) => {
@@ -866,7 +866,7 @@ QUnit.module("ActionManager", (hooks) => {
             patchWithCleanup(browser.sessionStorage, {
                 getItem(k) {
                     assert.step(`getItem session ${k}`);
-                    return this._super(k);
+                    return super.getItem(k);
                 },
             });
 

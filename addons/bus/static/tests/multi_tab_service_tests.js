@@ -27,7 +27,7 @@ QUnit.module("bus", function () {
                 if (eventName === "pagehide") {
                     return;
                 }
-                this._super(eventName, callback);
+                super.addEventListener(eventName, callback);
             },
         });
         const secondTabEnv = await makeTestEnv();
@@ -95,7 +95,7 @@ QUnit.module("bus", function () {
                 if (eventName === "pagehide") {
                     return;
                 }
-                this._super(eventName, callback);
+                super.addEventListener(eventName, callback);
             },
         });
         const secondTabEnv = await makeTestEnv();

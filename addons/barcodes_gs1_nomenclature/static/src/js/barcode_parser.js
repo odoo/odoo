@@ -7,7 +7,7 @@ export class GS1BarcodeError extends Error {};
 
 export const FNC1_CHAR = String.fromCharCode(29);
 
-patch(BarcodeParser, "barcodes_gs1_nomenclature.BarcodeParser static", {
+patch(BarcodeParser, {
     barcodeNomenclatureFields: [
         ...BarcodeParser.barcodeNomenclatureFields,
         "is_gs1_nomenclature",
@@ -21,14 +21,14 @@ patch(BarcodeParser, "barcodes_gs1_nomenclature.BarcodeParser static", {
     ],
 });
 
-patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
+patch(BarcodeParser.prototype, {
     /**
      * Convert YYMMDD GS1 date into a Date object
      *
      * @param {string} gs1Date YYMMDD string date, length must be 6
      * @returns {Date}
      */
-    gs1_date_to_date: function(gs1Date) {
+    gs1_date_to_date(gs1Date) {
         // See 7.12 Determination of century in dates:
         // https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdfDetermination of century
         const now = new Date();
@@ -58,7 +58,7 @@ patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
      * @param {Object} rule Matched Barcode Rule
      * @returns {Object|null}
      */
-    parse_gs1_rule_pattern: function(match, rule) {
+    parse_gs1_rule_pattern(match, rule) {
         const result = {
             rule: Object.assign({}, rule),
             ai: match[1],
@@ -103,7 +103,7 @@ patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
      * @param {string} barcode
      * @returns {Array} Array of object
      */
-    gs1_decompose_extanded: function(barcode) {
+    gs1_decompose_extanded(barcode) {
         const results = [];
         const rules = this.nomenclature.rules.filter(rule => rule.encoding === 'gs1-128');
         const separatorReg = FNC1_CHAR + "?";
@@ -137,10 +137,10 @@ patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
      * @override
      * @returns {Object|Array|null} If nomenclature is GS1, returns an array or null
      */
-    parse_barcode: function(barcode){
+    parse_barcode(barcode) {
         if (this.nomenclature && this.nomenclature.is_gs1_nomenclature) {
             return this.gs1_decompose_extanded(barcode);
         }
-        return this._super(...arguments);
+        return super.parse_barcode(...arguments);
     },
 });

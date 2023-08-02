@@ -160,7 +160,7 @@ QUnit.module("ActionManager", (hooks) => {
             // attribute is removed right after)
             patchWithCleanup(ReportAction.prototype, {
                 setup() {
-                    this._super(...arguments);
+                    super.setup(...arguments);
                     this.env.services.rpc(this.reportUrl);
                     this.reportUrl = "about:blank";
                 },
@@ -218,7 +218,7 @@ QUnit.module("ActionManager", (hooks) => {
         // attribute is removed right after)
         patchWithCleanup(ReportAction.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 this.env.services.rpc(this.reportUrl);
                 this.reportUrl = "about:blank";
             },
@@ -350,7 +350,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         patchWithCleanup(ReportAction.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 this.env.services.rpc(this.reportUrl);
                 this.reportUrl = "about:blank";
             },
@@ -387,7 +387,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         patchWithCleanup(ReportAction.prototype, {
             init() {
-                this._super(...arguments);
+                super.init(...arguments);
                 this.reportUrl = "about:blank";
             },
         });

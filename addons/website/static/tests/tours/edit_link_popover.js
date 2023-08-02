@@ -191,7 +191,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
         extra_trigger: 'iframe .o_edit_menu_popover a.o_we_full_url[target="_blank"]',
         run: (actions) => {
             // We do not want to open a link in a tour
-            patch(browser, 'window_open_action', {
+            patch(browser, {
                 open: (url) => {
                     if (window.location.hostname === url.hostname && url.pathname.startsWith('/@/')) {
                         document.querySelector('body').classList.add('new_backend_window_opened');

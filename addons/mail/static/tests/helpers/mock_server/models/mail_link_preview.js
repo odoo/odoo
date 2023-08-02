@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/mail_link_preview", {
+patch(MockServer.prototype, {
     /**
      * Simulates the `_link_preview_format` method of `mail.link.preview`.
      *

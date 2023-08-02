@@ -5,7 +5,7 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 import { patch } from "@web/core/utils/patch";
 
-patch(BackButton.prototype, "pos_restaurant.BackButton", {
+patch(BackButton.prototype, {
     get floor() {
         return this.table?.floor;
     },

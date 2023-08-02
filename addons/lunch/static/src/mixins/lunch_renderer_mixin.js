@@ -2,13 +2,13 @@
 
 import { useBus, useService } from "@web/core/utils/hooks";
 
-export const LunchRendererMixin = {
+export const LunchRendererMixin = (T) => class LunchRendererMixin extends T {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
 
         this.action = useService("action");
         useBus(this.env.bus, 'lunch_open_order', (ev) => this.openOrderLine(ev.detail.productId));
-    },
+    }
 
     openOrderLine(productId, orderId) {
         let context = {};
@@ -36,5 +36,5 @@ export const LunchRendererMixin = {
         this.action.doAction(action, {
             onClose: () => this.env.bus.trigger('lunch_update_dashboard')
         });
-    },
-}
+    }
+};

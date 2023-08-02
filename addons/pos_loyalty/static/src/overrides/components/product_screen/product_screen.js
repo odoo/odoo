@@ -7,9 +7,9 @@ import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_pop
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 
-patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
+patch(ProductScreen.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.notification = useService("pos_notification");
         useBarcodeReader({
             coupon: this._onCouponScan,
@@ -20,7 +20,6 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
         this.currentOrder.activateCode(code.base_code);
     },
     async updateSelectedOrderline({ buffer, key }) {
-        const _super = this._super;
         const selectedLine = this.currentOrder.get_selected_orderline();
         if (key === "-") {
             if (selectedLine && selectedLine.eWalletGiftCardProgram) {
@@ -60,10 +59,10 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
                 return;
             }
         }
-        return _super({ buffer, key });
+        return super.updateSelectedOrderline({ buffer, key });
     },
     /**
-     * 1/ Perform the usual set value operation (this._super(val)) if the line being modified
+     * 1/ Perform the usual set value operation (super._setValue(val)) if the line being modified
      * is not a reward line or if it is a reward line, the `val` being set is '' or 'remove' only.
      *
      * 2/ Update activated programs and coupons when removing a reward line.
@@ -80,7 +79,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
             !selectedLine.is_reward_line ||
             (selectedLine.is_reward_line && ["", "remove"].includes(val))
         ) {
-            this._super(val);
+            super._setValue(val);
         }
         if (!selectedLine) {
             return;
@@ -108,7 +107,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
         }
     },
     async _barcodeProductAction(code) {
-        await this._super(code);
+        await super._barcodeProductAction(code);
         this.currentOrder._updateRewards();
     },
 });

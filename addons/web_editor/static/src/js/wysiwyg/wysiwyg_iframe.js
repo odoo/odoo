@@ -11,7 +11,7 @@ var promiseJsAssets;
  * Add option (inIframe) to load Wysiwyg in an iframe.
  **/
 
-patch(Wysiwyg.prototype, 'wysiwyg_iframe.js', {
+patch(Wysiwyg.prototype, {
     /**
      * Add options to load Wysiwyg in an iframe.
      *
@@ -19,7 +19,7 @@ patch(Wysiwyg.prototype, 'wysiwyg_iframe.js', {
      * @param {boolean} options.inIframe
      **/
     init() {
-        this._super();
+        super.init();
         if (this.options.inIframe) {
             this._onUpdateIframeId = 'onLoad_' + this.id;
         }
@@ -28,14 +28,13 @@ patch(Wysiwyg.prototype, 'wysiwyg_iframe.js', {
      * @override
      **/
     async startEdition() {
-        const _super = this._super.bind(this);
         if (!this.options.inIframe) {
-            return _super();
+            return super.startEdition();
         } else {
             this.defAsset = this._getAssets();
             await this.defAsset;
             await this._loadIframe();
-            return _super();
+            return super.startEdition();
         }
     },
 
@@ -47,7 +46,7 @@ patch(Wysiwyg.prototype, 'wysiwyg_iframe.js', {
      * @override
      **/
     _getEditorOptions() {
-        const options = this._super.apply(this, arguments);
+        const options = super._getEditorOptions(...arguments);
         if (!("getContextFromParentRect" in options)) {
             options.getContextFromParentRect = () => {
                 return this.$iframe && this.$iframe.length ? this.$iframe[0].getBoundingClientRect() : { top: 0, left: 0 };
@@ -151,7 +150,7 @@ patch(Wysiwyg.prototype, 'wysiwyg_iframe.js', {
         if (this.options.inIframe) {
             return this.snippetsMenu.appendTo(this.$utilsZone);
         } else {
-            return this._super.apply(this, arguments);
+            return super._insertSnippetMenu(...arguments);
         }
     },
     /**
@@ -177,7 +176,7 @@ patch(Wysiwyg.prototype, 'wysiwyg_iframe.js', {
      */
     _bindOnBlur() {
         if (!this.options.inIframe) {
-            this._super.apply(this, arguments);
+            super._bindOnBlur(...arguments);
         } else {
             this.$iframe[0].contentWindow.addEventListener('blur', this._onBlur);
         }

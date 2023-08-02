@@ -4,7 +4,7 @@ import { Thread } from "@mail/core/common/thread";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Thread.prototype, "discuss/message_pin/common", {
+patch(Thread.prototype, {
     /**
      * @override
      * @param {MouseEvent} ev

@@ -76,9 +76,9 @@ function computeFreeQuantity(numberItems, n, m) {
     return Math.floor(free + adjustment);
 }
 
-patch(Orderline.prototype, "pos_loyalty.Orderline", {
+patch(Orderline.prototype, {
     export_as_JSON() {
-        const result = this._super(...arguments);
+        const result = super.export_as_JSON(...arguments);
         result.is_reward_line = this.is_reward_line;
         result.reward_id = this.reward_id;
         result.reward_product_id = this.reward_product_id;
@@ -106,7 +106,7 @@ patch(Orderline.prototype, "pos_loyalty.Orderline", {
         this.giftBarcode = json.giftBarcode;
         this.giftCardId = json.giftCardId;
         this.eWalletGiftCardProgram = this.pos.program_by_id[json.eWalletGiftCardProgramId];
-        this._super(...arguments);
+        super.init_from_JSON(...arguments);
     },
     set_quantity(quantity, keep_price) {
         if (quantity === "remove" && this.is_reward_line) {
@@ -126,7 +126,7 @@ patch(Orderline.prototype, "pos_loyalty.Orderline", {
                 this.order.orderlines.remove(line);
             }
         }
-        return this._super(...arguments);
+        return super.set_quantity(...arguments);
     },
     getEWalletGiftCardProgramType() {
         return this.eWalletGiftCardProgram && this.eWalletGiftCardProgram.program_type;
@@ -140,9 +140,9 @@ patch(Orderline.prototype, "pos_loyalty.Orderline", {
     },
 });
 
-patch(Order.prototype, "pos_loyalty.Order", {
+patch(Order.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this._initializePrograms({});
         // Always start with invalid coupons so that coupon for this
         // order is properly assigned. @see _checkMissingCoupons
@@ -151,13 +151,13 @@ patch(Order.prototype, "pos_loyalty.Order", {
 
     /** @override */
     getEmailItems() {
-        return this._super(...arguments).concat(
+        return super.getEmailItems(...arguments).concat(
             this.has_pdf_gift_card ? [_t("the gift cards")] : []
         );
     },
 
     export_as_JSON() {
-        const json = this._super(...arguments);
+        const json = super.export_as_JSON(...arguments);
         json.disabledRewards = [...this.disabledRewards];
         json.codeActivatedProgramRules = this.codeActivatedProgramRules;
         json.codeActivatedCoupons = this.codeActivatedCoupons;
@@ -184,7 +184,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 this.couponPointChanges[newId] = pe;
             }
         }
-        this._super(...arguments);
+        super.init_from_JSON(...arguments);
         delete this.oldCouponMapping;
         this.disabledRewards = new Set(json.disabledRewards);
         this.codeActivatedProgramRules = json.codeActivatedProgramRules;
@@ -209,7 +209,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 }
             }
         } else {
-            return this._super(...arguments);
+            return super.pay(...arguments);
         }
     },
     /**
@@ -220,7 +220,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
      */
     set_partner(partner) {
         const oldPartner = this.get_partner();
-        this._super(partner);
+        super.set_partner(partner);
         if (this.couponPointChanges && oldPartner !== this.get_partner()) {
             // Remove couponPointChanges for cards in is_nominative programs.
             // This makes sure that counting of points on loyalty and ewallet programs is updated after partner changes.
@@ -241,7 +241,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
         return (
             Object.keys(this.couponPointChanges || {}).length > 0 ||
             this._get_reward_lines().length ||
-            this._super(...arguments)
+            super.wait_for_push_order(...arguments)
         );
     },
     /**
@@ -250,7 +250,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
      * @override
      */
     export_for_printing() {
-        const result = this._super(...arguments);
+        const result = super.export_for_printing(...arguments);
         if (this.get_partner()) {
             result.loyaltyStats = this.getLoyaltyPoints();
         }
@@ -259,7 +259,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
     },
     //@override
     _get_ignored_product_ids_total_discount() {
-        const productIds = this._super(...arguments);
+        const productIds = super._get_ignored_product_ids_total_discount(...arguments);
         const giftCardPrograms = this.pos.programs.filter((p) => p.program_type === "gift_card");
         for (const program of giftCardPrograms) {
             const giftCardProductId = [...program.rules[0].valid_product_ids][0];
@@ -270,7 +270,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
         return productIds;
     },
     get_orderlines() {
-        const orderlines = this._super(this, arguments);
+        const orderlines = super.get_orderlines(this, arguments);
         const rewardLines = [];
         const nonRewardLines = [];
         for (const line of orderlines) {
@@ -302,7 +302,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
     },
     set_pricelist(pricelist) {
         const oldPricelist = this.pricelist
-        this._super(...arguments);
+        super.set_pricelist(...arguments);
         if (this.couponPointChanges && oldPricelist !== pricelist) {
             // Remove couponPointChanges for cards in no longer available programs.
             // This makes sure that counting of points on loyalty and ewallet programs is updated after pricelist changes.
@@ -321,7 +321,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
         this._updateRewards();
     },
     set_orderline_options(line, options) {
-        this._super(...arguments);
+        super.set_orderline_options(...arguments);
         if (options && options.is_reward_line) {
             line.is_reward_line = options.is_reward_line;
             line.reward_id = options.reward_id;

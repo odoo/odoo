@@ -3,12 +3,12 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/mail_tracking_value", {
+patch(MockServer.prototype, {
     /**
      * @override
      */
     init(data, options) {
-        this._super(data, options);
+        super.init(data, options);
         if (this.currentPartnerId && this.models && "res.partner" in this.models) {
             this.currentPartner = this.getRecords("res.partner", [
                 ["id", "=", this.currentPartnerId],
@@ -29,7 +29,7 @@ patch(MockServer.prototype, "mail/models/mail_tracking_value", {
      */
     mockWrite(model) {
         const initialTrackedFieldValuesByRecordId = this._mockMailThread_TrackPrepare(model);
-        const mockWriteResult = this._super(...arguments);
+        const mockWriteResult = super.mockWrite(...arguments);
         if (initialTrackedFieldValuesByRecordId) {
             this._mockMailThread_TrackFinalize(model, initialTrackedFieldValuesByRecordId);
         }

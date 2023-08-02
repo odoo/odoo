@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 import { OrderCart } from "@pos_self_order/pages/order_cart/order_cart";
 import { _t } from "@web/core/l10n/translation";
 
-patch(OrderCart.prototype, "pos_online_payment_self_order.OrderCart", {
+patch(OrderCart.prototype, {
     get buttonToShow() {
         if (this.selfOrder.self_order_mode === "each") {
             return { label: _t("Pay"), disabled: false };
@@ -22,7 +22,7 @@ patch(OrderCart.prototype, "pos_online_payment_self_order.OrderCart", {
                 }
             }
         } else {
-            return this._super(...arguments);
+            return super.buttonToShow;
         }
     },
     async processOrder() {
@@ -54,7 +54,7 @@ patch(OrderCart.prototype, "pos_online_payment_self_order.OrderCart", {
             this.sendInProgress = false;
             this.checkAndOpenPaymentPage(order);
         } else {
-            return this._super(...arguments);
+            return super.processOrder(...arguments);
         }
     },
     checkAndOpenPaymentPage(order) {

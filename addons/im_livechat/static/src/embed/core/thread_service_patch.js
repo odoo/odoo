@@ -19,7 +19,7 @@ threadService.dependencies.push(
     "notification"
 );
 
-patch(ThreadService.prototype, "im_livechat", {
+patch(ThreadService.prototype, {
     TEMPORARY_ID: "livechat_temporary_thread",
 
     /**
@@ -32,7 +32,7 @@ patch(ThreadService.prototype, "im_livechat", {
      * }} services
      */
     setup(env, services) {
-        this._super(env, services);
+        super.setup(env, services);
         this.livechatService = services["im_livechat.livechat"];
         this.chatWindowService = services["mail.chat_window"];
         this.chatbotService = services["im_livechat.chatbot"];
@@ -41,14 +41,14 @@ patch(ThreadService.prototype, "im_livechat", {
 
     getMessagePostRoute(thread) {
         if (thread.type !== "livechat") {
-            return this._super(...arguments);
+            return super.getMessagePostRoute(...arguments);
         }
         return "/im_livechat/chat_post";
     },
 
     async getMessagePostParams({ thread, body }) {
         if (thread.type !== "livechat") {
-            return this._super(...arguments);
+            return super.getMessagePostParams(...arguments);
         }
         return {
             uuid: thread.uuid,
@@ -60,7 +60,6 @@ patch(ThreadService.prototype, "im_livechat", {
      * @returns {Promise<import("@mail/core/common/message_model").Message}
      */
     async post(thread, body, params) {
-        const _super = this._super;
         const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === thread.localId);
         if (
             this.livechatService.state !== SESSION_STATE.PERSISTED &&
@@ -80,7 +79,7 @@ patch(ThreadService.prototype, "im_livechat", {
                 await this.chatbotService.postWelcomeSteps();
             }
         }
-        const message = await _super(thread, body, params);
+        const message = await super.post(thread, body, params);
         if (!message) {
             this.notificationService.add(_t("Session expired... Please refresh and try again."));
             this.chatWindowService.close(chatWindow);
@@ -111,7 +110,7 @@ patch(ThreadService.prototype, "im_livechat", {
 
     insert(data) {
         const isUnknown = !(createLocalId(data.model, data.id) in this.store.threads);
-        const thread = this._super(...arguments);
+        const thread = super.insert(...arguments);
         if (thread.type === "livechat" && isUnknown) {
             if (
                 this.livechatService.displayWelcomeMessage &&
@@ -154,7 +153,7 @@ patch(ThreadService.prototype, "im_livechat", {
     },
 
     async update(thread, data) {
-        this._super(...arguments);
+        super.update(...arguments);
         if (data.operator_pid) {
             thread.operator = this.personaService.insert({
                 type: "partner",
@@ -166,7 +165,7 @@ patch(ThreadService.prototype, "im_livechat", {
 
     avatarUrl(author, thread) {
         if (thread.type !== "livechat") {
-            return this._super(...arguments);
+            return super.avatarUrl(...arguments);
         }
         const isFromOperator =
             author && author.id !== this.livechatService.options.current_partner_id;

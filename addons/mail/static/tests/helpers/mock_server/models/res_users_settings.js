@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/res_users_settings", {
+patch(MockServer.prototype, {
     async _performRPC(route, args) {
         if (args.model === "res.users.settings" && args.method === "_find_or_create_for_user") {
             const user_id = args.args[0][0];
@@ -14,7 +14,7 @@ patch(MockServer.prototype, "mail/models/res_users_settings", {
             const newSettings = args.kwargs.new_settings;
             return this._mockResUsersSettingsSetResUsersSettings(id, newSettings);
         }
-        return this._super(route, args);
+        return super._performRPC(route, args);
     },
     /**
      * Simulates `_find_or_create_for_user` on `res.users.settings`.

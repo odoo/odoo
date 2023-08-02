@@ -1429,7 +1429,7 @@ QUnit.module("ActionManager", (hooks) => {
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
         patchWithCleanup(listView.Controller.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 useSetupAction({
                     getContext: () => ({ shouldBeInFilterContext: true }),
                 });

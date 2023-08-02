@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
 import { sprintf } from "@web/core/utils/strings";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
-patch(PosStore.prototype, "l10n_fr_pos_cert.PosStore", {
+patch(PosStore.prototype, {
     is_french_country() {
         var french_countries = ["FR", "MF", "MQ", "NC", "PF", "RE", "GF", "GP", "TF"];
         if (!this.company.country) {
@@ -20,19 +20,19 @@ patch(PosStore.prototype, "l10n_fr_pos_cert.PosStore", {
         return french_countries.includes(this.company.country?.code);
     },
     disallowLineQuantityChange() {
-        const result = this._super(...arguments);
+        const result = super.disallowLineQuantityChange(...arguments);
         return this.is_french_country() || result;
     },
 });
 
-patch(Order.prototype, "l10n_fr_pos_cert.Order", {
+patch(Order.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.l10n_fr_hash = this.l10n_fr_hash || false;
         this.save_to_db();
     },
     export_for_printing() {
-        var result = this._super(...arguments);
+        var result = super.export_for_printing(...arguments);
         result.l10n_fr_hash = this.get_l10n_fr_hash();
         return result;
     },
@@ -43,16 +43,16 @@ patch(Order.prototype, "l10n_fr_pos_cert.Order", {
         return this.l10n_fr_hash;
     },
     wait_for_push_order() {
-        var result = this._super(...arguments);
+        var result = super.wait_for_push_order(...arguments);
         result = Boolean(result || this.pos.is_french_country());
         return result;
     },
 });
 
-patch(Orderline.prototype, "l10n_fr_pos_cert.Orderline", {
+patch(Orderline.prototype, {
     can_be_merged_with(orderline) {
         if (!this.pos.is_french_country()) {
-            return this._super(...arguments);
+            return super.can_be_merged_with(...arguments);
         }
         const order = this.pos.get_order();
         const orderlines = order.orderlines;
@@ -61,7 +61,7 @@ patch(Orderline.prototype, "l10n_fr_pos_cert.Orderline", {
         if (lastOrderline.product.id !== orderline.product.id || lastOrderline.quantity < 0) {
             return false;
         } else {
-            return this._super(...arguments);
+            return super.can_be_merged_with(...arguments);
         }
     },
 });

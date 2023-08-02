@@ -11,7 +11,7 @@ const initialSessionInfo = Object.assign({}, sessionInfo);
 import Session from "@web/legacy/js/core/session";
 import { patch } from "@web/core/utils/patch";
 
-patch(Session.prototype, "web.SessionTestPatch", {
+patch(Session.prototype, {
     async session_reload() {
         for (const key in sessionInfo) {
             delete sessionInfo[key];
@@ -19,6 +19,6 @@ patch(Session.prototype, "web.SessionTestPatch", {
         for (const key in initialSessionInfo) {
             sessionInfo[key] = initialSessionInfo[key];
         }
-        return await this._super(...arguments);
+        return await super.session_reload(...arguments);
     },
 });

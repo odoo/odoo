@@ -6,14 +6,14 @@ import { patch } from "@web/core/utils/patch";
 
 register_payment_method("adyen", PaymentAdyen);
 
-patch(Payment.prototype, "pos_adyen.Payment", {
+patch(Payment.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.terminalServiceId = this.terminalServiceId || null;
     },
     //@override
     export_as_JSON() {
-        const json = this._super(...arguments);
+        const json = super.export_as_JSON(...arguments);
         if (json) {
             json.terminal_service_id = this.terminalServiceId;
         }
@@ -21,7 +21,7 @@ patch(Payment.prototype, "pos_adyen.Payment", {
     },
     //@override
     init_from_JSON(json) {
-        this._super(...arguments);
+        super.init_from_JSON(...arguments);
         this.terminalServiceId = json.terminal_service_id;
     },
     setTerminalServiceId(id) {

@@ -6,9 +6,9 @@ import { patch } from "@web/core/utils/patch";
 import { sprintf } from "@web/core/utils/strings";
 import { formatFloat } from "@web/views/fields/formatters";
 
-patch(PartnerLine.prototype, "pos_loyalty.PartnerLine", {
+patch(PartnerLine.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.pos = usePos();
     },
     _getLoyaltyPointsRepr(loyaltyCard) {

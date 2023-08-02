@@ -5,9 +5,9 @@ import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook
 import { patch } from "@web/core/utils/patch";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
-patch(ProductScreen.prototype, "pos_mercury.ProductScreen", {
+patch(ProductScreen.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         useBarcodeReader({
             credit: this.credit_error_action,
         });

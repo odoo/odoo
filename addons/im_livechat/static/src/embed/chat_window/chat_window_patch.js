@@ -12,9 +12,9 @@ import { patch } from "@web/core/utils/patch";
 
 Object.assign(ChatWindow.components, { FeedbackPanel });
 
-patch(ChatWindow.prototype, "im_livechat", {
+patch(ChatWindow.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.livechatService = useService("im_livechat.livechat");
         this.chatbotService = useState(useService("im_livechat.chatbot"));
         this.livechatState = useState({
@@ -24,13 +24,13 @@ patch(ChatWindow.prototype, "im_livechat", {
 
     close() {
         if (this.thread?.type !== "livechat") {
-            return this._super();
+            return super.close();
         }
         if (this.livechatService.state === SESSION_STATE.PERSISTED) {
             this.livechatState.hasFeedbackPanel = true;
             this.chatWindowService.show(this.props.chatWindow);
         } else {
-            this._super();
+            super.close();
         }
         this.livechatService.leaveSession();
         this.chatbotService.stop();

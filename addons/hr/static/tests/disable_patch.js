@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { unpatch } from "@web/core/utils/patch";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { unpatchAvatarCardPopover } from "@hr/components/avatar_card/avatar_card_popover_patch";
 
-unpatch(AvatarCardPopover.prototype, "hr");
+unpatchAvatarCardPopover();

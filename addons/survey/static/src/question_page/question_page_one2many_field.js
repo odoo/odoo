@@ -8,7 +8,7 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 
 const { useSubEnv } = owl;
 
-patch(X2ManyFieldDialog.prototype, 'survey_question_chaining_with_validation', {
+patch(X2ManyFieldDialog.prototype, {
     /**
      * Re-enable buttons after our error is thrown because blocking normal
      * behavior is required to not close the dialog and stay in edition but
@@ -17,7 +17,7 @@ patch(X2ManyFieldDialog.prototype, 'survey_question_chaining_with_validation', {
      * @override
      */
     async saveAndNew() {
-        const res = this._super(...arguments);
+        const res = super.saveAndNew(...arguments);
         if (this.record.resModel === 'survey.question') {
             const btns = this.modalRef.el.querySelectorAll(".modal-footer button"); // see XManyFieldDialog.disableButtons
             this.enableButtons(btns);

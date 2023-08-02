@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { patch } from '@web/core/utils/patch';
+import { patch } from "@web/core/utils/patch";
 import { MockServer } from '@web/../tests/helpers/mock_server';
 
-patch(MockServer.prototype, 'calendar/models/calendar_event', {
+patch(MockServer.prototype, {
     /**
      * @override
      */
@@ -12,6 +12,6 @@ patch(MockServer.prototype, 'calendar/models/calendar_event', {
         if (args.model === 'calendar.event' && args.method === 'check_access_rights') {
             return true;
         }
-        return this._super(...arguments);
+        return super._performRPC(...arguments);
     },
 });

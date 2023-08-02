@@ -4,12 +4,12 @@ import { Attachment } from "@mail/core/common/attachment_model";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Attachment.prototype, "discuss/core/common", {
+patch(Attachment.prototype, {
     get isDeletable() {
         if (this.message && this.originThread?.model === "discuss.channel") {
             return this.message.editable;
         }
-        return this._super();
+        return super.isDeletable;
     },
     get urlRoute() {
         if (!this.accessToken && this.originThread?.model === "discuss.channel") {
@@ -17,6 +17,6 @@ patch(Attachment.prototype, "discuss/core/common", {
                 ? `/discuss/channel/${this.originThread.id}/image/${this.id}`
                 : `/discuss/channel/${this.originThread.id}/attachment/${this.id}`;
         }
-        return this._super();
+        return super.urlRoute;
     },
 });

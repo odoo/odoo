@@ -12,7 +12,6 @@ import {
     strftimeToLuxonFormat,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { patch, unpatch } from "@web/core/utils/patch";
 import core from "@web/legacy/js/services/core";
 import field_utils from "@web/legacy/js/fields/field_utils";
 import session from "web.session";
@@ -165,7 +164,7 @@ QUnit.module(
         });
 
         QUnit.test("parseDateTime", async (assert) => {
-            patch(localization, "default loc", defaultLocalization);
+            patchWithCleanup(localization, { ...defaultLocalization });
 
             assert.throws(
                 function () {
@@ -197,14 +196,12 @@ QUnit.module(
             assert.equal(parseDateTime(dateStr).toISO(), expected, "Date with leading 0");
             dateStr = "1/13/2019 10:5:45";
             assert.equal(parseDateTime(dateStr).toISO(), expected, "Date without leading 0");
-
-            unpatch(localization, "default loc");
         });
 
         QUnit.test("parseDateTime (norwegian locale)", async (assert) => {
             const dateFormat = strftimeToLuxonFormat("%d. %b %Y");
             const timeFormat = strftimeToLuxonFormat("%H:%M:%S");
-            patch(localization, "weird loc", {
+            patchWithCleanup(localization, {
                 dateFormat,
                 timeFormat,
                 dateTimeFormat: `${dateFormat} ${timeFormat}`,
@@ -227,7 +224,6 @@ QUnit.module(
             );
 
             Settings.defaultLocale = originalLocale;
-            unpatch(localization, "weird loc");
         });
 
         QUnit.test("parseDate", async (assert) => {
@@ -243,7 +239,7 @@ QUnit.module(
         QUnit.test("parseDate without separator", async (assert) => {
             const dateFormat = strftimeToLuxonFormat("%d.%m/%Y");
             const timeFormat = strftimeToLuxonFormat("%H:%M:%S");
-            patch(localization, "patch loc", {
+            patchWithCleanup(localization, {
                 dateFormat,
                 timeFormat,
                 dateTimeFormat: `${dateFormat} ${timeFormat}`,
@@ -294,13 +290,12 @@ QUnit.module(
             assert.equal(parseDate("310197").toFormat(testDateFormat), "31.01/1997");
             assert.equal(parseDate("310117").toFormat(testDateFormat), "31.01/2017");
             assert.equal(parseDate("31011985").toFormat(testDateFormat), "31.01/1985");
-            unpatch(localization, "patch loc");
         });
 
         QUnit.test("parseDateTime without separator", async (assert) => {
             const dateFormat = strftimeToLuxonFormat("%d.%m/%Y");
             const timeFormat = strftimeToLuxonFormat("%H:%M:%S");
-            patch(localization, "patch loc", {
+            patchWithCleanup(localization, {
                 dateFormat,
                 timeFormat,
                 dateTimeFormat: `${dateFormat} ${timeFormat}`,
@@ -319,13 +314,12 @@ QUnit.module(
                 parseDateTime("31/01/1985 08").toFormat(dateTimeFormat),
                 "31.01/1985 08:00/00"
             );
-            unpatch(localization, "patch loc");
         });
 
         QUnit.test("parseDateTime with escaped characters (eg. Basque locale)", async (assert) => {
             const dateFormat = strftimeToLuxonFormat("%a, %Y.eko %bren %da");
             const timeFormat = strftimeToLuxonFormat("%H:%M:%S");
-            patch(localization, "patch loc", {
+            patchWithCleanup(localization, {
                 dateFormat,
                 timeFormat,
                 dateTimeFormat: `${dateFormat} ${timeFormat}`,
@@ -337,7 +331,6 @@ QUnit.module(
                 parseDateTime("1985-01-31 08:30:00").toFormat(dateTimeFormat),
                 "Thu, 1985.eko Janren 31a 08:30:00"
             );
-            unpatch(localization, "patch loc");
         });
 
         QUnit.test("parse smart date input", async (assert) => {
@@ -387,7 +380,7 @@ QUnit.module(
         });
 
         QUnit.test("parseDateTime SQL Format", async (assert) => {
-            patch(localization, "default loc", defaultLocalization);
+            patchWithCleanup(localization, { ...defaultLocalization });
 
             let dateStr = "2017-05-15 09:12:34";
             let expected = "2017-05-15T09:12:34.000+01:00";
@@ -400,8 +393,6 @@ QUnit.module(
                 expected,
                 "Date SQL format, check date is not confused with month"
             );
-
-            unpatch(localization, "default loc");
         });
 
         QUnit.test("serializeDate", async (assert) => {
