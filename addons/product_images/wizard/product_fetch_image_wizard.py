@@ -307,7 +307,7 @@ class ProductFetchImageWizard(models.TransientModel):
         if 'x-raw-image:///' not in url:  # Ignore images with incorrect link
             response = self._session.get(url, timeout=5)
             if response.status_code == requests.codes.ok \
-                and 'image/' in response.headers['Content-Type']:  # Ignore non-image results
+                and 'image/' in response.headers.get('Content-Type', ''):  # Ignore non-image results
                 image = base64.b64encode(response.content)
         return image
 
