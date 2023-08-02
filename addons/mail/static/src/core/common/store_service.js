@@ -72,23 +72,23 @@ export class Store {
     inPublicPage = false;
 
     /** @type {Object.<number, import("@mail/core/common/channel_member_model").ChannelMember>} */
-    channelMembers = {};
+    ChannelMember = {};
     companyName = "";
 
     /** @type {Object.<number, import("@mail/core/common/notification_model").Notification>} */
-    notifications = {};
-    notificationGroups = [];
+    Notification = {};
+    NotificationGroup = [];
 
     /** @type {Object.<number, import("@mail/core/common/follower_model").Follower>} */
-    followers = {};
+    Follower = {};
 
     /** @type {import("@mail/core/common/persona_model").Persona} */
     odoobot = null;
     /** @type {Object.<number, import("@mail/core/common/persona_model").Persona>} */
-    personas = {};
+    Persona = {};
 
     /** @type {Object.<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
-    rtcSessions = {};
+    RtcSession = {};
     users = {};
     internalUserGroupId = null;
     registeredImStatusPartners = null;
@@ -136,22 +136,22 @@ export class Store {
         /** @type {import("@mail/core/common/thread_model").Thread} */
         history: null,
     };
-    cannedResponses = [];
+    CannedResponse = [];
 
     /** @type {Object.<number, import("@mail/core/web/activity_model").Activity>} */
-    activities = {};
+    Activity = {};
     activityCounter = 0;
     /** @type {Object.<number, import("@mail/core/common/attachment_model").Attachment>} */
-    attachments = {};
+    Attachment = {};
 
     /** @type {import("@mail/core/common/chat_window_model").ChatWindow[]} */
-    chatWindows = [];
+    ChatWindow = [];
 
     /** @type {Object.<number, import("@mail/core/common/message_model").Message>} */
-    messages = {};
+    Message = {};
 
     /** @type {Object.<string, import("@mail/core/common/thread_model").Thread>} */
-    threads = {};
+    Thread = {};
 
     isMessagingReady = false;
 }

@@ -30,7 +30,7 @@ export class ChatWindow extends DiscussModel {
     }
 
     get thread() {
-        return this._store.threads[this.threadObjectId];
+        return this._store.Thread[this.threadObjectId];
     }
 
     set thread(thread) {

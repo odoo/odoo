@@ -169,7 +169,7 @@ export class Message extends DiscussModel {
     }
 
     get originThread() {
-        return this._store.threads[createObjectId("Thread", this.resModel, this.resId)];
+        return this._store.Thread[createObjectId("Thread", this.resModel, this.resId)];
     }
 
     get resUrl() {

@@ -16,6 +16,6 @@ export class MessageReactions extends DiscussModel {
 
     /** @type {import("@mail/core/common/persona_model").Persona[]} */
     get personas() {
-        return this.personaObjectIds.map((objectId) => this._store.personas[objectId]);
+        return this.personaObjectIds.map((objectId) => this._store.Persona[objectId]);
     }
 }

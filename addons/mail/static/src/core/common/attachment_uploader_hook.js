@@ -123,7 +123,7 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
         }
         const threadId = parseInt(upload.data.get("thread_id"));
         const threadModel = upload.data.get("thread_model");
-        const originThread = store.threads[createObjectId("Thread", threadModel, threadId)];
+        const originThread = store.Thread[createObjectId("Thread", threadModel, threadId)];
         const attachment = attachmentService.insert({
             ...response,
             extension: upload.title.split(".").pop(),
@@ -138,7 +138,7 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
             }
         }
         const def = deferredByAttachmentId.get(tmpId);
-        state.unlink(store.attachments[tmpId]);
+        state.unlink(store.Attachment[tmpId]);
         if (def) {
             def.resolve(attachment);
             deferredByAttachmentId.delete(tmpId);

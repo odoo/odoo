@@ -60,7 +60,7 @@ patch(ThreadService.prototype, {
      * @returns {Promise<import("@mail/core/common/message_model").Message}
      */
     async post(thread, body, params) {
-        const chatWindow = this.store.chatWindows.find((c) => c.threadObjectId === thread.objectId);
+        const chatWindow = this.store.ChatWindow.find((c) => c.threadObjectId === thread.objectId);
         if (
             this.livechatService.state !== SESSION_STATE.PERSISTED &&
             thread.objectId === this.livechatService.thread?.objectId
@@ -109,7 +109,7 @@ patch(ThreadService.prototype, {
     },
 
     insert(data) {
-        const isUnknown = !(createObjectId("Thread", data.model, data.id) in this.store.threads);
+        const isUnknown = !(createObjectId("Thread", data.model, data.id) in this.store.Thread);
         const thread = super.insert(...arguments);
         if (thread.type === "livechat" && isUnknown) {
             if (

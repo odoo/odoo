@@ -104,12 +104,12 @@ patch(ThreadService.prototype, {
     },
     getThread(resModel, resId) {
         const objectId = createObjectId("Thread", resModel, resId);
-        if (objectId in this.store.threads) {
+        if (objectId in this.store.Thread) {
             if (resId === false) {
-                return this.store.threads[objectId];
+                return this.store.Thread[objectId];
             }
             // to force a reload
-            this.store.threads[objectId].status = "new";
+            this.store.Thread[objectId].status = "new";
         }
         const thread = this.insert({
             id: resId,
@@ -137,10 +137,10 @@ patch(ThreadService.prototype, {
      * @returns {import("@mail/core/common/follower_model").Follower}
      */
     insertFollower(data) {
-        let follower = this.store.followers[data.id];
+        let follower = this.store.Follower[data.id];
         if (!follower) {
-            this.store.followers[data.id] = new Follower();
-            follower = this.store.followers[data.id];
+            this.store.Follower[data.id] = new Follower();
+            follower = this.store.Follower[data.id];
         }
         Object.assign(follower, {
             followedThread: data.followedThread,
@@ -178,9 +178,7 @@ patch(ThreadService.prototype, {
         thread.suggestedRecipients = recipients;
     },
     async leaveChannel(channel) {
-        const chatWindow = this.store.chatWindows.find(
-            (c) => c.threadObjectId === channel.objectId
-        );
+        const chatWindow = this.store.ChatWindow.find((c) => c.threadObjectId === channel.objectId);
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }
@@ -235,10 +233,10 @@ patch(ThreadService.prototype, {
         } else {
             thread.followers.delete(follower);
         }
-        delete this.store.followers[follower.id];
+        delete this.store.Follower[follower.id];
     },
     unpin(thread) {
-        const chatWindow = this.store.chatWindows.find((c) => c.threadObjectId === thread.objectId);
+        const chatWindow = this.store.ChatWindow.find((c) => c.threadObjectId === thread.objectId);
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }

@@ -24,10 +24,10 @@ export class NotificationGroup extends DiscussModel {
     constructor(store) {
         super(store);
         this._store = store;
-        this._store.notificationGroups.push(this);
+        this._store.NotificationGroup.push(this);
         this.id = nextId++;
         // return reactive
-        return store.notificationGroups.find((group) => group === this);
+        return store.NotificationGroup.find((group) => group === this);
     }
 
     get iconSrc() {
@@ -39,7 +39,7 @@ export class NotificationGroup extends DiscussModel {
     }
 
     get lastMessage() {
-        return this._store.messages[this.lastMessageId];
+        return this._store.Message[this.lastMessageId];
     }
 
     get datetime() {

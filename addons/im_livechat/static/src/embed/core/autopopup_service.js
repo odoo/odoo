@@ -58,7 +58,7 @@ export class AutopopupService {
      */
     async shouldOpenChatWindow() {
         const thread = await this.threadService.getLivechatThread();
-        return this.storeService.chatWindows.every(
+        return this.storeService.ChatWindow.every(
             (chatWindow) => chatWindow.thread.objectId !== thread?.objectId
         );
     }

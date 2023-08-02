@@ -141,8 +141,8 @@ export class Thread extends DiscussModel {
             type: data.type,
             _store: store,
         });
-        store.threads[this.objectId] = this;
-        return store.threads[this.objectId];
+        store.Thread[this.objectId] = this;
+        return store.Thread[this.objectId];
     }
 
     get accessRestrictedToGroupText() {
@@ -155,7 +155,7 @@ export class Thread extends DiscussModel {
     }
 
     get activeRtcSession() {
-        return this._store.rtcSessions[this.activeRtcSessionId];
+        return this._store.RtcSession[this.activeRtcSessionId];
     }
 
     set activeRtcSession(session) {
@@ -222,7 +222,7 @@ export class Thread extends DiscussModel {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
                 this.customName ||
-                this._store.personas[createObjectId("Persona", "partner", this.chatPartnerId)]
+                this._store.Persona[createObjectId("Persona", "partner", this.chatPartnerId)]
                     .nameOrDisplayName
             );
         }
@@ -419,7 +419,7 @@ export class Thread extends DiscussModel {
     }
 
     get rtcInvitingSession() {
-        return this._store.rtcSessions[this.invitingRtcSessionId];
+        return this._store.RtcSession[this.invitingRtcSessionId];
     }
 
     get hasNeedactionMessages() {
@@ -427,7 +427,7 @@ export class Thread extends DiscussModel {
     }
 
     get videoCount() {
-        return Object.values(this.rtcSessions).filter((session) => session.videoStream).length;
+        return Object.values(this.RtcSession).filter((session) => session.videoStream).length;
     }
 
     get lastInterestDateTime() {
@@ -450,6 +450,6 @@ export class Thread extends DiscussModel {
         if (previousMessages.length === 0) {
             return false;
         }
-        return this._store.messages[Math.max(...previousMessages.map((m) => m.id))];
+        return this._store.Message[Math.max(...previousMessages.map((m) => m.id))];
     }
 }

@@ -20,7 +20,7 @@ export class ChannelMember extends DiscussModel {
     _store;
 
     get persona() {
-        return this._store.personas[this.personaObjectId];
+        return this._store.Persona[this.personaObjectId];
     }
 
     set persona(persona) {
@@ -28,11 +28,11 @@ export class ChannelMember extends DiscussModel {
     }
 
     get rtcSession() {
-        return this._store.rtcSessions[this.rtcSessionId];
+        return this._store.RtcSession[this.rtcSessionId];
     }
 
     get thread() {
-        return this._store.threads[createObjectId("Thread", "discuss.channel", this.threadId)];
+        return this._store.Thread[createObjectId("Thread", "discuss.channel", this.threadId)];
     }
 
     /**

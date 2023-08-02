@@ -85,7 +85,7 @@ export class Discuss extends Component {
     }
 
     get thread() {
-        return this.store.threads[this.store.discuss.threadObjectId];
+        return this.store.Thread[this.store.discuss.threadObjectId];
     }
 
     async onFileUploaded(file) {

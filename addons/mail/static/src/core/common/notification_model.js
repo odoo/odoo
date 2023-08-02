@@ -29,7 +29,7 @@ export class Notification extends DiscussModel {
     }
 
     get message() {
-        return this._store.messages[this.messageId];
+        return this._store.Message[this.messageId];
     }
 
     get isFailure() {

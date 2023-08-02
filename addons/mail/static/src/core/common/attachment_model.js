@@ -28,7 +28,7 @@ export class Attachment extends DiscussModel {
 
     /** @type {import("@mail/core/common/thread_model").Thread} */
     get originThread() {
-        return this._store.threads[this.originThreadObjectId];
+        return this._store.Thread[this.originThreadObjectId];
     }
 
     get isDeletable() {

@@ -101,7 +101,7 @@ export class Activity extends DiscussModel {
             id,
             _store: store,
         });
-        store.activities[id] = this;
-        return store.activities[id];
+        store.Activity[id] = this;
+        return store.Activity[id];
     }
 }

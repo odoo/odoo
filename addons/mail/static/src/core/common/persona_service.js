@@ -32,16 +32,16 @@ export class PersonaService {
      */
     insert(data) {
         const objectId = createObjectId("Persona", data.type, data.id);
-        let persona = this.store.personas[objectId];
+        let persona = this.store.Persona[objectId];
         if (!persona) {
             persona = new Persona();
             persona._store = this.store;
             persona.objectId = objectId;
-            this.store.personas[objectId] = persona;
+            this.store.Persona[objectId] = persona;
         }
         this.update(persona, data);
         // return reactive version
-        return this.store.personas[objectId];
+        return this.store.Persona[objectId];
     }
 
     update(persona, data) {
@@ -64,7 +64,7 @@ export class PersonaService {
      * @returns {[integer]}
      */
     getRecentChatPartnerIds() {
-        return Object.values(this.store.threads)
+        return Object.values(this.store.Thread)
             .filter((thread) => thread.type === "chat")
             .sort((a, b) => {
                 if (!a.lastInterestDateTime && !b.lastInterestDateTime) {

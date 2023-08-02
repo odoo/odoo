@@ -346,7 +346,7 @@ export class ThreadService {
     // This function is like fetchNewMessages but just for a single message at most on all pinned threads
     fetchPreviews = memoize(async () => {
         const ids = [];
-        for (const thread of Object.values(this.store.threads)) {
+        for (const thread of Object.values(this.store.Thread)) {
             if (["channel", "group", "chat"].includes(thread.type)) {
                 ids.push(thread.id);
             }
@@ -355,7 +355,7 @@ export class ThreadService {
             const previews = await this.orm.call("discuss.channel", "channel_fetch_preview", [ids]);
             for (const preview of previews) {
                 const thread =
-                    this.store.threads[createObjectId("Thread", "discuss.channel", preview.id)];
+                    this.store.Thread[createObjectId("Thread", "discuss.channel", preview.id)];
                 const data = Object.assign(preview.last_message, {
                     body: markup(preview.last_message.body),
                 });
@@ -455,13 +455,13 @@ export class ThreadService {
 
     sortChannels() {
         this.store.discuss.channels.threads.sort((id1, id2) => {
-            const thread1 = this.store.threads[id1];
-            const thread2 = this.store.threads[id2];
+            const thread1 = this.store.Thread[id1];
+            const thread2 = this.store.Thread[id2];
             return String.prototype.localeCompare.call(thread1.name, thread2.name);
         });
         this.store.discuss.chats.threads.sort((objectId_1, objectId_2) => {
-            const thread1 = this.store.threads[objectId_1];
-            const thread2 = this.store.threads[objectId_2];
+            const thread1 = this.store.Thread[objectId_1];
+            const thread2 = this.store.Thread[objectId_2];
             return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
         });
     }
@@ -529,7 +529,7 @@ export class ThreadService {
             }
         }
 
-        let chat = Object.values(this.store.threads).find(
+        let chat = Object.values(this.store.Thread).find(
             (thread) => thread.type === "chat" && thread.chatPartnerId === partnerId
         );
         if (!chat || !chat.is_pinned) {
@@ -619,7 +619,7 @@ export class ThreadService {
         this.remove(channel);
         this.setDiscussThread(
             this.store.discuss.channels.threads[0]
-                ? this.store.threads[this.store.discuss.channels.threads[0]]
+                ? this.store.Thread[this.store.discuss.channels.threads[0]]
                 : this.store.discuss.inbox
         );
     }
@@ -649,7 +649,7 @@ export class ThreadService {
     remove(thread) {
         removeFromArray(this.store.discuss.chats.threads, thread.objectId);
         removeFromArray(this.store.discuss.channels.threads, thread.objectId);
-        delete this.store.threads[thread.objectId];
+        delete this.store.Thread[thread.objectId];
     }
 
     /**
@@ -793,8 +793,8 @@ export class ThreadService {
             throw new Error("Cannot insert thread: model is missing in data");
         }
         const objectId = createObjectId("Thread", data.model, data.id);
-        if (objectId in this.store.threads) {
-            const thread = this.store.threads[objectId];
+        if (objectId in this.store.Thread) {
+            const thread = this.store.Thread[objectId];
             this.update(thread, data);
             return thread;
         }
@@ -814,7 +814,7 @@ export class ThreadService {
         this.update(thread, data);
         this.insertComposer({ thread });
         // return reactive version.
-        return this.store.threads[thread.objectId];
+        return this.store.Thread[thread.objectId];
     }
 
     /**
@@ -886,7 +886,7 @@ export class ThreadService {
                 tmpData.guestAuthor = this.store.self;
             }
             if (parentId) {
-                tmpData.parentMessage = this.store.messages[parentId];
+                tmpData.parentMessage = this.store.Message[parentId];
             }
             const prettyContent = await prettifyMessageContent(body, params.validMentions);
             const { emojis } = await loadEmoji();
@@ -915,7 +915,7 @@ export class ThreadService {
         const data = await this.rpc(this.getMessagePostRoute(thread), params);
         if (thread.type !== "chatter") {
             removeFromArrayWithPredicate(thread.messages, ({ id }) => id === tmpMsg.id);
-            delete this.store.messages[tmpMsg.id];
+            delete this.store.Message[tmpMsg.id];
         }
         if (!data) {
             return;
@@ -925,7 +925,7 @@ export class ThreadService {
                 ? markup(data.parentMessage.body)
                 : data.parentMessage.body;
         }
-        if (data.id in this.store.messages) {
+        if (data.id in this.store.Message) {
             data.temporary_id = null;
         }
         const message = this.messageService.insert(
@@ -1025,7 +1025,7 @@ export class ThreadService {
 
     getDiscussSidebarCategoryCounter(categoryId) {
         return this.store.discuss[categoryId].threads.reduce((acc, threadObjectId) => {
-            const channel = this.store.threads[threadObjectId];
+            const channel = this.store.Thread[threadObjectId];
             if (categoryId === "channels") {
                 return channel.message_needaction_counter > 0 ? acc + 1 : acc;
             } else {

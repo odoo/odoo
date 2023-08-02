@@ -84,7 +84,7 @@ export class MessagingMenu extends Component {
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
-            (this.store.notificationGroups.length > 0 && this.store.discuss.activeTab === "all") ||
+            (this.store.NotificationGroup.length > 0 && this.store.discuss.activeTab === "all") ||
             (this.notification.permission === "prompt" && this.store.discuss.activeTab === "all")
         );
     }
@@ -95,7 +95,7 @@ export class MessagingMenu extends Component {
             displayName: sprintf(_t("%s has a request"), this.store.odoobot.name),
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
-            isLast: this.threads.length === 0 && this.store.notificationGroups.length === 0,
+            isLast: this.threads.length === 0 && this.store.NotificationGroup.length === 0,
             isShown:
                 this.store.discuss.activeTab === "all" && this.notification.permission === "prompt",
         };
@@ -103,7 +103,7 @@ export class MessagingMenu extends Component {
 
     get threads() {
         /** @type {import("@mail/core/common/thread_model").Thread[]} */
-        let threads = Object.values(this.store.threads).filter(
+        let threads = Object.values(this.store.Thread).filter(
             (thread) =>
                 thread.is_pinned || (thread.hasNeedactionMessages && thread.type !== "mailbox")
         );
@@ -236,7 +236,7 @@ export class MessagingMenu extends Component {
             });
             // Close the related chat window as having both the form view
             // and the chat window does not look good.
-            this.store.chatWindows.find(({ thr }) => thr === thread)?.close();
+            this.store.ChatWindow.find(({ thr }) => thr === thread)?.close();
         } else {
             this.threadService.open(thread);
         }
@@ -283,10 +283,10 @@ export class MessagingMenu extends Component {
         if (
             this.store.discuss.activeTab === "mailbox" &&
             (!this.store.discuss.threadObjectId ||
-                this.store.threads[this.store.discuss.threadObjectId].type !== "mailbox")
+                this.store.Thread[this.store.discuss.threadObjectId].type !== "mailbox")
         ) {
             this.threadService.setDiscussThread(
-                Object.values(this.store.threads).find((thread) => thread.id === "inbox")
+                Object.values(this.store.Thread).find((thread) => thread.id === "inbox")
             );
         }
         if (this.store.discuss.activeTab !== "mailbox") {
@@ -297,10 +297,10 @@ export class MessagingMenu extends Component {
     get counter() {
         let value =
             this.store.discuss.inbox.counter +
-            Object.values(this.store.threads).filter(
+            Object.values(this.store.Thread).filter(
                 (thread) => thread.is_pinned && thread.message_unread_counter > 0
             ).length +
-            Object.values(this.store.notificationGroups).reduce(
+            Object.values(this.store.NotificationGroup).reduce(
                 (acc, ng) => acc + parseInt(Object.values(ng.notifications).length),
                 0
             );

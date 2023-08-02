@@ -84,7 +84,7 @@ export class ActivityService {
      * @returns {import("@mail/core/web/activity_model").Activity}
      */
     insert(data, { broadcast = true } = {}) {
-        const activity = this.store.activities[data.id] ?? new Activity(this.store, data.id);
+        const activity = this.store.Activity[data.id] ?? new Activity(this.store, data.id);
         if (data.request_partner_id) {
             data.request_partner_id = data.request_partner_id[0];
         }
@@ -99,7 +99,7 @@ export class ActivityService {
     }
 
     delete(activity, { broadcast = true } = {}) {
-        delete this.store.activities[activity.id];
+        delete this.store.Activity[activity.id];
         if (broadcast) {
             this.broadcastChannel?.postMessage({ type: "delete", payload: { id: activity.id } });
         }

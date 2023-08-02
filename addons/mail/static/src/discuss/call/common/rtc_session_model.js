@@ -45,11 +45,11 @@ export class RtcSession extends DiscussModel {
     logStep;
 
     get channelMember() {
-        return this._store.channelMembers[this.channelMemberId];
+        return this._store.ChannelMember[this.channelMemberId];
     }
 
     get channel() {
-        return this._store.threads[createObjectId("Thread", "discuss.channel", this.channelId)];
+        return this._store.Thread[createObjectId("Thread", "discuss.channel", this.channelId)];
     }
 
     get isMute() {
