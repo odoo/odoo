@@ -9,6 +9,7 @@ import { PartnerDetailsEdit } from "./PartnerDetailsEdit";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { Component, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
+import { useAsyncLockedMethod } from "../../custom_hooks";
 
 /**
  * Render this screen using `showTempScreen` to select partner.
@@ -48,6 +49,7 @@ export class PartnerListScreen extends Component {
             currentOffset: 0,
         });
         this.updatePartnerList = debounce(this.updatePartnerList, 70);
+        this.saveChanges = useAsyncLockedMethod(this.saveChanges);
         onWillUnmount(this.updatePartnerList.cancel);
         this.partnerEditor = {}; // create an imperative handle for PartnerDetailsEdit
     }

@@ -17,6 +17,7 @@ import { PaymentScreenStatus } from "./PaymentScreenStatus";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { Component, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
+import { useAsyncLockedMethod } from "../../custom_hooks";
 
 export class PaymentScreen extends Component {
     static template = "PaymentScreen";
@@ -43,6 +44,7 @@ export class PaymentScreen extends Component {
         useErrorHandlers();
         this.payment_interface = null;
         this.error = false;
+        this.validateOrder = useAsyncLockedMethod(this.validateOrder);
     }
 
     showMaxValueError() {
