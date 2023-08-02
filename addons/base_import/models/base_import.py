@@ -19,7 +19,7 @@ import os
 import re
 import requests
 
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 from odoo import api, fields, models
 from odoo.tools.translate import _
@@ -1247,8 +1247,10 @@ class Import(models.TransientModel):
                         _("File size exceeds configured maximum (%s bytes)", maxsize),
                         field=field
                     )
-
-            image = Image.open(io.BytesIO(content))
+            try:
+                image = Image.open(io.BytesIO(content))
+            except UnidentifiedImageError:
+                raise ImportValidationError(_("The uploaded image URL is unable to identify."))
             w, h = image.size
             if w * h > 42e6:  # Nokia Lumia 1020 photo resolution
                 raise ImportValidationError(
@@ -1257,6 +1259,8 @@ class Import(models.TransientModel):
                 )
 
             return base64.b64encode(content)
+        except ImportValidationError as e:
+            raise
         except Exception as e:
             _logger.exception(e)
             raise ImportValidationError(
