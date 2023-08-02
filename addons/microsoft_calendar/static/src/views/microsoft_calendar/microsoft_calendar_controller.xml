@@ -5,7 +5,7 @@
             <attribute name="t-if">true</attribute>
         </xpath>
         <xpath expr="//div[@id='microsoft_calendar_sync']" position="replace">
-            <div id="microsoft_calendar_sync" class="o_calendar_sync">
+            <div id="microsoft_calendar_sync" class="o_calendar_sync pb-2">
                 <button t-if="!model.microsoftIsSync and model.microsoftIsPaused" type="button" id="microsoft_sync_paused" class="o_google_sync_button o_microsoft_sync_paused btn btn-warning" t-on-click="onMicrosoftSyncUnpause">
                     <b>
                         <i id="microsoft_paused" class='fa fa-pause'/>

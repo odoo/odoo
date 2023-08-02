@@ -5,7 +5,7 @@
         <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
             <t t-if="section.filters.length gt 0">
                 <div
-                    class="o_calendar_filter d-flex flex-column gap-1"
+                    class="o_calendar_filter d-flex flex-column gap-1 mt-4"
                     t-att-class="{'o-calendar-filter-panel--section-collapsed': isSectionCollapsed(section)}"
                     t-att-data-name="section.fieldName"
                 >
@@ -92,13 +92,13 @@
                     />
                 </t>
                 <span
-                    class="o_cw_filter_title text-truncate flex-grow"
+                    class="o_cw_filter_title flex-grow-1 text-truncate lh-base"
                     t-esc="filter.label"
                 />
             </label>
             <t t-if="filter.canRemove">
                 <button
-                    class="o_remove btn bg-white text-700 py-0 px-2"
+                    class="o_remove btn position-absolute top-50 end-0 bg-white py-0 px-2 text-700 transition-base"
                     role="img"
                     title="Remove this favorite from the list"
                     aria-label="Remove this favorite from the list"

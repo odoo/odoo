@@ -158,33 +158,16 @@ $o-cw-filter-avatar-size: 20px;
 
     .o_calendar_filter {
 
-        .o_cw_filter_collapse_icon {
-            transition: all 0.3s ease;
-            @include o-hover-opacity();
-        }
-
-        .collapsed .o_cw_filter_collapse_icon {
-            transform: rotate(90deg);
-            opacity: 1;
-        }
-
         .o_calendar_filter_items_checkall,
         .o_calendar_filter_item {
 
-            .o_cw_filter_title {
-                line-height: $o-line-height-base;
-                flex-grow: 1;
-            }
-
             button.o_remove {
-                @include o-position-absolute(0, 0, 0);
-                transform: translateX(100%);
-                transition: $transition-base;
+                transform: translate(100%, -50%);
             }
 
             &:hover {
                 button.o_remove {
-                    transform: translateX(0%);
+                    transform: translate(0%, -50%);
                 }
             }
         }
