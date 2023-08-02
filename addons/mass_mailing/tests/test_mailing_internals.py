@@ -403,6 +403,38 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing_0.name, 'Second subject (Mass Mailing created on 2022-01-02) [2]',
             msg='The name must be unique')
 
+    @users('user_marketing')
+    def test_mailing_mailing_test_email_to(self):
+        """
+        Tests the default value for `email_to` in the `mailing.mailing.test` wizard. This wizard is
+        used when we send a test email to test our mass mailing.
+        """
+        mass_mailing = self.env['mailing.mailing'].create({'name': 'test', 'subject': 'test'})
+        test_action = mass_mailing.action_test()
+        wizard = self.env[test_action['res_model']].with_context(test_action['context']).create({})
+        # at first, default email_to should be the current user's
+        self.assertEqual(self.user_marketing.email_formatted, wizard.email_to)
+
+        wizard.email_to = 'test@example.com\nsalut@example.com'
+        wizard.send_mail_test()
+
+        chatter_test_message = self.env['mail.message'].search([
+            ('model', '=', 'mailing.mailing'),
+            ('res_id', '=', mass_mailing.id),
+            ('body', 'ilike', wizard._get_success_test_mailing_message()),
+        ], order='id desc', limit=1)
+        # check that a success note was logged for our test message
+        self.assertEqual(len(chatter_test_message), 1)
+
+        second_wizard = self.env[test_action['res_model']].with_context(test_action['context']).create({})
+        # for subsequent tests, check that the last emails are re-used
+        self.assertEqual(wizard.email_to, second_wizard.email_to)
+        second_wizard.email_to = 'third_email@email.corp'
+        second_wizard.send_mail_test()
+
+        third_wizard = self.env[test_action['res_model']].with_context(test_action['context']).create({})
+        self.assertEqual(second_wizard.email_to, third_wizard.email_to)
+
 
 @tagged('mass_mailing')
 class TestMassMailFeatures(MassMailCommon, CronMixinCase):

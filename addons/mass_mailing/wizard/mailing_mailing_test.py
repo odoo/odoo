@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 from markupsafe import Markup
 
-from odoo import _, fields, models, tools
+from odoo import _, api, fields, models, tools
 from odoo.tools.misc import file_open
 
 
@@ -11,9 +12,41 @@ class TestMassMailing(models.TransientModel):
     _name = 'mailing.mailing.test'
     _description = 'Sample Mail Wizard'
 
-    email_to = fields.Text(string='Recipients', required=True,
-                           help='Carriage-return-separated list of email addresses.', default=lambda self: self.env.user.email_formatted)
+    email_to = fields.Text(string='Recipients', required=True, default=lambda s: s._get_email_to(),
+                           help='Carriage-return-separated list of email addresses.')
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', required=True, ondelete='cascade')
+
+    @api.model
+    def _get_success_test_mailing_message(self):
+        return 'Test mailing successfully sent to'
+
+    @api.model
+    def _get_failure_test_mailing_message(self):
+        return 'Test mailing could not be sent to'
+
+    def _get_email_to(self):
+        """
+        Tries to get the last test email adress used from the chatter logged notes. If not
+        available, returns the current user's email adress.
+        """
+        if not self.env.context.get('default_mass_mailing_id'):
+            return self.env.user.email_formatted
+
+        chatter_test_message = self.env['mail.message'].search([
+            ('model', '=', 'mailing.mailing'),
+            ('res_id', '=', self.env.context['default_mass_mailing_id']),
+            ('message_type', '=', 'notification'),
+            '|',
+                ('body', 'ilike', self._get_success_test_mailing_message()),
+                ('body', 'ilike', self._get_failure_test_mailing_message()),
+        ], order='id desc', limit=1)
+        email_adresses = None
+
+        if chatter_test_message:
+            email_adresses = re.findall(
+                r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', str(chatter_test_message.body))
+
+        return '\n'.join(email_adresses) if email_adresses else self.env.user.email_formatted
 
     def send_mail_test(self):
         self.ensure_one()
@@ -81,10 +114,10 @@ class TestMassMailing(models.TransientModel):
         for mail_sudo in mails_sudo:
             if mail_sudo.state == 'sent':
                 notification_messages.append(
-                    _('Test mailing successfully sent to %s', mail_sudo.email_to))
+                    _(f'{self._get_success_test_mailing_message()} {mail_sudo.email_to}'))
             elif mail_sudo.state == 'exception':
                 notification_messages.append(
-                    _('Test mailing could not be sent to %s:', mail_sudo.email_to) +
+                    _(f'{self._get_failure_test_mailing_message()} {mail_sudo.email_to}:') +
                     (Markup("<br/>") + mail_sudo.failure_reason)
                 )
 
