@@ -28,5 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'l10n_cn_1124',
                 'income_currency_exchange_account_id': 'l10n_cn_6051',
                 'expense_currency_exchange_account_id': 'l10n_cn_6711',
+                'account_sale_tax_id': 'l10n_cn_sales_included_13',
+                'account_purchase_tax_id': 'l10n_cn_purchase_excluded_13',
             },
         }

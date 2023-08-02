@@ -28,5 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_suspense_account_id': 'l10n_pk_2226000',
                 'account_journal_early_pay_discount_loss_account_id': 'l10n_pk_4411003',
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_pk_3112004',
+                'account_sale_tax_id': 'pk_sales_tax_17',
+                'account_purchase_tax_id': 'purchases_tax_17',
             },
         }

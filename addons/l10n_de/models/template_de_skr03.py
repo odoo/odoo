@@ -33,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'account_2150',
                 'account_journal_early_pay_discount_loss_account_id': 'account_2130',
                 'account_journal_early_pay_discount_gain_account_id': 'account_2670',
+                'account_sale_tax_id': 'tax_ust_19_skr03',
+                'account_purchase_tax_id': 'tax_vst_19_skr03',
             },
         }
 

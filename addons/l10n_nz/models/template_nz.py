@@ -33,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'nz_61630',
                 'account_journal_early_pay_discount_loss_account_id': 'nz_61610',
                 'account_journal_early_pay_discount_gain_account_id': 'nz_61620',
+                'account_sale_tax_id': 'nz_tax_sale_15',
+                'account_purchase_tax_id': 'nz_tax_purchase_15',
             },
         }

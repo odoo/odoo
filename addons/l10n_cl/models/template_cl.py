@@ -34,5 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_currency_exchange_account_id': 'account_410195',
                 'expense_currency_exchange_account_id': 'account_410195',
                 'tax_calculation_rounding_method': 'round_globally',
+                'account_sale_tax_id': 'ITAX_19',
+                'account_purchase_tax_id': 'OTAX_19',
             },
         }

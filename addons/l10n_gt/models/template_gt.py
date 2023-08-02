@@ -27,5 +27,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'cta110205',
                 'income_currency_exchange_account_id': 'cta410103',
                 'expense_currency_exchange_account_id': 'cta710101',
+                'account_sale_tax_id': 'impuestos_plantilla_iva_por_pagar',
+                'account_purchase_tax_id': 'impuestos_plantilla_iva_por_cobrar',
+
             },
         }

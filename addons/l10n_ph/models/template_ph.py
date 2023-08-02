@@ -33,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_suspense_account_id': 'l10n_ph_100000',
                 'default_cash_difference_income_account_id': 'l10n_ph_710102',
                 'default_cash_difference_expense_account_id': 'l10n_ph_710103',
+                'account_sale_tax_id': 'l10n_ph_tax_sale_vat_12',
+                'account_purchase_tax_id': 'l10n_ph_tax_purchase_vat_12',
             },
         }

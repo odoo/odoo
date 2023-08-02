@@ -33,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': '610340',
                 'default_cash_difference_income_account_id': '500110',
                 'default_cash_difference_expense_account_id': '610460',
+                'account_sale_tax_id': 'ST1',
+                'account_purchase_tax_id': 'PT15',
             },
         }

@@ -29,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'transfer_account_code_prefix': '389',
                 'income_currency_exchange_account_id': 'l10n_hu_976',
                 'expense_currency_exchange_account_id': 'l10n_hu_876',
+                'account_sale_tax_id': 'F27',
+                'account_purchase_tax_id': 'V27',
             },
         }

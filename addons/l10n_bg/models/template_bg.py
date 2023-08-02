@@ -28,5 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'transfer_account_code_prefix': '430',
                 'income_currency_exchange_account_id': 'l10n_bg_624',
                 'expense_currency_exchange_account_id': 'l10n_bg_624',
+                'account_sale_tax_id': 'l10n_bg_sale_vat_20',
+                'account_purchase_tax_id': 'l10n_bg_purchase_vat_20_ptc',
             },
         }

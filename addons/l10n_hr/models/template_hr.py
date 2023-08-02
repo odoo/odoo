@@ -28,5 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'hr_120100',
                 'income_currency_exchange_account_id': 'hr_772000',
                 'expense_currency_exchange_account_id': 'hr_475000',
+                'account_sale_tax_id': 'VAT_S_IN_ROC_25',
+                'account_purchase_tax_id': 'VAT_P_IN_ROC_25',
             },
         }

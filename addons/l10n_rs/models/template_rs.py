@@ -30,5 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'rs_563',
                 'default_cash_difference_income_account_id': 'rs_6791',
                 'default_cash_difference_expense_account_id': 'rs_5791',
+                'account_sale_tax_id': 'rs_sale_vat_20',
+                'account_purchase_tax_id': 'rs_purchase_vat_20',
             },
         }

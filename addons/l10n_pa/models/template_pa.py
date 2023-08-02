@@ -27,5 +27,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': '121_01',
                 'income_currency_exchange_account_id': 'gain81_01',
                 'expense_currency_exchange_account_id': 'loss81_01',
+                'account_sale_tax_id': 'ITAX_19',
+                'account_purchase_tax_id': 'OTAX_19',
             },
         }

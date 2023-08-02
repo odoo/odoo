@@ -32,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'chart_skr04_5730',
                 'default_cash_difference_income_account_id': 'chart_skr04_9991',
                 'default_cash_difference_expense_account_id': 'chart_skr04_9994',
+                'account_sale_tax_id': 'tax_ust_19_skr04',
+                'account_purchase_tax_id': 'tax_vst_19_skr04',
             },
         }
 

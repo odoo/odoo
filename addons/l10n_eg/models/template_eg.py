@@ -36,6 +36,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_payment_credit_account_id': 'egy_account_105003',
                 'default_cash_difference_income_account_id': 'egy_account_999002',
                 'default_cash_difference_expense_account_id': 'egy_account_999001',
+                'account_sale_tax_id': 'eg_standard_sale_14',
+                'account_purchase_tax_id': 'eg_standard_purchase_14',
             },
         }
 

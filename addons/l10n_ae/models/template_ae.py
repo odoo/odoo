@@ -20,6 +20,15 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('ae', 'res.company')
     def _get_ae_res_company(self):
+        sales_tax_xmlid = {
+            'AZ': 'uae_sale_tax_5_abu_dhabi',
+            'AJ': 'uae_sale_tax_5_ajman',
+            'DU': 'uae_sale_tax_5_dubai',
+            'FU': 'uae_sale_tax_5_fujairah',
+            'RK': 'uae_sale_tax_5_ras_al_khaima',
+            'SH': 'uae_sale_tax_5_sharjah',
+            'UQ': 'uae_sale_tax_5_umm_al_quwain',
+        }.get(self.env.company.state_id.code, 'uae_sale_tax_5_abu_dhabi')
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.ae',
@@ -31,6 +40,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'uae_account_400053',
                 'account_journal_early_pay_discount_loss_account_id': 'uae_account_400071',
                 'account_journal_early_pay_discount_gain_account_id': 'uae_account_500014',
+                'account_sale_tax_id': sales_tax_xmlid,
+                'account_purchase_tax_id': 'uae_purchase_tax_5',
             },
         }
 
