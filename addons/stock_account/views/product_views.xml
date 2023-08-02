@@ -12,6 +12,17 @@
             </field>
         </record>
 
+        <record id="view_product_category_tree" model="ir.ui.view">
+            <field name="name">product.category.tree.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_list_view"/>
+            <field name="arch" type="xml">
+                <field name="display_name" position="after">
+                    <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
+                </field>
+            </field>
+        </record>
+
         <record id="view_category_property_form_stock" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit.stock</field>
             <field name="model">product.category</field>
