@@ -37,8 +37,3 @@ class Partner(models.Model):
         country_fname = 'country_id'
         number = self[number_fname]
         return phone_validation.phone_sanitize_numbers_w_record([number], self, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']
-
-    def _phone_get_number_fields(self):
-        """ Stand alone version, allowing to use it on partner model without
-        having any dependency on sms module. To cleanup in master (15.3 +)."""
-        return ['mobile', 'phone']
