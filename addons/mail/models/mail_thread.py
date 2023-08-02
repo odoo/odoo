@@ -1254,6 +1254,9 @@ class MailThread(models.AbstractModel):
             if message.get_content_type() == 'text/plain':
                 # text/plain -> <pre/>
                 body = tools.append_content_to_html(u'', body, preserve=True)
+            elif message.get_content_type() == 'text/html':
+                # we only strip_classes here everything else will be done in by html field of mail.message
+                body = tools.html_sanitize(body, sanitize_tags=False, strip_classes=True)
         else:
             alternative = False
             mixed = False
