@@ -43,17 +43,21 @@ class MailingSMSController(http.Controller):
             return request.redirect('/web')
         # parse and validate number
         sms_number = post.get('sms_number', '').strip(' ')
-        sanitize_res = phone_validation.phone_sanitize_numbers([sms_number], request.geoip.country_code, None)[sms_number]
-        tocheck_number = sanitize_res['sanitized'] or sms_number
+        sanitized = phone_validation.phone_format(
+            sms_number,
+            request.geoip.country_code,
+            force_format='E164',
+            raise_exception=False,
+        )
+        tocheck_number = sanitized or sms_number
 
-        trace = check_res['trace'].filtered(lambda r: r.sms_number == tocheck_number)[:1]
-        mailing_list_ids = trace.mass_mailing_id.contact_list_ids
-
+        trace = check_res['trace'].filtered(lambda r: r.sms_number == tocheck_number)[:1] if tocheck_number else False
         # compute opt-out / blacklist information
         lists_optout = request.env['mailing.list'].sudo()
         lists_optin = request.env['mailing.list'].sudo()
         unsubscribe_error = False
         if tocheck_number and trace:
+            mailing_list_ids = trace.mass_mailing_id.contact_list_ids
             if mailing_list_ids:
                 subscriptions = request.env['mailing.contact.subscription'].sudo().search([
                     ('list_id', 'in', mailing_list_ids.ids),
@@ -74,7 +78,7 @@ class MailingSMSController(http.Controller):
         elif tocheck_number:
             unsubscribe_error = _('Number %s not found', tocheck_number)
         else:
-            unsubscribe_error = sanitize_res['msg']
+            unsubscribe_error = _('Invalid number %s', post.get('sms_number', ''))
 
         return request.render('mass_mailing_sms.blacklist_number', {
             'mailing_id': mailing_id,

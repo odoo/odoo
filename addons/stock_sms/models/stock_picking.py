@@ -45,14 +45,6 @@ class Picking(models.Model):
             'context': self.env.context,
         }
 
-    def _sms_get_number_fields(self):
-        """ No phone or mobile field is available on ``stock.picking`` model. Instead SMS will
-        fallback on partner-based computation using ``_sms_get_partner_fields``. """
-        return []
-
-    def _sms_get_partner_fields(self):
-        return ['partner_id']
-
     def _send_confirmation_email(self):
         super(Picking, self)._send_confirmation_email()
         if not self.env.context.get('skip_sms') and not getattr(threading.current_thread(), 'testing', False) and not self.env.registry.in_test_mode():

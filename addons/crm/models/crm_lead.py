@@ -633,12 +633,12 @@ class Lead(models.Model):
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
         if self.phone:
-            self.phone = self.phone_get_sanitized_number(number_fname='phone', force_format='INTERNATIONAL') or self.phone
+            self.phone = self._phone_format(fname='phone', force_format='INTERNATIONAL') or self.phone
 
     @api.onchange('mobile', 'country_id', 'company_id')
     def _onchange_mobile_validation(self):
         if self.mobile:
-            self.mobile = self.phone_get_sanitized_number(number_fname='mobile', force_format='INTERNATIONAL') or self.mobile
+            self.mobile = self._phone_format(fname='mobile', force_format='INTERNATIONAL') or self.mobile
 
     def _prepare_values_from_partner(self, partner):
         """ Get a dictionary with values coming from partner information to
@@ -706,8 +706,8 @@ class Lead(models.Model):
         """
         self.ensure_one()
         if self.partner_id and self.phone != self.partner_id.phone:
-            lead_phone_formatted = self.phone_get_sanitized_number(number_fname='phone') or self.phone or False
-            partner_phone_formatted = self.partner_id.phone_get_sanitized_number(number_fname='phone') or self.partner_id.phone or False
+            lead_phone_formatted = self._phone_format(fname='phone') or self.phone or False
+            partner_phone_formatted = self.partner_id._phone_format(fname='phone') or self.partner_id.phone or False
             return lead_phone_formatted != partner_phone_formatted
         return False
 
@@ -2039,10 +2039,6 @@ class Lead(models.Model):
                     partner_info['full_name'] = tools.formataddr((self.contact_name or self.partner_name, email))
                     break
         return result
-
-    def _phone_get_number_fields(self):
-        """ Use mobile or phone fields to compute sanitized phone number """
-        return ['mobile', 'phone']
 
     @api.model
     def get_import_templates(self):

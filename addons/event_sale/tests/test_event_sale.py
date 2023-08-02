@@ -168,16 +168,16 @@ class TestEventSale(TestEventSaleCommon):
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('phone')),
-            set(['+32456111111', self.event_customer._phone_format(self.event_customer.phone)])
+            set(['+32456111111', self.event_customer._phone_format(fname='phone')])
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('mobile')),
-            set(['+32456222222', self.event_customer._phone_format(self.event_customer.mobile)])
+            set(['+32456222222', self.event_customer._phone_format(fname='mobile')])
         )
         for field in ['name', 'email']:
             self.assertEqual(ticket2_new_reg[field], self.event_customer[field])
         for field in ['phone', 'mobile']:
-            self.assertEqual(ticket2_new_reg[field], self.event_customer._phone_format(self.event_customer[field]))
+            self.assertEqual(ticket2_new_reg[field], self.event_customer._phone_format(fname=field))
 
         # ADDING MANUAL LINES ON SO
         # ------------------------------------------------------------

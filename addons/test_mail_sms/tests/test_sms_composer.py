@@ -212,7 +212,7 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
             'phone_nbr': False,
             'mobile_nbr': False,
         })
-        default_field_name = self.env['mail.test.sms']._sms_get_number_fields()[0]
+        default_field_name = self.env['mail.test.sms']._phone_get_number_fields()[0]
 
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
@@ -573,7 +573,7 @@ class TestSMSComposerMass(SMSCommon):
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        number = self.partners[2].phone_get_sanitized_number()
+        number = self.partners[2]._phone_format()
         self.assertSMSNotification(
             [{'partner': test_record_2.customer_id, 'number': number}],
             "Hello %s ceci est en français." % test_record_2.display_name, messages

@@ -7,15 +7,6 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_date
 from odoo.exceptions import AccessError, ValidationError
 
-# phone_validation is not officially in the depends of event, but we would like
-# to have the formatting available in event, not in event_sms -> do a conditional
-# import just to be sure
-try:
-    from odoo.addons.phone_validation.tools.phone_validation import phone_format
-except ImportError:
-    def phone_format(number, country_code, country_phone_code, force_format='INTERNATIONAL', raise_exception=True):
-        return number
-
 
 class EventRegistration(models.Model):
     _name = 'event.registration'
@@ -134,13 +125,13 @@ class EventRegistration(models.Model):
     def _onchange_phone_validation(self):
         if self.phone:
             country = self.partner_id.country_id or self.event_id.country_id or self.env.company.country_id
-            self.phone = self._phone_format(self.phone, country)
+            self.phone = self._phone_format(fname='phone', country=country) or self.phone
 
     @api.onchange('mobile', 'event_id', 'partner_id')
     def _onchange_mobile_validation(self):
         if self.mobile:
             country = self.partner_id.country_id or self.event_id.country_id or self.env.company.country_id
-            self.mobile = self._phone_format(self.mobile, country)
+            self.mobile = self._phone_format(fname='mobile', country=country)
 
     # ------------------------------------------------------------
     # CRUD
@@ -165,7 +156,7 @@ class EventRegistration(models.Model):
 
             for fname in {'mobile', 'phone'}:
                 if values.get(fname):
-                    values[fname] = self._phone_format(values[fname], related_country)
+                    values[fname] = self._phone_format(number=values[fname], country=related_country) or values[fname]
 
         registrations = super(EventRegistration, self).create(vals_list)
 
@@ -220,20 +211,6 @@ class EventRegistration(models.Model):
     def _check_auto_confirmation(self):
         """ Checks that all registrations are for `auto-confirm` events. """
         return all(event.auto_confirm for event in self.event_id)
-
-    def _phone_format(self, number, country):
-        """ Call phone_validation formatting tool function. Returns original
-        number in case formatting cannot be done (no country, wrong info, ...) """
-        if not number or not country:
-            return number
-        new_number = phone_format(
-            number,
-            country.code,
-            country.phone_code,
-            force_format='E164',
-            raise_exception=False,
-        )
-        return new_number if new_number else number
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS

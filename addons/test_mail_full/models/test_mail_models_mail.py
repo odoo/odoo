@@ -87,8 +87,11 @@ class MailTestRating(models.Model):
             elif not rating.phone_nbr:
                 rating.phone_nbr = False
 
-    def _mail_get_partner_fields(self):
+    def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
+
+    def _phone_get_number_fields(self):
+        return ['phone_nbr', 'mobile_nbr']
 
     def _rating_apply_get_default_subtype_id(self):
         return self.env['ir.model.data']._xmlid_to_res_id("test_mail_full.mt_mail_test_rating_rating_done")
@@ -113,7 +116,7 @@ class MailTestRatingThread(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer')
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
 
-    def _mail_get_partner_fields(self):
+    def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
     def _rating_get_partner(self):

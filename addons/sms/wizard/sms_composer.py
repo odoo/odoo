@@ -123,7 +123,7 @@ class SendSMS(models.TransientModel):
                 continue
             records.ensure_one()
             res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=False)
-            composer.recipient_single_description = res[records.id]['partner'].name or records._sms_get_default_partners().display_name
+            composer.recipient_single_description = res[records.id]['partner'].name or records._mail_get_partners()[records[0].id].display_name
             composer.recipient_single_number = res[records.id]['number'] or ''
             if not composer.recipient_single_number_itf:
                 composer.recipient_single_number_itf = res[records.id]['number'] or ''
@@ -136,8 +136,7 @@ class SendSMS(models.TransientModel):
             value = composer.recipient_single_number_itf or composer.recipient_single_number
             if value:
                 records = composer._get_records()
-                sanitized = phone_validation.phone_sanitize_numbers_w_record([value], records)[value]['sanitized']
-                composer.recipient_single_valid = bool(sanitized)
+                composer.recipient_single_valid = bool(records._phone_format(number=value)) if len(records) == 1 else False
             else:
                 composer.recipient_single_valid = False
 
@@ -147,9 +146,8 @@ class SendSMS(models.TransientModel):
             if composer.numbers:
                 record = composer._get_records() if composer.res_model and composer.res_id else self.env.user
                 numbers = [number.strip() for number in composer.numbers.split(',')]
-                sanitize_res = phone_validation.phone_sanitize_numbers_w_record(numbers, record)
-                sanitized_numbers = [info['sanitized'] for info in sanitize_res.values() if info['sanitized']]
-                invalid_numbers = [number for number, info in sanitize_res.items() if info['code']]
+                sanitized_numbers = [record._phone_format(number=number) for number in numbers]
+                invalid_numbers = [number for sanitized, number in zip(sanitized_numbers, numbers) if not sanitized]
                 if invalid_numbers:
                     raise UserError(_('Following numbers are not correctly encoded: %s', repr(invalid_numbers)))
                 composer.sanitized_numbers = ','.join(sanitized_numbers)
