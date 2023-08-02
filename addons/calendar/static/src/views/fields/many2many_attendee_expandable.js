@@ -12,6 +12,7 @@ export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
     state = useState({ expanded: false });
 
     setup() {
+        super.setup();
         this.attendeesCount = this.props.record.data.attendees_count;
         this.acceptedCount = this.props.record.data.accepted_count;
         this.declinedCount = this.props.record.data.declined_count;
