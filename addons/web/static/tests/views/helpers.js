@@ -17,7 +17,6 @@ import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
 } from "../search/helpers";
-import { addLegacyMockEnvironment } from "../webclient/helpers";
 
 import { Component, useSubEnv, xml } from "@odoo/owl";
 
@@ -52,11 +51,9 @@ async function _makeView(params, inDialog = false) {
         ...getDefaultConfig(),
         ...props.config,
     };
-    const legacyParams = props.legacyParams || {};
 
     delete props.serverData;
     delete props.mockRPC;
-    delete props.legacyParams;
     delete props.config;
 
     if (props.arch) {
@@ -72,22 +69,6 @@ async function _makeView(params, inDialog = false) {
 
     const env = await makeTestEnv({ serverData, mockRPC });
     Object.assign(env, createDebugContext(env)); // This is needed if the views are in debug mode
-
-    /** Legacy Environment, for compatibility sakes
-     *  Remove this as soon as we drop the legacy support
-     */
-    const models = params.serverData.models;
-    if (legacyParams && legacyParams.withLegacyMockServer && models) {
-        legacyParams.models = Object.assign({}, 0);
-        // In lagacy, data may not be sole models, but can contain some other variables
-        // So we filter them out for our WOWL mockServer
-        Object.entries(legacyParams.models).forEach(([k, v]) => {
-            if (!(v instanceof Object) || !("fields" in v)) {
-                delete models[k];
-            }
-        });
-    }
-    await addLegacyMockEnvironment(env, legacyParams);
 
     const target = getFixture();
     const viewEnv = Object.assign(Object.create(env), { config });

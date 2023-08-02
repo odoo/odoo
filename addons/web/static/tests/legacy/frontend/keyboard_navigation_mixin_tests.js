@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import KeyboardNavigationMixin from "@web/legacy/frontend/keyboard_navigation_mixin";
-import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import Widget from "@web/legacy/js/core/widget";
 
 QUnit.module('KeyboardNavigationMixin', function () {
@@ -25,7 +24,7 @@ QUnit.module('KeyboardNavigationMixin', function () {
                 return this._super(...arguments);
             },
         });
-        var parent = await testUtils.createParent({});
+        var parent = new Widget();
         var w = new KeyboardWidget(parent);
         await w.appendTo($target);
 
@@ -66,7 +65,7 @@ QUnit.module('KeyboardNavigationMixin', function () {
                 return this._super(...arguments);
             },
         });
-        var parent = await testUtils.createParent({});
+        var parent = new Widget();
         var w = new KeyboardWidget(parent);
         await w.appendTo($target);
 

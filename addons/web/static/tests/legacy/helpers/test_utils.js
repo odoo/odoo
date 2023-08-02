@@ -11,7 +11,6 @@
     import testUtilsFields from "@web/../tests/legacy/helpers/test_utils_fields";
     import testUtilsFile from "@web/../tests/legacy/helpers/test_utils_file";
     import testUtilsMock from "@web/../tests/legacy/helpers/test_utils_mock";
-    import Widget from "@web/legacy/js/core/widget";
 
     function deprecated(fn, type) {
         return function () {
@@ -20,19 +19,6 @@
             console.warn(msg);
             return fn.apply(this, arguments);
         };
-    }
-
-    /**
-     * Create a widget parent from given parameters.
-     *
-     * @param {Object} params This object will be given to addMockEnvironment, so
-     *   any parameters from that method applies
-     * @returns {Promise<Widget>}
-     */
-    async function createParent(params) {
-        const widget = new Widget();
-        await testUtilsMock.addMockEnvironment(widget, params);
-        return widget;
     }
 
     /**
@@ -99,8 +85,6 @@
     }
 
     export const mock = {
-        addMockEnvironment: testUtilsMock.addMockEnvironment,
-        addMockEnvironmentOwl: testUtilsMock.addMockEnvironmentOwl,
         intercept: testUtilsMock.intercept,
         patch: testUtilsMock.patch,
         patchDate: testUtilsMock.patchDate,
@@ -137,14 +121,12 @@
         fields,
         file,
 
-        createParent,
         makeTestPromise: makeTestPromise,
         makeTestPromiseWithAssert: makeTestPromiseWithAssert,
         nextMicrotaskTick: nextMicrotaskTick,
         nextTick: nextTick,
 
         // backward-compatibility
-        addMockEnvironment: deprecated(testUtilsMock.addMockEnvironment, 'mock'),
         dragAndDrop: deprecated(testUtilsDom.dragAndDrop, 'dom'),
         getView: deprecated(testUtilsMock.getView, 'mock'),
         intercept: deprecated(testUtilsMock.intercept, 'mock'),
