@@ -117,6 +117,13 @@ export class Message {
         return this.recipients.some((recipient) => recipient === this._store.self);
     }
 
+    /**
+    * Whether the message was successfully sent/canceled
+    */
+    get isSuccess() {
+            return this.failureNotifications.length === 0;
+    }
+
     get isHighlightedFromMention() {
         return this.isSelfMentioned && this.resModel === "discuss.channel";
     }
@@ -179,6 +186,13 @@ export class Message {
         return this.write_date !== this.create_date ? this.write_date : false;
     }
 
+    /**
+    * Whether the message has notification statuses to display
+    */
+    get hasStatusIndicator() {
+        return this.notifications.length > 0;
+    }
+
     get hasTextContent() {
         return /*(this.editDate && this.attachments.length) || */ !this.isBodyEmpty;
     }
@@ -234,6 +248,23 @@ export class Message {
 
     get failureNotifications() {
         return this.notifications.filter((notification) => notification.isFailure);
+    }
+
+    /**
+     * Computes the title of the notification icon
+     */
+    get statusIndicatorTitle() {
+        return this.failureNotifications.length > 0
+               ? _t("Failed Message")
+               : _t("Fully Processed Message");
+    }
+
+    get statusIndicatorIcon() {
+        return this.notifications.length ? this.notifications[0].icon : '';
+    }
+
+    get statusIndicatorLabel() {
+        return this.notifications.length ? this.notifications[0].label : '';
     }
 
     get editDatetimeHuge() {

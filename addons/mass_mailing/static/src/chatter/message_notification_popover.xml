@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.MessageNotificationPopover" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-MessageNotificationPopover')]/div/i" position="after">
+            <t t-set="message" t-value="props.message"/>
+            <t t-if="message.traces.length > 0 and message.traces[0].trace_type === 'mail'">
+                <t t-foreach="message.traces" t-as="trace" t-key="trace.id">
+                    <div class="o_MessageNotificationPopoverContentView_notification">
+                        <i class="o_MessageNotificationPopoverContentView_notificationIcon me-2"
+                           t-att-class="trace.statusIconClass" t-att-title="trace.statusIconTitle" role="img"/>
+                        <span class="o_MessageNotificationPopoverContentView_notificationTraceEmail" t-esc="trace.email or '/'"/>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -458,6 +458,13 @@ export class MessageService {
                       displayName: data.res_partner_id[1],
                       type: "partner",
                   })
+                : data.unpartnered_email
+                ? this.personaService.insert({
+                    id: data.unpartnered_email,
+                    displayName: data.unpartnered_email,
+                    email: data.unpartnered_email,
+                    type: "email",
+                })
                 : undefined,
         });
         if (notification.message.author !== this.store.self) {

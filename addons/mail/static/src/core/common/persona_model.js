@@ -15,7 +15,7 @@ export class Persona {
     localId;
     /** @type {number} */
     id;
-    /** @type {'partner' | 'guest'} */
+    /** @type {'partner' | 'guest' | 'email'} */
     type;
     /** @type {string} */
     name;

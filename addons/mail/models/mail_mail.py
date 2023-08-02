@@ -236,7 +236,7 @@ class MailMail(models.Model):
 
         return res
 
-    def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
+    def _postprocess_sent_message(self, success_pids, success_email_addrs, failure_reason=False, failure_type=None):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
@@ -255,7 +255,8 @@ class MailMail(models.Model):
                 # find all notification linked to a failure
                 failed = self.env['mail.notification']
                 if failure_type:
-                    failed = notifications.filtered(lambda notif: notif.res_partner_id not in success_pids)
+                    failed = notifications.filtered(lambda notif: (notif.res_partner_id and notif.res_partner_id not in success_pids)
+                                                                  or (notif.unpartnered_email and notif.unpartnered_email not in success_email_addrs))
                 (notifications - failed).sudo().write({
                     'notification_status': 'sent',
                     'failure_type': '',
@@ -530,7 +531,7 @@ class MailMail(models.Model):
                 else:
                     batch = self.browse(batch_ids)
                     batch.write({'state': 'exception', 'failure_reason': exc})
-                    batch._postprocess_sent_message(success_pids=[], failure_type="mail_smtp")
+                    batch._postprocess_sent_message(success_pids=[], success_email_addrs=[], failure_type="mail_smtp")
             else:
                 self.browse(batch_ids)._send(
                     auto_commit=auto_commit,
@@ -554,7 +555,9 @@ class MailMail(models.Model):
 
         for mail_id in self.ids:
             success_pids = []
+            success_email_addrs = []
             failure_type = None
+            processing_email_addr = None
             processing_pid = None
             mail = None
             try:
@@ -612,12 +615,14 @@ class MailMail(models.Model):
                         subtype_alternative='plain',
                         headers=email['headers'],
                     )
+                    processing_email_addr = email.get("email_to", None)
                     processing_pid = email.pop("partner_id", None)
                     try:
                         res = IrMailServer.send_email(
                             msg, mail_server_id=mail.mail_server_id.id, smtp_session=smtp_session)
                         if processing_pid:
                             success_pids.append(processing_pid)
+                            success_email_addrs += processing_email_addr
                         processing_pid = None
                     except AssertionError as error:
                         if str(error) == IrMailServer.NO_VALID_RECIPIENT:
@@ -639,7 +644,7 @@ class MailMail(models.Model):
                     _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
                     # /!\ can't use mail.state here, as mail.refresh() will cause an error
                     # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
-                mail._postprocess_sent_message(success_pids=success_pids, failure_type=failure_type)
+                mail._postprocess_sent_message(success_pids=success_pids, success_email_addrs=success_email_addrs, failure_type=failure_type)
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
@@ -659,7 +664,7 @@ class MailMail(models.Model):
                 failure_reason = tools.ustr(e)
                 _logger.exception('failed sending mail (id: %s) due to %s', mail.id, failure_reason)
                 mail.write({'state': 'exception', 'failure_reason': failure_reason})
-                mail._postprocess_sent_message(success_pids=success_pids, failure_reason=failure_reason, failure_type='unknown')
+                mail._postprocess_sent_message(success_pids=success_pids, success_email_addrs=success_email_addrs, failure_reason=failure_reason, failure_type='unknown')
                 if raise_exception:
                     if isinstance(e, (AssertionError, UnicodeEncodeError)):
                         if isinstance(e, UnicodeEncodeError):

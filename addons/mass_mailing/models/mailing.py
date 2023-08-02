@@ -645,7 +645,7 @@ class MassMailing(models.Model):
             ('state', '=', 'exception')
         ])
         failed_mails.mapped('mailing_trace_ids').unlink()
-        failed_mails.unlink()
+        failed_mails.mapped('mail_message_id').unlink()
         self.action_put_in_queue()
 
     def action_view_traces_scheduled(self):
@@ -1067,7 +1067,8 @@ class MassMailing(models.Model):
         return url
 
     def action_send_mail(self, res_ids=None):
-        author_id = self.env.user.partner_id.id
+        # keep responsible as author, if any
+        author_id = self.user_id.partner_id.id or self.env.user.partner_id.id
 
         for mailing in self:
             context_user = mailing.user_id or mailing.write_uid or self.env.user

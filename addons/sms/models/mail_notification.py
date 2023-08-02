@@ -17,5 +17,9 @@ class MailNotification(models.Model):
         ('sms_number_format', 'Wrong Number Format'),
         ('sms_credit', 'Insufficient Credit'),
         ('sms_server', 'Server Error'),
-        ('sms_acc', 'Unregistered Account')
+        ('sms_acc', 'Unregistered Account'),
+        # mass mode
+        ('sms_blacklist', 'Blacklisted'),
+        ('sms_duplicate', 'Duplicate'),
+        ('sms_optout', 'Opted Out'),
     ])

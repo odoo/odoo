@@ -38,6 +38,16 @@ class MailingTrace(models.Model):
         ('sms_optout', 'Opted Out'),
     ])
 
+    @api.depends('sms_sms_id')
+    def _compute_mail_message_id(self):
+        # traces with emails, smses and snailmail are mutually exclusive sets
+        sms_trace = self.filtered(lambda trace: trace.trace_type == 'sms')
+        super(MailingTrace, self - sms_trace)._compute_mail_message_id()
+        for trace in self:
+            sudo_sms_id = trace.sudo().sms_sms_id
+            if sudo_sms_id:
+                trace.mail_message_id = sudo_sms_id.mail_message_id.sudo(False)
+
     @api.model_create_multi
     def create(self, values_list):
         for values in values_list:
@@ -52,3 +62,17 @@ class MailingTrace(models.Model):
         as it serves as obfuscation when unsubscribing. A valid trio
         code / mailing_id / number will be requested. """
         return ''.join(random.choice(string.ascii_letters + string.digits) for dummy in range(self.CODE_SIZE))
+
+    # ------------------------------------------------------------
+    # DISCUSS
+    # ------------------------------------------------------------
+
+    def _trace_format(self):
+        return [{'id': trace.id,
+                 'email': trace.email,
+                 'sms_number': trace.sms_number,
+                 'trace_type': trace.trace_type,
+                 'trace_status': trace.trace_status,
+                 'failure_type': trace.failure_type,
+                 'mailing_id': trace.mass_mailing_id.id,
+                 } for trace in self]

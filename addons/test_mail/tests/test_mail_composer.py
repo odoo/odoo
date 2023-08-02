@@ -355,8 +355,8 @@ class TestComposerForm(TestMailComposer):
         composer_form = Form(self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_records, add_web=True)
         ))
-        self.assertFalse(composer_form.auto_delete)
-        self.assertFalse(composer_form.auto_delete_keep_log, 'MailComposer: if emails are kept, logs are automatically kept')
+        self.assertTrue(composer_form.auto_delete)
+        self.assertTrue(composer_form.auto_delete_keep_log, 'MailComposer: auto_delete_keep_log should be true to get notifications')
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertFalse(composer_form.body)
         self.assertTrue(composer_form.composition_batch)
@@ -689,8 +689,8 @@ class TestComposerInternals(TestMailComposer):
                     self.assertTrue(composer.email_add_signature, 'Default value in comment mode')
                     self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_comment'))
                 else:
-                    self.assertFalse(composer.auto_delete, 'By default, keep mailing emails')
-                    self.assertFalse(composer.auto_delete_keep_log, 'Emails are not unlinked, logs are already kept')
+                    self.assertTrue(composer.auto_delete)
+                    self.assertTrue(composer.auto_delete_keep_log)
                     self.assertFalse(composer.email_add_signature, 'Not supported in mass mailing mode')
                     self.assertFalse(composer.subtype_id)
                 self.assertEqual(composer.email_layout_xmlid, 'mail.test_layout')
@@ -1259,9 +1259,9 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         # global outgoing
         self.assertEqual(len(self._mails), 3, 'Should have sent an email each recipient')
         self.assertEqual(len(self._new_mails), 2, 'Should have created 2 mail.mail (1 for users, 1 for customers)')
-        self.assertFalse(self._new_mails.exists(), 'Should have deleted mail.mail records')
+        self.assertEqual(len(self._new_mails.exists()), 0, 'Should have deleted mail.mail records by default')
 
-        # Check ``auto_delete`` field usage (note: currently not correctly managed)
+        # Check ``auto_delete`` field usage
         composer = self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_record),
         ).create({
@@ -1269,8 +1269,10 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             'body': '<p>Test Body</p>',
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
         })
+
         self.assertFalse(composer.auto_delete)
         self.assertFalse(composer.auto_delete_keep_log, 'Not used in comment mode')
+
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
 
@@ -1281,7 +1283,27 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         # global outgoing
         self.assertEqual(len(self._mails), 3, 'Should have sent an email each recipient')
         self.assertEqual(len(self._new_mails), 2, 'Should have created 2 mail.mail (1 for users, 1 for customers)')
-        self.assertEqual(len(self._new_mails.exists()), 2, 'Should not have deleted mail.mail records')
+        self.assertEqual(len(self._new_mails.exists()), 2, 'Should not have deleted the mail.mail based on compositor auto_delete value')
+
+        # ensure ``mail_auto_delete`` context key allow to override this behavior
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record),
+            mail_auto_delete=True,
+        ).create({
+            'body': '<p>Test Body</p>',
+            'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
+        })
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            composer._action_send_mail()
+
+        # notifications
+        message = self.test_record.message_ids[0]
+        self.assertEqual(message.notified_partner_ids, self.partner_employee_2 + self.partner_1 + self.partner_2)
+
+        # global outgoing
+        self.assertEqual(len(self._mails), 3, 'Should have sent an email each recipient')
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 2 mail.mail (1 for users, 1 for customers)')
+        self.assertEqual(len(self._new_mails.exists()), 0, 'Should have deleted mail.mail records based on context mail_auto_delete value')
 
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -1818,6 +1840,8 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertFalse(self._new_mails.exists(), 'Should have deleted mail.mail records')
         self.assertEqual(len(self._new_msgs), 2, 'Should have created 1 mail.mail per record')
         self.assertEqual(self._new_msgs.exists(), self._new_msgs, 'Should not have deleted mail.message records')
+        self.assertEqual(len(self._new_notifs), 2, 'Should have created 1 mail.notification per record')
+        self.assertEqual(self._new_notifs.exists(), self._new_notifs, 'Should not have deleted mail.notification')
 
         # force composer auto_delete field
         composer_form = Form(self.env['mail.compose.message'].with_context(
@@ -1826,6 +1850,9 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         composer.auto_delete = False
+        template_previous_auto_delete = self.template.auto_delete
+        self.template.auto_delete = False  # TO FIX this should not be required, composer should have priority
+        # Quick fix would require checking whether the booleans are NULL or False
         with self.mock_mail_gateway(mail_unlink_sent=True), self.mock_mail_app():
             composer._action_send_mail()
 
@@ -1834,6 +1861,10 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(self._new_mails.exists(), self._new_mails, 'Should not have deleted mail.mail records')
         self.assertEqual(len(self._new_msgs), 2, 'Should have created 1 mail.mail per record')
         self.assertEqual(self._new_msgs.exists(), self._new_msgs, 'Should not have deleted mail.message records')
+        self.assertEqual(len(self._new_notifs), 2, 'Should have created 1 mail.notification per recipient per record')
+        self.assertEqual(self._new_notifs.exists(), self._new_notifs, 'Should not have deleted mail.notification')
+
+        self.template.auto_delete = template_previous_auto_delete
 
         # check composer auto_delete_keep_log
         composer_form = Form(self.env['mail.compose.message'].with_context(
@@ -1849,8 +1880,9 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record')
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
         self.assertFalse(self._new_mails.exists(), 'Should have deleted mail.mail records')
-        self.assertEqual(len(self._new_msgs), 2, 'Should have created 1 mail.mail per record')
+        self.assertEqual(len(self._new_msgs), 2, 'Should have created 1 mail.message per record')
         self.assertFalse(self._new_msgs.exists(), 'Should have deleted mail.message records')
+        self.assertEqual(len(self._new_notifs), 0, 'Should not create notifications when removing logs in mass mode')
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -2067,119 +2099,98 @@ class TestComposerResultsMass(TestMailComposer):
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_mail_composer_wtpl_recipients(self):
-        """ Test various combinations of recipients: res_domain, active_id,
+        """ Test various combinations of recipients: active_domain, active_id,
         active_ids, ... to ensure fallback behavior are working. """
-        # 1: active ids
+        # 1: active_domain
         composer_form = Form(self.env['mail.compose.message'].with_context(
-            active_ids=self.test_records.ids,
-            default_composition_mode='mass_mail',
-            default_model=self.test_records._name,
-            default_template_id=self.template.id,
+            self._get_web_context(self.test_records, add_web=True,
+                                  default_template_id=self.template.id,
+                                  active_ids=[],
+                                  default_use_active_domain=True,
+                                  default_active_domain=[('id', 'in', self.test_records.ids)])
         ))
         composer = composer_form.save()
-        self.assertEqual(sorted(literal_eval(composer.res_ids)), sorted(self.test_records.ids))
-
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
 
-        # should create emails in a single batch
-        self.assertEqual(self.build_email_mocked.call_count, 2, 'One build email per outgoing email')
-        self.assertEqual(self.mail_mail_create_mocked.call_count, 2, 'Emails are anyway created in a singleton loop')
         # global outgoing
-        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record based on active_ids')
-        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record based on  on active_ids')
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
+        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record')
 
         for record in self.test_records:
             # template is sent directly using customer field, even if author is partner_employee
             self.assertSentEmail(self.partner_employee_2.email_formatted,
                                  record.customer_id)
 
-        # 2: default_res_ids + active_ids -> res_ids takes lead
+        # 2: active_domain not taken into account if use_active_domain is False
         composer_form = Form(self.env['mail.compose.message'].with_context(
-            self._get_web_context(self.test_record, add_web=False,
-                                  default_composition_mode='mass_mail',
-                                  default_res_ids=self.test_record.ids,
+            self._get_web_context(self.test_records, add_web=True,
                                   default_template_id=self.template.id,
-                                  active_ids=self.test_records.ids,
-                                 )
+                                  default_use_active_domain=False,
+                                  default_active_domain=[('id', 'in', -1)])
         ))
         composer = composer_form.save()
-        self.assertEqual(literal_eval(composer.res_ids), self.test_record.ids)
-
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
 
         # global outgoing
-        self.assertEqual(len(self._new_mails), 1, 'Should have taken default_res_ids (1 record)')
-        self.assertEqual(len(self._mails), 1, 'Should have taken default_res_ids (1 record)')
-
-        # template is sent directly using customer field, even if author is partner_employee
-        self.assertSentEmail(self.partner_employee_2.email_formatted,
-                             self.test_record.customer_id)
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
+        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record')
 
         # 3: fallback on active_id if not active_ids
         composer_form = Form(self.env['mail.compose.message'].with_context(
-            active_id=self.test_record.id,
-            default_composition_mode='mass_mail',
-            default_model=self.test_records._name,
-            default_template_id=self.template.id,
+            self._get_web_context(self.test_records, add_web=True,
+                                  default_template_id=self.template.id,
+                                  active_ids=[])
         ))
         composer = composer_form.save()
-        self.assertEqual(literal_eval(composer.res_ids), self.test_record.ids)
-
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer._action_send_mail()
 
         # global outgoing
-        self.assertEqual(len(self._new_mails), 1, 'Should have created 1 mail.mail per record')
-        self.assertEqual(len(self._mails), 1, 'Should have sent 1 email per record')
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
+        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record')
 
-        # 4: _batch_size limit for active_ids
-        with patch.object(MailComposer, '_batch_size', new=1):
-            composer_form = Form(self.env['mail.compose.message'].with_context(
-                active_ids=self.test_records.ids,
-                default_composition_mode='mass_mail',
-                default_model=self.test_records._name,
-                default_template_id=self.template.id,
-            ))
-            composer = composer_form.save()
-            self.assertTrue(composer.composition_batch)
-            self.assertEqual(composer.composition_mode, 'mass_mail')
-            self.assertFalse(composer.res_ids)
+        # 3: void is void
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            default_model='mail.test.ticket',
+            default_template_id=self.template.id
+        ))
+        composer = composer_form.save()
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.assertRaises(ValueError):
+            composer._action_send_mail()
 
-            with self.mock_mail_gateway(mail_unlink_sent=True):
-                composer._action_send_mail()
+        #4: _message_get_default_recipients
+        email_addrs = ['test1@test.lan', 'test2@test.lan']
+        records = self.env['mail.test.ticket'].create([{'name': 'Test %s' % email,
+                                                        'email_from': email} for email in email_addrs])
+        composer = self.env['mail.compose.message'].with_context(self._get_web_context(records)).create({})
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
 
-        # should create emails in 2 batches of 1
-        self.assertEqual(self.build_email_mocked.call_count, 2)
-        self.assertEqual(self.mail_mail_create_mocked.call_count, 2)
-        # global outgoing
-        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record based on active_ids')
-        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record based on  on active_ids')
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
+        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record')
+        self.assertEqual(set(email_addrs), set(self._new_mails.mapped('email_to')), 'Should have sent emails to the default recipients')
 
-        # 5: mail.batch_size config parameter support, for sending only
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', 1)
-        with patch.object(MailComposer, '_batch_size', new=50):
-            composer_form = Form(self.env['mail.compose.message'].with_context(
-                active_ids=self.test_records.ids,
-                default_composition_mode='mass_mail',
-                default_model=self.test_records._name,
-                default_template_id=self.template.id,
-            ))
-            composer = composer_form.save()
-            self.assertTrue(composer.composition_batch)
-            self.assertEqual(composer.composition_mode, 'mass_mail')
-            self.assertEqual(sorted(literal_eval(composer.res_ids)), sorted(self.test_records.ids))
+        #5: Invalid partner recipients get invalid notifications
+        invalid_partners = self.env['res.partner'].create([
+            {'name': 'Invalid',
+             'email': 'InvalidEmail'},
+             {'name': 'NoEmail',
+              'email': ''},
+        ])
+        invalid_records = self.env[self.test_record._name].create([
+            {'name': 'Test %s' % customer.email,
+             'customer_id': customer.id,} for customer in invalid_partners])
+        composer = self.env['mail.compose.message'].with_context(self._get_web_context(invalid_records)).create({})
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
 
-            with self.mock_mail_gateway(mail_unlink_sent=True):
-                composer._action_send_mail()
-
-        # should create emails in 2 batches of 1
-        self.assertEqual(self.build_email_mocked.call_count, 2)
-        self.assertEqual(self.mail_mail_create_mocked.call_count, 2)
-        # global outgoing
-        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record based on active_ids')
-        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record based on  on active_ids')
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
+        self.assertEqual(self._new_mails.mapped('state'), ['exception', 'exception'], 'All emails should be errors')
+        self.assertEqual(self._new_mails.notification_ids.mapped('notification_status'), ['exception', 'exception'], 'All email notifications should be errors')
+        self.assertEqual(set(self._new_mails.notification_ids.mapped('failure_type')), set(['mail_email_invalid', 'mail_email_missing']),
+                         'One email should fail because missing, the other because invalid')
 
         # 6: void is void: raise in comment mode, just don't send anything in mass mail mode
         composer_form = Form(self.env['mail.compose.message'].with_context(

@@ -1270,7 +1270,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         self.env.flush_all()
         self.env.invalidate_all()
 
-        with self.assertQueryCount(employee=14):
+        with self.assertQueryCount(employee=16):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 

@@ -19,8 +19,12 @@ class MailNotification(models.Model):
     author_id = fields.Many2one('res.partner', 'Author', ondelete='set null')
     mail_message_id = fields.Many2one('mail.message', 'Message', index=True, ondelete='cascade', required=True)
     mail_mail_id = fields.Many2one('mail.mail', 'Mail', index=True, help='Optional mail_mail ID. Used mainly to optimize searches.')
-    # recipient
+    # contact information
+    # unpartnered_email stores the recipient's normalized email address
+    # when a message is sent without being associated with a partner.
+    # (e.g. sending a mass mail on CRM leads)
     res_partner_id = fields.Many2one('res.partner', 'Recipient', index=True, ondelete='cascade')
+    unpartnered_email = fields.Char('Recipient Email')
     # status
     notification_type = fields.Selection([
         ('inbox', 'Inbox'), ('email', 'Email')
@@ -42,14 +46,38 @@ class MailNotification(models.Model):
         ("mail_email_invalid", "Invalid email address"),
         ("mail_email_missing", "Missing email address"),
         ("mail_smtp", "Connection failed (outgoing mail server problem)"),
-        ], string='Failure type')
+        # mass mode
+        ("mail_bl", "Blacklisted Address"),
+        ("mail_optout", "Opted Out"),
+        ("mail_dup", "Duplicated Email")], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)
 
     _sql_constraints = [
-        # email notification: partner is required
-        ('notification_partner_required',
-         "CHECK(notification_type NOT IN ('email', 'inbox') OR res_partner_id IS NOT NULL)",
-         'Customer is required for inbox / email notification'),
+        ('email_has_email_or_partner',
+         """
+          CHECK(
+            notification_type != 'email' OR res_partner_id IS NOT NULL
+            OR COALESCE(unpartnered_email, '') != ''
+          )""",
+         'Email notifications must have a partner or an email'),
+
+        ('inbox_has_partner',
+         "CHECK(notification_type != 'inbox' OR res_partner_id IS NOT NULL)",
+         'Inbox notifications must have a partner'),
+
+        ('email_xor_partner',
+         """
+          CHECK(
+            (res_partner_id IS NULL AND COALESCE(unpartnered_email, '') = '') OR (
+               (res_partner_id IS NOT NULL AND unpartnered_email IS NULL)
+               OR (res_partner_id IS NULL AND COALESCE(unpartnered_email, '') != '')
+            )
+          )""",
+         'Partner and unpartnered_email are mutually exclusive fields'),
+
+        ('unpartnered_email_only_for_email',
+         "CHECK(notification_type = 'email' OR (unpartnered_email IS NULL OR unpartnered_email=''))",
+         'unpartnered_email should only be set for email notifications')
     ]
 
     # ------------------------------------------------------------
@@ -116,7 +144,7 @@ class MailNotification(models.Model):
         """Returns only the notifications to show on the web client."""
         def _filter_unimportant_notifications(notif):
             if notif.notification_status in ['bounce', 'exception', 'canceled'] \
-                    or notif.res_partner_id.partner_share:
+                    or notif.res_partner_id.partner_share or notif.unpartnered_email:
                 return True
             subtype = notif.mail_message_id.subtype_id
             return not subtype or subtype.track_recipients
@@ -132,4 +160,5 @@ class MailNotification(models.Model):
             'notification_status': notif.notification_status,
             'failure_type': notif.failure_type,
             'res_partner_id': [notif.res_partner_id.id, notif.res_partner_id.display_name] if notif.res_partner_id else False,
+            'unpartnered_email': notif.unpartnered_email or False
         } for notif in self]

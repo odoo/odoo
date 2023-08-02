@@ -522,13 +522,25 @@ def generate_tracking_message_id(res_id):
     rndstr = ("%.15f" % rnd)[2:]
     return "<%s.%.15f-openerp-%s@%s>" % (rndstr, time.time(), res_id, socket.gethostname())
 
-def email_split_tuples(text):
+def email_split_keep_invalid(text):
+    """Return a list of (name, email) address tuples found in ``text``."""
+    if not text:
+        return []
+    return [addr for _, addr in email_split_tuples_keep_invalid(text)]
+
+def email_split_tuples_keep_invalid(text):
     """ Return a list of (name, email) address tuples found in ``text`` . Note
     that text should be an email header or a stringified email list as it may
     give broader results than expected on actual text. """
     if not text:
         return []
-    return [(addr[0], addr[1]) for addr in getaddresses([text])
+    return getaddresses([text])
+
+def email_split_tuples(text):
+    """ Return a list of valid (name, email) address tuples found in ``text``. """
+    if not text:
+        return []
+    return [(addr[0], addr[1]) for addr in email_split_tuples_keep_invalid(text)
                 # getaddresses() returns '' when email parsing fails, and
                 # sometimes returns emails without at least '@'. The '@'
                 # is strictly required in RFC2822's `addr-spec`.
@@ -539,7 +551,7 @@ def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
     if not text:
         return []
-    return [email for (name, email) in email_split_tuples(text)]
+    return [email for _, email in email_split_tuples(text)]
 
 def email_split_and_format(text):
     """ Return a list of email addresses found in ``text``, formatted using

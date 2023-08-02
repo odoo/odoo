@@ -236,6 +236,7 @@ class Mailing(models.Model):
             'composition_mode': 'mass',
             'mailing_id': self.id,
             'mass_keep_log': self.keep_archives,
+            'mass_notify': False,  # use traces instead of notifications
             'mass_force_send': self.sms_force_send,
             'mass_sms_allow_unsubscribe': self.sms_allow_unsubscribe,
         }
