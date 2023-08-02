@@ -11,6 +11,7 @@
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
+        'views/slide_channel_partner_views.xml',
         'views/slide_channel_views.xml',
         'views/slide_slide_partner_views.xml',
         'views/slide_slide_views.xml',
