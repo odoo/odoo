@@ -41,6 +41,7 @@ class Menu(models.Model):
     name = fields.Char('Menu', required=True, translate=True)
     url = fields.Char('Url', default='')
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
+    controller_page_id = fields.Many2one('website.controller.page', 'Related Model Page', ondelete='cascade')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
     website_id = fields.Many2one('website', 'Website', ondelete='cascade')
@@ -125,6 +126,14 @@ class Menu(models.Model):
                     or (not page_sudo.view_id._handle_visibility(do_raise=False)
                         and page_sudo.view_id._get_cached_visibility() != "password")):
                     visible = False
+
+            if menu.controller_page_id and not menu.user_has_groups('base.group_user'):
+                controller_page_sudo = menu.controller_page_id.sudo()
+                if (not controller_page_sudo.is_published
+                    or (not controller_page_sudo.view_id._handle_visibility(do_raise=False)
+                        and controller_page_sudo.view_id._get_cached_visibility() != "password")):
+                    visible = False
+
             menu.is_visible = visible
 
     def _clean_url(self):
