@@ -121,8 +121,9 @@ class Survey(models.Model):
         ('no_scoring', 'No scoring'),
         ('scoring_with_answers', 'Scoring with answers at the end'),
         ('scoring_without_answers', 'Scoring without answers at the end')],
-        string="Scoring", required=True, store=True, readonly=False, compute="_compute_scoring_type", precompute=True)
+        string='Scoring', required=True, store=True, readonly=False, compute='_compute_scoring_type', precompute=True)
     scoring_success_min = fields.Float('Required Score (%)', default=80.0)
+    scoring_max_obtainable = fields.Float('Maximum obtainable score', compute='_compute_scoring_max_obtainable')
     # attendees context: attempts and time limitation
     is_attempts_limited = fields.Boolean('Limited number of attempts', help="Check this option if you want to limit the number of attempts per user",
                                          compute="_compute_is_attempts_limited", store=True, readonly=False)
@@ -195,6 +196,19 @@ class Survey(models.Model):
         self.background_image_url = False
         for survey in self.filtered(lambda survey: survey.background_image and survey.access_token):
             survey.background_image_url = "/survey/%s/get_background_image" % survey.access_token
+
+    @api.depends(
+        'question_and_page_ids',
+        'question_and_page_ids.suggested_answer_ids',
+        'question_and_page_ids.suggested_answer_ids.answer_score',
+    )
+    def _compute_scoring_max_obtainable(self):
+        for survey in self:
+            survey.scoring_max_obtainable = sum(
+                question.answer_score
+                or sum(answer.answer_score for answer in question.suggested_answer_ids if answer.answer_score > 0)
+                for question in survey.question_ids
+            )
 
     def _compute_users_can_signup(self):
         signup_allowed = self.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'
@@ -937,6 +951,11 @@ class Survey(models.Model):
         # Ensure that this survey has at least one question.
         if not self.question_ids:
             raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
+
+        # Ensure scored survey have a positive total score obtainable.
+        if self.scoring_type != 'no_scoring' and self.scoring_max_obtainable <= 0:
+            raise UserError(_("A scored survey needs at least one question that gives points.\n"
+                              "Please check answers and their scores."))
 
         # Ensure that this survey has at least one section with question(s), if question layout is 'One page per section'.
         if self.questions_layout == 'page_per_section':
