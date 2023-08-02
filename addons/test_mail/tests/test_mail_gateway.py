@@ -42,6 +42,12 @@ class TestEmailParsing(TestMailCommon):
         res = self.env['mail.thread'].message_parse(self.from_string(plaintext))
         self.assertIn('Please call me as soon as possible this afternoon!', res['body'])
 
+        # test pure html
+        html = self.format(test_mail_data.MAIL_TEMPLATE_HTML, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>')
+        res = self.env['mail.thread'].message_parse(self.from_string(html))
+        self.assertIn('<p>Please call me as soon as possible this afternoon!</p>', res['body'])
+        self.assertNotIn('<!DOCTYPE', res['body'])
+
         # test multipart / text and html -> html has priority
         multipart = self.format(MAIL_TEMPLATE, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>')
         res = self.env['mail.thread'].message_parse(self.from_string(multipart))
