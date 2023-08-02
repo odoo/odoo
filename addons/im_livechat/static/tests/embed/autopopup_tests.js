@@ -25,9 +25,8 @@ QUnit.test("persisted session", async (assert) => {
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
     setCookie("im_livechat_session", JSON.stringify(channelInfo));
-    await start();
+    start();
     await waitUntil(".o-mail-ChatWindow");
-    assert.containsOnce($, ".o-mail-ChatWindow");
 });
 
 QUnit.test("rule received in init", async (assert) => {

@@ -59,9 +59,9 @@ QUnit.test("should not display call UI when no more members (self disconnect)", 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Start a Call']");
-    assert.containsOnce($, ".o-discuss-Call");
+    openDiscuss(channelId);
+    (await waitUntil(".o-mail-Discuss-header button[title='Start a Call']")).click();
+    await waitUntil(".o-discuss-Call");
 
     click(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await waitUntil(".o-discuss-Call", 0);
@@ -198,11 +198,12 @@ QUnit.test("can share user camera", async (assert) => {
     assert.containsNone($, ".o-discuss-CallParticipantCard video");
 });
 
-QUnit.test("Create a direct message channel when clicking on start a meeting", async (assert) => {
+QUnit.test("Create a direct message channel when clicking on start a meeting", async () => {
     mockGetMedia();
     const { openDiscuss } = await start();
-    await openDiscuss();
-    await click("button:contains(Start a meeting)");
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
-    assert.containsOnce($, ".o-discuss-Call");
+    openDiscuss();
+    (await waitUntil("button:contains(Start a meeting)")).click();
+    await waitUntil(".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
+    await waitUntil(".o-discuss-Call");
+    await waitUntil(".o-discuss-ChannelInvitation");
 });

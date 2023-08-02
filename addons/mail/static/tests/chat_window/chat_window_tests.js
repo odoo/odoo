@@ -925,18 +925,17 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
     ];
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], files);
     await waitUntil(".o-mail-AttachmentCard .fa-check", 2);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "XDU for the win !");
 
-    await openDiscuss();
-    assert.containsNone($, ".o-mail-ChatWindow");
+    openDiscuss();
+    await waitUntil(".o-mail-ChatWindow", 0);
 
-    await openView({
+    openView({
         res_id: channelId,
         res_model: "discuss.channel",
         views: [[false, "form"]],
     });
+    await waitUntil(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", 2);
     assert.strictEqual($(".o-mail-Composer-input").val(), "XDU for the win !");
-    assert.containsN($, ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", 2);
 });
 
 QUnit.test(

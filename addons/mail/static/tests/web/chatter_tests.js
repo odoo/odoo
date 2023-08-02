@@ -152,20 +152,21 @@ QUnit.test("Composer toggle state is kept when switching from aside to bottom", 
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    await openFormView("res.partner", partnerId);
-    await click("button:contains(Send message)");
+    openFormView("res.partner", partnerId);
+    (await waitUntil("button:contains(Send message)")).click();
+    await waitUntil(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
     await waitUntil(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
-    assert.containsOnce($, ".o-mail-Composer-input");
 });
 
 QUnit.test("Textarea content is kept when switching from aside to bottom", async (assert) => {
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    await openFormView("res.partner", partnerId);
-    await click("button:contains(Send message)");
+    openFormView("res.partner", partnerId);
+    (await waitUntil("button:contains(Send message)")).click();
+    await waitUntil(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
     await editInput(document.body, ".o-mail-Composer-input", "Hello world !");
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
@@ -750,18 +751,21 @@ QUnit.test("upload attachment on draft record", async (assert) => {
             </form>`,
     };
     const { openView } = await start({ serverData: { views } });
-    await openView({
+    openView({
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    const file = await createFile({
-        content: "hello, world",
-        contentType: "text/plain",
-        name: "text.txt",
-    });
-    assert.containsNone($, ".button[aria-label='Attach files']:contains(1)");
-    await afterNextRender(() => dragenterFiles($(".o-mail-Chatter")[0]));
-    await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], [file]));
+    const [chatter, file] = await Promise.all([
+        waitUntil(".o-mail-Chatter"),
+        createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
+        }),
+    ]);
+    await waitUntil(".button[aria-label='Attach files']:contains(1)", 0);
+    dragenterFiles(chatter[0]);
+    dropFiles((await waitUntil(".o-mail-Dropzone"))[0], [file]);
     await waitUntil("button[aria-label='Attach files']:contains(1)");
 });
 
