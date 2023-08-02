@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { bus } from "@web/legacy/js/services/core";
-import Context from "@web/legacy/js/core/context";
+import { makeContext } from "@web/core/context";
 
 import { browser } from "../core/browser/browser";
 import { registry } from "../core/registry";
@@ -20,7 +20,7 @@ export const legacyServiceProvider = {
         browser.addEventListener("do-action", (ev) => {
             const payload = ev.detail;
             if (payload.action.context) {
-                payload.action.context = new Context(payload.action.context).eval();
+                payload.action.context = makeContext([payload.action.context]);
             }
             const legacyOptions = mapDoActionOptionAPI(payload.options);
             services.action.doAction(payload.action, legacyOptions);
