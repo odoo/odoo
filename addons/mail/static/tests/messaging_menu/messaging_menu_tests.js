@@ -6,9 +6,9 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
+    contains,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
@@ -887,9 +887,9 @@ QUnit.test("chat should show unread counter on receiving new messages", async (a
     });
     await start();
     click(".o_menu_systray i[aria-label='Messages']");
-    await waitUntil(".o-mail-NotificationItem");
-    await waitUntil(".o-mail-NotificationItem:contains(Partner1)");
-    await waitUntil(".o-mail-NotificationItem .badge:contains('1')", 0);
+    await contains(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:contains(Partner1)");
+    await contains(".o-mail-NotificationItem .badge:contains('1')", 0);
     // simulate receiving a new message
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
@@ -902,7 +902,7 @@ QUnit.test("chat should show unread counter on receiving new messages", async (a
             res_id: channelId,
         },
     });
-    await waitUntil(".o-mail-NotificationItem .badge:contains('1')");
+    await contains(".o-mail-NotificationItem .badge:contains('1')");
 });
 
 QUnit.test("preview for channel should show latest non-deleted message", async (assert) => {

@@ -8,12 +8,12 @@ import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
+    contains,
     createFile,
     insertText,
     isScrolledToBottom,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
@@ -856,18 +856,18 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     }
     const { openDiscuss } = await start();
     openDiscuss();
-    (await waitUntil("button:contains(Mark all read)")).click();
-    await waitUntil(".o-mail-Message", 0);
+    (await contains("button:contains(Mark all read)")).click();
+    await contains(".o-mail-Message", 0);
 
     /**
      * The await is necessary on click because otherwise useAutoScroll would set
      * the scroll to bottom after the manually set value from this test.
      */
     await click("button:contains(History)");
-    await waitUntil(".o-mail-Message", 30);
+    await contains(".o-mail-Message", 30);
 
     $(".o-mail-Thread")[0].scrollTop = 0;
-    await waitUntil(".o-mail-Message", 40);
+    await contains(".o-mail-Message", 40);
 });
 
 QUnit.test("post a simple message", async (assert) => {
@@ -1937,16 +1937,16 @@ QUnit.test(
         await openDiscuss();
         await click(".o-mail-DiscussSidebarCategory-add[title='Start a conversation']");
         await insertText(".o-discuss-ChannelSelector input", "m");
-        await waitUntil(".o-mail-NavigableList-item:contains(Loading)");
+        await contains(".o-mail-NavigableList-item:contains(Loading)");
         await insertText(".o-discuss-ChannelSelector input", "a");
         await insertText(".o-discuss-ChannelSelector input", "r");
         deferred1.resolve();
         assert.verifySteps(["First RPC"]);
-        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
-        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mama)");
+        await contains(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
+        await contains(".o-discuss-ChannelSelector-suggestion:contains(Mama)");
         deferred2.resolve();
         assert.verifySteps(["Second RPC"]);
-        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mama)", 0);
-        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
+        await contains(".o-discuss-ChannelSelector-suggestion:contains(Mama)", 0);
+        await contains(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
     }
 );

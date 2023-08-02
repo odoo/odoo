@@ -10,13 +10,13 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
+    contains,
     createFile,
     insertText,
     isScrolledToBottom,
     nextAnimationFrame,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { nextTick, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
@@ -924,17 +924,17 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
         }),
     ];
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], files);
-    await waitUntil(".o-mail-AttachmentCard .fa-check", 2);
+    await contains(".o-mail-AttachmentCard .fa-check", 2);
 
     openDiscuss();
-    await waitUntil(".o-mail-ChatWindow", 0);
+    await contains(".o-mail-ChatWindow", 0);
 
     openView({
         res_id: channelId,
         res_model: "discuss.channel",
         views: [[false, "form"]],
     });
-    await waitUntil(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", 2);
+    await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", 2);
     assert.strictEqual($(".o-mail-Composer-input").val(), "XDU for the win !");
 });
 
@@ -1161,7 +1161,7 @@ QUnit.test("Open chat window of new inviter", async (assert) => {
         username: "Newbie",
         partnerId,
     });
-    await waitUntil(".o-mail-ChatWindow:contains(Newbie)");
+    await contains(".o-mail-ChatWindow:contains(Newbie)");
     assert.containsOnce(
         $,
         ".o_notification:contains(Newbie connected. This is their first connection. Wish them luck.)"

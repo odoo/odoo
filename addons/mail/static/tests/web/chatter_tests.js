@@ -4,13 +4,13 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
+    contains,
     dragenterFiles,
     dropFiles,
     insertText,
     isScrolledTo,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 
@@ -153,11 +153,11 @@ QUnit.test("Composer toggle state is kept when switching from aside to bottom", 
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     openFormView("res.partner", partnerId);
-    (await waitUntil("button:contains(Send message)")).click();
-    await waitUntil(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
+    (await contains("button:contains(Send message)")).click();
+    await contains(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
-    await waitUntil(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
+    await contains(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
 });
 
 QUnit.test("Textarea content is kept when switching from aside to bottom", async (assert) => {
@@ -165,12 +165,12 @@ QUnit.test("Textarea content is kept when switching from aside to bottom", async
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     openFormView("res.partner", partnerId);
-    (await waitUntil("button:contains(Send message)")).click();
-    await waitUntil(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
+    (await contains("button:contains(Send message)")).click();
+    await contains(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
     await editInput(document.body, ".o-mail-Composer-input", "Hello world !");
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
-    await waitUntil(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
+    await contains(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
     assert.strictEqual($(".o-mail-Composer-input").val(), "Hello world !");
 });
 
@@ -182,7 +182,7 @@ QUnit.test("Composer type is kept when switching from aside to bottom", async (a
     await click("button:contains(Log note)");
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
-    await waitUntil(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
+    await contains(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
     assert.hasClass(
         $("button:contains(Log note)"),
         "btn-primary",
@@ -756,17 +756,17 @@ QUnit.test("upload attachment on draft record", async (assert) => {
         views: [[false, "form"]],
     });
     const [chatter, file] = await Promise.all([
-        waitUntil(".o-mail-Chatter"),
+        contains(".o-mail-Chatter"),
         createFile({
             content: "hello, world",
             contentType: "text/plain",
             name: "text.txt",
         }),
     ]);
-    await waitUntil(".button[aria-label='Attach files']:contains(1)", 0);
+    await contains(".button[aria-label='Attach files']:contains(1)", 0);
     dragenterFiles(chatter[0]);
-    dropFiles((await waitUntil(".o-mail-Dropzone"))[0], [file]);
-    await waitUntil("button[aria-label='Attach files']:contains(1)");
+    dropFiles((await contains(".o-mail-Dropzone"))[0], [file]);
+    await contains("button[aria-label='Attach files']:contains(1)");
 });
 
 QUnit.test("Follower count of draft record is set to 0", async (assert) => {

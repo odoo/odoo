@@ -3,12 +3,12 @@
 import { Command } from "@mail/../tests/helpers/command";
 import {
     click,
+    contains,
     createFile,
     mockGetMedia,
     nextAnimationFrame,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
 import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
@@ -167,7 +167,7 @@ QUnit.test("make voice message in chat", async (assert) => {
     patchDate(2023, 6, 31, 13, 0, 11); // +1 so exactly 10 sec elapsed
     // simulate some microphone data
     audioProcessor.process([[new Float32Array(128)]]);
-    await waitUntil(".o-mail-VoiceRecorder:contains(00 : 10)");
+    await contains(".o-mail-VoiceRecorder:contains(00 : 10)");
     assert.containsOnce($, "button[title='Stop Recording']");
     await click("button[title='Stop Recording']");
     assert.containsOnce($, ".o-mail-VoicePlayer");

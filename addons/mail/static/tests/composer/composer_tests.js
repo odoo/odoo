@@ -6,6 +6,7 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
+    contains,
     createFile,
     dragenterFiles,
     dropFiles,
@@ -13,7 +14,6 @@ import {
     pasteFiles,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
@@ -701,7 +701,7 @@ QUnit.test("composer: add an attachment", async (assert) => {
         name: "text.txt",
     });
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
-    await waitUntil(".o-mail-AttachmentCard .fa-check");
+    await contains(".o-mail-AttachmentCard .fa-check");
 
     assert.containsOnce($, ".o-mail-Composer-footer .o-mail-AttachmentList");
     assert.containsOnce($, ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
@@ -731,7 +731,7 @@ QUnit.test("composer: add an attachment in reply to message in history", async (
         name: "text.txt",
     });
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
-    await waitUntil(".o-mail-AttachmentCard .fa-check");
+    await contains(".o-mail-AttachmentCard .fa-check");
 
     assert.containsOnce($, ".o-mail-Composer-footer .o-mail-AttachmentList");
     assert.containsOnce($, ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
@@ -757,7 +757,7 @@ QUnit.test(
             name: "text.txt",
         });
         inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
-        await waitUntil(".o-mail-AttachmentCard.o-isUploading");
+        await contains(".o-mail-AttachmentCard.o-isUploading");
         assert.containsOnce($, ".o-mail-Composer-send");
         assert.ok($(".o-mail-Composer-send")[0].attributes.disabled);
 
@@ -781,7 +781,7 @@ QUnit.test("remove an attachment from composer does not need any confirmation", 
         name: "text.txt",
     });
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
-    await waitUntil(".o-mail-AttachmentCard .fa-check");
+    await contains(".o-mail-AttachmentCard .fa-check");
     assert.containsOnce($, ".o-mail-Composer-footer .o-mail-AttachmentList");
     assert.containsOnce($, ".o-mail-AttachmentList .o-mail-AttachmentCard");
 
@@ -843,10 +843,10 @@ QUnit.test("remove an uploading attachment", async (assert) => {
         name: "text.txt",
     });
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
-    await waitUntil(".o-mail-AttachmentCard.o-isUploading");
+    await contains(".o-mail-AttachmentCard.o-isUploading");
 
     click(".o-mail-AttachmentCard-unlink");
-    await waitUntil(".o-mail-Composer .o-mail-AttachmentCard", 0);
+    await contains(".o-mail-Composer .o-mail-AttachmentCard", 0);
 });
 
 QUnit.test("Show a thread name in the recipient status text.", async (assert) => {
@@ -923,8 +923,8 @@ QUnit.test(
             contentType: "text/plain",
         });
         inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file1, file2]);
-        await waitUntil(".o-mail-AttachmentCard:contains(text1.txt)");
-        await waitUntil(".o-mail-AttachmentCard:contains(text2.txt)");
+        await contains(".o-mail-AttachmentCard:contains(text1.txt)");
+        await contains(".o-mail-AttachmentCard:contains(text2.txt)");
         assert.containsN($, ".o-mail-AttachmentCard-aside div[title='Uploading']", 2);
     }
 );
@@ -948,7 +948,7 @@ QUnit.test(
         });
         openDiscuss(channelId);
         const [input, file1, file2] = await Promise.all([
-            waitUntil(".o-mail-Composer-coreMain .o_input_file"),
+            contains(".o-mail-Composer-coreMain .o_input_file"),
             createFile({
                 name: "text1.txt",
                 content: "hello, world",
@@ -961,15 +961,15 @@ QUnit.test(
             }),
         ]);
         inputFiles(input[0], [file1, file2]);
-        await waitUntil(".o-mail-AttachmentCard.o-isUploading:contains(text1.txt)");
-        await waitUntil(".o-mail-AttachmentCard.o-isUploading:contains(text2.txt)");
+        await contains(".o-mail-AttachmentCard.o-isUploading:contains(text1.txt)");
+        await contains(".o-mail-AttachmentCard.o-isUploading:contains(text2.txt)");
 
         click(".o-mail-AttachmentCard-unlink:eq(1)");
-        await waitUntil(".o-mail-AttachmentCard:contains(text2.txt)", 0);
+        await contains(".o-mail-AttachmentCard:contains(text2.txt)", 0);
 
         // Simulates the completion of the upload of the first attachment
         uploadPromise.resolve();
-        await waitUntil('.o-mail-AttachmentCard:not(.o-isUploading):contains("text1.txt")');
+        await contains('.o-mail-AttachmentCard:not(.o-isUploading):contains("text1.txt")');
     }
 );
 

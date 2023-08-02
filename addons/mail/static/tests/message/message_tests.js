@@ -4,11 +4,11 @@ import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
+    contains,
     insertText,
     nextAnimationFrame,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -410,12 +410,12 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss(channelId);
-        (await waitUntil(".o-mail-Message [title='Expand']", 2))[0].click();
-        (await waitUntil(".o-mail-Message [title='Edit']")).click();
-        const input = (await waitUntil(".o-mail-Message .o-mail-Composer-input"))[0];
+        (await contains(".o-mail-Message [title='Expand']", 2))[0].click();
+        (await contains(".o-mail-Message [title='Edit']")).click();
+        const input = (await contains(".o-mail-Message .o-mail-Composer-input"))[0];
         insertText(input, "Goodbye World", { replace: true });
         triggerHotkey("Enter", false);
-        await waitUntil(".o-mail-MessageInReply-message:contains(Goodbye World)");
+        await contains(".o-mail-MessageInReply-message:contains(Goodbye World)");
         assert.strictEqual($(".o-mail-MessageInReply-message")[0].innerText, "Goodbye World");
     }
 );

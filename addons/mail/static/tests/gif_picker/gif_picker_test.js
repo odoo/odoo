@@ -1,12 +1,6 @@
 /* @odoo-module */
 
-import {
-    click,
-    insertText,
-    start,
-    startServer,
-    waitUntil,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 
 const rpc = {
@@ -116,10 +110,10 @@ QUnit.test("Searching for a GIF", async (assert) => {
         },
     });
     openDiscuss(channelId);
-    (await waitUntil("button[aria-label='GIFs']")).click();
-    insertText((await waitUntil("input[placeholder='Search for a gif']"))[0], "search");
-    await waitUntil("i[aria-label='back']");
-    await waitUntil(".o-discuss-Gif", 2);
+    (await contains("button[aria-label='GIFs']")).click();
+    insertText((await contains("input[placeholder='Search for a gif']"))[0], "search");
+    await contains("i[aria-label='back']");
+    await contains(".o-discuss-Gif", 2);
 });
 
 QUnit.test("Open a GIF category trigger the search for the category", async (assert) => {
@@ -136,9 +130,9 @@ QUnit.test("Open a GIF category trigger the search for the category", async (ass
         },
     });
     openDiscuss(channelId);
-    (await waitUntil("button[aria-label='GIFs']")).click();
-    (await waitUntil("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']")).click();
-    await waitUntil(".o-discuss-Gif", 2);
+    (await contains("button[aria-label='GIFs']")).click();
+    (await contains("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']")).click();
+    await contains(".o-discuss-Gif", 2);
     assert.strictEqual(
         document.querySelector("input[placeholder='Search for a gif']").value,
         "cry"
