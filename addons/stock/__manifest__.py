@@ -26,6 +26,7 @@
         'data/stock_data.xml',
         'data/stock_sequence_data.xml',
         'data/stock_traceability_report_data.xml',
+        'data/ir_actions_client_data.xml',
 
         'report/report_stock_quantity.xml',
         'report/report_stock_reception.xml',

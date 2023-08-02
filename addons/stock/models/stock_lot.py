@@ -16,6 +16,10 @@ class StockLot(models.Model):
     _check_company_auto = True
     _order = 'name, id'
 
+    def _read_group_location_id(self, locations, domain, order):
+        partner_locations = locations.search([('usage', 'in', ('customer', 'supplier'))])
+        return partner_locations + locations.warehouse_id.search([]).lot_stock_id
+
     name = fields.Char(
         'Lot/Serial Number', default=lambda self: self.env['ir.sequence'].next_by_code('stock.lot.serial'),
         required=True, help="Unique Lot/Serial Number", index='trigram')
@@ -35,7 +39,9 @@ class StockLot(models.Model):
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
     last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
     lot_properties = fields.Properties('Properties', definition='product_id.lot_properties_definition', copy=True)
-    location_id = fields.Many2one('stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False, inverse='_set_single_location', domain="[('usage', '!=', 'view')]")
+    location_id = fields.Many2one(
+        'stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False,
+        inverse='_set_single_location', domain="[('usage', '!=', 'view')]", group_expand='_read_group_location_id')
 
     @api.model
     def generate_lot_names(self, first_lot, count):
