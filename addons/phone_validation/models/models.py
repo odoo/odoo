@@ -15,7 +15,9 @@ class BaseModel(models.AbstractModel):
     def _phone_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to
         send an SMS on a record. """
-        return []
+        return [
+            number_fname for number_fname in ('mobile', 'phone') if number_fname in self
+        ]
 
     @api.model
     def _phone_get_country_field(self):
