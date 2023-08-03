@@ -6,6 +6,7 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
+import { CONNECTION_TYPES } from "./rtc_service";
 
 const PROTOCOLS_TEXT = { host: "HOST", srflx: "STUN", prflx: "STUN", relay: "TURN" };
 
@@ -17,37 +18,61 @@ export class CallContextMenu extends Component {
 
     setup() {
         this.userSettings = useState(useService("mail.user_settings"));
+        this.rtc = useState(useService("mail.rtc"));
+        this.state = useState({
+            localCandidateType: undefined,
+            remoteCandidateType: undefined,
+            dataChannelState: undefined,
+            packetsReceived: undefined,
+            packetsSent: undefined,
+            dtlsState: undefined,
+            iceState: undefined,
+            iceGatheringState: undefined,
+        });
         onMounted(() => {
             if (!this.env.debug) {
                 return;
             }
-            this.props.rtcSession.updateStats();
-            this.updateStatsTimeout = browser.setInterval(
-                () => this.props.rtcSession.updateStats(),
-                3000
-            );
+            this.updateStats();
+            this.updateStatsTimeout = browser.setInterval(() => this.updateStats(), 3000);
         });
         onWillUnmount(() => browser.clearInterval(this.updateStatsTimeout));
     }
 
+    get connectionState() {
+        if (this.rtc.state.connectionType === CONNECTION_TYPES.SERVER) {
+            return this.rtc.state.rtcServer?.connectionState;
+        } else {
+            return this.props.rtcSession?.connectionState;
+        }
+    }
+
     get inboundConnectionTypeText() {
-        if (!this.props.rtcSession.remoteCandidateType) {
+        if (!this.state.remoteCandidateType) {
             return _t("no connection");
         }
         return sprintf(_t("%(candidateType)s (%(protocol)s)"), {
-            candidateType: this.props.rtcSession.remoteCandidateType,
-            protocol: PROTOCOLS_TEXT[this.props.rtcSession.remoteCandidateType],
+            candidateType: this.state.remoteCandidateType,
+            protocol: PROTOCOLS_TEXT[this.state.remoteCandidateType],
         });
     }
 
     get outboundConnectionTypeText() {
-        if (!this.props.rtcSession.localCandidateType) {
+        if (!this.state.localCandidateType) {
             return _t("no connection");
         }
         return sprintf(_t("%(candidateType)s (%(protocol)s)"), {
-            candidateType: this.props.rtcSession.localCandidateType,
-            protocol: PROTOCOLS_TEXT[this.props.rtcSession.localCandidateType],
+            candidateType: this.state.localCandidateType,
+            protocol: PROTOCOLS_TEXT[this.state.localCandidateType],
         });
+    }
+
+    get peerConnection() {
+        if (this.rtc.state.connectionType === CONNECTION_TYPES.SERVER) {
+            return this.rtc.state.rtcServer?.peerConnection;
+        } else {
+            return this.props.rtcSession?.peerConnection;
+        }
     }
 
     get volume() {
@@ -62,5 +87,47 @@ export class CallContextMenu extends Component {
             volume,
         });
         this.props.rtcSession.volume = volume;
+    }
+
+    async updateStats() {
+        this.state.localCandidateType = undefined;
+        this.state.remoteCandidateType = undefined;
+        this.state.dataChannelState = undefined;
+        this.state.packetsReceived = undefined;
+        this.state.packetsSent = undefined;
+        this.state.dtlsState = undefined;
+        this.state.iceState = undefined;
+        this.state.iceGatheringState = undefined;
+        if (!this.peerConnection) {
+            return;
+        }
+        let stats;
+        try {
+            stats = await this.peerConnection.getStats();
+        } catch {
+            return;
+        }
+        this.iceGatheringState = this.peerConnection.iceGatheringState;
+        for (const value of stats.values() || []) {
+            switch (value.type) {
+                case "candidate-pair":
+                    if (value.state === "succeeded" && value.localCandidateId) {
+                        this.state.localCandidateType =
+                            stats.get(value.localCandidateId)?.candidateType || "";
+                        this.state.remoteCandidateType =
+                            stats.get(value.remoteCandidateId)?.candidateType || "";
+                    }
+                    break;
+                case "data-channel":
+                    this.state.dataChannelState = value.state;
+                    break;
+                case "transport":
+                    this.state.dtlsState = value.dtlsState;
+                    this.state.iceState = value.iceState;
+                    this.state.packetsReceived = value.packetsReceived;
+                    this.state.packetsSent = value.packetsSent;
+                    break;
+            }
+        }
     }
 }
