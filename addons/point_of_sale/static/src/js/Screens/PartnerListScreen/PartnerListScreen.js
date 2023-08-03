@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { useService } from "@web/core/utils/hooks";
+import { useAsyncLockedMethod } from "@point_of_sale/js/custom_hooks";
 
 import { PartnerLine } from "./PartnerLine";
 import { PartnerDetailsEdit } from "./PartnerDetailsEdit";
@@ -48,6 +49,7 @@ export class PartnerListScreen extends Component {
             currentOffset: 0,
         });
         this.updatePartnerList = debounce(this.updatePartnerList, 70);
+        this.saveChanges = useAsyncLockedMethod(this.saveChanges);
         onWillUnmount(this.updatePartnerList.cancel);
         this.partnerEditor = {}; // create an imperative handle for PartnerDetailsEdit
     }
