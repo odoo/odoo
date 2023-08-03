@@ -720,7 +720,7 @@ class AccountReconcileModel(models.Model):
                 numerical_tokens.append(formatted_token)
 
             # Exact tokens.
-            if len(tokens) == 1:
+            if len(tokens) == 1 and tokens[0] != '':
                 exact_tokens.append(tokens[0])
         return numerical_tokens, exact_tokens, text_tokens
 
