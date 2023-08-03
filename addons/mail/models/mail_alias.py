@@ -154,24 +154,24 @@ class Alias(models.Model):
         :raise UserError: if given alias_name is already assigned or there are
         duplicates in given vals_list;
         """
-        alias_names = [vals['alias_name'] for vals in vals_list if vals.get('alias_name')]
-        if alias_names:
-            sanitized_names = self._clean_and_check_unique(alias_names)
-            for vals in vals_list:
-                if vals.get('alias_name'):
-                    vals['alias_name'] = sanitized_names[alias_names.index(vals['alias_name'])]
+        alias_names = [self._sanitize_alias_name(vals.get('alias_name')) for vals in vals_list]
+        self._check_unique(alias_names)
+        for vals, alias_name in zip(vals_list, alias_names):
+            vals['alias_name'] = alias_name
         return super().create(vals_list)
 
     def write(self, vals):
         """ Raise UserError with a meaningfull message instead of letting the
         unicity constraint give its error. """
+        if 'alias_name' in vals:
+            vals['alias_name'] = self._sanitize_alias_name(vals['alias_name'])
         if vals.get('alias_name') and self.ids:
+            self._check_unique([vals['alias_name']])
             if len(self) > 1:
                 raise UserError(
                     _('Email alias %(alias_name)s cannot be used on %(count)d records at the same time. Please update records one by one.',
                       alias_name=vals['alias_name'], count=len(self))
                 )
-            vals['alias_name'] = self._clean_and_check_unique([vals.get('alias_name')])[0]
         return super().write(vals)
 
     def _clean_and_check_mail_catchall_allowed_domains(self, value):
@@ -186,20 +186,23 @@ class Alias(models.Model):
             )
         return ",".join(value)
 
-    def _clean_and_check_unique(self, names):
-        """When an alias name appears to already be an email, we keep the local
-        part only. A sanitizing / cleaning is also performed on the name. If
-        name already exists an UserError is raised. """
+    def _check_unique(self, sanitized_names):
+        """ Check unicity constraint won't be raised, otherwise raise a UserError
+        with a complete error message. Also check unicity against alias config
+        parameters.
 
-        sanitized_names = [self._sanitize_alias_name(name) for name in names]
-
+        :param list sanitized_names: a list of names (considered as sanitized
+          and ready to be sent to DB);
+        """
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+        valid_domain_aliases = filter(None, (bounce_alias, catchall_alias))
+        valid_names = list(filter(None, sanitized_names))
 
         # matches catchall or bounce alias
         for sanitized_name in sanitized_names:
-            if sanitized_name in [catchall_alias, bounce_alias]:
+            if sanitized_name in valid_domain_aliases:
                 matching_alias_name = '%s@%s' % (sanitized_name, alias_domain) if alias_domain else sanitized_name
                 raise UserError(
                     _('The e-mail alias %(matching_alias_name)s is already used as %(alias_duplicate)s alias. Please choose another alias.',
@@ -208,37 +211,40 @@ class Alias(models.Model):
                 )
 
         # matches existing alias
-        domain = [('alias_name', 'in', sanitized_names)]
-        if self:
-            domain += [('id', 'not in', self.ids)]
-        matching_alias = self.search(domain, limit=1)
+        matching_alias = self.env['mail.alias']
+        if valid_names:
+            domain = [('alias_name', 'in', valid_names)]
+            if self:
+                domain += [('id', 'not in', self.ids)]
+            matching_alias = self.search(domain, limit=1)
         if not matching_alias:
-            return sanitized_names
-
-        sanitized_alias_name = self._sanitize_alias_name(matching_alias.alias_name)
-        matching_alias_name = f'{sanitized_alias_name}@{alias_domain}' if alias_domain else sanitized_alias_name
+            return
         if matching_alias.alias_parent_model_id and matching_alias.alias_parent_thread_id:
             # If parent model and parent thread ID both are set, display document name also in the warning
             document_name = self.env[matching_alias.alias_parent_model_id.model].sudo().browse(matching_alias.alias_parent_thread_id).display_name
             raise UserError(
                 _('The e-mail alias %(matching_alias_name)s is already used by the %(document_name)s %(model_name)s. Choose another alias or change it on the other document.',
-                  matching_alias_name=matching_alias_name,
+                  matching_alias_name=matching_alias.display_name,
                   document_name=document_name,
                   model_name=matching_alias.alias_parent_model_id.name)
                 )
         raise UserError(
             _('The e-mail alias %(matching_alias_name)s is already linked with %(alias_model_name)s. Choose another alias or change it on the linked model.',
-              matching_alias_name=matching_alias_name,
+              matching_alias_name=matching_alias.display_name,
               alias_model_name=matching_alias.alias_model_id.name)
         )
 
     @api.model
     def _sanitize_alias_name(self, name):
         """ Cleans and sanitizes the alias name """
-        sanitized_name = remove_accents(name).lower().split('@')[0]
-        sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
-        sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
-        sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
+        sanitized_name = name.strip() if name else ''
+        if sanitized_name:
+            sanitized_name = remove_accents(sanitized_name).lower().split('@')[0]
+            sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
+            sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
+            sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
+        if not sanitized_name.strip():
+            return False
         return sanitized_name
 
     # ------------------------------------------------------------
