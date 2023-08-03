@@ -11,6 +11,7 @@ import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitab
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { parse } from "web.field_utils";
 import { useValidateCashInput } from "@point_of_sale/js/custom_hooks";
+import { useAsyncLockedMethod } from "../../../js/custom_hooks";
 
 export class CashMovePopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.CashMovePopup";
@@ -30,6 +31,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         });
         this.amountInput = useAutofocus({ refName: "amountInput" });
         useValidateCashInput('amountInput');
+        this.confirm = useAsyncLockedMethod(this.confirm);
     }
     async confirm() {
         let amount;
