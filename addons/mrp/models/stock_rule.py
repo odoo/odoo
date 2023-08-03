@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, SUPERUSER_ID, _, Command
 from odoo.osv import expression
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import float_compare, OrderedSet
@@ -38,6 +38,9 @@ class StockRule(models.Model):
                 remaining |= rule
         super(StockRule, remaining)._compute_picking_type_code_domain()
 
+    def _allow_to_merge_productions(self, procurement, rule):
+        return (procurement.origin != 'MPS') and (procurement.values.get('orderpoint_id') or rule.group_propagation_option != 'propagate')
+
     def _should_auto_confirm_procurement_mo(self, p):
         return (not p.orderpoint_id and p.move_raw_ids) or (p.move_dest_ids.procure_method != 'make_to_order' and not p.move_raw_ids and not p.workorder_ids)
 
@@ -45,17 +48,10 @@ class StockRule(models.Model):
     def _run_manufacture(self, procurements):
         new_productions_values_by_company = defaultdict(list)
         for procurement, rule in procurements:
-            if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
-                # If procurement contains negative quantity, don't create a MO that would be for a negative value.
-                continue
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
-
             mo = self.env['mrp.production']
-            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'))
-            if rule.route_id != mto_route and procurement.origin != 'MPS':
-                gpo = rule.group_propagation_option
-                group = (gpo == 'fixed' and rule.group_id) or \
-                        (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
+            if self._allow_to_merge_productions(procurement, rule):
+                procurement_date = fields.Date.to_date(procurement.values['date_planned'])
                 domain = (
                     ('bom_id', '=', bom.id),
                     ('product_id', '=', procurement.product_id.id),
@@ -64,20 +60,28 @@ class StockRule(models.Model):
                     ('picking_type_id', '=', rule.picking_type_id.id),
                     ('company_id', '=', procurement.company_id.id),
                     ('user_id', '=', False),
+                    ('date_deadline', '>=', datetime.combine(procurement_date, datetime.min.time())),
+                    ('date_deadline', '<=', datetime.combine(procurement_date, datetime.max.time()))
                 )
-                if procurement.values.get('orderpoint_id'):
-                    procurement_date = fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay))
-                    domain += (('date_deadline', '<=', datetime.combine(procurement_date, datetime.max.time())),)
+                gpo = rule.group_propagation_option
+                group = (gpo == 'fixed' and rule.group_id) or \
+                        (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
                 if group:
                     domain += (('procurement_group_id', '=', group.id),)
                 mo = self.env['mrp.production'].sudo().search(domain, limit=1)
             if not mo:
+                if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+                    # If procurement contains negative quantity, don't create a MO that would be for a negative value.
+                    continue
                 new_productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
             else:
                 self.env['change.production.qty'].sudo().with_context(skip_activity=True).create({
                     'mo_id': mo.id,
                     'product_qty': mo.product_id.uom_id._compute_quantity((mo.product_uom_qty + procurement.product_qty), mo.product_uom_id)
                 }).change_prod_qty()
+                mo.write({'origin': False})
+                if move_dest_ids := procurement.values.get('move_dest_ids'):
+                    mo.move_dest_ids = [Command.link(move.id) for move in move_dest_ids]
 
         note_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         for company_id, productions_values in new_productions_values_by_company.items():

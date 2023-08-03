@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from dateutil.relativedelta import relativedelta
+from functools import reduce
 from odoo import api, Command, fields, models
 from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
@@ -489,6 +489,12 @@ class StockMove(models.Model):
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.created_production_id,)
+
+    def _search_picking_for_assignation_domain(self):
+        domain = super()._search_picking_for_assignation_domain()
+        if self.created_production_id:
+            domain = reduce(lambda a, b: a + ['|'] + [b] + [('move_ids.created_production_id', '=', self.created_production_id.id)] if isinstance(b, tuple) and b[0] == 'group_id' else a + [b], domain, [])
+        return domain
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
