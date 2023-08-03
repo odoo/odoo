@@ -69,11 +69,6 @@ export class ListBinaryField extends BinaryField {
     static template = "web.ListBinaryField";
 }
 
-export const listBinaryField = {
-    ...BinaryField,
-    component: ListBinaryField,
-};
-
 export const binaryField = {
     component: BinaryField,
     displayName: _lt("File"),
@@ -89,6 +84,11 @@ export const binaryField = {
         acceptedFileExtensions: options.accepted_file_extensions,
         fileNameField: attrs.filename,
     }),
+};
+
+export const listBinaryField = {
+    ...binaryField,
+    component: ListBinaryField,
 };
 
 registry.category("fields").add("binary", binaryField);
