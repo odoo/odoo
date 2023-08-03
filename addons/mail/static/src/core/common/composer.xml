@@ -18,7 +18,7 @@
                 <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="threadService.avatarUrl(store.self, props.composer.thread)" alt="Avatar of user"/>
             </div>
             <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread === props.composer.thread">
-                <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message.id, props.composer.thread)">
+                <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message, props.composer.thread)">
                     Replying to <b t-esc="props.messageToReplyTo.message.author.name"/>
                 </span>
                 <span t-if="props.messageToReplyTo.message.originThread !== props.composer.thread">

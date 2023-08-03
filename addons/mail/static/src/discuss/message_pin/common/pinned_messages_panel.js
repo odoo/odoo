@@ -50,7 +50,7 @@ export class PinnedMessagesPanel extends Component {
             // to the message.
             await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
         }
-        await this.env.messageHighlight?.highlightMessage(message.id, this.props.thread);
+        await this.env.messageHighlight?.highlightMessage(message, this.props.thread);
     }
 
     /**

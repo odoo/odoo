@@ -202,7 +202,10 @@ export class Thread extends Component {
     async onClickNotification(ev) {
         const { oeType, oeId } = ev.target.dataset;
         if (oeType === "highlight") {
-            await this.env.messageHighlight?.highlightMessage(Number(oeId), this.props.thread);
+            await this.env.messageHighlight?.highlightMessage(
+                this.store.messages[Number(oeId)],
+                this.props.thread
+            );
         }
     }
 
