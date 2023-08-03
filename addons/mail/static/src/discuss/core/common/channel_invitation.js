@@ -9,6 +9,7 @@ import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { useSequential } from "@mail/utils/common/hooks";
 
 export class ChannelInvitation extends Component {
     static components = { ImStatus, ActionPanel };
@@ -27,6 +28,7 @@ export class ChannelInvitation extends Component {
         this.suggestionService = useService("mail.suggestion");
         this.ui = useService("ui");
         this.inputRef = useRef("input");
+        this.sequential = useSequential();
         this.searchStr = "";
         this.state = useState({
             selectablePartners: [],
@@ -46,10 +48,13 @@ export class ChannelInvitation extends Component {
     }
 
     async fetchPartnersToInvite() {
-        const results = await this.messaging.orm.call("res.partner", "search_for_channel_invite", [
+        const results = await this.sequential(() => this.messaging.orm.call("res.partner", "search_for_channel_invite", [
             this.searchStr,
             this.props.thread.id,
-        ]);
+        ]));
+        if (!results) {
+            return;
+        }
         const Partners = results["partners"];
         const selectablePartners = [];
         for (const selectablePartner of Partners) {
