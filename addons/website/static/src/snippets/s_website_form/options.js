@@ -161,8 +161,28 @@ const FormEditor = options.Class.extend({
         if (!field.id) {
             field.id = weUtils.generateHTMLId();
         }
+        const params = { field: { ...field } };
+        if (["url", "email", "tel"].includes(field.type)) {
+            params.field.inputType = field.type;
+        }
+        if (["boolean", "selection", "binary"].includes(field.type)) {
+            params.field.isCheck = true;
+        }
+        if (field.type === "one2many" && field.relation !== "ir.attachment") {
+            params.field.isCheck = true;
+        }
+        if (field.custom && !field.string) {
+            params.field.string = field.name;
+        }
+        if (field.type === "description") {
+            if (field.description) {
+                params.default_description = _t("Describe your field here.");
+            } else if (["email_cc", "email_to"].includes(field.name)) {
+                params.default_description = _t("Separate email addresses with a comma.");
+            }
+        }
         const template = document.createElement('template');
-        template.content.append(renderToElement("website.form_field_" + field.type, {field: field}));
+        template.content.append(renderToElement("website.form_field_" + field.type, params));
         if (field.description && field.description !== true) {
             $(template.content.querySelector('.s_website_form_field_description')).replaceWith(field.description);
         }
@@ -674,6 +694,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 field: {
                     name: fieldName,
                     value: value,
+                    dnone: true,
+                    formatInfo: {},
                 },
             });
             this.$target.find('.s_website_form_submit').before(hiddenField);
