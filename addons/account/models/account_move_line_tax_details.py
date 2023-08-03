@@ -391,6 +391,7 @@ class AccountMoveLine(models.Model):
                     tax_line.tax_repartition_line_id,
 
                     tax_line.company_id,
+                    tax_line.display_type AS display_type,
                     comp_curr.id AS company_currency_id,
                     comp_curr.decimal_places AS comp_curr_prec,
                     curr.id AS currency_id,
@@ -456,6 +457,7 @@ class AccountMoveLine(models.Model):
 
                 sub.base_line_id,
                 sub.tax_line_id,
+                sub.display_type,
                 sub.src_line_id,
 
                 sub.tax_id,

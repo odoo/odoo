@@ -894,7 +894,7 @@ class SaleOrderLine(models.Model):
     @api.depends('order_id.partner_id', 'product_id')
     def _compute_analytic_distribution(self):
         for line in self:
-            if not line.display_type and line.state == 'draft':
+            if not line.display_type:
                 distribution = line.env['account.analytic.distribution.model']._get_distribution({
                     "product_id": line.product_id.id,
                     "product_categ_id": line.product_id.categ_id.id,

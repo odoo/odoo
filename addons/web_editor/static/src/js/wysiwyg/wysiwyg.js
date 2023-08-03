@@ -300,7 +300,21 @@ const Wysiwyg = Widget.extend({
         this.$editable.on('click', '.o_image, .media_iframe_video', e => e.preventDefault());
         this.showTooltip = true;
         this.$editable.on('dblclick', mediaSelector, function () {
-            if (this.isContentEditable || (this.parentElement && this.parentElement.isContentEditable)) {
+            let isEditable =
+                // TODO that first check is probably useless/wrong: checking if
+                // the media itself has editable content should not be relevant.
+                // In fact the content of all media should be marked as non
+                // editable anyway.
+                this.isContentEditable ||
+                // For a media to be editable, the base case is to be in a
+                // container whose content is editable.
+                (this.parentElement && this.parentElement.isContentEditable);
+
+            if (!isEditable && this.classList.contains('o_editable_media')) {
+                isEditable = weUtils.shouldEditableMediaBeEditable(this);
+            }
+
+            if (isEditable) {
                 self.showTooltip = false;
 
                 const selection = self.odooEditor.document.getSelection();
@@ -1847,6 +1861,10 @@ const Wysiwyg = Widget.extend({
         }
 
         this.odooEditor.automaticStepSkipStack();
+        // Clear "d-none" for button groups.
+        for (const buttonGroup of this.toolbar.el.querySelectorAll('.btn-group')) {
+            buttonGroup.classList.remove('d-none');
+        }
         // We need to use the editor's window so the tooltip displays in its
         // document even if it's in an iframe.
         const editorWindow = this.odooEditor.document.defaultView;
@@ -1901,6 +1919,10 @@ const Wysiwyg = Widget.extend({
         if (!range || spansBlocks) {
             this.toolbar.$el.find('#create-link').toggleClass('d-none', true);
         }
+        // Toggle unlink button. Always hide it on media.
+        const linkNode = getInSelection(this.odooEditor.document, 'a');
+        const unlinkButton = this.toolbar.el.querySelector('#unlink');
+        unlinkButton && unlinkButton.classList.toggle('d-none', !linkNode || isInMedia);
         // Toggle the toolbar arrow.
         this.toolbar.$el.toggleClass('noarrow', isInMedia);
         // Unselect all media.
@@ -1913,8 +1935,6 @@ const Wysiwyg = Widget.extend({
             range.selectNode(this.lastMediaClicked);
             selection.removeAllRanges();
             selection.addRange(range);
-            // Always hide the unlink button on media.
-            this.toolbar.$el.find('#unlink').toggleClass('d-none', true);
             // Toggle the 'active' class on the active image tool buttons.
             for (const button of this.toolbar.$el.find('#image-shape div, #fa-spin')) {
                 button.classList.toggle('active', $(e.target).hasClass(button.id));
@@ -1942,6 +1962,14 @@ const Wysiwyg = Widget.extend({
                 this.odooEditor.observerActive();
             }, 400));
         }
+        // Hide button groups that have no visible buttons.
+        for (const buttonGroup of this.toolbar.el.querySelectorAll('.btn-group:not(.d-none)')) {
+            if (!buttonGroup.querySelector('.btn:not(.d-none)')) {
+                buttonGroup.classList.add('d-none');
+            }
+        }
+        // Toolbar might have changed size, update its position.
+        this.odooEditor.updateToolbarPosition();
         // Update color of already opened colorpickers.
         setTimeout(() => {
             for (let eventName in this.colorpickers) {

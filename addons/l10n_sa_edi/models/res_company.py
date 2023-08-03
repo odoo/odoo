@@ -1,5 +1,5 @@
 import re
-from odoo import models, fields
+from odoo import models, fields, _
 from odoo.exceptions import UserError
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
@@ -48,7 +48,7 @@ class ResCompany(models.Model):
         for company in self:
             if 'l10n_sa_api_mode' in vals:
                 if company.l10n_sa_api_mode == 'prod' and vals['l10n_sa_api_mode'] != 'prod':
-                    raise UserError("You cannot change the ZATCA Submission Mode once it has been set to Production")
+                    raise UserError(_("You cannot change the ZATCA Submission Mode once it has been set to Production"))
                 journals = self.env['account.journal'].search([('company_id', '=', company.id)])
                 journals._l10n_sa_reset_certificates()
                 journals.l10n_sa_latest_submission_hash = False

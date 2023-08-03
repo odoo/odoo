@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Layna Nascimento, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-23 08:03+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -241,6 +242,13 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Alguns campos críticos foram modificados em %s.\n"
+"Observe que os dados existentes NÃO serão atualizados por essa alteração.\n"
+"\n"
+"Como as unidades de medida afetam todo o sistema, isso pode causar problemas críticos.\n"
+"Por exemplo. modificar o arredondamento pode atrapalhar o saldo do seu estoque.\n"
+"\n"
+"Portanto, alterar as unidades de medida principais em um banco de dados em execução não é recomendado."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -385,7 +393,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
 msgid "Uom"
-msgstr ""
+msgstr "UDM"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol

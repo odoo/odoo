@@ -11,6 +11,7 @@ from odoo.modules.loading import load_modules, reset_modules_state
 
 from odoo.modules.module import (
     adapt_version,
+    check_manifest_dependencies,
     get_module_path,
     get_module_resource,
     get_modules,
