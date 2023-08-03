@@ -648,6 +648,11 @@ class ProductProduct(models.Model):
             debit_account_id = product_accounts[product.id]['stock_valuation'].id
             credit_account_id = product_accounts[product.id]['stock_input'].id
             value = out_stock_valuation_layer.value
+            if out_stock_valuation_layer.currency_id.compare_amounts(value, 0) < 0:
+                # Swap accounts makes a negative value in accounting
+                debit_account_id = product_accounts[product.id]['stock_output'].id
+                credit_account_id = product_accounts[product.id]['stock_valuation'].id
+
             move_vals = {
                 'journal_id': product_accounts[product.id]['stock_journal'].id,
                 'company_id': self.env.company.id,
