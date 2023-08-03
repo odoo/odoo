@@ -1102,8 +1102,14 @@ class StockMove(models.Model):
                 # `partner_id` and `ref` field will refer to multiple records. In this
                 # case, we chose to wipe them.
                 vals = {}
-                if any(picking.partner_id.id != m.partner_id.id for m in moves):
-                    vals['partner_id'] = False
+                if picking.partner_id != moves.partner_id:
+                    if len(moves.partner_id) == 1:
+                        # If a picking has moves with different partners but all the moves
+                        # match, then the partner should be filled in with the partner
+                        # of the moves.
+                        vals['partner_id'] = moves.partner_id.id
+                    else:
+                        vals['partner_id'] = False
                 if any(picking.origin != m.origin for m in moves):
                     vals['origin'] = False
                 if vals:
