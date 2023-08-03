@@ -135,3 +135,19 @@ export function useValidateCashInput(inputRef, startingValue) {
         }
     })
 }
+
+export function useAsyncLockedMethod(method) {
+    const component = useComponent();
+    let called = false;
+    return async (...args) => {
+        if (called) {
+            return;
+        }
+        try {
+            called = true;
+            await method.call(component, ...args);
+        } finally {
+            called = false;
+        }
+    };
+}
