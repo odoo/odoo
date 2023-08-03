@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import threading
+
 from contextlib import contextmanager
 from unittest.mock import patch
 
@@ -337,6 +339,21 @@ class MockSmtplibCase:
             self.find_mail_server_mocked = find_mail_server_mocked
             yield
 
+    def _build_email(self, mail_from, return_path=None, **kwargs):
+        return self.env['ir.mail_server'].build_email(
+            body=kwargs.pop('body', 'body'),
+            email_from=mail_from,
+            email_to='dest@example-é.com',
+            headers={'Return-Path': return_path} if return_path else None,
+            subject='subject',
+            **kwargs,
+        )
+
+    def _send_email(self, msg, smtp_session):
+        with patch.object(threading.current_thread(), 'testing', False):
+            self.env['ir.mail_server'].send_email(msg, smtp_session=smtp_session)
+        return smtp_session.messages.pop()
+
     def assert_email_sent_smtp(self, smtp_from=None, smtp_to_list=None, message_from=None, from_filter=None, emails_count=1):
         """Check that the given email has been sent.
 
@@ -373,7 +390,7 @@ class MockSmtplibCase:
     @classmethod
     def _init_mail_config(cls):
         cls.alias_bounce = 'bounce.test'
-        cls.alias_domain = 'test.com'
+        cls.alias_domain = 'test.mycompany.com'
         cls.default_from = 'notifications'
         cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', cls.alias_domain)
         cls.env['ir.config_parameter'].sudo().set_param('mail.default.from', cls.default_from)
@@ -395,15 +412,15 @@ class MockSmtplibCase:
         ) = cls.env['ir.mail_server'].create([
             {
                 'name': 'Domain based server',
-                'from_filter': 'test.com',
+                'from_filter': 'test.mycompany.com',
                 ** ir_mail_server_values,
             }, {
                 'name': 'User specific server',
-                'from_filter': 'specific_user@test.com',
+                'from_filter': 'specific_user@test.mycompany.com',
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server Notifications',
-                'from_filter': 'notifications@test.com',
+                'from_filter': 'notifications@test.mycompany.com',
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server No From Filter',

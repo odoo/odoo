@@ -2,23 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
-from unittest.mock import patch
 
-import email.policy
-import email.message
 import re
-import threading
 
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 from odoo.tests import tagged
-from odoo.tests.common import BaseCase, TransactionCase
+from odoo.tests.common import BaseCase
 from odoo.tools import (
     is_html_empty, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
     email_split, email_domain_normalize,
     misc, formataddr,
     prepend_html_content,
-    config,
 )
 
 from . import test_mail_examples
@@ -27,6 +22,24 @@ from . import test_mail_examples
 @tagged('mail_sanitize')
 class TestSanitizer(BaseCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
+
+    def test_abrupt_close(self):
+        payload = """<!--> <script> alert(1) </script> -->"""
+        html_result = html_sanitize(payload)
+        self.assertNotIn('alert(1)', html_result)
+
+        payload = """<!---> <script> alert(1) </script> -->"""
+        html_result = html_sanitize(payload)
+        self.assertNotIn('alert(1)', html_result)
+
+    def test_abrut_malformed(self):
+        payload = """<!--!> <script> alert(1) </script> -->"""
+        html_result = html_sanitize(payload)
+        self.assertNotIn('alert(1)', html_result)
+
+        payload = """<!---!> <script> alert(1) </script> -->"""
+        html_result = html_sanitize(payload)
+        self.assertNotIn('alert(1)', html_result)
 
     def test_basic_sanitizer(self):
         cases = [
@@ -38,6 +51,20 @@ class TestSanitizer(BaseCase):
         for content, expected in cases:
             html = html_sanitize(content)
             self.assertEqual(html, expected, 'html_sanitize is broken')
+
+    def test_comment_malformed(self):
+        html = '''<!-- malformed-close --!> <img src='x' onerror='alert(1)'></img> --> comment <!-- normal comment --> --> out of context balise --!>'''
+        html_result = html_sanitize(html)
+        self.assertNotIn('alert(1)', html_result)
+
+    def test_comment_multiline(self):
+        payload = """
+            <div> <!--
+                multi line comment
+                --!> </div> <script> alert(1) </script> -->
+        """
+        html_result = html_sanitize(payload)
+        self.assertNotIn('alert(1)', html_result)
 
     def test_evil_malicious_code(self):
         # taken from https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Tests
@@ -438,6 +465,7 @@ class TestHtmlTools(BaseCase):
         self.assertEqual(result, "<html><body><div>test</div><div>test</div></body></html>")
 
 
+@tagged('mail_tools')
 class TestEmailTools(BaseCase):
     """ Test some of our generic utility functions for emails """
 
@@ -492,133 +520,3 @@ class TestEmailTools(BaseCase):
         self.assertEqual(email_domain_normalize("Test.Com"), "test.com", "Should have normalized the domain")
         self.assertEqual(email_domain_normalize("email@test.com"), False, "The domain is not valid, should return False")
         self.assertEqual(email_domain_normalize(False), False, "The domain is not valid, should return False")
-
-
-class EmailConfigCase(TransactionCase):
-    @patch.dict(config.options, {"email_from": "settings@example.com"})
-    def test_default_email_from(self, *args):
-        """Email from setting is respected."""
-        # ICP setting is more important
-        ICP = self.env["ir.config_parameter"].sudo()
-        ICP.set_param("mail.catchall.domain", "example.org")
-        ICP.set_param("mail.default.from", "icp")
-        message = self.env["ir.mail_server"].build_email(
-            False, "recipient@example.com", "Subject",
-            "The body of an email",
-        )
-        self.assertEqual(message["From"], "icp@example.org")
-        # Without ICP, the config file/CLI setting is used
-        ICP.set_param("mail.default.from", False)
-        message = self.env["ir.mail_server"].build_email(
-            False, "recipient@example.com", "Subject",
-            "The body of an email",
-        )
-        self.assertEqual(message["From"], "settings@example.com")
-
-
-class _FakeSMTP:
-    """SMTP stub"""
-    def __init__(self):
-        self.messages = []
-        self.from_filter = 'example.com'
-
-    # Python 3 before 3.7.4
-    def sendmail(self, smtp_from, smtp_to_list, message_str,
-                 mail_options=(), rcpt_options=()):
-        self.messages.append(message_str)
-
-    # Python 3.7.4+
-    def send_message(self, message, smtp_from, smtp_to_list,
-                     mail_options=(), rcpt_options=()):
-        self.messages.append(message.as_string())
-
-
-class TestEmailMessage(TransactionCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls._fake_smtp = _FakeSMTP()
-
-    def build_email(self, **kwargs):
-        kwargs.setdefault('email_from', 'from@example.com')
-        kwargs.setdefault('email_to', 'to@example.com')
-        kwargs.setdefault('subject', 'subject')
-        return self.env['ir.mail_server'].build_email(**kwargs)
-
-    def send_email(self, msg):
-        with patch.object(threading.current_thread(), 'testing', False):
-            self.env['ir.mail_server'].send_email(msg, smtp_session=self._fake_smtp)
-        return self._fake_smtp.messages.pop()
-
-    def test_bpo_34424_35805(self):
-        """Ensure all email sent are bpo-34424 and bpo-35805 free"""
-        msg = email.message.EmailMessage(policy=email.policy.SMTP)
-        msg['From'] = '"Joé Doe" <joe@example.com>'
-        msg['To'] = '"Joé Doe" <joe@example.com>'
-
-        # Message-Id & References fields longer than 77 chars (bpo-35805)
-        msg['Message-Id'] = '<929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>'
-        msg['References'] = '<345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>'
-
-        msg_on_the_wire = self.send_email(msg)
-        self.assertEqual(msg_on_the_wire,
-            'From: =?utf-8?q?Jo=C3=A9?= Doe <joe@example.com>\r\n'
-            'To: =?utf-8?q?Jo=C3=A9?= Doe <joe@example.com>\r\n'
-            'Message-Id: <929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>\r\n'
-            'References: <345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>\r\n'
-            '\r\n'
-        )
-
-    def test_alternative_correct_order(self):
-        """
-        RFC-1521 7.2.3. The Multipart/alternative subtype
-        > the alternatives appear in an order of increasing faithfulness
-        > to the original content. In general, the best choice is the
-        > LAST part of a type supported by the recipient system's local
-        > environment.
-
-        Also, the MIME-Version header should be present in BOTH the
-        enveloppe AND the parts
-        """
-        msg = self.build_email(body='<p>Hello world</p>', subtype='html')
-        msg_on_the_wire = self.send_email(msg)
-
-        self.assertGreater(msg_on_the_wire.index('text/html'), msg_on_the_wire.index('text/plain'),
-            "The html part should be preferred (=appear after) to the text part")
-        self.assertEqual(msg_on_the_wire.count('==============='), 2 + 2, # +2 for the header and the footer
-            "There should be 2 parts: one text and one html")
-        self.assertEqual(msg_on_the_wire.count('MIME-Version: 1.0'), 3,
-            "There should be 3 headers MIME-Version: one on the enveloppe, "
-            "one on the html part, one on the text part")
-
-    def test_comment_malformed(self):
-        html = '''<!-- malformed-close --!> <img src='x' onerror='alert(1)'></img> --> comment <!-- normal comment --> --> out of context balise --!>'''
-        html_result = html_sanitize(html)
-        self.assertNotIn('alert(1)', html_result)
-
-    def test_multiline(self):
-        payload = """
-            <div> <!--
-                multi line comment
-                --!> </div> <script> alert(1) </script> -->
-        """
-        html_result = html_sanitize(payload)
-        self.assertNotIn('alert(1)', html_result)
-
-    def test_abrupt_close(self):
-        payload = """<!--> <script> alert(1) </script> -->"""
-        html_result = html_sanitize(payload)
-        self.assertNotIn('alert(1)', html_result)
-
-        payload = """<!---> <script> alert(1) </script> -->"""
-        html_result = html_sanitize(payload)
-        self.assertNotIn('alert(1)', html_result)
-
-    def test_abrut_malformed(self):
-        payload = """<!--!> <script> alert(1) </script> -->"""
-        html_result = html_sanitize(payload)
-        self.assertNotIn('alert(1)', html_result)
-
-        payload = """<!---!> <script> alert(1) </script> -->"""
-        html_result = html_sanitize(payload)
-        self.assertNotIn('alert(1)', html_result)

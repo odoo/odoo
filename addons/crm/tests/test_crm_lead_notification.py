@@ -49,7 +49,6 @@ class NewLeadNotification(TestCrmCommon):
 
         crm_team_model = self.env['ir.model'].search([('model', '=', 'crm.team')])
         crm_lead_model = self.env['ir.model'].search([('model', '=', 'crm.lead')])
-        self.env["ir.config_parameter"].sudo().set_param("mail.catchall.domain", 'aqualung.com')
 
         crm_team0 = self.env['crm.team'].create({
             'name': 'crm team 0',
@@ -83,7 +82,7 @@ Date: Thu, 27 Dec 2018 16:27:45 +0100
 Message-ID: <blablabla0>
 Subject: sale team 0 in company 0
 From:  A client <client_a@someprovider.com>
-To: sale_team_0@aqualung.com
+To: sale_team_0@test.mycompany.com
 Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
 
 --000000000000a47519057e029630
@@ -104,7 +103,7 @@ Date: Thu, 27 Dec 2018 16:27:45 +0100
 Message-ID: <blablabla1>
 Subject: sale team 1 in company 1
 From:  B client <client_b@someprovider.com>
-To: sale_team_1@aqualung.com
+To: sale_team_1@test.mycompany.com
 Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
 
 --000000000000a47519057e029630

@@ -12,7 +12,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'test-company.odoo.com')
+        cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'test.mycompany.com')
 
         cls.internal_user = cls.env['res.users'].create({
             'name': 'Internal User',
