@@ -248,7 +248,7 @@ class PaymentTransaction(models.Model):
             # Extract the error from the response, log it, and set the transaction in error to let
             # the calling module handle the issue without rolling back the cursor.
             error_msg = response['error'].get('message')
-            _logger.error(
+            _logger.warning(
                 "The creation of the payment intent failed.\n"
                 "Stripe gave us the following info about the problem:\n'%s'", error_msg
             )
