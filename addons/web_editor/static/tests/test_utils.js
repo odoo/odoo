@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import ajax from "@web/legacy/js/core/ajax";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
-import * as coreUtils from "@web/core/utils/patch";
+import { patch } from "@web/core/utils/patch";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
 import options from "@web_editor/js/editor/snippets.options";
@@ -94,7 +93,7 @@ const SNIPPETS_TEMPLATE = `
         </div>
     </div>`;
 
-coreUtils.patch(MockServer.prototype, {
+patch(MockServer.prototype, {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -144,32 +143,6 @@ options.registry.option_test = options.Class.extend({
         this.$target.closest('.note-editable').addClass('snippet_has_removed');
     },
 });
-
-function patch() {
-    testUtils.mock.patch(ajax, {
-        loadAsset: function (xmlId) {
-            if (xmlId === 'template.assets') {
-                return Promise.resolve({
-                    cssLibs: [],
-                    cssContents: ['body {background-color: red;}']
-                });
-            }
-            if (xmlId === 'template.assets_all_style') {
-                return Promise.resolve({
-                    cssLibs: $('link[href]:not([type="image/x-icon"])').map(function () {
-                        return $(this).attr('href');
-                    }).get(),
-                    cssContents: ['body {background-color: red;}']
-                });
-            }
-            throw 'Wrong template';
-        },
-    });
-}
-
-function unpatch() {
-    testUtils.mock.unpatch(ajax);
-}
 
 /**
  * @param {object} data
@@ -819,8 +792,6 @@ export default {
     testKeyboard: testKeyboard,
     select: select,
     keydown: keydown,
-    patch: patch,
-    unpatch: unpatch,
     getGridHtml: getGridHtml,
     getTableHtml: getTableHtml,
     getRegularGridHtml: getRegularGridHtml,

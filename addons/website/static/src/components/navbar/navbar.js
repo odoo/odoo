@@ -3,14 +3,14 @@
 import { NavBar } from '@web/webclient/navbar/navbar';
 import { useService, useBus } from '@web/core/utils/hooks';
 import { registry } from "@web/core/registry";
-import { patch } from '@web/legacy/js/core/utils';
+import { patch } from "@web/core/utils/patch";
 
 const websiteSystrayRegistry = registry.category('website_systray');
 const { useEffect } = owl;
 
-patch(NavBar.prototype, 'website_navbar', {
+patch(NavBar.prototype, {
     setup() {
-        this._super();
+        super.setup();
         this.websiteService = useService('website');
         this.websiteCustomMenus = useService('website_custom_menus');
 
@@ -55,14 +55,14 @@ patch(NavBar.prototype, 'website_navbar', {
                 .filter((item) => ('isDisplayed' in item ? item.isDisplayed(this.env) : true))
                 .reverse();
         }
-        return this._super();
+        return super.systrayItems;
     },
 
     /**
      * @override
      */
     get currentAppSections() {
-        const currentAppSections = this._super();
+        const currentAppSections = super.currentAppSections;
         if (this.currentApp && this.currentApp.xmlid === 'website.menu_website_configuration') {
             return this.websiteCustomMenus.addCustomMenus(currentAppSections).filter(section => section.childrenTree.length);
         }
@@ -77,6 +77,6 @@ patch(NavBar.prototype, 'website_navbar', {
         if (websiteMenu) {
             return this.websiteCustomMenus.open(menu);
         }
-        return this._super(menu);
+        return super.onNavBarDropdownItemSelection(menu);
     },
 });

@@ -1,8 +1,8 @@
 /** @odoo-module **/
-import { patch } from '@web/legacy/js/core/utils';
+import { patch } from "@web/core/utils/patch";
 import { WebsitePreview } from '@website/client_actions/website_preview/website_preview';
 
-patch(WebsitePreview.prototype, 'website_preview_test_mode', {
+patch(WebsitePreview.prototype, {
     /**
      * @override
      */

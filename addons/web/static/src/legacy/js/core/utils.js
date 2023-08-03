@@ -205,8 +205,6 @@ var diacriticsMap = {
 '\u0225': 'z','\u0240': 'z','\u2C6C': 'z','\uA763': 'z',
 };
 
-const patchMap = new WeakMap();
-
 /**
  * Helper function returning an extraction handler to use on array elements to
  * return a certain attribute or mutated form of the element.
@@ -736,82 +734,6 @@ const utils = {
         }, []);
     },
     /**
-     * Patch an object and return a function that remove the patch
-     * when called.
-     *
-     * @param {Object} obj Object to patch
-     * @param {string} patchName
-     * @param {Object} patch
-     */
-    patch:function (obj, patchName, patch) {
-        if (!patchMap.has(obj)) {
-            patchMap.set(obj, {
-                original: {},
-                patches: [],
-            });
-        }
-        const objDesc = patchMap.get(obj);
-        if (objDesc.patches.some(p => p.name === patchName)) {
-            throw new AlreadyDefinedPatchError(`Patch ${patchName} is already defined`);
-        }
-        objDesc.patches.push({
-            name: patchName,
-            patch,
-        });
-
-        for (const k in patch) {
-            let prevDesc = null;
-            let proto = obj;
-            do {
-                prevDesc = Object.getOwnPropertyDescriptor(proto, k);
-                proto = Object.getPrototypeOf(proto);
-            } while (!prevDesc && proto);
-
-            const newDesc = Object.getOwnPropertyDescriptor(patch, k);
-            if (!objDesc.original.hasOwnProperty(k)) {
-                objDesc.original[k] = Object.getOwnPropertyDescriptor(obj, k);
-            }
-
-            if (prevDesc) {
-                const patchedFnName = `${k} (patch ${patchName})`;
-
-                if (prevDesc.value && typeof newDesc.value === "function") {
-                    makeIntermediateFunction("value", prevDesc, newDesc, patchedFnName);
-                }
-                if (prevDesc.get || prevDesc.set) {
-                    // get and set are defined together. If they are both defined
-                    // in the previous descriptor but only one in the new descriptor
-                    // then the other will be undefined so we need to apply the
-                    // previous descriptor in the new one.
-                    newDesc.get = newDesc.get || prevDesc.get;
-                    newDesc.set = newDesc.set || prevDesc.set;
-                    if (prevDesc.get && typeof newDesc.get === "function") {
-                        makeIntermediateFunction("get", prevDesc, newDesc, patchedFnName);
-                    }
-                    if (prevDesc.set && typeof newDesc.set === "function") {
-                        makeIntermediateFunction("set", prevDesc, newDesc, patchedFnName);
-                    }
-                }
-            }
-
-            Object.defineProperty(obj, k, newDesc);
-        }
-
-        function makeIntermediateFunction(key, prevDesc, newDesc, patchedFnName) {
-            const _superFn = prevDesc[key];
-            const patchFn = newDesc[key];
-            newDesc[key] = {
-                [patchedFnName](...args) {
-                    const prevSuper = this._super;
-                    this._super = _superFn.bind(this);
-                    const result = patchFn.call(this, ...args);
-                    this._super = prevSuper;
-                    return result;
-                }
-            }[patchedFnName];
-        }
-    },
-    /**
      * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
      * See the corresponding float_round() in server/tools/float_utils.py for more info
      * @param {Number} value the value to be rounded
@@ -1017,42 +939,6 @@ const utils = {
         return casesensetive ? str : str.toLowerCase();
     },
     /**
-     * We define here an unpatch function.  This is mostly useful if we want to
-     * remove a patch.  For example, for testing purposes
-     *
-     * @param {Object} obj
-     * @param {string} patchName
-     * @returns {Object} the removed patch
-     */
-    unpatch: function (obj, patchName) {
-        const objDesc = patchMap.get(obj);
-        if (!objDesc || !objDesc.patches.some(p => p.name === patchName)) {
-            throw new UnknownPatchError(`Could not find patch ${patchName}`);
-        }
-        patchMap.delete(obj);
-
-        // Restore original methods on the prototype and the class.
-        for (const k in objDesc.original) {
-            if (objDesc.original[k] === undefined) {
-                delete obj[k];
-            } else {
-                Object.defineProperty(obj, k, objDesc.original[k]);
-            }
-        }
-
-        // Re-apply the patches except the one to remove.
-        let removedPatch;
-        for (const patchDesc of objDesc.patches) {
-            if (patchDesc.name !== patchName) {
-                utils.patch(obj, patchDesc.name, patchDesc.patch);
-            } else {
-                removedPatch = patchDesc.patch;
-            }
-        }
-
-        return removedPatch;
-    },
-    /**
      * @param {any} node
      * @param {any} strip_whitespace
      * @returns
@@ -1168,10 +1054,8 @@ const utils = {
     },
 };
 
-export const patch = utils.patch
 export const confine = utils.confine
 export const traverse = utils.traverse
-export const unpatch = utils.unpatch
 export const is_email = utils.is_email
 export const sprintf = utils.sprintf
 export const groupBy = utils.groupBy

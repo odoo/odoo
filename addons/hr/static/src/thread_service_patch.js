@@ -2,15 +2,14 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { ThreadService } from "@mail/core/common/thread_service";
-import { patch } from '@web/legacy/js/core/utils';
+import { patch } from "@web/core/utils/patch";
 
 /** @type {import("@mail/core/common/thread_service").ThreadService} */
 const threadServicePatch = {
     async getChat(person) {
         const { employeeId } = person;
-        const _super = this._super.bind(this);
         if (!employeeId) {
-            return _super(person);
+            return super.getChat(person);
         }
         let employee = this.store.employees[employeeId];
         if (!employee) {
@@ -49,8 +48,8 @@ const threadServicePatch = {
             );
             return;
         }
-        return _super({ userId: employee.user_id });
+        return super.getChat({ userId: employee.user_id });
     },
 };
 
-patch(ThreadService.prototype, "hr", threadServicePatch);
+patch(ThreadService.prototype, threadServicePatch);
