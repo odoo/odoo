@@ -21,13 +21,13 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  *  work on group elements during the dragging sequence.
  * @property {string | () => string} [handle] additional selector for when the dragging
  *  sequence must be initiated when dragging on a certain part of the element.
- * @property {string | () => string} [ignore] selector targetting elements that must
+ * @property {string | () => string} [ignore] selector targeting elements that must
  *  initiate a drag.
  * @property {boolean | () => boolean} [connectGroups] whether elements can be dragged
- *  accross different parent groups. Note that it requires a `groups` param to work.
+ *  across different parent groups. Note that it requires a `groups` param to work.
  * @property {string | () => string} [cursor] cursor style during the dragging sequence.
  * @property {boolean | () => boolean} [nest] whether elements are nested or not.
- * @property {string | () => string} [lisType] type of lists ("ul" or "ol").
+ * @property {string | () => string} [listTagName] type of lists ("ul" or "ol").
  * @property {number | () => number} [nestInterval] Horizontal distance needed to trigger
  * a change in the list hierarchy (i.e. changing parent when moving horizontally)
  *
@@ -72,7 +72,7 @@ export const useNestedSortable = makeDraggableHook({
         groups: [String, Function],
         connectGroups: [Boolean, Function],
         nest: [Boolean],
-        listType: [String],
+        listTagName: [String],
         nestInterval: [Number],
     },
     defaultParams: {
@@ -83,7 +83,7 @@ export const useNestedSortable = makeDraggableHook({
         elements: "li",
         groupSelector: null,
         nest: false,
-        listType: "ul",
+        listTagName: "ul",
         nestInterval: 15,
     },
 
@@ -94,12 +94,12 @@ export const useNestedSortable = makeDraggableHook({
         if (ctx.groupSelector) {
             ctx.fullSelector = [ctx.groupSelector, ctx.fullSelector].join(" ");
         }
-        // Connection accross groups
+        // Connection across groups
         ctx.connectGroups = params.connectGroups;
         // Nested elements
         ctx.nest = params.nest;
-        // List type
-        ctx.listType = params.listType;
+        // List tag name
+        ctx.listTagName = params.listTagName;
         // Horizontal distance needed to trigger a change in the list hierarchy
         // (i.e. changing parent when moving horizontally)
         ctx.nestInterval = params.nestInterval;
@@ -115,8 +115,12 @@ export const useNestedSortable = makeDraggableHook({
                 ctx.current.container = ctx.currentGroup;
             }
         }
+
+        if (ctx.nest) {
+            ctx.prevNestX = ctx.pointer.x;
+        }
         ctx.current.placeHolder = ctx.current.element.cloneNode(false);
-        ctx.current.placeHolder.style = `display: block; width: 100%; height: 5px; background-color: deepskyblue`;
+        ctx.current.placeHolder.classList.add("o_nested_sortable_placeholder");
         addCleanup(() => ctx.current.placeHolder.remove());
     },
 
@@ -127,11 +131,11 @@ export const useNestedSortable = makeDraggableHook({
         // Horizontal position which will be used to detect row changes when moving vertically, so that
         // we do not need to be on the row to trigger row changes (only the vertical position matters).
         // Nested rows are shorter than "root" rows, and do not start at the same horizontal position.
-        // However, every row spans until the end of the container. Therefore, we use the end of the
-        // container - 1 as horizontal position.
+        // However, every row ends at the same horizontal position. Therefore, we use the end of the
+        // current element - 1 as horizontal position.
         ctx.selectorX = ctx.isRTL
-            ? ctx.current.containerRect.left + 1
-            : ctx.current.containerRect.right - 1;
+            ? ctx.current.elementRect.left + 1
+            : ctx.current.elementRect.right - 1;
 
         // Placeholder is initially added right after the current element.
         ctx.current.element.after(ctx.current.placeHolder);
@@ -144,8 +148,6 @@ export const useNestedSortable = makeDraggableHook({
         addStyle(document.querySelector(".o_navbar"), { "pointer-events": "none" });
         addStyle(document.querySelector(".o_action_manager"), { "pointer-events": "none" });
         addStyle(ctx.current.container, { "pointer-events": "auto" });
-
-        ctx.prevNestX = ctx.pointer.x;
 
         // Calls "onDragStart" handler
         return {
@@ -179,9 +181,9 @@ export const useNestedSortable = makeDraggableHook({
          * @return {HTMLElement} list
          */
         const getChildList = (el) => {
-            let list = el.querySelector(ctx.listType);
+            let list = el.querySelector(ctx.listTagName);
             if (!list) {
-                list = document.createElement(ctx.listType);
+                list = document.createElement(ctx.listTagName);
                 el.appendChild(list);
             }
             return list;
@@ -229,7 +231,7 @@ export const useNestedSortable = makeDraggableHook({
          */
         if (ctx.nest) {
             const xInterval = ctx.prevNestX - ctx.pointer.x;
-            if (ctx.nestInterval - (-1) ** ctx.isRTL * xInterval < 0) {
+            if (ctx.nestInterval - (-1) ** ctx.isRTL * xInterval < 1) {
                 // Place placeholder after its parent in its parent's list only
                 // if the placeholder is the last child of its parent
                 // (ignoring the current element which is in the dom)
@@ -246,22 +248,25 @@ export const useNestedSortable = makeDraggableHook({
                 }
                 // Recenter the pointer coordinates to this step
                 ctx.prevNestX = ctx.pointer.x;
-            } else if (ctx.nestInterval + (-1) ** ctx.isRTL * xInterval < 0) {
+                return;
+            } else if (ctx.nestInterval + (-1) ** ctx.isRTL * xInterval < 1) {
                 // Place placeholder as the last child of its previous sibling,
                 // (ignoring the current element which is in the dom)
                 let parent = position.previous;
                 if (parent === ctx.current.element) {
                     parent = parent.previousElementSibling;
                 }
-                if (parent) {
+                if (parent && parent.matches(ctx.elementSelector)) {
                     getChildList(parent).appendChild(ctx.current.placeHolder);
                     onMove(position);
                 }
                 // Recenter the pointer coordinates to this step
                 ctx.prevNestX = ctx.pointer.x;
+                return;
             }
         }
-        const closestEl = document.elementFromPoint(ctx.selectorX, ctx.pointer.y);
+        const currentTop = ctx.pointer.y - ctx.current.offset.y;
+        const closestEl = document.elementFromPoint(ctx.selectorX, currentTop);
         if (!closestEl) {
             // Cursor outside of viewport
             return;
@@ -277,23 +282,30 @@ export const useNestedSortable = makeDraggableHook({
             // element. If the position is not allowed but nesting is allowed,
             // place the placeholder as the last child of the previous sibling
             // instead.
-            if (ctx.pointer.y - eRect.y < 10) {
+            if (currentTop - eRect.y < 10) {
                 if (pos === 2 || pos === 10) {
                     element.before(ctx.current.placeHolder);
                     onMove(position);
                     // Recenter the pointer coordinates to this step
                     ctx.prevNestX = ctx.pointer.x;
                 }
-            } else if (ctx.pointer.y - eRect.y > 15 && pos === 4) {
+            } else if (currentTop - eRect.y > 15 && pos === 4) {
                 // Place placeholder after the hovered element in its parent's
                 // list if the cursor is not in the upper part of the
                 // element and if the placeholder is currently before the
                 // hovered element.
-                // If nesting is allowed, place the placeholder as the first
-                // child of the hovered element instead.
+                // If nesting is allowed and if the element has at least one
+                // child, place the placeholder above the first child of the
+                // hovered element instead.
                 if (ctx.nest) {
-                    getChildList(element).prepend(ctx.current.placeHolder);
-                    onMove(position);
+                    const elementChildList = getChildList(element);
+                    if (elementChildList.querySelector(ctx.elementSelector)) {
+                        elementChildList.prepend(ctx.current.placeHolder);
+                        onMove(position);
+                    } else {
+                        element.after(ctx.current.placeHolder);
+                        onMove(position);
+                    }
                     // Recenter the pointer coordinates to this step
                     ctx.prevNestX = ctx.pointer.x;
                 } else {
