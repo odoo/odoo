@@ -2278,7 +2278,7 @@ class TestComposerResultsMass(TestMailComposer):
                                   default_template_id=self.template.id)
         ))
         composer_form.reply_to_mode = 'new'
-        composer_form.reply_to = "{{ '\"' + object.name + '\" <%s>' % 'dynamic.reply.to@test.com' }}"
+        composer_form.reply_to = "{{ '\"' + object.name + '\" <%s>' % 'dynamic.reply.to@test.mycompany.com' }}"
         composer = composer_form.save()
         self.assertTrue(composer.reply_to_force_new)
         with self.mock_mail_gateway(mail_unlink_sent=False):
@@ -2294,7 +2294,7 @@ class TestComposerResultsMass(TestMailComposer):
                                     'email_from': self.partner_employee_2.email_formatted,
                                     'reply_to': formataddr((
                                         f'{record.name}',
-                                        'dynamic.reply.to@test.com'
+                                        'dynamic.reply.to@test.mycompany.com'
                                     )),
                                     'subject': 'TemplateSubject %s' % record.name,
                                 },
@@ -2302,7 +2302,7 @@ class TestComposerResultsMass(TestMailComposer):
                                     'email_from': self.partner_employee_2.email_formatted,
                                     'reply_to': formataddr((
                                         f'{record.name}',
-                                        'dynamic.reply.to@test.com'
+                                        'dynamic.reply.to@test.mycompany.com'
                                     )),
                                 },
                                )
