@@ -40,7 +40,7 @@
                         messageToReplyTo="props.messageToReplyTo"
                         squashed="isSquashed(msg, prevMsg)"
                         highlighted="messageHighlight?.highlightedMessageId === msg.id"
-                        onParentMessageClick="() => msg.parentMessage and env.messageHighlight?.highlightMessage(msg.parentMessage.id, props.thread)"
+                        onParentMessageClick="() => msg.parentMessage and env.messageHighlight?.highlightMessage(msg.parentMessage, props.thread)"
                         thread="props.thread"
                         messageEdition="props.messageEdition"
                     />
