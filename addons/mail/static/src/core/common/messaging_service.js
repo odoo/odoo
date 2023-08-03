@@ -87,6 +87,7 @@ export class Messaging {
         this.store.discuss.inbox.counter = data.needaction_inbox_counter;
         this.store.internalUserGroupId = data.internalUserGroupId;
         this.store.discuss.starred.counter = data.starred_counter;
+        this.store.mt_comment_id = data.mt_comment_id;
         this.store.discuss.isActive =
             data.menu_id === this.router.current.hash?.menu_id ||
             this.router.hash?.action === "mail.action_discuss";
