@@ -4779,4 +4779,34 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.verifySteps(["onWillStartModel", "render"]);
     });
+
+    QUnit.test("check apply default record label", async (assert) => {
+        assert.expect(1);
+        class TestCalendarController extends CalendarController {
+            get editRecordDefaultDisplayText() {
+                return "Test Display";
+            }
+        }
+
+        viewRegistry.add("test_calendar_view", {
+            ...calendarView,
+            Controller: TestCalendarController,
+        });
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar js_class="test_calendar_view" date_start="start" date_stop="stop" all_day="allday" mode="month" quick_add="0" event_open_popup="1" />
+            `,
+        });
+
+        await clickDate(target, "2016-12-13");
+        assert.strictEqual(
+            target.querySelector(".modal-title").textContent,
+            "Test Display",
+            "The text in the title should be Test Display"
+        );
+    });
 });
