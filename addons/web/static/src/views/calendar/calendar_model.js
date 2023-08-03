@@ -554,6 +554,14 @@ export class CalendarModel extends Model {
         };
     }
 
+    /**
+     * @protected
+     */
+    addFilterFields(record, filterInfo) {
+        return {
+            colorIndex: record.colorIndex,
+        };
+    }
     //--------------------------------------------------------------------------
 
     /**
@@ -662,7 +670,7 @@ export class CalendarModel extends Model {
                     filters.push({
                         id: value,
                         [fieldName]: rawValue,
-                        colorIndex: record.colorIndex,
+                        ...this.addFilterFields(record, filterInfo),
                     });
                 }
             }

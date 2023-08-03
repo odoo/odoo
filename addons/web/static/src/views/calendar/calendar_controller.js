@@ -116,6 +116,10 @@ export class CalendarController extends Component {
         return this.props.className;
     }
 
+    get editRecordDefaultDisplayText() {
+        return _t("New Event");
+    }
+
     getQuickCreateProps(record) {
         return {
             record,
@@ -174,7 +178,9 @@ export class CalendarController extends Component {
                         resModel: this.model.resModel,
                         resId: record.id || false,
                         context,
-                        title: record.id ? _t("Open: %s", record.title) : _t("New Event"),
+                        title: record.id
+                            ? _t("Open: %s", record.title)
+                            : this.editRecordDefaultDisplayText,
                         viewId: this.model.formViewId,
                         onRecordSaved: () => this.model.load(),
                     },
