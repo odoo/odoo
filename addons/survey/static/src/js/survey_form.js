@@ -159,7 +159,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var $commentInput = $choiceItemGroup.find('textarea[type="text"]');
 
         if ($otherItem.prop('checked') || $commentInput.hasClass('o_survey_comment')) {
-            $commentInput.enable();
+            $commentInput.each((idx, $input) => $input.disabled = false);
             $commentInput.closest('.o_survey_comment_container').removeClass('d-none');
             if ($otherItem.prop('checked')) {
                 $commentInput.focus();
@@ -167,7 +167,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         } else {
             $commentInput.val('');
             $commentInput.closest('.o_survey_comment_container').addClass('d-none');
-            $commentInput.enable(false);
+            $commentInput.each((idx, $input) => $input.disabled = true);
         }
 
         var $matrixBtn = $target.closest('.o_survey_matrix_btn');
