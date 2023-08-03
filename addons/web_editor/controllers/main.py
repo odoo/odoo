@@ -191,7 +191,7 @@ class Web_Editor(http.Controller):
             try:
                 data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
                 mimetype = guess_mimetype(b64decode(data))
-                if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
+                if mimetype == 'image/svg+xml' or mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
             except UserError:
                 # considered as an image by the browser file input, but not
