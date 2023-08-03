@@ -145,21 +145,6 @@ class PosOrder(models.Model):
             'coupon_report': coupon_per_report,
         }
 
-    def _prepare_order_line(self, order_line):
-        order_line = super(PosOrder, self)._prepare_order_line(order_line)
-
-        if order_line.get("reward_id"):
-            order_line["reward_id"] = order_line["reward_id"][0]
-        if order_line.get("coupon_id"):
-            order_line["coupon_id"] = order_line["coupon_id"][0]
-
-        return order_line
-
-    def _get_fields_for_order_line(self):
-        fields = super(PosOrder, self)._get_fields_for_order_line()
-        fields.extend(['is_reward_line', 'reward_id', 'coupon_id', 'reward_identifier_code', 'points_cost'])
-        return fields
-
     def _add_mail_attachment(self, name, ticket):
         attachment = super()._add_mail_attachment(name, ticket)
         gift_card_programs = self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'gift_card' and
