@@ -3,7 +3,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
 
     const { parse } = require('web.field_utils');
     const PosComponent = require('point_of_sale.PosComponent');
-    const { useErrorHandlers } = require('point_of_sale.custom_hooks');
+    const { useErrorHandlers, useAsyncLockedMethod } = require('point_of_sale.custom_hooks');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
@@ -27,6 +27,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             useErrorHandlers();
             this.payment_interface = null;
             this.error = false;
+            this.validateOrder = useAsyncLockedMethod(this.validateOrder);
         }
 
         showMaxValueError() {
