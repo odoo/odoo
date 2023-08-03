@@ -142,6 +142,23 @@ describe('applyColor', () => {
             contentAfter: '<p>[abcabc]</p>',
         });
     });
+    it('should apply background color on an single selected cell in a table', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: unformat(`
+                <table><tbody>
+                    <tr><td class="o_selected_td">[<p><br></p>]</td></tr>
+                    <tr><td>cd</td></tr>
+                </tbody></table>
+            `),
+            stepFunction: setColor('rgb(255, 0, 0)', 'background-color'),
+            contentAfter: unformat(`
+                <table><tbody>
+                    <tr><td style="background-color: rgb(255, 0, 0);"><p>[]<br></p></td></tr>
+                    <tr><td>cd</td></tr>
+                </tbody></table>
+            `),
+        });
+    });
 });
 describe('rgbToHex', () => {
     it('should convert an rgb color to hexadecimal', async () => {
