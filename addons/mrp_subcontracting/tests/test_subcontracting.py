@@ -811,6 +811,61 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         subcontracted = move._get_subcontract_production().filtered(lambda p: p.state == 'done')
         self.assertEqual(sum(subcontracted.mapped('qty_produced')), quantities[-1])
 
+    def test_change_reception_serial(self):
+        self.finished.tracking = 'serial'
+        self.bom.consumption = 'flexible'
+
+        finished_lots = self.env['stock.lot'].create([{
+            'name': 'lot_%s' % number,
+            'product_id': self.finished.id,
+            'company_id': self.env.company.id,
+        } for number in range(3)])
+
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.product_uom_qty = 3
+            picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        # Register serial number for each finished product
+        for lot in finished_lots:
+            action = picking_receipt.move_ids.action_show_details()
+            self.assertEqual(action['name'], 'Subcontract', "It should open the subcontract record components wizard instead.")
+            mo = self.env['mrp.production'].browse(action['res_id'])
+            with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
+                mo_form.qty_producing = 1
+                mo_form.lot_producing_id = lot
+                mo_form.save()
+            mo.subcontracting_record_component()
+
+        subcontract_move = picking_receipt.move_ids_without_package.filtered(lambda m: m.is_subcontract)
+        self.assertEqual(len(subcontract_move._get_subcontract_production()), 3)
+        self.assertEqual(len(subcontract_move._get_subcontract_production().lot_producing_id), 3)
+        self.assertRecordValues(subcontract_move._get_subcontract_production().lot_producing_id.sorted('id'), [
+            {'id': finished_lots[0].id},
+            {'id': finished_lots[1].id},
+            {'id': finished_lots[2].id},
+        ])
+
+        new_lot = self.env['stock.lot'].create({
+            'name': 'lot_alter',
+            'product_id': self.finished.id,
+            'company_id': self.env.company.id,
+        })
+        action = picking_receipt.move_ids.action_show_details()
+        self.assertEqual(action['name'], 'Detailed Operations', "The subcontract record components wizard shouldn't be available now.")
+        with Form(subcontract_move.with_context(action['context']), view=action['view_id']) as move_form:
+            with move_form.move_line_nosuggest_ids.edit(2) as move_line:
+                move_line.lot_id = new_lot
+            move_form.save()
+
+        subcontracted_mo = subcontract_move._get_subcontract_production()
+        self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_id == new_lot)), 1)
+        self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_id != new_lot)), 2)
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
