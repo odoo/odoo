@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates>
+
+    <t t-name="project.SubtaskCounter" owl="1">
+        <!-- <t t-if="subtaskCount"> -->
+            <a t-if="subtaskCount &gt; closedSubtaskCount"
+                t-attf-title="{{ closedSubtaskCount }} sub-tasks closed out of {{ subtaskCount }}"
+                class="subtask_list_button text-muted"
+                t-on-click.prevent="() => this.onClick()">
+                <span class="fa fa-check-square-o me-1"/>
+                <t t-esc="closedSubtaskCount + '/' + subtaskCount"/>
+            </a>
+            <div t-else="" t-attf-title="{{ closedSubtaskCount }} sub-tasks closed out of {{ subtaskCount }}" class="text-muted">
+                <span class="fa fa-check-square-o me-1"/>
+                <t t-esc="closedSubtaskCount + '/' + subtaskCount"/>
+            </div>
+        <!-- </t> -->
+    </t>
+
+</templates>

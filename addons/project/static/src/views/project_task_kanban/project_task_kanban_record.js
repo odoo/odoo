@@ -2,7 +2,6 @@
 
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { useState } from "@odoo/owl";
-import { ProjectTaskKanbanCompiler } from "./project_task_kanban_compiler";
 import { SubtaskKanbanList } from "@project/components/subtask_kanban_list/subtask_kanban_list"
 
 export class ProjectTaskKanbanRecord extends KanbanRecord {
@@ -21,7 +20,6 @@ export class ProjectTaskKanbanRecord extends KanbanRecord {
     }
 }
 
-ProjectTaskKanbanRecord.Compiler = ProjectTaskKanbanCompiler;
 ProjectTaskKanbanRecord.components = {
     ...KanbanRecord.components,
     SubtaskKanbanList,

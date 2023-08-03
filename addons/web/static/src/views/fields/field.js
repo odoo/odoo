@@ -112,7 +112,7 @@ export function getPropertyFieldInfo(propertyField) {
 }
 export class Field extends Component {
     setup() {
-        if (this.props.fieldInfo) {
+        if (this.props.fieldInfo && this.props.fieldInfo.field) {
             this.field = this.props.fieldInfo.field;
         } else {
             const fieldType = this.props.record.fields[this.props.name].type;
