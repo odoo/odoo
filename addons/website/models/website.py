@@ -1743,6 +1743,18 @@ class Website(models.Model):
                 similarities=sql.SQL(', ').join(similarities)
             )
 
+            where_clause = sql.SQL("")
+            # Filter unpublished records for portal and public user for
+            # performance.
+            # TODO: Same for `active` field?
+            filter_is_published = (
+                'is_published' in model._fields
+                and model._fields['is_published'].base_field.model_name == model_name
+                and not self.env.user.has_group('base.group_user')
+            )
+            if filter_is_published:
+                where_clause = sql.SQL("WHERE is_published")
+
             from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
             # Specific handling for fields being actually part of another model
             # through the `inherits` mechanism.
@@ -1761,12 +1773,14 @@ class Website(models.Model):
             query = sql.SQL("""
                 SELECT {table}.id, {best_similarity} AS _best_similarity
                 {from_clause}
+                {where_clause}
                 ORDER BY _best_similarity desc
                 LIMIT 1000
             """).format(
                 table=sql.Identifier(model._table),
                 best_similarity=best_similarity,
                 from_clause=from_clause,
+                where_clause=where_clause,
             )
             self.env.cr.execute(query, {'search': search})
             ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
