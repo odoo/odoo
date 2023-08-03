@@ -6,6 +6,7 @@ import { ImStatus } from "@mail/discuss_app/im_status";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { useSequential } from "@mail/utils/hooks";
 
 export class ChannelInvitation extends Component {
     static components = { ImStatus };
@@ -20,6 +21,7 @@ export class ChannelInvitation extends Component {
         this.threadService = useState(useService("mail.thread"));
         this.personaService = useService("mail.persona");
         this.inputRef = useRef("input");
+        this.sequential = useSequential();
         this.searchStr = "";
         this.state = useState({
             selectablePartners: [],
@@ -39,10 +41,13 @@ export class ChannelInvitation extends Component {
     }
 
     async fetchPartnersToInvite() {
-        const results = await this.messaging.orm.call("res.partner", "search_for_channel_invite", [
+        const results = await this.sequential(() => this.messaging.orm.call("res.partner", "search_for_channel_invite", [
             this.searchStr,
             this.props.thread.id,
-        ]);
+        ]));
+        if (!results) {
+            return;
+        }
         const Partners = results["partners"];
         const selectablePartners = [];
         for (const selectablePartner of Partners) {
