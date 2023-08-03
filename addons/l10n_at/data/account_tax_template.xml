@@ -1438,6 +1438,20 @@
                   'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_33')],
                 }),
             ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_33'),
+                    ref('tax_report_line_l10n_at_tva_line_4_17_base')],
+                }),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_33')],
+                }),
+            ]"/>
         </record>
 
         <!-- Vorlagen: Einkauf (Vorsteuer) -->
