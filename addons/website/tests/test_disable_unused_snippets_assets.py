@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import TransactionCase, tagged
-
+from unittest.mock import patch
 
 @tagged('post_install', '-at_install')
 class TestDisableSnippetsAssets(TransactionCase):
@@ -68,7 +68,20 @@ class TestDisableSnippetsAssets(TransactionCase):
             'mega_menu_content': MEGA_MENU_OUTDATED,
         })
         self.mega_menu.flush_recordset()
-        self.Website._disable_unused_snippets_assets()
+        cache_clears = []
+
+        init_clear_cache = self.env.registry.clear_cache
+        def patched_clear_cache(*cache_names):
+            for cache_name in cache_names:
+                cache_clears.append(cache_name)
+            init_clear_cache(*cache_names)
+
+        with patch.object(self.env.registry, 'clear_cache', patched_clear_cache):
+            self.Website._disable_unused_snippets_assets()
+            self.assertIn('assets', cache_clears, 'Assets cache should have been invalidated when updating ir_assets')
+            cache_clears.clear()
+            self.Website._disable_unused_snippets_assets()
+            self.assertNotIn('assets', cache_clears, 'No update on ir_assets expected, no invalidation should be triggered')
 
         s_website_form_000_scss = self._get_snippet_asset('s_website_form', '000', 'scss')
         s_website_form_001_scss = self._get_snippet_asset('s_website_form', '001', 'scss')
