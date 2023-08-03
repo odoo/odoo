@@ -241,15 +241,22 @@ export function useMessageHighlight(duration = 2000) {
     /** @type {import("@mail/core/common/thread_service").ThreadService} */
     const threadService = useService("mail.thread");
     const state = useState({
-        async highlightMessage(msgId, thread) {
-            await threadService.loadAround(thread, msgId);
+        /**
+         * @param {import("@mail/core/message_model").Message} message
+         * @param {import("@mail/core/thread_model").Thread} thread
+         */
+        async highlightMessage(message, thread) {
+            if (message.originThread.localId !== thread.localId) {
+                return;
+            }
+            await threadService.loadAround(thread, message.id);
             const lastHighlightedMessageId = state.highlightedMessageId;
             clearHighlight();
-            if (lastHighlightedMessageId === msgId) {
+            if (lastHighlightedMessageId === message.id) {
                 // Give some time for the state to update.
                 await new Promise(setTimeout);
             }
-            state.highlightedMessageId = msgId;
+            state.highlightedMessageId = message.id;
             timeout = setTimeout(clearHighlight, duration);
         },
         highlightedMessageId: null,
