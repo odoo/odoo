@@ -21,6 +21,9 @@
         "data/pos_restaurant_data.xml",
     ],
     "assets": {
+        'web.assets_backend': [
+            "pos_self_order/static/src/upgrade_selection_field.js",
+        ],
         "pos_self_order.assets_self_order": [
             "web/static/lib/jquery/jquery.js",
             ("include", "web._assets_helpers"),
@@ -47,6 +50,7 @@
             "web/static/lib/odoo_ui_icons/*",
             "pos_self_order/static/src/**/*",
             "point_of_sale/static/src/utils.js",
+            ("remove", "pos_self_order/static/src/upgrade_selection_field.js"),
             # bus service
             'bus/static/src/services/bus_service.js',
             'bus/static/src/bus_parameters_service.js',
