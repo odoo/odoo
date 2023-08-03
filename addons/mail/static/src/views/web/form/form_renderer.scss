@@ -8,12 +8,9 @@
     --ChatterTopbar-padding-right: #{$o-horizontal-padding};
 
     &.o-aside {
-        --Chatter-max-width: #{$o-form-view-sheet-max-width};
-
         flex-shrink: 0;
         flex-grow: 1;
         padding: map-get($spacers, 0);
-        max-width: var(--Chatter-max-width);
         width: $o-mail-Chatter-minWidth;
 
         .o-mail-Message.o-not-discussion {
