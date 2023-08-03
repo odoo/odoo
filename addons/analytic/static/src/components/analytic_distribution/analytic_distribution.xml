@@ -51,7 +51,7 @@
                                         class="o_input"
                                         inputmode="numeric"
                                         type="text"
-                                        t-att-value="formatPercentage(dist_tag.percentage)"
+                                        t-att-value="dist_tag.analytic_account_id or dist_tag.percentage ? formatPercentage(dist_tag.percentage) : ''"
                                         t-on-click.stop=""
                                         t-on-change="(ev) => this.percentageChanged(dist_tag, ev)"/>
                                 </td>
