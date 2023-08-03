@@ -189,7 +189,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             }
         }
         async _finalizeValidation() {
-            if ((this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) && this.env.pos.config.iface_cashdrawer && this.env.pos.config.use_proxy) {
+            if ((this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) && this.env.pos.config.iface_cashdrawer && this.env.proxy && this.env.proxy.printer) {
                 this.env.proxy.printer.open_cashbox();
             }
 
