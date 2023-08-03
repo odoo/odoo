@@ -742,6 +742,12 @@ export class OdooEditor extends EventTarget {
             }
         });
 
+        const applyFontSizeREM = pxStrValue => {
+            const pxValue = parseFloat(pxStrValue);
+            const remValue = this.options.convertNumericToUnit(pxValue, "px", "rem");
+            this.execCommand("setFontSize", `${remValue}rem`);
+        };
+
         // Handle the font size input.
         if (fontSizeInput) {
             const debouncedOnInputChange = (() => {
@@ -755,7 +761,7 @@ export class OdooEditor extends EventTarget {
                             if (!this.isSelectionInEditable()) {
                                 this.historyResetLatestComputedSelection(true);
                             }
-                            this.execCommand("setFontSize", `${fontSize}px`);
+                            applyFontSizeREM(fontSize);
                             fontSizeInput.blur();
                         }
                         resolve();
@@ -779,7 +785,7 @@ export class OdooEditor extends EventTarget {
                     this.execCommand("setFontSize", undefined);
                     this.execCommand("setFontSizeClassName", fontSizeClassName);
                 } else {
-                    this.execCommand("setFontSize", `${optionEl.dataset.value}px`);
+                    applyFontSizeREM(optionEl.dataset.value);
                 }
             };
             fontSizeDropdown.querySelectorAll('.dropdown-item').forEach(item => {
