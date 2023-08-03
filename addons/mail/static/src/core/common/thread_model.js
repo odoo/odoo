@@ -134,6 +134,7 @@ export class Thread {
     is_editable;
 
     constructor(store, data) {
+        this.setup();
         Object.assign(this, {
             id: data.id,
             model: data.model,
@@ -143,6 +144,8 @@ export class Thread {
         store.threads[this.localId] = this;
         return store.threads[this.localId];
     }
+
+    setup() {}
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {

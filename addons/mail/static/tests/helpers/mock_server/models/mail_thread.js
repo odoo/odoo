@@ -129,13 +129,16 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
      * @param {integer} [limit=100]
      * @returns {Object[]}
      */
-    _mockMailThreadMessageGetFollowers(model, ids, after, limit = 100) {
+    _mockMailThreadMessageGetFollowers(model, ids, after, limit = 100, kwargs = {}) {
         const domain = [
             ["res_id", "=", ids[0]],
             ["res_model", "=", model],
         ];
         if (after) {
             domain.push(["id", ">", after]);
+        }
+        if (kwargs.filter_recipients) {
+            domain.push(["partner_id", "!=", this.currentPartnerId]);
         }
         const followers = this.getRecords("mail.followers", domain).sort(
             (f1, f2) => (f1.id < f2.id ? -1 : 1) // sorted from lowest ID to highest ID (i.e. from oldest to youngest)

@@ -6,6 +6,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
+import { useStore } from "../common/messaging_hook";
 
 /**
  * @typedef {Object} SubtypeData
@@ -28,6 +29,7 @@ export class FollowerSubtypeDialog extends Component {
 
     setup() {
         this.rpc = useService("rpc");
+        this.store = useStore();
         this.state = useState({
             /** @type {SubtypeData[]} */
             subtypes: [],
@@ -61,6 +63,9 @@ export class FollowerSubtypeDialog extends Component {
                     subtype_ids: selectedSubtypes.map((subtype) => subtype.id),
                 }
             );
+            if (!selectedSubtypes.some((subtype) => subtype.id === this.store.mt_comment_id)) {
+                this.env.services["mail.thread"].removeRecipient(this.props.follower);
+            }
             this.env.services.notification.add(
                 _t("The subscription preferences were successfully applied."),
                 { type: "success" }
