@@ -22,6 +22,7 @@ Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC
         'data/account.account.tag.csv',
         'data/account.account.template.csv',
         'data/account.tax.group.csv',
+        'data/vat_report.xml',
         'data/account_tax_template_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account.chart.template.csv',

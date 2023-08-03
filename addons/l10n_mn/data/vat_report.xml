@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="account_report_vat_report" model="account.report">
+        <field name="name">VAT Repayment Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.mn"/>
+        <field name="filter_multi_company">tax_units</field>
+        <field name="column_ids">
+            <record id="account_report_vat_report_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="vat_report_lineA" model="account.report.line">
+                <field name="name">А. ТУХАЙН САРЫН БОРЛУУЛСАН БАРАА, АЖИЛ, ҮЙЛЧИЛГЭЭНИЙ НӨАТ-ЫН ТООЦОО</field>
+                <field name="code">VAT_LINEA</field>
+                <field name="sequence">1000</field>
+                <field name="children_ids">
+                    <record id="vat_report_line1" model="account.report.line">
+                        <field name="name">Тухайн сарын нийт борлуулалтын орлого (1=2+3)</field>
+                        <field name="code">VAT_LINE1</field>
+                        <field name="sequence">1001</field>
+                        <field name="aggregation_formula">VAT_LINE2.balance + VAT_LINE3.balance</field>
+                    </record>
+                    <record id="vat_report_line2" model="account.report.line">
+                        <field name="name">Хуулийн 13-р зүйлд заасан тухайн сарын НӨАТ-аас чөлөөлөгдөх борлуулалт (2)</field>
+                        <field name="code">VAT_LINE2</field>
+                        <field name="sequence">1002</field>
+                        <field name="expression_ids">
+	                        <record id="l10n_mn_vat_report_line2_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:02 НӨАТ-аас чөлөөлөгдөх борлуулалт</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line3" model="account.report.line">
+                        <field name="name">Нэмэгдсэн өртгийн албан татвар ногдох бараа, ажил, үйлчилгээний нийт борлуулалтын орлого (3=4+10+29)</field>
+                        <field name="code">VAT_LINE3</field>
+                        <field name="sequence">1003</field>
+                        <field name="aggregation_formula">VAT_LINE4.balance + VAT_LINE10.balance + VAT_LINE29.balance</field>
+                    </record>
+                    <record id="vat_report_line4" model="account.report.line">
+                        <field name="name">НӨАТ ногдох бараа борлуулсны орлого (4=5+...+9)</field>
+                        <field name="code">VAT_LINE4</field>
+                        <field name="sequence">1004</field>
+                        <field name="aggregation_formula">VAT_LINE5.balance + VAT_LINE6.balance + VAT_LINE7.balance + VAT_LINE8.balance + VAT_LINE9.balance</field>
+                    </record>
+                    <record id="vat_report_line5" model="account.report.line">
+                        <field name="name">Дотоодын зах зээлд борлуулсан барааны борлуулалтын орлого (5)</field>
+                        <field name="code">VAT_LINE5</field>
+                        <field name="sequence">1005</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line5_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:05 НӨАТ-тэй борлуулалт, дотоодын зах зээл</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line6" model="account.report.line">
+                        <field name="name">Бусад барааны борлуулалтын орлого (6)</field>
+                        <field name="code">VAT_LINE6</field>
+                        <field name="sequence">1006</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line6_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:06 Бусад борлуулалтын НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line7" model="account.report.line">
+                        <field name="name">Эрх борлуулсны орлого (7)</field>
+                        <field name="code">VAT_LINE7</field>
+                        <field name="sequence">1007</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line7_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:07 Эрх борлуулсан НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line8" model="account.report.line">
+                        <field name="name">Татан буугдах үед өөрт үлдээсэн барааны орлого (8)</field>
+                        <field name="code">VAT_LINE8</field>
+                        <field name="sequence">1008</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line8_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:08 Татан буугдах үед борлуулсан барааны НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line9" model="account.report.line">
+                        <field name="name">Өрийн төлбөрт шилжүүлсэн барааны орлого (9)</field>
+                        <field name="code">VAT_LINE9</field>
+                        <field name="sequence">1009</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line9_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:09 Өрийн төлбөрт шилжүүлсэн барааны НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line10" model="account.report.line">
+                        <field name="name">НӨАТ ногдох ажил, үйлчилгээний орлого (11+...+24)</field>
+                        <field name="code">VAT_LINE10</field>
+                        <field name="sequence">1010</field>
+                        <field name="aggregation_formula">VAT_LINE11.balance + VAT_LINE12.balance + VAT_LINE13.balance + VAT_LINE14.balance + VAT_LINE15.balance + VAT_LINE16.balance + VAT_LINE17.balance + VAT_LINE18.balance + VAT_LINE19.balance + VAT_LINE20.balance + VAT_LINE21.balance + VAT_LINE22.balance + VAT_LINE23.balance + VAT_LINE24.balance</field>
+                    </record>
+                    <record id="vat_report_line11" model="account.report.line">
+                        <field name="name">Өрийн төлбөрт тооцсон ажил гүйцэтгэх, үйлчилгээ үзүүлсний орлого (11)</field>
+                        <field name="code">VAT_LINE11</field>
+                        <field name="sequence">1011</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line11_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:11 Өрийн төлбөрт үзүүлсэн үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line12" model="account.report.line">
+                        <field name="name">Цахилгаан, дулаан, хий, ус хангамж, ариутгах татуурга, шуудан, харилцаа холбооны болон бусад үйлчилгээ үзүүлсний орлого (12)</field>
+                        <field name="code">VAT_LINE12</field>
+                        <field name="sequence">1012</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line12_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:12 Цахилгаан, дулаан, ус, шуудан, холбоо, бусад үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line13" model="account.report.line">
+                        <field name="name">Бараа түрээслүүлэх, бусад хэлбэрээр эзэмшүүлэх, ашиглуулах үйлчилгээний орлого (13)</field>
+                        <field name="code">VAT_LINE13</field>
+                        <field name="sequence">1013</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line13_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:13 Бараа түрээслүүлэх, эзэмшүүлэх үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line14" model="account.report.line">
+                        <field name="name">Зочид буудал ба түүнтэй адилтгах байр түрээслүүлэх, эзэмшүүлэх, ашиглуулах үйлчилгээний орлого (14)</field>
+                        <field name="code">VAT_LINE14</field>
+                        <field name="sequence">1014</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line14_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:14 Зочид буудал, байр түрээслүүлэх, эзэмшүүлэх үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line15" model="account.report.line">
+                        <field name="name">Үл хөдлөх, хөдлөх эд хөрөнгө түрээслүүлэх ба эзэмшүүлэх ашиглуулах үйлчилгээий орлого (15)</field>
+                        <field name="code">VAT_LINE15</field>
+                        <field name="sequence">1015</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line15_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:15 Хөдлөх, үл хөдлөх хөрөнгө түрээслүүлэх, эзэмшүүлэх үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line16" model="account.report.line">
+                        <field name="name">Шинэ бүтээл, бүтээгдэхүүний загвар, зохиогчийн эрхэд хамаарах бүтээл, барааны тэмдэг, ноу-хау шилжүүлсэн, түрээсэлсэн, худалдсаны орлого (16)</field>
+                        <field name="code">VAT_LINE16</field>
+                        <field name="sequence">1016</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line16_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:16 Бүтээл, загвар, зохиогчийн эрх борлуулсан НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line17" model="account.report.line">
+                        <field name="name">Эд мөнгөний хонжворт сугалаа, төлбөрт таавар бооцоот тоглоомын үйл ажиллагааны орлого (17)</field>
+                        <field name="code">VAT_LINE17</field>
+                        <field name="sequence">1017</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line17_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:17 Хонжворт сугалаа, таавар, бооцоот тоглоомын НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line18" model="account.report.line">
+                        <field name="name">Зуучлалын үйлчилгээний орлого (18)</field>
+                        <field name="code">VAT_LINE18</field>
+                        <field name="sequence">1018</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line18_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:18 Зуучлалын үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line19" model="account.report.line">
+                        <field name="name">Бусдын буруутай үйл ажиллагааны улмаас авсан хүү, торгууль, алдангийн орлого (19)</field>
+                        <field name="code">VAT_LINE19</field>
+                        <field name="sequence">1019</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line19_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:19 Авсан хүү торгууль, алдангийн НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line20" model="account.report.line">
+                        <field name="name">Хөрөнгийн үнэлгээний үйлчилгээний орлого (20)</field>
+                        <field name="code">VAT_LINE20</field>
+                        <field name="sequence">1020</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line20_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:20 Хөрөнгийн үнэлгээний үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line21" model="account.report.line">
+                        <field name="name">Төрөөс олгож буй төсвийн санхүүжилт, татаас, урамшууллын орлого (21)</field>
+                        <field name="code">VAT_LINE21</field>
+                        <field name="sequence">1021</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line21_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:21 Төсвийн санхүүжилт, татаасын орлогын НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line22" model="account.report.line">
+                        <field name="name">Өмгөөлөл, хууль зүйн зөвлөлгөө өгөх үйлчилгээний орлого (22)</field>
+                        <field name="code">VAT_LINE22</field>
+                        <field name="sequence">1022</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line22_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:22 Хууль зүйн үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line23" model="account.report.line">
+                        <field name="name">Үсчин, гоо сайхан, засвар үйлчилгээ, угаалга, хими цэвэрлэгээний үйлчилгээний орлого (23)</field>
+                        <field name="code">VAT_LINE23</field>
+                        <field name="sequence">1023</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line23_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:23 Үсчин, гоо сайхан, угаалга, цэвэрлэгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line24" model="account.report.line">
+                        <field name="name">Хуулийн 13 дугаар зүйлд зааснаас бусад бүх төрлийн үйлчилгээний орлого (24)</field>
+                        <field name="code">VAT_LINE24</field>
+                        <field name="sequence">1024</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line24_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:24 Хуулийн 13-с бусад үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line25" model="account.report.line">
+                        <field name="name">Тухайн сарын НӨАТ ногдох дотоодын бараа, ажил, үйлчилгээний орлого (25=4+10)</field>
+                        <field name="code">VAT_LINE25</field>
+                        <field name="sequence">1025</field>
+                        <field name="aggregation_formula">VAT_LINE4.balance + VAT_LINE10.balance</field>
+                    </record>
+                    <record id="vat_report_line26" model="account.report.line">
+                        <field name="name">Ногдуулсан татвар (26=25*10%)</field>
+                        <field name="code">VAT_LINE26</field>
+                        <field name="sequence">1026</field>
+                        <field name="aggregation_formula">VAT_LINE25.balance - (VAT_LINE25.balance / 1.10)</field>
+                    </record>
+                    <record id="vat_report_line27" model="account.report.line">
+                        <field name="name">Нэмэгдсэн өртгийн албан татварын 0 хувь хэрэглэх бараа борлуулсны орлого (27)</field>
+                        <field name="code">VAT_LINE27</field>
+                        <field name="sequence">1027</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line27_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:27 НӨАТ 0 хувьтай бараа борлуулалт</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line28" model="account.report.line">
+                        <field name="name">Нэмэгдсэн өртгийн албан татварын 0 хувь хэрэглэх үйлчилгээ үзүүлсний орлого (28)</field>
+                        <field name="code">VAT_LINE28</field>
+                        <field name="sequence">1028</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line28_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:28 НӨАТ 0 хувьтай үйлчилгээ борлуулалт</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line29" model="account.report.line">
+                        <field name="name">Тухайн сарын НӨАТ ногдох экспортын бараа, ажил, үйлчилгээний орлого (29=27+28)</field>
+                        <field name="code">VAT_LINE29</field>
+                        <field name="sequence">1029</field>
+                        <field name="aggregation_formula">VAT_LINE27.balance + VAT_LINE28.balance</field>
+                    </record>
+                    <record id="vat_report_line30" model="account.report.line">
+                        <field name="name">Ногдуулсан татвар (30=29*0%)</field>
+                        <field name="code">VAT_LINE30</field>
+                        <field name="sequence">1030</field>
+                        <field name="aggregation_formula">(VAT_LINE27.balance + VAT_LINE28.balance) * 0</field>
+                    </record>
+                    <record id="vat_report_line31" model="account.report.line">
+                        <field name="name">Тухайн сард ногдуулсан НӨАТ-ын нийт татвар (31=26+30)</field>
+                        <field name="code">VAT_LINE31</field>
+                        <field name="sequence">1031</field>
+                        <field name="aggregation_formula">VAT_LINE26.balance + VAT_LINE30.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_report_lineB" model="account.report.line">
+                <field name="name">Б. ТУХАЙН САРД ХУДАЛДАН АВСАН БАРАА, АЖИЛ, ҮЙЛЧИЛГЭЭНИЙ НӨАТ-ЫН ТООЦОО</field>
+                <field name="code">VAT_LINEB</field>
+                <field name="sequence">2000</field>
+                <field name="children_ids">
+                    <record id="vat_report_line32" model="account.report.line">
+                        <field name="name">Тухайн сард худалдан авсан бараа, ажил үйлчилгээний нийт дүн (32)</field>
+                        <field name="code">VAT_LINE32</field>
+                        <field name="sequence">2032</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line32_expression" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ТТ03:32 Нийт худалдан авсан бараа, үйлчилгээний НӨАТ</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line33" model="account.report.line">
+                        <field name="name">Тухайн сард худалдан авсан БАҮ-нээс НӨАТ-тай худалдан авсан бараа, ажил, үйлчилгээний дүн (33=34+...+41)</field>
+                        <field name="code">VAT_LINE33</field>
+                        <field name="sequence">2033</field>
+                        <field name="aggregation_formula">VAT_LINE34.balance + VAT_LINE35.balance + VAT_LINE36.balance + VAT_LINE37.balance + VAT_LINE38.balance + VAT_LINE39.balance + VAT_LINE40.balance + VAT_LINE41.balance</field>
+                    </record>
+                    <record id="vat_report_line34" model="account.report.line">
+                        <field name="name">Импортын бараа, ажил үйлчилгээний дүн /НӨАТ-гүй дүн/ (34)</field>
+                        <field name="code">VAT_LINE34</field>
+                        <field name="sequence">2034</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line34_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:34 Импортоор худалдан авсан бараа, үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line35" model="account.report.line">
+                        <field name="name">Дотоодын зах зээлээс худалдан авсан бараа, ажил, үйлчилгээнд төлсөн дүн /НӨАТ-гүй дүн/ (35)</field>
+                        <field name="code">VAT_LINE35</field>
+                        <field name="sequence">2035</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line35_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:35 Дотоодоос худалдан авсан бараа, үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line36" model="account.report.line">
+                        <field name="name">Суутган төлөгчөөр бүртгүүлэх үед импортоор худалдан авсан бараа, үйлчилгээний НӨАТ-гүй дүн (36)</field>
+                        <field name="code">VAT_LINE36</field>
+                        <field name="sequence">2036</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line36_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:36 НӨАТ төлөгчөөр бүртгүүлэх үед худалдан авсан бараа, үйлчилгээ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line37" model="account.report.line">
+                        <field name="name">Тухайн сард хамаарах үндсэн хөрөнгө бэлтгэхэд зориулж импортоор худалдан авахад төлсөн НӨАТ-гүй дүн: барилга байгууламж (37)</field>
+                        <field name="code">VAT_LINE37</field>
+                        <field name="sequence">2037</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line37_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:37 Барилга байгууламжид зориулж импортоор авсан бараа, үйлчилгээ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line38" model="account.report.line">
+                        <field name="name">Тухайн сард хамаарах үндсэн хөрөнгө бэлтгэхэд зориулж импортоор худалдан авахад төлсөн НӨАТ-гүй дүн: машин тоног төхөөрөмж (38)</field>
+                        <field name="code">VAT_LINE38</field>
+                        <field name="sequence">2038</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line38_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:38 Машин, тоног төхөөрөмжид зориулж импортоор авсан бараа, үйлчилгээ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line39" model="account.report.line">
+                        <field name="name">Тухайн сард хамаарах үндсэн хөрөнгө бэлтгэхэд зориулж импортоор худалдан авахад төлсөн НӨАТ-гүй дүн: бусад үндсэн хөрөнгө (39)</field>
+                        <field name="code">VAT_LINE39</field>
+                        <field name="sequence">2039</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line39_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:39 Бусад үндсэн хөрөнгө бэлтгэхэд зориулж импортоор авсан бараа, үйлчилгээ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line40" model="account.report.line">
+                        <field name="name">Тухайн сард хамаарах үндсэн хөрөнгө бэлтгэхэд зориулж импортоор худалдан авахад төлсөн НӨАТ-гүй дүн: хайгуулын үнэлгээний хөрөнгө (40)</field>
+                        <field name="code">VAT_LINE40</field>
+                        <field name="sequence">2040</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line40_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:40 Хайгуулын үнэлгээний хөрөнгө бэлтгэхэд зориулж импортоор авсан бараа, үйлчилгээ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line41" model="account.report.line">
+                        <field name="name">Мал аж ахуй, газар тариалан эрхлэгчээс худалдан авсан бараа, үйлчилгээний НӨАТ-гүй дүн (41)</field>
+                        <field name="code">VAT_LINE41</field>
+                        <field name="sequence">2041</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line41_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:41 Мал аж ахуй, тариаланчаас худалдан авсан бараа, үйлчилгээ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line42" model="account.report.line">
+                        <field name="name">· Худалдан авсан бараа, ажил, үйлчилгээнд төлсөн НӨАТ-ын нийт дүн (42=33*10%)</field>
+                        <field name="code">VAT_LINE42</field>
+                        <field name="sequence">2042</field>
+                        <field name="aggregation_formula">VAT_LINE33.balance * 0.10</field>
+                    </record>
+                    <record id="vat_report_line43" model="account.report.line">
+                        <field name="name">· Худалдан авсан бараа, ажил, үйлчилгээнд төлсөн хасагдахгүй НӨАТ-ын дүн (43=44+..+48)</field>
+                        <field name="code">VAT_LINE43</field>
+                        <field name="sequence">2043</field>
+                        <field name="aggregation_formula">VAT_LINE44.balance + VAT_LINE45.balance + VAT_LINE46.balance + VAT_LINE47.balance + VAT_LINE48.balance</field>
+                    </record>
+                    <record id="vat_report_line44" model="account.report.line">
+                        <field name="name">Суудлын автомашин, түүний эд анги сэлбэгт төлсөн НӨАТ (44)</field>
+                        <field name="code">VAT_LINE44</field>
+                        <field name="sequence">2044</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line44_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:44 Суудлын авто машин, сэлбэгт төлсөн НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line45" model="account.report.line">
+                        <field name="name">Хувьдаа болон ажиллагсдын хэрэгцээнд зориулж авсан бараа, үйлчилгээнд төлсөн НӨАТ (45)</field>
+                        <field name="code">VAT_LINE45</field>
+                        <field name="sequence">2045</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line45_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:45 Ажлын хэрэгцээнд авсан бараанд төлсөн НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line46" model="account.report.line">
+                        <field name="name">Хуулийн 13-р зүйлд заасан чөлөөлөгдөх үйлдвэрлэл, үйлчилгээнд зориулж импортолсон бараа, үйлчилгээнд төлсөн НӨАТ (46)</field>
+                        <field name="code">VAT_LINE46</field>
+                        <field name="sequence">2046</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line46_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:46 Чөлөөлөгдөх үйлдвэрлэлд зориулж авсан бараа үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line47" model="account.report.line">
+                        <field name="name">Ашиглалтын өмнөх ажиллагаанд зориулж импортоор авсан бараа, үйлчилгээнд төлсөн НӨАТ (47)</field>
+                        <field name="code">VAT_LINE47</field>
+                        <field name="sequence">2047</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line47_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:47 Ашиглалтын өмнөх ажиллагаанд зориулж авсан бараа үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line48" model="account.report.line">
+                        <field name="name">Тайлант хугацааны албан татвар ногдох бараа, үйлчилгээтэй хамааралгүйгээр импортоор авсан бараа, үйлчилгээнд төлсөн НӨАТ (48)</field>
+                        <field name="code">VAT_LINE48</field>
+                        <field name="groupby">account_id</field>
+				        <field name="foldable" eval="True"/>
+				        <field name="sequence">2048</field>
+				        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line48_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:48 Ашиглалтын өмнөх ажиллагаанд зориулж авсан бараа үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line49" model="account.report.line">
+                        <field name="name">Тухайн сард хасагдах НӨАТ-ын дүн (49=42-43)</field>
+                        <field name="code">VAT_LINE49</field>
+				        <field name="sequence">2049</field>
+				        <field name="aggregation_formula">VAT_LINE42.balance - VAT_LINE43.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_report_lineC" model="account.report.line">
+                <field name="name">В. САНХҮҮГИЙН ТҮРЭЭС БОЛОН САНХҮҮЖИЛТИЙН ХЭЛЭЛЦЭЭРИЙН ЗҮЙЛИЙН НӨАТ-ЫН ТООЦОО</field>
+                <field name="code">VAT_LINEC</field>
+                <field name="sequence">3000</field>
+                <field name="children_ids">
+                    <record id="vat_report_line50" model="account.report.line">
+                        <field name="name">Санхүүгийн түрээсийн зүйлийг санхүүгийн түрээсээр дотоодын зах зээлд борлуулсны орлого (50)</field>
+                        <field name="code">VAT_LINE50</field>
+                        <field name="sequence">3050</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line50_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:50 Дотоодод зарсан санхүүгийн түрээсийн НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line51" model="account.report.line">
+                        <field name="name">Факторинг, форфайтинг зэрэг тэдгээртэй адилтгах хэлцлийн үйлчилгээний орлого (51)</field>
+                        <field name="code">VAT_LINE51</field>
+                        <field name="sequence">3051</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line51_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:51 Факторинг, форфайтинг хэлцлийн үйлчилгээний НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line51" model="account.report.line">
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="vat_report_line52" model="account.report.line">
+                        <field name="name">Ногдуулсан НӨАТ (52=(50+51)*10%)</field>
+                        <field name="code">VAT_LINE52</field>
+                        <field name="sequence">3052</field>
+                        <field name="aggregation_formula">(VAT_LINE50.balance + VAT_LINE51.balance) * 0.10</field>
+                    </record>
+                    <record id="vat_report_line53" model="account.report.line">
+                        <field name="name">Санхүүгийн түрээсийг санхүүгийн түрээсээр дотоодын зах зээлээс худалдан авахад төлсөн түрээсийн төлбөр (53)</field>
+				        <field name="code">VAT_LINE53</field>
+				        <field name="sequence">3053</field>
+				        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line53_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:53 Санхүүгийн түрээсийн худалдан авалтын НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line54" model="account.report.line">
+                        <field name="name">Факторинг, форфайтинг зэрэг тэдгээртэй адилтгах хэлцлийг худалдан авахад төлсөн төлбөр (54)</field>
+                        <field name="code">VAT_LINE54</field>
+                        <field name="sequence">3054</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line54_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:54 Факторинг, форфайтинг худалдан авалтын НӨАТ</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line54" model="account.report.line">
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="vat_report_line55" model="account.report.line">
+                        <field name="name">Хасагдах НӨАТ (55=(53+54)*10%)</field>
+                        <field name="code">VAT_LINE55</field>
+                        <field name="sequence">3055</field>
+                        <field name="aggregation_formula">(VAT_LINE53.balance + VAT_LINE54.balance) * 0.10</field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_report_lineD" model="account.report.line">
+                <field name="name">Г. ТУХАЙН САРЫН НЭМЭГДСЭН ӨРТГИЙН АЛБАН ТАТВАРЫН ТООЦООЛОЛ</field>
+                <field name="code">VAT_LINED</field>
+                <field name="sequence">4000</field>
+                <field name="children_ids">
+                    <record id="vat_report_line56" model="account.report.line">
+                        <field name="name">Тухайн сард төлбөл зохих НӨАТ (56=31+52)</field>
+                        <field name="code">VAT_LINE56</field>
+                        <field name="sequence">4056</field>
+                        <field name="aggregation_formula">VAT_LINE31.balance + VAT_LINE52.balance</field>
+                    </record>
+                    <record id="vat_report_line57" model="account.report.line">
+                        <field name="name">Тухайн сард буцаан авах НӨАТ (57=49+55)</field>
+                        <field name="code">VAT_LINE57</field>
+                        <field name="sequence">4057</field>
+                        <field name="aggregation_formula">VAT_LINE49.balance + VAT_LINE55.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_report_lineE" model="account.report.line">
+                <field name="name">Д. ӨМНӨХ САРЫН ТАЙЛАНГИЙН ЗАЛРУУЛГА</field>
+                <field name="code">VAT_LINEE</field>
+                <field name="sequence">5000</field>
+                <field name="children_ids">
+                    <record id="vat_report_line58" model="account.report.line">
+                        <field name="name">Борлуулалтын орлогын буцаалт, хөнгөлөлтийн дүн (58)</field>
+                        <field name="code">VAT_LINE58</field>
+                        <field name="sequence">5058</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line58_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:58 Борлуулалтын буцаалт, хөнгөлөлтийн дүн</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line59" model="account.report.line">
+                        <field name="name">Төлсөн НӨАТ (59=58*10%)</field>
+                        <field name="code">VAT_LINE59</field>
+                        <field name="sequence">5059</field>
+                        <field name="aggregation_formula">VAT_LINE58.balance * 0.10</field>
+                    </record>
+                    <record id="vat_report_line60" model="account.report.line">
+                        <field name="name">Худалдан авалтын буцаалт, хөнгөлөлтийн дүн (60)</field>
+                        <field name="code">VAT_LINE60</field>
+                        <field name="sequence">5060</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mn_vat_report_line60_expression" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">tax_tags</field>
+	                            <field name="formula">ТТ03:60 Худалдан авалтын буцаалт, хөнгөлөлтийн дүн</field>
+	                        </record>
+	                    </field>
+                    </record>
+                    <record id="vat_report_line61" model="account.report.line">
+                        <field name="name">Хасагдах НӨАТ (61=60*10%)</field>
+                        <field name="code">VAT_LINE61</field>
+                        <field name="sequence">5061</field>
+                        <field name="aggregation_formula">VAT_LINE60.balance * 0.10</field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_report_lineF" model="account.report.line">
+                <field name="name">Е. ТУХАЙН САРЫН НЭМЭГДСЭН ӨРТГИЙН АЛБАН ТАТВАРЫН ТООЦООЛОЛ</field>
+                <field name="code">VAT_LINEF</field>
+                <field name="sequence">6000</field>
+                <field name="children_ids">
+                    <record id="vat_report_line62" model="account.report.line">
+                        <field name="name">НИЙТ ТӨЛБӨЛ ЗОХИХ  НӨАТ (62=56+61)</field>
+                        <field name="code">VAT_LINE62</field>
+                        <field name="sequence">6062</field>
+                        <field name="aggregation_formula">VAT_LINE56.balance + VAT_LINE61.balance</field>
+                    </record>
+                    <record id="vat_report_line63" model="account.report.line">
+                        <field name="name">НИЙТ БУЦААН АВАХ НӨАТ (63=57+59)</field>
+                        <field name="code">VAT_LINE63</field>
+                        <field name="sequence">6063</field>
+                        <field name="aggregation_formula">VAT_LINE57.balance + VAT_LINE59.balance</field>
+                    </record>
+                    <record id="vat_report_line64" model="account.report.line">
+				        <field name="code">VAT_LINE64</field>
+				        <field name="name">ЭЦСИЙН ТООЦООГООР ТӨЛБӨЛ ЗОХИХ НӨАТ (64=62-63)</field>
+				        <field name="sequence">6064</field>
+				        <field name="aggregation_formula">VAT_LINE62.balance - VAT_LINE63.balance</field>
+				    </record>
+				    <record id="vat_report_line65" model="account.report.line">
+				        <field name="code">VAT_LINE65</field>
+				        <field name="name">ЭЦСИЙН ТООЦООГООР БУЦААН АВАХ НӨАТ (65=62-63)</field>
+				        <field name="sequence">6065</field>
+				        <field name="aggregation_formula">VAT_LINE62.balance - VAT_LINE63.balance</field>
+				    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+</data>
+</odoo>
