@@ -65,7 +65,9 @@ export class FileUploader extends Component {
                 this.state.isUploading = false;
             }
         }
-        ev.target.value = null;
+        if (!this.props.keepInputValue) {
+            ev.target.value = null;
+        }
         if (this.props.multiUpload && this.props.onUploadComplete) {
             this.props.onUploadComplete({});
         }
@@ -93,6 +95,7 @@ FileUploader.props = {
     acceptedFileExtensions: { type: String, optional: true },
     slots: { type: Object, optional: true },
     showUploadingText: { type: Boolean, optional: true },
+    keepInputValue: { type: Boolean, optional: true },
 };
 FileUploader.defaultProps = {
     showUploadingText: true,
