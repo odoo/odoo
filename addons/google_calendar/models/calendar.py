@@ -292,6 +292,9 @@ class Meeting(models.Model):
         # only owner can delete => others refuse the event
         user = self.env.user
         my_cancelled_records = self.filtered(lambda e: e.user_id == user)
+        for event in self:
+            # remove the tracking data to avoid calling _track_template in the pre-commit phase
+            self.env.cr.precommit.data.pop(f'mail.tracking.create.{event._name}.{event.id}', None)
         super(Meeting, my_cancelled_records)._cancel()
         attendees = (self - my_cancelled_records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.state = 'declined'
