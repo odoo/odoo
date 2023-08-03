@@ -9,7 +9,7 @@ from typing import Optional, List, Dict
 from werkzeug.urls import url_quote
 from odoo.tools import image_to_base64
 
-from odoo import api, fields, models, modules, _
+from odoo import api, fields, models, modules, _, service
 from odoo.tools import file_open, split_every
 
 
@@ -105,7 +105,7 @@ class PosConfig(models.Model):
         help="Allow customers to Order from their phones",
     )
     self_order_pay_after = fields.Selection(
-        [("each", "Each Order (mobile payment only)"), ("meal", "Meal (mobile payment or cashier)")],
+        selection=lambda self: self._compute_selection_pay_after(),
         string="Pay After:",
         default="meal",
         help="Choose when the customer will pay",
@@ -182,6 +182,13 @@ class PosConfig(models.Model):
             if not record.module_pos_restaurant:
                 record.self_order_view_mode = False
                 record.self_order_table_mode = False
+
+    def _compute_selection_pay_after(self):
+        selection = [("each", "Each Order (mobile payment only)"), ("meal", "Meal (mobile payment or cashier)")]
+        version_info = service.common.exp_version()['server_version_info']
+        if version_info[-1] == '':
+            selection[0] = (selection[0][0], selection[0][1] + ' (require Odoo Enterprise)')
+        return selection
 
     def _get_qr_code_data(self):
         self.ensure_one()
