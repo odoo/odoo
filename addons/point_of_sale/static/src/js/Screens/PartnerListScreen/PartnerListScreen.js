@@ -7,6 +7,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
 
     const { debounce } = require("@web/core/utils/timing");
     const { useListener } = require("@web/core/utils/hooks");
+    const { useAsyncLockedMethod } = require("point_of_sale.custom_hooks");
 
     const { onWillUnmount, useRef } = owl;
 
@@ -29,7 +30,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         setup() {
             super.setup();
             useListener('click-save', () => this.env.bus.trigger('save-partner'));
-            useListener('save-changes', this.saveChanges);
+            useListener('save-changes', useAsyncLockedMethod(this.saveChanges));
             this.searchWordInputRef = useRef('search-word-input-partner');
 
             // We are not using useState here because the object
