@@ -139,6 +139,12 @@ class Collector:
             self._processed = True
         return self._entries
 
+    def _report_output(self):
+        return [f'# TOTAL ENTRIES: {len(self._entries)}']
+
+    @property
+    def report(self):
+        _logger.info('%s output:\n%s', type(self).__name__, '\n'.join(self._report_output()))
 
 class SQLCollector(Collector):
     """
@@ -162,6 +168,23 @@ class SQLCollector(Collector):
             'start': query_start,
             'time': query_time,
         })
+
+    def group_operations(self):
+        operations = ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'ALTER']
+        operation_groups = {}
+        for entry in self._entries:
+            query = entry['full_query'][:100].strip().upper()  # full_query to remove Composed, ...
+            operation = next((operation for operation in operations if query.startswith(operation)), 'UNKWOW')
+            operation_groups.setdefault(operation, []).append(entry)
+        return operation_groups
+
+    def _report_output(self):
+        operation_groups = self.group_operations()
+        return super()._report_output() + [
+            f'# {operation}: {len(group)} (~{sum(entry["time"] for entry in group)}s)'
+            for operation, group in operation_groups.items()
+        ]
+
 
 
 class PeriodicCollector(Collector):
@@ -674,6 +697,10 @@ class Profiler:
             "duration": self.duration,
             "collectors": {collector.name: collector.entries for collector in self.collectors},
         }, indent=4)
+
+    def report(self):
+        for collector in self.collectors:
+            collector.report
 
 
 class Nested:
