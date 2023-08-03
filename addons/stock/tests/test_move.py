@@ -1089,7 +1089,7 @@ class StockMove(TransactionCase):
             'name': "storage category"
         })
 
-        self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -1100,6 +1100,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
         })
+
+        self.env['stock.quant']._update_available_quantity(self.product, shelf1_location, 1.0)
 
         # putaway from stock to child location with storage_category
         putaway = self.env['stock.putaway.rule'].create({
