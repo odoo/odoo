@@ -25,6 +25,9 @@
     ],
     "assets": {
         # Assets
+        'web.assets_backend': [
+            "pos_self_order/static/src/upgrade_selection_field.js",
+        ],
         "pos_self_order.assets_common": [
             "pos_self_order/static/src/kiosk/bootstrap_overridden.scss",
             ("include", "web._assets_helpers"),
