@@ -3,6 +3,7 @@
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_date, formatLang, frozendict, date_utils
+from odoo.tools.float_utils import float_round
 
 from dateutil.relativedelta import relativedelta
 
@@ -137,8 +138,10 @@ class AccountPaymentTerm(models.Model):
 
     @api.constrains('line_ids')
     def _check_lines(self):
+        round_precision = self.env['decimal.precision'].precision_get('Payment Terms')
         for terms in self:
-            if sum(line.value_amount for line in terms.line_ids if line.value == 'percent') != 100:
+            total_percent = sum(line.value_amount for line in terms.line_ids if line.value == 'percent')
+            if float_round(total_percent, precision_digits=round_precision) != 100:
                 raise ValidationError(_('The Payment Term must have at least one percent line and the sum of the percent must be 100%.'))
             if len(terms.line_ids) > 1 and terms.early_discount:
                 raise ValidationError(
