@@ -77,6 +77,9 @@ export const tooltipService = {
             if (hasTouch()) {
                 return !touchPressed;
             }
+            if (window.getComputedStyle(target).visibility === "hidden") {
+                return true; // target is no longer visible
+            }
             return false;
         }
 
