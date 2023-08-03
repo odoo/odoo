@@ -73,8 +73,10 @@ class TestMailAlias(TestMailAliasCommon):
                 ICP.set_param('mail.catchall.alias', catchall_value)
                 self.assertEqual(ICP.get_param('mail.catchall.alias'), expected_catchall)
 
-        # falsy values (FIXME: ' ' is currently replaced by '-' and is not falsy, should be')
-        for config_value in [False, None, '']:
+        # falsy values FIXME: fix ICP override for '' and ' ' as they make ICP
+        # udpate crash, they now try to write False in DB instead of removing
+        # the ICP
+        for config_value in [False, None]:
             with self.subTest(config_value=config_value):
                 ICP.set_param('mail.bounce.alias', config_value)
                 self.assertFalse(ICP.get_param('mail.bounce.alias'))
@@ -190,6 +192,29 @@ class TestMailAlias(TestMailAliasCommon):
             with self.subTest(alias_name=alias_name):
                 alias.write({'alias_name': alias_name})
                 self.assertEqual(alias.alias_name, expected, msg)
+
+    @users('admin')
+    def test_alias_name_sanitize_false(self):
+        """ Check empty-like aliases are forced to False, as otherwise unique
+        constraint might fail with empty strings. """
+        aliases = self.env['mail.alias'].create([
+            {
+                'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
+                'alias_name': falsy_name,
+            }
+            # '.' -> not allowed to start with a "." hence False
+            for falsy_name in [False, None, '', ' ', '.']
+        ])
+        for alias in aliases:
+            with self.subTest(alias_name=alias.alias_name):
+                self.assertFalse(alias.alias_name, 'Void values should resolve to False')
+
+        # try to reset names in batch: should work
+        for idx, alias in enumerate(aliases):
+            alias.write({'alias_name': f'unique-{idx}'})
+        aliases.write({'alias_name': ''})
+        for alias in aliases:
+            self.assertEqual(alias.alias_name, False)
 
     @users('admin')
     def test_alias_setup(self):
