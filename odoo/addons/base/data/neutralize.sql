@@ -2,6 +2,9 @@
 UPDATE ir_mail_server
    SET active = false;
 
+INSERT INTO ir_mail_server (name, smtp_port, smtp_host, smtp_encryption, active, smtp_authentication)
+VALUES ('neutralize emails', 1025, 'smtp.example.org', 'none', true, 'login');
+
 -- deactivate crons
 UPDATE ir_cron
    SET active = false
