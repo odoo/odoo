@@ -107,15 +107,17 @@ class SaleOrderOption(models.Model):
 
     def _get_values_to_add_to_order(self):
         self.ensure_one()
-        return {
+        res = {
             'order_id': self.order_id.id,
             'price_unit': self.price_unit,
             'name': self.name,
             'product_id': self.product_id.id,
             'product_uom_qty': self.quantity,
             'product_uom': self.uom_id.id,
-            'discount': self.discount,
         }
+        if self.discount:
+            res['discount'] = self.discount
+        return res
 
     @api.depends('line_id', 'order_id.order_line', 'product_id')
     def _compute_is_present(self):
