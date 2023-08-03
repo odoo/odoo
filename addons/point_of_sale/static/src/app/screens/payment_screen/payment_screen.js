@@ -228,8 +228,27 @@ export class PaymentScreen extends Component {
         }
     }
     async _finalizeValidation() {
+<<<<<<< HEAD:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js
         if (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) {
             this.hardwareProxy.openCashbox();
+||||||| parent of 3b05fb176bb (temp):addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js
+        const { globalState } = this.pos;
+        if (
+            (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) &&
+            globalState.config.iface_cashdrawer &&
+            globalState.config.use_proxy
+        ) {
+            this.hardwareProxy.printer.openCashbox();
+=======
+        const { globalState } = this.pos;
+        if (
+            (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) &&
+            globalState.config.iface_cashdrawer &&
+            this.hardwareProxy &&
+            this.hardwareProxy.printer
+        ) {
+            this.hardwareProxy.printer.openCashbox();
+>>>>>>> 3b05fb176bb (temp):addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js
         }
 
         this.currentOrder.initialize_validation_date();
