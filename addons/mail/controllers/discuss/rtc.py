@@ -13,6 +13,7 @@ from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 from werkzeug.exceptions import NotFound
 
+
 class RtcController(http.Controller):
     @http.route("/mail/rtc/session/notify_call_members", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
@@ -39,27 +40,27 @@ class RtcController(http.Controller):
         for session_sudo, notifications in notifications_by_session.items():
             session_sudo._notify_peers(notifications)
 
-    @http.route('/mail/rtc/session/info', methods=['POST'], type="json", auth="none", cors="*", csrf=False)
+    @http.route("/mail/rtc/session/info", methods=["POST"], type="json", auth="none", cors="*", csrf=False)
     def session_info(self, secret):
         """
         TODO limit cors to specific odoo rtc server domains or raise not found based on request.httprequest.remote_addr?
         """
         if not secret:
             raise NotFound()
-        key = request.env['mail.channel'].ENCRYPTION_KEY
+        key = request.env["mail.channel"].ENCRYPTION_KEY
         fernet = Fernet(key)
         try:
             data = json.loads(fernet.decrypt(base64.b64decode(secret)))
             session_id = data["session_id"]
         except Exception:
             raise NotFound()
-        session = request.env['mail.channel.rtc.session'].sudo().browse(session_id)
+        session = request.env["mail.channel.rtc.session"].sudo().browse(session_id)
         if not session:
             raise NotFound()
         return {
-            'session_id': session.id,
-            'channel_id': session.channel_id.id,
-            'ice_servers': request.env['mail.ice.server'].sudo()._get_ice_servers() or False,
+            "session_id": session.id,
+            "channel_id": session.channel_id.id,
+            "ice_servers": request.env["mail.ice.server"].sudo()._get_ice_servers() or False,
         }
 
     @http.route("/mail/rtc/session/update_and_broadcast", methods=["POST"], type="json", auth="public")
