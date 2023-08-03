@@ -1008,6 +1008,7 @@ class TestDiscussFullPerformance(HttpCase):
             ],
             'internalUserGroupId': self.env.ref('base.group_user').id,
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
+            'mt_comment_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             'odoobot': {
                 'active': False,
                 'email': 'odoobot@example.com',

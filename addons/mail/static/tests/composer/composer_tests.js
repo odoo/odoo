@@ -753,22 +753,6 @@ QUnit.test("remove an uploading attachment", async () => {
     await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 0 });
 });
 
-QUnit.test("Show a thread name in the recipient status text.", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "test name", email: "test@odoo.com" });
-    pyEnv["mail.followers"].create({
-        is_active: true,
-        partner_id: partnerId,
-        res_id: partnerId,
-        res_model: "res.partner",
-    });
-    const { openFormView } = await start();
-    openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
-    await contains(".o-mail-Chatter div", { text: "To: test" });
-    await contains('span[title="test@odoo.com"]');
-});
-
 QUnit.test("Show recipient list when there is more than 5 followers.", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create([
