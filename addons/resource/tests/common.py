@@ -37,6 +37,7 @@ class TestResourceCommon(TransactionCase):
                 })
                 for index, att in enumerate(attendances)
             ],
+            'two_weeks_calendar': True,
         })
 
     def setUp(self):
@@ -78,3 +79,22 @@ class TestResourceCommon(TransactionCase):
             'name': 'Paul',
             'resource_calendar_id': self.calendar_paul.id,
         })
+
+        self.two_weeks_resource = self._define_calendar_2_weeks(
+            'Two weeks resource',
+            [
+                (0, 0, 0, '0', 'line_section', 0),
+                (8, 16, 0, '0', False, 1),
+                (8, 16, 1, '0', False, 2),
+                (8, 16, 2, '0', False, 3),
+                (8, 16, 3, '0', False, 4),
+                (8, 16, 4, '0', False, 5),
+                (0, 0, 0, '1', 'line_section', 10),
+                (8, 16, 0, '1', False, 11),
+                (8, 16, 1, '1', False, 12),
+                (8, 16, 2, '1', False, 13),
+                (8, 16, 3, '1', False, 14),
+                (8, 16, 4, '1', False, 15)
+            ],
+            'Europe/Brussels'
+        )
