@@ -1423,34 +1423,6 @@ class Website(models.Model):
                 html_fields.append((model, table, name, translate))
         return html_fields
 
-    def _get_snippets_assets(self):
-        """Returns every parent snippet asset from the database, filtering out
-        their potential overrides defined in other modules. As they share the same
-        snippet_id, asset_version and asset_type, it is possible to do that using
-        Postgres' DISTINCT ON and ordering by asset_id, as overriden assets will be
-        created later than their parents.
-        The assets are returned in the form of a list of tuples :
-        [(snippet_module, snippet_id, asset_version, asset_type, asset_id)]
-        """
-        self.env.cr.execute(r"""
-            SELECT DISTINCT ON (snippet_id, asset_version, asset_type)
-                   regexp_matches[1] AS snippet_module,
-                   regexp_matches[2] AS snippet_id,
-                   regexp_matches[3] AS asset_version,
-                   CASE
-                       WHEN regexp_matches[4]='scss' THEN 'css'
-                       ELSE regexp_matches[4]
-                   END AS asset_type,
-                   id AS asset_id
-            FROM (
-                SELECT REGEXP_MATCHES(PATH, '(\w*)\/.*\/snippets\/(\w*)\/(\d{3})\.(js|scss)'),
-                       id
-                FROM ir_asset
-            ) AS regexp
-            ORDER BY snippet_id, asset_version, asset_type, asset_id;
-        """)
-        return self.env.cr.fetchall()
-
     def _is_snippet_used(self, snippet_module, snippet_id, asset_version, asset_type, html_fields_attributes):
         snippet_occurences = []
         # Check snippet template definition to avoid disabling its related assets.
@@ -1488,22 +1460,28 @@ class Website(models.Model):
         return False
 
     def _disable_unused_snippets_assets(self):
-        snippets_assets = self._get_snippets_assets()
+        snippet_assets = self.env['ir.asset'].with_context(active_test=False).search_fetch(
+            [('path', 'like', '/static%/snippets/')],
+            ['active', 'path'], order='id')
+        snippet_re = re.compile(r'(\w*)\/.*\/snippets\/(\w*)\/(\d{3})(?:_\w*)?\.(js|scss)')
+        # regex will match /module/static/[.../]/snippets/snippet_id/XXX[_variable].asset_type
+        # _variable is not kept since only module, snippet_id, asset_version (XXX), asset_type are relevant
         html_fields_attributes = self._get_html_fields_attributes()
-
-        for snippet_module, snippet_id, asset_version, asset_type, _asset_id in snippets_assets:
-            is_snippet_used = self._is_snippet_used(snippet_module, snippet_id, asset_version, asset_type, html_fields_attributes)
-
-            # The regex catches XXX.scss, XXX.js and XXX_variables.scss
-            assets_regex = f'{snippet_id}/{asset_version}.+{asset_type}'
-
-            # The query will also set to active or inactive assets overrides, as they
-            # share the same snippet_id, asset_version and filename_type as their parents
-            self.env.cr.execute("""
-                UPDATE ir_asset
-                SET active = %(active)s
-                WHERE path ~ %(assets_regex)s
-            """, {"active": is_snippet_used, "assets_regex": assets_regex})
+        snippet_used = {}
+        for snippet_asset in snippet_assets:
+            match = snippet_re.match(snippet_asset.path)
+            if not match:
+                continue
+            (snippet_module, snippet_id, asset_version, asset_type) = match.groups()
+            if asset_type == 'scss':
+                asset_type = 'css'
+            key = (snippet_id, asset_version, asset_type)  # module is not relevant, we want the first one in the asset id order to filter module extension
+            if key not in snippet_used:
+                snippet_used[key] = self._is_snippet_used(snippet_module, snippet_id, asset_version, asset_type, html_fields_attributes)
+            is_snippet_used = snippet_used[key]
+            if is_snippet_used != snippet_asset.active:
+                snippet_asset.active = is_snippet_used
+        self.env['ir.asset'].flush_model()
 
     def _search_build_domain(self, domain, search, fields, extra=None):
         """
