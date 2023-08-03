@@ -141,7 +141,7 @@ patch(PosStore.prototype, {
             // FIXME POSREF timeout
             const orders = await this.env.services.orm.silent.call(
                 "pos.order",
-                "get_table_draft_orders",
+                "export_for_ui_table_draft",
                 [tableIds]
             );
             this.set_synch("connected");

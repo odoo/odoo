@@ -1317,7 +1317,7 @@ export class Order extends PosModel {
             this.name = sprintf(_t("Order %s"), this.uid);
         }
         this.validation_date = json.creation_date;
-        this.server_id = json.server_id ? json.server_id : false;
+        this.server_id = json.server_id || json.id || false;
         this.user_id = json.user_id;
         this.firstDraft = false;
 

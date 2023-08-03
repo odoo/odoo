@@ -33,4 +33,7 @@ class PosOrderLine(models.Model):
         result = super()._export_for_ui(orderline)
         result['is_reward_line'] = orderline.is_reward_line
         result['reward_id'] = orderline.reward_id.id
+        result['coupon_id'] = orderline.coupon_id.id
+        result['reward_identifier_code'] = orderline.reward_identifier_code
+        result['points_cost'] = orderline.points_cost
         return result

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tools import groupby
-from re import search
 from functools import partial
-
-import pytz
 
 from odoo import api, fields, models
 
@@ -20,39 +16,6 @@ class PosOrder(models.Model):
 
     table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served', index='btree_not_null', readonly=True)
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)
-
-    def _get_fields_for_order_line(self):
-        fields = super(PosOrder, self)._get_fields_for_order_line()
-        fields.extend([
-            'note',
-            'full_product_name',
-            'customer_note',
-            'price_extra',
-            'refunded_orderline_id',
-        ])
-        return fields
-
-    def _prepare_order_line(self, order_line):
-        order_line = super(PosOrder, self)._prepare_order_line(order_line)
-        order_line["refunded_orderline_id"] = order_line["refunded_orderline_id"] and \
-                                              order_line["refunded_orderline_id"][0]
-        return order_line
-
-    def _get_fields_for_draft_order(self):
-        fields = super()._get_fields_for_draft_order()
-        fields.extend([
-            'table_id',
-            'customer_count',
-        ])
-        return fields
-
-    def _get_domain_for_draft_orders(self, table_ids):
-        """ Get the domain to search for draft orders on a table.
-        :param table_ids: Ids of the selected tables.
-        :type table_ids: list of int.
-        "returns: list -- list of tuples that represents a domain.
-        """
-        return [('state', '=', 'draft'), ('table_id', 'in', table_ids)]
 
     @api.model
     def remove_from_ui(self, server_ids):
@@ -74,35 +37,6 @@ class PosOrder(models.Model):
                 order_count = config.get_tables_order_count_and_printing_changes()
                 messages.append((config_cur_session._get_bus_channel_name(), 'TABLE_ORDER_COUNT', order_count))
         self.env['bus.bus']._sendmany(messages)
-
-    @api.model
-    def get_table_draft_orders(self, table_ids):
-        """Generate an object of all draft orders for the given table.
-
-        Generate and return an JSON object with all draft orders for the given table, to send to the
-        front end application.
-
-        :param table_ids: Ids of the selected tables.
-        :type table_ids: list of int.
-        :returns: list -- list of dict representing the table orders
-        """
-        table_orders = self.search_read(
-                domain=self._get_domain_for_draft_orders(table_ids),
-                fields=self._get_fields_for_draft_order())
-
-        self._get_order_lines(table_orders)
-        self._get_payment_lines(table_orders)
-
-        self._prepare_order(table_orders)
-
-        return table_orders
-
-    @api.model
-    def _prepare_order(self, orders):
-        super(PosOrder, self)._prepare_order(orders)
-        for order in orders:
-            if order['table_id']:
-                order['table_id'] = order['table_id'][0]
 
     def set_tip(self, tip_line_vals):
         """Set tip to `self` based on values in `tip_line_vals`."""
@@ -152,4 +86,10 @@ class PosOrder(models.Model):
     def _export_for_ui(self, order):
         result = super(PosOrder, self)._export_for_ui(order)
         result['table_id'] = order.table_id.id
+        result['customer_count'] = order.customer_count
         return result
+
+    @api.model
+    def export_for_ui_table_draft(self, table_ids):
+        orders = self.env['pos.order'].search([('state', '=', 'draft'), ('table_id', 'in', table_ids)])
+        return orders.export_for_ui()
