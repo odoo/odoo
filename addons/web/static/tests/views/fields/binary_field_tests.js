@@ -386,7 +386,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("Binary field in list view", async function (assert) {
+    QUnit.test("BinaryField in list view (formatter)", async function (assert) {
         serverData.models.partner.records[0].document = BINARY_FILE;
 
         await makeView({
@@ -395,7 +395,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                     <tree>
-                        <field name="document" filename="yooo"/>
+                        <field name="document"/>
                     </tree>`,
             resId: 1,
         });
@@ -406,7 +406,28 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("Binary field for new record has no download button", async function (assert) {
+    QUnit.test("BinaryField in list view with filename", async function (assert) {
+        serverData.models.partner.records[0].document = BINARY_FILE;
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <tree>
+                        <field name="document" filename="foo" widget="binary"/>
+                        <field name="foo"/>
+                    </tree>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_data_row .o_data_cell").textContent,
+            "coucou.txt"
+        );
+    });
+
+    QUnit.test("BinaryField for new record has no download button", async function (assert) {
         serverData.models.partner.fields.document.default = BINARY_FILE;
         await makeView({
             serverData,
