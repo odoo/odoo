@@ -4,7 +4,7 @@ import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePo
 import Registries from "@point_of_sale/js/Registries";
 import { _lt } from "@web/core/l10n/translation";
 import { parse } from "web.field_utils";
-import { useValidateCashInput } from "@point_of_sale/js/custom_hooks";
+import { useValidateCashInput, useAsyncLockedMethod } from "@point_of_sale/js/custom_hooks";
 
 const { useRef, useState, onMounted } = owl;
 
@@ -21,6 +21,7 @@ class CashMovePopup extends AbstractAwaitablePopup {
         this.inputAmountRef = useRef("input-amount-ref");
         useValidateCashInput('input-amount-ref');
         onMounted(() => this.inputAmountRef.el.focus());
+        this.confirm = useAsyncLockedMethod(this.confirm);
     }
     confirm() {
         try {

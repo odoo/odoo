@@ -2,7 +2,7 @@
 
 import { parse } from "web.field_utils";
 import PosComponent from "@point_of_sale/js/PosComponent";
-import { useErrorHandlers } from "@point_of_sale/js/custom_hooks";
+import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/js/custom_hooks";
 import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
 import { useListener } from "@web/core/utils/hooks";
 import Registries from "@point_of_sale/js/Registries";
@@ -27,6 +27,7 @@ class PaymentScreen extends PosComponent {
         useErrorHandlers();
         this.payment_interface = null;
         this.error = false;
+        this.validateOrder = useAsyncLockedMethod(this.validateOrder);
     }
 
     showMaxValueError() {
