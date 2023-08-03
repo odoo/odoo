@@ -744,11 +744,8 @@ class MrpProduction(models.Model):
                         Command.update(m.id, updated_values) for m in production.move_finished_ids
                     ]
                 continue
-            # delete to remove existing moves from database and clear to remove new records
-            production.move_finished_ids = [Command.delete(m) for m in production.move_finished_ids.ids]
-            production.move_finished_ids = [Command.clear()]
             if production.product_id:
-                production._create_update_move_finished()
+                production._maintain_move_finished()
             else:
                 production.move_finished_ids = [
                     Command.delete(move.id) for move in production.move_finished_ids if move.bom_line_id
@@ -997,13 +994,15 @@ class MrpProduction(models.Model):
                     byproduct.operation_id.id, byproduct.id, byproduct.cost_share))
         return moves
 
-    def _create_update_move_finished(self):
+    def _maintain_move_finished(self):
         """ This is a helper function to support complexity of onchange logic for MOs.
         It is important that the special *2Many commands used here remain as long as function
         is used within onchanges.
         """
         list_move_finished = []
         moves_finished_values = self._get_moves_finished_values()
+        moves_finished_product_ids = [values['product_id'] for values in moves_finished_values]
+        self.move_finished_ids = [Command.delete(move.id) for move in self.move_finished_ids if move.product_id.id not in moves_finished_product_ids]
         moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
         move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
         for move_finished_values in moves_finished_values:
