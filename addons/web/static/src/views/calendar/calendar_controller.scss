@@ -193,11 +193,14 @@ $o-cw-filter-avatar-size: 20px;
                     height: $o-cw-filter-avatar-size;
                     border-radius: 2px;
                     object-fit: cover;
+                    align-items: center;
                 }
             }
 
             input:not(:checked) + label .o_cw_filter_input_bg {
-                background: transparent !important;
+                &:not(.o_cw_filter_avatar) {
+                    background: transparent !important;
+                }
 
                 i.fa {
                     visibility: hidden;
