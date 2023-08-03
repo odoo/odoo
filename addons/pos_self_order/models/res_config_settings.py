@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, service
 from odoo.exceptions import UserError
 
 
@@ -14,7 +14,7 @@ class ResConfigSettings(models.TransientModel):
         compute="_compute_pos_module_pos_self_order", store=True, readonly=False
     )
     pos_self_order_pay_after = fields.Selection(
-        [("each", "Each Order (mobile payment only)"), ("meal", "Meal (mobile payment or cashier)")],
+        selection=lambda self: self._compute_selection_pay_after(),
         string="Pay After:",
         default="meal",
         help="Choose when the customer will pay",
@@ -67,6 +67,11 @@ class ResConfigSettings(models.TransientModel):
         if self.pos_self_order_table_mode:
             self.pos_self_order_view_mode = True
 
+    @api.onchange("pos_self_order_pay_after", "pos_self_order_table_mode")
+    def _onchange_pos_self_order_pay_after(self):
+        if self.pos_self_order_pay_after == "each" and not self.module_pos_preparation_display:
+            self.module_pos_preparation_display = True
+
     def generate_qr_codes_page(self):
         """
         Generate the data needed to print the QR codes page
@@ -81,3 +86,10 @@ class ResConfigSettings(models.TransientModel):
     def preview_self_order_app(self):
         self.ensure_one()
         return self.pos_config_id.preview_self_order_app()
+
+    def _compute_selection_pay_after(self):
+        selection = [("each", "Each Order (mobile payment only)"), ("meal", "Meal (mobile payment or cashier)")]
+        version_info = service.common.exp_version()['server_version_info']
+        if version_info[-1] == '':
+            selection[0] = (selection[0][0], selection[0][1] + ' (require Odoo Enterprise)')
+        return selection
