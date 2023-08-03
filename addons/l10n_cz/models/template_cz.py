@@ -35,5 +35,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_suspense_account_id': 'chart_cz_261000',
                 'default_cash_difference_income_account_id': 'chart_cz_668000',
                 'default_cash_difference_expense_account_id': 'chart_cz_568000',
+                'account_default_pos_receivable_account_id': 'chart_cz_311001',
             },
         }
