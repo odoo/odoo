@@ -5,9 +5,21 @@ import { Thread } from "@mail/core/common/thread_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, "mail/core/web", {
+    /** @type {integer|undefined} */
+    recipientsCount: undefined,
+    /** @type {Set<import("@mail/core/common/follower_model").Follower>|undefined} */
+    recipients: undefined,
+    /** @type {Number} */
+    mt_comment_id: undefined,
+    get recipientsFullyLoaded() {
+        return this.recipientsCount === this.recipients.size;
+    },
     /**
      * @returns {import("@mail/core/web/activity_model").Activity[]}
      */
+    setup() {
+        this.recipients = new Set();
+    },
     get activities() {
         return Object.values(this._store.activities)
             .filter((activity) => {

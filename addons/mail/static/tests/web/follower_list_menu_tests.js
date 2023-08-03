@@ -271,7 +271,7 @@ QUnit.test("Load 100 recipients at once", async (assert) => {
     await click("button:contains(Send message)");
     assert.containsOnce(
         $,
-        ".o-mail-Chatter:contains('me, partner1, partner2, partner3, partner4, …')"
+        ".o-mail-Chatter:contains('partner1, partner2, partner3, partner4, partner5, …')"
     );
     assert.containsOnce($, "button[title='Show all recipients']");
     await click("button[title='Show all recipients']");
@@ -285,9 +285,10 @@ QUnit.test("Load 100 recipients at once", async (assert) => {
     await afterNextRender(() =>
         $(".o-mail-RecipientList span:contains(Load more)")[0].scrollIntoView()
     );
-    assert.containsN($, ".o-mail-RecipientList li", 210);
+    assert.containsN($, ".o-mail-RecipientList li", 209);
     assert.containsNone($, ".o-mail-RecipientList span:contains(Load more)");
 });
+
 
 QUnit.test(
     'Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access',
