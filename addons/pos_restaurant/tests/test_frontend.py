@@ -198,11 +198,11 @@ class TestFrontend(odoo.tests.HttpCase):
         self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTipScreenTour', login="demo")
 
-        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')])
-        order2 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0002')])
-        order3 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0003')])
-        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0004')])
-        order5 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0005')])
+        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')], limit=1, order='id desc')
+        order2 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0002')], limit=1, order='id desc')
+        order3 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0003')], limit=1, order='id desc')
+        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0004')], limit=1, order='id desc')
+        order5 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0005')], limit=1, order='id desc')
 
         self.assertTrue(order1.is_tipped and order1.tip_amount == 0.40)
         self.assertTrue(order2.is_tipped and order2.tip_amount == 1.00)

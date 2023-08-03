@@ -1039,168 +1039,8 @@ class PosOrder(models.Model):
         mail = self.env['mail.mail'].sudo().create(self._prepare_mail_values(name, client, ticket))
         mail.send()
 
-    def _get_order_lines(self, orders):
-        """Add pos_order_lines to the orders.
-
-        The function doesn't return anything but adds the results directly to the orders.
-
-        :param orders: orders for which the order_lines are to be requested.
-        :type orders: pos.order.
-        """
-        order_lines = self.env['pos.order.line'].search_read(
-                domain=[('order_id', 'in', [to['id'] for to in orders])],
-                fields=self._get_fields_for_order_line())
-
-        if order_lines != []:
-            self._get_pack_lot_lines(order_lines)
-
-        extended_order_lines = []
-        for order_line in order_lines:
-            extended_order_lines.append([0, 0, self._prepare_order_line(order_line)])
-
-        for order_id, order_lines in groupby(extended_order_lines, key=lambda x: x[2]['order_id']):
-            next(order for order in orders if order['id'] == order_id[0])['lines'] = list(order_lines)
-
-    def _get_pack_lot_lines(self, order_lines):
-        """Add pack_lot_lines to the order_lines.
-
-        The function doesn't return anything but adds the results directly to the order_lines.
-
-        :param order_lines: order_lines for which the pack_lot_lines are to be requested.
-        :type order_lines: pos.order.line.
-        """
-        pack_lots = self.env['pos.pack.operation.lot'].search_read(
-                domain=[('pos_order_line_id', 'in', [order_line['id'] for order_line in order_lines])],
-                fields=[
-                    'id',
-                    'lot_name',
-                    'pos_order_line_id'
-                    ])
-        for pack_lot in pack_lots:
-            pack_lot['order_line'] = pack_lot['pos_order_line_id'][0]
-            pack_lot['server_id'] = pack_lot['id']
-
-            del pack_lot['pos_order_line_id']
-            del pack_lot['id']
-
-        for order_line_id, pack_lot_ids in groupby(pack_lots, key=lambda x: x['order_line']):
-            next(order_line for order_line in order_lines if order_line['id'] == order_line_id)['pack_lot_ids'] = list(pack_lot_ids)
-
-    def _prepare_order_line(self, order_line):
-        """Method that will allow the cleaning of values to send the correct information.
-        :param order_line: order_line that will be cleaned.
-        :type order_line: pos.order.line.
-        :returns: dict -- dict representing the order line's values.
-        """
-        order_line["product_id"] = order_line["product_id"][0]
-        order_line["server_id"] = order_line["id"]
-
-        del order_line["id"]
-        if not "pack_lot_ids" in order_line:
-            order_line["pack_lot_ids"] = []
-        else:
-            order_line["pack_lot_ids"] = [[0, 0, lot] for lot in order_line["pack_lot_ids"]]
-        return order_line
-
-    def _get_fields_for_payment_lines(self):
-        return [
-            'id',
-            'amount',
-            'pos_order_id',
-            'payment_method_id',
-            'card_type',
-            'cardholder_name',
-            'transaction_id',
-            'payment_status'
-            ]
-
-    def _get_payments_lines_list(self, orders):
-        payment_lines = self.env['pos.payment'].search_read(
-                domain=[('pos_order_id', 'in', [po['id'] for po in orders])],
-                fields=self._get_fields_for_payment_lines())
-
-        extended_payment_lines = []
-        for payment_line in payment_lines:
-            payment_line['server_id'] = payment_line['id']
-            payment_line['payment_method_id'] = payment_line['payment_method_id'][0]
-
-            del payment_line['id']
-            extended_payment_lines.append([0, 0, payment_line])
-        return extended_payment_lines
-
-    def _get_payment_lines(self, orders):
-        """Add account_bank_statement_lines to the orders.
-
-        The function doesn't return anything but adds the results directly to the orders.
-
-        :param orders: orders for which the payment_lines are to be requested.
-        :type orders: pos.order.
-        """
-        extended_payment_lines = self._get_payments_lines_list(orders)
-        for order_id, payment_lines in groupby(extended_payment_lines, key=lambda x: x[2]['pos_order_id']):
-            next(order for order in orders if order['id'] == order_id[0])['statement_ids'] = list(payment_lines)
-
-    def _get_fields_for_draft_order(self):
-        return [
-            'id',
-            'pricelist_id',
-            'partner_id',
-            'sequence_number',
-            'session_id',
-            'pos_reference',
-            'create_uid',
-            'create_date',
-            'fiscal_position_id',
-            'last_order_preparation_change',
-            'to_invoice',
-            'access_token',
-            'ticket_code',
-        ]
-
-    @api.model
-    def get_draft_share_order_ids(self, config_id):
-        """Search for 'draft' orders that satisfy the given domain."""
-        config = self.env['pos.config'].browse(config_id)
-        default_domain = ['&', ('state', '=', 'draft'), '|', ('config_id', '=', config_id), ('config_id', 'in', config.trusted_config_ids.ids)]
-        orders = self.search_read(
-                domain=default_domain,
-                fields=self._get_fields_for_draft_order())
-
-        self._get_order_lines(orders)
-        self._get_payment_lines(orders)
-
-        self._prepare_order(orders)
-
-        return orders
-
     def is_already_paid(self):
         return self.state == "paid"
-
-    @api.model
-    def _prepare_order(self, orders):
-        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
-        for order in orders:
-            order['pos_session_id'] = order['session_id'][0]
-            order['uid'] = re.search(r"\d{5,}-\d{3,}-\d{4,}", order['pos_reference']).group(0)
-            order['name'] = order['pos_reference']
-            order['creation_date'] = order['create_date'].astimezone(timezone)
-            order['server_id'] = order['id']
-            if order['fiscal_position_id']:
-                order['fiscal_position_id'] = order['fiscal_position_id'][0]
-            if order['pricelist_id']:
-                order['pricelist_id'] = order['pricelist_id'][0]
-            if order['partner_id']:
-                order['partner_id'] = order['partner_id'][0]
-
-            if not 'lines' in order:
-                order['lines'] = []
-            if not 'statement_ids' in order:
-                order['statement_ids'] = []
-
-            del order['id']
-            del order['session_id']
-            del order['pos_reference']
-            del order['create_date']
 
     @api.model
     def remove_from_ui(self, server_ids):
@@ -1275,24 +1115,14 @@ class PosOrder(models.Model):
             'tip_amount': order.tip_amount,
             'access_token': order.access_token,
             'ticket_code': order.ticket_code,
+            'last_order_preparation_change': order.last_order_preparation_change,
         }
 
-    def _get_fields_for_order_line(self):
-        """This function is here to be overriden"""
-        fields = [
-            'id',
-            'uuid',
-            'discount',
-            'skip_change',
-            'product_id',
-            'price_unit',
-            'order_id',
-            'qty',
-            'full_product_name',
-            'customer_note',
-            'price_extra',
-        ]
-        return fields
+    @api.model
+    def export_for_ui_shared_order(self, config_id):
+        config = self.env['pos.config'].browse(config_id)
+        orders = self.env['pos.order'].search(['&', ('state', '=', 'draft'), '|', ('config_id', '=', config_id), ('config_id', 'in', config.trusted_config_ids.ids)])
+        return orders.export_for_ui()
 
     def export_for_ui(self):
         """ Returns a list of dict with each item having similar signature as the return of
@@ -1473,7 +1303,7 @@ class PosOrderLine(models.Model):
             'refunded_qty': orderline.refunded_qty,
             'price_extra': orderline.price_extra,
             'full_product_name': orderline.full_product_name,
-            'refunded_orderline_id': orderline.refunded_orderline_id,
+            'refunded_orderline_id': orderline.refunded_orderline_id.id,
         }
 
     def export_for_ui(self):
@@ -1602,6 +1432,7 @@ class PosOrderLineLot(models.Model):
     def _export_for_ui(self, lot):
         return {
             'lot_name': lot.lot_name,
+            'order_line': lot.pos_order_line_id.id,
         }
 
     def export_for_ui(self):

@@ -51,6 +51,7 @@ class PosPayment(models.Model):
         return {
             'payment_method_id': payment.payment_method_id.id,
             'amount': payment.amount,
+            'pos_order_id': payment.pos_order_id.id,
             'payment_status': payment.payment_status,
             'card_type': payment.card_type,
             'cardholder_name': payment.cardholder_name,
