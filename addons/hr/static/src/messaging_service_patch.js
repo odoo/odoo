@@ -2,11 +2,11 @@
 
 import { Messaging } from "@mail/core/common/messaging_service";
 
-import { patch } from '@web/legacy/js/core/utils';
+import { patch } from "@web/core/utils/patch";
 
-patch(Messaging.prototype, "hr", {
+patch(Messaging.prototype, {
     setup(...args) {
-        this._super(...args);
+        super.setup(...args);
         this.store.employees = {};
     },
 });

@@ -11,8 +11,6 @@
 
 import { patchDate } from "@web/../tests/helpers/utils";
 
-import { uniqueId } from "@web/core/utils/functions";
-
 //------------------------------------------------------------------------------
 // Public functions
 //------------------------------------------------------------------------------
@@ -70,94 +68,7 @@ function legacyPatchDate(year, month, day, hours, minutes, seconds) {
     return function () {}; // all calls to that function are now useless
 }
 
-var patches = {};
-/**
- * Patches a given Class or Object with the given properties.
- *
- * @param {Class|Object} target
- * @param {Object} props
- */
-function patch(target, props) {
-    var patchID = uniqueId("patch_");
-    target.__patchID = patchID;
-    patches[patchID] = {
-        target: target,
-        otherPatchedProps: [],
-        ownPatchedProps: [],
-    };
-    if (target.prototype) {
-        Object.keys(props).forEach((key) => {
-            if (target.prototype.hasOwnProperty(key)) {
-                patches[patchID].ownPatchedProps.push({
-                    key: key,
-                    initialValue: target.prototype[key],
-                });
-            } else {
-                patches[patchID].otherPatchedProps.push(key);
-            }
-        });
-        target.include(props);
-    } else {
-        for (const [key, value] of Object.entries(props)) {
-            if (key in target) {
-                var oldValue = target[key];
-                patches[patchID].ownPatchedProps.push({
-                    key: key,
-                    initialValue: oldValue,
-                });
-                if (typeof value === 'function') {
-                    target[key] = function () {
-                        var oldSuper = this._super;
-                        this._super = oldValue;
-                        var result = value.apply(this, arguments);
-                        if (oldSuper === undefined) {
-                            delete this._super;
-                        } else {
-                            this._super = oldSuper;
-                        }
-                        return result;
-                    };
-                } else {
-                    target[key] = value;
-                }
-            } else {
-                patches[patchID].otherPatchedProps.push(key);
-                target[key] = value;
-            }
-        }
-    }
-}
-
-/**
- * Unpatches a given Class or Object.
- *
- * @param {Class|Object} target
- */
-function unpatch(target) {
-    var patchID = target.__patchID;
-    var patch = patches[patchID];
-    if (target.prototype) {
-        patch.ownPatchedProps.forEach((p) => {
-            target.prototype[p.key] = p.initialValue;
-        });
-        patch.otherPatchedProps.forEach((key) => {
-            delete target.prototype[key];
-        });
-    } else {
-        patch.ownPatchedProps.forEach((p) => {
-            target[p.key] = p.initialValue;
-        });
-        patch.otherPatchedProps.forEach((key) => {
-            delete target[key];
-        });
-    }
-    delete patches[patchID];
-    delete target.__patchID;
-}
-
 export default {
     intercept: intercept,
     patchDate: legacyPatchDate,
-    patch: patch,
-    unpatch: unpatch,
 };

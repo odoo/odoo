@@ -9,7 +9,6 @@ import {
     nextTick,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
-import * as legacyTestUtils from "@web/../tests/legacy/helpers/test_utils";
 import { assets } from "@web/core/assets";
 import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
 
@@ -47,7 +46,7 @@ QUnit.module('field html', (hooks) => {
         serverData = { models };
         setupViewRegistries();
 
-        legacyTestUtils.mock.patch(Wysiwyg.prototype, {
+        patchWithCleanup(Wysiwyg.prototype, {
             async _getColorpickerTemplate() {
                 return weTestUtils.COLOR_PICKER_TEMPLATE;
             },
@@ -60,9 +59,6 @@ QUnit.module('field html', (hooks) => {
                 }];
             },
         });
-    });
-    hooks.afterEach(() => {
-        legacyTestUtils.mock.unpatch(Wysiwyg.prototype);
     });
 
     QUnit.test('save arch and html', async function (assert) {
