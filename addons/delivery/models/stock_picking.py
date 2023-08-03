@@ -263,18 +263,29 @@ class StockPicking(models.Model):
         self.ensure_one()
         self.carrier_id.get_return_label(self)
 
+    def _get_matching_delivery_lines(self):
+        return self.sale_id.order_line.filtered(
+            lambda l: l.is_delivery
+            and l.currency_id.is_zero(l.price_unit)
+            and l.product_id == self.carrier_id.product_id
+        )
+
+    def _prepare_sale_delivery_line_vals(self):
+        return {
+            'price_unit': self.carrier_price,
+            # remove the estimated price from the description
+            'name': self.carrier_id.with_context(lang=self.partner_id.lang).name,
+        }
+
     def _add_delivery_cost_to_so(self):
         self.ensure_one()
         sale_order = self.sale_id
         if sale_order and self.carrier_id.invoice_policy == 'real' and self.carrier_price:
-            delivery_lines = sale_order.order_line.filtered(lambda l: l.is_delivery and l.currency_id.is_zero(l.price_unit) and l.product_id == self.carrier_id.product_id)
+            delivery_lines = self._get_matching_delivery_lines()
             if not delivery_lines:
                 delivery_lines = sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
-            delivery_lines[0].write({
-                'price_unit': self.carrier_price,
-                # remove the estimated price from the description
-                'name': self.carrier_id.with_context(lang=self.partner_id.lang).name,
-            })
+            vals = self._prepare_sale_delivery_line_vals()
+            delivery_lines[0].write(vals)
 
     def open_website_url(self):
         self.ensure_one()
