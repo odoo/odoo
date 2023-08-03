@@ -91,6 +91,8 @@ class AccountMoveSend(models.Model):
 
     @api.model
     def _get_mail_default_field_value_from_template(self, mail_template, lang, move, field, **kwargs):
+        if not mail_template:
+            return
         return mail_template\
             .with_context(lang=lang)\
             ._render_field(field, move.ids, **kwargs)[move._origin.id]
