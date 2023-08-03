@@ -506,6 +506,7 @@ class Task(models.Model):
 
     @api.depends('child_ids')
     def _compute_subtask_count(self):
+        print("-------PLOP-------")
         total_and_closed_subtask_count_per_parent_id = {
             parent.id: (count, sum(s in CLOSED_STATES for s in states))
             for parent, states, count in self.env['project.task']._read_group(
@@ -515,6 +516,8 @@ class Task(models.Model):
             )
         }
         for task in self:
+            print(task)
+            print(total_and_closed_subtask_count_per_parent_id.get(task.id, (0, 0)))
             task.subtask_count, task.closed_subtask_count = total_and_closed_subtask_count_per_parent_id.get(task.id, (0, 0))
 
     @api.onchange('company_id')

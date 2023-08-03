@@ -263,7 +263,9 @@ export class KanbanController extends Component {
             const group = this.model.root.groups.find((l) =>
                 l.records.find((r) => r.id === record.id)
             );
-            this.progressBarState?.updateCounts(group);
+            if (group) {
+                this.progressBarState?.updateCounts(group);
+            }
         }
     }
 
