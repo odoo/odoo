@@ -543,7 +543,7 @@ export const editorCommands = {
             node => closestElement(node).isContentEditable
         );
         let coloredTds = [];
-        if (selectedTds.length) {
+        if (selectedTds.length && mode === "backgroundColor") {
             for (const td of selectedTds) {
                 colorElement(td, color, mode);
             }
@@ -566,7 +566,9 @@ export const editorCommands = {
         if (isEmptyBlock(range.endContainer)) {
             selectionNodes.push(range.endContainer, ...descendants(range.endContainer));
         }
-        const selectedNodes = selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
+        const selectedNodes = mode === "backgroundColor"
+            ? selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
+            : selectionNodes;
         function getFonts(selectedNodes) {
             return selectedNodes.flatMap(node => {
                 let font = closestElement(node, 'font') || closestElement(node, 'span');
