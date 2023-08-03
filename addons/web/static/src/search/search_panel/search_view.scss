@@ -1,5 +1,7 @@
 .o_searchview {
-    background-color: $input-focus-bg;
+    --SearchBar-background-color: $input-focus-bg;
+    
+    background-color: var(--SearchBar-background-color);
     border: $input-border-width solid $border-color;
 
     &:focus-within {
