@@ -47,6 +47,11 @@ export class LinkTools extends Link {
         'background-color': { colorNames: null },
         'border-color': { colorNames: null },
     };
+    state = useState({
+        showLinkSizeRow: true,
+        showLinkCustomColor: true,
+        showLinkShapeRow: true,
+    });
 
     setup() {
         super.setup(...arguments);
@@ -270,13 +275,12 @@ export class LinkTools extends Link {
         if (el) {
             this.colorCombinationClass = el.dataset.value;
             // Hide the size option if the link is an unstyled anchor.
-            for (const rowEl of this.linkComponentWrapperRef.el.querySelectorAll('.link-size-row')) {
-                rowEl.classList.toggle('d-none', !this.colorCombinationClass);
-            }
-            // Show custom colors and shape only for Custom style.
-            for (const rowEl of this.linkComponentWrapperRef.el.querySelectorAll('.link-custom-color, .link-shape-row')) {
-                rowEl.classList.toggle('d-none', el.dataset.value !== 'custom');
-            }
+            this.state.showLinkSizeRow = Boolean(this.colorCombinationClass);
+
+            // // Show custom colors and shape only for Custom style.
+            this.state.showLinkCustomColor = el.dataset.value === 'custom';
+            this.state.showLinkShapeRow = el.dataset.value === 'custom';
+
             this.props.onColorCombinationClassChange(this.colorCombinationClass);
 
             this._updateColorpicker('color');
