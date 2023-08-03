@@ -29,6 +29,7 @@
                 <field name="name"/>
                 <field name="date"/>
                 <field name="account_id"/>
+                <field name="account_id" string="Cross by" filter_domain="[('move_line_id.analytic_line_ids.account_id', 'ilike', self)]"/>
                 <field name="plan_id"/>
                 <filter string="Date" name="date" date="date"/>
                 <filter string="Analytic Account" name="group_by_analytic_account" context="{'group_by': 'account_id'}"/>
@@ -112,8 +113,9 @@
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
             <pivot string="Analytic Items" sample="1">
+                <field name="plan_id" type="row"/>
                 <field name="account_id" type="row"/>
-                <field name="unit_amount" type="measure"/>
+                <field name="date" interval="month" type="col"/>
                 <field name="amount" type="measure"/>
             </pivot>
         </field>

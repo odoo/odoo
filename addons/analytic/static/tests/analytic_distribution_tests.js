@@ -151,11 +151,11 @@ QUnit.module("Analytic", (hooks) => {
 
         assert.containsOnce(target, ".o_field_analytic_distribution", "widget should be visible");
         assert.containsN(target, ".badge", 2, "should contain 2 tags");
-        assert.strictEqual(target.querySelector(".badge .o_tag_badge_text").textContent, "RD 30.3%",
-            "should have rendered tag 'RD 30.3%'"
+        assert.strictEqual(target.querySelector(".badge .o_tag_badge_text").textContent, "30.3% RD",
+            "should have rendered tag '30.3% RD'"
         );
-        assert.strictEqual(target.querySelectorAll(".badge .o_tag_badge_text")[1].textContent, "FI 69.7%",
-            "should have rendered tag 'FI 69.7%'"
+        assert.strictEqual(target.querySelectorAll(".badge .o_tag_badge_text")[1].textContent, "69.7% FI",
+            "should have rendered tag '69.7% FI'"
         );
 
         assert.containsN(target, ".o_delete", 2, "tags should contain a delete button");
@@ -261,13 +261,13 @@ QUnit.module("Analytic", (hooks) => {
         await click(target.querySelector(".o_select_button"));
 
         let percentageEls = [...popup.querySelectorAll("table#plan_5 .o_analytic_percentage input")];
-        let expectedPercentages = ['100%', '0%', '0%'];
+        let expectedPercentages = ['100%', '0%', ''];
         for (const [i, el] of percentageEls.entries()) {
             assert.equal(el.value, expectedPercentages[i], `1: Percentage Element ${i} should be ${expectedPercentages[i]}`);
         }
         // modify the percentage of tag 1, tag 2 is filled
         await editInput(percentageEls[0], null, "50");
-        expectedPercentages = ['50%', '50%', '0%'];
+        expectedPercentages = ['50%', '50%', ''];
         for (const [i, el] of percentageEls.entries()) {
             assert.equal(el.value, expectedPercentages[i], `2: Percentage Element ${i} should be ${expectedPercentages[i]}`);
         }
@@ -289,21 +289,21 @@ QUnit.module("Analytic", (hooks) => {
         await click(target.querySelector(".o_select_button"));
 
         percentageEls = [...popup.querySelectorAll("table#plan_5 .o_analytic_percentage input")];
-        expectedPercentages = ['40%', '50%', '10%', '0%', '0%', '0%'];
+        expectedPercentages = ['40%', '50%', '10%', '0%', '0%', ''];
         for (const [i, el] of percentageEls.entries()) {
             assert.equal(el.value, expectedPercentages[i], `4: Percentage Element ${i} should be ${expectedPercentages[i]}`);
         }
 
         // modify percentage of the tag 1 (focused), balance goes to the first zero (tag 4)
         await editInput(document.activeElement, null, "10");
-        expectedPercentages = ['10%', '50%', '10%', '30%', '0%', '0%'];
+        expectedPercentages = ['10%', '50%', '10%', '30%', '0%', ''];
         for (const [i, el] of percentageEls.entries()) {
             assert.equal(el.value, expectedPercentages[i], `5: Percentage Element ${i} should be ${expectedPercentages[i]}`);
         }
 
         // modify percentage of tag 4, balance goes to the first zero (tag 5)
         await editInput(percentageEls[3], null, "20");
-        expectedPercentages = ['10%', '50%', '10%', '20%', '10%', '0%'];
+        expectedPercentages = ['10%', '50%', '10%', '20%', '10%', ''];
         for (const [i, el] of percentageEls.entries()) {
             assert.equal(el.value, expectedPercentages[i], `6: Percentage Element ${i} should be ${expectedPercentages[i]}`);
         }
@@ -325,7 +325,7 @@ QUnit.module("Analytic", (hooks) => {
         percentageEls = [...popup.querySelectorAll("table#plan_5 .o_analytic_percentage input")];
         expectedPercentages = ['10%', '50%', '10%', '30%'];
         for (const [i, el] of percentageEls.entries()) {
-            assert.equal(el.value, expectedPercentages[i], `7: Percentage Element ${i} should be ${expectedPercentages[i]}`);
+            assert.equal(el.value, expectedPercentages[i], `8: Percentage Element ${i} should be ${expectedPercentages[i]}`);
         }
         assert.equal(popup.querySelector("table#plan_5 tr:last-of-type .o_analytic_account_name input").value, "",
             "Last tag's account is empty");
