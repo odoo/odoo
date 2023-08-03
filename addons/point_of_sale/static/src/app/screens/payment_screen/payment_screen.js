@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
-import { useErrorHandlers } from "@point_of_sale/app/utils/hooks";
+import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { floatIsZero } from "@web/core/utils/numbers";
@@ -43,6 +43,7 @@ export class PaymentScreen extends Component {
         useErrorHandlers();
         this.payment_interface = null;
         this.error = false;
+        this.validateOrder = useAsyncLockedMethod(this.validateOrder);
     }
 
     showMaxValueError() {
