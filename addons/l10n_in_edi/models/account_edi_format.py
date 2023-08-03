@@ -254,10 +254,11 @@ class AccountEdiFormat(models.Model):
             if is_overseas is true then pin is 999999 and GSTIN(vat) is URP and Stcd is .
             if pos_state_id is passed then we use set POS
         """
+        zip_digits = self._l10n_in_edi_extract_digits(partner.zip)
         partner_details = {
             "Addr1": partner.street or "",
             "Loc": partner.city or "",
-            "Pin": int(self._l10n_in_edi_extract_digits(partner.zip)),
+            "Pin": zip_digits and int(zip_digits) or "",
             "Stcd": partner.state_id.l10n_in_tin or "",
         }
         if partner.street2:
