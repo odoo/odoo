@@ -815,3 +815,15 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         self.assertFalse(wizard.exists())
+
+    def test_with_empty_mail_template(self):
+        """ Test you can use the send & print wizard without any mail template. """
+        self.partner_a.email = "turlututu@tsointsoin"
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        custom_subject = "turlututu"
+        wizard = self.create_send_and_print(invoice, mail_template_id=None, mail_subject=custom_subject)
+
+        wizard.action_send_and_print(allow_fallback_pdf=True)
+        message = self.env['mail.message'].search([('model', '=', invoice._name), ('res_id', '=', invoice.id)], limit=1)
+        self.assertRecordValues(message, [{'subject': custom_subject}])
