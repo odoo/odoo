@@ -151,7 +151,7 @@
                     </div>
                 </we-select>
             </we-row>
-            <we-row class="link-custom-color link-custom-color-text">
+            <we-row class="link-custom-color link-custom-color-text" t-att-class="{'d-none': !state.showLinkCustomColor}">
                 <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette o_we_sublevel_2">
                     <we-title>Text Color</we-title>
                     <div class="dropdown">
@@ -171,7 +171,7 @@
                     </div>
                 </we-select>
             </we-row>
-            <we-row class="link-custom-color link-custom-color-fill">
+            <we-row class="link-custom-color link-custom-color-fill" t-att-class="{'d-none': !state.showLinkCustomColor}">
                 <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette o_we_sublevel_2">
                     <we-title>Fill Color</we-title>
                     <div class="dropdown">
@@ -192,7 +192,7 @@
                     </div>
                 </we-select>
             </we-row>
-            <we-row class="link-custom-color link-custom-color-border o_we_sublevel_2">
+            <we-row class="link-custom-color link-custom-color-border o_we_sublevel_2" t-att-class="{'d-none': !state.showLinkCustomColor}">
                 <we-title>Border</we-title>
                 <div>
                     <we-input class="o_we_user_value_widget" title="Border Width">
@@ -235,7 +235,7 @@
                     </we-select>
                 </div>
             </we-row>
-            <we-row class="link-size-row">
+            <we-row class="link-size-row" t-att-class="{'d-none': !state.showLinkSizeRow}">
                 <we-select class="o_we_user_value_widget o_we_sublevel_2">
                     <we-title>Size</we-title>
                     <div>
@@ -261,7 +261,7 @@
                     </div>
                 </we-select>
             </we-row>
-            <we-row class="link-shape-row">
+            <we-row class="link-shape-row"  t-att-class="{'d-none': !state.showLinkShapeRow}">
                 <we-select class="o_we_user_value_widget o_we_sublevel_2">
                     <we-title>Shape</we-title>
                     <div>
