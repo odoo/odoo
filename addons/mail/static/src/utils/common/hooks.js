@@ -401,7 +401,7 @@ export function useMessageToReplyTo() {
          * @returns {boolean}
          */
         isNotSelected(thread, message) {
-            return this.thread === thread && this.message !== message;
+            return thread.equals(this.thread) && !message.equals(this.message);
         },
         /**
          * @param {import("@mail/core/common/thread_model").Thread} thread
@@ -409,7 +409,7 @@ export function useMessageToReplyTo() {
          * @returns {boolean}
          */
         isSelected(thread, message) {
-            return this.thread === thread && this.message === message;
+            return thread.equals(this.thread) && message.equals(this.message);
         },
         /** @type {import("@mail/core/common/message_model").Message|null} */
         message: null,
@@ -420,7 +420,7 @@ export function useMessageToReplyTo() {
          * @param {import("@mail/core/common/message_model").Message} message
          */
         toggle(thread, message) {
-            if (this.message === message) {
+            if (message.equals(this.message)) {
                 this.cancel();
             } else {
                 Object.assign(this, { message, thread });

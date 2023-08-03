@@ -25,31 +25,27 @@ export class Messaging {
         this.orm = services.orm;
         /** @type {import("@mail/core/common/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = services["mail.thread"];
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
-        this.personaService = services["mail.persona"];
         this.router = services.router;
         this.isReady = new Deferred();
         this.imStatusService = services.im_status;
         const user = services.user;
-        this.personaService.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
+        this.store.Persona.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
         this.registeredImStatusPartners = reactive([], () => this.updateImStatusRegistration());
         this.store.registeredImStatusPartners = this.registeredImStatusPartners;
-        this.store.discuss.inbox = this.threadService.insert({
+        this.store.discuss.inbox = this.store.Thread.insert({
             id: "inbox",
             model: "mail.box",
             name: _t("Inbox"),
             type: "mailbox",
         });
-        this.store.discuss.starred = this.threadService.insert({
+        this.store.discuss.starred = this.store.Thread.insert({
             id: "starred",
             model: "mail.box",
             name: _t("Starred"),
             type: "mailbox",
             counter: 0,
         });
-        this.store.discuss.history = this.threadService.insert({
+        this.store.discuss.history = this.store.Thread.insert({
             id: "history",
             model: "mail.box",
             name: _t("History"),
@@ -70,19 +66,19 @@ export class Messaging {
 
     initMessagingCallback(data) {
         if (data.current_partner) {
-            this.store.user = this.personaService.insert({
+            this.store.user = this.store.Persona.insert({
                 ...data.current_partner,
                 type: "partner",
             });
         }
         if (data.currentGuest) {
-            this.store.guest = this.personaService.insert({
+            this.store.guest = this.store.Persona.insert({
                 ...data.currentGuest,
                 type: "guest",
                 channelId: data.channels[0]?.id,
             });
         }
-        this.store.odoobot = this.personaService.insert({
+        this.store.odoobot = this.store.Persona.insert({
             ...data.odoobot,
             type: "partner",
         });
@@ -144,7 +140,7 @@ export class Messaging {
                 limit,
             ]);
             partners = partnersData.map((data) =>
-                this.personaService.insert({ ...data, type: "partner" })
+                this.store.Persona.insert({ ...data, type: "partner" })
             );
         }
         return partners;

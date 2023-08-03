@@ -4,7 +4,6 @@ import { useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useDiscussCoreCommon } from "@mail/discuss/core/common/discuss_core_common_service";
 import { cleanTerm } from "@mail/utils/common/format";
-import { createObjectId } from "@mail/utils/common/misc";
 
 import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 
@@ -27,7 +26,6 @@ export class ChannelSelector extends Component {
         this.store = useStore();
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
-        this.personaService = useService("mail.persona");
         /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
         this.suggestionService = useService("mail.suggestion");
         this.orm = useService("orm");
@@ -123,7 +121,7 @@ export class ChannelSelector extends Component {
                 const suggestions = this.suggestionService
                     .sortPartnerSuggestions(results, cleanedTerm)
                     .map((data) => {
-                        this.personaService.insert({ ...data, type: "partner" });
+                        this.store.Persona.insert({ ...data, type: "partner" });
                         return {
                             classList: "o-discuss-ChannelSelector-suggestion",
                             label: data.name,
@@ -162,7 +160,7 @@ export class ChannelSelector extends Component {
                     ])
                     .then((data) => {
                         const channel = this.discussCoreCommonService.createChannelThread(data);
-                        this.threadService.sortChannels();
+                        this.store.Thread.sortChannels();
                         this.threadService.open(channel);
                     });
             } else {
@@ -234,8 +232,7 @@ export class ChannelSelector extends Component {
     get tagsList() {
         const res = [];
         for (const partnerId of this.state.selectedPartners) {
-            const partner =
-                this.store.Persona.records[createObjectId("Persona", "partner", partnerId)];
+            const partner = this.store.Persona.findById({ type: "partner", id: partnerId });
             res.push({
                 id: partner.id,
                 text: partner.name,

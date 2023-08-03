@@ -7,6 +7,8 @@ import {
 } from "@mail/core/common/discuss_model";
 
 export class CannedResponse extends DiscussModel {
+    static id = ["id"];
+
     /** @type {number} */
     id;
     /** @type {string} */

@@ -4,6 +4,7 @@ import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo
 
 import { useService } from "@web/core/utils/hooks";
 import { hidePDFJSButtons } from "@web/legacy/js/libs/pdfjs";
+import { useStore } from "./messaging_hook";
 
 /**
  * @typedef {Object} Props
@@ -19,6 +20,7 @@ export class AttachmentView extends Component {
     setup() {
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
+        this.store = useStore();
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         this.state = useState({
             /** @type {import("@mail/core/common/thread_model").Thread} */
@@ -54,7 +56,7 @@ export class AttachmentView extends Component {
     }
 
     updateFromProps(props) {
-        this.state.thread = this.threadService.insert({
+        this.state.thread = this.store.Thread.insert({
             id: props.threadId,
             model: props.threadModel,
         });

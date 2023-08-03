@@ -5,6 +5,7 @@ import {
     DiscussModelManager,
     discussModelRegistry,
 } from "@mail/core/common/discuss_model";
+import { assignDefined } from "@mail/utils/common/misc";
 
 /**
  * @typedef Data
@@ -37,6 +38,8 @@ import {
  */
 
 export class Activity extends DiscussModel {
+    static id = ["id"];
+
     /** @type {string} */
     activity_category;
     /** @type {[number, string]} */
@@ -115,6 +118,30 @@ export class ActivityManager extends DiscussModelManager {
     class;
     /** @type {Object.<number, Activity>} */
     records = {};
+
+    /**
+     * @param {import("@mail/core/web/activity_model").Data} data
+     * @param {Object} [param1]
+     * @param {boolean} param1.broadcast
+     * @returns {import("@mail/core/web/activity_model").Activity}
+     */
+    insert(data, { broadcast = true } = {}) {
+        const activity = this.records[data.id] ?? new Activity(this.store, data.id);
+        activity.objectId = this._createObjectId(data);
+        if (data.request_partner_id) {
+            data.request_partner_id = data.request_partner_id[0];
+        }
+        assignDefined(activity, data);
+        if (broadcast) {
+            const data = { ...activity };
+            delete data._store;
+            this.broadcastChannel?.postMessage({
+                type: "insert",
+                payload: JSON.parse(JSON.stringify(data)),
+            });
+        }
+        return activity;
+    }
 }
 
 discussModelRegistry.add("Activity", [Activity, ActivityManager]);

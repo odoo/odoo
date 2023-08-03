@@ -5,8 +5,9 @@ import {
     DiscussModelManager,
     discussModelRegistry,
 } from "@mail/core/common/discuss_model";
+import { replaceArrayWithCompare } from "@mail/utils/common/arrays";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { createObjectId } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
 
 import { toRaw } from "@odoo/owl";
 
@@ -18,6 +19,8 @@ import { url } from "@web/core/utils/urls";
 const { DateTime } = luxon;
 
 export class Message extends DiscussModel {
+    static id = ["id"];
+
     /** @type {Object[]} */
     attachments = [];
     /** @type {import("@mail/core/common/persona_model").Persona} */
@@ -119,7 +122,7 @@ export class Message extends DiscussModel {
     }
 
     get isSelfMentioned() {
-        return this.recipients.some((recipient) => recipient === this._store.self);
+        return this.recipients.some((recipient) => recipient.equals(this._store.self));
     }
 
     get isHighlightedFromMention() {
@@ -173,7 +176,7 @@ export class Message extends DiscussModel {
     }
 
     get originThread() {
-        return this._store.Thread.records[createObjectId("Thread", this.resModel, this.resId)];
+        return this._store.Thread.findById({ model: this.resModel, id: this.resId });
     }
 
     get resUrl() {
@@ -253,6 +256,181 @@ export class MessageManager extends DiscussModelManager {
     class;
     /** @type {Object.<number, Message>} */
     records = {};
+
+    /**
+     * @param {Object} data
+     * @returns {Message}
+     */
+    insert(data) {
+        let message;
+        if (data.res_id) {
+            this.store.Thread.insert({
+                model: data.model,
+                id: data.res_id,
+            });
+        }
+        if (data.id in this.records) {
+            message = this.records[data.id];
+        } else {
+            message = new Message();
+            message._store = this.store;
+            this.records[data.id] = message;
+            message = this.records[data.id];
+            message.objectId = this._createObjectId(data);
+        }
+        this.update(message, data);
+        // return reactive version
+        return message;
+    }
+
+    /**
+     * @param {import("@mail/core/common/message_model").Message} message
+     * @param {Object} data
+     */
+    update(message, data) {
+        const {
+            attachment_ids: attachments = message.attachments,
+            default_subject: defaultSubject = message.defaultSubject,
+            is_discussion: isDiscussion = message.isDiscussion,
+            is_note: isNote = message.isNote,
+            is_transient: isTransient = message.isTransient,
+            linkPreviews = message.linkPreviews,
+            message_type: type = message.type,
+            model: resModel = message.resModel,
+            module_icon,
+            notifications = message.notifications,
+            parentMessage,
+            recipients = message.recipients,
+            record_name,
+            res_id: resId = message.resId,
+            res_model_name,
+            subtype_description: subtypeDescription = message.subtypeDescription,
+            ...remainingData
+        } = data;
+        assignDefined(message, remainingData);
+        assignDefined(message, {
+            defaultSubject,
+            isDiscussion,
+            isNote,
+            isStarred: this.store.user
+                ? message.starred_partner_ids.includes(this.store.user.id)
+                : false,
+            isTransient,
+            parentMessage: parentMessage ? this.insert(parentMessage) : undefined,
+            resId,
+            resModel,
+            subtypeDescription,
+            type,
+        });
+        // origin thread before other information (in particular notification insert uses it)
+        if (message.originThread) {
+            assignDefined(message.originThread, {
+                modelName: res_model_name || undefined,
+                module_icon: module_icon || undefined,
+                name: record_name || undefined,
+            });
+        }
+        replaceArrayWithCompare(
+            message.attachments,
+            attachments.map((attachment) =>
+                this.store.Attachment.insert({ message, ...attachment })
+            )
+        );
+        if (
+            Array.isArray(message.author) &&
+            message.author.some((command) => command.includes("clear"))
+        ) {
+            message.author = undefined;
+        }
+        if (data.author?.id) {
+            message.author = this.store.Persona.insert({
+                ...data.author,
+                type: "partner",
+            });
+        }
+        if (data.guestAuthor?.id) {
+            message.author = this.store.Persona.insert({
+                ...data.guestAuthor,
+                type: "guest",
+                channelId: message.originThread.id,
+            });
+        }
+        replaceArrayWithCompare(
+            message.linkPreviews,
+            linkPreviews.map((data) => this.store.LinkPreview.insert({ ...data, message }))
+        );
+        replaceArrayWithCompare(
+            message.notifications,
+            notifications.map((notification) =>
+                this.store.Notification.insert({ ...notification, messageId: message.id })
+            )
+        );
+        replaceArrayWithCompare(
+            message.recipients,
+            recipients.map((recipient) =>
+                this.store.Persona.insert({ ...recipient, type: "partner" })
+            )
+        );
+        if ("user_follower_id" in data && data.user_follower_id && this.store.self) {
+            message.originThread.selfFollower = this.store.Follower.insert({
+                followedThread: message.originThread,
+                id: data.user_follower_id,
+                isActive: true,
+                partner: this.store.self,
+            });
+        }
+        if (data.messageReactionGroups) {
+            this._updateReactions(message, data.messageReactionGroups);
+        }
+        if (message.isNotification && !message.notificationType) {
+            const parser = new DOMParser();
+            const htmlBody = parser.parseFromString(message.body, "text/html");
+            message.notificationType =
+                htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
+        }
+        this.env.bus.trigger("mail.message/onUpdate", { message, data });
+    }
+
+    _updateReactions(message, reactionGroups) {
+        const reactionContentToUnlink = new Set();
+        const reactionsToInsert = [];
+        for (const rawReaction of reactionGroups) {
+            const [command, reactionData] = Array.isArray(rawReaction)
+                ? rawReaction
+                : ["insert", rawReaction];
+            const reaction = this.store.MessageReactions.insert(reactionData);
+            if (command === "insert") {
+                reactionsToInsert.push(reaction);
+            } else {
+                reactionContentToUnlink.add(reaction.content);
+            }
+        }
+        message.reactions = message.reactions.filter(
+            ({ content }) => !reactionContentToUnlink.has(content)
+        );
+        for (const reaction of reactionsToInsert) {
+            const idx = message.reactions.findIndex(({ content }) => reaction.content === content);
+            if (idx !== -1) {
+                message.reactions[idx] = reaction;
+            } else {
+                message.reactions.push(reaction);
+            }
+        }
+    }
+
+    /**
+     * @returns {number}
+     */
+    getLastMessageId() {
+        return Object.values(this.records).reduce(
+            (lastMessageId, message) => Math.max(lastMessageId, message.id),
+            0
+        );
+    }
+
+    getNextTemporaryId() {
+        return this.getLastMessageId() + 0.01;
+    }
 }
 
 discussModelRegistry.add("Message", [Message, MessageManager]);

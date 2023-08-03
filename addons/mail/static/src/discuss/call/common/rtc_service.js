@@ -2,9 +2,8 @@
 
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
-import { RtcSession } from "@mail/discuss/call/common/rtc_session_model";
 import { removeFromArray } from "@mail/utils/common/arrays";
-import { closeStream, createObjectId, onChange } from "@mail/utils/common/misc";
+import { closeStream, onChange } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
@@ -103,10 +102,6 @@ export class Rtc {
         this.soundEffectsService = services["mail.sound_effects"];
         /** @type {import("@mail/core/common/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = services["mail.thread"];
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
-        this.personaService = services["mail.persona"];
         this.state = reactive({
             hasPendingRequest: false,
             selfSession: undefined,
@@ -177,7 +172,7 @@ export class Rtc {
             "RTC-SERVICE:UPDATE_RTC_SESSIONS",
             ({ detail: { commands = [], record, thread } }) => {
                 if (record) {
-                    const session = this.insertSession(record);
+                    const session = this.store.RtcSession.insert(record);
                     thread.rtcSessions[session.id] = session;
                 }
                 for (const command of commands) {
@@ -190,7 +185,7 @@ export class Rtc {
                             break;
                         case "insert":
                             for (const rtcSessionData of sessionsData) {
-                                const session = this.insertSession(rtcSessionData);
+                                const session = this.store.RtcSession.insert(rtcSessionData);
                                 thread.rtcSessions[session.id] = session;
                             }
                             break;
@@ -352,7 +347,7 @@ export class Rtc {
      */
     endCall(channel = this.state.channel) {
         channel.rtcInvitingSessionId = undefined;
-        if (this.state.channel === channel) {
+        if (channel.equals(this.state.channel)) {
             this.clear();
             this.soundEffectsService.play("channel-leave");
         }
@@ -542,7 +537,7 @@ export class Rtc {
             return;
         }
         this.state.hasPendingRequest = true;
-        const isActiveCall = Boolean(this.state.channel && this.state.channel === channel);
+        const isActiveCall = Boolean(this.state.channel && channel.equals(this.state.channel));
         if (this.state.channel) {
             await this.leaveCall(this.state.channel);
         }
@@ -901,7 +896,7 @@ export class Rtc {
         if (this.state.channel && rtcSessions) {
             const activeSessionsData = rtcSessions[0][1];
             for (const sessionData of activeSessionsData) {
-                const session = this.insertSession(sessionData);
+                const session = this.store.RtcSession.insert(sessionData);
                 this.state.channel.rtcSessions[session.id] = session;
             }
             const outdatedSessionsData = rtcSessions[1][1];
@@ -1407,38 +1402,6 @@ export class Rtc {
     }
 
     /**
-     * @param {Object} data
-     * @returns {RtcSession}
-     */
-    insertSession(data) {
-        let session;
-        if (this.store.RtcSession.records[data.id]) {
-            session = this.store.RtcSession.records[data.id];
-        } else {
-            session = new RtcSession();
-            session._store = this.store;
-        }
-        const { channelMember, ...remainingData } = data;
-        for (const key in remainingData) {
-            session[key] = remainingData[key];
-        }
-        if (channelMember?.channel) {
-            session.channelId = channelMember.channel.id;
-        }
-        if (channelMember) {
-            const channelMemberRecord = this.channelMemberService.insert(channelMember);
-            channelMemberRecord.rtcSessionId = session.id;
-            session.channelMemberId = channelMemberRecord.id;
-            if (channelMemberRecord.thread) {
-                channelMemberRecord.thread.rtcSessions[session.id] = session;
-            }
-        }
-        this.store.RtcSession.records[session.id] = session;
-        // return reactive version
-        return this.store.RtcSession.records[session.id];
-    }
-
-    /**
      * @param {import("@mail/discuss/call/common/rtc_session_model").id} id
      */
     deleteSession(id) {
@@ -1447,9 +1410,8 @@ export class Rtc {
             if (this.state.selfSession && session.id === this.state.selfSession.id) {
                 this.endCall();
             }
-            delete this.store.Thread.records[
-                createObjectId("Thread", "discuss.channel", session.channelId)
-            ]?.rtcSessions[id];
+            delete this.store.Thread.findById({ model: "discuss.channel", id: session.channelId })
+                ?.rtcSessions[id];
             this.disconnect(session);
         }
         delete this.store.RtcSession.records[id];
@@ -1514,8 +1476,7 @@ export class Rtc {
     }
 
     updateRtcSessions(channelId, sessionsData, command) {
-        const channel =
-            this.store.Thread.records[createObjectId("Thread", "discuss.channel", channelId)];
+        const channel = this.store.Thread.findById({ model: "discuss.channel", id: channelId });
         if (!channel) {
             return;
         }
@@ -1528,7 +1489,7 @@ export class Rtc {
                 break;
             case "insert":
                 for (const sessionData of sessionsData) {
-                    const session = this.insertSession(sessionData);
+                    const session = this.store.RtcSession.insert(sessionData);
                     channel.rtcSessions[session.id] = session;
                 }
                 break;
@@ -1587,7 +1548,7 @@ export const rtcService = {
         });
         services["bus_service"].subscribe("mail.record/insert", (payload) => {
             if (payload.RtcSession) {
-                rtc.insertSession(payload.RtcSession);
+                services["mail.store"].RtcSession.insert(payload.RtcSession);
             }
             const { "res.users.settings.volumes": volumeSettings } = payload;
             if (volumeSettings) {

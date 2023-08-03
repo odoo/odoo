@@ -19,12 +19,8 @@ export class MailCoreCommon {
         this.messageService = services["mail.message"];
         /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
-        this.personaService = services["mail.persona"];
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = services["mail.thread"];
         /** @type {import("@mail/core/common/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
     }
@@ -34,7 +30,7 @@ export class MailCoreCommon {
             this.busService.subscribe("ir.attachment/delete", (payload) => {
                 const { id: attachmentId, message: messageData } = payload;
                 if (messageData) {
-                    this.messageService.insert({ ...messageData });
+                    this.store.Message.insert({ ...messageData });
                 }
                 const attachment = this.store.Attachment.records[attachmentId];
                 if (attachment) {
@@ -69,7 +65,7 @@ export class MailCoreCommon {
             });
             this.busService.subscribe("mail.message/notification_update", (payload) => {
                 payload.elements.map((message) => {
-                    this.messageService.insert({
+                    this.store.Message.insert({
                         ...message,
                         body: markup(message.body),
                         // implicit: failures are sent by the server at
@@ -82,13 +78,13 @@ export class MailCoreCommon {
             this.busService.subscribe("mail.message/toggle_star", (payload) => {
                 const { message_ids: messageIds, starred } = payload;
                 for (const messageId of messageIds) {
-                    const message = this.messageService.insert({ id: messageId });
+                    const message = this.store.Message.insert({ id: messageId });
                     this.messageService.updateStarred(message, starred);
                 }
             });
             this.busService.subscribe("mail.record/insert", (payload) => {
                 if (payload.Thread) {
-                    this.threadService.insert(payload.Thread);
+                    this.store.Thread.insert(payload.Thread);
                 }
                 if (payload.Partner) {
                     const partners = Array.isArray(payload.Partner)
@@ -96,14 +92,14 @@ export class MailCoreCommon {
                         : [payload.Partner];
                     for (const partner of partners) {
                         if (partner.im_status) {
-                            this.personaService.insert({ ...partner, type: "partner" });
+                            this.store.Persona.insert({ ...partner, type: "partner" });
                         }
                     }
                 }
                 if (payload.Guest) {
                     const guests = Array.isArray(payload.Guest) ? payload.Guest : [payload.Guest];
                     for (const guest of guests) {
-                        this.personaService.insert({ ...guest, type: "guest" });
+                        this.store.Persona.insert({ ...guest, type: "guest" });
                     }
                 }
                 const { LinkPreview: linkPreviews } = payload;
@@ -117,7 +113,7 @@ export class MailCoreCommon {
                 const { Message: messageData } = payload;
                 if (messageData) {
                     const isStarred = this.store.Message.records[messageData.id]?.isStarred;
-                    const message = this.messageService.insert({
+                    const message = this.store.Message.insert({
                         ...messageData,
                         body: messageData.body ? markup(messageData.body) : messageData.body,
                     });

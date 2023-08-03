@@ -9,6 +9,8 @@ import {
 import { _t } from "@web/core/l10n/translation";
 
 export class Notification extends DiscussModel {
+    static id = ["id"];
+
     /** @type {number} */
     id;
     /** @type {number} */
@@ -85,10 +87,55 @@ export class Notification extends DiscussModel {
 }
 
 export class NotificationManager extends DiscussModelManager {
-    /** @type {typeof NotificationGroup} */
+    /** @type {typeof Notification} */
     class;
     /** @type {Object.<number, Notification>} */
     records = {};
+
+    /**
+     * @param {Object} data
+     * @returns {Notification}
+     */
+    insert(data) {
+        let notification = this.records[data.id];
+        if (!notification) {
+            this.records[data.id] = new Notification(this.store, data);
+            notification = this.records[data.id];
+            notification.objectId = this._createObjectId(data);
+        }
+        this.update(notification, data);
+        return notification;
+    }
+
+    update(notification, data) {
+        Object.assign(notification, {
+            messageId: data.messageId,
+            notification_status: data.notification_status,
+            notification_type: data.notification_type,
+            failure_type: data.failure_type,
+            persona: data.res_partner_id
+                ? this.store.Persona.insert({
+                      id: data.res_partner_id[0],
+                      displayName: data.res_partner_id[1],
+                      type: "partner",
+                  })
+                : undefined,
+        });
+        if (notification.message.author !== this.store.self) {
+            return;
+        }
+        const thread = notification.message.originThread;
+        this.store.NotificationGroup.insert({
+            modelName: thread?.modelName,
+            resId: thread?.id,
+            resModel: thread?.model,
+            status: notification.notification_status,
+            type: notification.notification_type,
+            notifications: [
+                [notification.isFailure ? "insert" : "insert-and-unlink", notification],
+            ],
+        });
+    }
 }
 
 discussModelRegistry.add("Notification", [Notification, NotificationManager]);

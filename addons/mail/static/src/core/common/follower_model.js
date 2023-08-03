@@ -15,6 +15,8 @@ import {
  */
 
 export class Follower extends DiscussModel {
+    static id = ["id"];
+
     /** @type {import("@mail/core/common/thread_model").Thread} */
     followedThread;
     /** @type {number} */
@@ -31,7 +33,7 @@ export class Follower extends DiscussModel {
      */
     get isEditable() {
         const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
-        return this._store.user === this.partner
+        return this.partner.equals(this._store.user)
             ? this.followedThread.hasReadAccess
             : hasWriteAccess;
     }
@@ -42,6 +44,27 @@ export class FollowerManager extends DiscussModelManager {
     class;
     /** @type {Object.<number, Follower>} */
     records = {};
+
+    /**
+     * @param {Data} data
+     * @returns {Follower}
+     */
+    insert(data) {
+        let follower = this.records[data.id];
+        if (!follower) {
+            this.records[data.id] = new Follower();
+            follower = this.records[data.id];
+            follower.objectId = this._createObjectId(data);
+        }
+        Object.assign(follower, {
+            followedThread: data.followedThread,
+            id: data.id,
+            isActive: data.is_active,
+            partner: this.store.Persona.insert({ ...data.partner, type: "partner" }),
+            _store: this.store,
+        });
+        return follower;
+    }
 }
 
 discussModelRegistry.add("Follower", [Follower, FollowerManager]);

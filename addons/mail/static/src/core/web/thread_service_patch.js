@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { Follower } from "@mail/core/common/follower_model";
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { parseEmail } from "@mail/js/utils";
 import { createObjectId } from "@mail/utils/common/misc";
@@ -16,8 +15,6 @@ patch(ThreadService.prototype, {
     setup(env, services) {
         super.setup(env, services);
         this.action = services.action;
-        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
-        this.attachmentService = services["mail.attachment"];
         /** @type {import("@mail/core/web/activity_service").ActivityService} */
         this.activityService = services["mail.activity"];
         /** @type {import("@mail/core/common/chat_window_service").ChatWindowService} */
@@ -44,7 +41,7 @@ patch(ThreadService.prototype, {
         if ("attachments" in result) {
             result["attachments"] = result["attachments"].map((attachment) => ({
                 ...attachment,
-                originThread: this.insert(attachment.originThread[0][1]),
+                originThread: this.store.Thread.insert(attachment.originThread[0][1]),
             }));
         }
         thread.canPostOnReadonly = result.canPostOnReadonly;
@@ -56,7 +53,7 @@ patch(ThreadService.prototype, {
                 if (activity.note) {
                     activity.note = markup(activity.note);
                 }
-                existingIds.add(this.activityService.insert(activity).id);
+                existingIds.add(this.store.Activity.insert(activity).id);
             }
             for (const activity of thread.activities) {
                 if (!existingIds.has(activity.id)) {
@@ -65,7 +62,7 @@ patch(ThreadService.prototype, {
             }
         }
         if ("attachments" in result) {
-            this.update(thread, {
+            this.store.Thread.update(thread, {
                 areAttachmentsLoaded: true,
                 attachments: result.attachments,
                 isLoadingAttachments: false,
@@ -73,7 +70,7 @@ patch(ThreadService.prototype, {
         }
         if ("mainAttachment" in result) {
             thread.mainAttachment = result.mainAttachment.id
-                ? this.attachmentService.insert(result.mainAttachment)
+                ? this.store.Attachment.insert(result.mainAttachment)
                 : undefined;
         }
         if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
@@ -81,14 +78,14 @@ patch(ThreadService.prototype, {
         }
         if ("followers" in result) {
             if (result.selfFollower) {
-                thread.selfFollower = this.insertFollower({
+                thread.selfFollower = this.store.Follower.insert({
                     followedThread: thread,
                     ...result.selfFollower,
                 });
             }
             thread.followersCount = result.followersCount;
             for (const followerData of result.followers) {
-                const follower = this.insertFollower({
+                const follower = this.store.Follower.insert({
                     followedThread: thread,
                     ...followerData,
                 });
@@ -103,7 +100,7 @@ patch(ThreadService.prototype, {
         return result;
     },
     getThread(resModel, resId) {
-        const objectId = createObjectId("Thread", resModel, resId);
+        const objectId = createObjectId(this.store.Thread.class.name, resModel, resId);
         if (objectId in this.store.Thread.records) {
             if (resId === false) {
                 return this.store.Thread.records[objectId];
@@ -111,13 +108,13 @@ patch(ThreadService.prototype, {
             // to force a reload
             this.store.Thread.records[objectId].status = "new";
         }
-        const thread = this.insert({
+        const thread = this.store.Thread.insert({
             id: resId,
             model: resModel,
             type: "chatter",
         });
         if (resId === false) {
-            const tmpId = this.messageService.getNextTemporaryId();
+            const tmpId = this.store.Message.getNextTemporaryId();
             const tmpData = {
                 id: tmpId,
                 author: { id: this.store.self.id },
@@ -127,29 +124,10 @@ patch(ThreadService.prototype, {
                 res_id: thread.id,
                 model: thread.model,
             };
-            const message = this.messageService.insert(tmpData);
+            const message = this.store.Message.insert(tmpData);
             thread.messages.push(message);
         }
         return thread;
-    },
-    /**
-     * @param {import("@mail/core/common/follower_model").Data} data
-     * @returns {import("@mail/core/common/follower_model").Follower}
-     */
-    insertFollower(data) {
-        let follower = this.store.Follower.records[data.id];
-        if (!follower) {
-            this.store.Follower.records[data.id] = new Follower();
-            follower = this.store.Follower.records[data.id];
-        }
-        Object.assign(follower, {
-            followedThread: data.followedThread,
-            id: data.id,
-            isActive: data.is_active,
-            partner: this.personaService.insert({ ...data.partner, type: "partner" }),
-            _store: this.store,
-        });
-        return follower;
     },
     /**
      * @param {import("@mail/core/common/thread_model").Thread} thread
@@ -167,7 +145,7 @@ patch(ThreadService.prototype, {
                 lang,
                 reason,
                 persona: partner_id
-                    ? this.personaService.insert({
+                    ? this.store.Persona.insert({
                           type: "partner",
                           id: partner_id,
                       })
@@ -192,7 +170,7 @@ patch(ThreadService.prototype, {
             Array.from(thread.followers).at(-1).id,
         ]);
         for (const data of followers) {
-            const follower = this.insertFollower({
+            const follower = this.store.Follower.insert({
                 followedThread: thread,
                 ...data,
             });
@@ -247,7 +225,7 @@ patch(ThreadService.prototype, {
         super.unpin(...arguments);
     },
     _openChatWindow(thread, replaceNewMessageChatWindow) {
-        const chatWindow = this.chatWindowService.insert({
+        const chatWindow = this.store.ChatWindow.insert({
             folded: false,
             thread,
             replaceNewMessageChatWindow,

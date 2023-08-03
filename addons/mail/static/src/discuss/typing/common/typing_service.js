@@ -17,19 +17,19 @@ export class Typing {
     /** @type {Map<number, number>} */
     timerByMemberId = new Map();
     /** @type {import("@mail/core/common/store_service").Store} */
-    storeService;
+    store;
 
     constructor({
         bus_service: busService,
         "discuss.channel.member": channelMemberService,
-        "mail.store": storeService,
+        "mail.store": store,
     }) {
-        Object.assign(this, { busService, channelMemberService, storeService });
+        Object.assign(this, { busService, channelMemberService, store });
     }
 
     setup() {
         this.busService.subscribe("discuss.channel.member/typing_status", (payload) => {
-            const member = this.channelMemberService.insert(payload);
+            const member = this.store.ChannelMember.insert(payload);
             if (payload.isTyping) {
                 this.addTypingMember(member);
             } else {
@@ -61,8 +61,8 @@ export class Typing {
      */
     getTypingMembers(channel) {
         return [...(this.memberIdsByChannelId.get(channel.id) ?? new Set())]
-            .map((id) => this.channelMemberService.insert({ id }))
-            .filter((member) => member.persona !== this.storeService.self);
+            .map((id) => this.store.ChannelMember.insert({ id }))
+            .filter((member) => member.persona !== this.store.self);
     }
 
     /**

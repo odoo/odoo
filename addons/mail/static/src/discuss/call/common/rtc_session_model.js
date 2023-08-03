@@ -5,9 +5,10 @@ import {
     DiscussModelManager,
     discussModelRegistry,
 } from "@mail/core/common/discuss_model";
-import { createObjectId } from "@mail/utils/common/misc";
 
 export class RtcSession extends DiscussModel {
+    static id = ["id"];
+
     // Server data
     channelId;
     channelMemberId;
@@ -53,9 +54,7 @@ export class RtcSession extends DiscussModel {
     }
 
     get channel() {
-        return this._store.Thread.records[
-            createObjectId("Thread", "discuss.channel", this.channelId)
-        ];
+        return this._store.Thread.findById({ model: "discuss.channel", id: this.channelId });
     }
 
     get isMute() {
@@ -153,6 +152,39 @@ export class RtcSessionManager extends DiscussModelManager {
     class;
     /** @type {Object.<number, RtcSession>} */
     records = {};
+
+    /**
+     * @param {Object} data
+     * @returns {RtcSession}
+     */
+    insert(data) {
+        let session;
+        if (this.records[data.id]) {
+            session = this.records[data.id];
+        } else {
+            session = new RtcSession();
+            session._store = this.store;
+            session.objectId = this._createObjectId(data);
+        }
+        const { channelMember, ...remainingData } = data;
+        for (const key in remainingData) {
+            session[key] = remainingData[key];
+        }
+        if (channelMember?.channel) {
+            session.channelId = channelMember.channel.id;
+        }
+        if (channelMember) {
+            const channelMemberRecord = this.store.ChannelMember.insert(channelMember);
+            channelMemberRecord.rtcSessionId = session.id;
+            session.channelMemberId = channelMemberRecord.id;
+            if (channelMemberRecord.thread) {
+                channelMemberRecord.thread.rtcSessions[session.id] = session;
+            }
+        }
+        this.records[session.id] = session;
+        // return reactive version
+        return this.records[session.id];
+    }
 }
 
 discussModelRegistry.add("RtcSession", [RtcSession, RtcSessionManager]);

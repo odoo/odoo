@@ -99,7 +99,6 @@ export class Composer extends Component {
             );
         }
         this.messageService = useState(useService("mail.message"));
-        this.personaService = useState(useService("mail.persona"));
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         this.ui = useState(useService("ui"));
@@ -179,7 +178,7 @@ export class Composer extends Component {
         );
         useEffect(
             (rThread, cThread) => {
-                if (cThread && rThread === cThread) {
+                if (cThread && cThread.equals(rThread)) {
                     this.state.autofocus++;
                 }
             },
@@ -442,7 +441,7 @@ export class Composer extends Component {
                 });
                 for (const index in partners) {
                     const partnerData = partners[index];
-                    const persona = this.personaService.insert({ ...partnerData, type: "partner" });
+                    const persona = this.store.Persona.insert({ ...partnerData, type: "partner" });
                     const email = emailsWithoutPartners[index];
                     const recipient = this.props.composer.thread.suggestedRecipients.find(
                         (recipient) => recipient.email === email

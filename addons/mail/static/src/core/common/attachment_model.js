@@ -10,6 +10,8 @@ import { assignDefined } from "@mail/utils/common/misc";
 import { url } from "@web/core/utils/urls";
 
 export class Attachment extends DiscussModel {
+    static id = ["id"];
+
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
     accessToken;
@@ -150,6 +152,54 @@ export class AttachmentManager extends DiscussModelManager {
     class;
     /** @type {Object.<number, Attachment>} */
     records = {};
+
+    insert(data) {
+        if (!("id" in data)) {
+            throw new Error("Cannot insert attachment: id is missing in data");
+        }
+        let attachment = this.records[data.id];
+        if (!attachment) {
+            this.records[data.id] = new Attachment();
+            attachment = this.records[data.id];
+            attachment.objectId = this._createObjectId(data);
+            Object.assign(attachment, { _store: this.store, id: data.id });
+        }
+        this.update(attachment, data);
+        return attachment;
+    }
+
+    update(attachment, data) {
+        assignDefined(attachment, data, [
+            "checksum",
+            "filename",
+            "mimetype",
+            "name",
+            "type",
+            "url",
+            "uploading",
+            "extension",
+            "accessToken",
+            "tmpUrl",
+            "message",
+        ]);
+        if (!("extension" in data) && data["name"]) {
+            attachment.extension = attachment.name.split(".").pop();
+        }
+        if (data.originThread !== undefined) {
+            const threadData = Array.isArray(data.originThread)
+                ? data.originThread[0][1]
+                : data.originThread;
+            const thread = this.store.Thread.insert({
+                model: threadData.model,
+                id: threadData.id,
+            });
+            attachment.originThreadObjectId = thread.objectId;
+            if (!thread.attachments.includes(attachment)) {
+                thread.attachments.push(attachment);
+                thread.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));
+            }
+        }
+    }
 }
 
 discussModelRegistry.add("Attachment", [Attachment, AttachmentManager]);

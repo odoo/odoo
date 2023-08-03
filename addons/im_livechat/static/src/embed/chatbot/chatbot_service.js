@@ -47,7 +47,6 @@ export class ChatBotService {
         this.env = env;
         this.bus = new EventBus();
         this.livechatService = services["im_livechat.livechat"];
-        this.messageService = services["mail.message"];
         this.store = services["mail.store"];
         this.rpc = services.rpc;
 
@@ -112,7 +111,7 @@ export class ChatBotService {
             chatbot_script_id: this.chatbot.scriptId,
         });
         this.livechatService.thread?.messages.push(
-            this.messageService.insert({ ...message, body: markup(message.body) })
+            this.store.Message.insert({ ...message, body: markup(message.body) })
         );
         this.currentStep = null;
         this.start();
@@ -127,7 +126,7 @@ export class ChatBotService {
             chatbot_script_id: this.chatbot.scriptId,
         });
         for (const rawMessage of rawMessages) {
-            const message = this.messageService.insert({
+            const message = this.store.Message.insert({
                 ...rawMessage,
                 body: markup(rawMessage.body),
             });
@@ -158,7 +157,7 @@ export class ChatBotService {
                 return;
             }
             if (stepMessage) {
-                const message = this.messageService.insert({
+                const message = this.store.Message.insert({
                     ...stepMessage,
                     body: markup(stepMessage.body),
                 });
@@ -197,7 +196,7 @@ export class ChatBotService {
                 step: new ChatbotStep(welcomeStep),
                 stepMessage: {
                     chatbotStep: welcomeStep,
-                    id: this.messageService.getNextTemporaryId(),
+                    id: this.store.Message.getNextTemporaryId(),
                     body: welcomeStep.message,
                     res_id: this.livechatService.thread.id,
                     model: this.livechatService.thread.model,
@@ -224,7 +223,7 @@ export class ChatBotService {
     async _processUserAnswer(message) {
         if (
             !this.active ||
-            message.originThread.objectId !== this.livechatService.thread?.objectId ||
+            !message.originThread.equals(this.livechatService.thread) ||
             !this.currentStep?.expectAnswer
         ) {
             return;
@@ -263,7 +262,7 @@ export class ChatBotService {
         this.currentStep.isEmailValid = success;
         if (msg && !this.livechatService.thread.hasMessage(msg)) {
             this.livechatService.thread.messages.push(
-                this.messageService.insert({ ...msg, body: markup(msg.body) })
+                this.store.Message.insert({ ...msg, body: markup(msg.body) })
             );
         }
     }

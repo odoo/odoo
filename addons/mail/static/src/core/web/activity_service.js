@@ -1,8 +1,5 @@
 /* @odoo-module */
 
-import { Activity } from "@mail/core/web/activity_model";
-import { assignDefined } from "@mail/utils/common/misc";
-
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
@@ -77,27 +74,6 @@ export class ActivityService {
         });
     }
 
-    /**
-     * @param {import("@mail/core/web/activity_model").Data} data
-     * @param {Object} [param1]
-     * @param {boolean} param1.broadcast
-     * @returns {import("@mail/core/web/activity_model").Activity}
-     */
-    insert(data, { broadcast = true } = {}) {
-        const activity = this.store.Activity.records[data.id] ?? new Activity(this.store, data.id);
-        if (data.request_partner_id) {
-            data.request_partner_id = data.request_partner_id[0];
-        }
-        assignDefined(activity, data);
-        if (broadcast) {
-            this.broadcastChannel?.postMessage({
-                type: "insert",
-                payload: this._serialize(activity),
-            });
-        }
-        return activity;
-    }
-
     delete(activity, { broadcast = true } = {}) {
         delete this.store.Activity.records[activity.id];
         if (broadcast) {
@@ -108,7 +84,7 @@ export class ActivityService {
     _onBroadcastChannelMessage({ data }) {
         switch (data.type) {
             case "insert":
-                this.insert(data.payload, { broadcast: false });
+                this.store.Activity.insert(data.payload, { broadcast: false });
                 break;
             case "delete":
                 this.delete(data.payload, { broadcast: false });
@@ -122,12 +98,6 @@ export class ActivityService {
                 break;
             }
         }
-    }
-
-    _serialize(activity) {
-        const data = { ...activity };
-        delete data._store;
-        return JSON.parse(JSON.stringify(data));
     }
 }
 

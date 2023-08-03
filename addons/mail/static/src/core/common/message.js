@@ -110,7 +110,7 @@ export class Message extends Component {
         });
         useEffect(
             (editingMessage) => {
-                if (editingMessage === this.props.message) {
+                if (this.props.message.equals(editingMessage)) {
                     this.enterEditMode();
                 }
             },
@@ -128,7 +128,7 @@ export class Message extends Component {
                     const reaction = this.message.reactions.find(
                         ({ content, personas }) =>
                             content === emoji &&
-                            personas.find((persona) => persona === this.store.self)
+                            personas.find((persona) => persona.equals(this.store.self))
                     );
                     if (!reaction) {
                         this.messageService.react(this.message, emoji);
@@ -263,7 +263,7 @@ export class Message extends Component {
         if (!this.props.thread) {
             return false;
         }
-        return this.message.originThread === this.props.thread;
+        return this.props.thread.equals(this.message.originThread);
     }
 
     get isInInbox() {
@@ -336,7 +336,7 @@ export class Message extends Component {
         const id = Number(ev.target.dataset.oeId);
         if (ev.target.closest(".o_channel_redirect")) {
             ev.preventDefault();
-            const thread = this.threadService.insert({ model, id });
+            const thread = this.store.Thread.insert({ model, id });
             this.threadService.open(thread);
             return;
         }
@@ -385,7 +385,7 @@ export class Message extends Component {
 
     enterEditMode() {
         const messageContent = convertBrToLineBreak(this.props.message.body);
-        this.threadService.insertComposer({
+        this.store.Composer.insert({
             mentions: this.props.message.recipients,
             message: this.props.message,
             textInputContent: messageContent,

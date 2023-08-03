@@ -1,8 +1,5 @@
 /* @odoo-module */
 
-import { Persona } from "@mail/core/common/persona_model";
-import { assignDefined, createObjectId, nullifyClearCommands } from "@mail/utils/common/misc";
-
 import { registry } from "@web/core/registry";
 
 export const DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
@@ -24,37 +21,6 @@ export class PersonaService {
             guest_id: guest.id,
             name,
         });
-    }
-
-    /**
-     * @param {import("@mail/core/common/persona_model").Data} data
-     * @returns {import("@mail/core/common/persona_model").Persona}
-     */
-    insert(data) {
-        const objectId = createObjectId("Persona", data.type, data.id);
-        let persona = this.store.Persona.records[objectId];
-        if (!persona) {
-            persona = new Persona();
-            persona._store = this.store;
-            persona.objectId = objectId;
-            this.store.Persona.records[objectId] = persona;
-        }
-        this.update(persona, data);
-        // return reactive version
-        return this.store.Persona.records[objectId];
-    }
-
-    update(persona, data) {
-        nullifyClearCommands(data);
-        assignDefined(persona, { ...data });
-        if (
-            persona.type === "partner" &&
-            persona.im_status !== "im_partner" &&
-            !persona.is_public &&
-            !this.store.registeredImStatusPartners?.includes(persona.id)
-        ) {
-            this.store.registeredImStatusPartners?.push(persona.id);
-        }
     }
 
     /**

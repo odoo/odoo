@@ -4,7 +4,6 @@ import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
 
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { createObjectId, onChange } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -65,7 +64,7 @@ patch(ThreadService.prototype, {
         );
         if (
             this.livechatService.state !== SESSION_STATE.PERSISTED &&
-            thread.objectId === this.livechatService.thread?.objectId
+            thread.equals(this.livechatService.thread)
         ) {
             // replace temporary thread by the persisted one.
             const temporaryThread = thread;
@@ -100,70 +99,13 @@ patch(ThreadService.prototype, {
         if (!thread) {
             return;
         }
-        const chatWindow = this.chatWindowService.insert({
+        const chatWindow = this.store.ChatWindow.insert({
             thread,
             folded: thread.state === "folded",
         });
         chatWindow.autofocus++;
         if (this.chatbotService.active) {
             this.chatbotService.start();
-        }
-    },
-
-    insert(data) {
-        const isUnknown = !(
-            createObjectId("Thread", data.model, data.id) in this.store.Thread.records
-        );
-        const thread = super.insert(...arguments);
-        if (thread.type === "livechat" && isUnknown) {
-            if (
-                this.livechatService.displayWelcomeMessage &&
-                !this.chatbotService.isChatbotThread(thread)
-            ) {
-                this.livechatService.welcomeMessage = this.messageService.insert({
-                    id: this.messageService.getNextTemporaryId(),
-                    body: this.livechatService.options.default_message,
-                    res_id: thread.id,
-                    model: thread.model,
-                    author: thread.operator,
-                });
-            }
-            if (this.chatbotService.isChatbotThread(thread)) {
-                this.chatbotService.typingMessage = this.messageService.insert({
-                    id: this.messageService.getNextTemporaryId(),
-                    res_id: thread.id,
-                    model: thread.model,
-                    author: thread.operator,
-                });
-            }
-            onChange(thread, "state", () => {
-                if ([SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(thread.state)) {
-                    this.livechatService.updateSession({ state: thread.state });
-                }
-            });
-            onChange(thread, "seen_message_id", () => {
-                if ([SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(thread.state)) {
-                    this.livechatService.updateSession({ seen_message_id: thread.seen_message_id });
-                }
-            });
-            onChange(thread, "message_unread_counter", () => {
-                if ([SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(thread.state)) {
-                    this.livechatService.updateSession({ channel: thread.channel });
-                }
-            });
-            this.store.livechatThread = thread;
-        }
-        return thread;
-    },
-
-    async update(thread, data) {
-        super.update(...arguments);
-        if (data.operator_pid) {
-            thread.operator = this.personaService.insert({
-                type: "partner",
-                id: data.operator_pid[0],
-                name: data.operator_pid[1],
-            });
         }
     },
 
@@ -195,7 +137,7 @@ patch(ThreadService.prototype, {
             this.notification.add(_t("No available collaborator, please try again later."));
             return;
         }
-        const thread = this.insert({
+        const thread = this.store.Thread.insert({
             ...session,
             id: session.id ?? this.TEMPORARY_ID,
             model: "discuss.channel",
@@ -207,7 +149,7 @@ patch(ThreadService.prototype, {
                     message.parentMessage.body = markup(message.parentMessage.body);
                 }
                 message.body = markup(message.body);
-                return this.messageService.insert(message);
+                return this.store.Message.insert(message);
             });
         }
         return thread;

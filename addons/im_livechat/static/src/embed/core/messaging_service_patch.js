@@ -8,7 +8,7 @@ import { session } from "@web/session";
 patch(Messaging.prototype, {
     initialize() {
         if (session.livechatData?.options.current_partner_id) {
-            this.store.user = this.personaService.insert({
+            this.store.user = this.store.Persona.insert({
                 type: "partner",
                 id: session.livechatData.options.current_partner_id,
             });

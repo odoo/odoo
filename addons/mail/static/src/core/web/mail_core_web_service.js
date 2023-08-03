@@ -12,8 +12,6 @@ export class MailCoreWeb {
         this.env = env;
         /** @type {ReturnType<typeof import("@bus/services/bus_service").busService.start>} */
         this.busService = services["bus_service"];
-        /** @type {import("@mail/core/common/message_service").MessageService} */
-        this.messageService = services["mail.message"];
         /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
         /** @type {ReturnType<typeof import("@web/core/network/rpc_service").rpcService.start>} */
@@ -26,7 +24,7 @@ export class MailCoreWeb {
         this.messagingService.isReady.then(() => {
             this.rpc("/mail/load_message_failures", {}, { silent: true }).then((messages) => {
                 messages.map((messageData) =>
-                    this.messageService.insert({
+                    this.store.Message.insert({
                         ...messageData,
                         body: messageData.body ? markup(messageData.body) : messageData.body,
                         // implicit: failures are sent by the server at
@@ -73,7 +71,7 @@ export class MailCoreWeb {
             });
             this.busService.subscribe("mail.message/inbox", (payload) => {
                 const data = Object.assign(payload, { body: markup(payload.body) });
-                const message = this.messageService.insert(data);
+                const message = this.store.Message.insert(data);
                 const inbox = this.store.discuss.inbox;
                 if (!inbox.messages.includes(message)) {
                     inbox.messages.push(message);

@@ -1,9 +1,5 @@
 /* @odoo-module */
 
-import { ChatWindow } from "@mail/core/common/chat_window_model";
-import { assignDefined } from "@mail/utils/common/misc";
-
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 export const CHAT_WINDOW_END_GAP_WIDTH = 10; // for a single end, multiply by 2 for left and right together.
@@ -25,7 +21,7 @@ export class ChatWindowService {
     }
 
     open(thread, replaceNewMessageChatWindow) {
-        const chatWindow = this.insert({
+        const chatWindow = this.store.ChatWindow.insert({
             folded: false,
             thread,
             replaceNewMessageChatWindow,
@@ -42,7 +38,7 @@ export class ChatWindowService {
             // New message chat window is already opened.
             return;
         }
-        this.insert();
+        this.store.ChatWindow.insert();
     }
 
     closeNewMessage() {
@@ -52,75 +48,12 @@ export class ChatWindowService {
         }
     }
 
-    get visible() {
-        return this.store.ChatWindow.records.filter((chatWindow) => !chatWindow.hidden);
-    }
-
-    get hidden() {
-        return this.store.ChatWindow.records.filter((chatWindow) => chatWindow.hidden);
-    }
-
-    get maxVisible() {
-        const startGap = this.ui.isSmall
-            ? 0
-            : this.hidden.length > 0
-            ? CHAT_WINDOW_END_GAP_WIDTH + CHAT_WINDOW_HIDDEN_WIDTH
-            : CHAT_WINDOW_END_GAP_WIDTH;
-        const endGap = this.ui.isSmall ? 0 : CHAT_WINDOW_END_GAP_WIDTH;
-        const available = browser.innerWidth - startGap - endGap;
-        const maxAmountWithoutHidden = Math.max(
-            1,
-            Math.floor(available / (CHAT_WINDOW_WIDTH + CHAT_WINDOW_INBETWEEN_WIDTH))
-        );
-        return maxAmountWithoutHidden;
-    }
-
-    /**
-     * @param {ChatWindowData} [data]
-     * @returns {ChatWindow}
-     */
-    insert(data = {}) {
-        const chatWindow = this.store.ChatWindow.records.find(
-            (c) => c.threadObjectId === data.thread?.objectId
-        );
-        if (!chatWindow) {
-            const chatWindow = new ChatWindow(this.store, data);
-            assignDefined(chatWindow, data);
-            let index;
-            if (!data.replaceNewMessageChatWindow) {
-                if (this.maxVisible <= this.store.ChatWindow.records.length) {
-                    const swaped = this.visible[this.visible.length - 1];
-                    index = this.visible.length - 1;
-                    this.hide(swaped);
-                } else {
-                    index = this.store.ChatWindow.records.length;
-                }
-            } else {
-                const newMessageChatWindowIndex = this.store.ChatWindow.records.findIndex(
-                    (chatWindow) => !chatWindow.thread
-                );
-                index =
-                    newMessageChatWindowIndex !== -1
-                        ? newMessageChatWindowIndex
-                        : this.store.ChatWindow.records.length;
-            }
-            this.store.ChatWindow.records.splice(
-                index,
-                data.replaceNewMessageChatWindow ? 1 : 0,
-                chatWindow
-            );
-            return this.store.ChatWindow.records[index]; // return reactive version
-        }
-        assignDefined(chatWindow, data);
-        return chatWindow;
-    }
-
     focus(chatWindow) {
         chatWindow.autofocus++;
     }
 
     makeVisible(chatWindow) {
-        const swaped = this.visible[this.visible.length - 1];
+        const swaped = this.store.ChatWindow.visible[this.store.ChatWindow.visible.length - 1];
         this.hide(swaped);
         this.show(chatWindow);
     }
@@ -146,12 +79,12 @@ export class ChatWindowService {
     }
 
     close(chatWindow, { escape = false } = {}) {
-        if (this.maxVisible < this.store.ChatWindow.records.length) {
-            const swaped = this.hidden[0];
+        if (this.store.ChatWindow.maxVisible < this.store.ChatWindow.records.length) {
+            const swaped = this.store.ChatWindow.hidden[0];
             swaped.hidden = false;
             swaped.folded = false;
         }
-        const index = this.store.ChatWindow.records.findIndex((c) => c === chatWindow);
+        const index = this.store.ChatWindow.records.findIndex((c) => c.equals(chatWindow));
         if (index > -1) {
             this.store.ChatWindow.records.splice(index, 1);
         }

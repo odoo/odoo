@@ -23,13 +23,13 @@ export class AutopopupService {
             "im_livechat.chatbot": chatbotService,
             "im_livechat.livechat": livechatService,
             "mail.thread": threadService,
-            "mail.store": storeService,
+            "mail.store": store,
             ui,
             cookie,
         }
     ) {
         this.threadService = threadService;
-        this.storeService = storeService;
+        this.store = store;
         this.livechatService = livechatService;
         this.chatbotService = chatbotService;
         this.cookie = cookie;
@@ -58,8 +58,8 @@ export class AutopopupService {
      */
     async shouldOpenChatWindow() {
         const thread = await this.threadService.getLivechatThread();
-        return this.storeService.ChatWindow.every(
-            (chatWindow) => chatWindow.thread.objectId !== thread?.objectId
+        return this.store.ChatWindow.records.every(
+            (chatWindow) => !chatWindow.thread.equals(thread)
         );
     }
 

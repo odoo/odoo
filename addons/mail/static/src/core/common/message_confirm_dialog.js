@@ -1,10 +1,9 @@
 /* @odoo-module */
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 
 export class MessageConfirmDialog extends Component {
     static components = { Dialog };
@@ -26,11 +25,6 @@ export class MessageConfirmDialog extends Component {
         title: _t("Confirmation"),
     };
     static template = "mail.MessageConfirmDialog";
-
-    setup() {
-        /** @type {import("@mail/core/common/message_service").MessageService} */
-        this.messageService = useState(useService("mail.message"));
-    }
 
     onClickConfirm() {
         this.props.onConfirm();

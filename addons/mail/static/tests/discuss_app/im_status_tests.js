@@ -2,7 +2,6 @@
 
 import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
 
-import { createObjectId } from "@mail/utils/common/misc";
 import { Command } from "@mail/../tests/helpers/command";
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
@@ -89,8 +88,7 @@ QUnit.test("Can handle im_status of unknown partner", async (assert) => {
         Partner: { im_status: "online", id: partnerId },
     });
     await nextTick();
-    const persona =
-        env.services["mail.store"].Persona.records[createObjectId("Persona", "partner", partnerId)];
+    const persona = env.services["mail.store"].Persona.findById({ type: "partner", id: partnerId });
     assert.ok(persona);
     assert.ok(persona.im_status === "online");
 });

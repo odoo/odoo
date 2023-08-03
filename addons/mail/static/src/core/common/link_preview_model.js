@@ -7,6 +7,8 @@ import {
 } from "@mail/core/common/discuss_model";
 
 export class LinkPreview extends DiscussModel {
+    static id = ["id"];
+
     /** @type {number} */
     id;
     /** @type {Object} */
@@ -57,6 +59,20 @@ export class LinkPreviewManager extends DiscussModelManager {
     class;
     /** @type {Object.<number, LinkPreview>} */
     records = {};
+
+    /**
+     * @param {Object} data
+     * @returns {LinkPreview}
+     */
+    insert(data) {
+        const linkPreview = data.message.linkPreviews.find(
+            (linkPreview) => linkPreview.id === data.id
+        );
+        if (linkPreview) {
+            return Object.assign(linkPreview, data);
+        }
+        return new LinkPreview(data);
+    }
 }
 
 discussModelRegistry.add("LinkPreview", [LinkPreview, LinkPreviewManager]);

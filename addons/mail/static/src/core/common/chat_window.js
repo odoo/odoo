@@ -105,14 +105,14 @@ export class ChatWindow extends Component {
                 this.close({ escape: true });
                 break;
             case "Tab": {
-                const index = this.chatWindowService.visible.findIndex(
-                    (cw) => cw === this.props.chatWindow
+                const index = this.store.ChatWindow.visible.findIndex((cw) =>
+                    cw.equals(this.props.chatWindow)
                 );
                 if (index === 0) {
-                    this.chatWindowService.visible[this.chatWindowService.visible.length - 1]
+                    this.store.ChatWindow.visible[this.store.ChatWindow.visible.length - 1]
                         .autofocus++;
                 } else {
-                    this.chatWindowService.visible[index - 1].autofocus++;
+                    this.store.ChatWindow.visible[index - 1].autofocus++;
                 }
                 break;
             }

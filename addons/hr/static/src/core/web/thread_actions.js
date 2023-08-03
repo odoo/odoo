@@ -4,6 +4,7 @@ import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 import { useComponent } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { useStore } from "@mail/core/common/messaging_hook";
 
 threadActionsRegistry.add("open-hr-profile", {
     condition(component) {
@@ -25,8 +26,9 @@ threadActionsRegistry.add("open-hr-profile", {
     },
     async setup(action) {
         const component = useComponent();
+        component.actionService = useService("action");
         const orm = useService("orm");
-        const personaService = useService("mail.persona");
+        const store = useStore();
         let employeeId;
         if (!component.thread?.correspondent?.employeeId && component.thread?.chatPartnerId) {
             const employees = await orm.silent.searchRead(
@@ -37,7 +39,7 @@ threadActionsRegistry.add("open-hr-profile", {
             employeeId = employees[0]?.id;
         }
         if (employeeId) {
-            personaService.insert({
+            store.Persona.insert({
                 ...component.thread.correspondent,
                 employeeId,
             });

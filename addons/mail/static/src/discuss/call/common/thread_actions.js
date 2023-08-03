@@ -43,7 +43,8 @@ threadActionsRegistry
         name: _t("Show Call Settings"),
         nameActive: _t("Hide Call Settings"),
         sequence(component) {
-            return component.props.chatWindow && component.thread === component.rtc.state.channel
+            return component.props.chatWindow &&
+                component.thread?.equals(component.rtc.state.channel)
                 ? 6
                 : 60;
         },

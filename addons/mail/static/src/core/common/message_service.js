@@ -1,13 +1,7 @@
 /* @odoo-module */
 
-import { LinkPreview } from "@mail/core/common/link_preview_model";
-import { Message } from "@mail/core/common/message_model";
-import { MessageReactions } from "@mail/core/common/message_reactions_model";
-import { NotificationGroup } from "@mail/core/common/notification_group_model";
-import { Notification } from "@mail/core/common/notification_model";
-import { removeFromArrayWithPredicate, replaceArrayWithCompare } from "@mail/utils/common/arrays";
+import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
-import { assignDefined, createObjectId } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -25,10 +19,6 @@ export class MessageService {
         this.rpc = services.rpc;
         this.orm = services.orm;
         this.userService = services.user;
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
-        this.personaService = services["mail.persona"];
-        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
-        this.attachmentService = services["mail.attachment"];
     }
 
     async edit(message, body, attachments = [], rawMentions) {
@@ -47,7 +37,7 @@ export class MessageService {
             message_id: message.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
         });
-        this.insert(
+        this.store.Message.insert(
             Object.assign(messageData, {
                 body: messageData.body ? markup(messageData.body) : messageData.body,
             })
@@ -79,20 +69,6 @@ export class MessageService {
         });
     }
 
-    /**
-     * @returns {number}
-     */
-    getLastMessageId() {
-        return Object.values(this.store.Message.records).reduce(
-            (lastMessageId, message) => Math.max(lastMessageId, message.id),
-            0
-        );
-    }
-
-    getNextTemporaryId() {
-        return this.getLastMessageId() + 0.01;
-    }
-
     getMentionsFromText(rawMentions, body) {
         if (!this.store.user) {
             // mentions are not supported for guests
@@ -104,8 +80,7 @@ export class MessageService {
         const rawMentionedPartnerIds = rawMentions.partnerIds || [];
         const rawMentionedThreadIds = rawMentions.threadIds || [];
         for (const partnerId of rawMentionedPartnerIds) {
-            const partner =
-                this.store.Persona.records[createObjectId("Persona", "partner", partnerId)];
+            const partner = this.store.Persona.findById({ type: "partner", id: partnerId });
             const index = body.indexOf(`@${partner.name}`);
             if (index === -1) {
                 continue;
@@ -113,8 +88,7 @@ export class MessageService {
             partners.push(partner);
         }
         for (const threadId of rawMentionedThreadIds) {
-            const thread =
-                this.store.Thread.records[createObjectId("Thread", "discuss.channel", threadId)];
+            const thread = this.store.Thread.findById({ model: "discuss.channel", id: threadId });
             const index = body.indexOf(`#${thread.displayName}`);
             if (index === -1) {
                 continue;
@@ -135,8 +109,8 @@ export class MessageService {
      */
     createTransient(data) {
         const { body, res_id, model } = data;
-        const lastMessageId = this.getLastMessageId();
-        return this.insert({
+        const lastMessageId = this.store.Message.getLastMessageId();
+        return this.store.Message.insert({
             author: this.store.odoobot,
             body,
             id: lastMessageId + 0.01,
@@ -212,320 +186,6 @@ export class MessageService {
             starred.counter--;
             removeFromArrayWithPredicate(starred.messages, ({ id }) => id === message.id);
         }
-    }
-
-    /**
-     * @param {Object} data
-     * @returns {Message}
-     */
-    insert(data) {
-        let message;
-        if (data.res_id) {
-            // this prevents cyclic dependencies between mail.thread and mail.message
-            this.env.bus.trigger("mail.thread/insert", {
-                model: data.model,
-                id: data.res_id,
-            });
-        }
-        if (data.id in this.store.Message.records) {
-            message = this.store.Message.records[data.id];
-        } else {
-            message = new Message();
-            message._store = this.store;
-            this.store.Message.records[data.id] = message;
-            message = this.store.Message.records[data.id];
-        }
-        this.update(message, data);
-        // return reactive version
-        return message;
-    }
-
-    /**
-     * @param {import("@mail/core/common/message_model").Message} message
-     * @param {Object} data
-     */
-    update(message, data) {
-        const {
-            attachment_ids: attachments = message.attachments,
-            default_subject: defaultSubject = message.defaultSubject,
-            is_discussion: isDiscussion = message.isDiscussion,
-            is_note: isNote = message.isNote,
-            is_transient: isTransient = message.isTransient,
-            linkPreviews = message.linkPreviews,
-            message_type: type = message.type,
-            model: resModel = message.resModel,
-            module_icon,
-            notifications = message.notifications,
-            parentMessage,
-            recipients = message.recipients,
-            record_name,
-            res_id: resId = message.resId,
-            res_model_name,
-            subtype_description: subtypeDescription = message.subtypeDescription,
-            ...remainingData
-        } = data;
-        assignDefined(message, remainingData);
-        assignDefined(message, {
-            defaultSubject,
-            isDiscussion,
-            isNote,
-            isStarred: this.store.user
-                ? message.starred_partner_ids.includes(this.store.user.id)
-                : false,
-            isTransient,
-            parentMessage: parentMessage ? this.insert(parentMessage) : undefined,
-            resId,
-            resModel,
-            subtypeDescription,
-            type,
-        });
-        // origin thread before other information (in particular notification insert uses it)
-        if (message.originThread) {
-            assignDefined(message.originThread, {
-                modelName: res_model_name || undefined,
-                module_icon: module_icon || undefined,
-                name: record_name || undefined,
-            });
-        }
-        replaceArrayWithCompare(
-            message.attachments,
-            attachments.map((attachment) =>
-                this.attachmentService.insert({ message, ...attachment })
-            )
-        );
-        if (
-            Array.isArray(message.author) &&
-            message.author.some((command) => command.includes("clear"))
-        ) {
-            message.author = undefined;
-        }
-        if (data.author?.id) {
-            message.author = this.personaService.insert({
-                ...data.author,
-                type: "partner",
-            });
-        }
-        if (data.guestAuthor?.id) {
-            message.author = this.personaService.insert({
-                ...data.guestAuthor,
-                type: "guest",
-                channelId: message.originThread.id,
-            });
-        }
-        replaceArrayWithCompare(
-            message.linkPreviews,
-            linkPreviews.map((data) => this.insertLinkPreview({ ...data, message }))
-        );
-        replaceArrayWithCompare(
-            message.notifications,
-            notifications.map((notification) =>
-                this.insertNotification({ ...notification, messageId: message.id })
-            )
-        );
-        replaceArrayWithCompare(
-            message.recipients,
-            recipients.map((recipient) =>
-                this.personaService.insert({ ...recipient, type: "partner" })
-            )
-        );
-        if ("user_follower_id" in data && data.user_follower_id && this.store.self) {
-            message.originThread.selfFollower = this.env.services["mail.thread"].insertFollower({
-                followedThread: message.originThread,
-                id: data.user_follower_id,
-                isActive: true,
-                partner: this.store.self,
-            });
-        }
-        if (data.messageReactionGroups) {
-            this._updateReactions(message, data.messageReactionGroups);
-        }
-        if (message.isNotification && !message.notificationType) {
-            const parser = new DOMParser();
-            const htmlBody = parser.parseFromString(message.body, "text/html");
-            message.notificationType =
-                htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
-        }
-        this.env.bus.trigger("mail.message/onUpdate", { message, data });
-    }
-
-    _updateReactions(message, reactionGroups) {
-        const reactionContentToUnlink = new Set();
-        const reactionsToInsert = [];
-        for (const rawReaction of reactionGroups) {
-            const [command, reactionData] = Array.isArray(rawReaction)
-                ? rawReaction
-                : ["insert", rawReaction];
-            const reaction = this.insertReactions(reactionData);
-            if (command === "insert") {
-                reactionsToInsert.push(reaction);
-            } else {
-                reactionContentToUnlink.add(reaction.content);
-            }
-        }
-        message.reactions = message.reactions.filter(
-            ({ content }) => !reactionContentToUnlink.has(content)
-        );
-        reactionsToInsert.forEach((reaction) => {
-            const idx = message.reactions.findIndex(({ content }) => reaction.content === content);
-            if (idx !== -1) {
-                message.reactions[idx] = reaction;
-            } else {
-                message.reactions.push(reaction);
-            }
-        });
-    }
-
-    /**
-     * @param {Object} data
-     * @returns {LinkPreview}
-     */
-    insertLinkPreview(data) {
-        const linkPreview = data.message.linkPreviews.find(
-            (linkPreview) => linkPreview.id === data.id
-        );
-        if (linkPreview) {
-            return Object.assign(linkPreview, data);
-        }
-        return new LinkPreview(data);
-    }
-
-    /**
-     * @param {Object} data
-     * @returns {MessageReactions}
-     */
-    insertReactions(data) {
-        let reaction = this.store.Message.records[data.message.id]?.reactions.find(
-            ({ content }) => content === data.content
-        );
-        if (!reaction) {
-            reaction = new MessageReactions();
-            reaction._store = this.store;
-        }
-        const personasToUnlink = new Set();
-        const alreadyKnownPersonaIds = new Set(reaction.personaObjectIds);
-        for (const rawPartner of data.partners) {
-            const [command, partnerData] = Array.isArray(rawPartner)
-                ? rawPartner
-                : ["insert", rawPartner];
-            const persona = this.personaService.insert({ ...partnerData, type: "partner" });
-            if (command === "insert" && !alreadyKnownPersonaIds.has(persona.objectId)) {
-                reaction.personaObjectIds.push(persona.objectId);
-            } else if (command !== "insert") {
-                personasToUnlink.add(persona.objectId);
-            }
-        }
-        for (const rawGuest of data.guests) {
-            const [command, guestData] = Array.isArray(rawGuest) ? rawGuest : ["insert", rawGuest];
-            const persona = this.personaService.insert({ ...guestData, type: "guest" });
-            if (command === "insert" && !alreadyKnownPersonaIds.has(persona.objectId)) {
-                reaction.personaObjectIds.push(persona.objectId);
-            } else if (command !== "insert") {
-                personasToUnlink.add(persona.objectId);
-            }
-        }
-        Object.assign(reaction, {
-            count: data.count,
-            content: data.content,
-            messageId: data.message.id,
-            personaObjectIds: reaction.personaObjectIds.filter(
-                (objectId) => !personasToUnlink.has(objectId)
-            ),
-        });
-        return reaction;
-    }
-
-    /**
-     * @param {Object} data
-     * @returns {Notification}
-     */
-    insertNotification(data) {
-        let notification = this.store.Notification.records[data.id];
-        if (!notification) {
-            this.store.Notification.records[data.id] = new Notification(this.store, data);
-            notification = this.store.Notification.records[data.id];
-        }
-        this.updateNotification(notification, data);
-        return notification;
-    }
-
-    updateNotification(notification, data) {
-        Object.assign(notification, {
-            messageId: data.messageId,
-            notification_status: data.notification_status,
-            notification_type: data.notification_type,
-            failure_type: data.failure_type,
-            persona: data.res_partner_id
-                ? this.personaService.insert({
-                      id: data.res_partner_id[0],
-                      displayName: data.res_partner_id[1],
-                      type: "partner",
-                  })
-                : undefined,
-        });
-        if (notification.message.author !== this.store.self) {
-            return;
-        }
-        const thread = notification.message.originThread;
-        this.insertNotificationGroups({
-            modelName: thread?.modelName,
-            resId: thread?.id,
-            resModel: thread?.model,
-            status: notification.notification_status,
-            type: notification.notification_type,
-            notifications: [
-                [notification.isFailure ? "insert" : "insert-and-unlink", notification],
-            ],
-        });
-    }
-
-    insertNotificationGroups(data) {
-        let group = this.store.NotificationGroup.records.find((group) => {
-            return (
-                group.resModel === data.resModel &&
-                group.type === data.type &&
-                (group.resModel !== "discuss.channel" || group.resIds.has(data.resId))
-            );
-        });
-        if (!group) {
-            group = new NotificationGroup(this.store);
-        }
-        this.updateNotificationGroup(group, data);
-        if (group.notifications.length === 0) {
-            removeFromArrayWithPredicate(
-                this.store.NotificationGroup.records,
-                (gr) => gr.id === group.id
-            );
-        }
-        return group;
-    }
-
-    updateNotificationGroup(group, data) {
-        Object.assign(group, {
-            modelName: data.modelName ?? group.modelName,
-            resModel: data.resModel ?? group.resModel,
-            type: data.type ?? group.type,
-            status: data.status ?? group.status,
-        });
-        const notifications = data.notifications ?? [];
-        const alreadyKnownNotifications = new Set(group.notifications.map(({ id }) => id));
-        const notificationIdsToRemove = new Set();
-        for (const [commandName, notification] of notifications) {
-            if (commandName === "insert" && !alreadyKnownNotifications.has(notification.id)) {
-                group.notifications.push(notification);
-            } else if (commandName === "insert-and-unlink") {
-                notificationIdsToRemove.add(notification.id);
-            }
-        }
-        group.notifications = group.notifications.filter(
-            ({ id }) => !notificationIdsToRemove.has(id)
-        );
-        group.lastMessageId = group.notifications[0]?.message.id;
-        for (const notification of group.notifications) {
-            if (group.lastMessageId < notification.message.id) {
-                group.lastMessageId = notification.message.id;
-            }
-        }
-        group.resIds.add(data.resId);
     }
 
     scheduledDateSimple(message) {

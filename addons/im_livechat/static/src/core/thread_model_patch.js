@@ -1,7 +1,8 @@
 /* @odoo-module */
 
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
-import { Thread } from "@mail/core/common/thread_model";
+import { Thread, ThreadManager } from "@mail/core/common/thread_model";
+import { assignDefined } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -89,5 +90,38 @@ patch(Thread.prototype, {
             return this.anonymous_name;
         }
         return super.getMemberName(persona);
+    },
+});
+
+patch(ThreadManager.prototype, {
+    insert(data) {
+        const isUnknown = !this.findById(data);
+        const thread = super.insert(data);
+        if (thread.type === "livechat") {
+            if (data?.channel) {
+                assignDefined(thread, data.channel, ["anonymous_name"]);
+            }
+            if (data?.operator_pid) {
+                thread.operator = this.store.Persona.insert({
+                    type: "partner",
+                    id: data.operator_pid[0],
+                    displayName: data.operator_pid[1],
+                });
+            }
+            if (isUnknown) {
+                this.store.discuss.livechat.threads.push(thread.objectId);
+                this.sortChannels();
+            }
+        }
+        return thread;
+    },
+    sortChannels() {
+        super.sortChannels();
+        // Live chats are sorted by most recent interest date time in the sidebar.
+        this.store.discuss.livechat.threads.sort((objectId_1, objectId_2) => {
+            const thread1 = this.records[objectId_1];
+            const thread2 = this.records[objectId_2];
+            return thread2.lastInterestDateTime?.ts - thread1.lastInterestDateTime?.ts;
+        });
     },
 });

@@ -1,10 +1,10 @@
 /* @odoo-module */
 
-import { ChatWindowService } from "@mail/core/common/chat_window_service";
+import { ChatWindowManager } from "@mail/core/common/chat_window_model";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(ChatWindowService.prototype, {
+patch(ChatWindowManager.prototype, {
     get visible() {
         return this.env.services.website?.context.isPreviewOpen ? [] : super.visible;
     },

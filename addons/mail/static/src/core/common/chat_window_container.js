@@ -49,7 +49,7 @@ export class ChatWindowContainer extends Component {
         this.hiddenMenuRef = useRef("hiddenMenu");
         useEffect(
             () => this.setHiddenMenuOffset(),
-            () => [this.chatWindowService.hidden]
+            () => [this.store.ChatWindow.hidden]
         );
         onWillStart(() => this.messaging.isReady);
         onMounted(() => this.setHiddenMenuOffset());
@@ -66,29 +66,29 @@ export class ChatWindowContainer extends Component {
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
         const visibleOffset =
             CHAT_WINDOW_END_GAP_WIDTH +
-            this.chatWindowService.maxVisible * (CHAT_WINDOW_WIDTH + CHAT_WINDOW_END_GAP_WIDTH);
+            this.store.ChatWindow.maxVisible * (CHAT_WINDOW_WIDTH + CHAT_WINDOW_END_GAP_WIDTH);
         const oppositeFrom = offsetFrom === "right" ? "left" : "right";
         this.hiddenMenuRef.el.style = `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto`;
     }
 
     onResize() {
-        while (this.chatWindowService.visible.length > this.chatWindowService.maxVisible) {
+        while (this.store.ChatWindow.visible.length > this.store.ChatWindow.maxVisible) {
             this.chatWindowService.hide(
-                this.chatWindowService.visible[this.chatWindowService.visible.length - 1]
+                this.store.ChatWindow.visible[this.store.ChatWindow.visible.length - 1]
             );
         }
         while (
-            this.chatWindowService.visible.length < this.chatWindowService.maxVisible &&
-            this.chatWindowService.hidden.length > 0
+            this.store.ChatWindow.visible.length < this.store.ChatWindow.maxVisible &&
+            this.store.ChatWindow.hidden.length > 0
         ) {
-            this.chatWindowService.show(this.chatWindowService.hidden[0]);
+            this.chatWindowService.show(this.store.ChatWindow.hidden[0]);
         }
         this.setHiddenMenuOffset();
     }
 
     get unread() {
         let unreadCounter = 0;
-        for (const chatWindow of this.chatWindowService.hidden) {
+        for (const chatWindow of this.store.ChatWindow.hidden) {
             unreadCounter += chatWindow.thread.message_unread_counter;
         }
         return unreadCounter;

@@ -55,10 +55,10 @@ export class DiscussClientAction extends Component {
             // legacy format (sent in old emails, shared links, ...)
             model = "discuss.channel";
         }
-        const activeThreadObjectId = createObjectId("Thread", model, id);
+        const activeThreadObjectId = createObjectId(this.store.Thread.class.name, model, id);
         if (activeThreadObjectId !== this.store.discuss.threadObjectId) {
             const thread =
-                this.store.Thread.records[createObjectId("Thread", model, id)] ??
+                this.store.Thread.findById({ model, id }) ??
                 (await this.threadService.fetchChannel(parseInt(id)));
             if (!thread.is_pinned) {
                 await this.threadService.pin(thread);

@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { useStore } from "@mail/core/common/messaging_hook";
-import { createObjectId } from "@mail/utils/common/misc";
 
 import { Component } from "@odoo/owl";
 
@@ -25,8 +24,9 @@ export class ThreadIcon extends Component {
     }
 
     get chatPartner() {
-        return this.store.Persona.records[
-            createObjectId("Persona", "partner", this.props.thread.chatPartnerId)
-        ];
+        return this.store.Persona.findById({
+            type: "partner",
+            id: this.props.thread.chatPartnerId,
+        });
     }
 }

@@ -5,15 +5,6 @@ import { ThreadService } from "@mail/core/common/thread_service";
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, {
-    update(thread, data) {
-        super.update(thread, data);
-        if (data?.visitor) {
-            thread.visitor = this.personaService.insert({
-                ...data.visitor,
-                type: "visitor",
-            });
-        }
-    },
     /**
      * @param {import('@mail/core/common/persona_model').Persona} persona
      * @param {import("@mail/core/common/thread_model").Thread} [thread]

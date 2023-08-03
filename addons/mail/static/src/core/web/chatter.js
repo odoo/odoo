@@ -136,7 +136,7 @@ export class Chatter extends Component {
         onPatched(this.scrollPosition.restore);
         onWillStart(() => {
             if (this.props.threadId) {
-                this.state.thread = this.threadService.insert({
+                this.state.thread = this.store.Thread.insert({
                     id: this.props.threadId,
                     model: this.props.threadModel,
                     name: this.props.webRecord?.data?.display_name || undefined,
@@ -209,7 +209,7 @@ export class Chatter extends Component {
         }
         allFollowers.push(...this.state.thread.followers);
         const followers = allFollowers.slice(0, 5).map(({ partner }) => {
-            if (partner === this.store.self) {
+            if (partner.equals(this.store.self)) {
                 return `<span class="text-muted" title="${escape(partner.email)}">me</span>`;
             }
             const text = partner.email ? partner.emailWithoutDomain : partner.name;

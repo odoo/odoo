@@ -5,7 +5,6 @@ import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { createObjectId } from "@mail/utils/common/misc";
 
 function dataUrlToBlob(data, type) {
     const binData = window.atob(data);
@@ -27,8 +26,6 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
     const notificationService = useService("notification");
     /** @type {import("@mail/core/common/store_service").Store} */
     const store = useService("mail.store");
-    /** @type {import("@mail/core/common/thread_service").ThreadService} */
-    const threadService = useService("mail.thread");
     /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
     const attachmentService = useService("mail.attachment");
     const abortByAttachmentId = new Map();
@@ -85,9 +82,9 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
         const threadId = parseInt(upload.data.get("thread_id"));
         const threadModel = upload.data.get("thread_model");
         const tmpUrl = upload.data.get("tmp_url");
-        const originThread = threadService.insert({ model: threadModel, id: threadId });
+        const originThread = store.Thread.insert({ model: threadModel, id: threadId });
         abortByAttachmentId.set(tmpId, upload.xhr.abort.bind(upload.xhr));
-        const attachment = attachmentService.insert({
+        const attachment = store.Attachment.insert({
             filename: upload.title,
             id: tmpId,
             mimetype: upload.type,
@@ -123,8 +120,8 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
         }
         const threadId = parseInt(upload.data.get("thread_id"));
         const threadModel = upload.data.get("thread_model");
-        const originThread = store.Thread.records[createObjectId("Thread", threadModel, threadId)];
-        const attachment = attachmentService.insert({
+        const originThread = store.Thread.findById({ model: threadModel, id: threadId });
+        const attachment = store.Attachment.insert({
             ...response,
             extension: upload.title.split(".").pop(),
             originThread: composer ? undefined : originThread,

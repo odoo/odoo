@@ -173,8 +173,8 @@ export const storeService = {
                     `There must be no duplicated Discuss Model Names (duplicate found: ${Model.name})`
                 );
             }
-            ModelManager.class = Model;
-            res[Model.name] = new ModelManager(res);
+            res[Model.name] = new ModelManager(env, res);
+            res[Model.name].class = Model;
         }
         onChange(res.Thread, "records", () => res.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {

@@ -25,7 +25,7 @@ export class MessagePin {
     /** @type {Map<number, string>} */
     pinnedAtByMessageId = new Map();
     /** @type {import("@mail/core/common/store_service").Store} */
-    storeService;
+    store;
 
     constructor(
         env,
@@ -33,7 +33,7 @@ export class MessagePin {
             bus_service: busService,
             dialog: dialogService,
             "mail.message": messageService,
-            "mail.store": storeService,
+            "mail.store": store,
             orm: ormService,
             rpc: rpcService,
         }
@@ -45,7 +45,7 @@ export class MessagePin {
             messageService,
             ormService,
             rpcService,
-            storeService,
+            store,
         });
     }
 
@@ -96,7 +96,7 @@ export class MessagePin {
                     messageData.parentMessage.body = markup(messageData.parentMessage.body);
                 }
                 messageData.body = markup(messageData.body);
-                this.messageService.insert(messageData);
+                this.store.Message.insert(messageData);
             });
             this.loadStateByChannelId.set(channel.id, "loaded");
         } catch (e) {
@@ -120,7 +120,7 @@ export class MessagePin {
      */
     getPinnedMessages(channel) {
         return [...(this.messageIdsByChannelId.get(channel.id) ?? new Set())]
-            .map((id) => this.messageService.insert({ id }))
+            .map((id) => this.store.Message.insert({ id }))
             .sort((a, b) => {
                 const aPinnedAt = this.pinnedAtByMessageId.get(a.id);
                 const bPinnedAt = this.pinnedAtByMessageId.get(b.id);

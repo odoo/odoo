@@ -4,7 +4,6 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { NotificationItem } from "@mail/core/web/notification_item";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { createObjectId } from "@mail/utils/common/misc";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -69,10 +68,6 @@ export class MessagingMenu extends Component {
         }
     }
 
-    createObjectId(...args) {
-        return createObjectId(...args);
-    }
-
     /**
      * @param {'chat' | 'group'} tab
      * @returns Thread types matching the given tab.
@@ -122,10 +117,16 @@ export class MessagingMenu extends Component {
              *
              * In each group, thread with most recent message comes first
              */
-            if (a.correspondent === this.store.odoobot && b.correspondent !== this.store.odoobot) {
+            if (
+                this.store.odoobot.equals(a.correspondent) &&
+                !this.store.odoobot.equals(b.correspondent)
+            ) {
                 return 1;
             }
-            if (b.correspondent === this.store.odoobot && a.correspondent !== this.store.odoobot) {
+            if (
+                this.store.odoobot.equals(b.correspondent) &&
+                !this.store.odoobot.equals(a.correspondent)
+            ) {
                 return -1;
             }
             if (a.hasNeedactionMessages && !b.hasNeedactionMessages) {
@@ -237,7 +238,7 @@ export class MessagingMenu extends Component {
             });
             // Close the related chat window as having both the form view
             // and the chat window does not look good.
-            this.store.ChatWindow.records.find(({ thr }) => thr === thread)?.close();
+            this.store.ChatWindow.records.find(({ thr }) => thr.equals(thread))?.close();
         } else {
             this.threadService.open(thread);
         }

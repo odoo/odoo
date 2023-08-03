@@ -6,7 +6,13 @@ import {
     discussModelRegistry,
 } from "@mail/core/common/discuss_model";
 import { ScrollPosition } from "@mail/core/common/scroll_position_model";
-import { createObjectId } from "@mail/utils/common/misc";
+import { replaceArrayWithCompare } from "@mail/utils/common/arrays";
+import {
+    assignDefined,
+    createObjectId,
+    nullifyClearCommands,
+    onChange,
+} from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -26,6 +32,8 @@ import { sprintf } from "@web/core/utils/strings";
  */
 
 export class Thread extends DiscussModel {
+    static id = ["model", "id"];
+
     /** @type {number} */
     id;
     /** @type {string} */
@@ -145,8 +153,6 @@ export class Thread extends DiscussModel {
             type: data.type,
             _store: store,
         });
-        store.Thread.records[this.objectId] = this;
-        return store.Thread.records[this.objectId];
     }
 
     get accessRestrictedToGroupText() {
@@ -226,9 +232,8 @@ export class Thread extends DiscussModel {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
                 this.customName ||
-                this._store.Persona.records[
-                    createObjectId("Persona", "partner", this.chatPartnerId)
-                ].nameOrDisplayName
+                this._store.Persona.findById({ type: "partner", id: this.chatPartnerId })
+                    .nameOrDisplayName
             );
         }
         if (this.type === "group" && !this.name) {
@@ -293,10 +298,6 @@ export class Thread extends DiscussModel {
         return null;
     }
 
-    get objectId() {
-        return createObjectId("Thread", this.model, this.id);
-    }
-
     get needactionCounter() {
         return this.isChatChannel ? this.message_unread_counter : this.message_needaction_counter;
     }
@@ -323,8 +324,8 @@ export class Thread extends DiscussModel {
     }
 
     get hasSelfAsMember() {
-        return this.channelMembers.some(
-            (channelMember) => channelMember.persona === this._store.self
+        return this.channelMembers.some((channelMember) =>
+            channelMember.persona.equals(this._store.self)
         );
     }
 
@@ -383,7 +384,7 @@ export class Thread extends DiscussModel {
         }
         const lastMessageSeenByAllId = Math.min(...otherLastSeenMessageIds);
         const orderedSelfSeenMessages = this.persistentMessages.filter((message) => {
-            return message.author === this._store.self && message.id <= lastMessageSeenByAllId;
+            return this._store.self.equals(message.author) && message.id <= lastMessageSeenByAllId;
         });
         if (!orderedSelfSeenMessages || orderedSelfSeenMessages.length === 0) {
             return false;
@@ -466,6 +467,196 @@ export class ThreadManager extends DiscussModelManager {
     class;
     /** @type {Object.<string, Thread>} */
     records = {};
+
+    /**
+     * @param {Object} data
+     * @returns {Thread}
+     */
+    getRecord(data) {
+        return this.records[createObjectId(data)];
+    }
+
+    /**
+     * @param {Object} data
+     * @returns {Thread}
+     */
+    insert(data) {
+        if (!("id" in data)) {
+            throw new Error("Cannot insert thread: id is missing in data");
+        }
+        if (!("model" in data)) {
+            throw new Error("Cannot insert thread: model is missing in data");
+        }
+        const objectId = createObjectId(this.class.name, data.model, data.id);
+        if (objectId in this.records) {
+            const thread = this.records[objectId];
+            this.update(thread, data);
+            return thread;
+        }
+        let thread = new Thread(this.store, data);
+        thread.objectId = objectId;
+        this.records[objectId] = thread;
+        // return reactive version.
+        thread = this.records[thread.objectId];
+        onChange(thread, "message_unread_counter", () => {
+            if (thread.channel) {
+                thread.channel.message_unread_counter = thread.message_unread_counter;
+            }
+        });
+        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
+        onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
+        onChange(thread, "is_pinned", () => {
+            if (!thread.is_pinned && this.store.discuss.threadObjectId === thread.objectId) {
+                this.store.discuss.threadObjectId = null;
+            }
+        });
+        this.update(thread, data);
+        this.store.Composer.insert({ thread });
+        return thread;
+    }
+
+    /**
+     * @param {Thread} thread
+     * @param {Object} data
+     */
+    update(thread, data) {
+        const { id, name, attachments: attachmentsData, description, ...serverData } = data;
+        assignDefined(thread, { id, name, description });
+        if (attachmentsData) {
+            replaceArrayWithCompare(
+                thread.attachments,
+                attachmentsData.map((attachmentData) =>
+                    this.store.Attachment.insert(attachmentData)
+                )
+            );
+        }
+        if (serverData) {
+            assignDefined(thread, serverData, [
+                "uuid",
+                "authorizedGroupFullName",
+                "description",
+                "hasWriteAccess",
+                "is_pinned",
+                "isLoaded",
+                "isLoadingAttachments",
+                "mainAttachment",
+                "message_unread_counter",
+                "message_needaction_counter",
+                "name",
+                "seen_message_id",
+                "state",
+                "type",
+                "status",
+                "group_based_subscription",
+                "last_interest_dt",
+                "is_editable",
+                "defaultDisplayMode",
+            ]);
+            if (serverData.channel && "message_unread_counter" in serverData.channel) {
+                thread.message_unread_counter = serverData.channel.message_unread_counter;
+            }
+            thread.lastServerMessageId = serverData.last_message_id ?? thread.lastServerMessageId;
+            if (thread.model === "discuss.channel" && serverData.channel) {
+                nullifyClearCommands(serverData.channel);
+                thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
+            }
+
+            thread.memberCount = serverData.channel?.memberCount ?? thread.memberCount;
+            if (thread.type === "chat" && serverData.channel) {
+                thread.customName = serverData.channel.custom_channel_name;
+            }
+            if (serverData.channel?.channelMembers) {
+                for (const [command, membersData] of serverData.channel.channelMembers) {
+                    const members = Array.isArray(membersData) ? membersData : [membersData];
+                    for (const memberData of members) {
+                        const member = this.store.ChannelMember.insert([command, memberData]);
+                        if (thread.type !== "chat") {
+                            continue;
+                        }
+                        if (
+                            member.persona.id !== thread._store.user?.id ||
+                            (serverData.channel.channelMembers[0][1].length === 1 &&
+                                member.persona.id === thread._store.user?.id)
+                        ) {
+                            thread.chatPartnerId = member.persona.id;
+                        }
+                    }
+                }
+            }
+            if ("invitedMembers" in serverData) {
+                if (!serverData.invitedMembers) {
+                    thread.invitedMemberIds.clear();
+                    return;
+                }
+                const command = serverData.invitedMembers[0][0];
+                const members = serverData.invitedMembers[0][1];
+                switch (command) {
+                    case "insert":
+                        if (members) {
+                            for (const member of members) {
+                                const record = this.store.ChannelMember.insert(member);
+                                thread.invitedMemberIds.add(record.id);
+                            }
+                        }
+                        break;
+                    case "unlink":
+                    case "insert-and-unlink":
+                        // eslint-disable-next-line no-case-declarations
+                        for (const member of members) {
+                            thread.invitedMemberIds.delete(member.id);
+                        }
+                        break;
+                }
+            }
+            if ("seen_partners_info" in serverData) {
+                thread.seenInfos = serverData.seen_partners_info.map(
+                    ({ fetched_message_id, partner_id, seen_message_id }) => {
+                        return {
+                            lastFetchedMessage: fetched_message_id
+                                ? this.store.Message.insert({ id: fetched_message_id })
+                                : undefined,
+                            lastSeenMessage: seen_message_id
+                                ? this.store.Message.insert({ id: seen_message_id })
+                                : undefined,
+                            partner: this.store.Persona.insert({
+                                id: partner_id,
+                                type: "partner",
+                            }),
+                        };
+                    }
+                );
+            }
+        }
+        if (
+            thread.type === "channel" &&
+            !this.store.discuss.channels.threads.includes(thread.objectId)
+        ) {
+            this.store.discuss.channels.threads.push(thread.objectId);
+        } else if (
+            (thread.type === "chat" || thread.type === "group") &&
+            !this.store.discuss.chats.threads.includes(thread.objectId)
+        ) {
+            this.store.discuss.chats.threads.push(thread.objectId);
+        }
+        if (!thread.type && !["mail.box", "discuss.channel"].includes(thread.model)) {
+            thread.type = "chatter";
+        }
+        this.env.bus.trigger("mail.thread/onUpdate", { thread, data });
+    }
+
+    // FIXME: should not be here (required by Thread.insert() in livechat)
+    sortChannels() {
+        this.store.discuss.channels.threads.sort((id1, id2) => {
+            const thread1 = this.records[id1];
+            const thread2 = this.records[id2];
+            return String.prototype.localeCompare.call(thread1.name, thread2.name);
+        });
+        this.store.discuss.chats.threads.sort((objectId_1, objectId_2) => {
+            const thread1 = this.records[objectId_1];
+            const thread2 = this.records[objectId_2];
+            return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
+        });
+    }
 }
 
 discussModelRegistry.add("Thread", [Thread, ThreadManager]);

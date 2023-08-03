@@ -22,7 +22,6 @@ export class ChannelInvitation extends Component {
         this.store = useStore();
         this.notification = useService("notification");
         this.threadService = useState(useService("mail.thread"));
-        this.personaService = useService("mail.persona");
         /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
         this.suggestionService = useService("mail.suggestion");
         this.ui = useService("ui");
@@ -53,7 +52,7 @@ export class ChannelInvitation extends Component {
         const Partners = results["partners"];
         const selectablePartners = [];
         for (const selectablePartner of Partners) {
-            const newPartner = this.personaService.insert({
+            const newPartner = this.store.Persona.insert({
                 type: "partner",
                 ...selectablePartner,
             });

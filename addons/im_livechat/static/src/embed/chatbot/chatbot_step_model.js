@@ -32,6 +32,8 @@ import { assignDefined } from "@mail/utils/common/misc";
  */
 
 export class ChatbotStep extends DiscussModel {
+    static id = ["id"];
+
     /** @type {number} */
     id;
     /** @type {StepAnswer[]} */

@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { createObjectId } from "@mail/utils/common/misc";
 import { Command } from "@mail/../tests/helpers/command";
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
@@ -154,10 +153,10 @@ QUnit.test("Channel member count update after user joined", async (assert) => {
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    const thread =
-        env.services["mail.store"].Thread.records[
-            createObjectId("Thread", "discuss.channel", channelId)
-        ];
+    const thread = env.services["mail.store"].Thread.findById({
+        model: "discuss.channel",
+        id: channelId,
+    });
     assert.strictEqual(thread.memberCount, 1);
     await click("[title='Show Member List']");
     await click("[title='Add Users']");
@@ -179,10 +178,10 @@ QUnit.test("Channel member count update after user left", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    const thread =
-        env.services["mail.store"].Thread.records[
-            createObjectId("Thread", "discuss.channel", channelId)
-        ];
+    const thread = env.services["mail.store"].Thread.findById({
+        model: "discuss.channel",
+        id: channelId,
+    });
     assert.strictEqual(thread.memberCount, 2);
     await env.services.orm.call("discuss.channel", "action_unfollow", [channelId], {
         context: { mockedUserId: userId },

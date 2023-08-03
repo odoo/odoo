@@ -12,10 +12,6 @@ export class SuggestionService {
         this.orm = services.orm;
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = services["mail.thread"];
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
-        this.personaService = services["mail.persona"];
         /** @type {import("@mail/core/common/channel_member_service").ChannelMemberService} */
         this.channelMemberService = services["discuss.channel.member"];
     }
@@ -55,9 +51,9 @@ export class SuggestionService {
             kwargs
         );
         suggestedPartners.map((data) => {
-            this.personaService.insert({ ...data, type: "partner" });
+            this.store.Persona.insert({ ...data, type: "partner" });
             if (data.persona?.channelMembers) {
-                this.channelMemberService.insert(...data.persona.channelMembers);
+                this.store.ChannelMember.insert(...data.persona.channelMembers);
             }
         });
     }
@@ -70,7 +66,7 @@ export class SuggestionService {
             { search: term }
         );
         suggestedThreads.map((data) => {
-            this.threadService.insert({
+            this.store.Thread.insert({
                 model: "discuss.channel",
                 ...data,
             });
@@ -128,7 +124,7 @@ export class SuggestionService {
         const mainSuggestionList = [];
         const extraSuggestionList = [];
         for (const partner of partners) {
-            if (partner === this.store.odoobot) {
+            if (partner.equals(this.store.odoobot)) {
                 // ignore archived partners (except OdooBot)
                 continue;
             }

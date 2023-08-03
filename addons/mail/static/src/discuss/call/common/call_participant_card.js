@@ -67,7 +67,7 @@ export class CallParticipantCard extends Component {
     get showConnectionState() {
         return Boolean(
             this.isOfActiveCall &&
-                !(this.rtcSession.channelMember?.persona.objectId === this.store.self?.objectId) &&
+                !this.store.self.equals(this.rtcSession.channelMember?.persona) &&
                 !HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
         );
     }
@@ -97,7 +97,7 @@ export class CallParticipantCard extends Component {
         }
         if (this.rtcSession) {
             const channel = this.rtcSession.channel;
-            if (channel.activeRtcSession === this.rtcSession) {
+            if (channel.activeRtcSession.equals(this.rtcSession)) {
                 channel.activeRtcSession = undefined;
             } else {
                 channel.activeRtcSession = this.rtcSession;
@@ -108,7 +108,7 @@ export class CallParticipantCard extends Component {
             channel_id: this.props.thread.id,
             member_ids: [this.channelMember.id],
         });
-        this.threadService.update(this.props.thread, {
+        this.store.Thread.update(this.props.thread, {
             invitedMembers: channelData.invitedMembers,
         });
     }

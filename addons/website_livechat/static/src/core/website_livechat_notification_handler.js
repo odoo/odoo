@@ -3,23 +3,19 @@
 import { registry } from "@web/core/registry";
 
 export const websiteLivechatNotifications = {
-    dependencies: ["bus_service", "mail.chat_window", "mail.thread"],
+    dependencies: ["bus_service", "mail.chat_window", "mail.store"],
     start(
         env,
-        {
-            bus_service: busService,
-            "mail.chat_window": chatWindowService,
-            "mail.thread": threadService,
-        }
+        { bus_service: busService, "mail.chat_window": chatWindowService, "mail.store": store }
     ) {
         busService.subscribe("website_livechat.send_chat_request", (payload) => {
-            const channel = threadService.insert({
+            const channel = store.Thread.insert({
                 ...payload,
                 id: payload.id,
                 model: "discuss.channel",
                 type: payload.channel.channel_type,
             });
-            const chatWindow = chatWindowService.insert({ thread: channel });
+            const chatWindow = store.ChatWindow.insert({ thread: channel });
             chatWindowService.makeVisible(chatWindow);
             chatWindowService.focus(chatWindow);
         });
