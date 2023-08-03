@@ -6,7 +6,7 @@ from unittest.mock import patch
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -195,8 +195,18 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
             'type': jtype}
             for jtype in ('general', 'cash', 'bank')
         ])
-        self.assertFalse(journals.alias_id, 'Account: no mail support via no alias for those journal types')
+        self.assertFalse(journals.alias_id, 'Do not create useless aliases')
         self.assertFalse(list(filter(None, journals.mapped('alias_name'))))
+
+    def test_alias_name_form(self):
+        """ Test alias name update using Form tool (onchange) """
+        journal = Form(self.env['account.journal'])
+        journal.name = 'Test With Form'
+        self.assertFalse(journal.alias_name)
+        journal.type = 'sale'
+        self.assertEqual(journal.alias_name, f'test-with-form-{self.env.company.name}')
+        journal.type = 'cash'
+        self.assertFalse(journal.alias_name)
 
     def test_alias_from_type(self):
         """ Test alias behavior on journal, especially alias_name management as
@@ -232,15 +242,15 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         self.assertEqual(journal_alias.alias_parent_thread_id, journal.id,
                          'Journal alias owned by journal itself')
 
-        # update alias_name, various tests because it is sometimes actually funny
+        # update alias_name, ensure a fallback on a real name when not explicit reset
         for alias_name, expected in [
-            (False, f'vendor-bills-{company_name}'),  # do not want to reset
-            ('', f'vendor-bills-{company_name}'),  # still does not want to reset
-            (' ', f'-{company_name}'),  # but why ?
-            ('.', f'-{company_name}'),  # but why ?
+            (False, False),
+            ('', False),
+            (' ', f'vendor-bills-{company_name}'),  # error recuperation
+            ('.', f'vendor-bills-{company_name}'),  # error recuperation
             ('😊', f'vendor-bills-{company_name}'),  # resets, unicode not supported
-            ('ぁ', f'vendor-bills-{company_name}'),  # resets, ascii not supported
-            ('Youpie Boum', f'youpie-boum-{company_name}'),
+            ('ぁ', f'vendor-bills-{company_name}'),  # resets, non ascii not supported
+            ('Youpie Boum', 'youpie-boum'),
         ]:
             with self.subTest(alias_name=alias_name):
                 journal.write({'alias_name': alias_name})
@@ -250,8 +260,10 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         # changing type should void if not purchase or sale
         for jtype in ('general', 'cash', 'bank'):
             journal.write({'type': jtype})
-            self.assertFalse(journal_alias.exists())
-            self.assertFalse(journal.alias_id)
+            self.assertEqual(journal.alias_id, journal_alias,
+                             'Dà not unlink aliases, just reset their value')
+            self.assertFalse(journal.alias_name)
+            self.assertFalse(journal_alias.alias_name)
 
         # changing type should reset if sale or purchase
         journal.company_id.write({'name': 'New Company Name'})
