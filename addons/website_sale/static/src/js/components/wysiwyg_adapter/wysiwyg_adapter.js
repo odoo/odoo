@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
 import { WysiwygAdapterComponent } from '@website/components/wysiwyg_adapter/wysiwyg_adapter';
-import { patch } from '@web/legacy/js/core/utils';
+import { patch } from "@web/core/utils/patch";
 
 // TODO this whole patch actually seems unnecessary. The bug it solved seems
 // to stay solved if this is removed. To investigate.
-patch(WysiwygAdapterComponent.prototype, 'website_sale_wysiwyg_adapter', {
+patch(WysiwygAdapterComponent.prototype, {
     /**
      * @override
      */
      _getContentEditableAreas() {
-        const array = this._super(...arguments);
+        const array = super._getContentEditableAreas(...arguments);
         return array.filter(el => {
             // TODO should really review this system of "ContentEditableAreas +
             // ReadOnlyAreas", here the "products_header" stuff is duplicated in
@@ -24,7 +24,7 @@ patch(WysiwygAdapterComponent.prototype, 'website_sale_wysiwyg_adapter', {
      * @override
      */
     _getReadOnlyAreas() {
-        const readOnlyEls = this._super(...arguments);
+        const readOnlyEls = super._getReadOnlyAreas(...arguments);
         return [...readOnlyEls].concat(
             $(this.websiteService.pageDocument).find("#wrapwrap").find('.oe_website_sale .products_header, .oe_website_sale .products_header a').toArray()
         );

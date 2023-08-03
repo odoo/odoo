@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { NewContentModal, MODULE_STATUS } from '@website/systray_items/new_content';
-import { patch } from '@web/legacy/js/core/utils';
+import { patch } from "@web/core/utils/patch";
 
-patch(NewContentModal.prototype, 'website_sale_new_content', {
+patch(NewContentModal.prototype, {
     setup() {
-        this._super();
+        super.setup();
 
         const newProductElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_sale');
         newProductElement.createNewContent = () => this.onAddContent('website_sale.product_product_action_add', true);

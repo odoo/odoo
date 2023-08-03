@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { patch } from '@web/legacy/js/core/utils';
+import { patch } from "@web/core/utils/patch";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { MediaDialog, TABS } from '@web_editor/components/media_dialog/media_dialog';
 import { ImageSelector } from '@web_editor/components/media_dialog/image_selector';
@@ -38,9 +38,9 @@ UnsplashError.components = {
     UnsplashCredentials,
 };
 
-patch(ImageSelector.prototype, 'image_selector_unsplash', {
+patch(ImageSelector.prototype, {
     setup() {
-        this._super();
+        super.setup();
         this.unsplash = useService('unsplash');
         this.keepLastUnsplash = new KeepLast();
 
@@ -69,20 +69,20 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
 
     get canLoadMore() {
         if (this.state.searchService === 'all') {
-            return this._super() || this.state.needle && !this.state.isMaxed && !this.state.unsplashError;
+            return super.canLoadMore || this.state.needle && !this.state.isMaxed && !this.state.unsplashError;
         } else if (this.state.searchService === 'unsplash') {
             return this.state.needle && !this.state.isMaxed && !this.state.unsplashError;
         }
-        return this._super();
+        return super.canLoadMore;
     },
 
     get hasContent() {
         if (this.state.searchService === 'all') {
-            return this._super() || !!this.state.unsplashRecords.length;
+            return super.hasContent || !!this.state.unsplashRecords.length;
         } else if (this.state.searchService === 'unsplash') {
             return !!this.state.unsplashRecords.length;
         }
-        return this._super();
+        return super.hasContent;
     },
 
     get errorTitle() {
@@ -104,7 +104,7 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
     },
 
     get isFetching() {
-        return this._super() || this.state.isFetchingUnsplash;
+        return super.isFetching || this.state.isFetchingUnsplash;
     },
 
     get combinedRecords() {
@@ -168,7 +168,7 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
     },
 
     async loadMore(...args) {
-        await this._super(...args);
+        await super.loadMore(...args);
         return this.keepLastUnsplash.add(this.fetchUnsplashRecords(this.state.unsplashRecords.length)).then(({ records, isMaxed }) => {
             // This is never reached if another search or loadMore occurred.
             this.state.unsplashRecords.push(...records);
@@ -177,7 +177,7 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
     },
 
     async search(...args) {
-        await this._super(...args);
+        await super.search(...args);
         await this.searchUnsplash();
     },
 
@@ -212,15 +212,14 @@ ImageSelector.components = {
     UnsplashError,
 };
 
-patch(MediaDialog.prototype, 'media_dialog_unsplash', {
+patch(MediaDialog.prototype, {
     setup() {
-        this._super();
+        super.setup();
 
         this.uploadService = useService('upload');
     },
 
     async save() {
-        const _super = this._super.bind(this);
         const selectedImages = this.selectedMedia[TABS.IMAGES.id];
         if (selectedImages) {
             const unsplashRecords = selectedImages.filter(media => media.mediaType === 'unsplashRecord');
@@ -231,13 +230,13 @@ patch(MediaDialog.prototype, 'media_dialog_unsplash', {
                 });
             }
         }
-        return _super(...arguments);
+        return super.save(...arguments);
     },
 });
 
-patch(uploadService, 'upload_service_unsplash', {
+patch(uploadService, {
     start(env, { rpc }) {
-        const service = this._super(...arguments);
+        const service = super.start(...arguments);
         return {
             ...service,
             async uploadUnsplashRecords(records, { resModel, resId }, onUploaded) {

@@ -3,10 +3,10 @@
 import wTourUtils from "@website/js/tours/tour_utils";
 
 import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";
-import { patch, unpatch } from '@web/legacy/js/core/utils';
+import { patch } from "@web/core/utils/patch";
 
 let patchWithError = false;
-const patchMediaDialog = () => patch(FileSelectorControlPanel.prototype, 'test_website.mock_image_widgets', {
+const patchMediaDialog = () => patch(FileSelectorControlPanel.prototype, {
     async onChangeFileInput() {
         const getFileFromB64 = (fileData) => {
             const binary = atob(fileData[2]);
@@ -17,7 +17,7 @@ const patchMediaDialog = () => patch(FileSelectorControlPanel.prototype, 'test_w
             }
             return new File([arr], fileData[1], {type: fileData[0]});
         };
-
+        
         let files = [
             getFileFromB64(['image/vnd.microsoft.icon', 'icon.ico', "AAABAAEAAQEAAAEAIAAwAAAAFgAAACgAAAABAAAAAgAAAAEAIAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=="]),
             getFileFromB64(['image/webp', 'image.webp', "UklGRhwAAABXRUJQVlA4TBAAAAAvE8AEAAfQhuh//wMR0f8A"]),
@@ -36,13 +36,13 @@ const patchMediaDialog = () => patch(FileSelectorControlPanel.prototype, 'test_w
     }
 });
 
-const unpatchMediaDialog = () => unpatch(FileSelectorControlPanel.prototype, 'test_website.mock_image_widgets');
+let unpatchMediaDialog = null;
 
 const setupSteps = [{
     content: "reload to load patch",
     trigger: ".o_website_preview",
     run: () => {
-        patchMediaDialog();
+        unpatchMediaDialog = patchMediaDialog();
     },
 }, {
     content: "drop a snippet",

@@ -2,18 +2,18 @@
 
 import { WysiwygAdapterComponent } from "@website/components/wysiwyg_adapter/wysiwyg_adapter";
 import websiteTourUtils from "@website/js/tours/tour_utils";
-import { patch, unpatch } from '@web/legacy/js/core/utils';
+import { patch } from "@web/core/utils/patch";
 
-const patchWysiwygAdapter = () => patch(WysiwygAdapterComponent.prototype, 'snippets_all_drag_and_drop.wysiwyg_adapter', {
+const patchWysiwygAdapter = () => patch(WysiwygAdapterComponent.prototype, {
     _trigger_up(ev) {
-        this._super(...arguments);
+        super._trigger_up(...arguments);
         if (ev.name === 'snippet_removed') {
             $('body').attr('test-dd-snippet-removed', true);
         }
     }
 });
 
-const unpatchWysiwygAdapter = () => unpatch(WysiwygAdapterComponent.prototype, 'snippets_all_drag_and_drop.wysiwyg_adapter');
+let unpatchWysiwygAdapter = null;
 
 import { registry } from "@web/core/registry";
 
@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
             if (steps.length < 220) {
                 console.error(`This test is not behaving as it should, got only ${steps.length} steps.`);
             }
-            patchWysiwygAdapter();
+            unpatchWysiwygAdapter = patchWysiwygAdapter();
         },
     },
     // This first step is needed as it will be used later for inner snippets
