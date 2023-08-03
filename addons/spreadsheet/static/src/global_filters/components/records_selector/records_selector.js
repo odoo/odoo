@@ -48,11 +48,11 @@ export class RecordsSelector extends Component {
     }
 
     /**
-     * @param {{ id: number; name?: string}[]} records
+     * @param {{ id: number; display_name?: string}[]} records
      */
     update(records) {
-        for (const record of records.filter((record) => record.name)) {
-            this.displayNames[record.id] = record.name;
+        for (const record of records.filter((record) => record.display_name)) {
+            this.displayNames[record.id] = record.display_name;
         }
         this.notifyChange(this.props.resIds.concat(records.map(({ id }) => id)));
     }
