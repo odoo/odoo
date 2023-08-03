@@ -146,8 +146,12 @@ registerModel({
         onClickSendMessage(ev) {
             if (this.composerView && !this.composerView.composer.isLog) {
                 this.update({ composerView: clear() });
+                const messageListFullHeight = '84vh';
+                $('.messageList_openeducat_live').height(messageListFullHeight);
             } else {
                 this.showSendMessage();
+                const messageBoxHeight = 200;
+                $('.messageList_openeducat_live').height($('.messageList_openeducat_live').height() - messageBoxHeight);
             }
         },
         /**
