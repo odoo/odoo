@@ -369,3 +369,37 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             [self.env.company.currency_id.round(l['foreign_amount']) for l in computed_term['line_ids']],
             [700.0, 500.0, 300.0, -500.0],
         )
+
+    def test_payment_term_percent_round_calculation(self):
+        """
+            the sum function might not sum the floating numbers properly
+            if there are a lot of lines with floating numbers
+            so this test verifies the round function changes
+        """
+        self.env['account.payment.term'].create({
+            'name': "test_payment_term_percent_round_calculation",
+            'line_ids': [
+                Command.create({'value_amount': 50, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 1.66, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 16.8, 'value': 'percent', 'nb_days': 0, }),
+            ],
+        })
