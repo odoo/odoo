@@ -76,6 +76,13 @@ export class Thread extends Record {
         return thread;
     }
 
+    setup() {}
+
+    constructor() {
+        super();
+        this.setup();
+    }
+
     /** @type {number} */
     id;
     /** @type {string} */

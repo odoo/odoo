@@ -94,6 +94,15 @@ patch(ThreadService.prototype, {
                     thread.followers.add(follower);
                 }
             }
+            thread.recipientsCount = result.recipientsCount;
+            for (const recipientData of result.recipients) {
+                thread.recipients.add(
+                    this.store.Follower.insert({
+                        followedThread: thread,
+                        ...recipientData,
+                    })
+                );
+            }
         }
         if ("suggestedRecipients" in result) {
             this.insertSuggestedRecipients(thread, result.suggestedRecipients);
@@ -180,6 +189,22 @@ patch(ThreadService.prototype, {
             }
         }
     },
+    async loadMoreRecipients(thread) {
+        const recipients = await this.orm.call(
+            thread.model,
+            "message_get_followers",
+            [[thread.id], Array.from(thread.recipients).at(-1).id],
+            { filter_recipients: true }
+        );
+        for (const data of recipients) {
+            thread.recipients.add(
+                this.store.Follower.insert({
+                    followedThread: thread,
+                    ...data,
+                })
+            );
+        }
+    },
     open(thread, replaceNewMessageChatWindow) {
         if (!this.store.discuss.isActive && !this.ui.isSmall) {
             this._openChatWindow(thread, replaceNewMessageChatWindow);
@@ -203,6 +228,12 @@ patch(ThreadService.prototype, {
     /**
      * @param {import("@mail/core/common/follower_model").Follower} follower
      */
+    removeRecipient(recipient) {
+        recipient.followedThread.recipients.delete(recipient);
+    },
+    /**
+     * @param {import("@mail/core/common/follower_model").Follower} follower
+     */
     async removeFollower(follower) {
         await this.orm.call(follower.followedThread.model, "message_unsubscribe", [
             [follower.followedThread.id],
@@ -214,6 +245,7 @@ patch(ThreadService.prototype, {
         } else {
             thread.followers.delete(follower);
         }
+        this.removeRecipient(follower);
         follower.delete();
     },
     unpin(thread) {

@@ -560,6 +560,14 @@ patch(MockServer.prototype, {
                 ? this._mockMailFollowers_FormatForChatter(selfFollower.id)[0]
                 : false;
             res["followers"] = this._mockMailThreadMessageGetFollowers(thread_model, [thread_id]);
+            res["recipientsCount"] = (thread.message_follower_ids || []).length - 1;
+            res["recipients"] = this._mockMailThreadMessageGetFollowers(
+                thread_model,
+                [thread_id],
+                undefined,
+                100,
+                { filter_recipients: true }
+            );
         }
         if (request_list.includes("suggestedRecipients")) {
             res["suggestedRecipients"] = this._mockMailThread_MessageGetSuggestedRecipients(

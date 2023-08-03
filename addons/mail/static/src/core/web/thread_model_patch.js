@@ -5,6 +5,17 @@ import { Thread } from "@mail/core/common/thread_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
+    /** @type {integer|undefined} */
+    recipientsCount: undefined,
+    /** @type {Number} */
+    mt_comment_id: undefined,
+    recipients: undefined,
+    setup() {
+        this.recipients = new Set();
+    },
+    get recipientsFullyLoaded() {
+        return this.recipientsCount === this.recipients.size;
+    },
     /**
      * @returns {import("@mail/core/web/activity_model").Activity[]}
      */

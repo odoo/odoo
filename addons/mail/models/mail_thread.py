@@ -3966,12 +3966,18 @@ class MailThread(models.AbstractModel):
 
         return True
 
-    def message_get_followers(self, after=None, limit=100):
+    def message_get_followers(self, after=None, limit=100, filter_recipients=False):
         self.ensure_one()
         domain = [
             ("res_id", "=", self.id),
             ("res_model", "=", self._name),
         ]
+        if filter_recipients:
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+            domain = expression.AND([domain, [
+                ('subtype_ids', '=', subtype_id),
+                ('partner_id', '!=', self.env.user.partner_id.id),
+            ]])
         if after:
             domain = expression.AND([domain, [('id', '>', after)]])
         return self.env["mail.followers"].search(domain, limit=limit, order='id ASC')._format_for_chatter()
@@ -4145,6 +4151,14 @@ class MailThread(models.AbstractModel):
             ])._format_for_chatter()
             res['selfFollower'] = self_follower[0] if len(self_follower) > 0 else None
             res['followers'] = self.message_get_followers()
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+            res['recipientsCount'] = self.env['mail.followers'].search_count([
+                ("res_id", "=", self.id),
+                ("res_model", "=", self._name),
+                ('partner_id', '!=', self.env.user.partner_id.id),
+                ('subtype_ids', '=', subtype_id),
+            ])
+            res['recipients'] = self.message_get_followers(filter_recipients=True)
         if 'suggestedRecipients' in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()[self.id]
         return res

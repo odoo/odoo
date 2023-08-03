@@ -258,6 +258,7 @@ class Users(models.Model):
             'initBusId': self.env['bus.bus'].sudo()._bus_last_id(),
             'internalUserGroupId': self.env.ref('base.group_user').id,
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
+            'mt_comment_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             'needaction_inbox_counter': self.partner_id._get_needaction_count(),
             'odoobot': odoobot.sudo().mail_partner_format().get(odoobot),
             'shortcodes': self.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution']),

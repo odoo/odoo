@@ -30,7 +30,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { escape } from "@web/core/utils/strings";
+import { escapeHTML } from "@web/core/utils/strings";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { FileUploader } from "@web/views/fields/file_handler";
 
@@ -220,17 +220,9 @@ export class Chatter extends Component {
      * @returns {string}
      */
     get toRecipientsText() {
-        const allFollowers = [];
-        if (this.state.thread.selfFollower) {
-            allFollowers.push(this.state.thread.selfFollower);
-        }
-        allFollowers.push(...this.state.thread.followers);
-        const followers = allFollowers.slice(0, 5).map(({ partner }) => {
-            if (partner.eq(this.store.self)) {
-                return `<span class="text-muted" title="${escape(partner.email)}">me</span>`;
-            }
+        const recipients = [...this.state.thread.recipients].slice(0, 5).map(({ partner }) => {
             const text = partner.email ? partner.emailWithoutDomain : partner.name;
-            return `<span class="text-muted" title="${escape(partner.email)}">${escape(
+            return `<span class="text-muted" title="${escapeHTML(partner.email)}">${escapeHTML(
                 text
             )}</span>`;
         });
@@ -238,10 +230,10 @@ export class Chatter extends Component {
             this.store.env.services["user"].lang?.replace("_", "-"),
             { type: "unit" }
         );
-        if (allFollowers.length > 5) {
-            followers.push("…");
+        if (this.state.thread.recipients.size > 5) {
+            recipients.push("…");
         }
-        return markup(formatter.format(followers));
+        return markup(formatter.format(recipients));
     }
 
     /**
