@@ -366,7 +366,7 @@ export class AnalyticDistribution extends Component {
     get tags() {
         return this.listReady.map((dist_tag) => ({
             id: dist_tag.id,
-            text: `${dist_tag.analytic_account_name}${dist_tag.percentage > 99.99 && dist_tag.percentage < 100.01 ? "" : " " + this.formatPercentage(dist_tag.percentage)}`,
+            text: `${dist_tag.percentage > 99.99 && dist_tag.percentage < 100.01 ? "" : this.formatPercentage(dist_tag.percentage) + " "}${dist_tag.analytic_account_name}`,
             colorIndex: dist_tag.color,
             group_id: dist_tag.group_id,
             onClick: (ev) => this.tagClicked(ev, dist_tag.id),
