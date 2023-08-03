@@ -53,6 +53,11 @@ class ResConfigSettings(models.TransientModel):
         if self.pos_self_order_table_mode:
             self.pos_self_order_view_mode = True
 
+    @api.onchange("pos_self_order_pay_after", "pos_self_order_table_mode")
+    def _onchange_pos_self_order_pay_after(self):
+        if self.pos_self_order_pay_after == "each" and not self.module_pos_preparation_display:
+            self.module_pos_preparation_display = True
+
     def generate_qr_codes_page(self):
         """
         Generate the data needed to print the QR codes page
