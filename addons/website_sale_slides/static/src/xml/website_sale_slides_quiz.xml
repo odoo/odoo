@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-extend="slide.slide.quiz.validation">
-        <t t-jquery=".o_wslides_quiz_join_course_message" t-operation="append">
+    <t t-inherit="website_slides.slide.slide.quiz.validation" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_wslides_quiz_join_course_message')]" position="inside">
             <span t-if="widget.channel.channelEnroll == 'payment'">
                 <t t-if="widget.publicUser">
                     Sign in and buy the course to take the quiz
@@ -10,6 +10,6 @@
                     Buy the course to validate your answers!
                 </t>
             </span>
-        </t>
+        </xpath>
     </t>
 </templates>
