@@ -51,6 +51,7 @@ export class ActivityCell extends Component {
                 defaultActivityTypeId: this.props.activityTypeId,
                 onActivityChanged: () => {
                     this.props.reloadFunc();
+                    this.popover.close();
                 },
                 resId: this.props.resId,
                 resModel: this.props.resModel,
