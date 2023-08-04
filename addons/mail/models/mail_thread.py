@@ -1321,6 +1321,7 @@ class MailThread(models.AbstractModel):
         Indeed those aspects should be covered by the html_sanitize method
         located in tools. """
         body, attachments = payload_dict['body'], payload_dict['attachments']
+        wrapper = type(body)
         if not body.strip():
             return {'body': body, 'attachments': attachments}
         try:
@@ -1347,7 +1348,8 @@ class MailThread(models.AbstractModel):
         for node in to_remove:
             node.getparent().remove(node)
         if postprocessed:
-            body = Markup(etree.tostring(root, pretty_print=False, encoding='unicode'))
+            # FIXME: not clear what the sink is here
+            body = wrapper(etree.tostring(root, pretty_print=False, encoding='unicode'))
         return {'body': body, 'attachments': attachments}
 
     def _message_parse_extract_payload(self, message, message_dict, save_original=False):

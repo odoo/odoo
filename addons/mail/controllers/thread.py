@@ -6,6 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.tools import html_sanitize
 
 
 class ThreadController(http.Controller):
@@ -93,7 +94,7 @@ class ThreadController(http.Controller):
             })
         thread = request.env[thread_model]._get_from_context_or_raise(int(thread_id))
         if "body" in post_data:
-            post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
+            post_data["body"] = html_sanitize(post_data["body"], sanitize_style=True, sanitize_attributes=True)  # contains HTML such as @mentions
         new_partners = []
         if "partner_emails" in post_data:
             new_partners = [

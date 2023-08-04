@@ -34,6 +34,7 @@ class MailRenderMixin(models.AbstractModel):
 
         :return: updated html
         """
+        wrapper = type(html)
         base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         short_schema = base_url + '/r/'
         for match in set(re.findall(tools.HTML_TAG_URL_REGEX, html)):
@@ -51,7 +52,7 @@ class MailRenderMixin(models.AbstractModel):
             if link.short_url:
                 # `str` manipulation required to support replacing "&" characters, common in urls
                 new_href = match[0].replace(long_url, link.short_url)
-                html = html.replace(markupsafe.Markup(match[0]), markupsafe.Markup(new_href))
+                html = html.replace(wrapper(match[0]), wrapper(new_href))
 
         return html
 

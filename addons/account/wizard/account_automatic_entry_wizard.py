@@ -450,7 +450,9 @@ class AutomaticEntryWizard(models.TransientModel):
     def _format_new_transfer_move_log(self, acc_transfer_per_move):
         transfer_format = Markup("<li>%s, <strong>%%(account_source_name)s</strong></li>") % \
             _("{amount} ({debit_credit}) from {link}")
-        rslt = Markup(_("This entry transfers the following amounts to %(destination)s") + "<ul>%(transfer_logs)s</ul>") % {
+
+        tmpl = Markup("%s<ul>%%(transfer_logs)s</ul>") % _("This entry transfers the following amounts to %(destination)s")
+        rslt = tmpl % {
             'destination': Markup("<strong>%s</strong>") % self.destination_account_id.display_name,
             'transfer_logs': Markup().join([
                 self._format_strings(transfer_format % {'account_source_name': account.display_name}, move, balance)

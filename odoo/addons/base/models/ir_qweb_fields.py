@@ -34,7 +34,7 @@ def nl2br_enclose(string, enclosure_tag='div'):
     trusted and untrusted content. New lines added by use are trusted, other
     content is escaped. """
     converted = nl2br(escape(string))
-    return Markup(f'<{enclosure_tag}>{converted}</{enclosure_tag}>')
+    return Markup('<{}>{}</{}>').format(enclosure_tag, converted, enclosure_tag)
 
 #--------------------------------------------------------------------
 # QWeb Fields converters
@@ -398,7 +398,7 @@ class ImageConverter(models.AbstractModel):
         except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
-        return Markup('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value.decode('ascii')))
+        return Markup('<img src="data:%s;base64,%s">') % (Image.MIME[image.format], value.decode('ascii'))
 
 class ImageUrlConverter(models.AbstractModel):
     """ ``image_url`` widget rendering, inserts an image tag in the
@@ -410,7 +410,7 @@ class ImageUrlConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return Markup('<img src="%s">' % (value))
+        return Markup('<img src="%s">') % value
 
 class MonetaryConverter(models.AbstractModel):
     """ ``monetary`` converter, has a mandatory option

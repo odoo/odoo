@@ -59,9 +59,10 @@ class MassSMSTest(models.TransientModel):
                 )
 
         if notification_messages:
-            message_body = Markup(
-                f"<ul>{''.join('<li>%s</li>' for _ in notification_messages)}</ul>"
-            ) % tuple(notification_messages)
+            message_body = Markup("<ul>%s</ul>") % Markup('').join(
+                Markup('<li>%s</li>') % m
+                for m in notification_messages
+            )
             self.mailing_id._message_log(body=message_body)
 
         return True

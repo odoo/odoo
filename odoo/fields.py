@@ -1986,7 +1986,7 @@ class Html(_String):
         if value is None or value is False:
             return None
 
-        if not validate or not self.sanitize:
+        if not validate or not self.sanitize or isinstance(value, Markup):
             return value
 
         sanitize_vals = {

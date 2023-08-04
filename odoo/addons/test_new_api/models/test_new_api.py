@@ -1830,3 +1830,23 @@ class AnyTag(models.Model):
 
     name = fields.Char()
     child_ids = fields.Many2many('test_new_api.any.child')
+
+
+class Html2Html(models.Model):
+    _name = 'test_new_api.html2html'
+    _description = "A model to test html2html transmissions"
+
+    h1 = fields.Html(sanitize_attributes=False)
+    h2 = fields.Html(string="H2", related='h1')
+    h3 = fields.Html(compute='_compute_h3')
+    h4 = fields.Html(compute='_compute_h4', store=True, readonly=False)
+
+    @api.depends('h1')
+    def _compute_h3(self):
+        for r in self:
+            r.h3 = r.h1
+
+    @api.depends('h1')
+    def _compute_h4(self):
+        for r in self:
+            r.h4 = r.h1 + 'whop whop'

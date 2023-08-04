@@ -63,12 +63,9 @@ class MassMailController(http.Controller):
                     ('opt_out', '=', False)
                 ]).mapped('list_id')
 
-                message = Markup('<p>%s</p>') % Markup(
-                    _(
-                        'Blocklist request from unsubscribe link of mailing %(mailing_link)s (document %(record_link)s)',
-                        **self._format_bl_request(mailing, res_id)
-                    )
-                )
+                message = Markup('<p>{}</p>').format(
+                    _('Blocklist request from unsubscribe link of mailing %(mailing_link)s (document %(record_link)s)')
+                ) % self._format_bl_request(mailing, res_id)
                 _blacklist_rec = request.env['mail.blacklist'].sudo()._add(email, message=message)
 
                 return request.render('mass_mailing.page_mailing_unsubscribe_done', {
@@ -207,14 +204,11 @@ class MassMailController(http.Controller):
         if email:
             if mailing_id and res_id:
                 mailing_sudo = request.env['mailing.mailing'].sudo().browse(mailing_id)
-                message = Markup('<p>%s</p>') % Markup(
-                    _(
-                        'Blocklist request from portal of mailing %(mailing_link)s (document %(record_link)s)',
-                        **self._format_bl_request(mailing_sudo, res_id)
-                    )
-                )
+                message = Markup('<p>{}</p>').format(
+                    _('Blocklist request from portal of mailing %(mailing_link)s (document %(record_link)s)')
+                ) % self._format_bl_request(mailing_sudo, res_id)
             else:
-                message = Markup('<p>%s</p>') % _('Blocklist request from portal')
+                message = Markup('<p>{}</p>').format(_('Blocklist request from portal'))
 
             _blacklist_rec = request.env['mail.blacklist'].sudo()._add(email, message=message)
             return True
@@ -227,14 +221,11 @@ class MassMailController(http.Controller):
         if email:
             if mailing_id and res_id:
                 mailing_sudo = request.env['mailing.mailing'].sudo().browse(mailing_id)
-                message = Markup('<p>%s</p>') % Markup(
-                    _(
-                        'Blocklist removal request from portal of mailing %(mailing_link)s (document %(record_link)s)',
-                        **self._format_bl_request(mailing_sudo, res_id)
-                    )
-                )
+                message = Markup('<p>{}</p>').format(
+                    _('Blocklist removal request from portal of mailing %(mailing_link)s (document %(record_link)s)')
+                ) % self._format_bl_request(mailing_sudo, res_id)
             else:
-                message = Markup('<p>%s</p>') % _('Blocklist removal request from portal')
+                message = Markup('<p>{}</p>').format(_('Blocklist removal request from portal'))
 
             _blacklist_rec = request.env['mail.blacklist'].sudo()._remove(email, message=message)
             return True
@@ -242,9 +233,10 @@ class MassMailController(http.Controller):
 
     def _format_bl_request(self, mailing, document_id):
         mailing_model_name = request.env['ir.model']._get(mailing.mailing_model_real).display_name
+        tmpl = Markup('<a href="#" data-oe-model="{}" data-oe-id="{}">{}</a>')
         return {
-            'mailing_link': Markup(f'<a href="#" data-oe-model="mailing.mailing" data-oe-id="{mailing.id}">{escape(mailing.subject)}</a>'),
-            'record_link': Markup(f'<a href="#" data-oe-model="{escape(mailing.mailing_model_real)}" data-oe-id="{int(document_id)}">{escape(mailing_model_name)}</a>'),
+            'mailing_link': tmpl.format("mailing.mailing", mailing.id, mailing.subject),
+            'record_link': tmpl.format(mailing.mailing_model_real, document_id, mailing_model_name),
         }
 
     # ------------------------------------------------------------

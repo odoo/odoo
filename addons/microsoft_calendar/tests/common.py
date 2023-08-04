@@ -142,7 +142,7 @@ class TestCommon(HttpCase):
         self.recurrent_event_ms_values = {
             'subject': self.recurrent_event_values["name"],
             "body": {
-                'content': Markup('<p>%s</p>' % self.recurrent_event_values["description"]),
+                'content': Markup('<p>%s</p>') % self.recurrent_event_values["description"],
                 'contentType': "html",
             },
             'start': {
