@@ -3,7 +3,7 @@
 import { blockDom, markup } from "@odoo/owl";
 
 export function renderToElement(template, context = {}) {
-    return render(template, context).firstChild;
+    return render(template, context).firstElementChild;
 }
 
 /**
