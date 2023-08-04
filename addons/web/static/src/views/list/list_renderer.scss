@@ -59,7 +59,12 @@
 
         tbody > tr > td:not(.o_list_record_selector) {
             &:not(.o_handle_cell):not(.o_list_button):not(.o_list_record_remove) {
-                @include o-text-overflow(table-cell);
+                --fieldWidget-display: block; // Will affect inner components (see fields.scss)
+
+                display: table-cell;
+                @include text-truncate();
+                vertical-align: middle;
+
                 &.o_list_text {
                     white-space: pre-wrap;
                 }
