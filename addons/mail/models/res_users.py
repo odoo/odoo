@@ -144,6 +144,11 @@ class Users(models.Model):
                 )
         return write_res
 
+    def action_archive(self):
+        activities_to_delete = self.env['mail.activity'].search([('user_id', 'in', self.ids)])
+        activities_to_delete.unlink()
+        return super(Users, self).action_archive()
+
     def _notify_security_setting_update(self, subject, content, mail_values=None, **kwargs):
         """ This method is meant to be called whenever a sensitive update is done on the user's account.
         It will send an email to the concerned user warning him about this change and making some security suggestions.

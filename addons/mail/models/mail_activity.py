@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import pytz
 
 from collections import defaultdict
@@ -11,6 +12,8 @@ from odoo import api, exceptions, fields, models, _, Command
 from odoo.osv import expression
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang
+
+_logger = logging.getLogger(__name__)
 
 
 class MailActivity(models.Model):
@@ -660,3 +663,23 @@ class MailActivity(models.Model):
         virtual_activity._onchange_previous_activity_type_id()
         virtual_activity._onchange_activity_type_id()
         return virtual_activity._convert_to_write(virtual_activity._cache)
+
+    @api.autovacuum
+    def _gc_delete_old_overdue_activities(self):
+        """
+        Delete old overdue activities
+        - If the config_parameter is deleted or 0, the user doesn't want to run this gc routine
+        - If the config_parameter is set to a negative number, it's an invalid value, we skip the gc routine
+        - If the config_parameter is set to a positive number, we delete only overdue activities which deadline is older than X years
+        """
+        year_threshold = int(self.env['ir.config_parameter'].sudo().get_param('mail.activity.gc.delete_overdue_years', 0))
+        if year_threshold == 0:
+            _logger.warning("The ir.config_parameter 'mail.activity.gc.delete_overdue_years' is missing or set to 0. Skipping gc routine.")
+            return
+        if year_threshold < 0:
+            _logger.warning("The ir.config_parameter 'mail.activity.gc.delete_overdue_years' is set to a negative number "
+                            "which is invalid. Skipping gc routine.")
+            return
+        deadline_threshold_dt = datetime.now() - relativedelta(years=year_threshold)
+        old_overdue_activities = self.env['mail.activity'].search([('date_deadline', '<', deadline_threshold_dt)], limit=10_000)
+        old_overdue_activities.unlink()
