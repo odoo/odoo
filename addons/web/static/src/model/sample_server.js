@@ -125,8 +125,6 @@ export class SampleServer {
         }
         this._populateModels();
         switch (params.method || params.route) {
-            case "web_search_read":
-                return this._mockWebSearchRead(params);
             case "unity_web_search_read":
                 return this._mockWebSearchReadUnity(params);
             case "web_read_group":
@@ -577,24 +575,6 @@ export class SampleServer {
         return data;
     }
 
-    /**
-     * Mocks calls to the web_search_read method to return sample records.
-     * @private
-     * @param {Object} params
-     * @param {string} params.model
-     * @param {string[]} params.fields
-     * @returns {{ records: Object[], length: number }}
-     */
-    _mockWebSearchRead(params) {
-        const model = this.data[params.model];
-        const rawRecords = model.records.slice(0, SampleServer.SEARCH_READ_LIMIT);
-        const records = this._mockRead({
-            model: params.model,
-            args: [rawRecords.map((r) => r.id), params.fields],
-        });
-        return { records, length: records.length };
-    }
-
     _mockWebSearchReadUnity(params) {
         const fields = Object.keys(params.specification);
         let result;
@@ -606,7 +586,13 @@ export class SampleServer {
                 length: group.__data.records.length,
             };
         } else {
-            result = this._mockWebSearchRead({ ...params, fields });
+            const model = this.data[params.model];
+            const rawRecords = model.records.slice(0, SampleServer.SEARCH_READ_LIMIT);
+            const records = this._mockRead({
+                model: params.model,
+                args: [rawRecords.map((r) => r.id), fields],
+            });
+            result = { records, length: records.length };
         }
         // populate many2one and x2many values
         for (const fieldName in params.specification) {

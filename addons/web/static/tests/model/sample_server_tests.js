@@ -117,12 +117,20 @@ QUnit.module(
         QUnit.test("Sample data: people type + all field names", async function (assert) {
             assert.expect(26);
 
-            const allFieldNames = Object.keys(fields["res.users"]);
+            const specification = {};
+            for (const fieldName in fields["res.users"]) {
+                specification[fieldName] = {};
+                if (fields["res.users"][fieldName].type === "many2one") {
+                    specification[fieldName] = {
+                        fields: { display_name: {} },
+                    };
+                }
+            }
             const server = new DeterministicSampleServer("res.users", fields["res.users"]);
             const { records } = await server.mockRpc({
-                method: "web_search_read",
+                method: "unity_web_search_read",
                 model: "res.users",
-                fields: allFieldNames,
+                specification,
             });
             const rec = records[0];
 
@@ -178,14 +186,14 @@ QUnit.module(
             assert.ok(selectionValues.includes(rec.type));
 
             // Relational fields
-            assert.strictEqual(rec.currency[0], 1);
+            assert.strictEqual(rec.currency.id, 1);
             // Currently we expect the currency name to be a latin string, which
             // is not important; in most case we only need the ID. The following
             // assertion can be removed if needed.
-            assert.ok(SAMPLE_TEXTS.includes(rec.currency[1]));
+            assert.ok(SAMPLE_TEXTS.includes(rec.currency.display_name));
 
-            assert.strictEqual(typeof rec.manager_id[0], "number");
-            assert.ok(SAMPLE_PEOPLE.includes(rec.manager_id[1]));
+            assert.strictEqual(typeof rec.manager_id.id, "number");
+            assert.ok(SAMPLE_PEOPLE.includes(rec.manager_id.display_name));
 
             assert.strictEqual(rec.cover_image_id, false);
 
@@ -201,9 +209,9 @@ QUnit.module(
 
             const server = new DeterministicSampleServer("res.country", fields["res.country"]);
             const { records } = await server.mockRpc({
-                method: "web_search_read",
+                method: "unity_web_search_read",
                 model: "res.country",
-                fields: ["display_name"],
+                specification: { display_name: {} },
             });
 
             assert.ok(SAMPLE_COUNTRIES.includes(records[0].display_name));
@@ -215,9 +223,9 @@ QUnit.module(
             const server = new DeterministicSampleServer("hobbit", fields.hobbit);
 
             const { records } = await server.mockRpc({
-                method: "web_search_read",
+                method: "unity_web_search_read",
                 model: "hobbit",
-                fields: ["display_name"],
+                specification: { display_name: {} },
             });
 
             assert.ok(SAMPLE_TEXTS.includes(records[0].display_name));
@@ -231,34 +239,14 @@ QUnit.module(
             const server = new DeterministicSampleServer("hobbit", fields.hobbit);
 
             const result = await server.mockRpc({
-                method: "web_search_read",
+                method: "unity_web_search_read",
                 model: "hobbit",
-                fields: ["display_name"],
+                specification: { display_name: {} },
             });
 
             assert.deepEqual(Object.keys(result.records[0]), ["id", "display_name"]);
             assert.strictEqual(result.length, SEARCH_READ_LIMIT);
             assert.ok(/\w+/.test(result.records[0].display_name), "Display name has been mocked");
-        });
-
-        QUnit.test("Send 'search_read' RPC: invalid field names", async function (assert) {
-            assert.expect(3);
-
-            const server = new DeterministicSampleServer("hobbit", fields.hobbit);
-
-            const result = await server.mockRpc({
-                method: "web_search_read",
-                model: "hobbit",
-                fields: ["name"],
-            });
-
-            assert.deepEqual(Object.keys(result.records[0]), ["id", "name"]);
-            assert.strictEqual(result.length, SEARCH_READ_LIMIT);
-            assert.strictEqual(
-                result.records[0].name,
-                false,
-                `Field "name" doesn't exist => returns false`
-            );
         });
 
         QUnit.test("Send 'search_read' RPC: many2one fields", async function (assert) {
