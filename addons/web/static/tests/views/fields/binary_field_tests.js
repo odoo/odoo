@@ -268,6 +268,36 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("icons are displayed exactly once", async (assert) => {
+        assert.expect(3);
+        patchWithCleanup(odoo, { debug: true });
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: /* xml */ `
+                <form>
+                    <field name="document" filename="foo"/>
+                </form>`,
+            resId: 1,
+        });
+        assert.containsOnce(
+            target,
+            ".o_field_binary .o_select_file_button",
+            "only one select file icon should be visible"
+        );
+        assert.containsOnce(
+            target,
+            ".o_field_binary .o_download_file_button",
+            "only one download file icon should be visible"
+        );
+        assert.containsOnce(
+            target,
+            ".o_field_binary .o_clear_file_button",
+            "only one clear file icon should be visible"
+        );
+    });
+
     QUnit.test(
         "binary fields input value is empty when clearing after uploading",
         async function (assert) {
