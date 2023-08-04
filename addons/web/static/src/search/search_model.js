@@ -1072,10 +1072,12 @@ export class SearchModel extends EventBus {
             domain.push(["id", "=", this.context.active_id]);
         }
 
-        const result = await this.orm.webSearchRead(definitionRecordModel, domain, [
-            "display_name",
-            definitionRecordField,
-        ]);
+        const result = await this.orm.webSearchRead(definitionRecordModel, domain, {
+            specification: {
+                display_name: {},
+                [definitionRecordField]: {},
+            },
+        });
 
         return result.records.map((values) => {
             return {
