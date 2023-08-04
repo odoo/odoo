@@ -1451,6 +1451,7 @@ export const paragraphRelatedElements = [
     'H5',
     'H6',
     'PRE',
+    'BLOCKQUOTE',
 ];
 
 /**
