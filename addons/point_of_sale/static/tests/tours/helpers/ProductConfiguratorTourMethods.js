@@ -65,7 +65,7 @@ class Check {
         return [
             {
                 content: "product configurator is shown",
-                trigger: ".product-configurator-popup:not(:has(.oe_hidden))",
+                trigger: ".product-configurator-popup:not(:has(.d-none))",
                 run: () => {},
             },
         ];

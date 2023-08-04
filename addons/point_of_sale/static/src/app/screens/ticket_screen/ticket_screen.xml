@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.TicketScreen" owl="1">
-        <div class="ticket-screen screen h-100 bg-100" t-att-class="{ oe_hidden: !props.isShown }">
+        <div class="ticket-screen screen h-100 bg-100" t-att-class="{ 'd-none': !props.isShown }">
             <div class="screen-full-width d-flex w-100 h-100">
                 <div class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-50 h-md-100 bg-300 overflow-y-auto">
                     <div class="controls d-flex align-items-center justify-content-between mt-1 mt-md-0 p-2 bg-400">
@@ -58,7 +58,7 @@
                     <div class="orders overflow-y-auto">
                         <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
                         <t t-if="_filteredOrderList.length !== 0">
-                            <div class="header-row d-flex text-bg-700 fw-bolder" t-att-class="{ oe_hidden: ui.isSmall }">
+                            <div class="header-row d-flex text-bg-700 fw-bolder" t-att-class="{ 'd-none': ui.isSmall }">
                                 <div class="col wide p-2">Date</div>
                                 <div class="col wide p-2">Receipt Number</div>
                                 <div class="col p-2">Customer</div>

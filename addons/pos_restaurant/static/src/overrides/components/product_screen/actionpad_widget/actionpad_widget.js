@@ -1,7 +1,6 @@
 /** @odoo-module */
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
-import { nbsp } from "@web/core/utils/strings";
 /**
  * @props partner
  */
@@ -13,15 +12,11 @@ patch(ActionpadWidget.prototype, {
     get currentOrder() {
         return this.pos.get_order();
     },
-    get addedClasses() {
-        if (!this.currentOrder) {
-            return {};
-        }
-        const hasChanges = this.currentOrder.hasChangesToPrint();
-        const skipped = hasChanges ? false : this.currentOrder.hasSkippedChanges();
+    get swapButtonClasses() {
         return {
-            highlight: hasChanges,
-            altlight: skipped,
+            "highlight btn-primary": this.currentOrder?.hasChangesToPrint(),
+            altlight:
+                !this.currentOrder?.hasChangesToPrint() && this.currentOrder?.hasSkippedChanges(),
         };
     },
     async submitOrder() {
@@ -61,12 +56,8 @@ patch(ActionpadWidget.prototype, {
             }
             const category = this.pos.db.category_by_id[categoryId].name;
             const numProd = orderline.quantity;
-            categories[category] = categories[category] ? categories[category] + numProd : numProd;
+            categories[category] = categories[category] ?? 0 + numProd;
         }
-        let result = "";
-        for (const key in categories) {
-            result = result + categories[key] + nbsp + key + " | ";
-        }
-        return result.slice(0, -2);
+        return Object.entries(categories);
     },
 });

@@ -2,48 +2,47 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ProductScreen" owl="1">
-        <div class="product-screen screen h-100 bg-100" t-att-class="{ oe_hidden: !props.isShown }">
-            <div class="screen-full-width d-flex w-100 h-100">
-                <div class="leftpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 border-end bg-200" t-if="!ui.isSmall || pos.mobile_pane === 'left'">
-                    <OrderWidget/>
-                    <div class="pads border-top">
-                        <div class="control-buttons d-flex flex-wrap border-bottom overflow-hidden bg-300">
-                            <t t-if="!ui.isSmall">
-                                <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
-                                    <t t-component="cb.component" t-key="cb.name"/>
-                                </t>
-                            </t>
-                        </div>
-                        <div class="subpads d-flex">
-                            <ActionpadWidget
-                                partner="partner"
-                                actionName="constructor.numpadActionName"
-                                actionType="'payment'"
-                                onClickMore.bind="displayAllControlPopup" />
-                            <NumpadWidget
-                                updateSelectedOrderline.bind="updateSelectedOrderline"
-                                activeMode="pos.numpadMode" />
-                        </div>
+        <div class="product-screen d-flex h-100 bg-100" t-att-class="{ 'd-none': !props.isShown }">
+            <div class="leftpane d-flex flex-column border-end bg-200" 
+                t-if="!ui.isSmall || pos.mobile_pane === 'left'"
+                t-att-class="{'flex-grow-1': ui.isSmall}">
+                <OrderWidget/>
+                <div class="pads border-top">
+                    <div class="control-buttons d-flex flex-wrap border-bottom overflow-hidden bg-300"
+                        t-if="!ui.isSmall">
+                        <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
+                            <t t-component="cb.component" t-key="cb.name"/>
+                        </t>
+                    </div>
+                    <div class="subpads d-flex">
+                        <ActionpadWidget
+                            partner="partner"
+                            actionName="constructor.numpadActionName"
+                            actionType="'payment'"
+                            onClickMore.bind="displayAllControlPopup" />
+                        <NumpadWidget
+                            updateSelectedOrderline.bind="updateSelectedOrderline"
+                            activeMode="pos.numpadMode" />
                     </div>
                 </div>
-                <div class="rightpane d-flex flex-column flex-grow-1 w-100 h-100 bg-300" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
-                    <ProductsWidget />
-                    <t t-if="ui.isSmall">
-                        <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="showProductReminder" t-key="animationKey" >
-                            <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
-                        </div>
-                        <div class="switchpane d-flex">
-                            <button class="btn-switchpane pay-button btn btn-primary w-50 rounded-0 fw-bolder" t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}" t-on-click="() => currentOrder.pay()">
-                                <span class="fs-1 d-block">Pay</span>
-                                <span><t t-esc="total" /></span>
-                            </button>
-                            <button class="btn-switchpane btn btn-secondary w-50 rounded-0 fw-bolder" t-att-class="{'primary': primaryReviewButton(), 'secondary': !primaryReviewButton()}" t-on-click="switchPane">
-                                <span class="fs-1 d-block">Review</span>
-                                <span><t t-esc="items"/> items</span>
-                            </button>
-                        </div>
-                    </t>
-                </div>
+            </div>
+            <div class="rightpane overflow-auto d-flex flex-grow-1 flex-column bg-300" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
+                <ProductsWidget />
+                <t t-if="ui.isSmall">
+                    <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="showProductReminder" t-key="animationKey" >
+                        <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
+                    </div>
+                    <div class="switchpane d-flex">
+                        <button class="btn-switchpane pay-button btn btn-primary w-50 rounded-0 fw-bolder" t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}" t-on-click="() => currentOrder.pay()">
+                            <span class="fs-1 d-block">Pay</span>
+                            <span><t t-esc="total" /></span>
+                        </button>
+                        <button class="btn-switchpane btn btn-secondary w-50 rounded-0 fw-bolder" t-att-class="{'primary': primaryReviewButton(), 'secondary': !primaryReviewButton()}" t-on-click="switchPane">
+                            <span class="fs-1 d-block">Review</span>
+                            <span><t t-esc="items"/> items</span>
+                        </button>
+                    </div>
+                </t>
             </div>
         </div>
     </t>

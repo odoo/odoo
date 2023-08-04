@@ -186,7 +186,7 @@
         </div>
     </t>
     <t t-name="point_of_sale.OrderLinesReceipt" owl="1">
-        <t t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
+        <div t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
             <div t-esc="line.product_name_wrapped[0]" />
             <WrappedProductNameLines line="line" />
             <t t-if="line.display_discount_policy == 'without_discount' and line.price != line.price_lst">
@@ -237,7 +237,7 @@
                     </ul>
                 </div>
             </t>
-        </t>
+        </div>
     </t>
 
 </templates>
