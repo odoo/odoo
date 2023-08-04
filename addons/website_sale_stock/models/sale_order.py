@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
         product = self.env['product.product'].browse(product_id)
         if product.type == 'product' and not product.allow_out_of_stock_order:
             product_qty_in_cart, available_qty = self._get_cart_and_free_qty(
-                line=order_line, product=product
+                product, line=order_line
             )
 
             old_qty = order_line.product_uom_qty if order_line else 0
@@ -49,13 +49,13 @@ class SaleOrder(models.Model):
                 return allowed_line_qty, order_line.shop_warning or self.shop_warning
         return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
 
-    def _get_cart_and_free_qty(self, line=None, product=None):
+    def _get_cart_and_free_qty(self, product, line=None):
         """ Get cart quantity and free quantity for given product or line's product.
 
         Note: self.ensure_one()
 
+        :param ProductProduct product: The product
         :param SaleOrderLine line: The optional line
-        :param ProductProduct product: The optional product
         """
         self.ensure_one()
         if not line and not product:
@@ -79,7 +79,7 @@ class SaleOrder(models.Model):
         values = []
         for line in self.order_line:
             if line.product_id.type == 'product' and not line.product_id.allow_out_of_stock_order:
-                cart_qty, avl_qty = self._get_cart_and_free_qty(line=line)
+                cart_qty, avl_qty = self._get_cart_and_free_qty(line.product_id, line=line)
                 if cart_qty > avl_qty:
                     line._set_shop_warning_stock(cart_qty, max(avl_qty, 0))
                     values.append(line.shop_warning)
