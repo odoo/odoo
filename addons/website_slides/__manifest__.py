@@ -147,7 +147,7 @@ Featuring
             'web/static/src/legacy/scss/translation_dialog.scss',
             'web/static/src/legacy/scss/keyboard.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
-            'web/static/src/legacy/scss/web.zoomodoo.scss',
+            'website/static/src/libs/zoomodoo/zoomodoo.scss',
 
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
@@ -197,7 +197,7 @@ Featuring
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/libs/moment.js',
             'web/static/src/legacy/js/libs/pdfjs.js',
-            'web/static/src/legacy/js/libs/zoomodoo.js',
+            'website/static/src/libs/zoomodoo/zoomodoo.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
             'web/static/src/legacy/js/core/ajax.js',
             'web/static/src/legacy/js/core/bus.js',
