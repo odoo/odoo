@@ -143,7 +143,7 @@ export class AccountMoveListController extends ListController {
 
     async onDeleteSelectedRecords() {
         const selectedResIds = await this.getSelectedResIds();
-        if (!await this.account_move_service.addDeletionDialog(this, selectedResIds)) {
+        if (this.props.resModel !== "account.move" || !await this.account_move_service.addDeletionDialog(this, selectedResIds)) {
             return super.onDeleteSelectedRecords(...arguments);
         }
     }
