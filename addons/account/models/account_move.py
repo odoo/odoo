@@ -3516,11 +3516,13 @@ class AccountMove(models.Model):
         for ids in self._cr.split_for_in_conditions(records.ids, size=100):
             moves = self.browse(ids)
             try:  # try posting in batch
-                moves._post()
+                with self.env.cr.savepoint():
+                    moves._post()
             except UserError:  # if at least one move cannot be posted, handle moves one by one
                 for move in moves:
                     try:
-                        move._post()
+                        with self.env.cr.savepoint():
+                            move._post()
                     except UserError as e:
                         move.to_check = True
                         msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
