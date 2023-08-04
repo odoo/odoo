@@ -236,7 +236,6 @@ Featuring
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
             'web/static/src/legacy/xml/name_and_signature.xml',
-            'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/core/**/*.js',
             'web/static/src/env.js',
             'web/static/src/legacy/js/services/session.js',
