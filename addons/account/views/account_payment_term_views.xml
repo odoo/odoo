@@ -42,6 +42,7 @@
                         </div>
                         <group>
                             <field name="company_id" options="{'no_create': True}" class="w-25" groups="base.group_multi_company"/>
+<<<<<<< HEAD
                             <label for="early_discount"/>
                             <div class="o_field_highlight">
                                 <field name="early_discount"/>
@@ -91,6 +92,39 @@
                                     <label for="display_on_invoice"/>
                                 </div>
                             </group>
+||||||| parent of 330fc92536c (temp)
+                            <field name="note" string="Description on Invoices" placeholder="e.g. Payment terms: 30 days after invoice date"/>
+                            <field name="display_on_invoice" string="Display details"/>
+
+                            <field name="line_ids" nolabel="1" colspan="2">
+                                <tree string="Payment Terms" editable="top" no_open="True">
+                                    <field name="value" string="Due Type"/>
+                                    <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}" />
+                                    <field name="months"/>
+                                    <field name="days"/>
+                                    <field name="end_month" widget="boolean_toggle"/>
+                                    <field name="days_after" attrs="{'invisible': [('end_month','=', False)]}"/>
+                                    <field name="discount_percentage"/>
+                                    <field name="discount_days"/>
+                                </tree>
+                            </field>
+=======
+                            <field name="note" string="Description on Invoices" placeholder="e.g. Payment terms: 30 days after invoice date"/>
+                            <field name="display_on_invoice" string="Display details"/>
+
+                            <field name="line_ids" nolabel="1" colspan="2">
+                                <tree string="Payment Terms" editable="top" no_open="True">
+                                    <field name="value" string="Due Type"/>
+                                    <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}" />
+                                    <field name="months"/>
+                                    <field name="days"/>
+                                    <field name="end_month" widget="boolean_toggle" options="{'autosave': False}"/>
+                                    <field name="days_after" attrs="{'invisible': [('end_month','=', False)]}"/>
+                                    <field name="discount_percentage"/>
+                                    <field name="discount_days"/>
+                                </tree>
+                            </field>
+>>>>>>> 330fc92536c (temp)
                         </group>
                     </sheet>
                 </form>
