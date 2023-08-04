@@ -251,6 +251,7 @@ class AccountMoveLine(models.Model):
         invoice = self.move_id
         svl_vals_list = []
         aml_vals_list = []
+        total_difference = 0
         for layer in layers:
             # use the link between `self` and `layer` (i.e. the qty of `layer` billed by `self`)
             invoicing_layer_qty = layers_and_invoices_qties[(layer, invoice)][1]
@@ -309,6 +310,7 @@ class AccountMoveLine(models.Model):
             aml_price_unit = aml.product_uom_id._compute_price(aml_price_unit, product_uom)
 
             unit_valuation_difference = aml_price_unit - layer_price_unit
+            total_difference += unit_valuation_difference
 
             # Generate the AML values for the already out quantities
             unit_valuation_difference_curr = self.company_id.currency_id._convert(unit_valuation_difference, self.currency_id, self.company_id, self.date, round=False)
@@ -316,6 +318,7 @@ class AccountMoveLine(models.Model):
             out_qty_to_invoice = product_uom._compute_quantity(out_qty_to_invoice, self.product_uom_id)
             if not float_is_zero(unit_valuation_difference_curr * out_qty_to_invoice, precision_rounding=self.currency_id.rounding):
                 aml_vals_list += self._prepare_pdiff_aml_vals(out_qty_to_invoice, unit_valuation_difference_curr)
+                # total_difference += unit_valuation_difference_curr
 
             # Generate the SVL values for the on hand quantities (and impact the parent layer)
             po_pu_curr = po_line.currency_id._convert(po_line.price_unit, self.currency_id, self.company_id, self.date, round=False)
@@ -324,6 +327,25 @@ class AccountMoveLine(models.Model):
                 svl_vals = self._prepare_pdiff_svl_vals(layer, sign * qty_to_correct, unit_valuation_difference, price_difference_curr)
                 layer.remaining_value += svl_vals['value']
                 svl_vals_list.append(svl_vals)
+
+        if self.is_refund:
+
+            layer_price_unit = layer.value / layer.quantity
+            aml_gross_price_unit = self._get_gross_unit_price()
+            aml_price_unit = aml.currency_id._convert(aml_gross_price_unit, aml.company_id.currency_id, aml.company_id, aml.date, round=False)
+            aml_price_unit = aml.product_uom_id._compute_price(aml_price_unit, product_uom)
+
+            unit_valuation_difference = layer_price_unit + aml_price_unit - total_difference
+
+            # Generate the AML values for the already out quantities
+            unit_valuation_difference_curr = self.company_id.currency_id._convert(unit_valuation_difference, self.currency_id, self.company_id, self.date, round=False)
+            unit_valuation_difference_curr = product_uom._compute_price(unit_valuation_difference_curr, self.product_uom_id)
+            out_qty_to_invoice = product_uom._compute_quantity(layer.quantity, self.product_uom_id)
+            if not float_is_zero(unit_valuation_difference_curr * out_qty_to_invoice, precision_rounding=self.currency_id.rounding):
+                aml_vals_list += self._prepare_pdiff_aml_vals(out_qty_to_invoice, unit_valuation_difference_curr)
+            # return_diff_amount = sum(layers.mapped('value'))
+            # aml_vals_list += self._prepare_pdiff_aml_vals(self.quantity, return_diff_amount / self.quantity)
+
         return svl_vals_list, aml_vals_list
 
     def _prepare_pdiff_aml_vals(self, qty, unit_valuation_difference):
