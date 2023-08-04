@@ -1162,6 +1162,10 @@ class BaseModel(metaclass=MetaModel):
                     # Failed to write, log to messages, rollback savepoint (to
                     # avoid broken transaction) and keep going
                     errors += 1
+                except UserError as e:
+                    info = rec_data['info']
+                    messages.append(dict(info, type='error', message=str(e)))
+                    errors += 1
                 except Exception as e:
                     _logger.debug("Error while loading record", exc_info=True)
                     info = rec_data['info']
@@ -4426,6 +4430,17 @@ Fields:
             for data in to_create:
                 if data.get('xml_id') and not data['xml_id'].startswith(prefix):
                     _logger.warning("Creating record %s in module %s.", data['xml_id'], module)
+
+        if self.env.context.get('import_file'):
+            existing_modules = self.env['ir.module.module'].search([]).mapped('name')
+            for data in to_create:
+                xml_id = data.get('xml_id')
+                if xml_id:
+                    module_name, sep, record_id = xml_id.partition('.')
+                    if sep and module_name in existing_modules:
+                        raise UserError(
+                            _("The record %(xml_id)s has the module prefix %(module_name)s. This is the part before the '.' in the external id. Because the prefix refers to an existing module, the record would be deleted when the module is upgraded. Use either no prefix and no dot or a prefix that isn't an existing module. For example, __import__, resulting in the external id __import__.%(record_id)s.",
+                              xml_id=xml_id, module_name=module_name, record_id=record_id))
 
         # create records
         records = self._load_records_create([data['values'] for data in to_create])
