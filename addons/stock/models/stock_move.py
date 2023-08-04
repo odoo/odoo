@@ -367,6 +367,9 @@ class StockMove(models.Model):
                     continue
                 ml.qty_done -= qty_ml_dec
                 quantity -= move.product_uom._compute_quantity(qty_ml_dec, move.product_uom, round=False)
+                if not ml.exists():
+                    # If decreasing the move line qty_done to 0 let it to be unlinked (i.e. for immediate transfers)
+                    continue
                 # Unreserve
                 if (not move.picking_id.immediate_transfer and move.reserved_availability < move.product_uom_qty):
                     continue
