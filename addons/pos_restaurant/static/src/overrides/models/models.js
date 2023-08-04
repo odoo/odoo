@@ -29,7 +29,7 @@ patch(Order.prototype, {
         super.init_from_JSON(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             this.tableId = json.table_id;
-            this.validation_date = moment.utc(json.creation_date).local().toDate();
+            this.validation_date = json.creation_date;
             this.customerCount = json.customer_count;
         }
     },

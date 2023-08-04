@@ -1881,8 +1881,8 @@ export class Order extends PosModel {
     }
 
     initialize_validation_date() {
-        this.validation_date = new Date();
-        this.formatted_validation_date = formatDateTime(DateTime.fromJSDate(this.validation_date));
+        this.validation_date = luxon.DateTime.now()
+        this.formatted_validation_date = formatDateTime(this.validation_date);
     }
 
     set_tip(tip) {

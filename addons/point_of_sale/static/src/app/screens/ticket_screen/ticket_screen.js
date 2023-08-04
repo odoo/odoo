@@ -365,7 +365,9 @@ export class TicketScreen extends Component {
         return this._getOrderList().filter(predicate);
     }
     getDate(order) {
-        return deserializeDate(order.validation_date).toFormat("yyyy-MM-dd HH:mm a");
+        const creation_date = (luxon.DateTime.fromJSDate(order.creation_date)).toFormat("yyyy-MM-dd HH:mm:ss");
+        const date = order.validation_date ? order.validation_date : creation_date;
+        return deserializeDate(date).toFormat("yyyy-MM-dd HH:mm:ss");
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.get_total_with_tax());
