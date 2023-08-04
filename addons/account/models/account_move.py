@@ -4322,6 +4322,15 @@ class AccountMove(models.Model):
         # from_cron=True to log errors in chatter instead of raise
         composer.action_send_and_print(from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
+    def generate_pdf_and_send_invoice(self):
+        """ Calls `_generate_pdf_and_send_invoice` and returns the (pdf, filename)"""
+        template = self.env.ref(self._get_mail_template())
+        self.with_context(skip_invoice_sync=True)._generate_pdf_and_send_invoice(template)
+        if len(self) < 2:
+            return self.invoice_pdf_report_id.raw, self.invoice_pdf_report_id.name
+        else:
+            return self.env['ir.actions.report']._render('account.account_invoices', self.ids)[0], "Invoices.pdf"
+
     def _get_invoice_pdf_report_filename(self):
         """ Get the filename of the generated PDF invoice report. """
         self.ensure_one()
