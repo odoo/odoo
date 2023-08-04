@@ -2881,7 +2881,9 @@ export class Wysiwyg extends Component {
         if (node?.querySelectorAll) {
             for (const element of node.querySelectorAll('.o_editable, .o_not_editable')) {
                 const editable = element.classList.contains('o_editable');
-                if (element.isContentEditable !== editable) {
+                if(element.hasAttribute('data-oe-not-contenteditable') && !element.firstChild) {
+                    element.contentEditable = false;
+                } else if (element.isContentEditable !== editable) {
                     element.contentEditable = editable;
                 }
             }
