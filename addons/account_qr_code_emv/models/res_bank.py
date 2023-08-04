@@ -3,6 +3,7 @@
 import re
 
 from odoo import _, api, fields, models
+from odoo.tools.misc import remove_accents
 
 from odoo.addons.account_qr_code_emv.const import CURRENCY_MAPPING
 
@@ -22,6 +23,10 @@ class ResPartnerBank(models.Model):
             return f'{header:02}{len(str(value)):02}{value}'
         else:
             return ''
+
+    @api.model
+    def _remove_accents(self, string):
+        return remove_accents(string).replace('đ', 'd').replace('Đ', 'D')
 
     @api.depends('country_code')
     def _compute_display_qr_setting(self):
@@ -48,10 +53,11 @@ class ResPartnerBank(models.Model):
     def _get_qr_code_vals_list(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         tag, merchant_account_info = self._get_merchant_account_info()
         currency_code = CURRENCY_MAPPING[currency.name]
-        merchant_name = self.partner_id.name and self.partner_id.name[:25] or 'NA'
-        merchant_city = self.partner_id.city and self.partner_id.city[:15] or ''
+        amount = amount.is_integer() and int(amount) or amount
+        merchant_name = self.partner_id.name and self._remove_accents(self.partner_id.name)[:25] or 'NA'
+        merchant_city = self.partner_id.city and self._remove_accents(self.partner_id.city)[:15] or ''
         comment = structured_communication or free_communication or ''
-        comment = re.sub(r'/[^ A-Za-z0-9_@.\/#&+-]+/g', '', comment)
+        comment = re.sub(r'/[^ A-Za-z0-9_@.\/#&+-]+/g', '', remove_accents(comment))
         additional_data_field = self._get_additional_data_field(comment) if self.include_reference else None
         return [
             (0, '01'),                                                              # Payload Format Indicator
