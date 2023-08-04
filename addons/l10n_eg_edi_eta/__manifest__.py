@@ -14,6 +14,7 @@
     'version': '0.2',
     'license': 'LGPL-3',
     'depends': ['account_edi', 'l10n_eg'],
+    'auto_install': ['l10n_eg'],
     'data': [
         'data/account_edi_data.xml',
         'data/l10n_eg_edi.activity.type.csv',
