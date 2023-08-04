@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Markup } from '@web/legacy/js/core/utils';
 import session from 'web.session';
 import publicRootData from '@web/legacy/js/public/public_root';
-import "@web/legacy/js/libs/zoomodoo";
+import "@website/libs/zoomodoo/zoomodoo";
 import { pick } from "@web/core/utils/objects";
 
 export const WebsiteRoot = publicRootData.PublicRoot.extend({

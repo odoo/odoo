@@ -6,7 +6,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
-import "@web/legacy/js/libs/zoomodoo";
+import "@website/libs/zoomodoo/zoomodoo";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
 import dom from "@web/legacy/js/core/dom";
 import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
