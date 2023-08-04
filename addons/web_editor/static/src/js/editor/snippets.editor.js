@@ -8,7 +8,7 @@ import { Markup, confine } from "@web/legacy/js/core/utils";
 import Widget from "@web/legacy/js/core/widget";
 import options from "@web_editor/js/editor/snippets.options";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
-import SmoothScrollOnDrag from "@web/legacy/js/core/smooth_scroll_on_drag";
+import SmoothScrollOnDrag from "@web_editor/js/editor/smooth_scroll_on_drag";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 import { sprintf, escape } from "@web/core/utils/strings";
