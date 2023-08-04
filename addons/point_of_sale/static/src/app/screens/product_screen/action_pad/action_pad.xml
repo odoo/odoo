@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ActionpadWidget" owl="1">
-        <div class="actionpad d-flex flex-column flex-grow-1 mw-50 p-0 border-end">
+        <div class="actionpad d-flex flex-column flex-grow-1 p-0 border-end">
             <button class="button mobile-more-button btn btn-secondary flex-fill border-bottom" t-if="ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
                 <span>More...</span>
             </button>
@@ -20,10 +20,11 @@
                     </div>
                 </div>
             </button>
-            <button class="button pay validation pay-order-button btn btn-primary btn-lg py-5 rounded-0 highlight d-flex flex-column flex-fill align-items-center justify-content-center fw-bolder" 
+            <button class="pay validation pay-order-button btn-primary"
+                t-attf-class="{{getMainButtonClasses()}}" 
                 t-att-class="{ 'with-more-button': props.onClickMore and ui.isSmall }" 
                 t-on-click="props.actionToTrigger ? this.props.actionToTrigger : () => pos.get_order().pay()">
-                <div class="pay-circle d-flex align-items-center justify-content-center py-2 mb-2" t-att-class="{ 'highlight': this.highlightPay }">
+                <div class="pay-circle d-flex align-items-center justify-content-center py-2 mb-2">
                     <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
                 </div>
                 <t class="text-white" t-esc="props.actionName" />

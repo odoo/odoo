@@ -122,7 +122,7 @@ export class PartnerDetailsEdit extends Component {
     }
     /**
      * Loading image is converted to a Promise to allow await when
-     * loading an image. It resolves to the loaded image if succesful,
+     * loading an image. It resolves to the loaded image if successful,
      * else, resolves to false.
      *
      * [Source](https://stackoverflow.com/questions/45788934/how-to-turn-this-callback-into-a-promise-using-async-await)

@@ -2,6 +2,7 @@
 /* global posmodel */
 
 import { registry } from "@web/core/registry";
+import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { roundDecimals as round_di } from "@web/core/utils/numbers";
 import { nbsp } from "@web/core/utils/strings";
 
@@ -100,11 +101,7 @@ steps = steps.concat([
         trigger: ".pos.done-testing",
         run: function () {}, // it's a check
     },
-    {
-        content: "click category switch",
-        trigger: ".breadcrumb-home",
-        run: "click",
-    },
+    ...ProductScreen.do.clickHomeCategory(),
     {
         content: "click review button",
         trigger: ".btn-switchpane:contains('Review')",
@@ -324,8 +321,8 @@ steps = steps.concat([
     },
 ]);
 
-registry.category("web_tour.tours").add("pos_pricelist", { 
-    test: true, 
-    url: "/pos/ui", 
+registry.category("web_tour.tours").add("pos_pricelist", {
+    test: true,
+    url: "/pos/ui",
     steps: () => steps,
 });

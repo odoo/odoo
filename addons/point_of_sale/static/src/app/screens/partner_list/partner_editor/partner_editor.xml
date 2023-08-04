@@ -13,7 +13,7 @@
                         </t>
                         <input type="file" class="image-uploader" t-on-change="uploadImage" />
                     </div>
-                    <input class="detail partner-name form-control form-control-lg" name="name" t-att-value="props.partner.name or ''" placeholder="Name" t-on-change="captureChange" />
+                    <input class="detail partner-name form-control form-control-lg" t-model="changes.name" name="name" placeholder="Name" />
                 </div>
                 <div class="partner-details-box row row-cols-1 row-cols-sm-2 gy-3 mt-3">
                     <t t-foreach="['Street', 'City', 'Zip', 'Email', 'Phone', 'Mobile', 'Barcode' ]" t-as="item" t-key="item">
