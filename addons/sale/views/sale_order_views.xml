@@ -115,9 +115,9 @@
                   decoration-primary="state == 'sent'"
                   decoration-muted="state == 'cancel'">
                 <header>
-                    <button name="%(sale.action_view_sale_advance_payment_inv)d" 
-                            type="action" 
-                            string="Create Invoices" 
+                    <button name="%(sale.action_view_sale_advance_payment_inv)d"
+                            type="action"
+                            string="Create Invoices"
                             class="btn-secondary"/>
                 </header>
                 <field name="message_needaction" invisible="1"/>
@@ -280,10 +280,10 @@
                 </div>
                 <group name="sale_header">
                     <group name="partner_details">
-                        <field name="partner_id" 
-                               widget="res_partner_many2one" 
-                               context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" 
-                               options="{'always_reload': True}" 
+                        <field name="partner_id"
+                               widget="res_partner_many2one"
+                               context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
+                               options="{'always_reload': True}"
                                placeholder="Type to find a customer..."/>
                         <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
                         <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
@@ -425,6 +425,7 @@
                             <tree
                                 string="Sales Order Lines"
                                 editable="bottom"
+                                limit="200"
                             >
                                 <control>
                                     <create name="add_product_control" string="Add a product"/>
