@@ -484,6 +484,19 @@
                                 </span>
                             </div>
                         </button>
+                        <button name="%(project.act_project_project_2_project_task_all)d" type="action" class="oe_stat_button" icon="fa-tasks">
+                            <div
+                                class="o_field_widget o_stat_info"
+                                style="display: inline-flex;"
+                            >
+                                <span class="o_stat_value mr4">
+                                    <field name="task_count" />
+                                </span>
+                                <span class="o_label">
+                                    <field name="label_tasks" readonly="1" />
+                                </span>
+                            </div>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
