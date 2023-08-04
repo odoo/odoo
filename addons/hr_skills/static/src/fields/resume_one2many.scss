@@ -23,7 +23,11 @@
                 content: "";
 
                 @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
-                    left: ($o-hrs-timeline-dot-size * .5 + o-to-rem($o-horizontal-padding) * 2 - o-to-rem($border-width))
+                    left: ($o-hrs-timeline-dot-size * .5 + o-to-rem(map-get($spacers, 4))  - o-to-rem($border-width))
+                }
+
+                @include media-breakpoint-up(xxl, $o-extra-grid-breakpoints) {
+                    left: ($o-hrs-timeline-dot-size * .5 + o-to-rem($o-horizontal-padding)  - o-to-rem($border-width))
                 }
             }
         }
