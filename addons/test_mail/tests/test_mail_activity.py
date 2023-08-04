@@ -9,6 +9,7 @@ from unittest.mock import patch
 from unittest.mock import DEFAULT
 
 import pytz
+import random
 
 from odoo import fields, exceptions, tests
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
@@ -379,6 +380,29 @@ class TestActivityMixin(TestActivityCommon):
         rec.toggle_active()
         self.assertEqual(rec.active, True)
         self.assertEqual(rec.activity_ids, self.env['mail.activity'])
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_activity_mixin_archive_user(self):
+        """
+        Test when archiving an user, we unlink all his related activities
+        """
+        test_users = self.env['res.users']
+        for i in range(5):
+            test_users += mail_new_test_user(self.env, name=f'test_user_{i}', login=f'test_password_{i}')
+        for user in test_users:
+            self.test_record.activity_schedule(user_id=user.id)
+        archived_users = self.env['res.users'].browse(map(lambda x: x.id, random.sample(test_users, 2)))  # pick 2 users to archive
+        archived_users.action_archive()
+        active_users = test_users - archived_users
+
+        activities = self.env['mail.activity'].search([('user_id', 'in', archived_users.ids)])
+        self.assertFalse(activities, "Activities of archived users should be deleted.")
+
+        # activities of active users shouldn't be touched, each has exactly 1 activity present
+        activities = self.env['mail.activity'].search([('user_id', 'in', active_users.ids)])
+        self.assertEqual(len(activities), 3, "We should have only 3 activities in total linked to our active users")
+        self.assertEqual(activities.mapped('user_id'), active_users,
+                         "We should have 3 different users linked to the activities of the active users")
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_reschedule_user(self):
