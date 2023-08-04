@@ -74,8 +74,9 @@ export const nameService = {
                     const idsInBatch = unique(batches[resModel]);
                     delete batches[resModel];
 
+                    const specification = { display_name: {} };
                     orm.silent
-                        .webSearchRead(resModel, [["id", "in", idsInBatch]], ["display_name"])
+                        .webSearchRead(resModel, [["id", "in", idsInBatch]], { specification })
                         .then(({ records }) => {
                             const displayNames = Object.fromEntries(
                                 records.map((rec) => [rec.id, rec.display_name])

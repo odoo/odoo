@@ -627,8 +627,6 @@ export class MockServer {
                 return this.mockUnlink(args.model, args.args);
             case "web_read":
                 return this.mockWebRead(args.model, args.args, args.kwargs);
-            case "web_search_read":
-                return this.mockWebSearchRead(args.model, args.args, args.kwargs);
             case "read_group":
                 return this.mockReadGroup(args.model, args.kwargs);
             case "web_read_group":
@@ -1920,14 +1918,18 @@ export class MockServer {
         return records;
     }
 
-    mockWebSearchRead(modelName, args, kwargs) {
+    mockWebSearchReadUnity(modelName, args, kwargs) {
+        let _fieldNames = Object.keys(kwargs.specification);
+        if (!_fieldNames.length) {
+            _fieldNames = ["id"];
+        }
         const { fieldNames, length, records } = this.mockSearchController({
             model: modelName,
-            domain: kwargs.domain || args[0],
-            fields: kwargs.fields || args[1],
-            offset: kwargs.offset || args[2],
-            limit: kwargs.limit || args[3],
-            sort: kwargs.order || args[4],
+            fields: _fieldNames,
+            domain: kwargs.domain,
+            offset: kwargs.offset,
+            limit: kwargs.limit,
+            sort: kwargs.order,
             context: kwargs.context,
         });
         const result = {
@@ -1938,16 +1940,6 @@ export class MockServer {
         if (countLimit) {
             result.length = Math.min(result.length, countLimit);
         }
-        return result;
-    }
-
-    mockWebSearchReadUnity(modelName, args, kwargs) {
-        let fieldNames = Object.keys(kwargs.specification);
-        if (!fieldNames.length) {
-            fieldNames = ["id"];
-        }
-        const _kwargs = { ...kwargs, fields: fieldNames };
-        const result = this.mockWebSearchRead(modelName, [], _kwargs);
         this._unityReadRecords(modelName, kwargs.specification, result.records);
         return result;
     }
