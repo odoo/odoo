@@ -45,7 +45,7 @@ const FormEditor = options.Class.extend({
                 method: 'search_read',
                 args: [
                     field.domain,
-                    field.name_field || ['display_name']
+                    field.name_field ? [field.name_field] : ['display_name'],
                 ],
             });
             field.records.forEach(r => r.display_name = r[field.name_field]);
