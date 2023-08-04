@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
 import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
@@ -38,11 +37,6 @@ export function setCookie(key, val) {
 // =============================================================================
 // SETUP
 // =============================================================================
-
-Object.assign(TEST_USER_IDS, {
-    currentPartnerId: TEST_USER_IDS.adminPartnerId,
-    currentUserId: TEST_USER_IDS.adminUserId,
-});
 
 /**
  * Setup the server side of the livechat app.
@@ -119,6 +113,7 @@ export async function start({ mockRPC } = {}) {
         },
     });
     const pyEnv = await getPyEnv();
+    pyEnv.logout();
     const { env } = await createWebClient({
         serverData: {
             models: pyEnv.getData(),

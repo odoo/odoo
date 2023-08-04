@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
@@ -33,7 +34,10 @@ QUnit.test("No reaction button", async (assert) => {
         anonymous_name: "Visitor 11",
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: pyEnv.publicPartnerId }),
+        ],
     });
     pyEnv["mail.message"].create({
         body: "not empty",
@@ -52,7 +56,10 @@ QUnit.test("No reply button", async (assert) => {
         anonymous_name: "Visitor 11",
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: pyEnv.publicPartnerId }),
+        ],
     });
     pyEnv["mail.message"].create({
         body: "not empty",
@@ -88,12 +95,13 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
     assert.containsNone($, ".o-mail-DiscussSidebarCategory-livechat");
     // simulate livechat visitor sending a message
     const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
-    await afterNextRender(async () =>
-        env.services.rpc("/im_livechat/chat_post", {
-            context: { mockedUserId: false },
-            uuid: channel.uuid,
-            message_content: "new message",
-        })
+    await afterNextRender(() =>
+        pyEnv.withUser(pyEnv.publicUserId, () =>
+            env.services.rpc("/im_livechat/chat_post", {
+                uuid: channel.uuid,
+                message_content: "new message",
+            })
+        )
     );
     assert.containsOnce($, ".o-mail-DiscussSidebarCategory-livechat");
     assert.containsOnce(
@@ -112,7 +120,10 @@ QUnit.test("reaction button should not be present on livechat", async (assert) =
         anonymous_name: "Visitor 11",
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: pyEnv.publicPartnerId }),
+        ],
     });
     const { insertText, openDiscuss } = await start();
     await openDiscuss(channelId);

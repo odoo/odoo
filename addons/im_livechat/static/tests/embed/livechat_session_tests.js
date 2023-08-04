@@ -85,6 +85,6 @@ QUnit.test("Seen message is saved on the session", async (assert) => {
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.strictEqual(
         env.services["im_livechat.livechat"].sessionCookie.seen_message_id,
-        env.services["im_livechat.livechat"].thread.seenInfos[0].lastSeenMessage.id
+        env.services["im_livechat.livechat"].thread.newestMessage.id
     );
 });

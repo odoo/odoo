@@ -52,19 +52,13 @@ patch(MockServer.prototype, {
         if (author_id === undefined) {
             // For simplicity partner is not guessed from email_from here, but
             // that would be the first step on the server.
-            let user_id;
-            if ("mockedUserId" in context) {
-                // can be falsy to simulate not being logged in
-                user_id = context.mockedUserId ? context.mockedUserId : this.publicUserId;
-            } else {
-                user_id = this.currentUserId;
-            }
-            const user = this.getRecords("res.users", [["id", "=", user_id]], {
-                active_test: false,
-            })[0];
-            const author = this.getRecords("res.partner", [["id", "=", user.partner_id]], {
-                active_test: false,
-            })[0];
+            const author = this.getRecords(
+                "res.partner",
+                [["id", "=", this.pyEnv.currentUser.partner_id]],
+                {
+                    active_test: false,
+                }
+            )[0];
             author_id = author.id;
             email_from = `${author.display_name} <${author.email}>`;
         }
@@ -201,15 +195,24 @@ patch(MockServer.prototype, {
             kwargs.attachment_ids = attachmentIds.map((attachmentId) => [4, attachmentId]);
         }
         const subtype_xmlid = kwargs.subtype_xmlid || "mail.mt_note";
-        const [author_id, email_from] = this._MockMailThread_MessageComputeAuthor(
-            model,
-            ids,
-            kwargs.author_id,
-            kwargs.email_from,
-            context
-        );
+        let author_id;
+        let email_from;
+        const author_guest_id = this.pyEnv.currentUser?._is_public()
+            ? this._mockMailGuest__getGuestFromContext()?.id
+            : undefined;
+        if (!author_guest_id) {
+            [author_id, email_from] = this._MockMailThread_MessageComputeAuthor(
+                model,
+                ids,
+                kwargs.author_id,
+                kwargs.email_from,
+                context
+            );
+        }
+
         const values = Object.assign({}, kwargs, {
             author_id,
+            author_guest_id,
             email_from,
             is_discussion: subtype_xmlid === "mail.mt_comment",
             is_note: subtype_xmlid === "mail.mt_note",
@@ -293,9 +296,13 @@ patch(MockServer.prototype, {
                     { last_interest_dt: now }
                 );
                 for (const member of members) {
-                    // simplification, send everything on the current user "test" bus, but it should send to each member instead
+                    const target = member.guest_id
+                        ? this.pyEnv["mail.guest"].searchRead([["id", "=", member.guest_id]])[0]
+                        : this.pyEnv["res.partner"].searchRead([["id", "=", member.partner_id]], {
+                              context: { active_test: false },
+                          })[0];
                     notifications.push([
-                        member,
+                        target,
                         "discuss.channel/last_interest_dt_changed",
                         {
                             id: channel.id,
@@ -312,18 +319,12 @@ patch(MockServer.prototype, {
                         message: Object.assign(messageFormat, { temporary_id }),
                     },
                 ]);
-                if (message.author_id === this.currentPartnerId) {
+                if (message.author_id === this.pyEnv.currentPartnerId) {
                     this._mockDiscussChannel_ChannelSeen(ids, message.id);
                 }
             }
         }
-        const channelMemberOfCurrentUser = this.pyEnv["discuss.channel.member"].search([
-            ["channel_id", "=", message.res_id],
-            ["partner_id", "=", this.currentPartnerId],
-        ]);
-        if (channelMemberOfCurrentUser.length === 1) {
-            this.pyEnv["bus.bus"]._sendmany(notifications);
-        }
+        this.pyEnv["bus.bus"]._sendmany(notifications);
     },
     /**
      * Simulates `message_unsubscribe` on `mail.thread`.
@@ -440,7 +441,7 @@ patch(MockServer.prototype, {
             const message = this.getRecords("mail.message", [
                 ["id", "=", notification.mail_message_id],
             ])[0];
-            return message.model === model && message.author_id === this.currentPartnerId;
+            return message.model === model && message.author_id === this.pyEnv.currentPartnerId;
         });
         // Update notification status
         this.pyEnv["mail.notification"].write(

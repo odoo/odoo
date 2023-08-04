@@ -499,9 +499,9 @@ QUnit.test("Can handle leave notification from unknown member", async (assert) =
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    await env.services.orm.call("discuss.channel", "action_unfollow", [channelId], {
-        context: { mockedUserId: userId },
-    });
+    await pyEnv.withUser(userId, () =>
+        env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
+    );
     await click("button[title='Show Member List']");
     assert.containsOnce($, ".o-discuss-ChannelMember:contains(Mitchell)");
     assert.containsNone($, ".o-discuss-ChannelMember:contains(Dobby)");

@@ -27,12 +27,13 @@ QUnit.test(
         const { env } = await start();
         // simulate receving new message
         await afterNextRender(() =>
-            env.services.rpc("/mail/message/post", {
-                context: { mockedUserId: userId },
-                post_data: { body: "new message", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
+            pyEnv.withUser(userId, () =>
+                env.services.rpc("/mail/message/post", {
+                    post_data: { body: "new message", message_type: "comment" },
+                    thread_id: channelId,
+                    thread_model: "discuss.channel",
+                })
+            )
         );
         assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Dumbledore)");
     }
@@ -54,12 +55,13 @@ QUnit.test(
         const { env, openDiscuss, openFormView } = await start();
         await openDiscuss();
         // simulate receiving new message
-        env.services.rpc("/mail/message/post", {
-            context: { mockedUserId: userId },
-            post_data: { body: "new message", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        });
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "new message", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        );
         // leaving discuss.
         await openFormView("res.partner", partnerId);
         assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Dumbledore)");
