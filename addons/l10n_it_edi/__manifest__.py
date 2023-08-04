@@ -12,7 +12,7 @@
         'account_edi',
         'account_edi_proxy_client',
     ],
-    'auto_install': ['l10n_it', 'account_edi'],
+    'auto_install': ['l10n_it'],
     'description': """
 E-invoice implementation
     """,
