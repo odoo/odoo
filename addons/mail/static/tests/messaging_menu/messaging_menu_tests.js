@@ -510,24 +510,31 @@ QUnit.test("'New Message' button should open a chat window in mobile", async (as
 
 QUnit.test("Counter is updated when receiving new message", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Albert" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
     const { env, openDiscuss } = await start();
     await openDiscuss();
     await afterNextRender(() =>
-        env.services.rpc("/mail/message/post", {
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-            post_data: {
-                body: "Hello world",
-                message_type: "comment",
-            },
-            context: {
-                mockedUserId: userId,
-                partnerId,
-            },
-        })
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+                post_data: {
+                    body: "Hello world",
+                    message_type: "comment",
+                },
+                context: {
+                    partnerId,
+                },
+            })
+        )
     );
     assert.containsOnce($, ".o-mail-MessagingMenu-counter.badge:contains(1)");
 });

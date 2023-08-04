@@ -85,7 +85,11 @@ QUnit.test("change icon on change partner im_status", async (assert) => {
 QUnit.test("Can handle im_status of unknown partner", async (assert) => {
     const { env, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
-    pyEnv["bus.bus"]._sendone("channel-1", "mail.record/insert", {
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
+    pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
         Partner: { im_status: "online", id: partnerId },
     });
     await nextTick();

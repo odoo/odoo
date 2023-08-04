@@ -27,6 +27,21 @@ patch(MockServer.prototype, {
         return super._performRPC(route, args);
     },
     /**
+     * Simulates `_bus_notification_target` on `mail.message`.
+     *
+     * @param {number} messageId
+     */
+    _mockMailMessage__busNotificationTarget(messageId) {
+        const [message] = this.pyEnv["mail.message"].searchRead([["id", "=", messageId]]);
+        if (message.model === "discuss.channel") {
+            return this.pyEnv["discuss.channel"].searchRead([["id", "=", message.res_id]])[0];
+        }
+        if (this.pyEnv.currentUser?._is_public()) {
+            this._mockMailGuest__getGuestFromContext();
+        }
+        return this.pyEnv.currentPartner;
+    },
+    /**
      * Simulates `_message_reaction` on `mail.message`.
      */
     _mockMailMessage_messageReaction(messageId, content, action) {
@@ -72,9 +87,11 @@ patch(MockServer.prototype, {
                 ],
             ],
         };
-        this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartnerId, "mail.record/insert", {
-            Message: result,
-        });
+        this.pyEnv["bus.bus"]._sendone(
+            this._mockMailMessage__busNotificationTarget(messageId),
+            "mail.record/insert",
+            { Message: result }
+        );
     },
     /**
      * Simulates `mark_all_as_read` on `mail.message`.
@@ -85,7 +102,7 @@ patch(MockServer.prototype, {
      */
     _mockMailMessageMarkAllAsRead(domain) {
         const notifDomain = [
-            ["res_partner_id", "=", this.currentPartnerId],
+            ["res_partner_id", "=", this.pyEnv.currentPartnerId],
             ["is_read", "=", false],
         ];
         if (domain) {
@@ -111,14 +128,14 @@ patch(MockServer.prototype, {
             this.pyEnv["mail.message"].write([message.id], {
                 needaction: false,
                 needaction_partner_ids: message.needaction_partner_ids.filter(
-                    (partnerId) => partnerId !== this.currentPartnerId
+                    (partnerId) => partnerId !== this.pyEnv.currentPartnerId
                 ),
             });
         }
         this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.message/mark_as_read", {
             message_ids: messageIds,
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(
-                this.currentPartnerId
+                this.pyEnv.currentPartnerId
             ),
         });
         return messageIds;
@@ -225,7 +242,7 @@ patch(MockServer.prototype, {
             );
 
             const reactionsPerContent = {};
-            for (const reactionId of message.reaction_ids) {
+            for (const reactionId of message.reaction_ids ?? []) {
                 const [reaction] = this.getRecords("mail.message.reaction", [
                     ["id", "=", reactionId],
                 ]);
@@ -367,7 +384,7 @@ patch(MockServer.prototype, {
         const messages = this.getRecords("mail.message", [["id", "in", ids]]);
 
         const notifications = this.getRecords("mail.notification", [
-            ["res_partner_id", "=", this.currentPartnerId],
+            ["res_partner_id", "=", this.pyEnv.currentPartnerId],
             ["is_read", "=", false],
             ["mail_message_id", "in", messages.map((messages) => messages.id)],
         ]);
@@ -383,13 +400,13 @@ patch(MockServer.prototype, {
             this.pyEnv["mail.message"].write([message.id], {
                 needaction: false,
                 needaction_partner_ids: message.needaction_partner_ids.filter(
-                    (partnerId) => partnerId !== this.currentPartnerId
+                    (partnerId) => partnerId !== this.pyEnv.currentPartnerId
                 ),
             });
             this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.message/mark_as_read", {
                 message_ids: [message.id],
                 needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(
-                    this.currentPartnerId
+                    this.pyEnv.currentPartnerId
                 ),
             });
         }
@@ -403,9 +420,9 @@ patch(MockServer.prototype, {
     _mockMailMessageToggleMessageStarred(ids) {
         const messages = this.getRecords("mail.message", [["id", "in", ids]]);
         for (const message of messages) {
-            const wasStared = message.starred_partner_ids.includes(this.currentPartnerId);
+            const wasStared = message.starred_partner_ids.includes(this.pyEnv.currentPartnerId);
             this.pyEnv["mail.message"].write([message.id], {
-                starred_partner_ids: [[wasStared ? 3 : 4, this.currentPartnerId]],
+                starred_partner_ids: [[wasStared ? 3 : 4, this.pyEnv.currentPartnerId]],
             });
             this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.message/toggle_star", {
                 message_ids: [message.id],
@@ -420,11 +437,11 @@ patch(MockServer.prototype, {
      */
     _mockMailMessageUnstarAll() {
         const messages = this.getRecords("mail.message", [
-            ["starred_partner_ids", "in", this.currentPartnerId],
+            ["starred_partner_ids", "in", this.pyEnv.currentPartnerId],
         ]);
         this.pyEnv["mail.message"].write(
             messages.map((message) => message.id),
-            { starred_partner_ids: [[3, this.currentPartnerId]] }
+            { starred_partner_ids: [[3, this.pyEnv.currentPartnerId]] }
         );
         this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.message/toggle_star", {
             message_ids: messages.map((message) => message.id),

@@ -39,7 +39,7 @@ QUnit.test("Remove member from channel", async (assert) => {
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     assert.containsOnce($, ".o-discuss-ChannelMember:contains(Harry)");
-    env.services.orm.call("discuss.channel", "action_unfollow", [channelId], {
-        context: { mockedUserId: userId },
-    });
+    pyEnv.withUser(userId, () =>
+        env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
+    );
 });

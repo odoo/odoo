@@ -118,19 +118,16 @@ QUnit.test("should disconnect when closing page while in call", async (assert) =
 });
 
 QUnit.test("should display invitations", async (assert) => {
-    patchWithCleanup(
-        browser,
-        {
-            Audio: class extends Audio {
-                pause() {
-                    assert.step("pause_sound_effect");
-                }
-                play() {
-                    assert.step("play_sound_effect");
-                }
-            },
-        }
-    );
+    patchWithCleanup(browser, {
+        Audio: class extends Audio {
+            pause() {
+                assert.step("pause_sound_effect");
+            }
+            play() {
+                assert.step("play_sound_effect");
+            }
+        },
+    });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "InvitationSender" });

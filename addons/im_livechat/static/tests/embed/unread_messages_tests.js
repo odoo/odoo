@@ -25,14 +25,15 @@ QUnit.test("new message from operator displays unread counter", async (assert) =
     setCookie("im_livechat_session", JSON.stringify(channelInfo));
     const env = await start();
     $(".o-mail-Composer-input").blur();
-    await afterNextRender(() => {
-        env.services.rpc("/mail/message/post", {
-            context: { mockedUserId: pyEnv.adminUserId },
-            post_data: { body: "Are you there?", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        });
-    });
+    await afterNextRender(() =>
+        pyEnv.withUser(pyEnv.adminUserId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "Are you there?", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        )
+    );
     await waitUntil(".o-mail-ChatWindow-header:contains(1)");
     assert.containsOnce($, ".o-mail-ChatWindow-header:contains(1)");
 });
@@ -53,14 +54,15 @@ QUnit.test("focus on unread livechat marks it as read", async (assert) => {
     setCookie("im_livechat_session", JSON.stringify(channelInfo));
     const env = await start();
     $(".o-mail-Composer-input").blur();
-    await afterNextRender(() => {
-        env.services.rpc("/mail/message/post", {
-            context: { mockedUserId: pyEnv.adminUserId },
-            post_data: { body: "Are you there?", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        });
-    });
+    await afterNextRender(() =>
+        pyEnv.withUser(pyEnv.adminUserId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "Are you there?", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        )
+    );
     await waitUntil(".o-mail-Thread-newMessage ~ .o-mail-Message:contains(Are you there?)");
     await afterNextRender(() => $(".o-mail-Composer-input").trigger("focus"));
     assert.containsNone($, ".o-mail-Thread-newMessage");

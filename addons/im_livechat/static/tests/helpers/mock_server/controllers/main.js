@@ -31,8 +31,7 @@ patch(MockServer.prototype, {
         if (route === "/im_livechat/notify_typing") {
             const uuid = args.uuid;
             const is_typing = args.is_typing;
-            const context = args.context;
-            return this._mockRouteImLivechatNotifyTyping(uuid, is_typing, context);
+            return this._mockRouteImLivechatNotifyTyping(uuid, is_typing);
         }
         if (route === "/im_livechat/chat_post") {
             const uuid = args.uuid;
@@ -69,18 +68,10 @@ patch(MockServer.prototype, {
         persisted,
         context = {}
     ) {
-        let user_id;
         let country_id;
-        if ("mockedUserId" in context) {
-            // can be falsy to simulate not being logged in
-            user_id = context.mockedUserId;
-        } else {
-            user_id = this.currentUserId;
-        }
         // don't use the anonymous name if the user is logged in
-        if (user_id) {
-            const user = this.getRecords("res.users", [["id", "=", user_id]])[0];
-            country_id = user.country_id;
+        if (this.pyEnv.currentUser && !this.pyEnv.currentUser._is_public()) {
+            country_id = this.pyEnv.currentUser.country_id;
         } else {
             // simulate geoip
             const countryCode = context.mockedCountryCode;
@@ -94,7 +85,6 @@ patch(MockServer.prototype, {
             channel_id,
             anonymous_name,
             previous_operator_id,
-            user_id,
             country_id,
             persisted
         );
@@ -107,13 +97,11 @@ patch(MockServer.prototype, {
      * @param {boolean} is_typing
      * @param {Object} [context={}]
      */
-    _mockRouteImLivechatNotifyTyping(uuid, is_typing, context = {}) {
-        const [discussChannel] = this.getRecords("discuss.channel", [["uuid", "=", uuid]]);
-        const partnerId = context.mockedPartnerId || this.currentPartnerId;
-        const [memberOfCurrentUser] = this.getRecords("discuss.channel.member", [
-            ["channel_id", "=", discussChannel.id],
-            ["partner_id", "=", partnerId],
-        ]);
+    _mockRouteImLivechatNotifyTyping(uuid, is_typing) {
+        const [channel] = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+        const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
+            channel.id
+        );
         this._mockDiscussChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
     },
     /**
@@ -130,19 +118,10 @@ patch(MockServer.prototype, {
         if (!channel) {
             return false;
         }
-
-        let user_id;
-        // find the author from the user session
-        if ("mockedUserId" in context) {
-            // can be falsy to simulate not being logged in
-            user_id = context.mockedUserId;
-        } else {
-            user_id = this.currentUserId;
-        }
         let author_id;
         let email_from;
-        if (user_id) {
-            const author = this.getRecords("res.users", [["id", "=", user_id]])[0];
+        if (this.pyEnv.currentUser && !this.pyEnv.currentUser._is_public()) {
+            const author = this.pyEnv.currentUser;
             author_id = author.partner_id;
             email_from = `${author.display_name} <${author.email}>`;
         } else {

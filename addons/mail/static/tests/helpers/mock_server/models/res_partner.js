@@ -213,7 +213,7 @@ patch(MockServer.prototype, {
                     return false;
                 }
                 // not current partner
-                if (partner.id === this.currentPartnerId) {
+                if (partner.id === this.pyEnv.currentPartnerId) {
                     return false;
                 }
                 // no name is considered as return all
@@ -310,7 +310,7 @@ patch(MockServer.prototype, {
                             return false;
                         }
                         // not current partner
-                        if (partner.id === this.currentPartnerId) {
+                        if (partner.id === this.pyEnv.currentPartnerId) {
                             return false;
                         }
                         // no name is considered as return all
@@ -340,7 +340,9 @@ patch(MockServer.prototype, {
      * @returns {Object[]}
      */
     _mockResPartner_MessageFetchFailed(id) {
-        const partner = this.getRecords("res.partner", [["id", "=", id]])[0];
+        const partner = this.getRecords("res.partner", [["id", "=", id]], {
+            active_test: false,
+        })[0];
         const messages = this.getRecords("mail.message", [
             ["author_id", "=", partner.id],
             ["res_id", "!=", 0],

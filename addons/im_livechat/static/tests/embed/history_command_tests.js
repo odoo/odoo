@@ -23,7 +23,9 @@ QUnit.test("Handle livechat history command", async (assert) => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     await afterNextRender(() => triggerHotkey("Enter"));
     const thread = env.services["im_livechat.livechat"].thread;
-    pyEnv["bus.bus"]._sendone(thread.uuid, "im_livechat.history_command", { id: thread.id });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "im_livechat.history_command", {
+        id: thread.id,
+    });
     await nextTick();
     assert.verifySteps(["/im_livechat/history"]);
 });

@@ -43,12 +43,13 @@ QUnit.test(
         const { env } = await start();
 
         // simulate receiving a message
-        env.services.rpc("/mail/message/post", {
-            context: { mockedUserId: userId },
-            post_data: { body: "hu", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        });
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "hu", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        );
         await nextAnimationFrame();
         assert.containsNone($, ".o-mail-ChatWindow");
     }
@@ -656,12 +657,13 @@ QUnit.test(
         const { env } = await start();
         // simulate receiving a message
         await afterNextRender(async () =>
-            env.services.rpc("/mail/message/post", {
-                context: { mockedUserId: userId },
-                post_data: { body: "hu", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
+            pyEnv.withUser(userId, () =>
+                env.services.rpc("/mail/message/post", {
+                    post_data: { body: "hu", message_type: "comment" },
+                    thread_id: channelId,
+                    thread_model: "discuss.channel",
+                })
+            )
         );
         assert.containsOnce($, ".o-mail-ChatWindow");
         assert.containsN($, ".o-mail-Message", 2);
@@ -688,12 +690,13 @@ QUnit.test(
         const { env } = await start();
         // simulate receiving a message
         await afterNextRender(async () =>
-            env.services.rpc("/mail/message/post", {
-                context: { mockedUserId: userId },
-                post_data: { body: "hu", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
+            pyEnv.withUser(userId, () =>
+                env.services.rpc("/mail/message/post", {
+                    post_data: { body: "hu", message_type: "comment" },
+                    thread_id: channelId,
+                    thread_model: "discuss.channel",
+                })
+            )
         );
         assert.containsOnce($, "hr + span:contains(New messages)");
     }
@@ -713,14 +716,13 @@ QUnit.test("chat window should open when receiving a new DM", async (assert) => 
     const { env } = await start();
     // simulate receiving the first message on chat
     await afterNextRender(() =>
-        env.services.rpc("/mail/message/post", {
-            context: {
-                mockedUserId: userId,
-            },
-            post_data: { body: "new message", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "new message", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        )
     );
     assert.containsOnce($, ".o-mail-ChatWindow");
 });
@@ -738,12 +740,13 @@ QUnit.test("chat window should not open when receiving a new DM from odoobot", a
     const { env } = await start();
     // simulate receiving new message from odoobot
     await afterNextRender(() =>
-        env.services.rpc("/mail/message/post", {
-            context: { mockedUserId: userId },
-            post_data: { body: "new message", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "new message", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        )
     );
     assert.containsNone($, ".o-mail-ChatWindow");
 });
@@ -757,7 +760,11 @@ QUnit.test(
                 [
                     0,
                     0,
-                    { fold_state: "open", is_minimized: true, partner_id: pyEnv.currentPartnerId },
+                    {
+                        fold_state: "open",
+                        is_minimized: true,
+                        partner_id: pyEnv.currentPartnerId,
+                    },
                 ],
             ],
         });
@@ -804,12 +811,13 @@ QUnit.test("chat window should remain folded when new message is received", asyn
     const { env } = await start();
     assert.hasClass($(".o-mail-ChatWindow"), "o-folded");
 
-    env.services.rpc("/mail/message/post", {
-        context: { mockedUserId: userId },
-        post_data: { body: "New Message", message_type: "comment" },
-        thread_id: channelId,
-        thread_model: "discuss.channel",
-    });
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/mail/message/post", {
+            post_data: { body: "New Message", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
     await nextTick();
     assert.hasClass($(".o-mail-ChatWindow"), "o-folded");
 });
@@ -933,12 +941,13 @@ QUnit.test(
         $(".o-mail-Composer-input")[0].blur();
         // simulate receiving a message
         await afterNextRender(() =>
-            env.services.rpc("/mail/message/post", {
-                context: { mockedUserId: userId },
-                post_data: { body: "hu", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
+            pyEnv.withUser(userId, () =>
+                env.services.rpc("/mail/message/post", {
+                    post_data: { body: "hu", message_type: "comment" },
+                    thread_id: channelId,
+                    thread_model: "discuss.channel",
+                })
+            )
         );
         assert.containsOnce($, "hr + span:contains(New messages)");
         await afterNextRender(() => $(".o-mail-Composer-input")[0].focus());
