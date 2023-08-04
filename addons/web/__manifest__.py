@@ -380,7 +380,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
 
-            ('include', 'web.frontend_legacy'),
             'web/static/src/legacy/translations_loaded.js',
         ],
         'web.assets_frontend_lazy': [
@@ -528,11 +527,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/bootstrap_overridden_frontend.scss',
         ],
 
-        # Used during the transition of the web architecture
-        'web.frontend_legacy': [
-            'web/static/src/legacy/frontend/**/*',
-        ],
-
         # ---------------------------------------------------------------------
         # TESTS BUNDLES
         # ---------------------------------------------------------------------
@@ -595,17 +589,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/main.js',
             'web/static/tests/mock_server_tests.js',
             'web/static/tests/setup.js',
-
-            # These 2 lines below are taken from web.assets_frontend
-            # They're required for the web.frontend_legacy to work properly
-            # It is expected to add other lines coming from the web.assets_frontend
-            # if we need to add more and more legacy stuff that would require other scss or js.
-            ('include', 'web._assets_helpers'),
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-
-            ('include', 'web.frontend_legacy'),
-            ("include", "web.assets_backend_legacy_lazy"),
         ],
         'web.qunit_suite_tests': [
             'web/static/tests/env_tests.js',
@@ -625,16 +608,9 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/**/*.js',
             ('remove', 'web/static/tests/legacy/helpers/**/*.js'),
             ('remove', 'web/static/tests/legacy/legacy_setup.js'),
-
-            ('include', 'web.frontend_legacy_tests'),
         ],
         'web.qunit_mobile_suite_tests': [
             'web/static/tests/mobile/**/*.js',
-        ],
-
-        # Used during the transition of the web architecture
-        'web.frontend_legacy_tests': [
-            'web/static/tests/legacy/frontend/*.js',
         ],
     },
     'bootstrap': True,  # load translations for login screen,

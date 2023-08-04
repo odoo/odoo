@@ -2,16 +2,14 @@
 
 import { loadJS } from "@web/core/assets";
 import { _t } from "@web/legacy/js/services/core";
-import KeyboardNavigationMixin from '@web/legacy/frontend/keyboard_navigation_mixin';
 import { Markup } from '@web/legacy/js/core/utils';
 import session from 'web.session';
 import publicRootData from '@web/legacy/js/public/public_root';
 import "@web/legacy/js/libs/zoomodoo";
 import { pick } from "@web/core/utils/objects";
 
-export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
-    // TODO remove KeyboardNavigationMixin in master
-    events: Object.assign({}, KeyboardNavigationMixin.events, publicRootData.PublicRoot.prototype.events || {}, {
+export const WebsiteRoot = publicRootData.PublicRoot.extend({
+    events: Object.assign({}, publicRootData.PublicRoot.prototype.events || {}, {
         'click .js_change_lang': '_onLangChangeClick',
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
         'shown.bs.modal': '_onModalShown',
@@ -29,29 +27,16 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
      */
     init() {
         this.isFullscreen = false;
-        KeyboardNavigationMixin.init.call(this, {
-            autoAccessKeys: false,
-            skipRenderOverlay: true,
-        });
         return this._super(...arguments);
     },
     /**
      * @override
      */
     start: function () {
-        KeyboardNavigationMixin.start.call(this);
-
         // Enable magnify on zommable img
         this.$('.zoomable img[data-zoom]').zoomOdoo();
 
         return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        KeyboardNavigationMixin.destroy.call(this);
-        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -260,19 +245,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
      */
     _onModalShown: function (ev) {
         $(ev.target).addClass('modal_shown');
-    },
-    /**
-     * @override
-     */
-    _onKeyDown(ev) {
-        if (!session.user_id) {
-            return;
-        }
-        // If document.body doesn't contain the element, it was probably removed as a consequence of pressing Esc.
-        // we don't want to toggle fullscreen as the removal (eg, closing a modal) is the intended action.
-        if (ev.keyCode !== $.ui.keyCode.ESCAPE || !document.body.contains(ev.target) || ev.target.closest('.modal')) {
-            return KeyboardNavigationMixin._onKeyDown.apply(this, arguments);
-        }
     },
 });
 

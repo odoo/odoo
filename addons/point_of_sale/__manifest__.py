@@ -242,8 +242,6 @@
             'web/static/tests/main.js',
             'web/static/tests/setup.js',
 
-            ('include', 'web.frontend_legacy'),
-            ("include", "web.assets_backend_legacy_lazy"),
             ## END copy of web.tests_assets
             # pos unit tests
             'point_of_sale/static/tests/unit/**/*',
