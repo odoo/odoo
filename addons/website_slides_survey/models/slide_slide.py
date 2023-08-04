@@ -65,6 +65,12 @@ class Slide(models.Model):
             if slide.slide_category == 'certification' or not slide.is_preview:
                 slide.is_preview = False
 
+    @api.depends('slide_type')
+    def _compute_slide_icon_class(self):
+        certification = self.filtered(lambda slide: slide.slide_type == 'certification')
+        certification.slide_icon_class = 'fa-trophy'
+        super(Slide, self - certification)._compute_slide_icon_class()
+
     @api.depends('slide_category', 'source_type')
     def _compute_slide_type(self):
         super(Slide, self)._compute_slide_type()

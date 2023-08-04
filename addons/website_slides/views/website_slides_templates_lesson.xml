@@ -157,20 +157,10 @@
                     <div t-att-class="'o_wslides_lesson_aside_list_link d-flex p-1 %s%s' % (('bg-100 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')"
                         t-att-data-id="slide.id"
                         t-att-data-completed="slide_completed">
-                        <t t-set="slide_icon" t-if="aside_slide.slide_type == 'pdf'" t-value="'fa-file-pdf-o'"/>
-                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'sheet'" t-value="'fa-file-excel-o'"/>
-                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'doc'" t-value="'fa-file-word-o'"/>
-                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'slides'" t-value="'fa-file-powerpoint-o'"/>
-                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'image'" t-value="'fa-file-picture-o'"/>
-                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'youtube_video'" t-value="'fa-youtube-play'"/>
-                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'google_drive_video'" t-value="'fa-play-circle-o'"/>
-                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'vimeo_video'" t-value="'fa-vimeo'"/>
-                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'article'" t-value="'fa-file-text-o'"/>
-                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'quiz'" t-value="'fa-question-circle-o'"/>
-                        <t t-set="slide_icon" t-else="" t-value="'fa-file-o'"/>
                         <t t-call="website_slides.slide_sidebar_done_button">
                             <t t-set="slide" t-value="aside_slide"/>
                             <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
+                            <t t-set="use_slide_icon" t-value="True"/>
                         </t>
                         <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
                             t-attf-class="d-flex text-decoration-none mw-100 overflow-hidden #{'text-muted' if not can_access else ''}">
@@ -233,9 +223,7 @@
         <div class="col-12 col-md order-2 order-md-1 d-flex">
             <div class="d-flex align-items-start">
                 <h1 class="h4 my-0 d-flex flex_row">
-                    <t t-call="website_slides.slide_icon">
-                        <t t-set="icon_class" t-valuef="me-2"/>
-                    </t>
+                    <i t-attf-class="fa #{slide.slide_icon_class} me-2"/>
                     <span t-field="slide.name"/>
                 </h1>
             </div>
