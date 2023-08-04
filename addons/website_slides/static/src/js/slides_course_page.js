@@ -63,7 +63,7 @@ export const SlideCoursePage = publicWidget.Widget.extend({
 
         const newButton = QWeb.render('website.slides.sidebar.done.button', {
             slideId: slide.id,
-            slideIcon: $button.data('slideIcon') ?? 'fa-file-o',
+            uncompletedIcon: $button.data('uncompletedIcon') ?? 'fa-circle-thin',
             slideCompleted: completed,
             canSelfMarkUncompleted: slide.canSelfMarkUncompleted,
             canSelfMarkCompleted: slide.canSelfMarkCompleted,
