@@ -3,7 +3,6 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 
 const { Component, useState } = owl;
 const cogMenuRegistry = registry.category("cogMenu");
@@ -63,7 +62,7 @@ export class AddToBoard extends Component {
             this.notification.add(
                 this.env._t("Please refresh your browser for the changes to take effect."),
                 {
-                    title: sprintf(this.env._t(`"%s" added to dashboard`), this.state.name),
+                    title: this.env._t("“%s” added to dashboard", this.state.name),
                     type: "warning",
                 }
             );

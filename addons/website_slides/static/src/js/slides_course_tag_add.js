@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { uniqueId } from '@web/core/utils/functions';
-import { sprintf } from '@web/core/utils/strings';
 import { _t } from "@web/core/l10n/translation";
 import Dialog from '@web/legacy/js/core/dialog';
 import publicWidget from '@web/legacy/js/public/public_widget';
@@ -121,7 +120,7 @@ var TagCourseDialog = Dialog.extend({
                             id: uniqueId("tag_"),
                             create: true,
                             tag: term,
-                            text: sprintf(_t("Create new %s '%s'"), tag, term),
+                            text: _t("Create new %s '%s'", tag, term),
                         };
                     } else {
                         return undefined;

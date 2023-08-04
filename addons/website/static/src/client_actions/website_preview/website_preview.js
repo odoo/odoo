@@ -12,7 +12,6 @@ import {OptimizeSEODialog} from '@website/components/dialog/seo';
 import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { routeToUrl } from "@web/core/browser/router_service";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { sprintf } from "@web/core/utils/strings";
 import wUtils from '@website/js/utils';
 import config from "@web/legacy/js/services/config";
 
@@ -70,10 +69,7 @@ export class WebsitePreview extends Component {
                 // same session and CORS errors won't be a thing in such a case)
                 this.dialogService.add(WebsiteDialog, {
                     title: this.env._t("Redirecting..."),
-                    body: sprintf(this.env._t(
-                        "You are about to be redirected to the domain configured for your website ( %s ). " +
-                        "This is necessary to edit or view your website from the Website app. You might need to log back in."
-                    ), this.websiteDomain),
+                    body: this.env._t("You are about to be redirected to the domain configured for your website ( %s ). This is necessary to edit or view your website from the Website app. You might need to log back in.", this.websiteDomain),
                     showSecondaryButton: false,
                 }, {
                     onClose: () => {

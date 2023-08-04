@@ -4,7 +4,6 @@ import {
     StateSelectionField,
     stateSelectionField,
 } from "@web/views/fields/state_selection/state_selection_field";
-import { sprintf } from "@web/core/utils/strings";
 import { useCommand } from "@web/core/commands/command_hook";
 import { formatSelection } from "@web/views/fields/formatters";
 
@@ -44,7 +43,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         if (this.props.viewType != 'form') {
             super.setup();
         } else {
-            const commandName = sprintf(this.env._t(`Set state as...`));
+            const commandName = this.env._t("Set state as...");
             useCommand(
                 commandName,
                 () => {

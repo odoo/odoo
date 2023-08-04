@@ -5,7 +5,6 @@ import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 
 export class DiscussCoreWeb {
     /**
@@ -73,8 +72,8 @@ export class DiscussCoreWeb {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
             // then open a chat for the current user with the new user.
-            const notification = sprintf(
-                _t("%(user)s connected. This is their first connection. Wish them luck."),
+            const notification = _t(
+                "%(user)s connected. This is their first connection. Wish them luck.",
                 { user: username }
             );
             this.notificationService.add(notification, { type: "info" });

@@ -7,7 +7,6 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
@@ -1306,10 +1305,7 @@ function makeActionManager(env) {
         const view = _getView(viewType);
         if (!view) {
             throw new ViewNotFoundError(
-                sprintf(
-                    env._t("No view of type '%s' could be found in the current action."),
-                    viewType
-                )
+                env._t("No view of type '%s' could be found in the current action.", viewType)
             );
         }
         const newController = controller.action.controllers[viewType] || {

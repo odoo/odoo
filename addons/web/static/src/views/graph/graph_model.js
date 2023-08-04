@@ -7,7 +7,6 @@ import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { Model } from "@web/model/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
-import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
 
 export const SEP = " / ";
@@ -306,7 +305,7 @@ export class GraphModel extends Model {
         if (!description) {
             return this.env._t("Sum");
         } else {
-            return sprintf(this.env._t("Sum (%s)"), description);
+            return this.env._t("Sum (%s)", description);
         }
     }
 

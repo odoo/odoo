@@ -5,7 +5,6 @@ import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { sortBy } from "@web/core/utils/arrays";
 import { deepCopy } from "@web/core/utils/objects";
-import { sprintf } from "@web/core/utils/strings";
 import { SearchArchParser } from "./search_arch_parser";
 import {
     constructDateDomain,
@@ -1501,7 +1500,7 @@ export class SearchModel extends EventBus {
             return context;
         } catch (error) {
             throw new Error(
-                sprintf(_t("Failed to evaluate the context: %(context)s.\n%(error)s"), {
+                _t("Failed to evaluate the context: %(context)s.\n%(error)s", {
                     context,
                     error: error.message,
                 })
@@ -1589,7 +1588,7 @@ export class SearchModel extends EventBus {
             return params.raw ? domain : domain.toList(this.domainEvalContext);
         } catch (error) {
             throw new Error(
-                sprintf(_t("Failed to evaluate the domain: %(domain)s.\n%(error)s"), {
+                _t("Failed to evaluate the domain: %(domain)s.\n%(error)s", {
                     domain: domain.toString(),
                     error: error.message,
                 })
@@ -1991,7 +1990,7 @@ export class SearchModel extends EventBus {
                         }
                     } catch (error) {
                         throw new Error(
-                            sprintf(_t("Failed to evaluate the context: %(context)s.\n%(error)s"), {
+                            _t("Failed to evaluate the context: %(context)s.\n%(error)s", {
                                 context: searchItem.context,
                                 error: error.message,
                             })

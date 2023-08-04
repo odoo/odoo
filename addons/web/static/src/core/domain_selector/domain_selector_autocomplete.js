@@ -7,7 +7,6 @@ import { formatAST, toPyValue } from "@web/core/py_js/py_utils";
 import { registry } from "@web/core/registry";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { Expression } from "@web/core/domain_tree";
 
 const SEARCH_LIMIT = 7;
@@ -89,7 +88,7 @@ class AutoCompleteWithSources extends Component {
         const dynamicFilters = ids.length
             ? [
                   {
-                      description: sprintf(_t("Quick search: %s"), name),
+                      description: _t("Quick search: %s", name),
                       domain: [["id", operator, ids]],
                   },
               ]
@@ -97,7 +96,7 @@ class AutoCompleteWithSources extends Component {
         // fine for now but we don't like this kind of dependence of core to views
         const SelectCreateDialog = registry.category("dialogs").get("select_create");
         this.addDialog(SelectCreateDialog, {
-            title: sprintf(_t("Search: %s"), fieldString),
+            title: _t("Search: %s", fieldString),
             dynamicFilters,
             resModel,
             noCreate: true,
@@ -140,13 +139,13 @@ const getFormat = (val, displayNames) => {
         text =
             typeof displayNames[val] === "string"
                 ? displayNames[val]
-                : sprintf(_t(`Inaccessible/missing record ID: %s`), val);
+                : _t("Inaccessible/missing record ID: %s", val);
         colorIndex = typeof displayNames[val] === "string" ? 0 : 2; // 0 = grey, 2 = orange
     } else {
         text =
             val instanceof Expression
                 ? String(val)
-                : sprintf(_t(`Invalid record ID: %s`), formatAST(toPyValue(val)));
+                : _t("Invalid record ID: %s", formatAST(toPyValue(val)));
         colorIndex = val instanceof Expression ? 2 : 1; // 1 = red
     }
     return { text, colorIndex };

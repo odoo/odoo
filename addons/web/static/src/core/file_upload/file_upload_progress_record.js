@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { sprintf } from "../utils/strings";
 import { FileUploadProgressBar } from "./file_upload_progress_bar";
 
 import { Component } from "@odoo/owl";
@@ -18,8 +17,8 @@ export class FileUploadProgressRecord extends Component {
             const mbLoaded = Math.round(fileUpload.loaded / 1000000);
             const mbTotal = Math.round(fileUpload.total / 1000000);
             return {
-                left: sprintf(this.env._t("Uploading... (%s%)"), percent),
-                right: sprintf(this.env._t("(%s/%sMB)"), mbLoaded, mbTotal),
+                left: this.env._t("Uploading... (%s%)", percent),
+                right: this.env._t("(%s/%sMB)", mbLoaded, mbTotal),
             };
         }
     }

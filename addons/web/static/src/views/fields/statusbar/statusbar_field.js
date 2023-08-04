@@ -8,7 +8,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
-import { escape, sprintf } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -35,7 +35,7 @@ export class StatusBarField extends Component {
 
     setup() {
         if (this.props.withCommand) {
-            const commandName = sprintf(this.env._t(`Move to %s...`), escape(this.displayName));
+            const commandName = this.env._t("Move to %s...", escape(this.displayName));
             useCommand(
                 commandName,
                 () => {
@@ -61,7 +61,7 @@ export class StatusBarField extends Component {
                 }
             );
             useCommand(
-                sprintf(this.env._t(`Move to next %s`), this.displayName),
+                this.env._t("Move to next %s", this.displayName),
                 () => {
                     const options = this.computeItems(false);
                     const nextOption =

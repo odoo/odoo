@@ -3,7 +3,6 @@
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
-import { sprintf } from "@web/core/utils/strings";
 import { ensureArray } from "../utils/arrays";
 
 const { DateTime, Settings } = luxon;
@@ -436,7 +435,7 @@ export function parseDateTime(value, options = {}) {
 
     // No working parsing methods: throw an error
     if (!isValidDate(result)) {
-        throw new ConversionError(sprintf(_t("'%s' is not a correct date or datetime"), value));
+        throw new ConversionError(_t("'%s' is not a correct date or datetime", value));
     }
 
     // Revert to original numbering system

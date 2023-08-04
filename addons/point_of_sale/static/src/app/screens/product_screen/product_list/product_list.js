@@ -8,7 +8,6 @@ import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/r
 import { ProductItem } from "@point_of_sale/app/screens/product_screen/product/product";
 import { ProductsWidgetControlPanel } from "@point_of_sale/app/screens/product_screen/product_list/control_panel/control_panel";
 import { Component, useState } from "@odoo/owl";
-import { sprintf } from "@web/core/utils/strings";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
@@ -81,16 +80,12 @@ export class ProductsWidget extends Component {
         const result = await this.loadProductFromDB();
         if (result.length > 0) {
             this.notification.add(
-                sprintf(
-                    this.env._t('%s product(s) found for "%s".'),
-                    result.length,
-                    searchProductWord
-                ),
+                this.env._t('%s product(s) found for "%s".', result.length, searchProductWord),
                 3000
             );
         } else {
             this.notification.add(
-                sprintf(this.env._t('No more product found for "%s".'), searchProductWord),
+                this.env._t('No more product found for "%s".', searchProductWord),
                 3000
             );
         }

@@ -8,7 +8,6 @@ import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_lin
 import { PartnerDetailsEdit } from "@point_of_sale/app/screens/partner_list/partner_editor/partner_editor";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onWillUnmount, useRef, useState } from "@odoo/owl";
-import { sprintf } from "@web/core/utils/strings";
 
 /**
  * Render this screen using `showTempScreen` to select partner.
@@ -128,16 +127,12 @@ export class PartnerListScreen extends Component {
         const result = await this.searchPartner();
         if (result.length > 0) {
             this.notification.add(
-                sprintf(
-                    this.env._t('%s customer(s) found for "%s".'),
-                    result.length,
-                    this.state.query
-                ),
+                this.env._t('%s customer(s) found for "%s".', result.length, this.state.query),
                 3000
             );
         } else {
             this.notification.add(
-                sprintf(this.env._t('No more customer found for "%s".'), this.state.query),
+                this.env._t('No more customer found for "%s".', this.state.query),
                 3000
             );
         }

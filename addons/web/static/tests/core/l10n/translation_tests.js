@@ -171,3 +171,23 @@ QUnit.test("tamil has the correct numbering system", async (assert) => {
         "௧௦/௧௨/௨௦௨௧ ௧௨:௦௦:௦௦"
     );
 });
+
+QUnit.test(
+    "_t fills the format specifiers in translated terms with its extra arguments",
+    async (assert) => {
+        patchWithCleanup(translatedTerms, { "Due in %s days": "Échéance dans %s jours" });
+        const translatedStr = _t("Due in %s days", 513);
+        assert.strictEqual(translatedStr, "Échéance dans 513 jours");
+    }
+);
+
+QUnit.test(
+    "_t fills the format specifiers in lazy translated terms with its extra arguments",
+    async (assert) => {
+        translatedTerms[translationLoaded] = false;
+        const translatedStr = _t("Due in %s days", 513);
+        patchWithCleanup(translatedTerms, { "Due in %s days": "Échéance dans %s jours" });
+        translatedTerms[translationLoaded] = true;
+        assert.equal(translatedStr, "Échéance dans 513 jours");
+    }
+);

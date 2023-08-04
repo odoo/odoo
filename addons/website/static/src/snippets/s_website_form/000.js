@@ -8,7 +8,6 @@
     import publicWidget from "@web/legacy/js/public/public_widget";
     import dom from "@web/legacy/js/core/dom";
     import concurrency from "@web/legacy/js/core/concurrency";
-    import { sprintf } from "@web/core/utils/strings";
     import { debounce } from "@web/core/utils/timing";
     import { _t } from "@web/core/l10n/translation";
 
@@ -284,12 +283,15 @@
             if (!self.check_error_fields({})) {
                 if (this.fileInputError) {
                     const errorMessage = this.fileInputError.type === "number"
-                        ? sprintf(_t(
-                            "Please fill in the form correctly. You uploaded too many files. (Maximum %s files)"
-                        ), this.fileInputError.limit)
-                        : sprintf(_t(
-                            "Please fill in the form correctly. The file \"%s\" is too big. (Maximum %s MB)"
-                        ), this.fileInputError.fileName, this.fileInputError.limit);
+                        ? _t(
+                            "Please fill in the form correctly. You uploaded too many files. (Maximum %s files)", 
+                            this.fileInputError.limit
+                        )
+                        : _t(
+                            "Please fill in the form correctly. The file \"%s\" is too big. (Maximum %s MB)", 
+                            this.fileInputError.fileName,
+                            this.fileInputError.limit
+                        );
                     this.update_status("error", errorMessage);
                     delete this.fileInputError;
                 } else {
@@ -580,13 +582,13 @@
                     if (datetime.isValid()) {
                         return time.datetime_to_str(datetime.toDate());
                     }
-                    throw new Error(sprintf(_t("'%s' is not a correct datetime"), value));
+                    throw new Error(_t("'%s' is not a correct datetime", value));
                 case 'date':
                     var date = moment(value, [date_pattern, date_pattern_wo_zero], true);
                     if (date.isValid()) {
                         return time.date_to_str(date.toDate());
                     }
-                    throw new Error(sprintf(_t("'%s' is not a correct date"), value));
+                    throw new Error(_t("'%s' is not a correct date", value));
             }
             return value;
         },

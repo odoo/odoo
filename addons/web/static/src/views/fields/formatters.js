@@ -4,7 +4,7 @@ import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { escape, intersperse, nbsp, sprintf } from "@web/core/utils/strings";
+import { escape, intersperse, nbsp } from "@web/core/utils/strings";
 import { isBinarySize } from "@web/core/utils/binary";
 
 import { markup } from "@odoo/owl";
@@ -364,7 +364,7 @@ export function formatX2many(value) {
     } else if (count === 1) {
         return _t("1 record");
     } else {
-        return sprintf(_t("%s records"), count);
+        return _t("%s records", count);
     }
 }
 

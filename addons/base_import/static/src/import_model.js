@@ -5,7 +5,6 @@ import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { groupBy, sortBy } from "@web/core/utils/arrays";
 import { memoize } from "@web/core/utils/functions";
-import { sprintf } from "@web/core/utils/strings";
 import { useState } from "@odoo/owl";
 import { ImportBlockUI } from "./import_block_ui";
 
@@ -281,8 +280,8 @@ export class BaseImportModel {
         if (!importRes.hasError) {
             if (importRes.nextrow) {
                 this._addMessage("warning", [
-                    sprintf(
-                        _t("Click 'Resume' to proceed with the import, resuming at line %s."),
+                    _t(
+                        "Click 'Resume' to proceed with the import, resuming at line %s.",
                         importRes.nextrow + 1
                     ),
                     _t("You can test or reload your file before resuming the import."),
@@ -445,8 +444,8 @@ export class BaseImportModel {
                     if (error.record !== undefined) {
                         this._addMessage("danger", [
                             error.rows.from === error.rows.to
-                                ? sprintf(_t('Error at row %s: "%s"'), error.record, error.message)
-                                : sprintf(_t("%s at multiple rows"), error.message),
+                                ? _t('Error at row %s: "%s"', error.record, error.message)
+                                : _t("%s at multiple rows", error.message),
                         ]);
                     }
                     // Handle global errors.

@@ -4,7 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 
 import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 
 function addMedia(position = "right") {
     return {
@@ -106,7 +105,7 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
     const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
         trigger: `${option_block} ${weName}, ${option_block} [title='${weName}']`,
-        content: Markup(sprintf(_t("<b>Click</b> on this option to change the %s of the block."), optionTooltipLabel)),
+        content: Markup(_t("<b>Click</b> on this option to change the %s of the block.", optionTooltipLabel)),
         position: position,
         in_modal: false,
         run: "click",
@@ -118,7 +117,7 @@ function selectNested(trigger, optionName, alt_trigger = null, optionTooltipLabe
     const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
         trigger: trigger,
-        content: Markup(sprintf(_t("<b>Select</b> a %s."), optionTooltipLabel)),
+        content: Markup(_t("<b>Select</b> a %s.", optionTooltipLabel)),
         alt_trigger: alt_trigger == null ? undefined : `${option_block} ${alt_trigger}`,
         position: position,
         run: 'click',
@@ -135,7 +134,7 @@ function changePaddingSize(direction) {
     }
     return {
         trigger: `iframe .oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
-        content: Markup(sprintf(_t("<b>Slide</b> this button to change the %s padding"), direction)),
+        content: Markup(_t("<b>Slide</b> this button to change the %s padding", direction)),
         consumeEvent: 'mousedown',
         position: position,
     };
@@ -235,7 +234,7 @@ function dragNDrop(snippet, position = "bottom") {
     return {
         trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"] .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
         extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets",
-        content: Markup(sprintf(_t("Drag the <b>%s</b> building block and drop it at the bottom of the page."), snippet.name)),
+        content: Markup(_t("Drag the <b>%s</b> building block and drop it at the bottom of the page.", snippet.name)),
         position: position,
         // Normally no main snippet can be dropped in the default footer but
         // targeting it allows to force "dropping at the end of the page".

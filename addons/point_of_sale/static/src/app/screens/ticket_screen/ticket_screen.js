@@ -18,7 +18,6 @@ import { ReprintReceiptButton } from "@point_of_sale/app/screens/ticket_screen/r
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
-import { sprintf } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
@@ -128,10 +127,8 @@ export class TicketScreen extends Component {
         ) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Existing orderlines"),
-                body: sprintf(
-                    this.env._t(
-                        "%s has a total amount of %s, are you sure you want to delete this order?"
-                    ),
+                body: this.env._t(
+                    "%s has a total amount of %s, are you sure you want to delete this order?",
                     order.name,
                     this.getTotal(order)
                 ),
@@ -212,10 +209,8 @@ export class TicketScreen extends Component {
                 this.numberBuffer.reset();
                 this.popup.add(ErrorPopup, {
                     title: this.env._t("Maximum Exceeded"),
-                    body: sprintf(
-                        this.env._t(
-                            "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded."
-                        ),
+                    body: this.env._t(
+                        "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
                         quantity,
                         refundableQty
                     ),

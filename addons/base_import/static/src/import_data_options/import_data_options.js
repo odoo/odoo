@@ -3,7 +3,6 @@
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 
 export class ImportDataOptions extends Component {
     static template = "ImportDataOptions";
@@ -45,7 +44,7 @@ export class ImportDataOptions extends Component {
                 const fields = await this.orm.call(this.currentModel, "fields_get");
                 const selection = fields[this.props.fieldInfo.name].selection.map((opt) => [
                     opt[0],
-                    sprintf(_t("Set to: %s"), opt[1]),
+                    _t("Set to: %s", opt[1]),
                 ]);
                 options.push(...selection);
             } else {

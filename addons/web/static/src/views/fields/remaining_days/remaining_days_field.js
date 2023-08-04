@@ -5,7 +5,6 @@ import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 import { DateTimeField } from "../datetime/datetime_field";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -45,9 +44,9 @@ export class RemainingDaysField extends Component {
             return this.formattedValue;
         }
         if (this.diffDays < 0) {
-            return sprintf(_t("%s days ago"), -this.diffDays);
+            return _t("%s days ago", -this.diffDays);
         }
-        return sprintf(_t("In %s days"), this.diffDays);
+        return _t("In %s days", this.diffDays);
     }
 
     get formattedValue() {

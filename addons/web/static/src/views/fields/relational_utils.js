@@ -13,7 +13,6 @@ import {
     useOwnedDialogs,
     useService,
 } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { createElement } from "@web/core/utils/xml";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews } from "@web/views/form/form_controller";
@@ -283,7 +282,7 @@ export class Many2XAutocomplete extends Component {
 
         if (this.props.quickCreate && request.length) {
             options.push({
-                label: sprintf(this.env._t(`Create "%s"`), request),
+                label: this.env._t('Create "%s"', request),
                 classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
                 action: async (params) => {
                     try {
@@ -363,13 +362,13 @@ export class Many2XAutocomplete extends Component {
 
             dynamicFilters = [
                 {
-                    description: sprintf(this.env._t("Quick search: %s"), request),
+                    description: this.env._t("Quick search: %s", request),
                     domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
                 },
             ];
         }
 
-        const title = sprintf(this.env._t("Search: %s"), fieldString);
+        const title = this.env._t("Search: %s", fieldString);
         this.selectCreate({
             domain,
             context,
@@ -461,8 +460,7 @@ export function useOpenMany2XRecord({
 
         let resolve = () => {};
         if (!title) {
-            title = resId ? env._t("Open: %s") : env._t("Create %s");
-            title = sprintf(title, fieldString);
+            title = resId ? env._t("Open: %s", fieldString) : env._t("Create %s", fieldString);
         }
 
         const { create: canCreate, write: canWrite } = activeActions;
@@ -708,8 +706,9 @@ export function useOpenX2ManyRecord({
 
     async function openRecord({ record, mode, context, title, onClose }) {
         if (!title) {
-            title = record ? env._t("Open: %s") : env._t("Create %s");
-            title = sprintf(title, activeField.string);
+            title = record
+                ? env._t("Open: %s", activeField.string)
+                : env._t("Create %s", activeField.string);
         }
         const list = getList();
         const { archInfo, fields: _fields } = await getFormViewInfo({

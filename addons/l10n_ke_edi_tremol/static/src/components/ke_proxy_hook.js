@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { sprintf } from "@web/core/utils/strings";
+
 import { useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -37,7 +37,7 @@ export function useKEProxy({onAllSent}) {
         let progress; // keep track of when an error occurs
         for (const index in invoices) {
             let { move_id, messages, proxy_address, company_vat, name } = invoices[index];
-            state.message = sprintf(_t("Posting invoice: %s"), name);
+            state.message = _t("Posting invoice: %s", name);
             try {
                 progress = 'postToDevice';
                 let deviceResponse = await http.post(
@@ -59,16 +59,16 @@ export function useKEProxy({onAllSent}) {
                 state.error = true;
                 switch (progress) {
                     case 'postToDevice':
-                        state.message = sprintf(_t("Error trying to connect to the middleware. Is the middleware running? \n Error message: %s"), e.message);
+                        state.message = _t("Error trying to connect to the middleware. Is the middleware running? \n Error message: %s", e.message);
                         break;
                     case 'parseResponse':
-                        state.message = sprintf(_t("Posting the invoice %s has failed with the message: \n %s"), name, e.message);
+                        state.message = _t("Posting the invoice %s has failed with the message: \n %s", name, e.message);
                         break;
                     case 'updateInvoice':
-                        state.message = sprintf(_t("Error trying to connect to Odoo. Check your internet connection. Error message: %s"), e.message);
+                        state.message = _t("Error trying to connect to Odoo. Check your internet connection. Error message: %s", e.message);
                         break;
                     default:
-                        state.message = sprintf(_t("Unexpected Error:\n %s"), e.message);
+                        state.message = _t("Unexpected Error:\n %s", e.message);
                 }
                 break;
             }

@@ -6,7 +6,6 @@ import { OnlinePaymentPopup } from "@pos_online_payment/app/utils/online_payment
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { floatIsZero } from "@web/core/utils/numbers";
-import { sprintf } from "@web/core/utils/strings";
 
 patch(PaymentScreen.prototype, {
     getRemainingOnlinePaymentLines() {
@@ -23,7 +22,11 @@ patch(PaymentScreen.prototype, {
             if (amount <= 0) {
                 this.popup.add(ErrorPopup, {
                     title: this.env._t("Invalid online payment"),
-                    body: sprintf(this.env._t("Online payments cannot have a negative amount (%s: %s)."), line.payment_method.name, this.env.utils.formatCurrency(amount)),
+                    body: this.env._t(
+                        "Online payments cannot have a negative amount (%s: %s).",
+                        line.payment_method.name,
+                        this.env.utils.formatCurrency(amount)
+                    ),
                 });
                 return false;
             }
@@ -32,7 +35,11 @@ patch(PaymentScreen.prototype, {
         if (!floatIsZero(unpaidAmount - remainingAmount, this.pos.currency.decimal_places)) {
             this.popup.add(ErrorPopup, {
                 title: this.env._t("Invalid online payments"),
-                body: sprintf(this.env._t("The total amount of remaining online payments to execute (%s) doesn't correspond to the remaining unpaid amount of the order (%s)."), this.env.utils.formatCurrency(remainingAmount), this.env.utils.formatCurrency(unpaidAmount)),
+                body: this.env._t(
+                    "The total amount of remaining online payments to execute (%s) doesn't correspond to the remaining unpaid amount of the order (%s).",
+                    this.env.utils.formatCurrency(remainingAmount),
+                    this.env.utils.formatCurrency(unpaidAmount)
+                ),
             });
             return false;
         }

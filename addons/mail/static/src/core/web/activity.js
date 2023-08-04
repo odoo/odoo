@@ -12,7 +12,6 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 /**
@@ -46,7 +45,7 @@ export class Activity extends Component {
 
     get displayName() {
         if (this.props.data.summary) {
-            return sprintf(_t("“%s”"), this.props.data.summary);
+            return _t("“%s”", this.props.data.summary);
         }
         return this.props.data.display_name;
     }

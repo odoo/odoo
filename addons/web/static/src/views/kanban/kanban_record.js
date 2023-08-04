@@ -7,7 +7,6 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { Field } from "@web/views/fields/field";
@@ -334,10 +333,8 @@ export class KanbanRecord extends Component {
                 ) {
                     this.dialog.add(KanbanCoverImageDialog, { autoOpen, fieldName, record });
                 } else {
-                    const warning = sprintf(
-                        env._t(
-                            `Could not set the cover image: incorrect field ("%s") is provided in the view.`
-                        ),
+                    const warning = env._t(
+                        `Could not set the cover image: incorrect field ("%s") is provided in the view.`,
                         fieldName
                     );
                     this.notification.add({ title: warning, type: "danger" });

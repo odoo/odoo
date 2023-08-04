@@ -27,7 +27,6 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 const EDIT_CLICK_TYPE = {
@@ -82,9 +81,7 @@ export class Composer extends Component {
 
     setup() {
         this.SEND_KEYBIND_TO_SEND = markup(
-            sprintf(_t("<samp>%(send_keybind)s</samp><i> to send</i>"), {
-                send_keybind: this.sendKeybind,
-            })
+            _t("<samp>%(send_keybind)s</samp><i> to send</i>", { send_keybind: this.sendKeybind })
         );
         this.KEYBOARD = {
             NONE: "None",
@@ -211,13 +208,9 @@ export class Composer extends Component {
         }
         if (this.thread) {
             if (this.thread.type === "channel") {
-                return sprintf(_t("Message #%(thread name)s…"), {
-                    "thread name": this.thread.displayName,
-                });
+                return _t("Message #%(thread name)s…", { "thread name": this.thread.displayName });
             }
-            return sprintf(_t("Message %(thread name)s…"), {
-                "thread name": this.thread.displayName,
-            });
+            return _t("Message %(thread name)s…", { "thread name": this.thread.displayName });
         }
         return "";
     }
@@ -233,10 +226,8 @@ export class Composer extends Component {
 
     get CANCEL_OR_SAVE_EDIT_TEXT() {
         return markup(
-            sprintf(
-                _t(
-                    "<samp>%(cancel_keybind)s</samp><i> to <a href='#' data-type='%(cancel_type)s'>cancel</a></i>, <samp>%(save_keybind)s</samp><i> to <a href='#' data-type='%(save_type)s'>save</a></i>"
-                ),
+            _t(
+                "<samp>%(cancel_keybind)s</samp><i> to <a href='#' data-type='%(cancel_type)s'>cancel</a></i>, <samp>%(save_keybind)s</samp><i> to <a href='#' data-type='%(save_type)s'>save</a></i>",
                 {
                     cancel_keybind: _t("Escape"),
                     cancel_type: EDIT_CLICK_TYPE.CANCEL,
@@ -556,7 +547,7 @@ export class Composer extends Component {
         const message = await this.threadService.post(this.thread, value, postData);
         if (this.props.composer.thread.type === "mailbox") {
             this.env.services.notification.add(
-                sprintf(_t('Message posted on "%s"'), message.originThread.displayName),
+                _t('Message posted on "%s"', message.originThread.displayName),
                 { type: "info" }
             );
         }

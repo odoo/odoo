@@ -13,7 +13,6 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 
 export class MessagingMenu extends Component {
     static components = { Dropdown, NotificationItem, ImStatus };
@@ -90,7 +89,7 @@ export class MessagingMenu extends Component {
     get notificationRequest() {
         return {
             body: _t("Enable desktop notifications to chat"),
-            displayName: sprintf(_t("%s has a request"), this.store.odoobot.name),
+            displayName: _t("%s has a request", this.store.odoobot.name),
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
             isLast: this.threads.length === 0 && this.store.notificationGroups.length === 0,

@@ -216,9 +216,7 @@ export class NewContentModal extends Component {
                     }
                     return el;
                 });
-                this.website.showLoader({
-                    title: sprintf(this.env._t("Building your %s"), name),
-                });
+                this.website.showLoader({ title: this.env._t("Building your %s", name) });
                 try {
                     await this.installModule(id, element.redirectUrl);
                 } catch (error) {

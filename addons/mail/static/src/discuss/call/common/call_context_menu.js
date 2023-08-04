@@ -5,7 +5,6 @@ import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 
 const PROTOCOLS_TEXT = { host: "HOST", srflx: "STUN", prflx: "STUN", relay: "TURN" };
 
@@ -34,7 +33,7 @@ export class CallContextMenu extends Component {
         if (!this.props.rtcSession.remoteCandidateType) {
             return _t("no connection");
         }
-        return sprintf(_t("%(candidateType)s (%(protocol)s)"), {
+        return _t("%(candidateType)s (%(protocol)s)", {
             candidateType: this.props.rtcSession.remoteCandidateType,
             protocol: PROTOCOLS_TEXT[this.props.rtcSession.remoteCandidateType],
         });
@@ -44,7 +43,7 @@ export class CallContextMenu extends Component {
         if (!this.props.rtcSession.localCandidateType) {
             return _t("no connection");
         }
-        return sprintf(_t("%(candidateType)s (%(protocol)s)"), {
+        return _t("%(candidateType)s (%(protocol)s)", {
             candidateType: this.props.rtcSession.localCandidateType,
             protocol: PROTOCOLS_TEXT[this.props.rtcSession.localCandidateType],
         });
