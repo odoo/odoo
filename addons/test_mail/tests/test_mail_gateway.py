@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import itertools
 import socket
 
 from datetime import datetime
@@ -504,6 +505,61 @@ class TestMailgateway(MailCommon):
         self.assertFalse(record.message_ids[0].author_id)
         self.assertEqual(record.message_ids[0].email_from, from_1.email_formatted)
 
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_alias_owner_author_notify(self):
+        """ Make sure users are notified when a reply is sent to an alias address.
+        Alias owner should impact the message creator, but not notifications. """
+        test_record = self.env['mail.test.ticket'].create({})
+        author_partner = self.env['res.partner'].create({
+            'name': 'Author',
+            'email': 'author-partner@test.com',
+        })
+        message = self.env['mail.message'].create({
+            'body': '<p>test</p>',
+            'email_from': 'author-partner@test.com',  # email sent by author who also has an alias with their email
+            'message_type': 'email',
+            'model': test_record._name,
+            'res_id': test_record.id,
+        })
+        self.env['mail.alias'].create({
+            'alias_model_id': self.env['ir.model']._get_id(test_record._name),
+            'alias_name': 'author-partner',
+            'alias_user_id': self.user_employee.id
+        })
+
+        test_record.message_subscribe((author_partner | self.user_employee.partner_id).ids)
+
+        messages = test_record.message_ids
+
+        self.assertFalse(self.user_root.active, 'notification logic relies on odoobot being archived')
+
+        test_users = [self.user_employee, self.user_root]
+        email_tos = ['author-partner@test.com', 'some_non_aliased_email@test.com']
+        for email_to, test_user in itertools.product(email_tos, test_users):
+            with self.subTest(test_user=test_user, email_to=email_to):
+                with self.mock_mail_gateway(), self.mock_mail_app():
+                    self.format_and_process(
+                        MAIL_TEMPLATE, self.email_from, email_to,
+                        subject=message.message_id, extra=f'In-Reply-To:\r\n\t{message.message_id}\n',
+                        model=None, with_user=test_user)
+                new_messages = test_record.message_ids - messages
+
+                self.assertEqual(len(new_messages), 1)
+                self.assertEqual(new_messages.create_uid, self.user_root,
+                                 'Odoobot should be creating the message')
+
+                # Make sure the alias owner is notified if they are a follower
+                self.assertNotified(new_messages, [{
+                    'partner': self.user_employee.partner_id,
+                    'is_read': False,
+                    'type': 'inbox',
+                }])
+                # never notify the author of the incoming message
+                with self.assertRaises(Exception):
+                    self.assertNotified(new_messages, [{'partner': author_partner}])
+
+            messages = test_record.message_ids
+
     # --------------------------------------------------
     # Alias configuration
     # --------------------------------------------------
@@ -767,7 +823,7 @@ class TestMailgateway(MailCommon):
             record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='NoEmployeeAllowed')
         self.assertEqual(record.create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].subject, 'NoEmployeeAllowed')
-        self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].create_uid, self.user_root, 'Message should be created by caller of message_process.')
         self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
@@ -775,19 +831,19 @@ class TestMailgateway(MailCommon):
         record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='Email Found')
         self.assertEqual(record.create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].subject, 'Email Found')
-        self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].create_uid, self.user_root)
         self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
 
         record = self.format_and_process(MAIL_TEMPLATE, 'Another name <%s>' % self.user_employee.email, 'groups@test.com', subject='Email OtherName')
         self.assertEqual(record.create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].subject, 'Email OtherName')
-        self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].create_uid, self.user_root)
         self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
 
         record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_normalized, 'groups@test.com', subject='Email SimpleEmail')
         self.assertEqual(record.create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].subject, 'Email SimpleEmail')
-        self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].create_uid, self.user_root)
         self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink')
@@ -802,7 +858,7 @@ class TestMailgateway(MailCommon):
         record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='FollowerWinner')
         self.assertEqual(record.create_uid, follower_user)
         self.assertEqual(record.message_ids[0].subject, 'FollowerWinner')
-        self.assertEqual(record.message_ids[0].create_uid, follower_user)
+        self.assertEqual(record.message_ids[0].create_uid, self.user_root)
         self.assertEqual(record.message_ids[0].author_id, follower_user.partner_id)
 
         # name order win
@@ -811,7 +867,7 @@ class TestMailgateway(MailCommon):
         record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='FirstFoundWinner')
         self.assertEqual(record.create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].subject, 'FirstFoundWinner')
-        self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].create_uid, self.user_root)
         self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
 
     # --------------------------------------------------
