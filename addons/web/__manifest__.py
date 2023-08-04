@@ -231,7 +231,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/boot.js',
             'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
-            'web/static/src/legacy/js/core/menu.js',
             'web/static/src/legacy/js/public/lazyloader.js',
         ],
         'web.assets_frontend': [
@@ -332,7 +331,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/popover.js',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/local_storage.js',
-            'web/static/src/legacy/js/core/menu.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/qweb.js',
             'web/static/src/legacy/js/core/ram_storage.js',
@@ -385,7 +383,6 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/boot.js'),
             ('remove', 'web/static/src/session.js'),
             ('remove', 'web/static/src/legacy/js/core/cookie_utils.js'),
-            ('remove', 'web/static/src/legacy/js/core/menu.js'),
             ('remove', 'web/static/src/legacy/js/public/lazyloader.js'),
         ],
         'web.assets_backend_prod_only': [
