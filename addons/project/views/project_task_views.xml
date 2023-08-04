@@ -568,7 +568,7 @@
                                         <span invisible="context.get('default_project_id', False)" style="display: block; margin-top: 4px;">
                                             <field name="project_id" options="{'no_open': True}"/>
                                         </span>
-                                        <span t-if="record.partner_id.value" style="display: block; margin-top: 4px;">
+                                        <span t-if="record.partner_id" style="display: block; margin-top: 4px;">
                                             <field name="partner_id"/>
                                         </span>
                                         <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" style="display: block; margin-top: 4px;">
@@ -581,7 +581,8 @@
                                     <div t-if="record.date_deadline.raw_value" name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}">
                                         <field name="date_deadline" widget="remaining_days"/>
                                     </div>
-                                    <div t-if="record.displayed_image_id.value">
+                                    <field name="displayed_image_id"/>
+                                    <div t-if="record.displayed_image_id">
                                         <field name="displayed_image_id" widget="attachment_image"/>
                                     </div>
                                 </div>
@@ -598,15 +599,15 @@
                                             <i title="Private Task" class="fa fa-lock"/>
                                         </a>
                                         <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
-                                            <a t-if="record.project_id.raw_value and record.subtask_count.raw_value and record.subtask_count.value &gt; record.closed_subtask_count.value"
-                                               t-attf-title="{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}"
+                                            <a t-if="record.project_id.raw_value and record.subtask_count.raw_value and record.subtask_count &gt; record.closed_subtask_count"
+                                               t-attf-title="{{ record.closed_subtask_count }} sub-tasks closed out of {{ record.subtask_count }}"
                                                class="subtask_list_button text-muted">
                                                 <span class="fa fa-check-square-o me-1"/>
-                                                <t t-out="record.closed_subtask_count.value + '/' + record.subtask_count.value"/>
+                                                <t t-out="record.closed_subtask_count + '/' + record.subtask_count"/>
                                             </a>
-                                            <div t-else="" t-attf-title="{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}" class="text-muted">
+                                            <div t-else="" t-attf-title="{{ record.closed_subtask_count }} sub-tasks closed out of {{ record.subtask_count }}" class="text-muted">
                                                 <span class="fa fa-check-square-o me-1"/>
-                                                <t t-out="record.closed_subtask_count.value + '/' + record.subtask_count.value"/>
+                                                <t t-out="record.closed_subtask_count + '/' + record.subtask_count"/>
                                             </div>
                                         </t>
                                     </div>
@@ -766,11 +767,11 @@
                     <templates>
                         <div class="w-100" t-name="activity-box" style="display: inline-grid; grid-template-columns: auto max-content;">
                             <div>
-                                <span t-att-title="record.name.value">
+                                <span t-att-title="record.name">
                                     <field name="name" display="full" class="w-100 text-truncate"/>
                                 </span>
-                                <span t-att-title="record.project_id.value" invisible="context.get('default_project_id', False)">
-                                    <field t-if="record.project_id.value" name="project_id" muted="1" class="w-100 text-truncate"/>
+                                <span t-att-title="record.project_id" invisible="context.get('default_project_id', False)">
+                                    <field t-if="record.project_id" name="project_id" muted="1" class="w-100 text-truncate"/>
                                     <span t-else="" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                 </span>
                             </div>
