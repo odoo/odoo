@@ -555,13 +555,7 @@ class IrActionsServer(models.Model):
         return True
 
     def _run_action_code_multi(self, eval_context):
-        try:
-            safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
-        except Exception as e:
-            external_id = self.get_external_id().get(self.id)
-            if not external_id or external_id.startswith('__export__'):
-                e.sentry_ignored = True
-            raise e.with_traceback(e.__traceback__) from None
+        safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
         return eval_context.get('action')
 
     def _run_action_multi(self, eval_context=None):
@@ -580,11 +574,7 @@ class IrActionsServer(models.Model):
             for field, new_value in res.items():
                 record_cached[field] = new_value
         else:
-            try:
-                self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
-            except Exception as e:
-                e.sentry_ignored = True
-                raise
+            self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
 
     def _run_action_object_create(self, eval_context=None):
         """Create specified model object with specified values.
@@ -594,11 +584,7 @@ class IrActionsServer(models.Model):
         vals = self.fields_lines.eval_value(eval_context=eval_context)
         res = {line.col1.name: vals[line.id] for line in self.fields_lines}
 
-        try:
-            res = self.env[self.crud_model_id.model].create(res)
-        except Exception as e:
-            e.sentry_ignored = True
-            raise
+        res = self.env[self.crud_model_id.model].create(res)
 
         if self.link_field_id:
             record = self.env[self.model_id.model].browse(self._context.get('active_id'))
@@ -778,11 +764,7 @@ class IrServerObjectLines(models.Model):
         for line in self:
             expr = line.value
             if line.evaluation_type == 'equation':
-                try:
-                    expr = safe_eval(line.value, eval_context)
-                except Exception as e:
-                    e.sentry_ignored = True
-                    raise e.with_traceback(e.__traceback__) from None
+                expr = safe_eval(line.value, eval_context)
             elif line.col1.ttype in ['many2one', 'integer']:
                 try:
                     expr = int(line.value)
