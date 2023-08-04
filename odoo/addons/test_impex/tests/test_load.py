@@ -574,11 +574,12 @@ class test_m2o(ImporterCase):
         # 1 x SAVEPOINT load
         # 3 x name_search
         # 1 x SAVEPOINT _load_records
-        # 3 x insert
+        # 1 x select on list of existing modules
+        # 1 x insert
         # 1 x RELEASE SAVEPOINT _load_records
         # 1 x RELEASE SAVEPOINT load
-        # => 10
-        with self.assertQueryCount(8):
+        # => 9
+        with self.assertQueryCount(9):
             result = self.import_(['value'], [
                 # import by name_get
                 [name1],
