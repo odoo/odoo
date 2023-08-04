@@ -11,31 +11,28 @@
                     >
                         <t t-if="props.record.resId">
                             <button
-                                class="btn btn-secondary btn-sm lh-1 o_download_file_button"
+                                class="btn btn-link btn-sm lh-1 fa fa-download o_download_file_button"
                                 data-tooltip="Download"
                                 aria-label="Download"
                                 t-on-click="onFileDownload"
                             >
-                                <i class="fa fa-fw fa-download"/>
                             </button>
                         </t>
                         <t t-set-slot="toggler">
                             <input type="text" class="o_input" t-att-value="fileName" readonly="readonly" />
                             <button
-                                class="btn btn-secondary btn-sm lh-1 o_select_file_button"
+                                class="btn btn-link btn-sm lh-1 fa fa-pencil o_select_file_button"
                                 data-tooltip="Edit"
                                 aria-label="Edit"
                             >
-                                <i class="fa fa-fw fa-pencil"/>
                             </button>
                         </t>
                         <button
-                            class="btn btn-secondary btn-sm lh-1 o_clear_file_button"
+                            class="btn btn-link btn-sm lh-1 fa fa-trash o_clear_file_button"
                             data-tooltip="Clear"
                             aria-label="Clear"
                             t-on-click="() => this.update({})"
                         >
-                            <i class="fa fa-fw fa-trash"/>
                         </button>
                     </FileUploader>
                 </div>
@@ -74,16 +71,6 @@
                 </FileUploader>
             </label>
         </xpath>
-        <xpath expr="//button[hasclass('o_download_file_button')]" position="attributes">
-            <attribute name="class">btn btn-sm btn-link fa fa-download o_download_file_button</attribute>
-        </xpath>
-        <xpath expr="//button[hasclass('o_select_file_button')]" position="attributes">
-            <attribute name="class">btn btn-sm btn-link fa fa-pencil o_select_file_button</attribute>
-        </xpath>
-        <xpath expr="//button[hasclass('o_clear_file_button')]" position="attributes">
-            <attribute name="class">btn btn-sm btn-link fa fa-trash o_clear_file_button</attribute>
-        </xpath>
-
     </t>
 
 </templates>
