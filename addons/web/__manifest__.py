@@ -155,7 +155,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
             'web/static/src/legacy/xml/name_and_signature.xml',
-            'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/legacy/translations_loaded.js',
         ],
         'web.assets_emoji': [
@@ -360,7 +359,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
             'web/static/src/legacy/xml/name_and_signature.xml',
-            'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
 
             'web/static/src/env.js',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
