@@ -139,6 +139,7 @@ Featuring
             'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
+            'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/core/colorpicker/colorpicker.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/mimetypes.scss',
@@ -147,7 +148,6 @@ Featuring
             'web/static/src/legacy/scss/keyboard.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
             'web/static/src/legacy/scss/web.zoomodoo.scss',
-            'web/static/src/legacy/scss/fontawesome_overridden.scss',
 
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',

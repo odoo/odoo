@@ -99,8 +99,8 @@
             # scss variables and utilities
             'point_of_sale/static/src/scss/pos_variables_extra.scss',
             'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/fonts/fonts.scss',
-            'web/static/src/legacy/scss/fontawesome_overridden.scss',
 
 
             # JS framework

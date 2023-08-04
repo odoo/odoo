@@ -59,6 +59,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
+            'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/core/colorpicker/colorpicker.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/mimetypes.scss',
@@ -67,7 +68,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/keyboard.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
             'web/static/src/legacy/scss/web.zoomodoo.scss',
-            'web/static/src/legacy/scss/fontawesome_overridden.scss',
 
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
@@ -247,6 +247,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/base_frontend.scss',
+            'web/static/src/scss/fontawesome_overridden.scss',
 
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/mimetypes.scss',
@@ -255,7 +256,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/keyboard.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
             'web/static/src/legacy/scss/web.zoomodoo.scss',
-            'web/static/src/legacy/scss/fontawesome_overridden.scss',
 
             'web/static/src/legacy/scss/lazyloader.scss',
 
@@ -404,7 +404,7 @@ This module provides the core of the Odoo Web Client.
 
             'base/static/src/css/description.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'web/static/src/legacy/scss/fontawesome_overridden.scss',
+            'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/lib/odoo_ui_icons/*',
             'web/static/fonts/fonts.scss',
 
