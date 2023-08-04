@@ -46,6 +46,15 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 100})],
         })
 
+        cls.emv_qr_invoice_with_non_integer_amount = cls.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': cls.partner_a.id,
+            'currency_id': cls.env.ref('base.HKD').id,
+            'partner_bank_id': cls.acc_emv_hk.id,
+            'company_id': cls.company_data['company'].id,
+            'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 100.5})],
+        })
+
     def test_emv_qr_code_generation(self):
         self.emv_qr_invoice.qr_code_method = 'emv_qr'
         self.emv_qr_invoice._generate_qr_code()
@@ -81,4 +90,19 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
 
         # Check the whole qr code string
         qr_code_string = ''.join(emv_qr_vals)
-        self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-678912345204000053033445405100.05802HK5914company_1_data6002HK62170513INV/TEST/00016304264C')
+        self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-6789123452040000530334454031005802HK5914company_1_data6002HK62170513INV/TEST/00016304A154')
+
+    def test_emv_qr_vals_with_non_integer_amount(self):
+        self.emv_qr_invoice_with_non_integer_amount.qr_code_method = 'emv_qr'
+        unstruct_ref = 'INV/TEST/0002'
+        emv_qr_vals = self.emv_qr_invoice_with_non_integer_amount.partner_bank_id._get_qr_vals(
+            qr_method=self.emv_qr_invoice_with_non_integer_amount.qr_code_method,
+            amount=self.emv_qr_invoice_with_non_integer_amount.amount_residual,
+            currency=self.emv_qr_invoice_with_non_integer_amount.currency_id,
+            debtor_partner=self.emv_qr_invoice_with_non_integer_amount.partner_id,
+            free_communication=unstruct_ref,
+            structured_communication=self.emv_qr_invoice_with_non_integer_amount.payment_reference,
+        )
+
+        # Check the whole qr code string
+        self.assertEqual(emv_qr_vals, '00020101021226330012hk.com.hkicl0313+852-678912345204000053033445405100.55802HK5914company_1_data6002HK62170513INV/TEST/000263049E64')
