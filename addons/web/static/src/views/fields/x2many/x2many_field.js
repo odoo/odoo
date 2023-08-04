@@ -5,7 +5,6 @@ import { evalDomain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 import {
     useActiveActions,
     useAddInlineRecord,
@@ -258,7 +257,7 @@ export class X2ManyField extends Component {
         context = makeContext([this.props.context, context]);
         if (this.isMany2Many) {
             const { string } = this.props;
-            const title = sprintf(this.env._t("Add: %s"), string);
+            const title = this.env._t("Add: %s", string);
             return this.selectCreate({ domain, context, title });
         }
         if (editable) {

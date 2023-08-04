@@ -6,7 +6,6 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 
 /**
@@ -83,7 +82,7 @@ export class AttachmentList extends Component {
             return this.props.unlinkAttachment(attachment);
         }
         this.dialog.add(ConfirmationDialog, {
-            body: sprintf(_t('Do you really want to delete "%s"?'), attachment.filename),
+            body: _t('Do you really want to delete "%s"?', attachment.filename),
             cancel: () => {},
             confirm: () => this.onConfirmUnlink(attachment),
         });

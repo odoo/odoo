@@ -11,7 +11,6 @@ import { reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 
 const ORDERED_TRANSCEIVER_NAMES = ["audio", "video"];
@@ -492,7 +491,7 @@ export class Rtc {
                 if (session.raisingHand) {
                     this.addCallNotification({
                         id: notificationId,
-                        text: sprintf(_t("%s raised a hand"), session.name),
+                        text: _t("%s raised a hand", session.name),
                     });
                 } else {
                     this.removeCallNotification(notificationId);
@@ -1236,9 +1235,9 @@ export class Rtc {
         } catch {
             const str =
                 type === "camera"
-                    ? _t('%s" requires "camera" access')
-                    : _t('%s" requires "screen recording" access');
-            this.notification.add(sprintf(str, window.location.host), { type: "warning" });
+                    ? _t('%s" requires "camera" access', window.location.host)
+                    : _t('%s" requires "screen recording" access', window.location.host);
+            this.notification.add(str, { type: "warning" });
             stopVideo();
             return;
         }
@@ -1252,10 +1251,7 @@ export class Rtc {
                 videoStream = await this.blurManager.stream;
             } catch (_e) {
                 this.notification.add(
-                    sprintf(_t("%(name)s: %(message)s)"), {
-                        name: _e.name,
-                        message: _e.message,
-                    }),
+                    _t("%(name)s: %(message)s)", { name: _e.name, message: _e.message }),
                     { type: "warning" }
                 );
                 this.userSettingsService.useBlur = false;
@@ -1330,7 +1326,7 @@ export class Rtc {
                 audioTrack = audioStream.getAudioTracks()[0];
             } catch {
                 this.notification.add(
-                    sprintf(_t('"%(hostname)s" requires microphone access'), {
+                    _t('"%(hostname)s" requires microphone access', {
                         hostname: window.location.host,
                     }),
                     { type: "warning" }

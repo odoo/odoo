@@ -7,7 +7,6 @@ import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
-import { sprintf } from "@web/core/utils/strings";
 
 // FIXME: Perhaps MutexedDropPrevious can be replaced by the new KeepLast.
 // > This might require thorough investigation on how _updateRewards work.
@@ -1556,8 +1555,8 @@ patch(Order.prototype, {
             }
         }
         if (!rule && this.orderlines.length === 0 && coupon) {
-            return sprintf(
-                _t("Gift Card: %s\nBalance: %s"),
+            return _t(
+                "Gift Card: %s\nBalance: %s",
                 code,
                 this.env.utils.formatCurrency(coupon.balance)
             );

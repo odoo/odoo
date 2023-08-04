@@ -8,7 +8,6 @@ import { markup, reactive, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 
 export class DiscussCoreCommon {
     /**
@@ -45,7 +44,7 @@ export class DiscussCoreCommon {
                 });
                 if (invitedByUserId && invitedByUserId !== this.store.user?.user?.id) {
                     this.notificationService.add(
-                        sprintf(_t("You have been invited to #%s"), thread.displayName),
+                        _t("You have been invited to #%s", thread.displayName),
                         { type: "info" }
                     );
                 }
@@ -69,10 +68,9 @@ export class DiscussCoreCommon {
                 if (thread.localId === this.store.discuss.threadLocalId) {
                     this.store.discuss.threadLocalId = undefined;
                 }
-                this.notificationService.add(
-                    sprintf(_t("You unsubscribed from %s."), thread.displayName),
-                    { type: "info" }
-                );
+                this.notificationService.add(_t("You unsubscribed from %s.", thread.displayName), {
+                    type: "info",
+                });
             });
             this.busService.subscribe("discuss.channel/legacy_insert", (payload) => {
                 this.threadService.insert({
@@ -112,7 +110,7 @@ export class DiscussCoreCommon {
                 if (thread) {
                     thread.is_pinned = false;
                     this.notificationService.add(
-                        sprintf(_t("You unpinned your conversation with %s"), thread.displayName),
+                        _t("You unpinned your conversation with %s", thread.displayName),
                         { type: "info" }
                     );
                 }

@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -70,15 +69,15 @@ class ResConfigInviteUsers extends Component {
                 });
                 switch (invalidEmails.length) {
                     case 1:
-                        return sprintf(_t("Invalid email address: %(address)s"), {
+                        return _t("Invalid email address: %(address)s", {
                             address: invalidEmails[0],
                         });
                     case 2:
-                        return sprintf(_t("Invalid email addresses: %(2 addresses)s"), {
+                        return _t("Invalid email addresses: %(2 addresses)s", {
                             "2 addresses": listFormatter.format(invalidEmails),
                         });
                     default:
-                        return sprintf(_t("Invalid email addresses: %(addresses)s"), {
+                        return _t("Invalid email addresses: %(addresses)s", {
                             addresses: listFormatter.format(invalidEmails),
                         });
                 }

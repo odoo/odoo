@@ -4,7 +4,6 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { sprintf } from "@web/core/utils/strings";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 patch(PosStore.prototype, {
@@ -13,7 +12,7 @@ patch(PosStore.prototype, {
         if (!this.company.country) {
             this.env.services.popup.add(ErrorPopup, {
                 title: _t("Missing Country"),
-                body: sprintf(_t("The company %s doesn't have a country set."), this.company.name),
+                body: _t("The company %s doesn't have a country set.", this.company.name),
             });
             return false;
         }

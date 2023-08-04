@@ -5,7 +5,6 @@ import {registry} from '@web/core/registry';
 import {listView} from '@web/views/list/list_view';
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
 import {useService} from "@web/core/utils/hooks";
-import {sprintf} from "@web/core/utils/strings";
 import {DeletePageDialog} from '@website/components/dialog/page_properties';
 import {SearchDropdownItem} from "@web/search/search_dropdown_item/search_dropdown_item";
 
@@ -44,12 +43,7 @@ export class PageListController extends PageControllerMixin(listView.Controller)
                 callback: async () => {
                     this.dialogService.add(ConfirmationDialog, {
                         title: this.env._t("Publish Website Content"),
-                        body: sprintf(
-                            this.env._t(
-                                "%s record(s) selected, are you sure you want to publish them all?"
-                            ),
-                            this.model.root.selection.length
-                        ),
+                        body: this.env._t("%s record(s) selected, are you sure you want to publish them all?", this.model.root.selection.length),
                         confirm: () => this.togglePublished(true),
                     });
                 },

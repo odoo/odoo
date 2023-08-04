@@ -6,7 +6,6 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable";
-import { sprintf } from "@web/core/utils/strings";
 import { isNull } from "@web/views/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { useBounceButton } from "@web/views/view_hook";
@@ -329,7 +328,7 @@ export class KanbanRenderer extends Component {
         if (this.exampleData && this.exampleData.ghostColumns) {
             colNames = this.exampleData.ghostColumns;
         } else {
-            colNames = [1, 2, 3, 4].map((num) => sprintf(this.env._t("Column %s"), num));
+            colNames = [1, 2, 3, 4].map((num) => this.env._t("Column %s", num));
         }
         return colNames.map((colName) => ({
             name: colName,

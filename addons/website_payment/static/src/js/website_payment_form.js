@@ -2,7 +2,6 @@
 
 import core, { _t } from "@web/legacy/js/services/core";
 import checkoutForm from '@payment/js/checkout_form';
-import { sprintf } from '@web/core/utils/strings';
 
 checkoutForm.include({
     events: Object.assign({}, checkoutForm.prototype.events || {}, {
@@ -46,7 +45,7 @@ checkoutForm.include({
                 const $field = this.$('input[name="' + id + '"],select[name="' + id + '"]');
                 $field.removeClass('is-invalid').popover('dispose');
                 if (!$field.val().trim()) {
-                    errorFields[id] = sprintf(_t("Field '%s' is mandatory"), mandatoryFields[id]);
+                    errorFields[id] = _t("Field '%s' is mandatory", mandatoryFields[id]);
                 }
             }
             if (Object.keys(errorFields).length) {

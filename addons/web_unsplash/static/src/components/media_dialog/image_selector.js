@@ -8,7 +8,6 @@ import { useService } from '@web/core/utils/hooks';
 import { uploadService, AUTOCLOSE_DELAY } from '@web_editor/components/upload_progress_toast/upload_service';
 
 import { useState, Component } from "@odoo/owl";
-import { sprintf } from '@web/core/utils/strings';
 
 class UnsplashCredentials extends Component {
     setup() {
@@ -244,8 +243,8 @@ patch(uploadService, {
                 const file = service.addFile({
                     id: service.fileId,
                     name: records.length > 1 ?
-                    sprintf(env._t("Uploading %s '%s' images."), records.length, records[0].query) :
-                    sprintf(env._t("Uploading '%s' image."), records[0].query),
+                    env._t("Uploading %s '%s' images.", records.length, records[0].query) :
+                    env._t("Uploading '%s' image.", records[0].query),
                     size: null,
                     progress: 0,
                 });

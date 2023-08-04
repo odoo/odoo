@@ -3,7 +3,7 @@
 import core from "@web/legacy/js/services/core";
 import { loadBundle, loadCSS } from "@web/core/assets";
 import Dialog from "@web/legacy/js/core/dialog";
-import { Markup, sprintf } from "@web/legacy/js/core/utils";
+import { Markup } from "@web/legacy/js/core/utils";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
@@ -2807,7 +2807,7 @@ options.registry.anchor = options.Class.extend({
     _buildClipboard(buttonEl) {
         const clipboard = new ClipboardJS(buttonEl, {text: () => this._getAnchorLink()});
         clipboard.on("success", () => {
-            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), this._getAnchorLink());
+            const message = Markup(_t("Anchor copied to clipboard<br>Link: %s", this._getAnchorLink()));
             this.displayNotification({
                 type: "success",
                 message: message,

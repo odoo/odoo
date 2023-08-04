@@ -2,7 +2,6 @@
 
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 
 async function actionGetDrive(env, action, type) {
     const { drive_id, sign_host: host } = action.params;
@@ -47,9 +46,7 @@ async function actionGetDrive(env, action, type) {
             unauthorized: _t("Unauthorized"),
         };
         dialog.add(AlertDialog, {
-            body:
-                typeToErrorMessage[result.error] ||
-                sprintf(_t(`Unexpected error: "%s"`), result.error),
+            body: typeToErrorMessage[result.error] || _t("Unexpected error: “%s”", result.error),
         });
     } else if (result[key]) {
         await orm.call("l10n_eg_edi.thumb.drive", method, [[drive_id], result[key]]).catch(() => {

@@ -3,7 +3,6 @@
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { patch } from "@web/core/utils/patch";
-import { sprintf } from "@web/core/utils/strings";
 import { formatFloat } from "@web/views/fields/formatters";
 
 patch(PartnerLine.prototype, {
@@ -20,6 +19,6 @@ patch(PartnerLine.prototype, {
         if (program.portal_visible) {
             return `${balanceRepr} ${program.portal_point_name}`;
         }
-        return sprintf(this.env._t("%s Points"), balanceRepr);
+        return this.env._t("%s Points", balanceRepr);
     },
 });

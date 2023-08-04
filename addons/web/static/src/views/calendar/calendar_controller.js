@@ -3,7 +3,6 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -175,7 +174,7 @@ export class CalendarController extends Component {
                         resModel: this.model.resModel,
                         resId: record.id || false,
                         context,
-                        title: record.id ? sprintf(_t("Open: %s"), record.title) : _t("New Event"),
+                        title: record.id ? _t("Open: %s", record.title) : _t("New Event"),
                         viewId: this.model.formViewId,
                         onRecordSaved: () => this.model.load(),
                     },

@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registry } from "../registry";
-import { sprintf } from "../utils/strings";
 
 import { EventBus, reactive } from "@odoo/owl";
 
@@ -56,7 +55,7 @@ export const fileUploadService = {
                 loaded: 0,
                 total: 0,
                 state: "pending",
-                title: files.length === 1 ? files[0].name : sprintf(env._t("%s Files"), files.length),
+                title: files.length === 1 ? files[0].name : env._t("%s Files", files.length),
                 type: files.length === 1 ? files[0].type : undefined,
             });
             uploads[upload.id] = upload;

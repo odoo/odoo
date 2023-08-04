@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import ajax from "@web/legacy/js/core/ajax";
-import { sprintf, escape } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
 import { whenReady } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import session from "web.session";
@@ -45,10 +45,12 @@ whenReady(() => {
 
             var unsubscribed_list = $("input[name='unsubscribed_list']").val();
             if (unsubscribed_list){
-                $('#subscription_info').html(sprintf(
-                    _t("You have been <strong>successfully unsubscribed from %s</strong>."),
-                    escape(unsubscribed_list)
-                ));
+                $("#subscription_info").html(
+                    _t(
+                        "You have been <strong>successfully unsubscribed from %s</strong>.",
+                        escape(unsubscribed_list)
+                    )
+                )
             }
             else{
                 $('#subscription_info').html(_t('You have been <strong>successfully unsubscribed</strong>.'));

@@ -5,7 +5,6 @@ import { Component, onWillStart, onWillUnmount, useState } from "@odoo/owl";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 
 const { Duration } = luxon;
 
@@ -73,7 +72,7 @@ export class GreetingMessage extends Component {
                 .toFormat("hh-mm")
                 .split("-");
 
-            this.hours_today = sprintf(this.env._t("%(hours)s hours, %(minutes)s minutes"), {
+            this.hours_today = this.env._t("%(hours)s hours, %(minutes)s minutes", {
                 hours: duration[0],
                 minutes: duration[1],
             });

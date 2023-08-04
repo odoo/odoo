@@ -8,7 +8,7 @@ import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFrom
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { Markup } from '@web/legacy/js/core/utils';
 import session from "web.session";
-import { escape, sprintf } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 var qweb = core.qweb;
 
@@ -264,7 +264,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         ev.preventDefault();
         if (session.is_website_user) {
             this._displayAccessDeniedNotification(
-                Markup`<p>${sprintf(_t('Oh no! Please <a href="%s">sign in</a> to vote'), "/web/login")}</p>`
+                Markup`<p>${_t('Oh no! Please <a href="%s">sign in</a> to vote', "/web/login")}</p>`
             );
             return;
         }
@@ -373,7 +373,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 const message = data.error === 'own_post'
                     ? _t('Sorry, you cannot vote for your own posts')
                     : data.error === 'anonymous_user'
-                        ? Markup`<p>${sprintf(_t('Oh no! Please <a href="%s">sign in</a> to vote'), "/web/login")}</p>`
+                        ? Markup`<p>${_t('Oh no! Please <a href="%s">sign in</a> to vote', "/web/login")}</p>`
                         : data.error;
                 this._displayAccessDeniedNotification(message);
             } else {

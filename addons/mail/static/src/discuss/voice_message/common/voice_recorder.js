@@ -1,7 +1,6 @@
 /* @odoo-module */
 import { Component, useState, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { Mp3Encoder } from "./mp3_encoder";
@@ -85,7 +84,7 @@ export class VoiceRecorder extends Component {
                 });
             } catch {
                 this.notification.add(
-                    sprintf(_t('"%(hostname)s" needs to access your microphone'), {
+                    _t('"%(hostname)s" needs to access your microphone', {
                         hostname: window.location.host,
                     }),
                     { type: "warning" }

@@ -6,7 +6,6 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 import { formatSelection } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -36,7 +35,7 @@ export class StateSelectionField extends Component {
             const hotkeys = ["D", "F", "G"];
             for (const [index, [value, label]] of this.options.entries()) {
                 useCommand(
-                    sprintf(this.env._t("Set kanban state as %s"), label),
+                    this.env._t("Set kanban state as %s", label),
                     () => {
                         this.updateRecord(value);
                     },

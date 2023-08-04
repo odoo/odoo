@@ -2,7 +2,6 @@
 
 import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 import { templates } from "@web/core/assets";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
 
@@ -166,10 +165,8 @@ export class EpsonPrinter extends BasePrinter {
             },
         };
         if (window.location.protocol === "https:") {
-            printRes.message.body += sprintf(
-                _t(
-                    "If you are on a secure server (HTTPS) please make sure you manually accepted the certificate by accessing %s"
-                ),
+            printRes.message.body += _t(
+                "If you are on a secure server (HTTPS) please make sure you manually accepted the certificate by accessing %s",
                 this.url
             );
         }

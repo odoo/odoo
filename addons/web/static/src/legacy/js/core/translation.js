@@ -1,6 +1,7 @@
 
 /** @odoo-module **/
 
+import { sprintf } from "@web/core/utils/strings";
 import Class from "@web/legacy/js/core/class";
 
 var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# */{
@@ -39,9 +40,12 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
     },
     build_translation_function: function() {
         var self = this;
-        var fcnt = function(str) {
-            var tmp = self.get(str);
-            return tmp === undefined ? str : tmp;
+        var fcnt = function(term, ...values) {
+            const translation = self.get(term) ?? term;
+            if (values.length === 0) {
+                return translation;
+            }
+            return sprintf(translation, ...values);
         };
         fcnt.database = this;
         return fcnt;

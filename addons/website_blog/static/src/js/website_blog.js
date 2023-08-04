@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
 import publicWidget from "@web/legacy/js/public/public_widget";
@@ -74,8 +73,11 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         var blogPostTitle = $('#o_wblog_post_name').html() || '';
         var articleURL = window.location.href;
         if ($element.hasClass('o_twitter')) {
-            var twitterText = _t("Amazing blog article: %s! Check it live: %s");
-            var tweetText = sprintf(twitterText, blogPostTitle, articleURL);
+            var tweetText = _t(
+                "Amazing blog article: %s! Check it live: %s",
+                blogPostTitle,
+                articleURL
+            );
             url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + encodeURIComponent(tweetText);
         } else if ($element.hasClass('o_facebook')) {
             url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(articleURL);

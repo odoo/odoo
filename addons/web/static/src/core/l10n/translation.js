@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { Deferred } from "@web/core/utils/concurrency";
+import { sprintf } from "@web/core/utils/strings";
+
 export const translationLoaded = Symbol("translationLoaded");
 export const translatedTerms = {
     [translationLoaded]: false,
@@ -17,11 +19,15 @@ export const translationIsReady = new Deferred();
  * @param {string} term
  * @returns {string}
  */
-export function _t(term) {
+export function _t(term, ...values) {
     if (translatedTerms[translationLoaded]) {
-        return translatedTerms[term] || term;
+        const translation = translatedTerms[term] ?? term;
+        if (values.length === 0) {
+            return translation;
+        }
+        return sprintf(translation, ...values);
     } else {
-        return new LazyTranslatedString(term);
+        return new LazyTranslatedString(term, ...values);
     }
 }
 
@@ -35,13 +41,21 @@ export function _t(term) {
  * @param {string} term
  * @returns {LazyTranslatedString}
  */
-export const _lt = (term) => _t(term);
+export const _lt = (term, ...values) => _t(term, ...values);
 
 class LazyTranslatedString extends String {
+    constructor(term, ...values) {
+        super(term);
+        this.values = values;
+    }
     valueOf() {
         const term = super.valueOf();
         if (translatedTerms[translationLoaded]) {
-            return translatedTerms[term] || term;
+            const translation = translatedTerms[term] ?? term;
+            if (this.values.length === 0) {
+                return translation;
+            }
+            return sprintf(translation, ...this.values);
         } else {
             throw new Error(`translation error`);
         }

@@ -35,7 +35,6 @@ import {
 } from "@web_editor/js/editor/image_processing";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
-import { sprintf } from "@web/core/utils/strings";
 import { uniqueId } from "@web/core/utils/functions";
 import { pick } from "@web/core/utils/objects";
 import { _t } from "@web/core/l10n/translation";
@@ -5846,14 +5845,14 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             1024: ['1024px', 'image/webp'],
             1920: ['1920px', 'image/webp'],
         };
-        widths[img.naturalWidth] = [sprintf(_t("%spx"), img.naturalWidth), 'image/webp'];
-        widths[optimizedWidth] = [sprintf(_t("%spx (Suggested)"), optimizedWidth), 'image/webp'];
+        widths[img.naturalWidth] = [_t("%spx", img.naturalWidth), 'image/webp'];
+        widths[optimizedWidth] = [_t("%spx (Suggested)", optimizedWidth), 'image/webp'];
         const imgMimetype = this._getImageMimetype(img);
-        widths[maxWidth] = [sprintf(_t("%spx (Original)"), maxWidth), imgMimetype];
+        widths[maxWidth] = [_t("%spx (Original)", maxWidth), imgMimetype];
         if (imgMimetype !== 'image/webp') {
             // Avoid a key collision by subtracting 0.1 - putting the webp
             // above the original format one of the same size.
-            widths[maxWidth - 0.1] = [sprintf(_t("%spx"), maxWidth), 'image/webp'];
+            widths[maxWidth - 0.1] = [_t("%spx", maxWidth), 'image/webp'];
         }
         return Object.entries(widths)
             .filter(([width]) => width <= maxWidth)
@@ -8047,7 +8046,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                 reloadEditor: true,
                                 invalidateSnippetCache: true,
                                 onSuccess: async () => {
-                                    const defaultSnippetName = sprintf(_t("Custom %s"), this.data.snippetName);
+                                    const defaultSnippetName = _t("Custom %s", this.data.snippetName);
                                     const targetCopyEl = this.$target[0].cloneNode(true);
                                     delete targetCopyEl.dataset.name;
                                     // By the time onSuccess is called after request_save, the

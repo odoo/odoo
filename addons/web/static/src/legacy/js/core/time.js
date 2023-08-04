@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { sprintf } from "@web/core/utils/strings";
 import translation from "@web/legacy/js/core/translation";
 import utils from "@web/legacy/js/core/utils";
 
@@ -190,7 +189,7 @@ export function auto_str_to_date (value) {
     try {
         return str_to_time(value);
     } catch {}
-    throw new Error(sprintf(_t("'%s' is not a correct date, datetime nor time"), value));
+    throw new Error(_t("'%s' is not a correct date, datetime nor time", value));
 }
 
 export function auto_date_to_str (value, type) {
@@ -202,7 +201,7 @@ export function auto_date_to_str (value, type) {
         case 'time':
             return time_to_str(value);
         default:
-            throw new Error(sprintf(_t("'%s' is not convertible to date, datetime nor time"), type));
+            throw new Error(_t("'%s' is not convertible to date, datetime nor time", type));
     }
 }
 

@@ -3,7 +3,6 @@
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import session from "web.session";
-import { sprintf } from "@web/core/utils/strings";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
@@ -41,9 +40,9 @@ var PortalSidebar = publicWidget.Widget.extend({
                 } else if (diff > 0) {
                     // Workaround: force uniqueness of these two translations. We use %1d because the string
                     // with %d is already used in mail and mail's translations are not sent to the frontend.
-                    displayStr = sprintf(_t('Due in %s days'), Math.abs(diff).toFixed(1));
+                    displayStr = _t('Due in %s days', Math.abs(diff).toFixed(1));
                 } else {
-                    displayStr = sprintf(_t('%s days overdue'), Math.abs(diff).toFixed(1));
+                    displayStr = _t('%s days overdue', Math.abs(diff).toFixed(1));
                 }
                 $(el).text(displayStr);
             });

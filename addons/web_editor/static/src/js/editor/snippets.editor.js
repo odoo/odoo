@@ -10,7 +10,7 @@ import options from "@web_editor/js/editor/snippets.options";
 import SmoothScrollOnDrag from "@web_editor/js/editor/smooth_scroll_on_drag";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
-import { sprintf, escape } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
 const QWeb = core.qweb;
 import { closestElement, isUnremovable } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
@@ -2958,12 +2958,12 @@ var SnippetsMenu = Widget.extend({
                     const btnRenameEl = document.createElement('we-button');
                     btnRenameEl.dataset.snippetId = $snippet.data('oeSnippetId');
                     btnRenameEl.classList.add('o_rename_btn', 'fa', 'fa-pencil', 'btn', 'o_we_hover_success');
-                    btnRenameEl.title = sprintf(_t("Rename %s"), name);
+                    btnRenameEl.title = _t("Rename %s", name);
                     $snippet.append(btnRenameEl);
                     const btnEl = document.createElement('we-button');
                     btnEl.dataset.snippetId = $snippet.data('oeSnippetId');
                     btnEl.classList.add('o_delete_btn', 'fa', 'fa-trash', 'btn', 'o_we_hover_danger');
-                    btnEl.title = sprintf(_t("Delete %s"), name);
+                    btnEl.title = _t("Delete %s", name);
                     $snippet.append(btnEl);
                 }
             })
@@ -3830,9 +3830,9 @@ var SnippetsMenu = Widget.extend({
         var moduleID = $snippet.data('moduleId');
         var name = $snippet.attr('name');
         new Dialog(this, {
-            title: sprintf(_t("Install %s"), name),
+            title: _t("Install %s", name),
             size: 'medium',
-            $content: $('<div/>', {text: sprintf(_t("Do you want to install the %s App?"), name)}).append(
+            $content: $('<div/>', {text: _t("Do you want to install the %s App?", name)}).append(
                 $('<a/>', {
                     target: '_blank',
                     href: '/web#id=' + encodeURIComponent(moduleID) + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
@@ -3858,7 +3858,7 @@ var SnippetsMenu = Widget.extend({
                     }).guardedCatch(reason => {
                         reason.event.preventDefault();
                         this.close();
-                        const message = sprintf(Markup(_t("Could not install module <strong>%s</strong>")), name);
+                        const message = Markup(_t("Could not install module <strong>%s</strong>", escape(name)));
                         self.displayNotification({
                             message: message,
                             type: 'danger',
@@ -3919,7 +3919,7 @@ var SnippetsMenu = Widget.extend({
         new Dialog(this, {
             size: 'medium',
             title: _t('Confirmation'),
-            $content: $('<div><p>' + sprintf(_t("Are you sure you want to delete the snippet: %s?"), $snippet.attr('name')) + '</p></div>'),
+            $content: $('<div><p>' + _t("Are you sure you want to delete the snippet: %s?", $snippet.attr('name')) + '</p></div>'),
             buttons: [{
                 text: _t("Yes"),
                 close: true,

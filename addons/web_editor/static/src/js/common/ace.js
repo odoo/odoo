@@ -7,7 +7,6 @@ import dom from "@web/legacy/js/core/dom";
 import Dialog from "@web/legacy/js/core/dialog";
 import Widget from "@web/legacy/js/core/widget";
 import localStorage from "@web/legacy/js/core/local_storage";
-import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import { sortBy } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
@@ -429,11 +428,11 @@ var ViewEditor = Widget.extend({
         this.aceEditor.setSession(editingSession);
 
         if (this.currentType === 'xml') {
-            this.$viewID.text(sprintf(_t("Template ID: %s"), this.views[resID].key));
+            this.$viewID.text(_t("Template ID: %s", this.views[resID].key));
         } else if (this.currentType === 'scss') {
-            this.$viewID.text(sprintf(_t("SCSS file: %s"), resID));
+            this.$viewID.text(_t("SCSS file: %s", resID));
         } else {
-            this.$viewID.text(sprintf(_t("JS file: %s"), resID));
+            this.$viewID.text(_t("JS file: %s", resID));
         }
         const isCustomized = this._isCustomResource(resID);
         this.$lists[this.currentType].select2('val', resID);

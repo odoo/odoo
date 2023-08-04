@@ -2,7 +2,6 @@
 
 import { _t } from "@web/core/l10n/translation";
 import PortalChatter from '@portal/js/portal_chatter';
-import { sprintf } from '@web/core/utils/strings';
 
 /**
  * PortalChatter
@@ -19,7 +18,7 @@ PortalChatter.include({
     _reloadChatterContent: async function (data) {
         await this._super(...arguments);
         if (this.options.res_model === "slide.channel") {
-            $('#review-tab').text(sprintf(_t('Reviews (%s)'), data.rating_count));
+            $('#review-tab').text(_t('Reviews (%s)', data.rating_count));
         }
     },
 });

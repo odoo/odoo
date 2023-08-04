@@ -7,7 +7,6 @@ import { getNextTabableElement, getPreviousTabableElement } from "@web/core/util
 import { usePosition } from "@web/core/position_hook";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { shallowEqual } from "@web/core/utils/arrays";
-import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -272,7 +271,7 @@ export class AnalyticDistribution extends Component {
         if (searchTerm.length) {
             dynamicFilters = [
                 {
-                    description: sprintf(this.env._t("Quick search: %s"), searchTerm),
+                    description: this.env._t("Quick search: %s", searchTerm),
                     domain: this.searchAnalyticDomain(searchTerm),
                 },
             ];

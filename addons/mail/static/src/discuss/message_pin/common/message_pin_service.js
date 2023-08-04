@@ -8,7 +8,6 @@ import { markup, reactive, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 
 export const OTHER_LONG_TYPING = 60000;
 
@@ -159,10 +158,9 @@ export class MessagePin {
             confirmText: _t("Yeah, pin it!"),
             message: message,
             messageComponent: Message,
-            prompt: sprintf(
-                _t("You sure want this message pinned to %(conversation)s forever and ever?"),
-                { conversation: thread.prefix + thread.displayName }
-            ),
+            prompt: _t("You sure want this message pinned to %(conversation)s forever and ever?", {
+                conversation: thread.prefix + thread.displayName,
+            }),
             size: "md",
             title: _t("Pin It"),
             onConfirm: () => this.setPin(message, true),

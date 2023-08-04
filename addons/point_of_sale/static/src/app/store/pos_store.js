@@ -16,7 +16,6 @@ import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
-import { sprintf } from "@web/core/utils/strings";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { renderToString } from "@web/core/utils/render";
@@ -790,8 +789,8 @@ export class PosStore extends Reactive {
         const pricelistsNames = pricelistsJson.map((pricelist) => {
             return pricelist.display_name;
         });
-        message = sprintf(
-            _t("%s fiscal position(s) added to the configuration."),
+        message = _t(
+            "%s fiscal position(s) added to the configuration.",
             pricelistsNames.join(", ")
         );
         return message;
@@ -830,8 +829,8 @@ export class PosStore extends Reactive {
         const fiscalPositionNames = fiscalPositionJson.map((fp) => {
             return fp.display_name;
         });
-        message = sprintf(
-            _t("%s fiscal position(s) added to the configuration."),
+        message = _t(
+            "%s fiscal position(s) added to the configuration.",
             fiscalPositionNames.join(", ")
         );
         return message;
@@ -1704,10 +1703,8 @@ export class PosStore extends Reactive {
                         // FIXME POSREF this looks like it's dead code.
                         reject({
                             title: _t("HTTPS connection to IoT Box failed"),
-                            body: sprintf(
-                                _t(
-                                    "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box."
-                                ),
+                            body: _t(
+                                "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.",
                                 url
                             ),
                             popup: "alert",
@@ -1774,10 +1771,8 @@ export class PosStore extends Reactive {
         if (currentPartner && currentOrder.getHasRefundLines()) {
             this.popup.add(ErrorPopup, {
                 title: _t("Can't change customer"),
-                body: sprintf(
-                    _t(
-                        "This order already has refund lines for %s. We can't change the customer associated to it. Create a new order for the new customer."
-                    ),
+                body: _t(
+                    "This order already has refund lines for %s. We can't change the customer associated to it. Create a new order for the new customer.",
                     currentPartner.name
                 ),
             });

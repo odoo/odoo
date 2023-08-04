@@ -2,7 +2,6 @@
 
 import { ReorderDialog } from "@website_sale/js/website_sale_reorder";
 import { patch } from "@web/core/utils/patch";
-import { sprintf } from "@web/core/utils/strings";
 
 patch(ReorderDialog.prototype, {
     /**
@@ -33,16 +32,16 @@ patch(ReorderDialog.prototype, {
             product.add_to_cart_allowed = false;
         }
         if (product.max_quantity_available < product.qty) {
-            product.qty_warning = sprintf(
-                this.env._t("You ask for %s Units but only %s are available."),
+            product.qty_warning = this.env._t(
+                "You ask for %s Units but only %s are available.",
                 product.qty.toFixed(1),
                 product.max_quantity_available.toFixed(1)
             );
             product.qty = product.max_quantity_available;
             product.stock_warning = true;
         } else if (product.combinationInfo.cart_qty) {
-            product.qty_warning = sprintf(
-                this.env._t("You already have %s Units in your cart."),
+            product.qty_warning = this.env._t(
+                "You already have %s Units in your cart.",
                 product.combinationInfo.cart_qty.toFixed(1)
             );
         }
@@ -63,8 +62,8 @@ patch(ReorderDialog.prototype, {
      */
     changeProductQty(product, newQty) {
         if (product.max_quantity_available && newQty > product.max_quantity_available) {
-            product.qty_warning = sprintf(
-                this.env._t("You ask for %s Units but only %s are available."),
+            product.qty_warning = this.env._t(
+                "You ask for %s Units but only %s are available.",
                 newQty.toFixed(1),
                 product.max_quantity_available.toFixed(1)
             );

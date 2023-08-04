@@ -6,7 +6,6 @@ import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 
 export class MessageReactions extends Component {
     static props = ["message", "openReactionMenu"];
@@ -26,33 +25,33 @@ export class MessageReactions extends Component {
         );
         switch (reaction.count) {
             case 1:
-                return sprintf(_t("%s has reacted with %s"), firstUserName, reaction.content);
+                return _t("%s has reacted with %s", firstUserName, reaction.content);
             case 2:
-                return sprintf(
-                    _t("%s and %s have reacted with %s"),
+                return _t(
+                    "%s and %s have reacted with %s",
                     firstUserName,
                     secondUserName,
                     reaction.content
                 );
             case 3:
-                return sprintf(
-                    _t("%s, %s, %s have reacted with %s"),
+                return _t(
+                    "%s, %s, %s have reacted with %s",
                     firstUserName,
                     secondUserName,
                     thirdUserName,
                     reaction.content
                 );
             case 4:
-                return sprintf(
-                    _t("%s, %s, %s and 1 other person have reacted with %s"),
+                return _t(
+                    "%s, %s, %s and 1 other person have reacted with %s",
                     firstUserName,
                     secondUserName,
                     thirdUserName,
                     reaction.content
                 );
             default:
-                return sprintf(
-                    _t("%s, %s, %s and %s other persons have reacted with %s"),
+                return _t(
+                    "%s, %s, %s and %s other persons have reacted with %s",
                     firstUserName,
                     secondUserName,
                     thirdUserName,

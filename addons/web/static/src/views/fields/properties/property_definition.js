@@ -12,7 +12,6 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { PropertyDefinitionSelection } from "./property_definition_selection";
 import { PropertyTags } from "./property_tags";
-import { sprintf } from "@web/core/utils/strings";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { uuid } from "../../utils";
 
@@ -341,8 +340,8 @@ export class PropertyDefinition extends Component {
                 this.state.resModelDescription = result[0].display_name;
             } catch {
                 // can not read the ir.model
-                this.state.resModelDescription = sprintf(
-                    _t('You do not have access to the model "%s".'),
+                this.state.resModelDescription = _t(
+                    'You do not have access to the model "%s".',
                     newModel
                 );
             }

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { sprintf } from '@web/core/utils/strings';
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
@@ -141,7 +140,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
                 } else if (amount < parseFloat(minAmount)) {
                     const before = this.currency.position === "before" ? this.currency.symbol : "";
                     const after = this.currency.position === "after" ? this.currency.symbol : "";
-                    errorMessage = sprintf(_t("The minimum donation amount is %s%s%s"), before, minAmount, after);
+                    errorMessage = _t("The minimum donation amount is %s%s%s", before, minAmount, after);
                 }
                 if (errorMessage) {
                     $(ev.currentTarget).before($('<p>', {
