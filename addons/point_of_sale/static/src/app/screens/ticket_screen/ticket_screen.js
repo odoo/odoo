@@ -580,7 +580,8 @@ export class TicketScreen extends Component {
                 modelField: "pos_reference",
             },
             DATE: {
-                repr: (order) => deserializeDate(order.creation_date).toFormat("yyyy-MM-dd HH:mm a"),
+                repr: (order) =>
+                    deserializeDate(order.creation_date).toFormat("yyyy-MM-dd HH:mm a"),
                 displayName: this.env._t("Date"),
                 modelField: "date_order",
             },

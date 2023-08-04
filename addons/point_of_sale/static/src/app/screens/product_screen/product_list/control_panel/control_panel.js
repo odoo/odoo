@@ -2,14 +2,12 @@
 
 import { debounce } from "@web/core/utils/timing";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-
-import { CategoryButton } from "@point_of_sale/app/screens/product_screen/category_button/category_button";
-
 import { Component, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 
 export class ProductsWidgetControlPanel extends Component {
-    static components = { CategoryButton };
+    static components = { CategorySelector };
     static template = "point_of_sale.ProductsWidgetControlPanel";
 
     setup() {
@@ -30,6 +28,43 @@ export class ProductsWidgetControlPanel extends Component {
             window.removeEventListener("resize", toggleIsMobile);
         });
     }
+
+    getCategoryImageUrl(category) {
+        return `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`;
+    }
+    /**
+     * @param {Object} category - the object from `this.pos.db.category_by_id`
+     * @returns {import("@point_of_sale/app/generic_components/category_selector/category_selector").Category}
+     */
+    formatCategoryObject(category) {
+        const isRootCategory = category.id === this.pos.db.root_category_id;
+        const hasSeparator =
+            !isRootCategory &&
+            [
+                ...this.pos.db.get_category_ancestors_ids(this.pos.selectedCategoryId),
+                this.pos.selectedCategoryId,
+            ].includes(category.id);
+        return {
+            id: category.id,
+            name: !isRootCategory ? category.name : "",
+            icon: isRootCategory ? "fa-home fa-2x" : "",
+            separator: hasSeparator ? "fa-caret-right" : "",
+            imageUrl: category?.has_image && this.getCategoryImageUrl(category),
+        };
+    }
+    /**
+     * @returns {import("@point_of_sale/app/generic_components/category_selector/category_selector").Category[]}
+     */
+    getCategories() {
+        return [
+            ...this.pos.db.get_category_ancestors_ids(this.pos.selectedCategoryId),
+            this.pos.selectedCategoryId,
+            ...this.pos.db.get_category_childs_ids(this.pos.selectedCategoryId),
+        ]
+            .map((id) => this.pos.db.category_by_id[id])
+            .map((category) => this.formatCategoryObject(category));
+    }
+
     toggleIsMobile() {
         // In addition to the UI service we need to check the width of the window
         // because the search bar glitches on a specific width between when the

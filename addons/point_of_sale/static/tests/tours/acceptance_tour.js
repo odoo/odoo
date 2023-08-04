@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { registry } from "@web/core/registry";
 
 function add_product_to_order(product_name) {
@@ -91,15 +92,12 @@ function fillPaymentLineAmountMobile(lineName, keys) {
             content: "click confirm button",
             trigger: ".popup .footer .confirm",
             mobile: true,
-        }
+        },
     ];
 }
 
 function fillPaymentValue(lineName, val) {
-    return [
-        ...press_payment_numpad(val),
-        ...fillPaymentLineAmountMobile(lineName, val),
-    ]
+    return [...press_payment_numpad(val), ...fillPaymentLineAmountMobile(lineName, val)];
 }
 
 function press_product_numpad(val) {
@@ -230,7 +228,7 @@ function finish_order() {
         },
         {
             content: "check if we left the receipt screen",
-            trigger: ".pos-content .screen:not(:has(.receipt-screen))",
+            trigger: ".pos-content div:not(:has(.receipt-screen))",
             run: function () {},
         },
     ];
@@ -242,12 +240,8 @@ var steps = [
         trigger: "body:not(:has(.loader))",
         run: function () {},
     },
-    {
-        // Leave category displayed by default
-        content: "click category switch",
-        trigger: ".breadcrumb-home",
-    },
 ];
+steps = steps.concat(...ProductScreen.do.clickHomeCategory());
 
 steps = steps.concat(add_product_to_order("Desk Organizer"));
 steps = steps.concat(verify_order_total("5.10"));
@@ -353,4 +347,6 @@ steps = steps.concat([
     },
 ]);
 
-registry.category("web_tour.tours").add("pos_basic_order", { test: true, url: "/pos/ui", steps: () => steps });
+registry
+    .category("web_tour.tours")
+    .add("pos_basic_order", { test: true, url: "/pos/ui", steps: () => steps });

@@ -2,17 +2,13 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ProductsWidget" owl="1">
-      <div class="products-widget d-flex flex-column flex-grow-1 overflow-hidden">
+        <div class="products-widget d-flex flex-column flex-grow-1 overflow-auto">
             <ProductsWidgetControlPanel
                 updateProductList.bind="updateProductList"
                 clearSearch.bind="clearSearch"
                 updateSearch.bind="updateSearch"
-                switchCategory.bind="switchCategory"
-                breadcrumbs="breadcrumbs"
-                subcategories="subcategories"
-                hasNoCategories="hasNoCategories"
                 loadProductFromServer.bind="onPressEnterKey" />
-            <div class="product-list-container flex-grow-1 overflow-hidden overflow-y-auto">
+            <div class="product-list-container flex-grow-1 overflow-y-auto">
                 <div t-if="productsToDisplay.length != 0 and posHasValidProduct" t-attf-class="{{this.pos.productListViewMode}} product-list d-grid gap-1 p-1">
                     <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
                         <ProductItem
@@ -30,7 +26,7 @@
                         <t t-else="">
                             <div>
                                 <p>No products here, but don't worry, we've got your back.</p>
-                                <p>Play with <a role="button" class="button-no-demo btn btn-lg btn-primary" t-on-click="loadDemoDataProducts">our demo products</a> or <a role="button" class="button-no-demo" t-on-click="createNewProducts">create your own products</a></p>
+                                <p>Play with <a role="button" class="text-primary" t-on-click="loadDemoDataProducts">our demo products</a> or <a role="button" class="text-primary" t-on-click="createNewProducts">create your own products</a></p>
                                 <div t-if="state.showReloadMessage" class="info-load-product-message">
                                     Please reload this page once products have been created
                                 </div>
@@ -41,7 +37,7 @@
                 <div t-if="searchWord" class="search-more-button d-flex justify-content-center">
                     <button class="btn btn-primary btn-lg" t-on-click="onPressEnterKey">Search more</button>
                 </div>
-                <div class="portal search-database-button no-results-message" t-att-class="{ oe_hidden:  !shouldShowButton }"></div>
+                <div class="portal search-database-button no-results-message" t-att-class="{ 'd-none':  !shouldShowButton }"></div>
             </div>
         </div>
     </t>

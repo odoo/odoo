@@ -41,11 +41,11 @@ class Do {
         return [
             {
                 content: `selecting '${name}' subcategory`,
-                trigger: `.products-widget > .products-widget-control .category-simple-button:contains("${name}")`,
+                trigger: `.products-widget > .products-widget-control .category-button:contains("${name}")`,
             },
             {
                 content: `'${name}' subcategory selected`,
-                trigger: `.breadcrumbs .breadcrumb-button:contains("${name}")`,
+                trigger: `i.fa-caret-right ~ button.category-button:contains("${name}")`,
                 run: () => {},
             },
         ];
@@ -55,7 +55,7 @@ class Do {
         return [
             {
                 content: `click Home subcategory`,
-                trigger: `.breadcrumbs .breadcrumb-home`,
+                trigger: `button.category-button i.fa-home`,
             },
         ];
     }
@@ -281,8 +281,10 @@ class Do {
         return [
             {
                 content: `PoS model scan barcode '${barcode}'`,
-                trigger: '.pos', // The element here does not really matter as long as it is present
-                run: () => { window.posmodel.env.services.barcode_reader.scan(barcode); },
+                trigger: ".pos", // The element here does not really matter as long as it is present
+                run: () => {
+                    window.posmodel.env.services.barcode_reader.scan(barcode);
+                },
             },
         ];
     }
@@ -290,12 +292,10 @@ class Do {
         return [
             {
                 content: `PoS model scan EAN13 barcode '${barcode}'`,
-                trigger: '.pos', // The element here does not really matter as long as it is present
+                trigger: ".pos", // The element here does not really matter as long as it is present
                 run: () => {
                     const barcode_reader = window.posmodel.env.services.barcode_reader;
-                    barcode_reader.scan(
-                        barcode_reader.parser.sanitize_ean(barcode)
-                    );
+                    barcode_reader.scan(barcode_reader.parser.sanitize_ean(barcode));
                 },
             },
         ];
@@ -307,7 +307,7 @@ class Do {
                 trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
-        ]
+        ];
     }
 }
 

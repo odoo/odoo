@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.Chrome" owl="1">
-        <div class="pos vh-100 d-flex flex-column">
+        <div class="pos dvh-100 d-flex flex-column">
             <div class="pos-receipt-print"></div>
             <Navbar />
-            <div class="pos-content w-100 h-100 bg-200 overflow-auto">
+            <div class="pos-content flex-grow-1 overflow-auto w-100 bg-200">
                 <!-- FIXME POSREF: better error handling in main screens (currently, a crash in owl lifecycle of a main screen blows up the application and the error can't be displayed) -->
                 <t isShown="!pos.tempScreen" t-component="pos.mainScreen.component"
                     t-props="pos.mainScreen.props"/>

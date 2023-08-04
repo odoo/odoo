@@ -2,66 +2,27 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ProductsWidgetControlPanel" owl="1">
-        <div class="products-widget-control d-grid shadow-sm z-index-1" t-ref="products-widget-control">
-            <div class="rightpane-header d-flex justify-content-between align-items-center text-center bg-view p-1 overflow-x-auto overflow-y-hidden">
-                <t t-if="!props.hasNoCategories">
-                    <div class="categories-header d-flex overflow-x-auto">
-                    <!-- Breadcrumbs -->
-                        <div class="breadcrumbs d-flex">
-                            <span class="breadcrumb float-start d-flex align-items-center">
-                                <button class="breadcrumb-button breadcrumb-home btn btn-light fw-bolder" t-on-click="() => this.props.switchCategory(0)">
-                                    <i class="fa fa-home fa-2x py-1" role="img" aria-label="Home" title="Home"></i>
-                                </button>
-                            </span>
-                            <t t-foreach="props.breadcrumbs" t-as="category" t-key="category.id">
-                                <span class="breadcrumb float-start d-flex align-items-center">
-                                    <i class="breadcrumb-arrow fa fa-caret-right px-2" aria-hidden="true"/>
-                                    <button class="breadcrumb-button btn btn-light h-100 fw-bolder"
-                                        t-on-click="() => this.props.switchCategory(category.id)">
-                                        <t t-esc="category.name"></t>
-                                    </button>
-                                </span>
-                            </t>
-                        </div>
-                        <!-- Subcategories -->
-                        <div t-if="props.subcategories.length > 0 and !displayCategImages"  class="category-list simple d-flex align-items-center ms-1">
-                            <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
-                                <button class="category-simple-button btn btn-light h-100 fw-bolder"
-                                    t-on-click="() => this.props.switchCategory(category.id)">
-                                    <t t-esc="category.name" />
-                                </button>
-                            </t>
+        <div class="products-widget-control d-flex bg-view shadow-sm" t-ref="products-widget-control">
+            <CategorySelector
+                categories="getCategories()"
+                onClick="(id) => this.pos.setSelectedCategoryId(id)"
+            />
+            <div class="ms-auto search-bar-container d-flex align-items-center">
+                <button t-if="state.isMobile" 
+                    class="p-3 rounded"
+                    t-on-click="toggleMobileSearchBar">
+                    <i t-attf-class="fa {{state.mobileSearchBarIsShown ? 'fa-arrow-right' : 'fa-search'}}"/>
+                </button>
+                <t t-if="!state.isMobile || state.mobileSearchBarIsShown">
+                    <div class="input-group h-100">
+                        <div class="pos-search-bar form-control d-flex align-items-center py-1 bg-view">
+                            <i class="oi oi-search me-2"/>
+                            <input class="flex-grow-1 w-auto h-100 border-0 px-2 me-4" t-model="this.pos.searchProductWord" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
+                            <i t-if="this.pos.searchProductWord" class="fa fa-times position-absolute end-0 me-2 pe-1 cursor-pointer" t-on-click="_clearSearch"/>
                         </div>
                     </div>
                 </t>
-                <div class="search-bar-container sb-product d-flex align-items-center h-100">
-                    <span t-if="state.isMobile" class="oe_status oe_icon icon d-flex align-items-center h-100 me-1 px-4 rounded text-bg-secondary cursor-pointer" t-on-click="toggleMobileSearchBar">
-                        <i t-attf-class="fa {{state.mobileSearchBarIsShown ? 'fa-arrow-right' : 'fa-search'}}"/>
-                    </span>
-                    <t t-if="!state.isMobile || state.mobileSearchBarIsShown">
-                        <div class="input-group h-100">
-                            <div class="pos-search-bar form-control d-flex align-items-center py-1 bg-view">
-                                <i class="oi oi-search me-2"/>
-                                <input class="flex-grow-1 w-auto h-100 border-0 px-2 me-4" t-model="this.pos.searchProductWord" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
-                                <i t-if="this.pos.searchProductWord" class="fa fa-times position-absolute end-0 me-2 pe-1 cursor-pointer" t-on-click="_clearSearch"/>
-                            </div>
-                        </div>
-                    </t>
-                </div>
             </div>
-            <t t-if="props.subcategories.length > 0 and displayCategImages">
-                <div class="categories border-bottom shadow-sm">
-                    <div class="category-list-scroller w-100 h-100 overflow-hidden overflow-y-auto">
-                        <div class="category-list d-flex flex-wrap px-1 py-2 gap-3">
-                            <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
-                                <CategoryButton
-                                    switchCategory.bind="props.switchCategory"
-                                    category="category" />
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </t>
         </div>
     </t>
 

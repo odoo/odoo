@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.CategorySelector" owl="1">
+        <div t-attf-class="{{props.class or ''}} d-flex overflow-auto">
+            <div t-foreach="props.categories" t-as="category" t-key="category.id"
+                class="d-flex align-items-center">
+                <i  t-if="category.separator"
+                    t-attf-class="px-2 fa {{category.separator}}" 
+                    aria-hidden="true"/>
+                <button class="category-button btn btn-light h-100 fw-bolder" 
+                    t-on-click="() => props.onClick(category.id)">
+                    <div t-if="category.imageUrl"
+                        class="category-img">
+                        <img t-att-src="category.imageUrl" alt="Category" />
+                    </div>
+                    <i  t-if="category.icon"
+                        t-attf-class="fa {{category.icon}}" 
+                        aria-hidden="true"/>
+                    <t t-esc="category.name" />
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

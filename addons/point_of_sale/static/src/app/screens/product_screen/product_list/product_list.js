@@ -52,22 +52,6 @@ export class ProductsWidget extends Component {
             return a.display_name.localeCompare(b.display_name);
         });
     }
-    get subcategories() {
-        const { db } = this.pos;
-        return db
-            .get_category_childs_ids(this.selectedCategoryId)
-            .map((id) => db.get_category_by_id(id));
-    }
-    get breadcrumbs() {
-        const { db } = this.pos;
-        if (this.selectedCategoryId === db.root_category_id) {
-            return [];
-        }
-        return [
-            ...db.get_category_ancestors_ids(this.selectedCategoryId).slice(1),
-            this.selectedCategoryId,
-        ].map((id) => db.get_category_by_id(id));
-    }
     get hasNoCategories() {
         return this.pos.db.get_category_childs_ids(0).length === 0;
     }
