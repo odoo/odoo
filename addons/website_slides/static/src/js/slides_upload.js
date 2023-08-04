@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { uniqueId } from '@web/core/utils/functions';
-import { sprintf } from '@web/core/utils/strings';
 import {_t, qweb as QWeb} from "@web/legacy/js/services/core";
 import Dialog from '@web/legacy/js/core/dialog';
 import publicWidget from '@web/legacy/js/public/public_widget';
@@ -312,7 +311,7 @@ var SlideUploadDialog = Dialog.extend({
                             id: uniqueId("tag_"),
                             create: true,
                             tag: term,
-                            text: sprintf(_t("Create new %s '%s'"), tag, term),
+                            text: _t("Create new %s '%s'", tag, term),
                         };
                     } else {
                         return undefined;
@@ -661,23 +660,23 @@ var SlideUploadDialog = Dialog.extend({
             this.set('state', '_import');
             if (this.modulesToInstallStatus.installing) {
                 this.$('#o_wslides_install_module_text')
-                    .text(sprintf(_t('Already installing "%s".'), this.modulesToInstallStatus.name));
+                    .text(_t('Already installing "%s".', this.modulesToInstallStatus.name));
             } else if (this.modulesToInstallStatus.failed) {
                 this.$('#o_wslides_install_module_text')
-                    .text(sprintf(_t('Failed to install "%s".'), this.modulesToInstallStatus.name));
+                    .text(_t('Failed to install "%s".', this.modulesToInstallStatus.name));
             }
         } else {
             this.modulesToInstallStatus = Object.assign({}, this.modulesToInstall.find( function (item) { return item.id === moduleId; }));
             this.set('state', '_import');
             this.$('#o_wslides_install_module_text')
-                .text(sprintf(_t('Do you want to install the "%s" app?'), this.modulesToInstallStatus.name));
+                .text(_t('Do you want to install the "%s" app?', this.modulesToInstallStatus.name));
         }
     },
 
     _onClickInstallModuleConfirm: function () {
         var self = this;
         var $el = this.$('#o_wslides_install_module_text');
-        $el.text(sprintf(_t('Installing "%s".'), this.modulesToInstallStatus.name));
+        $el.text(_t('Installing "%s".', this.modulesToInstallStatus.name));
         this.modulesToInstallStatus.installing = true;
         this._resetModalButton();
         this._rpc({
@@ -692,7 +691,7 @@ var SlideUploadDialog = Dialog.extend({
             }
             window.location.href = redirectUrl;
         }, function () {
-            $el.text(sprintf(_t('Failed to install "%s".'), self.modulesToInstallStatus.name));
+            $el.text(_t('Failed to install "%s".', self.modulesToInstallStatus.name));
             self.modulesToInstallStatus.installing = false;
             self.modulesToInstallStatus.failed = true;
             self._resetModalButton();

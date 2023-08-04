@@ -7,7 +7,6 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { useDebounced } from "@web/core/utils/timing";
 import { isRelational } from "@web/model/relational_model/utils";
 import { isNull } from "@web/views/utils";
@@ -168,7 +167,7 @@ export class KanbanHeader extends Component {
                 context,
                 resId: value,
                 resModel: groupByField.relation,
-                title: sprintf(this.env._t("Edit: %s"), displayName),
+                title: this.env._t("Edit: %s", displayName),
                 onRecordSaved: async () => {
                     await this.props.list.load();
                     this.props.list.model.notify();

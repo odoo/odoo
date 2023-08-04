@@ -2,7 +2,6 @@
 
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
 import { Record } from "./record";
 
@@ -200,8 +199,8 @@ export class DynamicList extends DataPoint {
             resIds.length === this.model.activeIdsLimit &&
             resIds.length < this.count
         ) {
-            const msg = sprintf(
-                _t(`Only the first %s records have been deleted (out of %s selected)`),
+            const msg = _t(
+                `Only the first %s records have been deleted (out of %s selected)`,
                 resIds.length,
                 this.count
             );
@@ -366,8 +365,8 @@ export class DynamicList extends DataPoint {
             resIds.length === this.model.activeIdsLimit &&
             resIds.length < this.count
         ) {
-            const msg = sprintf(
-                _t("Of the %s records selected, only the first %s have been archived/unarchived."),
+            const msg = _t(
+                "Of the %s records selected, only the first %s have been archived/unarchived.",
                 resIds.length,
                 this.count
             );

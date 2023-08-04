@@ -7,7 +7,6 @@ import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
 import weUtils from "@web_editor/js/common/utils";
 import "@website/js/editor/snippets.options";
-import { sprintf } from "@web/core/utils/strings";
 import { unique } from "@web/core/utils/arrays";
 import { _t } from "@web/core/l10n/translation";
 
@@ -1370,7 +1369,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const list = document.createElement('we-list');
         const optionText = select ? 'Option' : type === 'selection' ? 'Radio' : 'Checkbox';
         list.setAttribute('string', `${optionText} List`);
-        list.dataset.addItemTitle = sprintf(_t("Add new %s"), optionText);
+        list.dataset.addItemTitle = _t("Add new %s", optionText);
         list.dataset.renderListItems = '';
 
         list.dataset.hasDefault = ['one2many', 'many2many'].includes(type) ? 'multiple' : 'unique';
@@ -1586,8 +1585,7 @@ options.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.extend({
         const fieldName = this.$target[0]
             .querySelector("input.s_website_form_input").getAttribute("name");
         const spanEl = document.createElement("span");
-        spanEl.innerText = sprintf(_t(
-            "The field '%s' is mandatory for the action '%s'."), fieldName, currentActionName);
+        spanEl.innerText = _t("The field '%s' is mandatory for the action '%s'.", fieldName, currentActionName);
         uiFragment.querySelector("we-alert").appendChild(spanEl);
     },
 });

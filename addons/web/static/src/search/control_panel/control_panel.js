@@ -7,7 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 import { SearchBar } from "../search_bar/search_bar";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useCommand } from "@web/core/commands/command_hook";
-import { sprintf } from "@web/core/utils/strings";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 import { Component, useState, onMounted, useExternalListener, useRef, useEffect } from "@odoo/owl";
@@ -35,7 +34,7 @@ export class ControlPanel extends Component {
         const { viewSwitcherEntries, viewType } = this.env.config;
         for (const view of viewSwitcherEntries || []) {
             useCommand(
-                sprintf(this.env._t("Show %s view"), view.name),
+                this.env._t("Show %s view", view.name),
                 () => this.onViewClicked(view.type),
                 {
                     category: "view_switcher",

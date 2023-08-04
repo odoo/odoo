@@ -8,7 +8,6 @@ import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
 import { standardFieldProps } from "../standard_field_props";
@@ -20,7 +19,7 @@ class CreateConfirmationDialog extends Component {
     static components = { Dialog };
 
     get title() {
-        return sprintf(this.env._t("New: %s"), this.props.name);
+        return this.env._t("New: %s", this.props.name);
     }
 
     async onCreate() {

@@ -5,7 +5,6 @@ import { useMessaging } from "@mail/core/common/messaging_hook";
 import { Component, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { useModel } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
@@ -48,7 +47,7 @@ export class ActivityController extends Component {
             resModel: this.props.resModel,
             searchViewId: this.env.searchModel.searchViewId,
             domain: this.model.originalDomain,
-            title: sprintf(this.env._t("Search: %s"), this.props.archInfo.title),
+            title: this.env._t("Search: %s", this.props.archInfo.title),
             multiSelect: false,
             context: this.props.context,
             onSelected: async (resIds) => {

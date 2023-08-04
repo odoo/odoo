@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { escape, sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
+import { escape } from "@web/core/utils/strings";
 import ajax from "@web/legacy/js/core/ajax";
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
@@ -125,8 +125,7 @@ var PortalComposer = publicWidget.Widget.extend({
                     resolve();
                 }).guardedCatch(function (error) {
                     self.displayNotification({
-                        message: sprintf(_t("Could not save file <strong>%s</strong>"),
-                            escape(file.name)),
+                        message: _t("Could not save file <strong>%s</strong>", escape(file.name)),
                         type: 'warning',
                         sticky: true,
                     });

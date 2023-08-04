@@ -4,7 +4,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { sprintf } from "@web/core/utils/strings";
 
 export class PaymentStripe extends PaymentInterface {
     setup() {
@@ -38,7 +37,7 @@ export class PaymentStripe extends PaymentInterface {
     async discoverReaders() {
         const discoverResult = await this.terminal.discoverReaders({});
         if (discoverResult.error) {
-            this._showError(sprintf(_t("Failed to discover: %s"), discoverResult.error));
+            this._showError(_t("Failed to discover: %s", discoverResult.error));
         } else if (discoverResult.discoveredReaders.length === 0) {
             this._showError(_t("No available Stripe readers."));
         } else {
@@ -108,8 +107,8 @@ export class PaymentStripe extends PaymentInterface {
             }
         }
         this._showError(
-            sprintf(
-                _t("Stripe readers %s not listed in your account"),
+            _t(
+                "Stripe readers %s not listed in your account",
                 this.payment_method.stripe_serial_number
             )
         );

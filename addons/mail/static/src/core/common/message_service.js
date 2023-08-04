@@ -13,7 +13,6 @@ import { markup } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
@@ -161,9 +160,7 @@ export class MessageService {
         const thread = message.originThread;
         await this.env.services["mail.thread"].removeFollower(thread.selfFollower);
         this.env.services.notification.add(
-            sprintf(_t('You are no longer following "%(thread_name)s".'), {
-                thread_name: thread.name,
-            }),
+            _t('You are no longer following "%(thread_name)s".', { thread_name: thread.name }),
             { type: "success" }
         );
     }

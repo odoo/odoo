@@ -5,7 +5,6 @@ import { createLocalId } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
-import { sprintf } from "@web/core/utils/strings";
 
 /**
  * @typedef SeenInfo
@@ -147,7 +146,7 @@ export class Thread {
         if (!this.authorizedGroupFullName) {
             return false;
         }
-        return sprintf(_t('Access restricted to group "%(groupFullName)s"'), {
+        return _t('Access restricted to group "%(groupFullName)s"', {
             groupFullName: this.authorizedGroupFullName,
         });
     }

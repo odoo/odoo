@@ -4,7 +4,6 @@ import { personaService, PersonaService } from "@mail/core/common/persona_servic
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { sprintf } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
@@ -35,6 +34,6 @@ patch(PersonaService.prototype, {
         // const fdate = date.toLocaleString(DateTime.TIME_SHORT);
         const fdate = date.toLocaleString(DateTime.DATE_MED);
         // const formattedDate = date.toLocaleDateString(localeCode, options);
-        return sprintf(_t("Out of office until %s"), fdate);
+        return _t("Out of office until %s", fdate);
     },
 });

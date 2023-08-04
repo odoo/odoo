@@ -4,7 +4,6 @@ import concurrency from "@web/legacy/js/core/concurrency";
 import core from "@web/legacy/js/services/core";
 import utils from "@web/legacy/js/core/utils";
 import ajax from "@web/legacy/js/core/ajax";
-import { sprintf } from "@web/core/utils/strings";
 import { memoize, uniqueId } from "@web/core/utils/functions";
 import { throttleForAnimation } from "@web/core/utils/timing";
 
@@ -517,7 +516,7 @@ var VariantMixin = {
             }
             excludedByData.push(excludedByName);
 
-            $target.attr('title', sprintf(_t('Not available with %s'), excludedByData.join(', ')));
+            $target.attr('title', _t('Not available with %s', excludedByData.join(', ')));
             $target.data('excluded-by', JSON.stringify(excludedByData));
         }
     },

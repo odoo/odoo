@@ -4,7 +4,6 @@
 import { Component, markup, onRendered, onWillStart, useState } from "@odoo/owl";
 import { Layout } from "@web/search/layout";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 
@@ -123,8 +122,8 @@ export class ProductPricelistReport extends Component {
         ev.preventDefault(); // avoid automatic reloading of the page
 
         if (this.quantities.length >= this.MAX_QTY) {
-            let message = sprintf(
-                this.env._t("At most %s quantities can be displayed simultaneously. Remove a selected quantity to add others."),
+            let message = this.env._t(
+                "At most %s quantities can be displayed simultaneously. Remove a selected quantity to add others.",
                 this.MAX_QTY
             );
             await this.action.doAction(sendCustomNotification("warning", message));
@@ -139,7 +138,7 @@ export class ProductPricelistReport extends Component {
                 this.quantities = this.quantities.sort((a, b) => a - b);
                 this.renderHtml();
             } else {
-                let message = sprintf(this.env._t("Quantity already present (%s)."), qty);
+                let message = this.env._t("Quantity already present (%s).", qty);
                 await this.action.doAction(sendCustomNotification("info", message));
             }
         } else {

@@ -2,7 +2,6 @@
 
 import Widget from "@web/legacy/js/core/widget";
 import { computeScore } from "@auth_password_policy/password_policy";
-import { sprintf } from "@web/core/utils/strings";
 import { translationIsReady, _t } from "@web/core/l10n/translation";
 
 export default Widget.extend({
@@ -27,12 +26,10 @@ export default Widget.extend({
     },
     start() {
         var helpMessage = _t(
-            "Required: %s.\n\nHint: increase length, use multiple words and use non-letter characters to increase your password's strength."
+            "Required: %s.\n\nHint: increase length, use multiple words and use non-letter characters to increase your password's strength.",
+            String(this._required) || _t("no requirements")
         );
-        this.el.setAttribute(
-            "title",
-            sprintf(helpMessage, String(this._required) || _t("no requirements"))
-        );
+        this.el.setAttribute("title", helpMessage);
         return this._super().then(function () {});
     },
     /**

@@ -23,7 +23,6 @@ import {
     useState,
     onWillStart,
 } from "@odoo/owl";
-import { sprintf } from "@web/core/utils/strings";
 
 export class FloorScreen extends Component {
     static components = { EditableTable, EditBar, Table };
@@ -526,8 +525,8 @@ export class FloorScreen extends Component {
         if (this.selectedTables.length == 0) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: `Removing floor ${this.activeFloor.name}`,
-                body: sprintf(
-                    this.env._t("Removing a floor cannot be undone. Do you still wanna remove %s?"),
+                body: this.env._t(
+                    "Removing a floor cannot be undone. Do you still wanna remove %s?",
                     this.activeFloor.name
                 ),
             });

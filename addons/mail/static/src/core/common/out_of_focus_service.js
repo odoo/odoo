@@ -5,7 +5,6 @@ import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
@@ -43,7 +42,7 @@ export class OutOfFocusService {
             notificationTitle = _t("New message");
         } else {
             if (channel.channel_type === "channel") {
-                notificationTitle = sprintf(_t("%(author name)s from %(channel name)s"), {
+                notificationTitle = _t("%(author name)s from %(channel name)s", {
                     "author name": author.name,
                     "channel name": channel.displayName,
                 });
@@ -61,10 +60,9 @@ export class OutOfFocusService {
             type: "info",
         });
         this.counter++;
-        const titlePattern = this.counter === 1 ? _t("%s Message") : _t("%s Messages");
         this.busService.trigger("set_title_part", {
             part: "_chat",
-            title: sprintf(titlePattern, this.counter),
+            title: this.counter === 1 ? _t("1 Message") : _t("%s Messages", this.counter),
         });
     }
 

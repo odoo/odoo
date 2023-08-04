@@ -6,7 +6,6 @@ import { useTypingService } from "@mail/discuss/typing/common/typing_service";
 import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 
 /**
  * @typedef {Object} Props
@@ -34,19 +33,11 @@ export class Typing extends Component {
             .getTypingMembers(this.props.channel)
             .map(({ persona }) => this.props.channel.getMemberName(persona));
         if (typingMemberNames.length === 1) {
-            return sprintf(_t("%s is typing..."), typingMemberNames[0]);
+            return _t("%s is typing...", typingMemberNames[0]);
         }
         if (typingMemberNames.length === 2) {
-            return sprintf(
-                _t("%s and %s are typing..."),
-                typingMemberNames[0],
-                typingMemberNames[1]
-            );
+            return _t("%s and %s are typing...", typingMemberNames[0], typingMemberNames[1]);
         }
-        return sprintf(
-            _t("%s, %s and more are typing..."),
-            typingMemberNames[0],
-            typingMemberNames[1]
-        );
+        return _t("%s, %s and more are typing...", typingMemberNames[0], typingMemberNames[1]);
     }
 }

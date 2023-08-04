@@ -14,7 +14,6 @@ import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ProductConfiguratorPopup } from "@point_of_sale/app/store/product_configurator_popup/product_configurator_popup";
 import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
-import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -573,10 +572,8 @@ export class Orderline extends PosModel {
                 } else {
                     this.env.services.popup.add(ErrorPopup, {
                         title: _t("Greater than allowed"),
-                        body: sprintf(
-                            _t(
-                                "The requested quantity to be refunded is higher than the refundable quantity of %s."
-                            ),
+                        body: _t(
+                            "The requested quantity to be refunded is higher than the refundable quantity of %s.",
                             this.env.utils.formatProductQty(maxQtyToRefund)
                         ),
                     });
@@ -1267,7 +1264,7 @@ export class Order extends PosModel {
             this.access_token = uuidv4(); // unique uuid used to identify the authenticity of the request from the QR code.
             this.ticketCode = this._generateTicketCode(); // 5-digits alphanum code shown on the receipt
             this.uid = this.generate_unique_id();
-            this.name = sprintf(_t("Order %s"), this.uid);
+            this.name = _t("Order %s", this.uid);
             this.validation_date = undefined;
             this.fiscal_position = this.pos.fiscal_positions.find(function (fp) {
                 return fp.id === self.pos.config.default_fiscal_position_id[0];
@@ -1314,7 +1311,7 @@ export class Order extends PosModel {
         if (json.name) {
             this.name = json.name;
         } else {
-            this.name = sprintf(_t("Order %s"), this.uid);
+            this.name = _t("Order %s", this.uid);
         }
         this.validation_date = json.creation_date;
         this.server_id = json.server_id || json.id || false;

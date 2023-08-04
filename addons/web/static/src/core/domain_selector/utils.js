@@ -5,7 +5,6 @@ import { getDefaultValue, getDefaultOperator } from "./domain_selector_fields";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { unique, zip } from "@web/core/utils/arrays";
-import { sprintf } from "@web/core/utils/strings";
 import {
     Expression,
     toValue,
@@ -183,7 +182,7 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
         if (typeof displayNames[val] === "string") {
             val = displayNames[val];
         } else {
-            return sprintf(_t(`Inaccessible/missing record ID: %s`), val);
+            return _t("Inaccessible/missing record ID: %s", val);
         }
     }
     if (fieldDef?.type === "selection") {

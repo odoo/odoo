@@ -4,7 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Transition } from "@web/core/transition";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { getColor } from "../colors";
 import { Component, useState } from "@odoo/owl";
@@ -29,7 +28,7 @@ export class CalendarFilterPanel extends Component {
         return {
             autoSelect: true,
             resetOnSelect: true,
-            placeholder: sprintf(_t("+ Add %s"), section.label),
+            placeholder: _t("+ Add %s", section.label),
             sources: [
                 {
                     placeholder: _t("Loading..."),
@@ -93,11 +92,11 @@ export class CalendarFilterPanel extends Component {
                 context: {},
             });
             dynamicFilters.push({
-                description: sprintf(_t("Quick search: %s"), request),
+                description: _t("Quick search: %s", request),
                 domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
             });
         }
-        const title = sprintf(_t("Search: %s"), section.label);
+        const title = _t("Search: %s", section.label);
         this.addDialog(SelectCreateDialog, {
             title,
             noCreate: true,

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-    import { escape, sprintf } from "@web/core/utils/strings";
+    import { escape } from "@web/core/utils/strings";
     import core from "@web/legacy/js/services/core";
     import Dialog from "@web/legacy/js/core/dialog";
     import { _t } from "@web/core/l10n/translation";
@@ -77,7 +77,7 @@
             const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
             if ($checkedRadios.length !== 1) { // Cannot find selected payment option, show dialog
                 return new Dialog(null, {
-                    title: sprintf(_t("Error: %s"), title),
+                    title: _t("Error: %s", title),
                     size: 'medium',
                     $content: `<p>${escape(description) || ''}</p>`,
                     buttons: [{text: _t("Ok"), close: true}]

@@ -7,7 +7,6 @@ import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { Domain, InvalidDomainError } from "@web/core/domain";
-import { sprintf } from "@web/core/utils/strings";
 import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
 
 const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long run memory issues and (to some extent) invalid data
@@ -245,10 +244,8 @@ patch(PosStore.prototype, {
             if (index != -1) {
                 this.env.services.popup.add(ErrorPopup, {
                     title: _t("A reward could not be loaded"),
-                    body: sprintf(
-                        _t(
-                            'The reward "%s" contain an error in its domain, your domain must be compatible with the PoS client'
-                        ),
+                    body: _t(
+                        'The reward "%s" contain an error in its domain, your domain must be compatible with the PoS client',
                         this.rewards[index].description
                     ),
                 });

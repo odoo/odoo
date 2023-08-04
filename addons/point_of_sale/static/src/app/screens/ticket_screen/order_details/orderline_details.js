@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { Component } from "@odoo/owl";
-import { sprintf } from "@web/core/utils/strings";
 import { formatFloat } from "@web/views/fields/formatters";
 import { roundPrecision as round_pr } from "@web/core/utils/numbers";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
@@ -72,9 +71,9 @@ export class OrderlineDetails extends Component {
         return this.env.utils.formatProductQty(toRefundDetail && toRefundDetail.qty);
     }
     getRefundingMessage() {
-        return sprintf(this.env._t("Refunding %s in "), this.getFormattedToRefundQty());
+        return this.env._t("Refunding %s in ", this.getFormattedToRefundQty());
     }
     getToRefundMessage() {
-        return sprintf(this.env._t("To Refund: %s"), this.getFormattedToRefundQty());
+        return this.env._t("To Refund: %s", this.getFormattedToRefundQty());
     }
 }

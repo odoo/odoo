@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 
 export class Policy {
     /**
@@ -27,13 +26,13 @@ export class ConcretePolicy extends Policy {
     toString() {
         const msgs = [];
         if (this.minlength > 1) {
-            msgs.push(sprintf(_t("at least %s characters"), this.minlength));
+            msgs.push(_t("at least %s characters", this.minlength));
         }
         if (this.minwords > 1) {
-            msgs.push(sprintf(_t("at least %s words"), this.minwords));
+            msgs.push(_t("at least %s words", this.minwords));
         }
         if (this.minclasses > 1) {
-            msgs.push(sprintf(_t("at least %s character classes"), this.minclasses));
+            msgs.push(_t("at least %s character classes", this.minclasses));
         }
         return msgs.join(", ");
     }

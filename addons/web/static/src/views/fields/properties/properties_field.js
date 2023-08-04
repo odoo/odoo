@@ -10,7 +10,6 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { PropertyValue } from "./property_value";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { sprintf } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { reposition } from "@web/core/position_hook";
 import { archParseBoolean } from "@web/views/utils";
@@ -278,10 +277,8 @@ export class PropertiesField extends Component {
         this.popover.close();
         const dialogProps = {
             title: _t("Delete Property Field"),
-            body: sprintf(
-                _t(
-                    'Are you sure you want to delete this property field? It will be removed for everyone using the "%s" %s.'
-                ),
+            body: _t(
+                'Are you sure you want to delete this property field? It will be removed for everyone using the "%s" %s.',
                 this.parentName,
                 this.parentString
             ),
@@ -325,7 +322,7 @@ export class PropertiesField extends Component {
 
         propertiesDefinitions.push({
             name: uuid(),
-            string: sprintf(_t("Property %s"), propertiesDefinitions.length + 1),
+            string: _t("Property %s", propertiesDefinitions.length + 1),
             type: "char",
             definition_changed: true,
         });
@@ -583,7 +580,7 @@ async function actionAddProperty(env) {
     if (addProperty) {
         addProperty.click();
     } else {
-        const message = sprintf(env._t("You can not create a new property."));
+        const message = env._t("You can not create a new property.");
         env.services.notification.add(message, { type: "danger" });
     }
 }

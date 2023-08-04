@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
@@ -51,7 +50,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
                 self.displayNotification({
                     type: 'info',
                     title: _t('Error'),
-                    message: sprintf(_t('Talk already in your Favorites')),
+                    message: _t('Talk already in your Favorites'),
                 });
             } else {
                 self.reminderOn = reminderOnValue;

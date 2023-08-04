@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 import { renderToElement } from "@web/core/utils/render";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { parseFloat, InvalidNumberError } from "@web/views/fields/parsers";
@@ -50,10 +49,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         }
         const formattedAmount = this.env.utils.formatCurrency(amount);
         if (!amount) {
-            this.notification.add(
-                sprintf(_t("Cash in/out of %s is ignored."), formattedAmount),
-                3000
-            );
+            this.notification.add(_t("Cash in/out of %s is ignored.", formattedAmount), 3000);
             return this.props.close();
         }
 
@@ -96,7 +92,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         }
         this.props.close();
         this.notification.add(
-            sprintf(this.env._t("Successfully made a cash %s of %s."), type, formattedAmount),
+            this.env._t("Successfully made a cash %s of %s.", type, formattedAmount),
             3000
         );
     }

@@ -3,7 +3,6 @@
 import { Component, onWillStart, onMounted, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { FileInput } from "@web/core/file_input/file_input";
 import { useImportModel } from "../import_model";
 import { ImportDataContent } from "../import_data_content/import_data_content";
@@ -171,10 +170,9 @@ export class ImportAction extends Component {
         }
 
         if (!isTest && res.ids.length) {
-            this.notification.add(
-                sprintf(this.env._t("%s records successfully imported"), res.ids.length),
-                { type: "success" }
-            );
+            this.notification.add(this.env._t("%s records successfully imported", res.ids.length), {
+                type: "success",
+            });
             this.exit();
         }
     }

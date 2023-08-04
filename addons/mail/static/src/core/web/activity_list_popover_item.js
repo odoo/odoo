@@ -9,7 +9,6 @@ import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { FileUploader } from "@web/views/fields/file_handler";
 
@@ -56,11 +55,11 @@ export class ActivityListPopoverItem extends Component {
         } else if (diff === -1) {
             return _t("Yesterday");
         } else if (diff < 0) {
-            return sprintf(_t("%s days overdue"), Math.round(Math.abs(diff)));
+            return _t("%s days overdue", Math.round(Math.abs(diff)));
         } else if (diff === 1) {
             return _t("Tomorrow");
         } else {
-            return sprintf(_t("Due in %s days"), Math.round(Math.abs(diff)));
+            return _t("Due in %s days", Math.round(Math.abs(diff)));
         }
     }
 

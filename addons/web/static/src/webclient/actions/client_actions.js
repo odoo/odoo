@@ -33,10 +33,7 @@ class InvalidAction extends Component {
     }
 
     onMounted() {
-        const message = sprintf(
-            this.env._t("No action with id '%s' could be found"),
-            this.props.actionId
-        );
+        const message = this.env._t("No action with id '%s' could be found", this.props.actionId);
         this.notification.add(message, { type: "danger" });
     }
 }

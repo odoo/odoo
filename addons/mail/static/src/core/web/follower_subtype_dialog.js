@@ -5,7 +5,6 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
 
 /**
  * @typedef {Object} SubtypeData
@@ -71,8 +70,6 @@ export class FollowerSubtypeDialog extends Component {
     }
 
     get title() {
-        return sprintf(_t("Edit Subscription of %(name)s"), {
-            name: this.props.follower.partner.name,
-        });
+        return _t("Edit Subscription of %(name)s", { name: this.props.follower.partner.name });
     }
 }

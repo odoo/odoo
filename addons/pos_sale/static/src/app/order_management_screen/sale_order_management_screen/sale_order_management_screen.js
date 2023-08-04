@@ -141,8 +141,8 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     await this.pos._loadPartners([sale_order.partner_id[0]]);
                 } catch {
                     const title = this.env._t("Customer loading error");
-                    const body = sprintf(
-                        this.env._t("There was a problem in loading the %s customer."),
+                    const body = this.env._t(
+                        "There was a problem in loading the %s customer.",
                         sale_order.partner_id[1]
                     );
                     await this.popup.add(ErrorPopup, { title, body });
@@ -335,10 +335,8 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     }
 
                     if (down_payment > sale_order.amount_unpaid) {
-                        const errorBody = sprintf(
-                            this.env._t(
-                                "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line."
-                            ),
+                        const errorBody = this.env._t(
+                            "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line.",
                             this.env.utils.formatCurrency(down_payment),
                             this.env.utils.formatCurrency(sale_order.amount_unpaid),
                             sale_order.amount_unpaid > 0
