@@ -344,7 +344,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="int_field" />
-                    <field name="trululu" context="{'blip': int_field, 'blop': 3}" options="{'always_reload': 1}" />
+                    <field name="trululu" context="{'blip': int_field, 'blop': 3}" />
                 </form>`,
             mockRPC(route, { method, args }) {
                 if (method === "onchange2") {
@@ -419,7 +419,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <sheet>
                         <group>
-                            <field name="trululu" context="{'show_address': 1}" options="{'always_reload': 1}" />
+                            <field name="trululu" context="{'show_address': 1}" />
                         </group>
                     </sheet>
                 </form>`,
@@ -463,7 +463,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <sheet>
                         <group>
-                            <field name="trululu" context="{'show_address': 1}" options="{'always_reload': 1}"/>
+                            <field name="trululu" context="{'show_address': 1}" />
                         </group>
                     </sheet>
                 </form>`,
@@ -518,7 +518,7 @@ QUnit.module("Fields", (hooks) => {
                 "turtle,false,form": `
                     <form>
                         <field name="display_name" />
-                        <field name="turtle_trululu" context="{'show_address': 1}" options="{'always_reload': 1}" />
+                        <field name="turtle_trululu" context="{'show_address': 1}" />
                     </form>`,
                 "turtle,false,list": `
                     <tree>
@@ -1354,7 +1354,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <sheet>
                         <group>
-                            <field name="trululu" options="{'always_reload': 1}" />
+                            <field name="trululu" />
                         </group>
                     </sheet>
                 </form>`,
@@ -1482,7 +1482,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="trululu" options="{'always_reload': 1}" />
+                    <field name="trululu" />
                 </form>`,
             async mockRPC(route, { method, args }, performRPC) {
                 if (method === "web_read") {
@@ -2740,7 +2740,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="trululu" options="{'always_reload': 1}" />
+                    <field name="trululu" />
                 </form>`,
             async mockRPC(route, { args, method }, performRPC) {
                 assert.step(method);
@@ -2772,7 +2772,7 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 arch: `
                 <tree sample="1">
-                    <field name="product_id" options="{'always_reload': True}"/>
+                    <field name="product_id" />
                 </tree>`,
                 context: { search_default_empty: true },
                 searchViewArch: `
