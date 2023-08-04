@@ -71,6 +71,9 @@ class PosPaymentMethod(models.Model):
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
+        for pm in self:
+            if pm.journal_id and pm.journal_id.type not in ['cash', 'bank']:
+                raise UserError(_("Only journals of type 'Cash' or 'Bank' could be used with payment methods."))
         if self.is_cash_count:
             self.use_payment_terminal = False
 
