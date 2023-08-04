@@ -496,7 +496,12 @@
                     </t>
                 </div>
                 <t t-if="not users">
-                    <h2 class="text-black m-auto">No Leaderboard Yet :(</h2>
+                    <t t-if="search">
+                        <h2 class="text-black m-auto">No profile found with given search term</h2>
+                    </t>
+                    <t t-else="">
+                        <h2 class="text-black m-auto">No Leaderboard Yet :(</h2>
+                    </t>
                 </t>
             </div>
         </t>
