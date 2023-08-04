@@ -255,10 +255,8 @@ registerModel({
          * Called when clicking on "send" button.
          */
         onClickSend() {
-            const messageListFullHeight = '84vh';
             this.sendMessage();
             this.update({ doFocus: true });
-            $('.messageList_openeducat_live').height(messageListFullHeight);
         },
         /**
          * Handles click on the "stop replying" button.
