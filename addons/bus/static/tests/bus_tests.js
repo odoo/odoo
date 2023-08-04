@@ -7,6 +7,7 @@ import { multiTabService } from "@bus/multi_tab_service";
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -49,6 +50,7 @@ QUnit.module(
                 }
             );
             env.services["bus_service"].addChannel("lambda");
+            await waitUntilSubscribe("lambda");
             pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
             await nextTick();
 
@@ -86,6 +88,7 @@ QUnit.module(
                     );
                 }
             );
+            await waitUntilSubscribe("lambda");
             // both tabs should receive the notification
             pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
             await nextTick();
@@ -108,18 +111,9 @@ QUnit.module(
             async function (assert) {
                 assert.expect(3);
 
-                const oldSetTimeout = window.setTimeout;
-                patchWithCleanup(
-                    window,
-                    {
-                        setTimeout: (callback) => oldSetTimeout(callback, 0),
-                    }
-                );
-
                 const pyEnv = await startServer();
                 const env = await makeTestEnv({ activateMockServer: true });
                 await env.services["bus_service"].start();
-                await nextTick();
                 env.services["bus_service"].addEventListener(
                     "notification",
                     ({ detail: notifications }) => {
@@ -130,6 +124,7 @@ QUnit.module(
                     }
                 );
                 env.services["bus_service"].addChannel("lambda");
+                await waitUntilSubscribe("lambda");
                 pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
                 pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
                 // Give websocket worker a tick to try to restart
@@ -147,45 +142,45 @@ QUnit.module(
             assert.expect(1);
 
             const pyEnv = await startServer();
-            const steps = new Set();
+            const steps = [];
             // main
             const mainEnv = await makeTestEnv({ activateMockServer: true });
             mainEnv.services["bus_service"].addEventListener(
                 "notification",
                 ({ detail: notifications }) => {
-                    steps.add(
+                    steps.push(
                         "main - notification - " +
                             notifications.map((notif) => notif.payload).toString()
                     );
                 }
             );
-            await mainEnv.services["bus_service"].addChannel("lambda");
+            mainEnv.services["bus_service"].addChannel("lambda");
 
             // slave
             const slaveEnv = await makeTestEnv();
-            await slaveEnv.services["bus_service"].start();
+            slaveEnv.services["bus_service"].start();
 
             slaveEnv.services["bus_service"].addEventListener(
                 "notification",
                 ({ detail: notifications }) => {
-                    steps.add(
+                    steps.push(
                         "slave - notification - " +
                             notifications.map((notif) => notif.payload).toString()
                     );
                 }
             );
             await slaveEnv.services["bus_service"].addChannel("lambda");
-
+            await waitUntilSubscribe("lambda");
             pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
             // Wait one tick for the worker `postMessage` to reach the bus_service.
             await nextTick();
             // Wait another tick for the `bus.trigger` to reach the listeners.
             await nextTick();
 
-            assert.deepEqual(
-                [...steps],
-                ["slave - notification - beta", "main - notification - beta"]
-            );
+            assert.deepEqual(steps.sort(), [
+                "main - notification - beta",
+                "slave - notification - beta",
+            ]);
         });
 
         QUnit.test(
@@ -194,14 +189,14 @@ QUnit.module(
                 assert.expect(1);
 
                 const pyEnv = await startServer();
-                const steps = new Set();
+                const steps = [];
                 // main
                 const mainEnv = await makeTestEnv({ activateMockServer: true });
-                await mainEnv.services["bus_service"].start();
+                mainEnv.services["bus_service"].start();
                 mainEnv.services["bus_service"].addEventListener(
                     "notification",
                     ({ detail: notifications }) => {
-                        steps.add(
+                        steps.push(
                             "main - notification - " +
                                 notifications.map((notif) => notif.payload).toString()
                         );
@@ -223,13 +218,14 @@ QUnit.module(
                 secondEnv.services["bus_service"].addEventListener(
                     "notification",
                     ({ detail: notifications }) => {
-                        steps.add(
+                        steps.push(
                             "slave - notification - " +
                                 notifications.map((notif) => notif.payload).toString()
                         );
                     }
                 );
                 secondEnv.services["bus_service"].addChannel("lambda");
+                await waitUntilSubscribe("lambda");
                 pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
                 await nextTick();
 
@@ -240,14 +236,11 @@ QUnit.module(
                 pyEnv["bus.bus"]._sendone("lambda", "notifType", "gamma");
                 await nextTick();
 
-                assert.deepEqual(
-                    [...steps],
-                    [
-                        "slave - notification - beta",
-                        "main - notification - beta",
-                        "slave - notification - gamma",
-                    ]
-                );
+                assert.deepEqual(steps.sort(), [
+                    "main - notification - beta",
+                    "slave - notification - beta",
+                    "slave - notification - gamma",
+                ]);
             }
         );
 
@@ -274,6 +267,8 @@ QUnit.module(
             secondTabEnv.services["bus_service"].addChannel("alpha");
             firstTabEnv.services["bus_service"].addChannel("beta");
             secondTabEnv.services["bus_service"].addChannel("beta");
+
+            await waitUntilSubscribe("alpha", "beta");
 
             assert.verifySteps([
                 "Tab 1: addChannel alpha",
@@ -309,7 +304,7 @@ QUnit.module(
             );
             firstTabEnv.services["bus_service"].addChannel("alpha");
             secondTabEnv.services["bus_service"].addChannel("beta");
-            await nextTick();
+            await waitUntilSubscribe("alpha", "beta");
             pyEnv["bus.bus"]._sendmany([
                 ["alpha", "notifType", "alpha"],
                 ["beta", "notifType", "beta"],
@@ -328,6 +323,7 @@ QUnit.module(
             patchWebsocketWorkerWithCleanup({
                 _sendToServer({ event_name, data }) {
                     assert.step(`${event_name} - [${data.channels.toString()}]`);
+                    super._sendToServer(...arguments);
                 },
             });
 
@@ -353,30 +349,16 @@ QUnit.module(
         });
 
         QUnit.test("channels subscription after disconnection", async function (assert) {
-            // Patch setTimeout in order for the worker to reconnect immediatly.
-            patchWithCleanup(window, {
-                setTimeout: (fn) => fn(),
-            });
-            const firstSubscribeDeferred = makeDeferred();
-            const worker = patchWebsocketWorkerWithCleanup({
-                _sendToServer({ event_name, data }) {
-                    assert.step(`${event_name} - [${data.channels.toString()}]`);
-                    if (event_name === "subscribe") {
-                        firstSubscribeDeferred.resolve();
-                    }
-                },
-            });
-
-            const env = await makeTestEnv();
+            const worker = patchWebsocketWorkerWithCleanup();
+            const env = await makeTestEnv({ activateMockServer: true });
             env.services["bus_service"].start();
-            // wait for the websocket to connect and the first subscription
-            // to occur.
-            await firstSubscribeDeferred;
+            await waitUntilSubscribe();
             worker.websocket.close(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
-            // wait for the websocket to re-connect.
-            await nextTick();
-
-            assert.verifySteps(["subscribe - []", "subscribe - []"]);
+            await waitUntilSubscribe();
+            assert.ok(
+                true,
+                "No error means waitUntilSubscribe resolves twice thus two subscriptions were triggered as expected"
+            );
         });
 
         QUnit.test(
@@ -394,7 +376,9 @@ QUnit.module(
                     },
                 });
                 const env1 = await makeTestEnv();
-                await env1.services["bus_service"].start();
+                env1.services["bus_service"].start();
+                env1.services["bus_service"].addChannel("lambda");
+                await waitUntilSubscribe("lambda");
                 await updateLastNotificationDeferred;
                 // First bus service has never received notifications thus the
                 // default is 0.
@@ -508,16 +492,13 @@ QUnit.module(
                     },
                 });
                 const websocketCreatedDeferred = makeDeferred();
-                patchWithCleanup(
-                    window,
-                    {
-                        WebSocket: function (url) {
-                            assert.step(url);
-                            websocketCreatedDeferred.resolve();
-                            return new EventTarget();
-                        },
-                    }
-                );
+                patchWithCleanup(window, {
+                    WebSocket: function (url) {
+                        assert.step(url);
+                        websocketCreatedDeferred.resolve();
+                        return new EventTarget();
+                    },
+                });
                 const env = await makeTestEnv();
                 env.services["bus_service"].start();
                 await websocketCreatedDeferred;
@@ -642,22 +623,19 @@ QUnit.module(
             async function (assert) {
                 const originalSharedWorker = browser.SharedWorker;
                 const originalWorker = browser.Worker;
-                patchWithCleanup(
-                    browser,
-                    {
-                        SharedWorker: function (url, options) {
-                            assert.step("shared-worker creation");
-                            const sw = new originalSharedWorker(url, options);
-                            // Simulate error during shared worker creation.
-                            setTimeout(() => sw.dispatchEvent(new Event("error")));
-                            return sw;
-                        },
-                        Worker: function (url, options) {
-                            assert.step("worker creation");
-                            return new originalWorker(url, options);
-                        },
-                    }
-                );
+                patchWithCleanup(browser, {
+                    SharedWorker: function (url, options) {
+                        assert.step("shared-worker creation");
+                        const sw = new originalSharedWorker(url, options);
+                        // Simulate error during shared worker creation.
+                        setTimeout(() => sw.dispatchEvent(new Event("error")));
+                        return sw;
+                    },
+                    Worker: function (url, options) {
+                        assert.step("worker creation");
+                        return new originalWorker(url, options);
+                    },
+                });
                 patchWithCleanup(window.console, {
                     warn(message) {
                         assert.step(message);
@@ -681,7 +659,8 @@ QUnit.module(
                 assert.deepEqual({ body: "hello", id: 1 }, payload);
                 assert.step("message");
             });
-            pyEnv["bus.bus"]._sendone("channel1", "message", {
+            await waitUntilSubscribe();
+            pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "message", {
                 body: "hello",
                 id: 1,
             });

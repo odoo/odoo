@@ -75,6 +75,132 @@ async function getModelDefinitions() {
     return modelDefinitions;
 }
 
+let _cookie = {};
+QUnit.testDone(() => (_cookie = {}));
+export const pyEnvTarget = {
+    cookie: {
+        get(key) {
+            return _cookie[key];
+        },
+        set(key, value) {
+            _cookie[key] = value;
+        },
+        delete(key) {
+            delete _cookie[key];
+        },
+    },
+    _authenticate(user) {
+        if (!user) {
+            throw new Error("Unauthorized");
+        }
+        this.cookie.set("sid", user.id);
+    },
+    /**
+     * Authenticate a user on the mock server given its login
+     * and password.
+     *
+     * @param {string} login
+     * @param {string|} password
+     */
+    authenticate(login, password) {
+        const user = this.mockServer.getRecords(
+            "res.users",
+            [
+                ["login", "=", login],
+                ["password", "=", password],
+            ],
+            { active_test: false }
+        )[0];
+        this._authenticate(user);
+        this.cookie.set("authenticated_user_sid", this.cookie.get("sid"));
+    },
+    /**
+     * Logout the current user.
+     */
+    logout() {
+        if (this.cookie.get("authenticated_user_sid") === this.cookie.get("sid")) {
+            this.cookie.delete("authenticated_user_sid");
+        }
+        this.cookie.delete("sid");
+        const [publicUser] = this.mockServer.getRecords(
+            "res.users",
+            [["id", "=", this.publicUserId]],
+            { active_test: false }
+        );
+        this.authenticate(publicUser.login, publicUser.password);
+    },
+    /**
+     * Execute the provided function with the given user
+     * authenticated then restore the original user.
+     *
+     * @param {number} userId
+     * @param {Function} fn
+     */
+    async withUser(userId, fn) {
+        const user = this.currentUser;
+        const targetUser = this.mockServer.getRecords("res.users", [["id", "=", userId]], {
+            active_test: false,
+        })[0];
+        this._authenticate(targetUser);
+        let result;
+        try {
+            result = await fn();
+        } finally {
+            if (user) {
+                this._authenticate(user);
+            } else {
+                this.logout();
+            }
+        }
+        return result;
+    },
+    /**
+     * The current user, either the one authenticated or the one
+     * impersonated by `withUser`.
+     */
+    get currentUser() {
+        let user;
+        const currentUserId = this.cookie.get("sid");
+        if ("res.users" in this.mockServer.models && currentUserId) {
+            user = this.mockServer.getRecords("res.users", [["id", "=", currentUserId]], {
+                active_test: false,
+            })[0];
+            user = user ? { ...user, _is_public: () => user.id === this.publicUserId } : undefined;
+        }
+        return user;
+    },
+    /**
+     * The current partner, either the one of the current user or
+     * the one of the user impersonated by `withUser`.
+     */
+    get currentPartner() {
+        if ("res.partner" in this.mockServer.models && this.currentUser?.partner_id) {
+            return this.mockServer.getRecords(
+                "res.partner",
+                [["id", "=", this.currentUser?.partner_id]],
+                { active_test: false }
+            )[0];
+        }
+        return undefined;
+    },
+    get currentUserId() {
+        return this.currentUser?.id;
+    },
+    get currentPartnerId() {
+        return this.currentPartner?.id;
+    },
+    getData() {
+        return this.mockServer.models;
+    },
+    getViews() {
+        return this.mockServer.archs;
+    },
+    simulateConnectionLost(closeCode) {
+        this.mockServer._simulateConnectionLost(closeCode);
+    },
+    ...TEST_USER_IDS,
+};
+
 let pyEnv;
 /**
  * Creates an environment that can be used to setup test data as well as
@@ -110,119 +236,98 @@ export async function startServer({ actions, views = {} } = {}) {
                 archsRegistry.get(modelName, archsRegistry.get("default"));
         }
     }
-    pyEnv = new Proxy(
-        {
-            get currentPartner() {
-                if ("res.partner" in this.mockServer.models) {
-                    return this.mockServer.getRecords("res.partner", [
-                        ["id", "=", this.currentPartnerId],
-                    ])[0];
-                }
-                return undefined;
-            },
-            getData() {
-                return this.mockServer.models;
-            },
-            getViews() {
-                return views;
-            },
-            simulateConnectionLost(closeCode) {
-                this.mockServer._simulateConnectionLost(closeCode);
-            },
-            ...TEST_USER_IDS,
+    pyEnv = new Proxy(pyEnvTarget, {
+        get(target, name) {
+            if (name in target) {
+                return target[name];
+            }
+            const modelAPI = {
+                /**
+                 * Simulate a 'create' operation on a model.
+                 *
+                 * @param {Object[]|Object} values records to be created.
+                 * @returns {integer[]|integer} array of ids if more than one value was passed,
+                 * id of created record otherwise.
+                 */
+                create(values) {
+                    if (!values) {
+                        return;
+                    }
+                    if (!Array.isArray(values)) {
+                        values = [values];
+                    }
+                    const recordIds = values.map((value) =>
+                        target.mockServer.mockCreate(name, value)
+                    );
+                    return recordIds.length === 1 ? recordIds[0] : recordIds;
+                },
+                /**
+                 * Simulate a 'search' operation on a model.
+                 *
+                 * @param {Array} domain
+                 * @param {Object} context
+                 * @returns {integer[]} array of ids corresponding to the given domain.
+                 */
+                search(domain, context = {}) {
+                    return target.mockServer.mockSearch(name, [domain], context);
+                },
+                /**
+                 * Simulate a `search_count` operation on a model.
+                 *
+                 * @param {Array} domain
+                 * @return {number} count of records matching the given domain.
+                 */
+                searchCount(domain) {
+                    return this.search(domain).length;
+                },
+                /**
+                 * Simulate a 'search_read' operation on a model.
+                 *
+                 * @param {Array} domain
+                 * @param {Object} kwargs
+                 * @returns {Object[]} array of records corresponding to the given domain.
+                 */
+                searchRead(domain, kwargs = {}) {
+                    return target.mockServer.mockSearchRead(name, [domain], kwargs);
+                },
+                /**
+                 * Simulate an 'unlink' operation on a model.
+                 *
+                 * @param {integer[]} ids
+                 * @returns {boolean} mockServer 'unlink' method always returns true.
+                 */
+                unlink(ids) {
+                    return target.mockServer.mockUnlink(name, [ids]);
+                },
+                /**
+                 * Simulate a 'write' operation on a model.
+                 *
+                 * @param {integer[]} ids ids of records to write on.
+                 * @param {Object} values values to write on the records matching given ids.
+                 * @returns {boolean} mockServer 'write' method always returns true.
+                 */
+                write(ids, values) {
+                    return target.mockServer.mockWrite(name, [ids, values]);
+                },
+            };
+            if (name === "bus.bus") {
+                modelAPI["_sendone"] = target.mockServer._mockBusBus__sendone.bind(
+                    target.mockServer
+                );
+                modelAPI["_sendmany"] = target.mockServer._mockBusBus__sendmany.bind(
+                    target.mockServer
+                );
+            }
+            return modelAPI;
         },
-        {
-            get(target, name) {
-                if (target[name]) {
-                    return target[name];
-                }
-                const modelAPI = {
-                    /**
-                     * Simulate a 'create' operation on a model.
-                     *
-                     * @param {Object[]|Object} values records to be created.
-                     * @returns {integer[]|integer} array of ids if more than one value was passed,
-                     * id of created record otherwise.
-                     */
-                    create(values) {
-                        if (!values) {
-                            return;
-                        }
-                        if (!Array.isArray(values)) {
-                            values = [values];
-                        }
-                        const recordIds = values.map((value) =>
-                            target.mockServer.mockCreate(name, value)
-                        );
-                        return recordIds.length === 1 ? recordIds[0] : recordIds;
-                    },
-                    /**
-                     * Simulate a 'search' operation on a model.
-                     *
-                     * @param {Array} domain
-                     * @param {Object} context
-                     * @returns {integer[]} array of ids corresponding to the given domain.
-                     */
-                    search(domain, context = {}) {
-                        return target.mockServer.mockSearch(name, [domain], context);
-                    },
-                    /**
-                     * Simulate a `search_count` operation on a model.
-                     *
-                     * @param {Array} domain
-                     * @return {number} count of records matching the given domain.
-                     */
-                    searchCount(domain) {
-                        return this.search(domain).length;
-                    },
-                    /**
-                     * Simulate a 'search_read' operation on a model.
-                     *
-                     * @param {Array} domain
-                     * @param {Object} kwargs
-                     * @returns {Object[]} array of records corresponding to the given domain.
-                     */
-                    searchRead(domain, kwargs = {}) {
-                        return target.mockServer.mockSearchRead(name, [domain], kwargs);
-                    },
-                    /**
-                     * Simulate an 'unlink' operation on a model.
-                     *
-                     * @param {integer[]} ids
-                     * @returns {boolean} mockServer 'unlink' method always returns true.
-                     */
-                    unlink(ids) {
-                        return target.mockServer.mockUnlink(name, [ids]);
-                    },
-                    /**
-                     * Simulate a 'write' operation on a model.
-                     *
-                     * @param {integer[]} ids ids of records to write on.
-                     * @param {Object} values values to write on the records matching given ids.
-                     * @returns {boolean} mockServer 'write' method always returns true.
-                     */
-                    write(ids, values) {
-                        return target.mockServer.mockWrite(name, [ids, values]);
-                    },
-                };
-                if (name === "bus.bus") {
-                    modelAPI["_sendone"] = target.mockServer._mockBusBus__sendone.bind(
-                        target.mockServer
-                    );
-                    modelAPI["_sendmany"] = target.mockServer._mockBusBus__sendmany.bind(
-                        target.mockServer
-                    );
-                }
-                return modelAPI;
-            },
-            set(target, name, value) {
-                return (target[name] = value);
-            },
-        }
-    );
+    });
     pyEnv["mockServer"] = await makeMockServer({ actions, models, views });
     pyEnv["mockServer"].pyEnv = pyEnv;
     registerCleanup(() => (pyEnv = undefined));
+    if ("res.users" in pyEnv.mockServer.models) {
+        const adminUser = pyEnv["res.users"].searchRead([["id", "=", pyEnv.adminUserId]])[0];
+        pyEnv.authenticate(adminUser.login, adminUser.password);
+    }
     return pyEnv;
 }
 

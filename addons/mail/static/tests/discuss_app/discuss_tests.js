@@ -1123,12 +1123,13 @@ QUnit.test("should auto-pin chat when receiving a new DM", async (assert) => {
 
     // simulate receiving the first message on channel 11
     await afterNextRender(() =>
-        env.services.rpc("/mail/message/post", {
-            context: { mockedUserId: userId },
-            post_data: { body: "new message", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "new message", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        )
     );
     assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Demo)");
 });
@@ -1336,11 +1337,12 @@ QUnit.test(
 
 QUnit.test("Channel is added to discuss after invitation", async (assert) => {
     const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "Harry" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
-        channel_member_ids: [],
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
     });
-    const userId = pyEnv["res.users"].create({ name: "Harry" });
     const { env, openDiscuss } = await start({
         services: {
             notification: makeFakeNotificationService((message) => assert.step(message)),
@@ -1349,10 +1351,11 @@ QUnit.test("Channel is added to discuss after invitation", async (assert) => {
     await openDiscuss();
     assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(General)");
     await afterNextRender(() => {
-        env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
-            partner_ids: [pyEnv.currentPartnerId],
-            context: { mockedUserId: userId },
-        });
+        pyEnv.withUser(userId, () =>
+            env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
+                partner_ids: [pyEnv.adminPartnerId],
+            })
+        );
     });
     assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(General)");
     assert.verifySteps(["You have been invited to #General"]);
@@ -1496,7 +1499,13 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async (assert) => {
         name: "Foreigner user",
         partner_id: partnerId,
     });
-    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: partnerId }),
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+        ],
+    });
     let lastMessageId;
     for (let i = 1; i <= 25; i++) {
         lastMessageId = pyEnv["mail.message"].create({
@@ -1520,12 +1529,13 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async (assert) => {
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
     await afterNextRender(async () =>
-        env.services.rpc("/mail/message/post", {
-            context: { mockedUserId: userId },
-            post_data: { body: "hu", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "hu", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        )
     );
     assert.containsN($, ".o-mail-Message", 26);
     assert.containsOnce($, "hr + span:contains(New messages)");
@@ -1823,19 +1833,20 @@ QUnit.test("Message shows up even if channel data is incomplete", async (assert)
         ],
         channel_type: "chat",
     });
-    await env.services.rpc("/discuss/channel/notify_typing", {
-        context: { mockedPartnerId: correspondentPartnerId },
-        is_typing: true,
-        channel_id: channelId,
-    });
-    await afterNextRender(
-        async () =>
-            await env.services.rpc("/mail/message/post", {
-                context: { mockedUserId: correspondentUserId },
+    await pyEnv.withUser(correspondentUserId, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            is_typing: true,
+            channel_id: channelId,
+        })
+    );
+    await afterNextRender(() =>
+        pyEnv.withUser(correspondentUserId, () =>
+            env.services.rpc("/mail/message/post", {
                 post_data: { body: "hello world", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
             })
+        )
     );
     await click(
         ".o-mail-DiscussSidebarCategory-chat + .o-mail-DiscussSidebarChannel:contains(Albert)"

@@ -262,12 +262,13 @@ QUnit.test(
         });
         await click(".o_menu_systray i[aria-label='Messages']");
         await afterNextRender(async () =>
-            env.services.rpc("/mail/message/post", {
-                context: { mockedUserId: userId },
-                post_data: { body: "new message", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
+            pyEnv.withUser(userId, () =>
+                env.services.rpc("/mail/message/post", {
+                    post_data: { body: "new message", message_type: "comment" },
+                    thread_id: channelId,
+                    thread_model: "discuss.channel",
+                })
+            )
         );
         assert.verifySteps(["rpc:channel_fetch"]);
 
@@ -283,7 +284,13 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+        const channelId = pyEnv["discuss.channel"].create({
+            name: "test",
+            channel_member_ids: [
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        });
         const deferred = makeDeferred();
         const { env, openDiscuss } = await start({
             async mockRPC(route, args) {
@@ -301,12 +308,13 @@ QUnit.test(
         await openDiscuss(channelId);
         $(".o-mail-Composer-input")[0].focus();
         // simulate receiving a message
-        await env.services.rpc("/mail/message/post", {
-            context: { mockedUserId: userId },
-            post_data: { body: "<p>Some new message</p>", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        });
+        await pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "<p>Some new message</p>", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        );
         await afterNextRender(() => deferred.resolve());
         assert.verifySteps(["rpc:set_last_seen_message"]);
     }
@@ -318,7 +326,12 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
         const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
-        const channelId = pyEnv["discuss.channel"].create({});
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_member_ids: [
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        });
         for (let i = 0; i <= 10; i++) {
             pyEnv["mail.message"].create({
                 body: "not empty",
@@ -333,12 +346,13 @@ QUnit.test(
 
         // simulate receiving a message
         await afterNextRender(() =>
-            env.services.rpc("/mail/message/post", {
-                context: { mockedUserId: userId },
-                post_data: { body: "hello", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
+            pyEnv.withUser(userId, () =>
+                env.services.rpc("/mail/message/post", {
+                    post_data: { body: "hello", message_type: "comment" },
+                    thread_id: channelId,
+                    thread_model: "discuss.channel",
+                })
+            )
         );
         assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
     }
@@ -350,7 +364,12 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
         const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
-        const channelId = pyEnv["discuss.channel"].create({});
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_member_ids: [
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        });
         for (let i = 0; i <= 10; i++) {
             pyEnv["mail.message"].create({
                 body: "not empty",
@@ -369,12 +388,13 @@ QUnit.test(
 
         // simulate receiving a message
         await afterNextRender(() =>
-            env.services.rpc("/mail/message/post", {
-                context: { mockedUserId: userId },
-                post_data: { body: "hello", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
+            pyEnv.withUser(userId, () =>
+                env.services.rpc("/mail/message/post", {
+                    post_data: { body: "hello", message_type: "comment" },
+                    thread_id: channelId,
+                    thread_model: "discuss.channel",
+                })
+            )
         );
         assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 0);
     }
@@ -474,6 +494,7 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
         name: "General",
@@ -496,12 +517,13 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
     await afterNextRender(() =>
-        env.services.rpc("/mail/message/post", {
-            context: { mockedUserId: userId },
-            post_data: { body: "hu", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "hu", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        )
     );
     assert.containsN($, ".o-mail-Message", 2);
     assert.containsOnce($, "hr + span:contains(New messages)");
@@ -734,6 +756,10 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
             name: "General",
+            channel_member_ids: [
+                Command.create({ partner_id: partnerId }),
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+            ],
         });
         pyEnv["mail.message"].create([
             {
@@ -751,12 +777,13 @@ QUnit.test(
         $(".o-mail-Composer-input")[0].blur();
         // simulate receiving a message
         await afterNextRender(() =>
-            env.services.rpc("/mail/message/post", {
-                context: { mockedUserId: userId },
-                post_data: { body: "test", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
+            pyEnv.withUser(userId, () =>
+                env.services.rpc("/mail/message/post", {
+                    post_data: { body: "test", message_type: "comment" },
+                    thread_id: channelId,
+                    thread_model: "discuss.channel",
+                })
+            )
         );
         assert.containsN($, ".o-mail-Message", 3);
         assert.containsOnce($, "hr + span:contains(New messages)");

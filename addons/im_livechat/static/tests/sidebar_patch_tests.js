@@ -74,13 +74,12 @@ QUnit.test("Do not show channel when visitor is typing", async (assert) => {
     assert.containsNone($, ".o-mail-DiscussSidebarCategory-livechat");
     // simulate livechat visitor typing
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
-    await env.services.rpc("/im_livechat/notify_typing", {
-        context: {
-            mockedPartnerId: pyEnv.publicPartnerId,
-        },
-        is_typing: true,
-        uuid: channel.uuid,
-    });
+    await pyEnv.withUser(pyEnv.publicUserId, () =>
+        env.services.rpc("/im_livechat/notify_typing", {
+            is_typing: true,
+            uuid: channel.uuid,
+        })
+    );
     await nextTick();
     assert.containsNone($, ".o-mail-DiscussSidebarCategory-livechat");
 });
@@ -481,8 +480,6 @@ QUnit.test("Clicking on unpin button unpins the channel", async (assert) => {
 
 QUnit.test("Message unread counter", async (assert) => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Harry" });
-    const userId = pyEnv["res.users"].create({ name: "Harry", partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
@@ -494,12 +491,13 @@ QUnit.test("Message unread counter", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    await afterNextRender(async () =>
-        env.services.rpc("/im_livechat/chat_post", {
-            context: { mockedUserId: userId },
-            message_content: "hu",
-            uuid: pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0].uuid,
-        })
+    await afterNextRender(() =>
+        pyEnv.withUser(pyEnv.publicUserId, () =>
+            env.services.rpc("/im_livechat/chat_post", {
+                message_content: "hu",
+                uuid: pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0].uuid,
+            })
+        )
     );
     assert.containsOnce($, ".o-mail-DiscussSidebarChannel .badge:contains(1)");
 });

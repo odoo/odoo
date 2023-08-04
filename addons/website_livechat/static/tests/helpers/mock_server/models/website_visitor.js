@@ -15,7 +15,7 @@ patch(MockServer.prototype, {
                 ? this.getRecords("res.country", [["id", "=", visitor.country_id]])
                 : undefined;
             const visitor_name = `${visitor.display_name}${country ? `(${country.name})` : ""}`;
-            const membersToAdd = [[0, 0, { partner_id: this.currentPartnerId }]];
+            const membersToAdd = [[0, 0, { partner_id: this.pyEnv.currentPartnerId }]];
             if (visitor.partner_id) {
                 membersToAdd.push([0, 0, { partner_id: visitor.partner_id }]);
             } else {
@@ -25,7 +25,7 @@ patch(MockServer.prototype, {
                 anonymous_name: visitor_name,
                 channel_member_ids: membersToAdd,
                 channel_type: "livechat",
-                livechat_operator_id: this.currentPartnerId,
+                livechat_operator_id: this.pyEnv.currentPartnerId,
             });
             // notify operator
             this.pyEnv["bus.bus"]._sendone(

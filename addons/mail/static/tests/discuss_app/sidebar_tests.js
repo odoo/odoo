@@ -527,7 +527,10 @@ QUnit.test(
         });
         pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                Command.create({ message_unread_counter: 10, partner_id: pyEnv.currentPartnerId }),
+                Command.create({
+                    message_unread_counter: 10,
+                    partner_id: pyEnv.currentPartnerId,
+                }),
             ],
             channel_type: "chat",
         });
@@ -1049,22 +1052,10 @@ QUnit.test("Unpinning chat should display notification", async (assert) => {
 QUnit.test("Can leave channel", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(General)");
-    const messageId = pyEnv["mail.message"].create({
-        body: '<div class="o_mail_notification">Mitchell Admin left the channel</div>',
-        model: "discuss.channel",
-        res_id: channelId,
-        message_type: "comment",
-    });
-    const [message] = await env.services.orm.call("mail.message", "message_format", [[messageId]]);
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendmany([
-            [channelId, "discuss.channel/leave", { id: channelId }],
-            [channelId, "discuss.channel/new_message", { id: channelId, message }],
-        ]);
-    });
+    await click("[title='Leave this channel']");
     assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(General)");
 });
 

@@ -50,8 +50,7 @@ patch(MockServer.prototype, {
         if (route === "/discuss/channel/notify_typing") {
             const id = args.channel_id;
             const is_typing = args.is_typing;
-            const context = args.context;
-            return this._mockRouteDiscussChannelNotifyTyping(id, is_typing, context);
+            return this._mockRouteDiscussChannelNotifyTyping(id, is_typing);
         }
         if (new RegExp("/discuss/channel/\\d+/partner/\\d+/avatar_128").test(route)) {
             return;
@@ -82,7 +81,7 @@ patch(MockServer.prototype, {
                 ["id", "=", args.link_preview_id],
             ]);
             this.pyEnv["bus.bus"]._sendone(
-                this.pyEnv.currentPartnerId,
+                this._mockMailMessage__busNotificationTarget(linkPreview.message_id[0]),
                 "mail.link.preview/delete",
                 {
                     id: linkPreview.id,
@@ -126,13 +125,19 @@ patch(MockServer.prototype, {
                 body: args.body,
                 attachment_ids: args.attachment_ids,
             });
-            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartnerId, "mail.record/insert", {
-                Message: {
-                    id: args.message_id,
-                    body: args.body,
-                    attachment_ids: this._mockIrAttachment_attachmentFormat(args.attachment_ids),
-                },
-            });
+            this.pyEnv["bus.bus"]._sendone(
+                this._mockMailMessage__busNotificationTarget(args.message_id),
+                "mail.record/insert",
+                {
+                    Message: {
+                        id: args.message_id,
+                        body: args.body,
+                        attachment_ids: this._mockIrAttachment_attachmentFormat(
+                            args.attachment_ids
+                        ),
+                    },
+                }
+            );
             return this._mockMailMessageMessageFormat([args.message_id])[0];
         }
         if (route === "/mail/partner/from_email") {
@@ -199,7 +204,10 @@ patch(MockServer.prototype, {
      * @returns {Object}
      */
     _mockRouteMailInitMessaging() {
-        return this._mockResUsers_InitMessaging([this.currentUserId]);
+        if (this._mockMailGuest__getGuestFromContext() && this.pyEnv.currentUser?._is_public()) {
+            return this._mockMailGuest__initMessaging();
+        }
+        return this._mockResUsers_InitMessaging([this.pyEnv.currentUserId]);
     },
     /**
      * Simulates the `/mail/attachment/delete` route.
@@ -208,7 +216,7 @@ patch(MockServer.prototype, {
      * @param {integer} attachment_id
      */
     async _mockRouteMailAttachmentRemove(attachment_id) {
-        this.pyEnv["bus.bus"]._sendone(this.currentPartnerId, "ir.attachment/delete", {
+        this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "ir.attachment/delete", {
             id: attachment_id,
         });
         return this.pyEnv["ir.attachment"].unlink([attachment_id]);
@@ -250,12 +258,9 @@ patch(MockServer.prototype, {
      * @param {integer} limit
      * @param {Object} [context={}]
      */
-    async _mockRouteDiscussChannelNotifyTyping(channel_id, is_typing, context = {}) {
-        const partnerId = context.mockedPartnerId || this.currentPartnerId;
-        const [memberOfCurrentUser] = this.getRecords("discuss.channel.member", [
-            ["channel_id", "=", channel_id],
-            ["partner_id", "=", partnerId],
-        ]);
+    async _mockRouteDiscussChannelNotifyTyping(channel_id, is_typing) {
+        const memberOfCurrentUser =
+            this._mockDiscussChannelMember__getAsSudoFromContext(channel_id);
         if (!memberOfCurrentUser) {
             return;
         }
@@ -268,7 +273,7 @@ patch(MockServer.prototype, {
      * @returns {Object[]}
      */
     _mockRouteMailLoadMessageFailures() {
-        return this._mockResPartner_MessageFetchFailed(this.currentPartnerId);
+        return this._mockResPartner_MessageFetchFailed(this.pyEnv.currentPartnerId);
     },
     /**
      * Simulates `/mail/link_preview` route.
@@ -286,7 +291,7 @@ patch(MockServer.prototype, {
                     ["message_id", "=", message_id],
                 ]);
                 this.pyEnv["bus.bus"]._sendone(
-                    this.pyEnv.currentPartnerId,
+                    this._mockMailMessage__busNotificationTarget(linkPreview.message_id[0]),
                     "mail.link.preview/delete",
                     {
                         id: linkPreview.id,
@@ -305,13 +310,11 @@ patch(MockServer.prototype, {
                 ["id", "=", linkPreviewId],
             ]);
             linkPreviews.push(this._mockMailLinkPreviewFormat(linkPreview));
-            let target = this.pyEnv.currentPartner;
-            if (message.model === "discuss.channel") {
-                target = this.pyEnv["discuss.channel"].search([["id", "=", message.res_id]]);
-            }
-            this.pyEnv["bus.bus"]._sendmany([
-                [target, "mail.record/insert", { LinkPreview: linkPreviews }],
-            ]);
+            this.pyEnv["bus.bus"]._sendone(
+                this._mockMailMessage__busNotificationTarget(message_id),
+                "mail.record/insert",
+                { LinkPreview: linkPreviews }
+            );
         }
     },
     /**
@@ -333,7 +336,7 @@ patch(MockServer.prototype, {
             const notifs = this.pyEnv["mail.notification"].searchRead([
                 ["mail_message_id", "=", message.id],
                 ["is_read", "=", true],
-                ["res_partner_id", "=", this.currentPartnerId],
+                ["res_partner_id", "=", this.pyEnv.currentPartnerId],
             ]);
             return notifs.length > 0;
         });
@@ -360,7 +363,7 @@ patch(MockServer.prototype, {
      * @returns {Object}
      */
     _mockRouteMailMessageStarredMessages(after = false, before = false, limit = 30) {
-        const domain = [["starred_partner_ids", "in", [this.currentPartnerId]]];
+        const domain = [["starred_partner_ids", "in", [this.pyEnv.currentPartnerId]]];
         const messages = this._mockMailMessage_MessageFetch(domain, before, after, false, limit);
         return this._mockMailMessageMessageFormat(messages.map((message) => message.id));
     },
@@ -430,13 +433,13 @@ patch(MockServer.prototype, {
      * @returns {integer[]} [check_rtc_session_ids]
      */
     async _mockRouteMailRtcChannelJoinCall(channel_id, check_rtc_session_ids = []) {
-        const [currentChannelMember] = this.getRecords("discuss.channel.member", [
-            ["channel_id", "=", channel_id],
-            ["partner_id", "=", this.currentPartnerId],
-        ]);
+        const memberOfCurrentUser =
+            this._mockDiscussChannelMember__getAsSudoFromContext(channel_id);
         const sessionId = this.pyEnv["discuss.channel.rtc.session"].create({
-            channel_member_id: currentChannelMember.id,
+            channel_member_id: memberOfCurrentUser.id,
             channel_id, // on the server, this is a related field from channel_member_id and not explicitly set
+            guest_id: memberOfCurrentUser.guest_id[0],
+            partner_id: memberOfCurrentUser.partner_id[0],
         });
         const channelMembers = this.getRecords("discuss.channel.member", [
             ["channel_id", "=", channel_id],
@@ -478,11 +481,14 @@ patch(MockServer.prototype, {
                 rtcSessions.map((rtcSession) => rtcSession.id)
             );
         for (const [channelId, sessionsData] of Object.entries(channelInfo)) {
+            const channel = this.pyEnv["discuss.channel"].searchRead([
+                ["id", "=", parseInt(channelId)],
+            ])[0];
             const notificationRtcSessions = sessionsData.map((sessionsDataPoint) => {
                 return { id: sessionsDataPoint.id };
             });
             notifications.push([
-                channelId,
+                channel,
                 "discuss.channel/rtc_sessions_update",
                 {
                     id: Number(channelId), // JS object keys are strings, but the type from the server is number
@@ -491,7 +497,9 @@ patch(MockServer.prototype, {
             ]);
         }
         for (const rtcSession of rtcSessions) {
-            const target = rtcSession.guest_id || rtcSession.partner_id;
+            const target = rtcSession.guest_id
+                ? this.pyEnv["mail.guest"].searchRead([["id", "=", rtcSession.guest_id]])[0]
+                : this.pyEnv["res.partner"].searchRead([["id", "=", rtcSession.partner_id]])[0];
             notifications.push([
                 target,
                 "discuss.channel.rtc.session/ended",

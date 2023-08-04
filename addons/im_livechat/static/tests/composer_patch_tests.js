@@ -87,11 +87,12 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() =>
-        env.services.rpc("/im_livechat/notify_typing", {
-            context: { mockedPartnerId: pyEnv.publicPartnerId },
-            is_typing: true,
-            uuid: channel.uuid,
-        })
+        pyEnv.withUser(pyEnv.publicUserId, () =>
+            env.services.rpc("/im_livechat/notify_typing", {
+                is_typing: true,
+                uuid: channel.uuid,
+            })
+        )
     );
     assert.containsOnce($, ".o-discuss-Typing:contains(Visitor 20 is typing...)");
 });

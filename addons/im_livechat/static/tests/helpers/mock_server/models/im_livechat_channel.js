@@ -25,13 +25,7 @@ patch(MockServer.prototype, {
      * @param {integer} id
      * @returns {Object}
      */
-    _mockImLivechatChannel_getLivechatDiscussChannelVals(
-        id,
-        anonymous_name,
-        operator,
-        user_id,
-        country_id
-    ) {
+    _mockImLivechatChannel_getLivechatDiscussChannelVals(id, anonymous_name, operator, country_id) {
         // partner to add to the discuss.channel
         const operator_partner_id = operator.partner_id;
         const membersToAdd = [
@@ -44,17 +38,11 @@ patch(MockServer.prototype, {
                 },
             ],
         ];
-        const visitor_user = this.getRecords("res.users", [["id", "=", user_id]])[0];
-        if (
-            visitor_user &&
-            visitor_user.id === this.pyEnv.currentUserId &&
-            visitor_user !== operator
-        ) {
-            // valid session user (not public)
-            membersToAdd.push(Command.create({ partner_id: visitor_user.partner_id }));
+        if (this.pyEnv.currentPartnerId) {
+            membersToAdd.push(Command.create({ partner_id: this.pyEnv.currentPartnerId }));
         }
         const membersName = [
-            visitor_user ? visitor_user.display_name : anonymous_name,
+            this.pyEnv.currentUser ? this.pyEnv.currentUser.display_name : anonymous_name,
             operator.livechat_username ? operator.livechat_username : operator.name,
         ];
         return {
@@ -63,7 +51,7 @@ patch(MockServer.prototype, {
             livechat_active: true,
             livechat_operator_id: operator_partner_id,
             livechat_channel_id: id,
-            anonymous_name: user_id ? false : anonymous_name,
+            anonymous_name: this.pyEnv.currentUser?._is_public() ? false : anonymous_name,
             country_id: country_id,
             channel_type: "livechat",
             name: membersName.join(" "),
@@ -96,7 +84,6 @@ patch(MockServer.prototype, {
         id,
         anonymous_name,
         previous_operator_id,
-        user_id,
         country_id,
         persisted
     ) {
@@ -117,7 +104,6 @@ patch(MockServer.prototype, {
             id,
             anonymous_name,
             operator,
-            user_id,
             country_id
         );
         if (persisted) {

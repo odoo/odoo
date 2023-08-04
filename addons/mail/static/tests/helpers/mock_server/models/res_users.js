@@ -30,7 +30,7 @@ patch(MockServer.prototype, {
             current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(
                 user.partner_id
             ),
-            current_user_id: this.currentUserId,
+            current_user_id: this.pyEnv.currentUserId,
             current_user_settings: this._mockResUsersSettings_ResUsersSettingsFormat(
                 userSettings.id
             ),

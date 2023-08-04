@@ -554,11 +554,13 @@ QUnit.test("Reaction summary", async (assert) => {
         "Foo, Bar, FooBar and 1 other person have reacted with 😅",
     ];
     for (const [idx, name] of partnerNames.entries()) {
-        const partnerId = pyEnv["res.partner"].create({ name });
-        pyEnv.currentPartnerId = partnerId;
-        await click("[title='Add a Reaction']");
-        await click(".o-Emoji:contains(😅)");
-        assert.hasAttrValue($(".o-mail-MessageReaction")[0], "title", expectedSummaries[idx]);
+        const userId = pyEnv["res.users"].create({ name });
+        pyEnv["res.partner"].create({ name, user_ids: [Command.link(userId)] });
+        await pyEnv.withUser(userId, async () => {
+            await click("[title='Add a Reaction']");
+            await click(".o-Emoji:contains(😅)");
+            assert.hasAttrValue($(".o-mail-MessageReaction")[0], "title", expectedSummaries[idx]);
+        });
     }
 });
 

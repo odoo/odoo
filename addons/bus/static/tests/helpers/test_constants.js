@@ -11,7 +11,3 @@ export const TEST_USER_IDS = {
     publicPartnerId: 4,
     publicUserId: 3,
 };
-Object.assign(TEST_USER_IDS, {
-    currentPartnerId: TEST_USER_IDS.adminPartnerId,
-    currentUserId: TEST_USER_IDS.adminUserId,
-});

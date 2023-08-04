@@ -6,7 +6,7 @@ import {
     insertModelFields,
     insertRecords,
 } from "@bus/../tests/helpers/model_definitions_helpers";
-import { TEST_GROUP_IDS, TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
+import { TEST_GROUP_IDS } from "@bus/../tests/helpers/test_constants";
 
 import { Command } from "@mail/../tests/helpers/command";
 
@@ -60,13 +60,13 @@ insertModelFields("mail.activity", {
 insertModelFields("discuss.channel", {
     author_id: {
         default() {
-            return this.currentPartnerId;
+            return this.pyEnv.currentPartnerId;
         },
     },
     avatarCacheKey: { string: "Avatar Cache Key", type: "datetime" },
     channel_member_ids: {
         default() {
-            return [Command.create({ partner_id: this.currentPartnerId })];
+            return [Command.create({ partner_id: this.pyEnv.currentPartnerId })];
         },
     },
     channel_type: { default: "channel" },
@@ -84,7 +84,11 @@ insertModelFields("discuss.channel.member", {
     message_unread_counter: { default: 0 },
 });
 insertModelFields("mail.message", {
-    author_id: { default: TEST_USER_IDS.currentPartnerId },
+    author_id: {
+        default() {
+            return this.pyEnv.currentPartnerId;
+        },
+    },
     history_partner_ids: {
         relation: "res.partner",
         string: "Partners with History",
