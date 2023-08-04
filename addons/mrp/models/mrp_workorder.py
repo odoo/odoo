@@ -914,7 +914,7 @@ class MrpWorkorder(models.Model):
             wo.button_pending()
 
     def _compute_expected_operation_cost(self):
-        return (self.duration_expected / 60.0) * self.workcenter_id.costs_hour
+        return (self.duration_expected / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
 
     def _compute_current_operation_cost(self):
-        return (self.get_duration() / 60.0) * self.workcenter_id.costs_hour
+        return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
