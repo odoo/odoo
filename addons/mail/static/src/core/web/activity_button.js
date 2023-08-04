@@ -73,6 +73,7 @@ export class ActivityButton extends Component {
                 activityIds: this.props.record.data.activity_ids.currentIds,
                 onActivityChanged: () => {
                     this.props.record.load();
+                    this.popover.close();
                 },
                 resId: this.props.record.resId,
                 resModel: this.props.record.resModel,
