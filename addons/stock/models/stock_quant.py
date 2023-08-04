@@ -709,11 +709,7 @@ class StockQuant(models.Model):
             key = lambda q: (q.location_id, -q.id)
         return key, reverse
 
-    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, qty=0):
-        """ if records in self, the records are filtered based on the wanted characteristics passed to this function
-            if not, a search is done with all the characteristics passed.
-        """
-        removal_strategy = self._get_removal_strategy(product_id, location_id)
+    def _get_gather_domain(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         domain = [('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
@@ -730,7 +726,14 @@ class StockQuant(models.Model):
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
         if self.env.context.get('with_expiration'):
             domain = expression.AND([[('expiration_date', '>=', self.env.context['with_expiration'])], domain])
+        return domain
 
+    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, qty=0):
+        """ if records in self, the records are filtered based on the wanted characteristics passed to this function
+            if not, a search is done with all the characteristics passed.
+        """
+        removal_strategy = self._get_removal_strategy(product_id, location_id)
+        domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
         domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
         if self:
             sort_key = self._get_removal_strategy_sort_key(removal_strategy)
