@@ -548,7 +548,7 @@ export class HtmlField extends Component {
         });
     }
     _onDblClickEditableMedia(ev) {
-        const el = ev.target;
+        const el = ev.currentTarget;
         if (el.nodeName === 'IMG' && el.src) {
             this.wysiwyg.showImageFullscreen(el.src);
         }
