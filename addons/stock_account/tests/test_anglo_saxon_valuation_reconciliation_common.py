@@ -46,6 +46,13 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
             'uom_po_id': uom_unit.id,
         })
 
+        cls.res_users_stock_user = cls.env['res.users'].create({
+            'name': "Inventory User",
+            'login': "su",
+            'email': "stockuser@yourcompany.com",
+            'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_user').id])],
+            })
+
     @classmethod
     def setup_company_data(cls, company_name, chart_template=None, **kwargs):
         company_data = super().setup_company_data(company_name, chart_template=chart_template, **kwargs)
