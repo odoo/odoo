@@ -546,7 +546,7 @@ export class HtmlField extends Component {
         this.props.record.data.attachment_ids.linkTo(attachment.res_id, attachment);
     }
     _onDblClickEditableMedia(ev) {
-        const el = ev.target;
+        const el = ev.currentTarget;
         if (el.nodeName === 'IMG' && el.src) {
             this.wysiwyg.showImageFullscreen(el.src);
         }
