@@ -69,7 +69,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         async _getAddProductOptions(product, code) {
             let price_extra = 0.0;
             let draftPackLotLines, weight, description, packLotLinesToEdit;
-
+            let productConfiguratorPayload;
             if (this.env.pos.config.product_configurator && _.some(product.attribute_line_ids, (id) => id in this.env.pos.attributes_by_ptal_id)) {
                 let attributes = _.map(product.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
                                   .filter((attr) => attr !== undefined);
@@ -77,7 +77,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     product: product,
                     attributes: attributes,
                 });
-
+                productConfiguratorPayload = payload;
                 if (confirmed) {
                     description = payload.selected_attributes.join(', ');
                     price_extra += payload.price_extra;
@@ -157,7 +157,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 weight = this.env.pos.db.product_packaging_by_barcode[code.code].qty;
             }
 
-            return { draftPackLotLines, quantity: weight, description, price_extra };
+            return { draftPackLotLines, quantity: weight, description, price_extra, productConfiguratorPayload };
         }
         async _clickProduct(event) {
             if (!this.currentOrder) {
