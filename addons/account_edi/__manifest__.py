@@ -21,6 +21,5 @@ governements, etc.)
         'data/cron.xml'
     ],
     'installable': True,
-    'auto_install': True,
     'license': 'LGPL-3',
 }
