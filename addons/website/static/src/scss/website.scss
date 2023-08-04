@@ -86,12 +86,20 @@ $-seen-urls: ();
     @include print-variable('h4-line-height', $h4-line-height);
     @include print-variable('h5-line-height', $h5-line-height);
     @include print-variable('h6-line-height', $h6-line-height);
+    @include print-variable('display-1-line-height', $display-1-line-height);
+    @include print-variable('display-2-line-height', $display-2-line-height);
+    @include print-variable('display-3-line-height', $display-3-line-height);
+    @include print-variable('display-4-line-height', $display-4-line-height);
     @include print-variable('h1-font-size', $h1-font-size);
     @include print-variable('h2-font-size', $h2-font-size);
     @include print-variable('h3-font-size', $h3-font-size);
     @include print-variable('h4-font-size', $h4-font-size);
     @include print-variable('h5-font-size', $h5-font-size);
     @include print-variable('h6-font-size', $h6-font-size);
+    @include print-variable('display-1-font-size', map-get($display-font-sizes, 1));
+    @include print-variable('display-2-font-size', map-get($display-font-sizes, 2));
+    @include print-variable('display-3-font-size', map-get($display-font-sizes, 3));
+    @include print-variable('display-4-font-size', map-get($display-font-sizes, 4));
     // We cannot rely on $o-theme-hx-font because they contain the list of
     // fallback fonts (unicode...).
     $-headings-or-main-font: o-website-value('headings-font') or o-website-value('font');
@@ -100,12 +108,20 @@ $-seen-urls: ();
     @include print-variable('h4-font', o-website-value('h4-font') or $-headings-or-main-font);
     @include print-variable('h5-font', o-website-value('h5-font') or $-headings-or-main-font);
     @include print-variable('h6-font', o-website-value('h6-font') or $-headings-or-main-font);
+    @include print-variable('display-1-font', o-website-value('display-1-font') or $-headings-or-main-font);
+    @include print-variable('display-2-font', o-website-value('display-2-font') or $-headings-or-main-font);
+    @include print-variable('display-3-font', o-website-value('display-3-font') or $-headings-or-main-font);
+    @include print-variable('display-4-font', o-website-value('display-4-font') or $-headings-or-main-font);
     @include print-variable('set-headings-font', o-get-font-info('headings'));
     @include print-variable('set-h2-font', o-get-font-info('h2'));
     @include print-variable('set-h3-font', o-get-font-info('h3'));
     @include print-variable('set-h4-font', o-get-font-info('h4'));
     @include print-variable('set-h5-font', o-get-font-info('h5'));
     @include print-variable('set-h6-font', o-get-font-info('h6'));
+    @include print-variable('set-display-1-font', o-get-font-info('display-1'));
+    @include print-variable('set-display-2-font', o-get-font-info('display-2'));
+    @include print-variable('set-display-3-font', o-get-font-info('display-3'));
+    @include print-variable('set-display-4-font', o-get-font-info('display-4'));
     @include print-variable('headings-line-height', $headings-line-height);
     @include print-variable('headings-margin-top', $headings-margin-top);
     @include print-variable('headings-margin-bottom', $headings-margin-bottom);
@@ -114,11 +130,19 @@ $-seen-urls: ();
     @include print-variable('h4-margin-top', $h4-margin-top);
     @include print-variable('h5-margin-top', $h5-margin-top);
     @include print-variable('h6-margin-top', $h6-margin-top);
+    @include print-variable('display-1-margin-top', $display-1-margin-top);
+    @include print-variable('display-2-margin-top', $display-2-margin-top);
+    @include print-variable('display-3-margin-top', $display-3-margin-top);
+    @include print-variable('display-4-margin-top', $display-4-margin-top);
     @include print-variable('h2-margin-bottom', $h2-margin-bottom);
     @include print-variable('h3-margin-bottom', $h3-margin-bottom);
     @include print-variable('h4-margin-bottom', $h4-margin-bottom);
     @include print-variable('h5-margin-bottom', $h5-margin-bottom);
     @include print-variable('h6-margin-bottom', $h6-margin-bottom);
+    @include print-variable('display-1-margin-bottom', $display-1-margin-bottom);
+    @include print-variable('display-2-margin-bottom', $display-2-margin-bottom);
+    @include print-variable('display-3-margin-bottom', $display-3-margin-bottom);
+    @include print-variable('display-4-margin-bottom', $display-4-margin-bottom);
 
     @include print-variable('btn-padding-y', $btn-padding-y);
     @include print-variable('btn-padding-x', $btn-padding-x);
@@ -380,6 +404,10 @@ $heading-font-families: map-merge((
     "h4": $h4-font-family,
     "h5": $h5-font-family,
     "h6": $h6-font-family,
+    "display-1": $display-1-font-family,
+    "display-2": $display-2-font-family,
+    "display-3": $display-3-font-family,
+    "display-4": $display-4-font-family,
 ), $heading-font-families);
 $heading-line-heights: () !default;
 $heading-line-heights: map-merge((
@@ -388,6 +416,10 @@ $heading-line-heights: map-merge((
     "h4": $h4-line-height,
     "h5": $h5-line-height,
     "h6": $h6-line-height,
+    "display-1": $display-1-line-height,
+    "display-2": $display-2-line-height,
+    "display-3": $display-3-line-height,
+    "display-4": $display-4-line-height,
 ), $heading-line-heights);
 $heading-margin-tops: () !default;
 $heading-margin-tops: map-merge((
@@ -396,6 +428,10 @@ $heading-margin-tops: map-merge((
     "h4": $h4-margin-top,
     "h5": $h5-margin-top,
     "h6": $h6-margin-top,
+    "display-1": $display-1-margin-top,
+    "display-2": $display-2-margin-top,
+    "display-3": $display-3-margin-top,
+    "display-4": $display-4-margin-top,
 ), $heading-margin-tops);
 $heading-margin-bottoms: () !default;
 $heading-margin-bottoms: map-merge((
@@ -404,6 +440,10 @@ $heading-margin-bottoms: map-merge((
     "h4": $h4-margin-bottom,
     "h5": $h5-margin-bottom,
     "h6": $h6-margin-bottom,
+    "display-1": $display-1-margin-bottom,
+    "display-2": $display-2-margin-bottom,
+    "display-3": $display-3-margin-bottom,
+    "display-4": $display-4-margin-bottom,
 ), $heading-margin-bottoms);
 
 h1, h2, h3, h4, h5, h6 {
@@ -411,20 +451,21 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: $headings-margin-top;
     margin-bottom: $headings-margin-bottom;
 }
-@for $index from 2 through 6 {
-    h#{$index} {
-        $hn: 'h#{$index}';
-        @if ($headings-font-family != map-get($heading-font-families, $hn)) {
-            font-family: map-get($heading-font-families, $hn);
+@each $selector, $map-key in
+("h2" "h2", "h3" "h3", "h4" "h4", "h5" "h5", "h6" "h6", ".display-1" "display-1",
+".display-2" "display-2", ".display-3" "display-3", ".display-4" "display-4") {
+    #{$selector} {
+        @if ($headings-font-family != map-get($heading-font-families, $map-key)) {
+            font-family: map-get($heading-font-families, $map-key);
         }
-        @if ($headings-line-height != map-get($heading-line-heights, $hn)) {
-            line-height: map-get($heading-line-heights, $hn);
+        @if ($headings-line-height != map-get($heading-line-heights, $map-key)) {
+            line-height: map-get($heading-line-heights, $map-key);
         }
-        @if ($headings-margin-top != map-get($heading-margin-tops, $hn)) {
-            margin-top: map-get($heading-margin-tops, $hn);
+        @if ($headings-margin-top != map-get($heading-margin-tops, $map-key)) {
+            margin-top: map-get($heading-margin-tops, $map-key);
         }
-        @if ($headings-margin-bottom != map-get($heading-margin-bottoms, $hn)) {
-            margin-bottom: map-get($heading-margin-bottoms, $hn);
+        @if ($headings-margin-bottom != map-get($heading-margin-bottoms, $map-key)) {
+            margin-bottom: map-get($heading-margin-bottoms, $map-key);
         }
     }
 }

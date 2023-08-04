@@ -113,6 +113,23 @@ $h4-font-size: o-website-value('h4-font-size') or $font-size-base * $o-theme-h4-
 $h5-font-size: o-website-value('h5-font-size') or $font-size-base * $o-theme-h5-font-size-multiplier !default;
 $h6-font-size: o-website-value('h6-font-size') or $font-size-base * $o-theme-h6-font-size-multiplier !default;
 
+$display-font-sizes: (
+    // If the theme does not configure, default to Bootstrap values. It has to
+    // be duplicated here as Bootstrap does not merge the default map with the
+    // overridden ones anymore.
+    1: o-website-value('display-1-font-size') or 5rem,
+    2: o-website-value('display-2-font-size') or 4.5rem,
+    3: o-website-value('display-3-font-size') or 4rem,
+    4: o-website-value('display-4-font-size') or 3.5rem,
+
+    // Unused in Odoo templates and not configurable through the editor but we
+    // still want default Bootstrap classes to work for now. Also using
+    // o-website-value for those still allows to configure them through custom
+    // code more easily if needed.
+    5: o-website-value('display-5-font-size') or 3rem,
+    6: o-website-value('display-6-font-size') or 2.5rem
+) !default;
+
 // H2~H6 font families are custom variables.
 $headings-font-family: $o-theme-headings-font !default;
 $h2-font-family: $o-theme-h2-font !default;
@@ -120,6 +137,10 @@ $h3-font-family: $o-theme-h3-font !default;
 $h4-font-family: $o-theme-h4-font !default;
 $h5-font-family: $o-theme-h5-font !default;
 $h6-font-family: $o-theme-h6-font !default;
+$display-1-font-family: $o-theme-display-1-font !default;
+$display-2-font-family: $o-theme-display-2-font !default;
+$display-3-font-family: $o-theme-display-3-font !default;
+$display-4-font-family: $o-theme-display-4-font !default;
 // H2~H6 line heights are custom variables.
 $headings-line-height: o-website-value('headings-line-height') !default;
 $h2-line-height: o-website-value('h2-line-height') or $headings-line-height !default;
@@ -127,6 +148,10 @@ $h3-line-height: o-website-value('h3-line-height') or $headings-line-height !def
 $h4-line-height: o-website-value('h4-line-height') or $headings-line-height !default;
 $h5-line-height: o-website-value('h5-line-height') or $headings-line-height !default;
 $h6-line-height: o-website-value('h6-line-height') or $headings-line-height !default;
+$display-1-line-height: o-website-value('display-1-line-height') or $headings-line-height !default;
+$display-2-line-height: o-website-value('display-2-line-height') or $headings-line-height !default;
+$display-3-line-height: o-website-value('display-3-line-height') or $headings-line-height !default;
+$display-4-line-height: o-website-value('display-4-line-height') or $headings-line-height !default;
 // H1~H6 top margins are custom variables.
 $headings-margin-top: o-website-value('headings-margin-top') or 0 !default;
 $h2-margin-top: o-website-value('h2-margin-top') or $headings-margin-top !default;
@@ -134,6 +159,10 @@ $h3-margin-top: o-website-value('h3-margin-top') or $headings-margin-top !defaul
 $h4-margin-top: o-website-value('h4-margin-top') or $headings-margin-top !default;
 $h5-margin-top: o-website-value('h5-margin-top') or $headings-margin-top !default;
 $h6-margin-top: o-website-value('h6-margin-top') or $headings-margin-top !default;
+$display-1-margin-top: o-website-value('display-1-margin-top') or $headings-margin-top !default;
+$display-2-margin-top: o-website-value('display-2-margin-top') or $headings-margin-top !default;
+$display-3-margin-top: o-website-value('display-3-margin-top') or $headings-margin-top !default;
+$display-4-margin-top: o-website-value('display-4-margin-top') or $headings-margin-top !default;
 // H2~H6 bottom margins are custom variables.
 $headings-margin-bottom: o-website-value('headings-margin-bottom') !default;
 $h2-margin-bottom: o-website-value('h2-margin-bottom') or $headings-margin-bottom !default;
@@ -141,6 +170,10 @@ $h3-margin-bottom: o-website-value('h3-margin-bottom') or $headings-margin-botto
 $h4-margin-bottom: o-website-value('h4-margin-bottom') or $headings-margin-bottom !default;
 $h5-margin-bottom: o-website-value('h5-margin-bottom') or $headings-margin-bottom !default;
 $h6-margin-bottom: o-website-value('h6-margin-bottom') or $headings-margin-bottom !default;
+$display-1-margin-bottom: o-website-value('display-1-margin-bottom') or $headings-margin-bottom !default;
+$display-2-margin-bottom: o-website-value('display-2-margin-bottom') or $headings-margin-bottom !default;
+$display-3-margin-bottom: o-website-value('display-3-margin-bottom') or $headings-margin-bottom !default;
+$display-4-margin-bottom: o-website-value('display-4-margin-bottom') or $headings-margin-bottom !default;
 
 $headings-color: o-color('o-cc1-headings') !default;
 
