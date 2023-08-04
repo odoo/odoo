@@ -486,12 +486,12 @@ export class Wysiwyg extends Component {
         this.$editable.on('click', '.o_image, .media_iframe_video', e => e.preventDefault());
         this.showTooltip = true;
         this.$editable.on('dblclick', mediaSelector, ev => {
-            const target = ev.target;
-            if (target.isContentEditable || (target.parentElement && target.parentElement.isContentEditable)) {
+            const targetEl = ev.currentTarget;
+            if (targetEl.isContentEditable || (targetEl.parentElement && targetEl.parentElement.isContentEditable)) {
                 this.showTooltip = false;
 
                 if (!isProtected(this.odooEditor.document.getSelection().anchorNode)) {
-                    if (this.options.onDblClickEditableMedia && target.nodeName === 'IMG' && target.src) {
+                    if (this.options.onDblClickEditableMedia && targetEl.nodeName === 'IMG' && targetEl.src) {
                         this.options.onDblClickEditableMedia(ev);
                     } else {
                         this._onDblClickEditableMedia(ev);
@@ -2692,7 +2692,7 @@ export class Wysiwyg extends Component {
         }
     }
     _onDblClickEditableMedia(ev) {
-        const $el = $(ev.target);
+        const $el = $(ev.currentTarget);
         $el.selectElement();
         if (!$el.parent().hasClass('o_stars')) {
             // Waiting for all the options to be initialized before
@@ -2700,7 +2700,7 @@ export class Wysiwyg extends Component {
             // been deleted in the meantime.
             this.waitForEmptyMutexAction().then(() => {
                 if ($el[0].parentElement) {
-                    this.openMediaDialog({ node: ev.target });
+                    this.openMediaDialog({ node: $el[0] });
                 }
             });
         }
