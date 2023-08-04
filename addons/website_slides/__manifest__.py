@@ -207,7 +207,6 @@ Featuring
             'web/static/src/legacy/js/core/abstract_service.js',
             'web/static/src/legacy/js/core/abstract_storage_service.js',
             'web/static/src/legacy/js/core/ajax.js',
-            'web/static/src/legacy/js/core/browser_detection.js',
             'web/static/src/legacy/js/core/bus.js',
             'web/static/src/legacy/js/core/class.js',
             'web/static/src/legacy/js/core/concurrency.js',
