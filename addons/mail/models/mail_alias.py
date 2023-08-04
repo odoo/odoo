@@ -257,12 +257,26 @@ class Alias(models.Model):
         sanitized_name = name.strip() if name else ''
         if sanitized_name:
             sanitized_name = remove_accents(sanitized_name).lower().split('@')[0]
-            sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
+            # cannot start and end with dot
             sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
+            # subset of allowed characters
+            sanitized_name = re.sub(r'[^\w!#$%&\'*+\-/=?^_`{|}~.]+', '-', sanitized_name)
             sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
         if not sanitized_name.strip():
             return False
         return sanitized_name
+
+    @api.model
+    def _is_encodable(self, alias_name, charset='ascii'):
+        """ Check if alias_name is encodable. Standard charset is ascii, as
+        UTF-8 requires a specific extension. Not recommended for outgoing
+        aliases. 'remove_accents' is performed as sanitization process of
+        the name will do it anyway. """
+        try:
+            remove_accents(alias_name).encode(charset)
+        except UnicodeEncodeError:
+            return False
+        return True
 
     # ------------------------------------------------------------
     # ACTIONS

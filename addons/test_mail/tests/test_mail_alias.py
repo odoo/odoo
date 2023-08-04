@@ -60,7 +60,7 @@ class TestMailAlias(TestMailAliasCommon):
                 ('ぁ', 'ぁぁ'),
             ],
             [
-                ('bounce+b4r-r3wl_-_-', 'catchall+b4r-r3wl_-_-'),
+                ('bounce+b4r=*r3wl_#_-$-{}-~|-/!?&%^\'-`~', 'catchall+b4r=*r3wl_#_-$-{}-~|-/!?&%^\'-`~'),
                 ('bounce+-', 'catchall+-'),
                 ('bouncaide-', 'catchoiee-'),
                 ('?', '??'),
@@ -141,7 +141,7 @@ class TestMailAlias(TestMailAliasCommon):
         self.assertFalse(copy_1.alias_name)
         # test sanitize of copy with new name
         copy_2 = new_mail_alias.copy({'alias_name': 'test.alias.2.éè#'})
-        self.assertEqual(copy_2.alias_name, 'test.alias.2.ee-')
+        self.assertEqual(copy_2.alias_name, 'test.alias.2.ee#')
 
         # cannot batch update, would create duplicates
         with self.assertRaises(exceptions.UserError):
@@ -167,7 +167,7 @@ class TestMailAlias(TestMailAliasCommon):
         ]
         expected_names = [
             'bidule.inc',
-            'b4r+-r3wl_-_-',
+            'b4r+=*r3wl_#_-$-{}-~|-/!?&%^\'-`~',
             'helene.provaider',
             '-',
             'deboulonneur-',
