@@ -239,13 +239,19 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
 };
 
 HTMLLIElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
-    if (offset > 0 || this.previousElementSibling) {
+    if (offset === 0 && !this.classList.contains('oe-nested')) {
+        this.classList.add('oe-nested');
+    } else if (offset > 0 || this.previousElementSibling) {
         // If backspace inside li content or if the li is not the first one,
         // it behaves just like in a normal element.
         HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
-        return;
+    } else {
+        this.classList.remove('oe-nested');
+        if (!this.classList.length) {
+            this.removeAttribute('class');
+        }
+        this.oShiftTab(offset);
     }
-    this.oShiftTab(offset);
 };
 
 HTMLBRElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {

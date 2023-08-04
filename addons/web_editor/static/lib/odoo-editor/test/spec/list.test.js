@@ -503,7 +503,7 @@ describe('List', () => {
                         });
                     });
                     it('should turn a heading into a checklist', async () => {
-                            await testEditor(BasicEditor, {
+                        await testEditor(BasicEditor, {
                             removeCheckIds: true,
                             contentBefore: '<h1>ab[]cd</h1>',
                             stepFunction: toggleCheckList,
@@ -1215,7 +1215,7 @@ describe('List', () => {
                 });
                 it("should turn unordered list into ordered list with block style applied to it", async () => {
                     await testEditor(BasicEditor, {
-                    contentBefore: unformat(`
+                        contentBefore: unformat(`
                                         <ul>
                                             <li><h1>abc</h1></li>
                                             <li class="oe-nested">
@@ -1248,8 +1248,8 @@ describe('List', () => {
                                             <li><h1>abc</h1></li>
                                         </ul>
                                     `),
-                    stepFunction: toggleOrderedList,
-                    contentAfter: unformat(`
+                        stepFunction: toggleOrderedList,
+                        contentAfter: unformat(`
                                         <ol>
                                             <li><h1>abc</h1></li>
                                             <li class="oe-nested">
@@ -1283,9 +1283,9 @@ describe('List', () => {
                                         </ol>`),
                     });
                 });
-          it("should turn unordered list into ordered list with block and inline style applied to it", async () => {
-            await testEditor(BasicEditor, {
-              contentBefore: unformat(`
+                it("should turn unordered list into ordered list with block and inline style applied to it", async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
                                 <ul>
                                     <li><h1><strong>abc</strong></h1></li>
                                     <li class="oe-nested">
@@ -1318,8 +1318,8 @@ describe('List', () => {
                                     <li><h1><strong>abc</strong></h1></li>
                                 </ul>
                               `),
-              stepFunction: toggleOrderedList,
-              contentAfter: unformat(`
+                        stepFunction: toggleOrderedList,
+                        contentAfter: unformat(`
                                 <ol>
                                     <li><h1><strong>abc</strong></h1></li>
                                     <li class="oe-nested">
@@ -1351,8 +1351,8 @@ describe('List', () => {
                                     </li>
                                     <li><h1><strong>abc</strong></h1></li>
                                 </ol>`),
-            });
-          });
+                    });
+                });
                 it('should turn an unordered list item and a paragraph into two list items within an ordered list', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<ul><li>ab</li><li>c[d</li></ul><p>e]f</p>',
@@ -2077,20 +2077,29 @@ describe('List', () => {
                     it('should merge a list item with its next list item', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore: '<ul><li>abc[]</li><li>def</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             contentAfter: '<ul><li>abc[]def</li></ul>',
                         });
                         // With another list item before.
                         await testEditor(BasicEditor, {
                             contentBefore: '<ul><li>abc</li><li>def[]</li><li>ghi</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             contentAfter: '<ul><li>abc</li><li>def[]ghi</li></ul>',
                         });
                         // Where the list item to merge into is empty, with an
                         // empty list item before.
                         await testEditor(BasicEditor, {
                             contentBefore: '<ul><li><br></li><li>[]<br></li><li>abc</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             contentAfter: '<ul><li><br></li><li>[]abc</li></ul>',
                         });
                     });
@@ -2276,7 +2285,10 @@ describe('List', () => {
                             removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc[]</li><li>def</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             contentAfter:
                                 '<ul class="o_checklist"><li class="o_checked">abc[]def</li></ul>',
                         });
@@ -2285,7 +2297,10 @@ describe('List', () => {
                             removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li>def[]</li><li class="o_checked">ghi</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             contentAfter:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li>def[]ghi</li></ul>',
                         });
@@ -2295,7 +2310,10 @@ describe('List', () => {
                             removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li><br></li><li>[]<br></li><li>abc</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             contentAfter:
                                 '<ul class="o_checklist"><li><br></li><li>[]abc</li></ul>',
                         });
@@ -2443,7 +2461,9 @@ describe('List', () => {
                         await testEditor(BasicEditor, {
                             contentBefore:
                                 '<ol><li>abc[]</li><li class="oe-nested"><ol><li>def</li><li>ghi</li></ol></li></ol>',
-                            stepFunction: async editor => {
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
                                 await deleteForward(editor);
                                 await deleteForward(editor);
                             },
@@ -2455,7 +2475,10 @@ describe('List', () => {
                         await testEditor(BasicEditor, {
                             contentBefore:
                                 '<ul><li class="oe-nested"><ul><li>abc[]</li></ul></li><li>def</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             contentAfter:
                                 '<ul><li class="oe-nested"><ul><li>abc[]def</li></ul></li></ul>',
                         });
@@ -2464,7 +2487,9 @@ describe('List', () => {
                         await testEditor(BasicEditor, {
                             contentBefore:
                                 '<ul><li>abc[]</li><li class="oe-nested"><ul><li>def</li></ul></li></ul>',
-                            stepFunction: async editor => {
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
                                 await deleteForward(editor);
                                 await deleteForward(editor);
                             },
@@ -2476,7 +2501,9 @@ describe('List', () => {
                             removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>abc[]</li><li class="oe-nested"><ul class="o_checklist"><li>def</li><li class="o_checked">ghi</li></ul></li></ul>',
-                            stepFunction: async editor => {
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
                                 await deleteForward(editor);
                                 await deleteForward(editor);
                             },
@@ -2489,7 +2516,9 @@ describe('List', () => {
                             removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>abc[]</li><li class="oe-nested"><ul class="o_checklist"><li>def</li></ul></li></ul>',
-                            stepFunction: async editor => {
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
                                 await deleteForward(editor);
                                 await deleteForward(editor);
                             },
@@ -2502,7 +2531,8 @@ describe('List', () => {
                         // Note: Not perfect but consistent with backspace, to change this, we should change backspace
                         await testEditor(BasicEditor, {
                             contentBefore: '<p>ab[]cd</p><ul><li>ef</li><li>gh</li></ul>',
-                            stepFunction: async editor => {
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
                                 await deleteForward(editor);
                                 await deleteForward(editor);
                                 await deleteForward(editor);
@@ -2522,7 +2552,10 @@ describe('List', () => {
                         await testEditor(BasicEditor, {
                             contentBefore:
                                 '<ul><li>abc</li><li><b>de</b>fg[]</li><li><b>hij</b>klm</li><li>nop</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             contentAfter:
                                 '<ul><li>abc</li><li><b>de</b>fg[]<b>hij</b>klm</li><li>nop</li></ul>',
                         });
@@ -2547,7 +2580,8 @@ describe('List', () => {
                             removeCheckIds: true,
                             contentBefore:
                                 '<p>ab[]cd</p><ul class="o_checklist"><li class="o_checked">ef</li><li class="o_checked">gh</li></ul>',
-                            stepFunction: async editor => {
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
                                 await deleteForward(editor);
                                 await deleteForward(editor);
                                 await deleteForward(editor);
@@ -2594,7 +2628,10 @@ describe('List', () => {
                             removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>abc</li><li><b>de</b>fg[]</li><li><b>hij</b>klm</li><li>nop</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             // all checked
                             contentAfter:
                                 '<ul class="o_checklist"><li>abc</li><li><b>de</b>fg[]<b>hij</b>klm</li><li>nop</li></ul>',
@@ -2605,7 +2642,10 @@ describe('List', () => {
                             removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg[]</li><li class="o_checked"><b>hij</b>klm</li><li class="o_checked">nop</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             // all checked
                             contentAfter:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg[]<b>hij</b>klm</li><li class="o_checked">nop</li></ul>',
@@ -2614,7 +2654,10 @@ describe('List', () => {
                             removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg[]</li><li><b>hij</b>klm</li><li class="o_checked">nop</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             // only the removed li are unchecked
                             contentAfter:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg[]<b>hij</b>klm</li><li class="o_checked">nop</li></ul>',
@@ -2623,7 +2666,10 @@ describe('List', () => {
                             removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>abc</li><li><b>de</b>fg[]</li><li class="o_checked"><b>hij</b>klm</li><li>nop</li></ul>',
-                            stepFunction: deleteForward,
+                            stepFunction: async (editor) => {
+                                await deleteForward(editor);
+                                await deleteForward(editor);
+                            },
                             // only the removed li are checked
                             contentAfter:
                                 '<ul class="o_checklist"><li>abc</li><li><b>de</b>fg[]<b>hij</b>klm</li><li>nop</li></ul>',
@@ -3466,13 +3512,19 @@ describe('List', () => {
                         it('should convert to paragraph', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li><br>[]</li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>[]<br></p>',
                             });
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ol><li>[]abc</li></ol></li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ol><li>[]abc</li></ol>',
                             });
                         });
@@ -3513,20 +3565,29 @@ describe('List', () => {
                         it('should merge a list item with its previous list item', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li>abc</li><li>[]def</li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ol><li>abc[]def</li></ol>',
                             });
                             // With another list item after.
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li>abc</li><li>[]def</li><li>ghi</li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ol><li>abc[]def</li><li>ghi</li></ol>',
                             });
                             // Where the list item to merge into is empty, with an
                             // empty list item before.
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li><br></li><li><br></li><li>[]abc</li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ol><li><br></li><li>[]abc</li></ol>',
                             });
                         });
@@ -3664,7 +3725,9 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li>abc</li><li class="oe-nested"><ol><li>[]def</li><li>ghi</li></ol></li></ol>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -3676,7 +3739,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ol><li>abc</li></ol></li><li>[]def</li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ol><li class="oe-nested"><ol><li>abc[]def</li></ol></li></ol>',
                             });
@@ -3685,7 +3751,9 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li>abc</li><li class="oe-nested"><ol><li>[]def</li></ol></li></ol>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -3696,14 +3764,20 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ol><li>[]abc</li></ol></li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ol><li>[]abc</li></ol>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<p>abc</p><ol><li class="oe-nested"><ol><li>[]def</li></ol></li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>abc</p><ol><li>[]def</li></ol>',
                             });
                         });
@@ -3734,8 +3808,10 @@ describe('List', () => {
                             // Only one LI.
                             await testEditor(BasicEditor, {
                                 contentBefore: '<p>abc</p><ol t="1"><li>[]def</li></ol>',
-                                stepFunction: deleteBackward,
-                                contentAfter: '<p>abc</p><ol t="1"><li>[]def</li></ol>',
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                },
+                                contentAfter: '<p>abc</p><ol t="1"><li class="oe-nested">[]def</li></ol>',
                             });
                             // First LI.
                             // await testEditor(BasicEditor, {
@@ -3774,7 +3850,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li>abc</li><li class="oe-nested"><ol><li>[]<br></li><li><br></li></ol></li><li>def</li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ol><li>abc</li><li>[]<br></li><li class="oe-nested"><ol><li><br></li></ol></li><li>def</li></ol>',
                             });
@@ -3783,7 +3862,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li>abc</li><li class="oe-nested"><ol><li>[]<br></li></ol></li><li>def</li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ol><li>abc</li><li>[]<br></li><li>def</li></ol>',
                             });
                         });
@@ -3791,20 +3873,29 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ol><li><br>[]</li></ol></li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ol><li>[]<br></li></ol>',
                             });
                         });
                         it("should outdent a list to the point that it's a paragraph", async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li>[]<br></li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>[]<br></p>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore: '<p><br></p><ol><li>[]<br></li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p><br></p><p>[]<br></p>',
                             });
                         });
@@ -3813,7 +3904,8 @@ describe('List', () => {
                         it('should merge a list item into a paragraph', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<p>abcd</p><ol><li>ef[]gh</li><li>ij</li></ol>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
@@ -3853,13 +3945,19 @@ describe('List', () => {
                         it('should do nothing', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li><br>[]</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>[]<br></p>',
                             });
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul><li>[]abc</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>[]abc</li></ul>',
                             });
                         });
@@ -3900,20 +3998,29 @@ describe('List', () => {
                         it('should merge a list item with its previous list item', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li>abc</li><li>[]def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>abc[]def</li></ul>',
                             });
                             // With another list item after.
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li>abc</li><li>[]def</li><li>ghi</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>abc[]def</li><li>ghi</li></ul>',
                             });
                             // Where the list item to merge into is empty, with an
                             // empty list item before.
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li><br></li><li><br></li><li>[]abc</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li><br></li><li>[]abc</li></ul>',
                             });
                         });
@@ -4059,7 +4166,9 @@ describe('List', () => {
                                             </ul>
                                         </li>
                                     </ul>`),
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4078,7 +4187,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul><li>abc</li></ul></li><li>[]def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul><li class="oe-nested"><ul><li>abc[]def</li></ul></li></ul>',
                             });
@@ -4087,7 +4199,9 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul><li>[]def</li></ul></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4098,14 +4212,20 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul><li>[]abc</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>[]abc</li></ul>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<p>abc</p><ul><li class="oe-nested"><ul><li>[]def</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>abc</p><ul><li>[]def</li></ul>',
                             });
                         });
@@ -4113,7 +4233,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul><li>abc</li><li>[]<br></li><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ul>',
                             });
@@ -4122,7 +4245,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li>def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>abc</li><li>[]<br></li><li>def</li></ul>',
                             });
                         });
@@ -4130,20 +4256,29 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul><li><br>[]</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>[]<br></li></ul>',
                             });
                         });
                         it("should outdent a list to the point that it's a paragraph", async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li>[]<br></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>[]<br></p>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore: '<p><br></p><ul><li>[]<br></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p><br></p><p>[]<br></p>',
                             });
                         });
@@ -4152,7 +4287,8 @@ describe('List', () => {
                         it('should merge a list item into a paragraph', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<p>abcd</p><ul><li>ef[]gh</li><li>ij</li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
@@ -4172,7 +4308,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li><b>de</b>fg</li><li><b>[]hij</b>klm</li><li>nop</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul><li>abc</li><li><b>de</b>fg[]<b>hij</b>klm</li><li>nop</li></ul>',
                             });
@@ -4201,20 +4340,29 @@ describe('List', () => {
                         it('should remove the list and turn into p', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul class="o_checklist"><li><br>[]</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>[]<br></p>',
                             });
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><br>[]</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>[]<br></p>',
                             });
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">[]abc</li></ul>',
                             });
@@ -4274,7 +4422,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">[]def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">abc[]def</li></ul>',
                             });
@@ -4282,7 +4433,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">abc[]def</li></ul>',
                             });
@@ -4290,7 +4444,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>abc</li><li class="o_checked">[]def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul class="o_checklist"><li>abc[]def</li></ul>',
                             });
                             // With another list item after.
@@ -4298,7 +4455,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">[]def</li><li class="o_checked">ghi</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">abc[]def</li><li class="o_checked">ghi</li></ul>',
                             });
@@ -4306,7 +4466,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li><li>ghi</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">abc[]def</li><li>ghi</li></ul>',
                             });
@@ -4314,7 +4477,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li><li class="o_checked">ghi</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">abc[]def</li><li class="o_checked">ghi</li></ul>',
                             });
@@ -4324,7 +4490,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li><br></li><li><br></li><li class="o_checked">[]abc</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li><br></li><li>[]abc</li></ul>',
                             });
@@ -4545,7 +4714,9 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li><li class="o_checked">ghi</li></ul></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4558,7 +4729,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li><li class="o_checked">[]def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc[]def</li></ul></li></ul>',
                             });
@@ -4568,7 +4742,9 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li></ul></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4581,7 +4757,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">[]abc</li></ul>',
                             });
@@ -4590,7 +4769,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<p>abc</p><ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<p>abc</p><ul class="o_checklist"><li class="o_checked">[]def</li></ul>',
                             });
@@ -4599,7 +4781,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul><li><h1>[]def</h1></li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul><li>abc</li><li><h1>[]def</h1></li></ul>',
                             });
@@ -4643,7 +4828,10 @@ describe('List', () => {
                                         </li>
                                         <li class="o_checked">def</li>
                                     </ul>`),
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: unformat(`
                                     <ul class="o_checklist">
                                         <li>abc</li>
@@ -4662,7 +4850,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li></ul></li><li class="o_checked">def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li>abc</li><li>[]<br></li><li class="o_checked">def</li></ul>',
                             });
@@ -4672,7 +4863,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked"><br>[]</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">[]<br></li></ul>',
                             });
@@ -4681,7 +4875,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
                                 contentBefore: '<ul class="o_checklist"><li>[]<br></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>[]<br></p>',
                             });
                             // With a paragraph before the list:
@@ -4689,7 +4886,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<p><br></p><ul class="o_checklist"><li>[]<br></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p><br></p><p>[]<br></p>',
                             });
                         });
@@ -4700,7 +4900,8 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<p>abcd</p><ul class="o_checklist"><li class="o_checked">ef[]gh</li><li class="o_checked">ij</li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
@@ -4713,7 +4914,8 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<p>abcd</p><ul class="o_checklist"><li>ef[]gh</li><li class="o_checked">ij</li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
@@ -4727,7 +4929,8 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<p>abcd</p><ul class="o_checklist"><li class="o_checked">ef[]gh</li><li>ij</li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
@@ -4753,7 +4956,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg</li><li class="o_checked"><b>[]hij</b>klm</li><li class="o_checked">nop</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg[]<b>hij</b>klm</li><li class="o_checked">nop</li></ul>',
                             });
@@ -4785,7 +4991,8 @@ describe('List', () => {
                         it('should merge an ordered list into an unordered list', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li>a</li></ul><ol><li>[]b</li></ol>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4793,7 +5000,8 @@ describe('List', () => {
                             });
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li>a</li></ul><ol><li><p>[]b</p></li></ol>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4801,7 +5009,8 @@ describe('List', () => {
                             });
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li><p>a</p></li></ul><ol><li>[]b</li></ol>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4810,7 +5019,8 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li><p>a</p></li></ul><ol><li><p>[]b</p></li></ol>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4821,7 +5031,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ol><li>[]def</li><li>ghi</li></ol></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul><li>abc</li><li>[]def</li><li class="oe-nested"><ol><li>ghi</li></ol></li></ul>',
                             });
@@ -4830,7 +5043,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ul><li>abc</li></ul></li><li>[]def</li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ol><li class="oe-nested"><ul><li>abc[]def</li></ul></li></ol>',
                             });
@@ -4839,7 +5055,9 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ol><li>[]def</li></ol></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4850,14 +5068,20 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ol><li>[]abc</li></ol></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>[]abc</li></ul>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<p>abc</p><ul><li class="oe-nested"><ol><li>[]def</li></ol></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>abc</p><ul><li>[]def</li></ul>',
                             });
                         });
@@ -4865,7 +5089,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ol><li>[]<br></li><li><br></li></ol></li><li>def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul><li>abc</li><li>[]<br></li><li class="oe-nested"><ol><li><br></li></ol></li><li>def</li></ul>',
                             });
@@ -4874,7 +5101,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ol><li>[]<br></li></ol></li><li>def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>abc</li><li>[]<br></li><li>def</li></ul>',
                             });
                         });
@@ -4882,7 +5112,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ol><li><br>[]</li></ol></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>[]<br></li></ul>',
                             });
                         });
@@ -4891,7 +5124,8 @@ describe('List', () => {
                         it('should merge an unordered list into an ordered list', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li>a</li></ol><ul><li>[]b</li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4899,7 +5133,8 @@ describe('List', () => {
                             });
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li>a</li></ol><ul><li><p>[]b</p></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4907,7 +5142,8 @@ describe('List', () => {
                             });
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li><p>a</p></li></ol><ul><li>[]b</li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4916,7 +5152,8 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li><p>a</p></li></ol><ul><li><p>[]b</p></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4935,7 +5172,10 @@ describe('List', () => {
                                             </ul>
                                         </li>
                                     </ol>`),
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: unformat(`
                                     <ol>
                                         <li>abc</li>
@@ -4952,7 +5192,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ol><li>abc</li></ol></li><li>[]def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul><li class="oe-nested"><ol><li>abc[]def</li></ol></li></ul>',
                             });
@@ -4961,7 +5204,9 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li>abc</li><li class="oe-nested"><ul><li>[]def</li></ul></li></ol>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -4972,14 +5217,20 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ul><li>[]abc</li></ul></li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ol><li>[]abc</li></ol>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<p>abc</p><ol><li class="oe-nested"><ul><li>[]def</li></ul></li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>abc</p><ol><li>[]def</li></ol>',
                             });
                         });
@@ -4987,7 +5238,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li>abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li>def</li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ol><li>abc</li><li>[]<br></li><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ol>',
                             });
@@ -4996,7 +5250,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li>def</li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ol><li>abc</li><li>[]<br></li><li>def</li></ol>',
                             });
                         });
@@ -5004,7 +5261,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ul><li><br>[]</li></ul></li></ol>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ol><li>[]<br></li></ol>',
                             });
                         });
@@ -5014,7 +5274,8 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>a</li></ul><ul class="o_checklist"><li>[]b</li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5023,7 +5284,8 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>a</li></ul><ul class="o_checklist"><li><p>[]b</p></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5032,7 +5294,8 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li><p>a</p></li></ul><ul class="o_checklist"><li>[]b</li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5041,7 +5304,8 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li><p>a</p></li></ul><ul class="o_checklist"><li><p>[]b</p></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5053,7 +5317,9 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li><li class="o_checked">ghi</li></ul></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5066,7 +5332,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul><li>abc</li></ul></li><li>[]def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul><li>abc[]def</li></ul></li></ul>',
                             });
@@ -5075,7 +5344,9 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li></ul></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5086,14 +5357,20 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li class="o_checked">[]abc</li></ul>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<p>abc</p><ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<p>abc</p><ul><li class="o_checked">[]def</li></ul>',
                             });
                         });
@@ -5102,7 +5379,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul><li>abc</li><li>[]<br></li><li class="oe-nested"><ul class="o_checklist"><li><br></li></ul></li><li>def</li></ul>',
                             });
@@ -5111,7 +5391,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li></ul></li><li>def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>abc</li><li>[]<br></li><li>def</li></ul>',
                             });
                         });
@@ -5119,7 +5402,10 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul class="o_checklist"><li><br>[]</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul><li>[]<br></li></ul>',
                             });
                         });
@@ -5130,7 +5416,8 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">a</li></ul><ul><li>[]b</li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5141,7 +5428,8 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">a</li></ul><ul><li><p>[]b</p></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5153,7 +5441,8 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><p>a</p></li></ul><ul><li>[]b</li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5165,7 +5454,8 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><p>a</p></li></ul><ul><li><p>[]b</p></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5187,7 +5477,9 @@ describe('List', () => {
                                             </ul>
                                         </li>
                                     </ul>`),
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5207,7 +5499,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li><li>[]def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc[]def</li></ul></li></ul>',
                             });
@@ -5217,7 +5512,9 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul><li>[]def</li></ul></li></ul>',
-                                stepFunction: async editor => {
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
                                     await deleteBackward(editor);
                                     await deleteBackward(editor);
                                 },
@@ -5230,7 +5527,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul><li>[]abc</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul class="o_checklist"><li>[]abc</li></ul>',
                             });
                             // With a paragraph before the list:
@@ -5238,7 +5538,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<p>abc</p><ul class="o_checklist"><li class="oe-nested"><ul><li>[]def</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<p>abc</p><ul class="o_checklist"><li>[]def</li></ul>',
                             });
@@ -5248,7 +5551,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li class="o_checked">def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]<br></li><li class="oe-nested"><ul><li><br></li></ul></li><li class="o_checked">def</li></ul>',
                             });
@@ -5258,7 +5564,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li>abc</li><li>[]<br></li><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ul>',
                             });
@@ -5268,7 +5577,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li class="o_checked">def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]<br></li><li class="o_checked">def</li></ul>',
                             });
@@ -5278,7 +5590,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li>def</li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter:
                                     '<ul class="o_checklist"><li>abc</li><li>[]<br></li><li>def</li></ul>',
                             });
@@ -5288,7 +5603,10 @@ describe('List', () => {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul><li><br>[]</li></ul></li></ul>',
-                                stepFunction: deleteBackward,
+                                stepFunction: async (editor) => {
+                                    await deleteBackward(editor);
+                                    await deleteBackward(editor);
+                                },
                                 contentAfter: '<ul class="o_checklist"><li>[]<br></li></ul>',
                             });
                         });
@@ -6688,8 +7006,8 @@ describe('List', () => {
                     });
                 });
                 describe('Mixed', () => {
-                    describe('Ordered to unordered', () => {});
-                    describe('Unordered to ordered', () => {});
+                    describe('Ordered to unordered', () => { });
+                    describe('Unordered to ordered', () => { });
                 });
             });
             describe('Selection not collapsed', () => {
