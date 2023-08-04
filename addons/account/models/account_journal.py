@@ -9,13 +9,6 @@ import re
 
 _logger = logging.getLogger(__name__)
 
-def is_encodable_as_ascii(string):
-    try:
-        remove_accents(string).encode('ascii')
-    except UnicodeEncodeError:
-        return False
-    return True
-
 
 class AccountJournalGroup(models.Model):
     _name = 'account.journal.group'
@@ -371,10 +364,10 @@ class AccountJournal(models.Model):
                 journal.name,
                 journal.code,
                 journal.type,
-            ) if string and is_encodable_as_ascii(string))
+            ) if string and self.env['mail.alias']._is_encodable(string))
 
             if journal.company_id != self.env.ref('base.main_company'):
-                if is_encodable_as_ascii(journal.company_id.name):
+                if self.env['mail.alias']._is_encodable(journal.company_id.name):
                     alias_name = f"{alias_name}-{journal.company_id.name}"
                 else:
                     alias_name = f"{alias_name}-{journal.company_id.id}"
