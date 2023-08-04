@@ -81,4 +81,25 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
         )
 
         # Check the whole qr code string
-        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA5204000053037045405100.05802VN5914company_1_data6007Vietnam62170113INV/TEST/0001630425A9')
+        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914company_1_data6007Vietnam62170113INV/TEST/00016304E801')
+
+    def test_remove_vietnamese_accents(self):
+        accent_string = "áàảãạăắằẳẵặâấầẩẫậÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬéèẻẽẹêếềểễệÉÈẺẼẸÊẾỀỂỄỆóòỏõọôốồổỗộơớờởỡợÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢíìỉĩịÍÌỈĨỊúùủũụưứừửữựÚÙỦŨỤƯỨỪỬỮỰýỳỷỹỵÝỲỶỸỴđĐ"
+        result = self.env['res.partner.bank']._remove_accents(accent_string)
+        self.assertEqual(result, "aaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAeeeeeeeeeeeEEEEEEEEEEEoooooooooooooooooOOOOOOOOOOOOOOOOOiiiiiIIIIIuuuuuuuuuuuUUUUUUUUUUUyyyyyYYYYYdD")
+
+    def test_emv_qr_vals_with_accent_partner(self):
+        self.company_data['company'].partner_id.name = 'áÁéÉóÓíÍúÚýÝđĐ'
+        self.emv_qr_invoice.qr_code_method = 'emv_qr'
+        unstruct_ref = 'INV/TEST/0002'
+        emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
+            qr_method=self.emv_qr_invoice.qr_code_method,
+            amount=self.emv_qr_invoice.amount_residual,
+            currency=self.emv_qr_invoice.currency_id,
+            debtor_partner=self.emv_qr_invoice.partner_id,
+            free_communication=unstruct_ref,
+            structured_communication=self.emv_qr_invoice.payment_reference,
+        )
+
+        # Check the whole qr code string
+        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914aAeEoOiIuUyYdD6007Vietnam62170113INV/TEST/0002630492AF')
