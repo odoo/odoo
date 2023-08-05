@@ -14,9 +14,10 @@
 # Martin Trigaux, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Jiří Podhorecký, 2022
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Petr Hemza, 2023
 # SlavekB <slavek.banko@axis.cz>, 2023
+# Tomáš Píšek, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: SlavekB <slavek.banko@axis.cz>, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,6 +65,13 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* Stav „Koncept“ se používá, když uživatel zadává novou a nepotvrzenou objednávku opravy.\n"
+"* Stav „Potvrzeno“ se používá, když uživatel potvrdí objednávku na opravu.\n"
+"* Stav „Připraveno k opravě“ se používá k zahájení opravy, uživatel může zahájit opravu až po potvrzení objednávky opravy.\n"
+"* Stav „Opravuje se“ se používá, když probíhá oprava.\n"
+"* Stav „Faktura“ se používá k vygenerování faktury před nebo po provedení opravy.\n"
+"* Stav „Hotovo“ je nastaven po dokončení opravy.\n"
+"* Stav „Zrušeno“ se používá, když uživatel zruší objednávku na opravu."
 
 #. module: repair
 #. odoo-python
@@ -780,7 +788,7 @@ msgstr "Počet chyb"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Počet zpráv vyžadujících akci"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
@@ -1460,7 +1468,7 @@ msgstr "Nemůžete zrušit kompletní objednávku opravy."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot delete a completed repair order."
-msgstr ""
+msgstr "Nemůžete odstranit kompletní objednávku opravy."
 
 #. module: repair
 #. odoo-python

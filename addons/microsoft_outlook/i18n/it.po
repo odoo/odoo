@@ -44,6 +44,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Token Outlook valido\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -52,6 +55,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Token Outlook valido\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -85,6 +91,8 @@ msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"Collega il tuo account Outlook tramite il processo di autenticazione OAuth.  \n"
+"Per impostazione predefinita, solo un utente con un indirizzo e-mail adeguato potrà utilizzare il server. Per estenderne l'utilizzo, puoi configurare un parametro di sistema di tipo \"mail.default.from\"."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -94,6 +102,8 @@ msgid ""
 "Connect your personal Outlook account using OAuth. \n"
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
+"Collega il tuo account personale Outlook utilizzando OAuth.\n"
+"Verrai reindirizzato alla pagina di accesso di Outlook per accettare i permessi."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
@@ -108,7 +118,7 @@ msgstr "ID"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID of your Outlook app"
-msgstr ""
+msgstr "ID della tua app Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
@@ -178,7 +188,7 @@ msgstr "Outlook segreto client"
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
 msgid "Outlook OAuth Authentication"
-msgstr ""
+msgstr "Autenticazione OAuth Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
@@ -199,7 +209,7 @@ msgstr "Configura le credenziali Outlook, per favore."
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
-msgstr ""
+msgstr "Prima di utilizzarlo accedi al tuo account Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -210,6 +220,9 @@ msgid ""
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
+"Completa il campo \"Nome utente\" con il nome utente Outlook/Office 365 (il "
+"tuo indirizzo e-mail). Questo dovrebbe essere lo stesso account utilizzato "
+"per il token di OAutenticazione Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -232,7 +245,7 @@ msgstr "Leggi altro"
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required for the server %r."
-msgstr ""
+msgstr "Per il server %r è richiesto il protocollo SSL."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -242,7 +255,7 @@ msgstr "Secret"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret of your Outlook app"
-msgstr ""
+msgstr "Segreto della tua app Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
@@ -274,6 +287,8 @@ msgid ""
 "This server %r can only be used for your personal email address. Please fill"
 " the \"from_filter\" field with %r."
 msgstr ""
+"Il server %r può essere utilizzato solo per l'indirizzo e-mail personale. "
+"Compila il campo \"from_filter\" con %r."
 
 #. module: microsoft_outlook
 #. odoo-python
