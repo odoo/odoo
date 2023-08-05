@@ -142,7 +142,7 @@ msgid ""
 "title=\"Opportunities\"/>"
 msgstr ""
 "<i class=\"fa fa-fw fa-star\" aria-label=\"Opportunities\" role=\"img\" "
-"title=\"Chancen\"/>"
+"title=\"Opportunities\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3100,7 +3100,8 @@ msgstr ""
 "Richtlinie zum Hinterlassen einer Mitteilung im Dokument über das E-Mail-Gateway.\n"
 "- Jeder: jeder kann eine Nachricht hinterlassen\n"
 "- Partner: nur bestätigte Partner\n"
-"- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
+"- Follower: nur Follower des entsprechenden Dokuments\n"
+" oder Mitglieder der verfolgten Kanäle\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
@@ -4035,6 +4036,12 @@ msgstr ""
 "eine E-Mail an"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
+msgid "Use the <i>New</i> button, or send an email to"
+msgstr ""
+"Verwenden Sie die Schaltfläche <i>Neu</i> oder senden Sie eine E-Mail an"
+
+#. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
@@ -4046,6 +4053,16 @@ msgstr ""
 " Sie eine E-Mail an %s, um das E-Mail-Gateway zu testen."
 
 #. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"Use the <i>New</i> button, or send an email to %s to test the email gateway."
+msgstr ""
+"Verwenden Sie die Schaltfläche <i>Neu</i> oder senden Sie eine E-Mail an %s,"
+" um das E-Mail-Gateway zu testen."
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid ""
 "Use the top left Create button, or configure an email alias to test the "
@@ -4053,6 +4070,14 @@ msgid ""
 msgstr ""
 "Verwenden Sie die Schaltfläche „Erstellen“ oben links, oder konfigurieren "
 "Sie einen E-Mail-Alias, um das E-Mail-Gateway zu testen."
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
+msgid ""
+"Use the New button, or configure an email alias to test the email gateway."
+msgstr ""
+"Verwenden Sie die Schaltfläche „Neu“ oder konfigurieren Sie einen E-Mail-"
+"Alias, um das E-Mail-Gateway zu testen."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
