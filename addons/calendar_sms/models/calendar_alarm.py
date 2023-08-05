@@ -16,7 +16,7 @@ class CalendarAlarm(models.Model):
         compute='_compute_sms_template_id', readonly=False, store=True,
         help="Template used to render SMS reminder content.")
 
-    @api.depends('alarm_type', 'mail_template_id')
+    @api.depends('alarm_type', 'sms_template_id')
     def _compute_sms_template_id(self):
         for alarm in self:
             if alarm.alarm_type == 'sms' and not alarm.sms_template_id:

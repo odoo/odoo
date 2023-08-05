@@ -41,11 +41,15 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_01_account_tax_groups_tour(self):
         product = self.env.ref('product.product_product_5')
+        company_used = self.env.companies.sorted(lambda c: c.id)[0]
         new_tax = self.env['account.tax'].create({
             'name': '10% Tour Tax',
             'type_tax_use': 'purchase',
             'amount_type': 'percent',
             'amount': 10,
+            'company_id': company_used.id,
+            'country_id': company_used.account_fiscal_country_id.id
         })
         product.supplier_taxes_id = new_tax
+
         self.start_tour("/web", 'account_tax_group', login="admin")

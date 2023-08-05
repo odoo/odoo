@@ -474,7 +474,7 @@ class StockWarehouseOrderpoint(models.Model):
         be used in move/po creation.
         """
         date_planned = date or fields.Date.today()
-        date_planned = self.product_id._get_date_with_security_lead_days(date_planned, self.location_id)
+        date_planned = self.product_id._get_date_with_security_lead_days(date_planned, self.location_id, route_ids=self.route_id)
         return {
             'route_ids': self.route_id,
             'date_planned': date_planned,

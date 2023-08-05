@@ -517,6 +517,20 @@ class TestSalesTeam(SaleCommon):
         so_no_analytic_account.action_confirm()
         self.assertFalse(sol_no_analytic_account.analytic_distribution, "The compute should not overwrite what the user has set.")
 
+        sale_order.action_confirm()
+        sol_on_confirmed_order = self.env['sale.order.line'].create({
+            'name': super_product.name,
+            'product_id': super_product.id,
+            'order_id': sale_order.id,
+        })
+
+        self.assertEqual(
+            sol_on_confirmed_order.analytic_distribution,
+            {str(analytic_account_super.id): 100},
+            "The analytic distribution should be set to Super Account, even for confirmed orders"
+        )
+
+
     def test_cannot_assign_tax_of_mismatch_company(self):
         """ Test that sol cannot have assigned tax belonging to a different company from that of the sale order. """
         company_a = self.env['res.company'].create({'name': 'A'})

@@ -5,7 +5,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
     const Registries = require('point_of_sale.Registries');
     const { _lt } = require('@web/core/l10n/translation');
     const { parse } = require('web.field_utils');
-    const { useValidateCashInput } = require('point_of_sale.custom_hooks');
+    const { useValidateCashInput, useAsyncLockedMethod } = require('point_of_sale.custom_hooks');
 
     const { useRef, useState } = owl;
 
@@ -21,6 +21,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
             });
             this.inputAmountRef = useRef('input-amount-ref');
             useValidateCashInput('input-amount-ref');
+            this.confirm = useAsyncLockedMethod(this.confirm);
         }
         confirm() {
             try {

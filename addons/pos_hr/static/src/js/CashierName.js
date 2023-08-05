@@ -19,7 +19,7 @@ odoo.define('pos_hr.CashierName', function (require) {
                     if (!(cashier && cashier.id)) {
                         return '';
                     }
-                    return `/web/image/hr.employee/${cashier.id}/avatar_128`;
+                    return `/web/image/hr.employee.public/${cashier.id}/avatar_128`;
                 }
                 return super.avatar;
             }

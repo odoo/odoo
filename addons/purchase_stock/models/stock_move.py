@@ -42,8 +42,8 @@ class StockMove(models.Model):
         if self.state == 'done':
             received_qty -= self.product_uom._compute_quantity(self.quantity_done, line.product_uom, rounding_method='HALF-UP')
         if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
-            move_layer = line.move_ids.stock_valuation_layer_ids
-            invoiced_layer = line.invoice_lines.stock_valuation_layer_ids
+            move_layer = line.move_ids.sudo().stock_valuation_layer_ids
+            invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
             receipt_value = 0
             if move_layer:
@@ -54,7 +54,7 @@ class StockMove(models.Model):
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
             invoiced_value = 0
             invoiced_qty = 0
-            for invoice_line in line.invoice_lines:
+            for invoice_line in line.sudo().invoice_lines:
                 if invoice_line.tax_ids:
                     invoiced_value += invoice_line.tax_ids.with_context(round=False).compute_all(
                         invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
