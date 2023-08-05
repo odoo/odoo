@@ -585,7 +585,7 @@ msgid ""
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
 "Tất cả số lượng sản phẩm phải lớn hơn hoặc bằng 0.\n"
-"Các mục có số lượng bằng 0 sẽ được sử dụng như là các mục tuỳ chọn.\n"
+"Các dòng có số lượng bằng 0 sẽ được sử dụng như là các dòng tuỳ chọn.\n"
 "Bạn nên cài module mrp_byproduct nếu bạn muốn quản lý phụ phẩm trong ĐMNL!"
 
 #. module: mrp
@@ -827,7 +827,7 @@ msgstr "ĐMNL biến thể sản phẩm"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
-msgstr "ĐMNL biến thể sản phẩm cần được áp dụng cho mục này."
+msgstr "ĐMNL biến thể sản phẩm cần được áp dụng cho dòng này."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
@@ -837,7 +837,7 @@ msgstr "Chi tiết ĐMNL của ĐMNL được đề cập"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
 msgid "Backorder Confirmation Line"
-msgstr "Mục xác nhận đơn hàng tồn đọng"
+msgstr "Dòng xác nhận đơn hàng tồn đọng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
@@ -895,12 +895,12 @@ msgstr "Định mức nguyên liệu"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "Bill of Material Line"
-msgstr "Mục định mức nguyên liệu"
+msgstr "Dòng định mức nguyên liệu"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr "Mục định mức nguyên liệu"
+msgstr "Dòng định mức nguyên liệu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_bom_id
@@ -1022,7 +1022,7 @@ msgstr "Chi phí ĐMNL"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
 msgid "BoM Line"
-msgstr "Mục ĐMNL"
+msgstr "Dòng ĐMNL"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
@@ -1047,7 +1047,7 @@ msgstr "Loại ĐMNL"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
-msgstr "Mục ĐMNL của sản phẩm %s không nên giống với ĐMNL sản phẩm."
+msgstr "Dòng ĐMNL của sản phẩm %s không nên giống với ĐMNL sản phẩm."
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
@@ -1078,7 +1078,7 @@ msgstr "Phụ phẩm %s không được giống với sản phẩm ĐMNL. "
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
 msgid "By-product line that generated the move in a manufacturing order"
-msgstr "Mục phụ phẩm đã tạo dịch chuyển trong lệnh sản xuất"
+msgstr "Dòng phụ phẩm đã tạo dịch chuyển trong lệnh sản xuất"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__byproduct_ids
@@ -1357,7 +1357,7 @@ msgstr "Đã sử dụng"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__consume_line_ids
 msgid "Consumed Disassembly Lines"
-msgstr "Các mục tháo gỡ đã sử dụng"
+msgstr "Các dòng tháo gỡ đã sử dụng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__consume_unbuild_id
@@ -2401,7 +2401,7 @@ msgstr "Sản xuất tức thì"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_immediate_production_line
 msgid "Immediate Production Line"
-msgstr "Mục sản xuất tức thì"
+msgstr "Dòng sản xuất tức thì"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_immediate_production__immediate_production_line_ids
@@ -2710,7 +2710,7 @@ msgstr "Nghỉ"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
 msgid "Line of issue consumption"
-msgstr "Mục vấn đề lượng sử dụng "
+msgstr "Dòng vấn đề lượng sử dụng "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
@@ -3140,7 +3140,7 @@ msgstr "Dịch chuyển cần theo dõi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_consumption_warning_line_ids
 msgid "Mrp Consumption Warning Line"
-msgstr "Sản xuất Mục cảnh báo lượng sử dụng"
+msgstr "Sản xuất Dòng cảnh báo lượng sử dụng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
@@ -3901,7 +3901,7 @@ msgstr "Dịch chuyển sản phẩm"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Dịch chuyển sản phẩm (Mục dịch chuyển tồn kho)"
+msgstr "Dịch chuyển sản phẩm (Dòng dịch chuyển tồn kho)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_qty_available
@@ -4988,7 +4988,7 @@ msgid ""
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
 msgstr ""
-"Tỷ lệ phần trăm của chi phí sản xuất cuối cùng cho mục phụ phẩm này (chia "
+"Tỷ lệ phần trăm của chi phí sản xuất cuối cùng cho dòng phụ phẩm này (chia "
 "cho số lượng được sản xuất). Tổng tỷ lệ chi phí của tất cả phụ phẩm phải "
 "thấp hơn hoặc bằng 100. "
 

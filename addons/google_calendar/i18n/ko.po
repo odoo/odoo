@@ -24,7 +24,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "%(id)s and %(length)s following"
-msgstr ""
+msgstr "%(id)s 및 %(length)s 팔로잉"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
@@ -75,6 +75,8 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronisation."
 msgstr ""
+"토큰 생성 중에 오류가 발생했습니다. 인증 코드가 잘못되었거나 이미 만료된 코드 [%s]입니다. Google APIs 플랫폼에서 "
+"클라이언트 아이디 및 암호를 확인하거나 캘린더 동기화를 중지한 후 다시 시작하시기 바랍니다."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -287,7 +289,7 @@ msgstr "변경하지 않고 나가기"
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
 msgid "Need Sync"
-msgstr ""
+msgstr "동기화 필요"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_sync_token
@@ -357,7 +359,7 @@ msgstr "사용하기 전에 구글 동기화를 구성해야 합니다, 지금 �
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
-msgstr ""
+msgstr "Google 캘린더 서비스의 계정이 설정되어 있지 않습니다."
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
@@ -372,12 +374,12 @@ msgstr ""
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
-msgstr ""
+msgstr "Google 캘린더 동기화 중지에 성공하였습니다."
 
 #. module: google_calendar
 #: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
 msgid "The user has already a google account"
-msgstr ""
+msgstr "사용자에게 이미 Google 계정이 있습니다."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -415,18 +417,18 @@ msgstr "사용자의 기존 행사"
 msgid ""
 "You are about to stop the synchronization of your calendar with Google. Are "
 "you sure you want to continue?"
-msgstr ""
+msgstr "Google 캘린더 동기화를 중지하려고 합니다. 계속하시겠습니까?"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
-msgstr ""
+msgstr "정의되지 않은 시간"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
-msgstr ""
+msgstr "Google 캘린더에서 이 행사를 수정할 수 있는 권한이 없습니다."
