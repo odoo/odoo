@@ -25,6 +25,30 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Connect your Gmail account"
+msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Yhdistä Gmail-tilisi"
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Edit Settings"
+msgstr ""
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('use_google_gmail_service', '=', False), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Gmail Token Valid\n"
+"                    </span>"
+msgstr ""
+
+#. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Gmail Credentials</span>"
 msgstr ""
@@ -42,9 +66,21 @@ msgid "Access Token Expiration Timestamp"
 msgstr "Pääsytunnisteen viimeinen voimassaoloaika"
 
 #. module: google_gmail
+#: code:addons/google_gmail/controllers/main.py:0
+#: code:addons/google_gmail/controllers/main.py:0
+#, python-format
+msgid "An error occur during the authentication process."
+msgstr "Todentamisprosessin aikana tapahtui virhe."
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "An error occurred when fetching the access token."
+msgstr "Pääsytunnisteen noutamisessa tapahtui virhe."
+
+#. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_authorization_code
-#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid "Authorization Code"
 msgstr "Valtuutusavain"
 
@@ -108,6 +144,30 @@ msgstr "Viimeksi muokattu"
 #: model:ir.model,name:google_gmail.model_ir_mail_server
 msgid "Mail Server"
 msgstr "Sähköpostipalvelin"
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "Only the administrator can link a Gmail mail server."
+msgstr "Vain järjestelmänvalvoja voi linkittää Gmail-palvelimen."
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "Please configure your Gmail credentials."
+msgstr "Määritä Gmail-tunnuksesi."
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Please fill the \"Username\" field with your Gmail username (your email "
+"address). This should be the same account as the one used for the Gmail "
+"OAuthentication Token."
+msgstr ""
+"Täytä \"Käyttäjätunnus\"-kenttään Gmailin käyttäjätunnuksesi "
+"(sähköpostiosoitteesi). Tämän pitäisi olla sama tili, jota käytetään Gmail "
+"OAuthentication käyttötunnisteen hankkimiseen."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_refresh_token

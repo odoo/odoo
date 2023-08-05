@@ -1939,9 +1939,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Id opcional de um tópico (registro) ao qual todas as mensagens recebidas "
-"serão anexadas, a não ser que elas não sejam respostas a este. Se definido, "
-"ele desabilitará a criação de novos registros completamente."
+"ID opcional de uma thread (registro) à qual todas as mensagens recebidas "
+"serão anexadas, até mesmo quando não sejam respostas à thread. Se definido, "
+"isso desabilitará totalmente a criação de novos registros."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1968,7 +1968,7 @@ msgstr "Modelo Principal"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID de Registro Pai da Linha"
+msgstr "ID da thread do registro primário"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_model_id
@@ -1977,9 +1977,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modelo de pai segurando o alias. O modelo segurando a referência de alias\n"
-"não é necessariamente o modelo dado por alias_model_id\n"
-"(example: project (parent_model) and task (model))"
+"Modelo primário que contém o alias. O modelo que contém a referência de "
+"alias não é necessariamente o modelo dado por alias_model_id (exemplo: "
+"projeto (parent_model) e tarefa (model))"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
@@ -2438,9 +2438,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"O modelo (Odoo Documento Tipo), ao qual este apelido corresponde. Qualquer "
-"e-mails recebidos que não responde a um registro existente fará com que a "
-"criação de um novo registro desse modelo (e.g. a Project Task)"
+"O modelo (tipo de documento do Odoo) ao qual esse alias corresponde. "
+"Qualquer e-mail recebido que não responda a um registro existente causará a "
+"criação de um novo registro desse modelo (ex.: uma tarefa de projeto)"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq
@@ -2453,8 +2453,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"O nome do alias de e-mail, por exemplo, 'empregos' se você quer pegar "
-"e-mails para <empregos@suaempresa.com.br>"
+"O nome do alias de e-mail, por exemplo, 'empregos', se desejar receber "
+"e-mails enviados a <empregos@suaempresa.com.br>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_user_id
@@ -2464,11 +2464,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"O proprietário dos registros criados após o recebimento de e-mails neste "
-"apelido. Se este campo não estiver definido, o sistema tentará encontrar o "
-"proprietário correto baseado no endereço do remetente (De), ou utilizará a "
-"conta do Administrador se não for encontrado um usuário do sistema para este"
-" endereço."
+"O proprietário dos registros criados ao receber e-mails com este alias. Se "
+"este campo não estiver definido, o sistema tentará encontrar o proprietário "
+"correto baseado no endereço do remetente (De), ou utilizará a conta do "
+"Administrador se não for encontrado um usuário do sistema para este "
+"endereço."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id

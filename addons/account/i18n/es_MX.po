@@ -1570,7 +1570,7 @@ msgstr "Plantilla de impuestos de cuenta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr "TaxCloud de cuenta"
+msgstr "Cuenta de TaxCloud"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -3788,7 +3788,7 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
-"Seleccione esta casilla si la cuenta permite emparejar facturas y pagos con "
+"Seleccione esta casilla si la cuenta permite conciliar facturas y pagos con "
 "apuntes contables."
 
 #. module: account
@@ -14236,6 +14236,15 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__carry_over_condition_method
 msgid "The method used to determine if this line should be carried over."
 msgstr "El método utilizado para determinar si se debe traspasar esta línea."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
+"El movimiento no se pudo publicar debido al siguiente motivo: "
+"%(error_message)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id

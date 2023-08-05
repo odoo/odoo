@@ -13,8 +13,8 @@
 # Talal Albahra <talal.albahra@outlook.com>, 2022
 # Niyas Raphy, 2022
 # islam abdelmaaboud <islamabdelmaaboud@gmail.com>, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12014,7 +12014,7 @@ msgstr "الإعداد"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Setup your chart of accounts and record initial balances."
-msgstr "قم بإنشاء سجل الحسابات الخاص بك وسجّل الأرصدة الافتتاحية. "
+msgstr "قم بإنشاء شجرة الحسابات الخاصة بك وسجّل الأرصدة الافتتاحية. "
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -13998,6 +13998,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__carry_over_condition_method
 msgid "The method used to determine if this line should be carried over."
 msgstr "الطريقة المستخدمة لتحديد إذا ما كان لابد من ترحيل هذا البند. "
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id

@@ -13,6 +13,7 @@
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Daye Jeong, 2023
 # Sarah Park, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14567,6 +14568,12 @@ msgid "Compute"
 msgstr "계산"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "계산 방법은 'id' 필드에 종속될 수 없습니다."
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "청구서가 자동으로 생성 후 TaxCloud로 세금을 계산합니다."
@@ -14993,6 +15000,12 @@ msgstr "국가 그룹"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "국가명"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -20296,6 +20309,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "'그룹별' 매개 변수가 잘못되었습니다."
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "기본값 필드의 JSON 형식이 잘못되었습니다."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -20785,8 +20804,8 @@ msgstr "LGPL 버전 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - 회계 보고서"
+msgid "Lithuania - Accounting Reports"
+msgstr "리투아니아 - 회계 보고서"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -30517,6 +30536,12 @@ msgstr "태국 - 회계"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr "\"%s\" 작업은 기본 작업으로 선택할 수 없습니다."
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "\"App Switcher\" 작업은 기본 작업으로 선택할 수 없습니다."
 
@@ -30593,8 +30618,8 @@ msgstr "`%s` 모듈이 현재 사용할 수 없는 것 같습니다. 잠시 후 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "`기본 '모듈은 제거할 수 없습니다."
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "해당 모듈을 삭제할 수 없습니다: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -30611,6 +30636,16 @@ msgid ""
 msgstr ""
 "이와 같은 표준 판매 이용약관 이전 건에 대해서도, 고객은 자체 표준 이용약관 적용을 명시적으로 철회하게 됩니다. 내용이 효력을 "
 "가지려면, 모든 예외 사항에 대하여 사전에 명확히 서면 동의를 마쳐야 합니다. "
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"환율명이 없습니다.\n"
+"설정하시기 바랍니다."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -30657,7 +30692,6 @@ msgstr "통화 코드는 고유해야 합니다."
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr "환율 1을 통화 환율로 적용합니다."
 
@@ -30938,8 +30972,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "환율과 환율의 비율 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr "환율 1의 통화에 대한 통화 환율"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -33660,6 +33695,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "현재 사용중인 사용자를 비활성화 할 수 없습니다."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "설정 필드에 연결된 그룹은 삭제할 수 없습니다."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -34491,3 +34532,9 @@ msgstr "년"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "올란드 제도"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr "이 통화는 회사에 설정되어 있으므로 비활성화 시킬 수 없습니다."

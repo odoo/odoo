@@ -14,6 +14,7 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Jiří Podhorecký, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Jakub Smolka, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Last-Translator: Jakub Smolka, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13768,6 +13769,12 @@ msgid "Compute"
 msgstr "Vypočítat"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "Vypočítá daně pomocí TaxCloud po automatickém vytvoření faktury."
@@ -14192,6 +14199,12 @@ msgstr "Skupiny zemí"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Název státu"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -19577,6 +19590,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Neplatný parametr 'skupina podle'"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -20072,8 +20091,8 @@ msgstr "LGPL verze 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Účetní zprávy"
+msgid "Lithuania - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -25481,7 +25500,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_ir_profile
 msgid "Profiling"
-msgstr ""
+msgstr "Profilování"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.enable_profiling_wizard
@@ -27227,7 +27246,7 @@ msgstr "Plánované akce"
 #: model:ir.actions.act_window,name:base.ir_cron_trigger_action
 #: model:ir.ui.menu,name:base.ir_cron_trigger_menu
 msgid "Scheduled Actions Triggers"
-msgstr ""
+msgstr "Spouštěče pravidelných akcí"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -28897,6 +28916,12 @@ msgstr "Thajsko - účetnictví"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "Akce \"Switcher aplikace\" nemůže být zvolena jako domácí akce."
 
@@ -28980,8 +29005,8 @@ msgstr "Modul `%s` není momentálně dostupný, zkuste to prosím znovu pozděj
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Modul `base' nelze odinstalovat"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -29000,6 +29025,14 @@ msgstr ""
 "a to i v případě, že tyto byly sepsány až po těchto standardních obchodních "
 "podmínkách. Aby byla jakákoli odchylka platná, musí být předem výslovně "
 "písemně odsouhlasena."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -29049,7 +29082,6 @@ msgstr "Kód měny musí být jedinečný!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr ""
 
@@ -29330,8 +29362,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "Směnný kurz měny k měně o velikosti 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -32108,6 +32141,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "Nemůžete deaktivovat uživatele, na který jste aktuálně přihlášeni."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -32934,3 +32973,9 @@ msgstr "rok"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Ålandské ostrovy"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""

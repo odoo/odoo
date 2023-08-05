@@ -30,6 +30,7 @@
 # Claes-Johan Dahlin, 2022
 # Robin Calvin, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Lasse L, 2023
 # 
 msgid ""
 msgstr ""
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023\n"
+"Last-Translator: Lasse L, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14844,6 +14845,12 @@ msgid "Compute"
 msgstr "Beräkna"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "Beräkningsmetoden kan inte bero på fältet \"id"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "Beräkna skatter med TaxCloud efter automatiskt skapande av fakturor."
@@ -15271,6 +15278,12 @@ msgstr "Landsgrupp"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Land"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr "Landskod får inte vara tom"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -20697,6 +20710,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Felaktig 'Gruppera efter'-parameter"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -21194,8 +21213,8 @@ msgstr "LGPL version 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Redovisningsrapporter"
+msgid "Lithuania - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -31172,6 +31191,12 @@ msgstr "Thailand - Bokföring"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr "Åtgärden \"%s\" kan inte väljas som hemåtgärd."
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "Åtgärden \"App Switcher\" kan inte väljas som hemåtgärd."
 
@@ -31256,8 +31281,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Modulen 'base' kan inte avinstalleras"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Dessa moduler kan inte avinstalleras: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -31275,6 +31300,16 @@ msgstr ""
 "Kunden avstår uttryckligen från sina egna standardvillkor, även om dessa har"
 " utarbetats efter dessa standardförsäljningsvillkor. För att vara giltigt "
 "måste varje undantag uttryckligen överenskommas skriftligen i förväg."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"Namnet för den aktuella kursen är tomt.\n"
+"Vänligen ange det."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -31324,7 +31359,6 @@ msgstr "Valutakoden måste vara unik!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr "Valutan med kurs 1 till valutakursen."
 
@@ -31621,8 +31655,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "Valutans kurs i förhållande till valutan i kurs 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr "Kursen för valutan till valutan för kurs 1 "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -34444,6 +34479,12 @@ msgstr ""
 "Du kan inte avaktivera den användare som du för närvarande är inloggad som."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "Du kan inte radera en grupp som är kopplad till ett inställningsfält."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -35283,3 +35324,10 @@ msgstr "år"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"Denna valuta är inställd på ett företag och kan därför inte avaktiveras."

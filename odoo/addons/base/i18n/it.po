@@ -11,6 +11,7 @@
 # Friederike Fasterling-Nesselbosch, 2022
 # Luca Carlo, 2023
 # Marianna Ciofani, 2023
+# Wil Odoo, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
@@ -3100,6 +3101,25 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+"Registratore di cassa registrato in Belgio\n"
+"==========================================\n"
+"\n"
+"Questo modulo trasforma il modulo punto vendita in un registratore di cassa certificato per il Belgio.\n"
+"\n"
+"Maggiori informazioni:\n"
+"  * http://www.systemedecaisseenregistreuse.be/\n"
+"  * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Legale\n"
+"-----\n"
+"**L'utilizzo dei sorgenti di pos_blackbox_be è certificato solo sulla piattaforma SaaS odoo.com\n"
+"per la versione 13.0.**Prima dell'installazione del modulo pos_blackbox_be contattare Odoo SA.\n"
+"\n"
+"Per le installazioni in locale può essere fornita su richiesta una versione di pos_blackbox_be\n"
+"offuscata e certificata.\n"
+"Odoo SA non certifica e non supporta alcuna versione modificata.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -6286,6 +6306,12 @@ msgid ""
 "Bridge module adding UX requirements to ease SMS marketing o, event attendees.\n"
 "        "
 msgstr ""
+"\n"
+"Marketing via SMS ai partecipanti di un evento\n"
+"===========================================\n"
+"\n"
+"Modulo ponte che aggiunge requisiti dell'esperienza utente (UX) per semplificare il marketing via SMS ai partecipanti di un evento.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_event_track_sms
@@ -8219,6 +8245,8 @@ msgid ""
 "\n"
 "This widget allows to display gauges using d3 library.\n"
 msgstr ""
+"\n"
+"Questo widget consente di visualizzare indicatori utilizzando la libreria D3.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_holidays
@@ -9170,6 +9198,8 @@ msgstr ""
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
+"<code>UserError</code>: eccezione di avviso da utilizzare con "
+"<code>raise</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9194,6 +9224,8 @@ msgid ""
 "<code>log(message, level='info')</code>:logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>: funzione di log per registrare "
+"informazioni di debug nella tabella <code>ir.logging</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11624,7 +11656,7 @@ msgstr "Sistema di pagamento Authorize.Net"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__auto_install_required
 msgid "Auto Install Required"
-msgstr ""
+msgstr "Richiesta installazione automatica"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete
@@ -12132,7 +12164,7 @@ msgstr "Registratore di cassa registrato in Belgio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_l10n_be
 msgid "Belgian Registered Cash Register Employee module"
-msgstr ""
+msgstr "Modulo dipendenti registratore di cassa registrato in Belgio"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -13224,7 +13256,7 @@ msgstr "Colonna 2"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__column2
 msgid "Column referring to the record in the comodel table"
-msgstr ""
+msgstr "Colonna relativa al record nella tabella del comodello"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__column1
@@ -13453,6 +13485,12 @@ msgstr "Nome completo"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "Calcola"
+
+#. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "Il metodo compute non può dipendere dal campo \"id\""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -13885,6 +13923,12 @@ msgstr "Gruppi di nazioni"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Nome nazione"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -16292,6 +16336,9 @@ msgid ""
 "When Formula type is selected, this field may be a Python expression  that can use the same values as for the code field on the server action.\n"
 "If Value type is selected, the value will be used directly without evaluation."
 msgstr ""
+"Espressione contenente una specifica del valore. \n"
+"Quando viene selezionata la tipologia Formula, questo campo può essere un'espressione Python che può utilizzare gli stessi valori del campo Codice dell'azione server.\n"
+"Se viene selezionata la tipologia Valore, il valore verrà utilizzato direttamente senza valutazione."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
@@ -17320,7 +17367,7 @@ msgstr "Vista Gantt per la bacheca ferie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_kanban_gauge
 msgid "Gauge Widget for Kanban"
-msgstr ""
+msgstr "Widget indicatore per Kanban"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_3
@@ -19067,6 +19114,8 @@ msgstr "Versione installata"
 #: model:ir.module.module,description:base.module_bus
 msgid "Instant Messaging Bus allow you to send messages to users, in live."
 msgstr ""
+"Il bus di messaggistica istantanea consente di inviare messaggi agli utenti,"
+" dal vivo."
 
 #. module: base
 #: code:addons/models.py:0
@@ -19261,6 +19310,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'raggruppa per' non valido"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Formato JSON non valido nel campo del valore predefinito."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -19365,7 +19420,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid special '%(value)s' in button"
-msgstr ""
+msgstr "\"%(value)s\" speciale non valido nel pulsante"
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -19756,8 +19811,8 @@ msgstr "LGPL versione 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Rendiconti contabili"
+msgid "Lithuania - Accounting Reports"
+msgstr "Lituania - Rendiconti contabili"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -20445,7 +20500,7 @@ msgstr "Registrazione"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Logging details"
-msgstr ""
+msgstr "Dettagli registrazione log"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login
@@ -22259,6 +22314,11 @@ msgid ""
 "supposed to do\n"
 "    "
 msgstr ""
+"Le utilità di test non banali possono richiedere modelli e tutto il resto\n"
+"    \n"
+"Questo modulo è utile per convalidare che stiano facendo ciò che si \n"
+"suppone debbano fare\n"
+"    "
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__none
@@ -25170,12 +25230,12 @@ msgstr "Visualizza i tweet durante il tuo evento"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_layout__image
 msgid "Preview image src"
-msgstr ""
+msgstr "Sorgente anteprima immagine"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_layout__pdf
 msgid "Preview pdf src"
-msgstr ""
+msgstr "Sorgente anteprima PDF"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -25194,6 +25254,8 @@ msgid ""
 "Previous time the cron ran successfully, provided to the job through the "
 "context on the `lastcall` key"
 msgstr ""
+"La volta precedente nella quale cron è stato eseguito con successo, fornito "
+"al processo tramite il contesto sulla chiave `lastcall`"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
@@ -25958,7 +26020,7 @@ msgstr "Quiz e incontri con la comunità"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_meet_quiz
 msgid "Quiz and Meet on community route"
-msgstr ""
+msgstr "Quiz e incontri con la comunità"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live_quiz
@@ -26030,7 +26092,7 @@ msgstr "Campo qweb float"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float_time
 msgid "Qweb Field Float Time"
-msgstr ""
+msgstr "Campo QWeb orario virgola mobile"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_html
@@ -26207,7 +26269,7 @@ msgstr "Regole su record"
 #. module: base
 #: model:ir.module.module,summary:base.module_timer
 msgid "Record time"
-msgstr ""
+msgstr "Registrazione tempi"
 
 #. module: base
 #: code:addons/models.py:0 code:addons/models.py:0
@@ -26778,6 +26840,8 @@ msgid ""
 "SQL expression for ordering records in the model; e.g. \"x_sequence asc, id "
 "desc\""
 msgstr ""
+"Espressione SQL per ordinare i record nel modello; es. \"x_sequence asc, id "
+"desc\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_ssl_certificate
@@ -28184,7 +28248,7 @@ msgstr "Il passo non può essere zero."
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_iot
 msgid "Steps in MRP work orders with IoT devices"
-msgstr ""
+msgstr "Fasi negli ordini di lavoro MRP con dispositivi IoT"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note_pad
@@ -28834,6 +28898,12 @@ msgstr "Thailandia - Contabilità"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 "Non si può impostare l'azione \"Cambia applicazione\" come azione "
@@ -28919,8 +28989,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Il modulo \"base\" non può essere disinstallato"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Impossibile disinstallare questi moduli: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -28941,6 +29011,14 @@ msgstr ""
 "se queste sono state stabilite dopo le presenti condizioni standard di "
 "vendita. Per essere valida, qualsiasi deroga deve essere espressamente "
 "concordata in anticipo per iscritto."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -28990,7 +29068,6 @@ msgstr "Il codice della valuta deve essere unico !"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr ""
 
@@ -29123,6 +29200,9 @@ msgid ""
 "The m2o field %s is required but declares its ondelete policy as being 'set "
 "null'. Only 'restrict' and 'cascade' make sense."
 msgstr ""
+"Il campo molti a uno %s è obbligatorio ma la sua politica ondelete viene "
+"dichiarata come \"Impostare a NULL\", ha senso solo \"Limitare e \"In "
+"cascata\". "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__action_id
@@ -29210,7 +29290,7 @@ msgstr "Il prossimo passo dipenderà dal formato del file:"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "The ondelete policy %r is not valid for field %r"
-msgstr ""
+msgstr "Politica ondelete %r non valida per il campo %r"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -29279,8 +29359,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "Il tasso di cambio per la valuta con cambio pari a 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -29373,6 +29454,7 @@ msgstr "Il codice provincia."
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
 msgstr ""
+"La tabella %r se utilizzata per altri campi, eventualmente incompatibili."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__model
@@ -29893,7 +29975,7 @@ msgstr "Timer"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_timer
 msgid "Timer Tests"
-msgstr ""
+msgstr "Test per timer"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_timer
@@ -30322,7 +30404,7 @@ msgstr "Bacheca Twitter"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter
 msgid "Twitter scroller snippet in website"
-msgstr ""
+msgstr "Snippet barra di scorrimento Twitter nel sito web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp
@@ -30487,7 +30569,7 @@ msgstr "UTM e post negli ordini di vendita"
 #. module: base
 #: model:ir.module.module,description:base.module_social_crm
 msgid "UTM and posts on crm"
-msgstr ""
+msgstr "UTM e post nel CRM"
 
 #. module: base
 #: model:res.country,name:base.ug
@@ -31899,7 +31981,7 @@ msgstr "Diritti di accesso in scrittura"
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Data scrittura"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__code
@@ -32098,6 +32180,12 @@ msgstr "Non è possibile creare viste ereditate ricorsive."
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "Non puoi disattivare l'utente con cui ti sei registrato."
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -32944,3 +33032,10 @@ msgstr "anno"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Isole Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"La valuta è impostata su un'azienda, pertanto non può essere disattivata."

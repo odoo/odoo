@@ -30,7 +30,7 @@
 # Murat Durmuş <muratd@projetgrup.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
-# Ediz Duman <neps1192@gmail.com>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # 
 msgid ""
@@ -14320,6 +14320,12 @@ msgid "Compute"
 msgstr "Hesapla"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -14751,6 +14757,12 @@ msgstr "Ülke Grupları"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Ülke Adı"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -20192,6 +20204,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Geçersiz 'gruplama' parametresi"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -20687,8 +20705,8 @@ msgstr "LGPL Sürüm 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Accounting Reports"
+msgid "Lithuania - Accounting Reports"
+msgstr "Litvanya - Muhasebe Raporları"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -30580,6 +30598,12 @@ msgstr "Tayland - Muhasebe"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr "\"%s\" eylemi ana sayfa eylemi olarak seçilemez."
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "App Switcher eylemi ana eylem olarak seçilemez."
 
@@ -30663,8 +30687,8 @@ msgstr "Bu `%s` modüle şuanda erişilemiyor, lütfen daha sonra tekrar deneyin
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "`Baz` modül kaldırılamaz"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Bu modüller kaldırılamaz: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -30682,6 +30706,14 @@ msgstr ""
 "Müşteri kendi standart şartlarından feragat eder, standart satış "
 "şartlarından sonra düzenlenmiş olsa bile. Geçerli olması için, her türlü "
 "feragat önceden yazılı olarak anlaşılmış olmalıdır."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -30731,7 +30763,6 @@ msgstr "Para birim kodu benzersiz olmalı!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr "1 para biriminin döviz kuruna oranı."
 
@@ -31021,8 +31052,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "Para birimi kur oranı (kur oranı 1 e göre)"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr "Para birimi kur oranı (kur oranı 1 e göre) "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -33831,6 +33863,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "Şu anda oturum açtığınız kullanıcıyı devre dışı bırakamazsınız."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -34668,3 +34706,9 @@ msgstr "yıl"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Åland Adaları"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""

@@ -192,88 +192,6 @@ msgid ""
 "Copyright 2018 Odoo House ApS\n"
 "    "
 msgstr ""
-"\n"
-"\n"
-"Localization Module for Denmark\n"
-"===============================\n"
-"\n"
-"This is the module to manage the **accounting chart for Denmark**. Cover both one-man business as well as I/S, IVS, ApS and A/S\n"
-"\n"
-"**Modulet opsætter:**\n"
-"\n"
-"- **Dansk kontoplan**\n"
-"\n"
-"- Dansk moms\n"
-"        - 25% moms\n"
-"        - Resturationsmoms 6,25%\n"
-"        - Omvendt betalingspligt\n"
-"\n"
-"- Konteringsgrupper\n"
-"        - EU (Virksomhed)\n"
-"        - EU (Privat)\n"
-"        - 3.lande\n"
-"\n"
-"- Finans raporter\n"
-"        - Resulttopgørelse\n"
-"        - Balance\n"
-"        - Momsafregning\n"
-"            - Afregning\n"
-"            - Rubrik A, B og C\n"
-"\n"
-"- **Anglo-Saxon regnskabsmetode**\n"
-"\n"
-".\n"
-"\n"
-"Produkt setup:\n"
-"==============\n"
-"\n"
-"**Vare**\n"
-"\n"
-"**Salgsmoms:**      Salgmoms 25%\n"
-"\n"
-"**Salgskonto:**     1010 Salg af vare, m/moms\n"
-"\n"
-"**Købsmoms:**       Købsmoms 25%\n"
-"\n"
-"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
-"\n"
-".\n"
-"\n"
-"**Ydelse**\n"
-"\n"
-"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
-"\n"
-"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
-"\n"
-"**Købsmoms:**       Købsmoms 25%, ydelser\n"
-"\n"
-"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
-"\n"
-".\n"
-"\n"
-"**Vare med omvendt betalingspligt**\n"
-"\n"
-"**Salgsmoms:**      Salg omvendt betalingspligt\n"
-"\n"
-"**Salgskonto:**     1012 Salg af vare, u/moms\n"
-"\n"
-"**Købsmoms:**       Køb omvendt betalingspligt\n"
-"\n"
-"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
-"\n"
-"\n"
-".\n"
-"\n"
-"**Restauration**\n"
-"\n"
-"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
-"\n"
-"**Købskonto:**      4010 Restaurationsbesøg\n"
-"\n"
-".\n"
-"\n"
-"Copyright 2018 Odoo House ApS\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -2584,44 +2502,6 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
-"\n"
-"Add a new model named \"Identification Type\" that extend the vat field functionality in the partner and let the user to identify (an eventually invoice) to contacts not only with their fiscal tax ID (VAT) but with other types of identifications like national document, passport, foreign ID, etc. With this module installed you will see now in the partner form view two fields:\n"
-"\n"
-"* Identification Type\n"
-"* Identification Number\n"
-"\n"
-"This behavior is a common requirement for some latam countries like Argentina and Chile. If your localization has this requirements then you need to depend on this module and define in your localization module the identifications types that are used in your country. Generally these types of identifications are defined by the government authorities that regulate the fiscal operations. For example:\n"
-"\n"
-"* AFIP in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat for natural person), and another 80 valid identification types.\n"
-"\n"
-"Each identification holds this information:\n"
-"\n"
-"* name: short name of the identification\n"
-"* description: could be the same short name or a long name\n"
-"* country_id: the country where this identification belongs\n"
-"* is_vat: identify this record as the corresponding VAT for the specific country.\n"
-"* sequence: let us to sort the identification types depending on the ones that are most used.\n"
-"* active: we can activate/inactivate identifications to make it easier to our customers\n"
-"\n"
-"In order to make this module compatible for multi-company environments where we have companies that does not need/support this requirement, we have added generic identification types and generic rules to manage the contact information and make it transparent for the user when only use the VAT as we formerly know.\n"
-"\n"
-"Generic Identifications:\n"
-"\n"
-"* VAT: The Fiscal Tax Identification or VAT number, by default will be selected as identification type so the user will only need to add the related vat number.\n"
-"* Passport\n"
-"* Foreign ID (Foreign National Document)\n"
-"\n"
-"Rules when creating a new partner: We will only see the identification types that are meaningful, taking into account these rules:\n"
-"\n"
-"* If the partner have not country address set: Will show the generic identification types plus the ones defined in the partner's related company country (If the partner has not specific company then will show the identification types related to the current user company)\n"
-"\n"
-"* If the partner has country address : will show the generic identification types plus the ones defined for the country of the partner.\n"
-"\n"
-"When creating a new company, will set to the related partner always the related country is_vat identification type.\n"
-"\n"
-"All the defined identification types can be reviewed and activate/deactivate in \"Contacts / Configuration / Identification Type\" menu.\n"
-"\n"
-"This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -14516,6 +14396,12 @@ msgid "Compute"
 msgstr "計算"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "自動建立應收憑單後使用稅務雲(TaxCloud)計算稅費."
@@ -14942,6 +14828,12 @@ msgstr "國家群組"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "國家名稱"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -20226,6 +20118,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "無效的「分組」參數"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -20712,8 +20610,8 @@ msgstr "LGPL 第3版"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Accounting Reports"
+msgid "Lithuania - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -30670,6 +30568,12 @@ msgstr "泰國 - 會計"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "「應用程式切換」操作無法選擇為主動作."
 
@@ -30744,8 +30648,8 @@ msgstr "模組`%s`現在可能不能使用，請稍後再試."
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "`base` 模組不能卸載"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -30760,6 +30664,14 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr "客戶明確放棄其自己的標準條款和條件，即使這些是在這些標准銷售條款和條件之後製定的. 為了有效，任何減損必須事先以書面形式明確同意."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -30806,7 +30718,6 @@ msgstr "幣別代碼必須唯一!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr "匯率 1 的貨幣到貨幣的匯率."
 
@@ -31084,8 +30995,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "幣別到其他幣別的比率為 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr "此貨幣每一單位兌其他貨幣的匯率。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -32181,7 +32093,7 @@ msgstr "UPS 發貨"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_ups
 msgid "UPS: Bill My Account"
-msgstr "UPS:我的帳單"
+msgstr "UPS：記賬至我的帳戶"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url
@@ -33787,6 +33699,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "您不能停用您當前登入的使用者."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -34613,3 +34531,9 @@ msgstr "年"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "奧蘭群島"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""

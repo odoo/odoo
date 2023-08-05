@@ -5,6 +5,8 @@
 # Translators:
 # Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +50,12 @@ msgstr "Aggiungi un numero di telefono alla lista nera"
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_search
 msgid "Archived"
 msgstr "Archiviato"
+
+#. module: phone_validation
+#: code:addons/phone_validation/models/phone_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Phone Number?"
+msgstr "Rimuovere veramente questo numero di telefono dalla lista nera?"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -262,7 +270,7 @@ msgstr "Messaggi"
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Missing definition of phone fields."
-msgstr ""
+msgstr "La definizione dei campi telefono non è presente."
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number

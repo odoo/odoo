@@ -14295,6 +14295,12 @@ msgid "Compute"
 msgstr "Oblicz"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "Metoda obliczeniowa nie może zależeć od pola \"id\""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -14724,6 +14730,12 @@ msgstr "Grupy krajów"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Nazwa kraju"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr "Kod kraju nie może być pusty"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -20132,6 +20144,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Nieprawidłowy parametr \"grupuj według\""
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Nieprawidłowy format JSON w polu Wartość domyślna."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -20629,8 +20647,8 @@ msgstr "Wersja 3 LGPL"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr ""
+msgid "Lithuania - Accounting Reports"
+msgstr "Litwa - Raporty księgowe"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -30546,6 +30564,12 @@ msgstr "Tajlandia - Księgowość"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr "Akcja \"%s\" nie może być wybrana jako akcja główna."
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 "Akcja \"Przełącznik aplikacji\" nie może zostać wybrana jako akcja domowa."
@@ -30631,8 +30655,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Moduł 'base' nie może zostać odinstalowany."
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Modułów tych nie można odinstalować: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -30651,6 +30675,16 @@ msgstr ""
 "zostały one sporządzone po niniejszych standardowych warunkach sprzedaży. "
 "Aby odstępstwo było ważne, musi być wcześniej wyraźnie uzgodnione w formie "
 "pisemnej."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"Nazwa bieżącej stawki jest pusta.\n"
+"Należy ją ustawić."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -30700,7 +30734,6 @@ msgstr "Kod waluty musi być unikalny!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr "Waluta o kursie 1 do kursu waluty."
 
@@ -30998,8 +31031,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "Kurs waluty w stosunku do waluty o kursie 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr "Kurs waluty do waluty kursu 1"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -33801,6 +33835,12 @@ msgstr ""
 "Nie możesz dezaktywować użytkownika, jako który jesteś obecnie zalogowany."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "Nie można usunąć grupy powiązanej z polem ustawień."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -34640,3 +34680,10 @@ msgstr "rok"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Åland Islands"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"Ta waluta jest ustawiona na firmę i dlatego nie można jej dezaktywować."

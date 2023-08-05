@@ -52,13 +52,13 @@ msgstr ""
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
-msgstr ""
+msgstr "액세스 토큰을 가져오는 중 오류가 발생했습니다. %s"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "인증 URL"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -78,7 +78,7 @@ msgstr "설정 구성"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back to your mail server"
-msgstr ""
+msgstr "메일 서버로 돌아가기"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
@@ -86,13 +86,13 @@ msgstr ""
 msgid ""
 "Incorrect Connection Security for Outlook mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
-msgstr ""
+msgstr "Outlook 메일 서버 %r에 대한 연결 보안이 잘못되었습니다. \"TLS (STARTTLS)\"로 설정하시기 바랍니다."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr ""
+msgstr "Outlook 자격 증명 설정 여부"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -102,13 +102,13 @@ msgstr "메일 서버"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
 msgid "Microsoft Outlook Mixin"
-msgstr ""
+msgstr "Microsoft Outlook 믹스인"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr ""
+msgstr "관리자만 Outlook 메일 서버를 연결할 수 있습니다."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -119,13 +119,13 @@ msgstr "아웃룩"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "Outlook 액세스 토큰"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Outlook 액세스 토큰 만료 타임스탬프"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__use_microsoft_outlook_service
@@ -147,7 +147,7 @@ msgstr "Outlook 클라이언트 비밀번호"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "Outlook 새로고침 토큰"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
@@ -159,9 +159,20 @@ msgstr "Outlook 자격 증명을 구성하십시오."
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
+"Please fill the \"Username\" field with your Outlook/Office365 username "
+"(your email address). This should be the same account as the one used for "
+"the Outlook OAuthentication Token."
+msgstr ""
+"\"사용자 이름\" 필드에 Outlook/Office365 사용자 이름 (이메일 주소)을 입력하세요. 이 계정은 Outlook OAuth"
+" 인증 토큰에 사용된 계정과 동일해야 합니다."
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
-msgstr ""
+msgstr "Outlook 메일 서버 %r에서 비밀번호 필드를 비워두세요. OAuth 프로세스에는 비밀번호가 필요하지 않습니다."
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
@@ -185,10 +196,10 @@ msgstr "Outlook 계정을 연결하려면 일반 설정 항목에서 Outlook API
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "Outlook에서 인증 코드를 생성하기 위한 URL."
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."
-msgstr ""
+msgstr "알 수 없는 오류"

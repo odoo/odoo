@@ -13425,6 +13425,12 @@ msgid "Compute"
 msgstr "Hitung"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -13843,6 +13849,12 @@ msgstr "Kelompok Negara"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Nama Negara"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -16546,7 +16558,7 @@ msgstr "Nama Kolom"
 #: model:ir.module.category,name:base.module_category_services_field_service
 #: model:ir.module.module,shortdesc:base.module_industry_fsm
 msgid "Field Service"
-msgstr ""
+msgstr "Layanan Lapangan"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_forecast
@@ -16689,12 +16701,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__datas
 msgid "File Content (base64)"
-msgstr ""
+msgstr "Konten File (base64)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__raw
 msgid "File Content (raw)"
-msgstr ""
+msgstr "Konten File (raw)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__format
@@ -19055,6 +19067,12 @@ msgid "Invalid 'group by' parameter"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -19241,7 +19259,7 @@ msgstr "Penagihan"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
 msgid "IoT Box Homepage"
-msgstr ""
+msgstr "Beranda IoT Bpx"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_iot
@@ -19541,7 +19559,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
+msgid "Lithuania - Accounting Reports"
 msgstr ""
 
 #. module: base
@@ -25569,7 +25587,7 @@ msgstr "Poros"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Plan your resources on project tasks"
-msgstr ""
+msgstr "Rencanakan sumber daya Anda pada task project"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_planning
@@ -26744,7 +26762,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
-msgstr ""
+msgstr "Readonly"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_4
@@ -29191,7 +29209,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "Log Task"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__vat
@@ -29418,6 +29436,12 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 
@@ -29498,8 +29522,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Modul `dasar` tidak dapat dibongkar"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -29519,6 +29543,14 @@ msgstr ""
 "sendiri, bahkan bila hal tersebut dibuat setelah syarat dan ketentuan "
 "standar penjualan. Agar valid, derogation apapun harus disetujui secara "
 "eksplisit terlebih dahulu secara tertulis."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -29567,7 +29599,6 @@ msgstr "Kode mata uang harus unik!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr ""
 
@@ -29834,7 +29865,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
 msgstr ""
 
 #. module: base
@@ -32478,6 +32510,12 @@ msgstr ""
 "Anda tidak dapat menonaktifkan akun pengguna yang sedang anda gunakan."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -33312,3 +33350,9 @@ msgstr "tahun"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Kepulauan Aland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""

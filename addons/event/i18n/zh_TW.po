@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 16:40+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -229,18 +230,14 @@ msgstr "<i class=\"fa fa-map-marker\" title=\"地點\"/>"
 msgid ""
 "<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
 "button\" title=\"Confirm Attendance\"/>"
-msgstr ""
-"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
-"button\" title=\"確認出席\"/>"
+msgstr "<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"已出席按鈕\" title=\"確認出席\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
 "<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Confirm Attendance\"/>"
-msgstr ""
-"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
-"title=\"確認出席\"/>"
+msgstr "<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"已出席按鈕\" title=\"確認出席\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3021,6 +3018,13 @@ msgstr "我們與會者和我們的飛行員的安全是第一位的！"
 #, python-format
 msgid "The stop date cannot be earlier than the start date."
 msgstr "結束日期不能早於開始日期。"
+
+#. module: event
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0

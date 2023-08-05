@@ -12115,6 +12115,12 @@ msgid "Compute"
 msgstr "חשב"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -12539,6 +12545,12 @@ msgstr "קבוצות ארצות"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "שם ארץ"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -17806,6 +17818,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "פרמטר לא חוקי 'קבוצה לפי'"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -18309,8 +18327,8 @@ msgstr "LGPL גרסה 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - דוחות חשבונאיים"
+msgid "Lithuania - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -26914,6 +26932,12 @@ msgstr "תאילנד - הנהלת חשבונות"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "לא ניתן לבחור בפעולת 'בורר יישומים' כפעולה ביתית."
 
@@ -26988,8 +27012,8 @@ msgstr "ה `%s` נראה שהמודול אינו זמין כרגע, נסה שו�
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "אין אפשרות להסיר את המודול \"בסיס\""
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -27003,6 +27027,14 @@ msgid ""
 "these were drawn up after these standard terms and conditions of sale. In "
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
 msgstr ""
 
 #. module: base
@@ -27053,7 +27085,6 @@ msgstr "קוד המטבע חייב להיות ייחודי!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr "המטבע של שער 1 לשער המטבע."
 
@@ -27327,8 +27358,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "שער המטבע למטבע השער 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -30046,6 +30078,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "לא ניתן לבטל את המשתמש שבו אתה מחובר כעת."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -30880,3 +30918,9 @@ msgstr "שנה"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "איי‬ ‫אלאנד"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
