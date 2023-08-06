@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import re
 from collections import defaultdict
 
@@ -471,6 +472,16 @@ class AccountReportExpression(models.Model):
              "(on a _carryover_*-labeled expression), in case it is different from the parent line. 'custom' is also allowed as value"
              " in case the carryover destination requires more complex logic."
     )
+
+    @api.constrains('formula')
+    def _check_domain_formula(self):
+        for expression in self.filtered(lambda expr: expr.engine == 'domain'):
+            try:
+                domain = ast.literal_eval(expression.formula)
+                self.env['account.move.line']._where_calc(domain)
+            except:
+                raise UserError(_("Invalid domain for expression '%s' of line '%s': %s",
+                                expression.label, expression.report_line_name, expression.formula))
 
     @api.depends('engine')
     def _compute_auditable(self):
