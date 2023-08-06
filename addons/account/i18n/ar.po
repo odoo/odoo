@@ -10846,7 +10846,7 @@ msgstr "إعداد حسابك البنكي لمزامنة التغذية الب�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Setup your chart of accounts and record initial balances."
-msgstr "قم بإنشاء دليلك المحاسبي وسجل الأرصدة الافتتاحية."
+msgstr "قم بإنشاء شجرة الحسابات الخاصة بك وسجّل الأرصدة الافتتاحية. "
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -12652,6 +12652,13 @@ msgstr ""
 "- To Match the text at the beginning of the line (in label or notes), simply fill in your text.\n"
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
