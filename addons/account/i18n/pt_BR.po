@@ -9556,8 +9556,8 @@ msgstr "Adiantamentos"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
-"Predefinido para criar entradas de diário durante uma correspondência de "
-"faturas e pagamentos"
+"Configuração para criar entradas do diário quando ocorre uma correspondência"
+" entre faturas e pagamentos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12830,6 +12830,13 @@ msgstr ""
 "O mapeamento usa expressões regulares.\n"
 "- Para combinar o texto no início da linha (no rótulo ou notas), basta preencher o seu texto.\n"
 "- Para coincidir com o texto em qualquer lugar (no rótulo ou notas), coloque o texto entre . * por exemplo: .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
