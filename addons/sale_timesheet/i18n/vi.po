@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Không tìm thấy hoạt động nào. Hãy tạo một hoạt động mới!\n"
+"                </p><p>\n"
+"                    Theo dõi số giờ làm việc theo dự án hàng ngày và lập hoá đơn thời gian này cho khách hàng của bạn.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -93,7 +101,7 @@ msgstr ", dẫn tới"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "- Timesheet product"
-msgstr ""
+msgstr "- Sản phẩm bảng chấm công"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -158,9 +166,9 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Theo cấu hình sản phẩm, số lượng đã giao có thể được tính tự động theo cơ chế:\n"
-"  - Thủ công: số lượng được nhập thủ công trên mục\n"
+"  - Thủ công: số lượng được nhập thủ công trên dòng\n"
 "  - Phân tích từ chi phí: số lượng dựa trên tổng các khoản chi phí đã ghi nhận\n"
-"  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên kết với mục bán hàng\n"
+"  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên kết với dòng bán hàng\n"
 "  - Dịch chuyển tồn kho: số lượng đến từ các phiếu lấy hàng đã xác nhận\n"
 
 #. module: sale_timesheet
@@ -192,7 +200,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Mục phân tích"
+msgstr "Dòng phân tích"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
@@ -349,7 +357,7 @@ msgstr "Tạo hóa đơn từ dự án"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
 msgid "Create SO Line from project"
-msgstr "Tạo mục đơn bán hàng từ dự án"
+msgstr "Tạo dòng đơn bán hàng từ dự án"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order
@@ -484,7 +492,7 @@ msgstr "Ngày kết thúc"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__existing_employee_ids
 msgid "Existing Employee"
-msgstr ""
+msgstr "Nhân viên hiện tại"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -594,7 +602,8 @@ msgid ""
 "the order with a task for each sales order line to track the time spent."
 msgstr ""
 "Hóa đơn dựa trên bảng chấm công (số lượng đã giao) và tạo một dự án cho đơn "
-"hàng với nhiệm vụ cho mỗi mục đơn bán hàng để theo dõi thời gian đã sử dụng."
+"hàng với nhiệm vụ cho mỗi dòng đơn bán hàng để theo dõi thời gian đã sử "
+"dụng."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -795,7 +804,7 @@ msgstr "Giờ không thể lập hoá đơn"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "Không được lập hoá đơn"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -941,7 +950,7 @@ msgstr "Dự án"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
 msgid "Project Sales line, employee mapping"
-msgstr "Mục bán hàng dự án, sơ đồ nhân viên"
+msgstr "Dòng bán hàng dự án, sơ đồ nhân viên"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
@@ -1018,7 +1027,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "S0001"
-msgstr ""
+msgstr "S0001"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1035,7 +1044,7 @@ msgstr "Tài khoản phân tích đơn bán hàng"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
 msgid "Sale line/Employee map"
-msgstr "Mục bán hàng/sơ đồ nhân viên"
+msgstr "Dòng bán hàng/sơ đồ nhân viên"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_advance_payment_inv
@@ -1080,7 +1089,7 @@ msgstr "Hạng mục đơn bán hàng"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Mục đơn bán hàng"
+msgstr "Dòng đơn bán hàng"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
@@ -1149,7 +1158,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "Chọn người để lập hoá đơn..."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1204,7 +1213,7 @@ msgstr "Dịch vụ"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__show_hours_recorded_button
 msgid "Show Hours Recorded Button"
-msgstr ""
+msgstr "Hiển thị nút Số giờ đã ghi nhận"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description

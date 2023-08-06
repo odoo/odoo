@@ -2542,6 +2542,7 @@ msgstr "Tichetversion"
 #: model:ir.model.fields,help:project.field_project_task__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
 msgstr ""
+"JSON, das IDs aus einem many2one-Feld den aufgewendeten Sekunden zuordnet"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3424,7 +3425,8 @@ msgstr ""
 "Richtlinie zum Hinterlassen einer Mitteilung im Dokument über das E-Mail-Gateway.\n"
 "- Jeder: jeder kann eine Nachricht hinterlassen\n"
 "- Partner: nur bestätigte Partner\n"
-"- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
+"- Follower: nur Follower des entsprechenden Dokuments\n"
+" oder Mitglieder der verfolgten Kanäle\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
@@ -3498,7 +3500,7 @@ msgstr "Privat"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Private Tasks"
-msgstr ""
+msgstr "Private Aufgaben"
 
 #. module: project
 #. odoo-javascript
@@ -3784,6 +3786,10 @@ msgid ""
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
 msgstr ""
+"Überprüfen Sie schnell den Status von Aufgaben für Genehmigungen oder "
+"Änderungsanfragen und identifizieren Sie mit dem Sanduhr-Symbol die "
+"Aufgaben, die in der Warteschleife liegen, bis die Abhängigkeiten geklärt "
+"sind."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -4424,7 +4430,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "Statuszeit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
@@ -5697,7 +5703,7 @@ msgstr "Menüansicht Meine Aufgaben"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "on a periodic basis"
-msgstr ""
+msgstr "in regelmäßigen Abständen"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -5797,7 +5803,7 @@ msgstr ", um den aktuellen Status Ihrer Idee anzuzeigen."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "when reaching a given stage"
-msgstr ""
+msgstr "beim Erreichen einer bestimmten Phase"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

@@ -252,7 +252,7 @@ msgstr "(Produktbarcode)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(serial barcode)"
-msgstr ""
+msgstr "(Serienbarcode)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -264,6 +264,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Neu: Die Lagerbuchung wurde erstellt, aber nicht bestätigt.\n"
+"* Warten auf andere Bewegung: Eine verknüpfte Lagerbuchung sollte vor dieser durchgeführt werden.\n"
+"* Warten auf Verfügbarkeit: Die Lagerbuchung ist bestätigt, aber das Produkt kann nicht reserviert werden.\n"
+"* Verfügbar: Das Produkt der Lagerbuchung ist reserviert.\n"
+"* Erledigt: Das Produkt wurde bewegt und der Transfer wurde bestätigt."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -2715,7 +2720,7 @@ msgstr "Zielroute"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
-msgstr "Detailliere Vorgänge"
+msgstr "Detaillierte Vorgänge"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3151,7 +3156,7 @@ msgstr "FontAwesome-Icon, z. B. fa-tasks"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "For partial quantities fill in the done column"
-msgstr ""
+msgstr "Für Teilmengen füllen Sie die Spalte Erledigt aus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
@@ -3706,6 +3711,10 @@ msgid ""
 "numbers. For moves that are returns, the detailed operations will always be "
 "prefilled, regardless of this option."
 msgstr ""
+"Wenn dieses Kontrollkästchen angekreuzt ist, füllt Odoo die detaillierten "
+"Vorgänge automatisch mit den entsprechenden Produkten, Standorten und "
+"Los-/Seriennummern aus. Bei Bewegungen, die Retouren sind, werden die "
+"detaillierten Vorgänge immer vorausgefüllt, unabhängig von dieser Option."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report
@@ -3769,6 +3778,8 @@ msgid ""
 "If this picking was created as a return of another picking, this field links"
 " to the original picking."
 msgstr ""
+"Wenn diese Kommissionierung als Rückgabe einer anderen Kommissionierung "
+"erstellt wurde, verweist dieses Feld auf die ursprüngliche Kommissionierung."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__backorder_id
@@ -4511,7 +4522,7 @@ msgstr "Vorlaufzeiten"
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
 msgid "Least Packages"
-msgstr ""
+msgstr "Kleinste Pakete"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -5797,7 +5808,7 @@ msgstr "Verpackung"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
-msgstr ""
+msgstr "Paket A"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -6001,7 +6012,7 @@ msgid ""
 "                contain a lot/SN plus optional quantity and/or expiry\n"
 "                date, separated by space or semicolon."
 msgstr ""
-"Fügen Sie Ihre Liste der Serien/Lose hier ein. EJede Zeile muss\n"
+"Fügen Sie Ihre Liste der Serien/Lose hier ein. Jede Zeile muss\n"
 "                eine Los-/Seriennummer sowie eine optionale Menge und/oder ein\n"
 "                Ablaufdatum enthalten (per Leerzeichen oder Semikolon getrennt)."
 
@@ -6104,6 +6115,8 @@ msgid ""
 "Please put this document inside your return parcel.<br/>\n"
 "                                Your parcel must be sent to this address:"
 msgstr ""
+"Bitte legen Sie dieses Dokument in Ihr Retourenpaket.<br/>\n"
+"                                Ihr Paket muss an diese Adresse geschickt werden:"
 
 #. module: stock
 #. odoo-python
@@ -6138,7 +6151,7 @@ msgstr "Bevorzugte Route"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the type of operation."
-msgstr ""
+msgstr "Anwesenheit hängt von der Art des Vorgangs ab."
 
 #. module: stock
 #. odoo-python
@@ -6860,7 +6873,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "RETURN OF"
-msgstr ""
+msgstr "RETOURE VON"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
@@ -7102,7 +7115,7 @@ msgstr "Standort auffüllen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__should_replenish
 msgid "Replenish Scrapped Quantities"
-msgstr ""
+msgstr "Entsorgte Mengen auffüllen"
 
 #. module: stock
 #. odoo-python
@@ -7301,7 +7314,7 @@ msgstr "Rücksendungsposten"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_id
 msgid "Return of"
-msgstr ""
+msgstr "Retoure von"
 
 #. module: stock
 #. odoo-python
@@ -7313,7 +7326,7 @@ msgstr "Retoure von %s"
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
 msgid "Return slip"
-msgstr ""
+msgstr "Retourenschein"
 
 #. module: stock
 #. odoo-python
@@ -7471,7 +7484,7 @@ msgstr "Den Planer starten"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "S0001"
-msgstr ""
+msgstr "S0001"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
@@ -7559,7 +7572,7 @@ msgstr "Ausschuss melden"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
 msgid "Scrap operation"
-msgstr ""
+msgstr "Ausschussvorgang"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -8855,6 +8868,8 @@ msgid ""
 "This is the default location for returns created from a picking with this "
 "operation type."
 msgstr ""
+"Dies ist der Standardlagerort für Retouren, die aus einer Kommissionierung "
+"mit dieser Vorgangsart erstellt werden."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9713,22 +9728,22 @@ msgstr "Sichtbarkeitstage"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/OUT/00001"
-msgstr ""
+msgstr "WH/OUT/00001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "WH/OUT/0001"
-msgstr ""
+msgstr "WH/OUT/0001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/Outgoing"
-msgstr ""
+msgstr "WH/Outgoing"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/Stock"
-msgstr ""
+msgstr "WH/Stock"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed
@@ -10276,6 +10291,8 @@ msgid ""
 "You can only move a lot/serial to a new location if it exists in a single "
 "location."
 msgstr ""
+"Sie können ein Los/eine Serie nur an einen neuen Ort verschieben, wenn sie "
+"an einem einzigen Ort existiert."
 
 #. module: stock
 #. odoo-python
@@ -10707,7 +10724,7 @@ msgstr "bpost-Konnektor"
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
 msgid "closest"
-msgstr ""
+msgstr "Nächstgelegen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -10773,7 +10790,7 @@ msgstr "z. B. Zweistufiger Empfang"
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
 msgid "fifo"
-msgstr ""
+msgstr "fifo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -10800,7 +10817,7 @@ msgstr "least_packages"
 #. module: stock
 #: model:product.removal,method:stock.removal_lifo
 msgid "lifo"
-msgstr ""
+msgstr "lifo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form

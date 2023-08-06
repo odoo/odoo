@@ -2643,8 +2643,8 @@ msgstr "先月割り当てられたリードと案件の数。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "アクションが必要なメッセージの数"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
@@ -3860,6 +3860,11 @@ msgid "Use the top left <i>Create</i> button, or send an email to"
 msgstr "左上の<i>作成</i>ボタンを使用する、またはEメールゲートウェイをテストするために"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
+msgid "Use the <i>New</i> button, or send an email to"
+msgstr ""
+
+#. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
@@ -3869,11 +3874,25 @@ msgid ""
 msgstr "左上の <i>作成</i>ボタンを使用する、またはEメールゲートウェイをテストするために%(email_link)sEメールを送ります。"
 
 #. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"Use the <i>New</i> button, or send an email to %s to test the email gateway."
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid ""
 "Use the top left Create button, or configure an email alias to test the "
 "email gateway."
 msgstr "左上の作成ボタンを使用する、またはEメールゲートウェイをテストするためにEメールを送ります。"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
+msgid ""
+"Use the New button, or configure an email alias to test the email gateway."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action

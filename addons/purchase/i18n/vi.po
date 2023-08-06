@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +40,7 @@ msgstr "# Hóa đơn nhà cung cấp"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
 msgid "# of Lines"
-msgstr "# mục"
+msgstr "# dòng"
 
 #. module: purchase
 #. odoo-python
@@ -61,7 +62,7 @@ msgstr "%(product)s từ %(original_receipt_date)s đến %(new_receipt_date)s"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s confirmed the receipt will take place on %s."
-msgstr "%s được xác nhận biên nhận sẽ diễn ra trên %s."
+msgstr "%s đã xác nhận biên nhận sẽ diễn ra trên %s."
 
 #. module: purchase
 #. odoo-python
@@ -445,7 +446,7 @@ msgstr "<strong>Ngày YC.</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Description</strong>"
-msgstr "<strong>Mô tả</strong>"
+msgstr "<strong>Diễn giải</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -587,7 +588,7 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Theo cấu hình sản phẩm, số lượng đã nhận được có thể được tính toán tự động theo cơ chế:\n"
-"  - Thủ công: số lượng được điền thủ công vào mục\n"
+"  - Thủ công: số lượng được điền thủ công vào dòng\n"
 "  - Dịch chuyển tồn kho: số lượng đến từ các phiếu lấy hàng đã xác nhận\n"
 
 #. module: purchase
@@ -708,7 +709,7 @@ msgid ""
 "Amount of time between date planned and order by date for each purchase "
 "order line."
 msgstr ""
-"Khoảng thời gian giữa ngày lập kế hoạch và đặt hàng theo ngày cho mỗi mục "
+"Khoảng thời gian giữa ngày lập kế hoạch và đặt hàng theo ngày cho mỗi dòng "
 "đơn mua hàng."
 
 #. module: purchase
@@ -918,7 +919,7 @@ msgstr "Đơn mua hàng đã hủy #"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr "Không thể xóa một mục đơn mua hàng đang trong trạng thái '%s'."
+msgstr "Không thể xóa một dòng đơn mua hàng đang trong trạng thái '%s'."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_category_id
@@ -1169,12 +1170,12 @@ msgid ""
 "Depicts the date within which the Quotation should be confirmed and "
 "converted into a purchase order."
 msgstr ""
-"Xác định ngày mà Báo giá cần được xác nhận và chuyển đổi thành đơn mua hàng."
+"Xác định ngày mà báo giá cần được xác nhận và chuyển đổi thành đơn mua hàng."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
 msgid "Description"
-msgstr "Mô tả"
+msgstr "Diễn giải"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
@@ -1245,7 +1246,7 @@ msgstr "Bộ lọc mở rộng"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Extra line with %s "
-msgstr "Mục bổ sung với %s "
+msgstr "Dòng bổ sung với %s "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__fiscal_position_id
@@ -1271,7 +1272,7 @@ msgstr "Font biểu tượng, ví dụ: fa-tasks"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr "Các giá trị bị cấm trên mục đơn mua hàng không thể vào sổ"
+msgstr "Các giá trị bị cấm trên dòng đơn mua hàng không thể vào sổ"
 
 #. module: purchase
 #. odoo-python
@@ -1329,7 +1330,7 @@ msgstr "Có tin nhắn"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr "Ẩn các mục đã hủy"
+msgstr "Ẩn các dòng đã hủy"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1568,7 +1569,7 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"Biên độ sai lệch thời gian mua hàng. Khi hệ thống tạo các Đơn mua hàng để "
+"Biên độ sai lệch thời gian mua hàng. Khi hệ thống tạo các đơn mua hàng để "
 "mua sản phẩm, số ngày này sẽ được thêm vào thời gian mua hàng để ngăn ngừa "
 "sự trễ hẹn không mong muốn từ phía nhà cung cấp."
 
@@ -1579,7 +1580,7 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"Biên độ sai lệch thời gian mua hàng. Khi hệ thống tạo các Đơn mua hàng để "
+"Biên độ sai lệch thời gian mua hàng. Khi hệ thống tạo các đơn mua hàng để "
 "tái đặt hàng sản phẩm, số ngày này sẽ được thêm vào thời gian mua hàng để "
 "ngăn ngừa sự trễ hạn không mong muốn từ phía nhà cung cấp."
 
@@ -1598,7 +1599,7 @@ msgstr "Tin nhắn cho đơn mua hàng"
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr "Tin nhắn cho mục đơn mua hàng"
+msgstr "Tin nhắn cho dòng đơn mua hàng"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
@@ -1619,7 +1620,7 @@ msgstr "Số tiền tối thiểu yêu cầu phải có xác nhận hai lần"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr "Thiếu các trường bắt buộc trên mục đơn mua hàng có thể ghi sổ."
+msgstr "Thiếu các trường bắt buộc trên dòng đơn mua hàng có thể ghi sổ."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -2036,7 +2037,7 @@ msgstr "Phân tích mua hàng"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Purchase Description"
-msgstr "Mô tả mua hàng"
+msgstr "Diễn giải mua hàng"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_product_matrix
@@ -2119,13 +2120,13 @@ msgstr "Số đơn mua hàng"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
-msgstr "Mục đơn mua hàng"
+msgstr "Dòng đơn mua hàng"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn
 msgid "Purchase Order Line Warning"
-msgstr "Cảnh báo theo mục đơn mua hàng"
+msgstr "Cảnh báo theo dòng đơn mua hàng"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2195,7 +2196,7 @@ msgstr "Đơn mua hàng đã được xuất hoá đơn"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
-msgstr "Đơn mua hàng có chứa các mục chưa được xuất hóa đơn."
+msgstr "Đơn mua hàng có chứa các dòng chưa được xuất hóa đơn."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2861,7 +2862,7 @@ msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
 msgstr ""
-"Không có mục nào có thể lập hóa đơn. Nếu một sản phẩm có chính sách kiểm "
+"Không có dòng nào có thể lập hóa đơn. Nếu một sản phẩm có chính sách kiểm "
 "soát dựa trên số lượng đã nhận, vui lòng đảm bảo rằng đã nhận hàng."
 
 #. module: purchase
@@ -2914,14 +2915,14 @@ msgstr ""
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been created from: "
-msgstr ""
+msgstr "Hoá đơn nhà cung cấp này đã được tạo từ:"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been modified from: "
-msgstr ""
+msgstr "Hoá đơn nhà cung cấp này đã được chỉnh sửa từ:"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3289,8 +3290,8 @@ msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
-"Bạn không thể thay đổi loại của một mục đơn mua hàng. Thay vào đó, bạn nên "
-"xóa mục hiện tại và tạo một mục mới có loại phù hợp."
+"Bạn không thể thay đổi loại của một dòng đơn mua hàng. Thay vào đó, bạn nên "
+"xóa dòng hiện tại và tạo một dòng mới có loại phù hợp."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action

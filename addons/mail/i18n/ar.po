@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Martin Trigaux, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
@@ -819,7 +820,7 @@ msgstr "إضافة تعبير "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr ""
+msgstr "قم بإضافة مفتاح الواجهة البرمجية لـ Tenor GIF لتمكين دعم GIF. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
@@ -827,6 +828,8 @@ msgid ""
 "Add a Tenor GIF API key to enable GIFs support. "
 "https://developers.google.com/tenor/guides/quickstart#setup"
 msgstr ""
+"قم بإضافة مفتاح الواجهة البرمجية لـ Tenor GIF لتمكين دعم GIF.  "
+"https://developers.google.com/tenor/guides/quickstart#setup "
 
 #. module: mail
 #. odoo-javascript
@@ -1430,7 +1433,7 @@ msgstr "المتن"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body_has_template_value
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "محتوى المتن هو نفس القالب "
 
 #. module: mail
 #. odoo-javascript
@@ -1566,7 +1569,7 @@ msgstr "الردود الجاهزة"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_search
 msgid "Canned Responses Search"
-msgstr ""
+msgstr "البحث في الردود الجاهزة "
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -1576,6 +1579,10 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
+"تتيح لك الردود الجاهزة إدراج ردود مكتوبة مسبقًا في\n"
+"                رسائلك من خلال كتابة <i>: اختصار</i>. يتم استبدال الاختصار\n"
+"                مباشرة في رسالتك، حتى تتمكن من التحرير\n"
+"                قبل الإرسال. "
 
 #. module: mail
 #. odoo-python
@@ -2070,7 +2077,7 @@ msgstr "إنشاء سجل جديد"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid "Create a new canned response"
-msgstr ""
+msgstr "إنشاء رد جاهز جديد"
 
 #. module: mail
 #. odoo-python
@@ -2237,7 +2244,7 @@ msgstr "قم بتخصيص مظهر وأداء رسائل البريد الإلك
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "DTLS:"
-msgstr ""
+msgstr "DTLS:"
 
 #. module: mail
 #. odoo-javascript
@@ -2799,7 +2806,7 @@ msgstr "القائمة السوداء للبريد الإلكتروني "
 #: model:ir.model.fields,field_description:mail.field_res_company__email_secondary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_secondary_color
 msgid "Email Button Color"
-msgstr ""
+msgstr "لون زر البريد الإلكتروني "
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -2815,7 +2822,7 @@ msgstr "تهيئة البريد الإلكتروني "
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Header Color"
-msgstr ""
+msgstr "لون ترويسة البريد الإلكتروني "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
@@ -3112,7 +3119,7 @@ msgstr "فشل"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Failed to load gifs..."
-msgstr ""
+msgstr "فشل تحميل الـ gifs... "
 
 #. module: mail
 #. odoo-python
@@ -3201,6 +3208,8 @@ msgid ""
 "Field \"%(field)s\" on model \"%(model)s\" must be of type Many2one and have"
 " tracking=True for the computation of duration."
 msgstr ""
+"يجب أن يكون الحقل \"%(field)s\" في النموذج \"%(model)s\" من نوع متعدد إلى "
+"واحد، وأن يكون به التتبع=صحيح لاحتساب المدة. "
 
 #. module: mail
 #. odoo-python
@@ -3426,21 +3435,21 @@ msgstr "الأنشطة المستقبلية"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF"
-msgstr ""
+msgstr "GIF"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF Category"
-msgstr ""
+msgstr "فئة GIF "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF Favorites"
-msgstr ""
+msgstr "GIF المفضلة "
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.discuss_gif_favorite_action
@@ -3448,19 +3457,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.discuss_gif_favorite_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_gif_favorite_view_tree
 msgid "GIF favorite"
-msgstr ""
+msgstr "GIF المفضلة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_gif_favorite__tenor_gif_id
 msgid "GIF id from Tenor"
-msgstr ""
+msgstr "معرف GIF من Tenor "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/composer_patch.xml:0
 #, python-format
 msgid "GIFs"
-msgstr ""
+msgstr "GIFs"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -3477,7 +3486,7 @@ msgstr "مستخدم عام من السجل"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Go to conversation"
-msgstr ""
+msgstr "اذهب إلى المحادثة "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__group
@@ -3662,7 +3671,7 @@ msgstr "إخفاء قائمة الأعضاء "
 #: code:addons/mail/static/src/discuss/message_pin/common/thread_actions.js:0
 #, python-format
 msgid "Hide Pinned Messages"
-msgstr ""
+msgstr "إخفاء الرسائل المثبتة "
 
 #. module: mail
 #. odoo-javascript
@@ -4348,6 +4357,7 @@ msgstr "مشاركة الشاشة "
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
 msgstr ""
+"JSON يقوم بتخطيط المعرفات من حقل متعدد إلى واحد إلى الثواني المستغرقة "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -4527,7 +4537,7 @@ msgstr "آخر تحديث في"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__last_used
 msgid "Last Used"
-msgstr ""
+msgstr "آخر استخدام "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_seen_dt
@@ -4537,7 +4547,7 @@ msgstr "تاريخ آخر ظهور "
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__last_used
 msgid "Last time this shortcode was used"
-msgstr ""
+msgstr "آخر مرة تم استخدام هذا الكود القصير فيها "
 
 #. module: mail
 #. odoo-javascript
@@ -4709,7 +4719,7 @@ msgstr "منخفض"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Lower Hand"
-msgstr ""
+msgstr "خفض اليد "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_mimetype
@@ -5005,7 +5015,7 @@ msgstr "عدد الأعضاء "
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 #, python-format
 msgid "Member List"
-msgstr ""
+msgstr "قائمة الأعضاء "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_member_ids
@@ -5261,6 +5271,8 @@ msgid ""
 "Mixin to compute the time a record has spent in each value a many2one field "
 "can take"
 msgstr ""
+"Mixin لاحتساب الوقت الذي يستغرقه السجل في كل قيمة يمكن لحقل من نوع متعدد إلى"
+" واحد أن يحتويها "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model
@@ -5806,7 +5818,7 @@ msgstr "سيقوم أودو بإرسال إشعارات في هذا الجهاز
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__off
 msgid "Off"
-msgstr ""
+msgstr "مغلق "
 
 #. module: mail
 #. odoo-javascript
@@ -5952,7 +5964,7 @@ msgstr "فتح"
 #: code:addons/mail/static/src/core/common/chat_window.js:0
 #, python-format
 msgid "Open Actions Menu"
-msgstr ""
+msgstr "فتح قائمة الإجراءات "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -6231,7 +6243,7 @@ msgstr "كلمة المرور"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Paste your API key"
-msgstr ""
+msgstr "قم بلصق مفتاح الواجهة البرمجية الخاص بك "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -6561,7 +6573,7 @@ msgstr "جلسات RTC "
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Raise Hand"
-msgstr ""
+msgstr "رفع اليد "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings_volumes__volume
@@ -7025,7 +7037,7 @@ msgstr "حفظ كقالب جديد"
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
-msgstr ""
+msgstr "حفظ الـ GIF المفضل من الواجهة البرمجية لـ API "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -7132,7 +7144,7 @@ msgstr "البحث عن قناة... "
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Search for a gif"
-msgstr ""
+msgstr "البحث عن GIF "
 
 #. module: mail
 #. odoo-javascript
@@ -7206,7 +7218,7 @@ msgstr "اختر مستخدماً... "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Select the content filter used for filtering GIFs"
-msgstr ""
+msgstr "قم بتحديد عامل تصفية المحتوى المستخدَم لتصفية GIFs "
 
 #. module: mail
 #. odoo-javascript
@@ -7412,7 +7424,7 @@ msgstr "الإعدادات"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Share Screen"
-msgstr ""
+msgstr "مشاركة الشاشة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
@@ -7481,7 +7493,7 @@ msgstr "إظهار الأنشطة "
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "Show all recipients"
-msgstr ""
+msgstr "إظهار كافة المستلمين "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -7547,7 +7559,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "So uhh... maybe go favorite some GIFs?"
-msgstr ""
+msgstr "امممم... ربما يجدر بك وضع بعض GIFs في المفضلة؟ "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
@@ -7595,7 +7607,7 @@ msgstr "بدء مكالمة "
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Start a Conversation"
-msgstr ""
+msgstr "ابدأ محادثة "
 
 #. module: mail
 #. odoo-javascript
@@ -7647,14 +7659,14 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "وقت الحالة "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/statusbar_duration/statusbar_duration_field.js:0
 #, python-format
 msgid "Status with time"
-msgstr ""
+msgstr "الحالة مع الوقت "
 
 #. module: mail
 #. odoo-javascript
@@ -7668,7 +7680,7 @@ msgstr "إيقاف إضافة المستخدمين "
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Stop Sharing Screen"
-msgstr ""
+msgstr "إيقاف مشاركة الشاشة "
 
 #. module: mail
 #. odoo-javascript
@@ -7896,32 +7908,32 @@ msgstr "القوالب "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Tenor API key"
-msgstr ""
+msgstr "مفتاح الواجهة البرمجية لـ Tenor "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF API key"
-msgstr ""
+msgstr "مفتاح الواجهة البرمجية لـ Tenor GIF "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF content filter"
-msgstr ""
+msgstr "عامل تصفية محتوى Tenor GIF "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF limits"
-msgstr ""
+msgstr "حدود Tenor GIF "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
 msgid "Tenor Gif Limit"
-msgstr ""
+msgstr "حد Tenor GIF "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
 msgid "Tenor content filter"
-msgstr ""
+msgstr "عامل تصفية محتوى Tenor "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -7981,7 +7993,7 @@ msgstr "المرفق %s غير موجود أو إنك لا تملك حق الو�
 #: code:addons/mail/models/ir_attachment.py:0
 #, python-format
 msgid "The attachment %s does not exist."
-msgstr ""
+msgstr "المرفق %s غير موجود. "
 
 #. module: mail
 #. odoo-javascript
@@ -8354,7 +8366,7 @@ msgstr "إلى النظير: "
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "To:"
-msgstr ""
+msgstr "إلى:"
 
 #. module: mail
 #. odoo-javascript
@@ -8865,7 +8877,7 @@ msgstr "المستخدم متصل الآن"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
 msgid "User should not have duplicated favorite GIF"
-msgstr ""
+msgstr "يجب ألا يكون للمستخدم GIF مفضل مكرر "
 
 #. module: mail
 #. odoo-python
@@ -9628,7 +9640,7 @@ msgstr "قام بإسناد النشاط التالي إليك: "
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
 msgid "https://developers.google.com/tenor/guides/content-filtering"
-msgstr ""
+msgstr "https://developers.google.com/tenor/guides/content-filtering"
 
 #. module: mail
 #. odoo-python
@@ -9680,7 +9692,7 @@ msgstr "قائمة"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "list-item"
-msgstr ""
+msgstr "إدراج السلعة في القائمة "
 
 #. module: mail
 #. odoo-javascript

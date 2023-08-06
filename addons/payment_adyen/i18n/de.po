@@ -28,6 +28,8 @@ msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
 "                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
+"<strong>Warnung:</strong> Um den Betrag manuell zu erfassen, müssen Sie auch die\n"
+"                    die Erfassungsverzögerung in den Einstellungen Ihres Adyen-Kontos auf manuell setzen."
 
 #. module: payment_adyen
 #. odoo-python
@@ -35,6 +37,8 @@ msgstr ""
 #, python-format
 msgid "A request was sent to void the transaction with reference %s (%s)."
 msgstr ""
+"Es wurde ein Antrag auf Stornierung der Transaktion mit Referenz %s (%s) "
+"gesendet."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -93,7 +97,7 @@ msgstr "HMAC-Schlüssel"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Hat Adyen Steuer"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -211,7 +215,7 @@ msgstr "Der API-Schlüssel des Webservice-Benutzers"
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "The HMAC key of the webhook"
-msgstr ""
+msgstr "Der HMAC-Schlüssel des Webhooks"
 
 #. module: payment_adyen
 #. odoo-python
@@ -221,16 +225,19 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"Der von Adyen für die Transaktion %s verarbeitete Betrag unterscheidet sich "
+"von dem angeforderten Betrag. Es wird eine weitere Transaktion mit dem "
+"richtigen Betrag erstellt."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_checkout_api_url
 msgid "The base URL for the Checkout API endpoints"
-msgstr ""
+msgstr "Die Basis-URL für die API-Endpunkte des Kassiervorgangs"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_recurring_api_url
 msgid "The base URL for the Recurring API endpoints"
-msgstr ""
+msgstr "Die Basis-URL für die wiederkehrenden API-Endpunkte"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
@@ -238,6 +245,8 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"Die Erfassung oder Stornierung der Transaktion kann einige Minuten dauern,\n"
+"                     bis sie von Adyen verarbeitet und in Odoo wiedergegeben wird."
 
 #. module: payment_adyen
 #. odoo-python
@@ -259,6 +268,7 @@ msgstr "Der Client Key des Webservice-Benutzers"
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
 msgstr ""
+"Der Code des Händlerkontos, das mit diesem Anbieter verwendet werden soll."
 
 #. module: payment_adyen
 #. odoo-python

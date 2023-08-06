@@ -4,6 +4,9 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# JH CHOI <hwangtog@gmail.com>, 2023
+# Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:35+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1006,6 +1009,8 @@ msgid ""
 "\n"
 "        Bridge between HR and Livechat."
 msgstr ""
+"\n"
+"        인적자원 관리와 실시간 채팅 업무를 연결."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -1340,6 +1345,12 @@ msgid ""
 "        P&L + balance Sheet\n"
 "    "
 msgstr ""
+"\n"
+"        전자 회계 보고서\n"
+"            - 판매 보고서\n"
+"            - 구매 보고서\n"
+"        P&L + 재무상태표\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_keypay
@@ -10488,6 +10499,10 @@ msgid ""
 "Install this if you are using the Point of Sale app in Chile.    \n"
 "\n"
 msgstr ""
+"\n"
+"이 모듈에는 칠레 규정에서 요구하는 기술적인 내용이 담겨 있습니다.\n"
+"칠레에서 POS 프로그램을 사용하는 경우 이 모듈을 설치하십시오.    \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_pos_cert
@@ -12086,6 +12101,11 @@ msgid ""
 "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- 연락처: 특정 회사의 직원 (예. CEO, CFO 등)의 연락처 세부 정보를 구성하는 데 사용합니다.\n"
+"- 청구서 주소: 모든 청구서에 대한 기본 주소입니다. 이 회사와 관련된 주문서에 대한 청구서 발행 시 기본적으로 선택됩니다.\n"
+"- 배송 주소: 전체 배송과 관련된 기본 주소입니다. 이 회사와 관련된 주문을 배송할 때 기본적으로 선택됩니다.\n"
+"- 비공개: 비공개 주소는 권한이 부여된 사용자만 열람이 가능하며 민감한 데이터 (직원 집 주소 등)가 포함되어 있습니다.\n"
+"- 기타: 회사의 기타 주소입니다. (예. 자회사 등)"
 
 #. module: base
 #. odoo-python
@@ -14327,7 +14347,7 @@ msgstr "웹사이트 고객이 배송 픽업 지점을 선택하도록 허용"
 msgid ""
 "Also you will find here all the related documents and download it by "
 "clicking on any individual document."
-msgstr ""
+msgstr "또한 여기서 모든 관련 문서를 찾아 개별 문서를 클릭하여 다운로드할 수 있습니다."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
@@ -14807,7 +14827,7 @@ msgstr "첨부 파일"
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Attachment is not encoded in base64."
-msgstr ""
+msgstr "첨부 파일이 base64로 인코딩되지 않았습니다."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -15654,7 +15674,7 @@ msgstr "브라질 - 회계 보고서"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_sales
 msgid "Brazil - Sale"
-msgstr ""
+msgstr "브라질 - 판매"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
@@ -16587,6 +16607,8 @@ msgid ""
 "Comma-separated list of addresses or domains for which this server can be used.\n"
 "e.g.: \"notification@odoo.com\" or \"odoo.com\""
 msgstr ""
+"이 서버를 사용할 수 있는 주소 또는 도메인의 쉼표로 구분된 목록입니다.\n"
+"예.: \"notification@odoo.com\" 또는 \"odoo.com\""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__view_mode
@@ -16800,7 +16822,7 @@ msgstr "계산"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Compute method cannot depend on field 'id'"
-msgstr ""
+msgstr "계산 방법은 'id' 필드에 종속될 수 없습니다."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -17366,7 +17388,7 @@ msgstr "주소록에 새 고객 만들기"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_attachment
 msgid "Create a new document"
-msgstr ""
+msgstr "새 문서 만들기"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -17744,14 +17766,14 @@ msgstr "통화 단위"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__currency_field
 msgid "Currency field"
-msgstr ""
+msgstr "통화 필드"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Currency field does not have type many2one"
-msgstr ""
+msgstr "통화 필드에 many2one 유형이 없습니다"
 
 #. module: base
 #. odoo-python
@@ -18216,7 +18238,7 @@ msgstr "사용 권한 삭제"
 msgid ""
 "Deleting the template users is not allowed. Deleting this profile will "
 "compromise critical functionalities."
-msgstr ""
+msgstr "서식 사용자 삭제를 할 수 업습니다. 이 프로필을 삭제하면 중요 기능이 손상됩니다."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_inventory_delivery
@@ -20265,6 +20287,10 @@ msgid ""
 "Technical Details:\n"
 "%s"
 msgstr ""
+"형식이 잘못 되었거나 일치하는 파일로 인해 %r 파일을 가져오지 못했습니다. (유효한 형식은 .csv, .po입니다)\n"
+"\n"
+"기술 세부 정보:\n"
+"%s"
 
 #. module: base
 #. odoo-python
@@ -21057,7 +21083,7 @@ msgstr "그리스 - 회계"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr_reports
 msgid "Greece - Accounting Reports"
-msgstr ""
+msgstr "그리스 - 회계 보고서"
 
 #. module: base
 #: model:res.country,name:base.gl
@@ -22573,7 +22599,7 @@ msgstr "'그룹별' 매개 변수가 잘못되었습니다."
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
-msgstr ""
+msgstr "기본값 필드의 JSON 형식이 잘못되었습니다."
 
 #. module: base
 #. odoo-python
@@ -22818,7 +22844,7 @@ msgstr "아일랜드 - 회계"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ie_reports
 msgid "Ireland - Accounting Reports"
-msgstr ""
+msgstr "아일랜드 - 회계 보고서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
@@ -30690,7 +30716,7 @@ msgstr "요청함"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__res_users_settings_ids
 msgid "Res Users Settings"
-msgstr ""
+msgstr "관련 사용자 설정"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_partner_assign
@@ -30910,7 +30936,7 @@ msgstr "S - 기타 서비스 업무"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sbr
 msgid "SBR"
-msgstr ""
+msgstr "SBR"
 
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
@@ -31331,7 +31357,7 @@ msgstr "사우디 아라비아 - 회계"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_edi
 msgid "Saudi Arabia - E-invoicing"
-msgstr ""
+msgstr "사우디 아라비아 - 전자 청구서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
@@ -32507,7 +32533,7 @@ msgstr "스프레드시트 문서"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_spreadsheet
 msgid "Spreadsheet Test"
-msgstr ""
+msgstr "스프레드시트 테스트"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_spreadsheet
@@ -32653,7 +32679,6 @@ msgstr "환경 설정 시작"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -32691,6 +32716,7 @@ msgstr "시/도"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "상태"
@@ -34178,7 +34204,7 @@ msgstr "현재 창"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__allow_out_payment
 msgid "This account can be used for outgoing payments"
-msgstr ""
+msgstr "이 계정은 출금 결제용으로 사용할 수 없습니다."
 
 #. module: base
 #. odoo-python
@@ -35204,7 +35230,7 @@ msgstr "이 시스템에서 Wkhtmltopdf를 찾을 수 없습니다. PDF를 만�
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Unable to import field type '%s'  "
-msgstr ""
+msgstr "'%s' 형식 필드를 가져올 수 없습니다."
 
 #. module: base
 #. odoo-python
@@ -35387,7 +35413,7 @@ msgstr "%r 의존성에 알 수 없는 필드 %r이 있습니다."
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Unknown field name '%s' in currency_field"
-msgstr ""
+msgstr "currency_field '%s'에 알 수 없는 필드 이름"
 
 #. module: base
 #. odoo-python
@@ -36848,7 +36874,7 @@ msgstr "현재 사용중인 사용자를 비활성화 할 수 없습니다."
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "You cannot delete a group linked with a settings field."
-msgstr ""
+msgstr "설정 필드에 연결된 그룹은 삭제할 수 없습니다."
 
 #. module: base
 #. odoo-python
@@ -37234,7 +37260,7 @@ msgstr "예 : 주문 수량 업데이트"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "e.g. email@domain.com, domain.com"
-msgstr ""
+msgstr "예. email@domain.com, domain.com"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -37502,7 +37528,7 @@ msgstr "pos_account_reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mrp
 msgid "pos_mrp"
-msgstr ""
+msgstr "pos_mrp"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_predict_product

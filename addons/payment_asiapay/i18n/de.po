@@ -39,17 +39,17 @@ msgstr "AsiaPay"
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_merchant_id
 msgid "AsiaPay Merchant ID"
-msgstr ""
+msgstr "AsiaPay-Händler-ID"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
 msgid "AsiaPay Secure Hash Function"
-msgstr ""
+msgstr "Secure-Hash-Funktion von AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_secret
 msgid "AsiaPay Secure Hash Secret"
-msgstr ""
+msgstr "Secure-Hash-Geheimnis von AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_brand
@@ -88,7 +88,7 @@ msgstr "Keine Transaktion gefunden, die der Referenz %s entspricht."
 #: code:addons/payment_asiapay/models/payment_provider.py:0
 #, python-format
 msgid "Only one currency can be selected by AsiaPay account."
-msgstr ""
+msgstr "Pro AsiaPay-Konto kann nur eine Währung ausgewählt werden."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__paydollar
@@ -115,14 +115,14 @@ msgstr "PesoPay"
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(ref)s."
-msgstr ""
+msgstr "Erhaltene Daten mit fehlender Referenz %(ref)s."
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing success code."
-msgstr ""
+msgstr "Erhaltene Daten mit fehlenden Erfolgscode."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha1
@@ -142,12 +142,12 @@ msgstr "SHA512"
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Secure Hash Function"
-msgstr ""
+msgstr "Secure-Hash-Funktion"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Secure Hash Secret"
-msgstr ""
+msgstr "Secure-Hash-Geheimnis"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__siampay
@@ -158,16 +158,18 @@ msgstr "SiamPay"
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_merchant_id
 msgid "The Merchant ID solely used to identify your AsiaPay account."
 msgstr ""
+"Die Händler-ID dient ausschließlich zur Identifizierung Ihres AsiaPay-"
+"Kontos."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_brand
 msgid "The brand associated to your AsiaPay account."
-msgstr ""
+msgstr "Die mit Ihrem AsiaPay-Konto verbundene Marke."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
 msgid "The secure hash function associated to your AsiaPay account."
-msgstr ""
+msgstr "Die mit Ihrem AsiaPay-Konto verbundene Secure-Hash-Funktion."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__code
@@ -179,4 +181,4 @@ msgstr "Der technische Code dieses Zahlungsanbieters."
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown success code: %s"
-msgstr ""
+msgstr "Unbekannter Erfolgscode: %s"

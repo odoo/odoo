@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -836,6 +837,8 @@ msgstr "Reaktion hinzufügen"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add a Tenor GIF API key to enable GIFs support."
 msgstr ""
+"Fügen Sie einen Tenor-GIF-API-Schlüssel hinzu, um die Unterstützung von GIFs"
+" zu aktivieren."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
@@ -843,6 +846,8 @@ msgid ""
 "Add a Tenor GIF API key to enable GIFs support. "
 "https://developers.google.com/tenor/guides/quickstart#setup"
 msgstr ""
+"Fügen Sie einen Tenor-GIF-API-Schlüssel hinzu, um die Unterstützung von GIFs"
+" zu aktivieren. https://developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -1233,7 +1238,7 @@ msgstr "Audio-Player:"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__partners
 msgid "Authenticated Partners"
-msgstr "Authentifizierte Partner"
+msgstr "Authentifizierten Partnern"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_id
@@ -3112,7 +3117,7 @@ msgstr "Escapen"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
 msgid "Everyone"
-msgstr "Jeder"
+msgstr "Jedem"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__exception
@@ -3251,6 +3256,8 @@ msgid ""
 "Field \"%(field)s\" on model \"%(model)s\" must be of type Many2one and have"
 " tracking=True for the computation of duration."
 msgstr ""
+"Das Feld „%(field)s“ im Modell „%(model)s“ muss vom Typ Many2one sein und "
+"für die Berechnung der Dauer den Wert tracking=True haben."
 
 #. module: mail
 #. odoo-python
@@ -3388,7 +3395,7 @@ msgstr "Follower-Formular"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__followers
 msgid "Followers only"
-msgstr "Nur Follower"
+msgstr "Nur von Followern"
 
 #. module: mail
 #. odoo-javascript
@@ -3506,7 +3513,7 @@ msgstr "GIF-Favorit"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_gif_favorite__tenor_gif_id
 msgid "GIF id from Tenor"
-msgstr ""
+msgstr "GIF-ID von Tenor"
 
 #. module: mail
 #. odoo-javascript
@@ -4415,6 +4422,7 @@ msgstr "Teilt den Bildschirm"
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
 msgstr ""
+"JSON, das IDs aus einem many2one-Feld den aufgewendeten Sekunden zuordnet"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -4604,7 +4612,7 @@ msgstr "Letztes gesehenes Datum"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__last_used
 msgid "Last time this shortcode was used"
-msgstr ""
+msgstr "Letztes Mal, als dieses Tastenkürzel verwendet wurde"
 
 #. module: mail
 #. odoo-javascript
@@ -5334,6 +5342,8 @@ msgid ""
 "Mixin to compute the time a record has spent in each value a many2one field "
 "can take"
 msgstr ""
+"Mixin zum Berechnen der Zeit, die ein Datensatz in jedem Wert eines "
+"many2one-Feldes verbracht hat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model
@@ -5883,7 +5893,7 @@ msgstr "Odoo sendet keine Benachrichtigungen auf dieses Gerät!"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__off
 msgid "Off"
-msgstr ""
+msgstr "Aus"
 
 #. module: mail
 #. odoo-javascript
@@ -6032,7 +6042,7 @@ msgstr "Offen"
 #: code:addons/mail/static/src/core/common/chat_window.js:0
 #, python-format
 msgid "Open Actions Menu"
-msgstr ""
+msgstr "Aktionsmenü öffnen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -6419,7 +6429,8 @@ msgstr ""
 "Richtlinie zum Hinterlassen einer Mitteilung im Dokument über das E-Mail-Gateway.\n"
 "- Jeder: jeder kann eine Nachricht hinterlassen\n"
 "- Partner: nur bestätigte Partner\n"
-"- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
+"- Follower: nur Follower des entsprechenden Dokuments\n"
+" oder Mitglieder der verfolgten Kanäle\n"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -7121,7 +7132,7 @@ msgstr "Als neue Vorlage speichern"
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
-msgstr ""
+msgstr "Bevorzugtes GIF aus Tenor-API speichern"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -7302,7 +7313,7 @@ msgstr "Benutzer auswählen..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Select the content filter used for filtering GIFs"
-msgstr ""
+msgstr "Wählen Sie den Inhaltsfilter, der zum Filtern von GIFs verwendet wird"
 
 #. module: mail
 #. odoo-javascript
@@ -7508,7 +7519,7 @@ msgstr "Einstellungen"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Share Screen"
-msgstr ""
+msgstr "Bildschirm teilen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
@@ -7744,14 +7755,14 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "Statuszeit"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/statusbar_duration/statusbar_duration_field.js:0
 #, python-format
 msgid "Status with time"
-msgstr ""
+msgstr "Status mit Zeit"
 
 #. module: mail
 #. odoo-javascript
@@ -7765,7 +7776,7 @@ msgstr "Hinzufügen von Benutzerns stoppen"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Stop Sharing Screen"
-msgstr ""
+msgstr "Teilen des Bilschirms beenden"
 
 #. module: mail
 #. odoo-javascript
@@ -8001,27 +8012,27 @@ msgstr "API-Schlüssel von Tenor"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF API key"
-msgstr ""
+msgstr "GIF-API-Schlüssel von Tenor"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF content filter"
-msgstr ""
+msgstr "Tenor-GIF-Inhaltsfilter"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF limits"
-msgstr ""
+msgstr "Tenor-GIF-Beschränkungen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
 msgid "Tenor Gif Limit"
-msgstr ""
+msgstr "Tenor-GIF-Beschränkung"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
 msgid "Tenor content filter"
-msgstr ""
+msgstr "Tenor-Inhaltsfilter"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -8467,7 +8478,7 @@ msgstr "An Freund:"
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "To:"
-msgstr ""
+msgstr "An:"
 
 #. module: mail
 #. odoo-javascript

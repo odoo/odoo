@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Osoul <baruni@osoul.ly>, 2023
+# Martin Trigaux, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
@@ -103,7 +105,7 @@ msgstr "%(amount)s مستحق %(date)s "
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
-msgstr ""
+msgstr "%(partner_name)s وصل إلى حده الائتماني: %(credit_limit)s "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -184,7 +186,7 @@ msgstr "%s الضرائب المشمولة "
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "%s Statement %s"
-msgstr ""
+msgstr "%s كشف الحساب %s "
 
 #. module: account
 #. odoo-python
@@ -208,6 +210,8 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"لقد وصل %s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي الصلة.\n"
+"حتى تكون منتظماً، يجب أن يحتوي قيد اليومية على بند تعليق واحد فقط. "
 
 #. module: account
 #. odoo-python
@@ -729,6 +733,9 @@ msgid ""
 "                                        A second payment will be created in the destination journal.\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|','|',('paired_internal_transfer_payment_id','!=',False),('is_internal_transfer','=',False),('state','!=','draft')]}\" class=\"fst-italic\">\n"
+"                                        سيتم إنشاء عملية دفع أخرى في دفتر اليومية المستهدف.\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -993,12 +1000,12 @@ msgstr "<span role=\"separator\">عرض</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Last Statement</span>"
-msgstr ""
+msgstr "<span title=\"آخر كشف حساب \">آخر كشف حساب</span> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Outstanding Payments/Receipts\">Payments</span>"
-msgstr ""
+msgstr "<span title=\"المدفوعات/الإيصالات المستحقة \">المدفوعات</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -1054,7 +1061,7 @@ msgstr "<span>المبلغ</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Balance</span>"
-msgstr ""
+msgstr "<span>الرصيد</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1192,7 +1199,7 @@ msgstr "<strong>تاريخ إشعار الدائن:</strong> "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong><br/>"
-msgstr ""
+msgstr "<strong>كود العميل:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1202,7 +1209,7 @@ msgstr "<strong>التاريخ:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Delivery Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>تاريخ التوصيل:</strong><br/> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1212,7 +1219,7 @@ msgstr "<strong>تاريخ الاستحقاق:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>تاريخ الاستحقاق:</strong><br/> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1222,7 +1229,7 @@ msgstr "<strong>الرصيد النهائي</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm:</strong><br/>"
-msgstr ""
+msgstr "<strong>شروط التجارة الدولية:</strong><br/> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1238,7 +1245,7 @@ msgstr "<strong>تاريخ الإيصال:</strong> "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>المرجع:</strong><br/> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1417,7 +1424,7 @@ msgstr "تم إنشاء عملية دفع ثانية:  "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A section title"
-msgstr ""
+msgstr "عنوان القسم "
 
 #. module: account
 #. odoo-python
@@ -1503,7 +1510,7 @@ msgstr "عملة الحساب"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
 msgid "Account Dashboard Onboarding"
-msgstr ""
+msgstr "تهيئة لوحة بيانات الحساب للعمل "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3744,7 +3751,7 @@ msgstr "شجرة الحسابات "
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Chart of accounts set!"
-msgstr ""
+msgstr "تم إعداد شجرة الحسابات! "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -3988,7 +3995,7 @@ msgstr "عملة الشركة "
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
 msgid "Company Data"
-msgstr ""
+msgstr "بيانات الشركة "
 
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
@@ -4020,7 +4027,7 @@ msgstr "الشركة المتعلقة بهذه اليومية "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
 msgid "Composite Report"
-msgstr ""
+msgstr "تقرير مُركّب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__engine
@@ -4889,7 +4896,7 @@ msgstr "تخصيص"
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_base_document_layout
 msgid "Customize the look of your documents."
-msgstr ""
+msgstr "قم بتخصيص شكل مستنداتك. "
 
 #. module: account
 #. odoo-javascript
@@ -5215,7 +5222,7 @@ msgstr "قم بتحديد أصغر وحدة من العملة المستخدمة
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
 msgid "Define your fiscal years & tax returns periodicity."
-msgstr ""
+msgstr "قم بتحديد دورية سنواتك المالية وإقراراتك الضريبية. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -5599,7 +5606,7 @@ msgstr "رقمنة المستند "
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
 msgid "Documents Layout"
-msgstr ""
+msgstr "مخطط المستندات "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__business_domain
@@ -6546,21 +6553,21 @@ msgstr "حساب الضرائب الأجنبية (%s)"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account advance payment (%s)"
-msgstr ""
+msgstr "الدفع المقدم لحساب الضريبة الأجنبية (%s) "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account payable (%s)"
-msgstr ""
+msgstr "حساب دائن للضريبة الأجنبية (%s) "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account receivable (%s)"
-msgstr ""
+msgstr "حساب مدين للضريبة الأجنبية (%s) "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__formula
@@ -7199,7 +7206,7 @@ msgstr "قالب استيراد لعناصر اليومية "
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_setup_bill
 msgid "Import Vendor Bills"
-msgstr ""
+msgstr "استيراد فواتير الموردين "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -7859,7 +7866,7 @@ msgstr "تراث تطبيق الفوترة "
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_invoice
 msgid "Invoicing Onboarding"
-msgstr ""
+msgstr "تهيئة الفوترة "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
@@ -8540,7 +8547,7 @@ msgstr "فلنقم بإرسال الفاتورة. "
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_company_data
 msgid "Let's start!"
-msgstr ""
+msgstr "فلنبدأ!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__hierarchy_level
@@ -8570,7 +8577,7 @@ msgstr "البند "
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "البند \"%s\" يحدد نفسه كالأصل. "
 
 #. module: account
 #. odoo-python
@@ -8580,6 +8587,8 @@ msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
 msgstr ""
+"البند \"%s\" يحدد البند \"%s\" كالأصل، ولكن يظهر قبله في التقرير. يجب أن "
+"يأتي الأصل أولاً دائماً. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
@@ -8613,7 +8622,7 @@ msgstr "تحميل المزيد من الحدود "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr ""
+msgstr "رسالة تاريخ القفل "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -8892,7 +8901,7 @@ msgstr "التاريخ الأقصى للبنود المتطابقة "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__max_tax_lock_date
 msgid "Max Tax Lock Date"
-msgstr ""
+msgstr "آخر تاريخ لإغلاق الضريبة "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__5
@@ -9129,7 +9138,7 @@ msgstr "تنقل بسهولة عبر التقارير واقرأ ما بين ا�
 #: model:ir.model.fields,field_description:account.field_account_move__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
 msgid "Need Cancel Request"
-msgstr ""
+msgstr "بحاجة إلى إلغاء الطلب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -9594,29 +9603,29 @@ msgstr "تهيئة المتقدمين "
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_fiscal_year
 msgid "Onboarding Accounting Periods"
-msgstr ""
+msgstr "تهيئة الفترات المحاسبية "
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_bank_account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_chart_of_accounts
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_sales_tax
 msgid "Onboarding Bank Account"
-msgstr ""
+msgstr "تهيئة الحساب البنكي "
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_company_data
 msgid "Onboarding Company Data"
-msgstr ""
+msgstr "تهيئة بيانات الشركة "
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_create_invoice
 msgid "Onboarding Create Invoice"
-msgstr ""
+msgstr "تهيئة إنشاء الفواتير "
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_base_document_layout
 msgid "Onboarding Documents Layout"
-msgstr ""
+msgstr "تهيئة مخطط المستندات "
 
 #. module: account
 #: model:ir.model,name:account.model_onboarding_onboarding_step
@@ -9626,12 +9635,12 @@ msgstr "خطة تمهيدية "
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_setup_bill
 msgid "Onboarding Step Image"
-msgstr ""
+msgstr "صورة خطوة التهيئة "
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_default_taxes
 msgid "Onboarding Taxes"
-msgstr ""
+msgstr "تهيئة الضرائب "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -9703,7 +9712,7 @@ msgstr "وحدهم المدراء باستطاعتهم تثبيت قوالب ا�
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Only draft journal entries can be cancelled."
-msgstr ""
+msgstr "لا يمكن إلغاء قيود اليومية إلا إذا كانت في حالة المسودة. "
 
 #. module: account
 #. odoo-python
@@ -9726,6 +9735,8 @@ msgstr ""
 #, python-format
 msgid "Only posted/cancelled journal entries can be reset to draft."
 msgstr ""
+"لا يمكن إعادة تعيين قيود اليومية إلى حالة المسودة إلا إذا كانت مُرحلة/ملغية."
+" "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -10037,7 +10048,7 @@ msgstr "ملف PDF"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PROFORMA"
-msgstr ""
+msgstr "شكلي "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10467,7 +10478,7 @@ msgstr "شروط السداد: سداد فوري"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment within 30 calendar days"
-msgstr ""
+msgstr "الدفع خلال 30 يوم "
 
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
@@ -11291,7 +11302,7 @@ msgstr "أصغر فئة عملة غير صفرية (مثلاً فئة خمسة �
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Request Cancel"
-msgstr ""
+msgstr "طلب الإلغاء "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__require_partner_bank_account
@@ -11580,7 +11591,7 @@ msgstr "خطأ في تسليم الرسائل النصية القصيرة "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "SO123"
-msgstr ""
+msgstr "SO123"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -11783,12 +11794,12 @@ msgstr "القسم"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_main_report_ids
 msgid "Section Of"
-msgstr ""
+msgstr "قسم من "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_report_ids
 msgid "Sections"
-msgstr ""
+msgstr "الأقسام "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
@@ -12141,19 +12152,19 @@ msgstr "إعداد الضرائب"
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Set up your chart of accounts and record initial balances."
-msgstr ""
+msgstr "قم بإنشاء شجرة الحسابات الخاصة بك وسجّل الأرصدة الافتتاحية. "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 #, python-format
 msgid "Set your company data"
-msgstr ""
+msgstr "ضبط بيانات شركتك "
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_company_data
 msgid "Set your company's data for documents header/footer."
-msgstr ""
+msgstr "قم بضبط بيانات شركتك لاستخدامها في ترويسة وتذييل المستندات. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__action_id
@@ -12216,7 +12227,7 @@ msgstr "إظهار الفاصلة العشرية "
 #: model:ir.model.fields,field_description:account.field_account_move__show_delivery_date
 #: model:ir.model.fields,field_description:account.field_account_payment__show_delivery_date
 msgid "Show Delivery Date"
-msgstr ""
+msgstr "إظهار تاريخ التوصيل "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_discount_details
@@ -12429,7 +12440,7 @@ msgstr "بند كشف الحساب"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_name
 msgid "Statement Name"
-msgstr ""
+msgstr "اسم كشف الحساب "
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
@@ -12516,7 +12527,7 @@ msgstr "تم اكتمال الخطوة!"
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_fiscal_year
 msgid "Step completed!"
-msgstr ""
+msgstr "تم إكمال الخطوة بنجاح! "
 
 #. module: account
 #: model:account.account,name:account.1_stock_out
@@ -12972,7 +12983,7 @@ msgstr ""
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_default_taxes
 msgid "Taxes set!"
-msgstr ""
+msgstr "تم إعداد الضرائب! "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13393,6 +13404,8 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
+"يتم تعيين التاريخ قبل تاريخ إقفال %(lock_type)s %(lock_date)s. سيتم احتساب "
+"قيد اليومية في %(invoice_date)s عند الترحيل. "
 
 #. module: account
 #. odoo-python
@@ -13887,7 +13900,7 @@ msgstr "لا يطابق الرصيد الجاري (%s) الرصيد النهائ
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "The sections defined on a report cannot have sections themselves."
-msgstr ""
+msgstr "لا يمكن أن يكون للأقسام المحددة في تقرير أقسام تابعة لها. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14147,7 +14160,7 @@ msgstr "يتم تعيين هذه الضرائب عند إضافة أي منتج 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Thirty one dollar and Five cents"
-msgstr ""
+msgstr "واحد وثلاثون دولاراً وخمس سنتات "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_month
@@ -14299,7 +14312,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "This entry has been %s"
-msgstr ""
+msgstr "هذا القيد %s "
 
 #. module: account
 #. odoo-python
@@ -14313,7 +14326,7 @@ msgstr "تم استنساخ هذا القيد من %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been reversed from %s"
-msgstr ""
+msgstr "لقد تم عكس هذا القيد من %s "
 
 #. module: account
 #. odoo-python
@@ -14392,7 +14405,7 @@ msgstr "سوف يتم ترحيل هذه الحركة في التاريخ الم�
 #: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
-msgstr ""
+msgstr "ستتسبب هذه العملية في إحداث ثغرة في التسلسل. "
 
 #. module: account
 #. odoo-python
@@ -14635,27 +14648,28 @@ msgid ""
 "Total amount due (including sales orders and this document): "
 "%(total_credit)s"
 msgstr ""
+"إجمالي المبلغ المستحق (شامل أوامر البيع وهذا المستند): %(total_credit)s "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due (including sales orders): %(total_credit)s"
-msgstr ""
+msgstr "إجمالي المبلغ المستحق (شامل أوامر البيع): %(total_credit)s "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due (including this document): %(total_credit)s"
-msgstr ""
+msgstr "إجمالي المبلغ المستحق (شامل هذا المستند): %(total_credit)s "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due: %(total_credit)s"
-msgstr ""
+msgstr "إجمالي المبلغ المستحق: %(total_credit)s "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
@@ -14988,7 +15002,7 @@ msgstr "الإجمالي دون الضريبة "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 msgid "Untaxed amount"
-msgstr ""
+msgstr "المبلغ غير الشامل للضريبة "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -15651,7 +15665,7 @@ msgstr "يمكنك تسجيل الدفع لقيود اليومية المرحّ�
 #, python-format
 msgid ""
 "You can only request a cancellation for invoice sent to the government."
-msgstr ""
+msgstr "يمكنك فقط طلب إلغاء الفواتير المرسلة إلى الحكومة. "
 
 #. module: account
 #. odoo-python
@@ -15924,6 +15938,8 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
+"لا يمكنك حذف هذا القيد، حيث أنه استهلك رقم تسلسل بالفعل وليس الأخير في "
+"السلسلة. من الأفضل التراجع عوضاً عن ذلك. "
 
 #. module: account
 #. odoo-python
@@ -16335,6 +16351,8 @@ msgid ""
 "[(Total Receivable/Total Revenue) * number of days since the first invoice] "
 "for this customer"
 msgstr ""
+"[(إجمالي المستحقات/إجمالي الإيرادات) * عدد الأيام منذ الفاتورة الأولى] لهذا "
+"العميل "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -16633,7 +16651,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "reversed"
-msgstr ""
+msgstr "معكوس "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
@@ -16693,7 +16711,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "وحدات "
 
 #. module: account
 #. odoo-python

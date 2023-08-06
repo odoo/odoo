@@ -3,8 +3,8 @@
 # 	* account_peppol
 # 
 # Translators:
-# Larissa Manderfeld, 2023
 # Wil Odoo, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:21+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,9 @@ msgid ""
 "                                        I want to migrate my Peppol connection to Odoo (optional):\n"
 "                                    </span>"
 msgstr ""
+"<span>\n"
+"                                        Ich möchte meine Peppol-Verbindung zu Odoo migrieren (optional):\n"
+"                                    </span>"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -75,13 +78,15 @@ msgstr "Anwendungsstatus"
 msgid ""
 "Can't cancel an active registration. Please request a migration instead."
 msgstr ""
+"Eine aktive Registrierung kann nicht gelöscht werden. Bitte beantragen Sie "
+"stattdessen eine Migration."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Can't cancel registration with this status: %s"
-msgstr ""
+msgstr "Mit diesem Status können Sie die Registrierung nicht abbrechen: %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -89,13 +94,14 @@ msgstr ""
 #, python-format
 msgid "Can't deregister with this status: %s"
 msgstr ""
+"Mit diesem Status können Sie die Registrierung nicht rückgänig machen: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Can't migrate registration with this status: %s"
-msgstr ""
+msgstr "Mit diesem Status können Sie die Registrierung nicht migrieren: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -105,7 +111,7 @@ msgstr "PEPPOL abbrechen"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Cancel registration"
-msgstr ""
+msgstr "Registrierung abbrechen"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__canceled
@@ -171,21 +177,21 @@ msgstr "Kontakt"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 #, python-format
 msgid "Contact details were updated."
-msgstr ""
+msgstr "Kontaktinformationen sind aktuell."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Contact email and phone number are required."
-msgstr ""
+msgstr "Kontakt-E-Mail und Telefonnummer sind erforderlich."
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Deregister from Peppol"
-msgstr ""
+msgstr "Registrierung bei Peppol aufheben"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -261,18 +267,18 @@ msgstr "Letzte Verifizierung des Peppol-Endpunkts"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Migrate registration to another service"
-msgstr ""
+msgstr "Registrierung zu einem anderen Dienst migrieren"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_migration_key
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_migration_key
 msgid "Migration Key"
-msgstr ""
+msgstr "Migrationsschlüssel"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Migration key"
-msgstr ""
+msgstr "Migrationsschlüssel"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
@@ -299,6 +305,8 @@ msgstr "Noch nicht verifiziert"
 msgid ""
 "Our staff members will first review your request within two working days."
 msgstr ""
+"Unsere Mitarbeiter werden Ihren Antrag zunächst innerhalb von zwei "
+"Arbeitstagen prüfen."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
@@ -443,7 +451,7 @@ msgstr "Telefonnummer"
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "Phone number (for validation)"
-msgstr ""
+msgstr "Telefonnummer (für Validierung)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -451,6 +459,8 @@ msgid ""
 "Please do not hesitate to contact our support if you need further "
 "assistance."
 msgstr ""
+"Bitte zögern Sie nicht, unseren Support zu kontaktieren, wenn Sie weitere "
+"Hilfe benötigen."
 
 #. module: account_peppol
 #. odoo-python
@@ -458,6 +468,7 @@ msgstr ""
 #, python-format
 msgid "Please enter a phone number to verify your application."
 msgstr ""
+"Bitte geben Sie eine Telefonnummer ein, um Ihren Antrag zu überprüfen."
 
 #. module: account_peppol
 #. odoo-python
@@ -468,13 +479,16 @@ msgid ""
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
+"Bitte geben Sie die Telefonnummer im korrekten internationalen Format ein.\n"
+"Zum Beispiel: +32123456789, wobei +32 die Landesvorwahl ist.\n"
+"Derzeit werden nur europäische Länder unterstützt."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Please fill in the EAS code and the Participant ID code."
-msgstr ""
+msgstr "Bitte geben Sie den EAS-Code und den ID-Code des Teilnehmers ein."
 
 #. module: account_peppol
 #. odoo-python
@@ -489,13 +503,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Primary contact email"
-msgstr ""
+msgstr "Primäre Kontakt-E-Mail"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Primary contact email for Peppol-related communication"
-msgstr ""
+msgstr "Primäre Kontakt-E-Mail für die Kommunikation mit Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -520,13 +534,13 @@ msgstr "Abgelehnt"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Retry registration"
-msgstr ""
+msgstr "Registrierung erneut versuchen"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_verification_code
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_verification_code
 msgid "SMS verification code"
-msgstr ""
+msgstr "SMS-Verifizierungscode"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
@@ -544,13 +558,15 @@ msgid ""
 "Start sending and receiving documents via Peppol as soon as you receive our "
 "email notification."
 msgstr ""
+"Beginnen Sie mit dem Senden und Empfangen von Dokumenten über Peppol, sobald"
+" Sie unsere E-Mail-Benachrichtigung erhalten."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid "The Peppol endpoint identification number is not correct."
-msgstr ""
+msgstr "Die Identifikationsnummer des Peppol-Endpunkts ist nicht korrekt."
 
 #. module: account_peppol
 #. odoo-python
@@ -568,6 +584,8 @@ msgid ""
 "The endpoint number might not be correct. Please check if you entered the "
 "right identification number."
 msgstr ""
+"Die Endpunktnummer ist möglicherweise nicht korrekt. Bitte überprüfen Sie, "
+"ob Sie die richtige Identifikationsnummer eingegeben haben."
 
 #. module: account_peppol
 #. odoo-python
@@ -598,7 +616,7 @@ msgstr "Der EAS-Code und der PEPPOL-Endpunkt des Partners sind gültig"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "The rejection reason has been sent to you via email."
-msgstr ""
+msgstr "Der Ablehnungsgrund wurde Ihnen per E-Mail zugesandt."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -611,7 +629,7 @@ msgstr ""
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "The verification code should contain six digits."
-msgstr ""
+msgstr "Der Verifizierungscode sollte 6 Zahlen enthalten."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -633,7 +651,7 @@ msgstr ""
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Update contact details"
-msgstr ""
+msgstr "Kontaktinformationen aktualisieren"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__is_account_peppol_participant
@@ -655,12 +673,12 @@ msgstr "Gültig"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Validate registration"
-msgstr ""
+msgstr "Registrierung validieren"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__sent_verification
 msgid "Verification code sent"
-msgstr ""
+msgstr "Verifizierungscode gesendet"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -675,7 +693,7 @@ msgstr "Den PEPPOL-Endpunkt des Partners verifizieren"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Verify phone number"
-msgstr ""
+msgstr "Telefonnummer verifizieren"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
@@ -686,7 +704,7 @@ msgstr "Warnung"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "We sent a verification code to"
-msgstr ""
+msgstr "Wir haben einen Verifizierungscode gesendet an"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -696,12 +714,14 @@ msgid ""
 "You will not be able to send or receive Peppol documents in Odoo anymore. "
 "Are you sure you want to proceed?"
 msgstr ""
+"Sie können keine Peppol-Dokumente mehr in Odoo versenden oder empfangen. "
+"Sind Sie sicher, dass Sie fortfahren möchten?"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "You will receive a verification code to this phone number"
-msgstr ""
+msgstr "Sie erhalten einen Verifizierungscode an diese Telefonnummer"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -718,4 +738,4 @@ msgstr "Ihr Bestätigungscode lautet"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
-msgstr ""
+msgstr "Ihr Migrationsschlüssel lautet:"

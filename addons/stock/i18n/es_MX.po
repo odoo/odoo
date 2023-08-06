@@ -6,6 +6,8 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
+# Lucia Pacheco, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,7 +145,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
 msgid "# Returns"
-msgstr ""
+msgstr "# Devoluciones"
 
 #. module: stock
 #. odoo-python
@@ -235,24 +237,24 @@ msgstr "(copia de) %s"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(document barcode)"
-msgstr ""
+msgstr "(código de barras del documento)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(package barcode)"
-msgstr ""
+msgstr "(código de barras del paquete)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(product barcode)"
-msgstr ""
+msgstr "(código de barras del producto)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(serial barcode)"
-msgstr ""
+msgstr "(código de barras en serie)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -264,6 +266,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Nuevo: se creó el movimiento de existencias pero no está confirmado.\n"
+"* En espera de otro movimiento: se debe hacer el movimiento de existencias vinculado antes de éste.\n"
+"* En espera de disponibilidad: el movimiento de existencias está confirmado pero no puede reservar el producto.\n"
+"* Disponible: el producto del movimiento de existencias está reservado.\n"
+"* Hecho: se transfirió el producto y se confirmó la transferencia."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -333,19 +340,19 @@ msgstr "1 semana"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "2021-9-01"
-msgstr ""
+msgstr "01-9-2021"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "2023-09-24"
-msgstr ""
+msgstr "24-09-2023"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "3.00"
-msgstr ""
+msgstr "3.00"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
@@ -355,7 +362,7 @@ msgstr "4 x 12"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
-msgstr ""
+msgstr "54326786758"
 
 #. module: stock
 #. odoo-python
@@ -600,7 +607,7 @@ msgstr "<span><strong>Dirección de almacén:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "<span>O-BTN.return</span>"
-msgstr ""
+msgstr "<span>O-BTN.return</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -651,7 +658,7 @@ msgstr "<strong>Entregado</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
-msgstr ""
+msgstr "<strong>Dirección de entrega</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -742,7 +749,7 @@ msgstr "<strong>Cantidad</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Recipient address</strong>"
-msgstr ""
+msgstr "<strong>Dirección del destinatario</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -782,7 +789,7 @@ msgstr "<strong>Productos rastreados:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Warehouse address</strong>"
-msgstr ""
+msgstr "<strong>Dirección del almacén</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -953,7 +960,7 @@ msgstr ""
 #: code:addons/stock/static/src/fields/stock_move_line_x2_many_field.js:0
 #, python-format
 msgid "Add line: %s"
-msgstr ""
+msgstr "Agregar línea: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1146,6 +1153,8 @@ msgid ""
 "Apply specific route for the replenishment instead of product's default "
 "routes."
 msgstr ""
+"Aplique una ruta específica para el reabastecimiento en lugar de las rutas "
+"predeterminadas del producto."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__4
@@ -1679,7 +1688,7 @@ msgstr "Cerrar"
 #. module: stock
 #: model:product.removal,name:stock.removal_closest
 msgid "Closest Location"
-msgstr ""
+msgstr "Ubicación más cercana"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__color
@@ -1870,7 +1879,8 @@ msgid ""
 "same category. The conversion will be made based on the ratios."
 msgstr ""
 "La conversión entre las unidades de medidas solo puede ocurrir si pertenecen"
-" a la misma categoría. La conversión se basará en los ratios establecidos."
+" a la misma categoría. La conversión se basará en las proporciones "
+"establecidas."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2362,7 +2372,7 @@ msgstr "Ruta de salida a seguir predeterminada"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_return_id
 msgid "Default returns location"
-msgstr ""
+msgstr "Ubicación de devoluciones predeterminada"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__forecast_uom_id
@@ -2639,7 +2649,7 @@ msgstr "Descripción en recepciones"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Description on transfer"
-msgstr ""
+msgstr "Descripción en el traslado"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
@@ -5298,7 +5308,7 @@ msgstr "No se encontró ningún movimiento de existencias"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
 msgid "No stock to show"
-msgstr "No hay existencias por mostrar"
+msgstr "No hay existencias para mostrar"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -5556,7 +5566,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_location__posy
 #: model:ir.model.fields,help:stock.field_stock_location__posz
 msgid "Optional localization details, for information purpose only"
-msgstr "Detalles de ubicación opcionales, solo para fines de información."
+msgstr "Detalles de ubicación opcionales, solo con fines informativos"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__returned_move_ids
@@ -5645,7 +5655,7 @@ msgstr "Regla de reordenamiento original"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Other Information"
-msgstr "Otra información"
+msgstr "Más información"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -5657,12 +5667,12 @@ msgid ""
 "My Company (Chicago) will be authorized to suspend any provision of services"
 " without prior warning in the event of late payment."
 msgstr ""
-"Nuestras facturas se pueden pagar dentro de 21 días hábiles, a no ser que se"
-" indique un margen de tiempo diferente, ya sea en la factura o en la orden. "
-"En el caso de que no se pague para la fecha acordada, Mi empresa (San "
-"Francisco) se reserva el derecho a pedir un pago de intereses fijo que puede"
-" ser del 10% de la suma que sigue sin pagarse para el último día. Mi empresa"
-" (Chicago) tendrá la autorización de suspender cualquier servicio "
+"Nuestras facturas se pueden pagar en un plazo de 21 días hábiles, a no ser "
+"que se indique un margen de tiempo diferente, ya sea en la factura o en la "
+"orden. En el caso de que no se pague para la fecha acordada, Mi empresa (San"
+" Francisco) se reserva el derecho a pedir un pago de intereses fijo que "
+"puede ser del 10% de la suma que sigue sin pagarse para el último día. Mi "
+"empresa (Chicago) tendrá la autorización de suspender cualquier servicio "
 "provisional sin dar aviso previo en caso de que haya un pago atrasado."
 
 #. module: stock
@@ -5741,7 +5751,7 @@ msgstr "Propietario:"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "P&L Qty"
-msgstr "Cant. P&L"
+msgstr "Cantidad de estado de resultados"
 
 #. module: stock
 #. odoo-python
@@ -5789,7 +5799,7 @@ msgstr "Paquete"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
-msgstr ""
+msgstr "Paquete A"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -5946,7 +5956,7 @@ msgstr "Zona de empaquetado"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Pallet"
-msgstr ""
+msgstr "Pallet"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
@@ -6079,8 +6089,7 @@ msgstr "Problemas de planeación"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add 'Done' quantities to the picking to create a new pack."
-msgstr ""
-"Agregue cantidades 'Hecho' a la selección para crear un nuevo paquete."
+msgstr "Agregue cantidades listas a la selección para crear un nuevo paquete."
 
 #. module: stock
 #. odoo-python
@@ -6095,13 +6104,15 @@ msgid ""
 "Please put this document inside your return parcel.<br/>\n"
 "                                Your parcel must be sent to this address:"
 msgstr ""
+"Ponga este documento dentro de su paquete de devolución.<br/>\n"
+"                                Debe enviarlo a esta dirección:"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Please specify at least one non-zero quantity."
-msgstr "Especifique al menos una cantidad diferente de cero."
+msgstr "Especifique al menos una cantidad diferente a cero."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_reserved
@@ -6114,7 +6125,7 @@ msgstr "Precompletar operaciones detalladas"
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Preceding operations"
-msgstr "Operaciones precedentes"
+msgstr "Operaciones anteriores"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -6129,7 +6140,7 @@ msgstr "Ruta preferida"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the type of operation."
-msgstr ""
+msgstr "La presencia depende del tipo de operación."
 
 #. module: stock
 #. odoo-python
@@ -6139,8 +6150,8 @@ msgid ""
 "Press the CREATE button to define quantity for each product in your stock or"
 " import them from a spreadsheet throughout Favorites"
 msgstr ""
-"Haga clic en el botón de CREAR para definir una cantidad para cada producto "
-"en sus existencias o impórtelos de una hoja de cálculo a través de Favoritos"
+"Haga clic en el botón CREAR para definir una cantidad para cada producto en "
+"sus existencias o impórtelos de una hoja de cálculo a través de Favoritos"
 
 #. module: stock
 #. odoo-javascript
@@ -7464,7 +7475,7 @@ msgstr "Ejecutar el planificador"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "S0001"
-msgstr ""
+msgstr "S0001"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
@@ -10843,7 +10854,7 @@ msgstr "para alcanzar un valor máximo de"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "units"
-msgstr ""
+msgstr "unidades"
 
 #. module: stock
 #. odoo-python
