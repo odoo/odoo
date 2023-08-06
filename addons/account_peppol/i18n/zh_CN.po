@@ -55,6 +55,9 @@ msgid ""
 "                                        Upload a document to verify Company information.\n"
 "                                    </span>"
 msgstr ""
+"<span>\n"
+"                                        上传文件以验证公司信息\n"
+"                                    </span>"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -74,7 +77,7 @@ msgstr "已启用"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Application status:"
-msgstr ""
+msgstr "应用程序状态："
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__manually_approved
@@ -163,26 +166,26 @@ msgstr "错误"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Error when receiving via Peppol: %s"
-msgstr ""
+msgstr "通过 Peppol 接收时出错： %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Failed to import a Peppol document."
-msgstr ""
+msgstr "导入 Peppol 文档失败。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Failed to import a Peppol document. Sender endpoint: %s"
-msgstr ""
+msgstr "导入 Peppol 文档失败。发送终端点： %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
-msgstr ""
+msgstr "入账发票日记账"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move
@@ -193,7 +196,7 @@ msgstr "日记账分录"
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_validity_last_check
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_validity_last_check
 msgid "Last Peppol endpoint verification"
-msgstr ""
+msgstr "最后一次 Peppol 终端点验证"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
@@ -203,12 +206,12 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
 msgid "Not valid"
-msgstr ""
+msgstr "无效"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
 msgid "Not verified yet"
-msgstr ""
+msgstr "尚未验证"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -217,50 +220,53 @@ msgid ""
 "                                        You will be able to start sending and receiving documents via PEPPOL once your participation is approved.\n"
 "                                        We will notify you once we have reviewed your application."
 msgstr ""
+"选择此选项并确认后，我们将审查您的申请。\n"
+"                                        一旦您的参与获得批准，您就可以开始通过 Peppol 发送和接收文件。\n"
+"                                        我们将在审查完您的申请后通知您。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 msgid "PEPPOL"
-msgstr ""
+msgstr "Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "PEPPOL Electronic Document Invoicing"
-msgstr ""
+msgstr "Peppol 电子文件发票"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__is_account_peppol_participant
 msgid "PEPPOL Participant"
-msgstr ""
+msgstr "Peppol 参与者"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "PEPPOL Purchase Journal"
-msgstr ""
+msgstr "Peppol 采购日记账"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__is_account_peppol_eligible
 msgid "PEPPOL eligible"
-msgstr ""
+msgstr "可使用 Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "PEPPOL endpoint validity"
-msgstr ""
+msgstr "Peppol 终端点有效性"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_payment__peppol_message_uuid
 msgid "PEPPOL message ID"
-msgstr ""
+msgstr "Peppol 信息ID"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "PEPPOL state"
-msgstr ""
+msgstr "Peppol 状态"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_move_state
@@ -270,22 +276,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_proxy_state
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_proxy_state
 msgid "PEPPOL status"
-msgstr ""
+msgstr "Peppol 状态"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
 msgid "PEPPOL: retrieve new documents"
-msgstr ""
+msgstr "Peppol：读取新文件"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_message_status_ir_actions_server
 msgid "PEPPOL: update message status"
-msgstr ""
+msgstr "Peppol：更新信息状态"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "PEPPOL: update participant status"
-msgstr ""
+msgstr "Peppol：更新参与者状态"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -295,14 +301,14 @@ msgstr "待定"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol EAS"
-msgstr ""
+msgstr "Peppol EAS"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Endpoint"
-msgstr "Peppol Endpoint"
+msgstr "Peppol 终端点"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_attachment_ids
@@ -470,17 +476,17 @@ msgstr "Peppol BIS Billing 3.0及其衍生产品使用的唯一标识符，也�
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Upload documents"
-msgstr ""
+msgstr "上传文件"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__is_account_peppol_participant
 msgid "Use PEPPOL"
-msgstr ""
+msgstr "使用Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Use PEPPOL Invoicing"
-msgstr ""
+msgstr "使用Peppol发票功能"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
@@ -495,7 +501,7 @@ msgstr "验证"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify partner's PEPPOL endpoint"
-msgstr ""
+msgstr "验证合作伙伴的 Peppol 终端点"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning

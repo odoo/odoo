@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,8 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -209,6 +212,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"자동화된 작업을 비활성화할 경우 작업 절차는 계속 진행할 수 있으나\n"
+"                중요한 또는 필수 필드를 설정할 수 있는\n"
+"                사용자 지정 양식을 비활성화하므로\n"
+"                이 작업 이후에 생성된 모든 데이터는 손상될 가능성이 있습니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -244,7 +251,7 @@ msgstr "이메일 서식"
 msgid ""
 "Email, followers or activities action types cannot be used when deleting "
 "records."
-msgstr ""
+msgstr "이메일, 팔로워 또는 활동 유형은 레코드를 삭제할 때 사용할 수 없습니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
@@ -262,7 +269,7 @@ msgstr "onchange를 트리거하는 필드."
 #, python-format
 msgid ""
 "Form Modification based actions can only be used with code action type."
-msgstr ""
+msgstr "서식 수정 작업은 코드 작업 유형에서만 사용할 수 있습니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -366,7 +373,7 @@ msgstr "노트"
 #, python-format
 msgid ""
 "Note that this action can be triggered up to %d minutes after its schedule."
-msgstr ""
+msgstr "이 작업은 예약 후 약 %d분 후에 트리거됩니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -485,7 +492,7 @@ msgstr ""
 msgid ""
 "The action will be triggered if and only if one of these fields is updated. "
 "If empty, all fields are watched."
-msgstr "해당 필드 중에서 하나를 업데이트한 경우에만 작업을 동작시킵니다. 공란으로 둘 경우, 전체 필드를 확인합니다."
+msgstr "해당 필드 중에서 하나를 업데이트한 경우에만 작업을 동작시킵니다. 비워둘 경우, 전체 필드를 확인합니다."
 
 #. module: base_automation
 #. odoo-javascript
@@ -495,6 +502,8 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
+"자동화된 작업을 실행하는 동안 오류가 발생했습니다.\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -609,7 +618,7 @@ msgid ""
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 "조건이 작동되어야 하는 경우.\n"
-"                해당하는 경우, 스케줄러에서 확인합니다. 공란인 경우에는, 생성하거나 업데이트할 경우 확인합니다."
+"                해당하는 경우, 스케줄러에서 확인합니다. 비워둘 경우에는, 생성하거나 업데이트 시 확인합니다."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -647,3 +656,4 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"삭제된 레코드에 대해서는 이메일 전송이나 팔로워 추가, 활동 생성 등의 작업을 수행할 수 없습니다. 정상적으로 동작하지 않습니다."

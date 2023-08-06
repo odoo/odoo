@@ -2562,8 +2562,8 @@ msgstr "上个月指派的潜在客户和商机的数量。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要采取操作的消息的数量"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
@@ -3778,6 +3778,11 @@ msgid "Use the top left <i>Create</i> button, or send an email to"
 msgstr "使用左上角的<i>创建</i>按钮，或发送电子邮件至"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
+msgid "Use the <i>New</i> button, or send an email to"
+msgstr ""
+
+#. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
@@ -3787,11 +3792,25 @@ msgid ""
 msgstr "使用左上角的<i>创建</i>按钮，或向%(email_link)s发送电子邮件，以测试电子邮件网关。"
 
 #. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"Use the <i>New</i> button, or send an email to %s to test the email gateway."
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid ""
 "Use the top left Create button, or configure an email alias to test the "
 "email gateway."
 msgstr "使用左上角的“创建”按钮，或配置电子邮箱别名，以测试电子邮件网关。"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
+msgid ""
+"Use the New button, or configure an email alias to test the email gateway."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action

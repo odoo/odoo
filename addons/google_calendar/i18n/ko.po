@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "%(id)s and %(length)s following"
-msgstr ""
+msgstr "%(id)s 및 %(length)s 팔로잉"
 
 #. module: google_calendar
 #. odoo-python
@@ -81,6 +81,8 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronisation."
 msgstr ""
+"토큰 생성 중에 오류가 발생했습니다. 인증 코드가 잘못되었거나 이미 만료된 코드 [%s]입니다. Google APIs 플랫폼에서 "
+"클라이언트 아이디 및 암호를 확인하거나 캘린더 동기화를 중지한 후 다시 시작하시기 바랍니다."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -192,57 +194,57 @@ msgstr "일정 반복 규칙"
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #, python-format
 msgid "Google"
-msgstr "구글"
+msgstr "Google"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Google Calendar"
-msgstr "구글 캘린더"
+msgstr "Google 캘린더"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_account_id
 msgid "Google Calendar Account"
-msgstr "구글 캘린더 계정"
+msgstr "Google 캘린더 계정"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_credentials
 msgid "Google Calendar Account Data"
-msgstr "구글 캘린더 계정 데이터"
+msgstr "Google 캘린더 계정 데이터"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 #: model:ir.model,name:google_calendar.model_google_calendar_account_reset
 msgid "Google Calendar Account Reset"
-msgstr "구글 캘린더 계정 초기화"
+msgstr "Google 캘린더 계정 초기화"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
 msgid "Google Calendar Event Id"
-msgstr "구글 캘린더 행사 ID"
+msgstr "Google 캘린더 행사 ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__google_id
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__google_id
 msgid "Google Calendar Id"
-msgstr "구글 캘린더 아이디"
+msgstr "Google 캘린더 아이디"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
 msgid "Google Calendar: synchronization"
-msgstr "구글 캘린더 : 동기화"
+msgstr "Google 캘린더 : 동기화"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__synchronization_stopped
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
 msgid "Google Synchronization stopped"
-msgstr "구글 동기화가 중지되었습니다"
+msgstr "Google 동기화가 중지되었습니다"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "Google gave the following explanation: %s"
-msgstr "구글에서 설명하는 내용은 다음과 같습니다: %s"
+msgstr "Google에서 설명하는 내용은 다음과 같습니다: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
@@ -262,7 +264,7 @@ msgstr "사용중인 필드를 아니오로 설정하면 일정 알람 정보를
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "It will not be synced as long at it is not updated."
-msgstr ""
+msgstr "업데이트하려면 동기화를 진행하시기 바랍니다."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
@@ -296,7 +298,7 @@ msgstr "변경하지 않고 나가기"
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
 msgid "Need Sync"
-msgstr ""
+msgstr "동기화 필요"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_sync_token
@@ -330,7 +332,7 @@ msgstr "계정 초기화"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
 msgid "Reset Google Calendar Account"
-msgstr "구글 캘린더 계정 초기화"
+msgstr "Google 캘린더 계정 초기화"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -342,7 +344,7 @@ msgstr "성공"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
 msgid "Synchronize a record with Google Calendar"
-msgstr "구글 캘린더와 레코드 동기화"
+msgstr "Google 캘린더와 레코드 동기화"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
@@ -361,33 +363,33 @@ msgstr "새로운 행사만 동기화"
 msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
-msgstr "사용하기 전에 구글 동기화를 구성해야 합니다, 지금 하시겠습니까?"
+msgstr "사용하기 전에 Google 동기화 설정을 해야 합니다, 지금 하시겠습니까?"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
-msgstr ""
+msgstr "Google 캘린더 서비스의 계정이 설정되어 있지 않습니다."
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "The following event could not be synced with Google Calendar."
-msgstr ""
+msgstr "다음 행사를 Google 캘린더와 동기화할 수 없습니다."
 
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
-msgstr ""
+msgstr "Google 캘린더 동기화 중지에 성공하였습니다."
 
 #. module: google_calendar
 #: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
 msgid "The user has already a google account"
-msgstr ""
+msgstr "사용자에게 이미 Google 계정이 있습니다."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -425,7 +427,7 @@ msgstr "사용자의 기존 행사"
 msgid ""
 "You are about to stop the synchronization of your calendar with Google. Are "
 "you sure you want to continue?"
-msgstr ""
+msgstr "Google 캘린더 동기화를 중지하려고 합니다. 계속하시겠습니까?"
 
 #. module: google_calendar
 #. odoo-python
@@ -433,7 +435,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
-msgstr ""
+msgstr "정의되지 않은 시간"
 
 #. module: google_calendar
 #. odoo-python
@@ -441,4 +443,4 @@ msgstr ""
 #, python-format
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
-msgstr ""
+msgstr "Google 캘린더에서 이 행사를 수정할 수 있는 권한이 없습니다."

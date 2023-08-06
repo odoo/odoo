@@ -46,9 +46,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"分录（%s）不平衡。\n"
-"总借项等于 %s，总贷项等于 %s。\n"
-"您可能希望在日记账“%s”中指定默认科目，以自动平衡各分录项。"
+"分录（%s）导致账目不平衡。\n"
+"借记总额为%s，贷记总额为%s。\n"
+"您可以在日记账“%s”中预设入账账户，以便系统自动平衡各分录项。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -66,7 +66,7 @@ msgid ""
 msgstr ""
 "\n"
 "    - 税项组：税项为一组子税项。\n"
-"    - 固定：无论价格如何，税额保持不变。\n"
+"    - 固定税项：无论价格如何，税额保持不变。\n"
 "    - 价格百分比：按价格的一定百分比计算税额：\n"
 "       例如，100*10％=110（不含价格）\n"
 "       例如，110/（1+10％）=100（含价格）\n"
@@ -90,7 +90,7 @@ msgstr "# 已对账账单"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "#已对账结算单"
+msgstr "#已对账发票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count

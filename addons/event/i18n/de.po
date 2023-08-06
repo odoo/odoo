@@ -88,7 +88,7 @@ msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"'Faltbarer Veranstaltungsausweis - %s - ' % ((object.event_id.name or "
+"'Faltbarer Veranstaltungsausweis - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
@@ -303,12 +303,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
-msgstr "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Bestätigt\"/>"
+msgstr "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Location\"/>"
-msgstr "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Ort\"/>"
+msgstr "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Location\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -628,7 +628,7 @@ msgstr ""
 "                        <t t-else=\"\">\n"
 "                            <strong t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</strong>\n"
 "                        </t>\n"
-"                        <strong t-out=\"object.get_date_range_str() or ''\">today</strong> beginnt.\n"
+"                        <strong t-out=\"object.get_date_range_str() or ''\">heute</strong> beginnt.\n"
 "                    </div>\n"
 "                    <div>\n"
 "                        <br>\n"
@@ -2592,7 +2592,7 @@ msgstr "Fügen Sie dynamische Google Maps in Ihre E-Mail-Vorlagen ein"
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
-msgstr "Intervalle"
+msgstr "Intervall"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
