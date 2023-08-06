@@ -9994,8 +9994,8 @@ msgstr "Nombre d'erreurs"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de messages exigeant une action"
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -14446,6 +14446,13 @@ msgstr ""
 "- Pour faire correspondre le texte au début de la ligne (dans le libellé ou les notes), remplissez simplement votre texte.\n"
 "- Pour faire correspondre le texte n'importe où (dans le libellé ou les notes), placez votre texte entre .*\n"
 "ex : .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #. odoo-javascript

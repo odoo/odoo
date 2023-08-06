@@ -3,11 +3,11 @@
 # 	* product
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Friederike Fasterling-Nesselbosch, 2023
 # Léonie Bouchat <lbo@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Sebastiano Picchi, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Marianna Ciofani, 2023
 # 
 msgid ""
@@ -1706,7 +1706,7 @@ msgstr "Numero di errori"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Numero di messaggi che richiedono un'azione"
 
 #. module: product
@@ -2366,7 +2366,7 @@ msgstr "Righe"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
-msgstr ""
+msgstr "Consiglio regola"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2482,6 +2482,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Specifica l'importo fisso da aggiungere o sottrarre (se negativo) "
+"all'importo calcolato con lo sconto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2561,6 +2563,7 @@ msgstr "Etichette"
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
 msgstr ""
+"I tag sono utilizzati per cercare i prodotti in base a un determinato tema."
 
 #. module: product
 #. odoo-python
@@ -2694,7 +2697,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "Il metodo di arrotondamento deve essere molto preciso."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3115,7 +3118,7 @@ msgstr "Bianco"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Data scrittura"
 
 #. module: product
 #. odoo-python
@@ -3248,6 +3251,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"Non è possibile eliminare il valore %s perché è utilizzato sui seguenti prodotti:\n"
+"%s\n"
+"Se il valore è stato associato ad un prodotto in passato, non potrai eliminarlo."
 
 #. module: product
 #. odoo-python

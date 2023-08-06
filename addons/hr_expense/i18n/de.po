@@ -546,7 +546,7 @@ msgstr "Standard-Spesenbuch"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default Journals"
-msgstr "Standard-Journale"
+msgstr "Standardjournale"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -609,6 +609,7 @@ msgid "Domain"
 msgstr "Bereich"
 
 #. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__done
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__done
 msgid "Done"
 msgstr "Erledigt"
@@ -1380,8 +1381,8 @@ msgstr "Anzahl der Fehler"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+msgid "Number of messages requiring action"
+msgstr "Anzahl der Meldungen, die eine Aktion erfordern"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error_counter
@@ -1456,7 +1457,6 @@ msgid "Others"
 msgstr "Andere"
 
 #. module: hr_expense
-#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__done
 #: model:mail.message.subtype,name:hr_expense.mt_expense_paid
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Paid"
@@ -1578,7 +1578,7 @@ msgid ""
 "navigate."
 msgstr ""
 "Bereit? Sie können sie manuell speichern oder Änderungen von hier aus "
-"verwerfen. Sie <em>müssen sie nicht speichern</em> - Odoo wird alles für Sie"
+"verwerfen. Sie <em>müssen sie nicht speichern</em> – Odoo wird alles für Sie"
 " speichern, wenn Sie fortfahren."
 
 #. module: hr_expense

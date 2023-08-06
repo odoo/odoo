@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 11:22+0000\n"
+"POT-Creation-Date: 2023-07-17 07:38+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -2910,6 +2910,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "It is not allowed to mix refunds and sales"
+msgstr "Il n'est pas permis de mélanger les remboursements et les ventes"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/debug_manager.js:0
 #, python-format
 msgid "JS Tests"
@@ -3401,11 +3408,6 @@ msgid "Newspaper Rack"
 msgstr "Porte-journaux"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Activité suivante de l'événement du calendrier"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Date limite de l'activité à venir"
@@ -3583,13 +3585,27 @@ msgstr "Nombre d'éléments remboursés dans cette ligne de commande"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de messages exigeant une action"
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Nombre de messages avec des erreurs d'envoi"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Number of partners loaded can not be 0"
+msgstr "Le nombre de partenaires chargés ne peut pas être 0"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Number of product loaded can not be 0"
+msgstr "Le nombre de produits chargés ne peut pas être 0"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5109,6 +5125,13 @@ msgstr "Commandes remboursées"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Refund and Sales not allowed"
+msgstr "Remboursement et ventes non autorisés"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/OrderlineDetails.xml:0
 #, python-format
 msgid "Refunded"
@@ -5271,16 +5294,15 @@ msgstr ""
 "session %s"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Reversal of: %s"
 msgstr "Extourne de : %s"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Demande d'extourne envoyée au terminal"
@@ -7348,6 +7370,17 @@ msgid ""
 msgstr ""
 "Vous pouvez en ajouter certains depuis le menu Produits ou lier des produits existants en les marquant comme \"Disponible dans le point de vente\".\n"
 "                    Vous pouvez également ajouter des données de démonstration à des fins de test. Attention : cette action est irréversible."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid ""
+"You can only unlink PoS order lines that are related to orders in new or "
+"cancelled state."
+msgstr ""
+"Vous pouvez uniquement dissocier les lignes de commande PdV qui sont liées "
+"aux commandes dont le statut est nouveau ou annulé."
 
 #. module: point_of_sale
 #. odoo-python

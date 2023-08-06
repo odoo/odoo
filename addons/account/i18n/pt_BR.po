@@ -20,8 +20,8 @@
 # lucas LucasLc7, 2023
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # Kevilyn Rosa, 2023
-# adrianojprado <adrianojprado@gmail.com>, 2023
 # Layna Nascimento, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9821,8 +9821,8 @@ msgstr "Número de Erros"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requer uma ação"
+msgid "Number of messages requiring action"
+msgstr "Número de mensagens que requerem ação"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -10022,7 +10022,7 @@ msgstr ""
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "Oops"
-msgstr ""
+msgstr "Oops"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
@@ -11132,8 +11132,8 @@ msgstr "Adiantamentos"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
-"Predefinido para criar entradas de diário durante uma correspondência de "
-"faturas e pagamentos"
+"Configuração para criar entradas do diário quando ocorre uma correspondência"
+" entre faturas e pagamentos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14188,6 +14188,13 @@ msgstr ""
 "O mapeamento usa expressões regulares.\n"
 "- Para combinar o texto no início da linha (no rótulo ou notas), basta preencher o seu texto.\n"
 "- Para coincidir com o texto em qualquer lugar (no rótulo ou notas), coloque o texto entre . * por exemplo: .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #. odoo-javascript

@@ -6,9 +6,9 @@
 # Shigurefox <tom.liang@omniwaresoft.com.tw>, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
-# Tony Ng, 2023
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 12:35+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -965,6 +965,17 @@ msgid ""
 "        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
 "    "
 msgstr ""
+"\n"
+"        Chart of Accounts (COA) Template for Latvia's Accounting.\n"
+"        This module also includes:\n"
+"        * Tax groups,\n"
+"        * Most common Latvian Taxes,\n"
+"        * Fiscal positions,\n"
+"        * Latvian bank list.\n"
+"\n"
+"        author is Allegro IT (visit for more information https://www.allegro.lv)\n"
+"        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -3607,6 +3618,43 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Automatic DIMONA declarations\n"
+"=============================\n"
+"\n"
+"Prerequisites:\n"
+"--------------\n"
+"\n"
+"- You need a Belgian Government Compliant Digital Certificate, delivered by Global\n"
+"  Sign. See: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Generate certificate files from your SSL certificate (.pfx file) that are needed to create\n"
+"  a technical user (.cer file) and to authenticate remotely to the ONSS (.pem) file. On a UNIX\n"
+"  system, you may use the following commands:\n"
+"\n"
+"  - PFX -> CRT : openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER : openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM : openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- Before you can use the social security REST web service, you must create an account\n"
+"  for yourself or for your client and configure the security. (The whole procedure is\n"
+"  available at https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - User account management: Follow the Procedure https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Create a technical user: Your client must now create a technical user in the Access management\n"
+"    online service. The follow this procedure: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Activate a web service channel: Once the technical user has been created, your client must\n"
+"    activate the web service channel in Access Management. The following manual explains the\n"
+"    steps to follow to activate the channel: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - At the end of the procedure, you should receive a \"ONSS Expeditor Number\", you may\n"
+"    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_booth_exhibitor
@@ -3828,6 +3876,53 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
 "    "
 msgstr ""
+"\n"
+"Belgian Payroll Rules.\n"
+"======================\n"
+"\n"
+"    * Employee Details\n"
+"    * Employee Contracts\n"
+"    * Passport based Contract\n"
+"    * Allowances/Deductions\n"
+"    * Allow to configure Basic/Gross/Net Salary\n"
+"    * Employee Payslip\n"
+"    * Monthly Payroll Register\n"
+"    * Integrated with Leaves Management\n"
+"    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...\n"
+"\n"
+"Automatic DmfA Signature\n"
+"========================\n"
+"\n"
+"Prerequisites:\n"
+"--------------\n"
+"\n"
+"- You need a Belgian Government Compliant Digital Certificate, delivered by Global\n"
+"  Sign. See: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Generate certificate files from your SSL certificate (.pfx file) that are needed to create\n"
+"  a technical user (.cer file) and to authenticate remotely to the ONSS (.pem) file. On a UNIX\n"
+"  system, you may use the following commands:\n"
+"\n"
+"  - PFX -> CRT : openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER : openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM : openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX -> KEY : openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts\n"
+"\n"
+"- Before you can use the social security REST web service, you must create an account\n"
+"  for yourself or for your client and configure the security. (The whole procedure is\n"
+"  available at https://www.socialsecurity.be/site_fr/general/helpcentre/batch/sftp/previewstep.htm)\n"
+"\n"
+"  - Create a technical user + Activate a SFTP channel: Your client must now create a technical user in the Access management\n"
+"    online service. The follow this procedure: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Configure your SFTP client: https://www.socialsecurity.be/site_fr/general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - At the end of the procedure, you should have received a \"ONSS Expeditor Number\", you may\n"
+"    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -31786,7 +31881,6 @@ msgstr "開始設定"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -31829,6 +31923,7 @@ msgstr "縣市"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "狀態"
@@ -34187,7 +34282,7 @@ msgstr "UPS 發貨"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_ups
 msgid "UPS: Bill My Account"
-msgstr "UPS:我的帳單"
+msgstr "UPS：記賬至我的帳戶"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url

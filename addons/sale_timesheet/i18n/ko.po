@@ -51,7 +51,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
 msgid " Candidate Orders"
-msgstr ""
+msgstr "잠재 주문"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__billable_percentage
@@ -500,7 +500,7 @@ msgstr "상향 판매 경고 표시 있음"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr ""
+msgstr "다중 Sol 있음"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_cost
@@ -692,10 +692,13 @@ msgid "Margin"
 msgstr "이윤"
 
 #. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+#, python-format
 msgid "Materials"
 msgstr "재료"
 

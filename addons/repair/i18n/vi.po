@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"POT-Creation-Date: 2023-05-25 12:30+0000\n"
 "PO-Revision-Date: 2023-01-17 14:39+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -65,20 +65,20 @@ msgstr ": Không đủ số lượng để sửa chữa"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br>\n"
 "        Here is your repair order <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
 "        <t t-if=\"object.invoice_method != 'none'\">\n"
-"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            .<br/>\n"
+"            .<br>\n"
 "        </t>\n"
 "        You can reply to this email if you have any questions.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -758,8 +758,8 @@ msgstr "Số lỗi"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Số thông báo cần xử lý"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
@@ -1004,6 +1004,11 @@ msgstr "Báo giá sửa chữa số:"
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
 msgid "Repair Reference"
 msgstr "Tham chiếu sửa chữa"
+
+#. module: repair
+#: model:product.template,name:repair.product_service_order_repair_product_template
+msgid "Repair Services"
+msgstr ""
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
@@ -1431,6 +1436,13 @@ msgstr "Bạn không thể nhập số lượng âm."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a completed repair order."
+msgstr ""
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot delete a completed repair order."
 msgstr ""
 
 #. module: repair

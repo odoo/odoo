@@ -9635,8 +9635,8 @@ msgstr "错误数量"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要操作的消息的数量"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -13880,6 +13880,13 @@ msgstr ""
 "- 要匹配行首的文本（标签或注释），只需填写文本即可。\n"
 "- 要匹配任意位置的文本（标签或注释），应将文本放在两个.*中间\n"
 "例如：.*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #. odoo-javascript

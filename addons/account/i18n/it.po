@@ -9,8 +9,8 @@
 # Odoo - Paolo Gatti (pgi), 2023
 # Sebastiano Picchi, 2023
 # Martin Trigaux, 2023
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1830,7 +1830,7 @@ msgstr "Periodi contabili"
 #. module: account
 #: model:ir.model,name:account.model_account_report
 msgid "Accounting Report"
-msgstr ""
+msgstr "Rendiconto contabile"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_column
@@ -7772,7 +7772,7 @@ msgstr "Ultimo giorno dell'anno fiscale non valido"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
-msgstr ""
+msgstr "Inverti tag"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_investing
@@ -9079,6 +9079,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manuale: paga oppure ricevi pagamenti al di fuori di Odoo, con qualsiasi metodo.\n"
+"Fornitori di pagamento: ogni fornitore ha il proprio metodo. Richiedi una transazione su o verso una carta grazie ad un token di pagamento salvato dal partner quando compri o effettui un abbonamento online.\n"
+"Assegno: paga le fatture con gli assegni e stampali da Odoo.\n"
+"Versamento in lotto: colleziona vari assegni dei clienti generando e inviando un versamento complessivo alla tua banca. È necessario il modulo account_batch_payment.\n"
+"Bonifico SEPA: paga nella zona SEPA inviando un bonifico SEPA alla tua banca. È necessario il modulo account_sepa.\n"
+"Addebito diretto SEPA: ricevi pagamenti nella zona SEPA grazie ad un mandato che il partner deve garantirti. È necessario il modulo account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -9835,7 +9841,7 @@ msgstr "Numero di errori"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Numero di messaggi che richiedono un'azione"
 
 #. module: account
@@ -14207,6 +14213,13 @@ msgstr ""
 "- Per trovare la corrispondenza all'inizio della riga (nell'etichetta e nelle note), inserire semplicemente del testo.\n"
 "- Per trovare la corrispondenza ovunque (nell'etichetta e nelle note), inserire il testo tra .*\n"
 "  es.: .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #. odoo-javascript

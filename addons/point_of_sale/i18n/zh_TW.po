@@ -3,18 +3,18 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Tony Ng, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 11:22+0000\n"
+"POT-Creation-Date: 2023-07-17 07:38+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2816,6 +2816,13 @@ msgstr "禁止修改未過帳的POS訂單中使用的稅金。在修改稅金之
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "It is not allowed to mix refunds and sales"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/debug_manager.js:0
 #, python-format
 msgid "JS Tests"
@@ -3294,11 +3301,6 @@ msgid "Newspaper Rack"
 msgstr "報紙架"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "下一個活動行事曆事件"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "下一活動截止日期"
@@ -3472,13 +3474,27 @@ msgstr "此訂單項目中退款的商品數量。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要處理的訊息數量"
+msgid "Number of messages requiring action"
+msgstr "需要採取行動的訊息數目"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "有發送錯誤的郵件數量"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Number of partners loaded can not be 0"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Number of product loaded can not be 0"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4964,6 +4980,13 @@ msgstr "退款訂單"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Refund and Sales not allowed"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/OrderlineDetails.xml:0
 #, python-format
 msgid "Refunded"
@@ -5124,16 +5147,15 @@ msgid "Reversal of POS closing entry %s for order %s from session %s"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Reversal of: %s"
 msgstr "撤銷對象： %s"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "向終端發送撤銷請求"
@@ -7043,6 +7065,15 @@ msgstr ""
 msgid ""
 "You can add some from the Products menu, or linked any existing by flagging them as \"Available in PoS\".\n"
 "                    Or you can add demo data for testing purpose. Please mind that this is an irreversible action."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid ""
+"You can only unlink PoS order lines that are related to orders in new or "
+"cancelled state."
 msgstr ""
 
 #. module: point_of_sale

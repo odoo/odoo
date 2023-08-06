@@ -9622,8 +9622,8 @@ msgstr "エラー数"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "アクションを必要とするメッセージの数"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -13878,6 +13878,13 @@ msgstr ""
 "- 行の先頭にテキストと一致させるため、単にテキストを入力してください。\n"
 "- (ラベルまたはノートの)テキストのどこかと一致させるため、文字間にテキストを配置します.*\n"
 "例:.*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #. odoo-javascript

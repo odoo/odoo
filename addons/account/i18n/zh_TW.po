@@ -9601,8 +9601,8 @@ msgstr "錯誤數"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要處理的訊息數"
+msgid "Number of messages requiring action"
+msgstr "需要採取行動的訊息數目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -13852,6 +13852,13 @@ msgstr ""
 "- 要匹配明細開頭(在標籤或註釋中)的文字，只需填寫您的文字.\n"
 "- 要在任何地方匹配文字(在備註或註釋中)，請將文字放在 .* 之間\n"
 "  例如:.*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #. odoo-javascript

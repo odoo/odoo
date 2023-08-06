@@ -90,6 +90,7 @@ msgstr "%s ملفات "
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "%s days ago"
 msgstr "منذ %s أيام مضت "
@@ -320,15 +321,15 @@ msgstr "<span class=\"text-nowrap\">ضريبة 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span id=\"line_tax_ids\">15.00%</span>"
-msgstr "<span id=\"line_tax_ids\">15.00%</span>"
+msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -342,8 +343,8 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span>5.000</span>"
-msgstr "<span>5.000</span>"
+msgid "<span>5.00</span>"
+msgstr "<span>5.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -359,10 +360,8 @@ msgstr "<span>الوصف</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span>Invoice</span>\n"
-"                           <span>INV/2020/07/0003</span>"
+"                           <span>INV/2023/00003</span>"
 msgstr ""
-"<span>الفاتورة</span>\n"
-"                           <span>INV/2020/07/0003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -414,13 +413,13 @@ msgstr "<strong>تاريخ الفاتورة:</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Subtotal</strong>"
-msgstr "<strong>الإجمالي الفرعي</strong>"
+msgid "<strong>Total</strong>"
+msgstr "<strong>الإجمالي</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Total</strong>"
-msgstr "<strong>الإجمالي</strong>"
+msgid "<strong>Untaxed Amount</strong>"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -841,6 +840,8 @@ msgstr "تطبيق"
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Archive"
@@ -873,15 +874,8 @@ msgstr "هل أنت متأكد من أنك ترغب في أرشفة كافة ا�
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/form/form_controller.js:0
-#, python-format
-msgid "Are you sure that you want to archive all this record?"
-msgstr "هل أنت متأكد من أنك ترغب في أرشفة السجل بأكمله؟ "
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
 msgstr "هل أنت متأكد من أنك ترغب في أرشفة هذا السجل؟ "
@@ -1315,7 +1309,6 @@ msgstr "مسح التوقيع "
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/dialog.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_column_examples_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -1868,6 +1861,7 @@ msgstr "الافتراضي:"
 #: code:addons/web/static/src/views/fields/many2many_tags/tags_list.xml:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
@@ -1926,6 +1920,20 @@ msgstr "تنازلي "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
+#, python-format
+msgid "Developer Tools"
+msgstr "أدوات المطورين "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_renderer.js:0
+#, python-format
+msgid "Different currencies cannot be aggregated"
+msgstr "لا يمكن جمع العملات المختلفة "
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.xml:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
@@ -1936,7 +1944,6 @@ msgstr "تنازلي "
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
@@ -2689,14 +2696,8 @@ msgstr "صورة"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "In"
-msgstr "في"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "In %s days"
 msgstr "في %s أيام "
@@ -2797,6 +2798,13 @@ msgid "Invalid fields: "
 msgstr "الحقول غير الصالحة: "
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
@@ -2816,6 +2824,11 @@ msgstr "دعوة مستخدمين جدد "
 #, python-format
 msgid "Inviting..."
 msgstr "جاري الدعوة... "
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
+msgid "Is Company Details Empty"
+msgstr "تفاصيل الشركة فارغة "
 
 #. module: web
 #. odoo-javascript
@@ -4008,6 +4021,7 @@ msgstr "يرجى الانتظار قليلاً بعد. "
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
+#: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Please click on the \"save\" button first"
 msgstr "يرجى الضغط على زر \"حفظ\" أولاً "
@@ -4059,7 +4073,6 @@ msgstr "يرجى اختيار الحقول المُراد حفظها كقائم�
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
 msgid "Please update translations of :"
 msgstr "يرجى تحديث الترجمات لـ: "
@@ -4076,10 +4089,8 @@ msgstr "يرجى استخدام زر النسخ لإبلاغ خدمة الدعم
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "Please use the following communication for your payment : <b><span>\n"
-"                           INV/2020/07/0003</span></b>"
+"                           INV/2023/00003</span></b>"
 msgstr ""
-"يرجى استخدام رمز التواصل التالي لعملية الدفع الخاصة بك : <b><span>\n"
-"                           INV/2020/07/0003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -4451,7 +4462,7 @@ msgstr "الأيام المتبقية"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
-#: code:addons/web/static/src/views/fields/relational_utils.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
@@ -5424,7 +5435,7 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Today"
 msgstr "اليوم"
@@ -5448,7 +5459,7 @@ msgstr "تبديل القائمة "
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Tomorrow"
 msgstr "غدًا"
@@ -6025,7 +6036,7 @@ msgstr "نعم"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "البارحة"
@@ -6261,6 +6272,7 @@ msgstr "تابع لـ"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "contains"
 msgstr "يحتوي على "
@@ -6274,20 +6286,6 @@ msgstr "التاريخ"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days"
-msgstr "يوم"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days ago"
-msgstr "أيام مضت "
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
@@ -6297,6 +6295,7 @@ msgstr "لا يحتوي على "
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "doesn't contain"
@@ -6457,6 +6456,7 @@ msgstr "بين "
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is equal to"
 msgstr "يساوي"
@@ -6489,6 +6489,7 @@ msgstr "ليس ="
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not equal to"
 msgstr "لا يساوي"
@@ -6508,6 +6509,8 @@ msgstr "لا يساوي"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not set"
 msgstr "لم يتم تعيينه "
@@ -6522,6 +6525,8 @@ msgstr "لم يتم تعيينه "
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0

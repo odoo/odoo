@@ -8,8 +8,8 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 11:24+0000\n"
 "PO-Revision-Date: 2023-01-17 11:05+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -631,7 +631,10 @@ msgid "Buy 3 large cabinets, get one for free"
 msgstr "Compre 3 gabinetes grandes, reciba uno gratis"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
+#, python-format
 msgid "Buy X Get Y"
 msgstr "Comprar X y obtener Y"
 
@@ -730,7 +733,10 @@ msgid "Control panel buttons"
 msgstr "Botones del panel de control"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_ids
+#, python-format
 msgid "Coupon"
 msgstr "Cupón"
 
@@ -896,7 +902,10 @@ msgid "Discount Applicability"
 msgstr "Vigencia de descuentos"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
+#, python-format
 msgid "Discount Code"
 msgstr "Código de descuento"
 
@@ -1010,6 +1019,12 @@ msgstr "Fecha de vencimiento"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Fidelity Card"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fidelity Cards"
@@ -1106,6 +1121,13 @@ msgid "Generate Gift Cards"
 msgstr "Genere tarjetas de regalo"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Generate and share unique coupons with your customers"
+msgstr ""
+
+#. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
 msgstr "Genere monederos electrónicos"
@@ -1114,8 +1136,8 @@ msgstr "Genere monederos electrónicos"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Get 10% of on some products, with a code"
-msgstr "Obtenga 10% de descuento en algunos productos con un código"
+msgid "Get 10% off on some products, with a code"
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1317,6 +1339,12 @@ msgstr "Logo"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Loyalty Card"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__loyalty
@@ -1409,6 +1437,12 @@ msgstr "Productos múltiples"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Next Order Coupon"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__next_order_coupons
 #, python-format
@@ -1442,7 +1476,7 @@ msgstr "Número de errores"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Número de mensajes que requieren una acción"
 
 #. module: loyalty
@@ -1696,13 +1730,6 @@ msgstr ""
 "siguiente"
 
 #. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "Send unique coupons that give access to rewards"
-msgstr "Envíe cupones únicos para que tenga accesos a las recompensas"
-
-#. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
 msgid "Sent to customer who purchased a gift card"
 msgstr "Enviado al cliente que compró una tarjeta de regalo"
@@ -1911,8 +1938,8 @@ msgstr "Se enviará correo electrónico"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Win points with each purchases, and claim gifts"
-msgstr "Gane puntos con cada compra y usélos para obtener regalos"
+msgid "Win points with each purchase, and claim gifts"
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code
