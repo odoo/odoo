@@ -10,12 +10,19 @@ export class ProgressBar extends Component {
 }
 ProgressBar.template = 'web_editor.ProgressBar';
 ProgressBar.props = {
-    progress: Number,
-    hasError: Boolean,
-    uploaded: Boolean,
+    progress: { type: Number, optional: true },
+    hasError: { type: Boolean, optional: true },
+    uploaded: { type: Boolean, optional: true },
     name: String,
-    size: String,
-    errorMessage: String,
+    size: { type: String, optional: true },
+    errorMessage: { type: String, optional: true },
+};
+ProgressBar.defaultProps = {
+    progress: 0,
+    hasError: false,
+    uploaded: false,
+    size: "",
+    errorMessage: "",
 };
 
 export class UploadProgressToast extends Component {

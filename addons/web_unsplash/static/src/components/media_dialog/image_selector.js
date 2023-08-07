@@ -228,8 +228,6 @@ patch(uploadService, 'upload_service_unsplash', {
                     name: records.length > 1 ?
                     _.str.sprintf(env._t("Uploading %s '%s' images."), records.length, records[0].query) :
                     _.str.sprintf(env._t("Uploading '%s' image."), records[0].query),
-                    size: null,
-                    progress: 0,
                 });
 
                 try {
