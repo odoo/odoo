@@ -697,13 +697,12 @@ class AccountMoveLine(models.Model):
             for unreconciled lines, and something in-between for partially reconciled lines.
         """
         need_residual_lines = self.filtered(lambda x: x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card'))
-        stored_lines = need_residual_lines.filtered('id')
 
-        if stored_lines:
+        if need_residual_lines:
             self.env['account.partial.reconcile'].flush_model()
             self.env['res.currency'].flush_model(['decimal_places'])
 
-            aml_ids = tuple(stored_lines.ids)
+            aml_ids = tuple(need_residual_lines.ids)
             self._cr.execute('''
                 SELECT
                     part.debit_move_id AS line_id,
@@ -744,8 +743,8 @@ class AccountMoveLine(models.Model):
             foreign_curr = line.currency_id or comp_curr
 
             # Retrieve the amounts in both foreign/company currencies. If the record is 'new', the amounts_map is empty.
-            debit_amount, debit_amount_currency = amounts_map.get((line.id, 'debit'), (0.0, 0.0))
-            credit_amount, credit_amount_currency = amounts_map.get((line.id, 'credit'), (0.0, 0.0))
+            debit_amount, debit_amount_currency = amounts_map.get((line.ids[0], 'debit'), (0.0, 0.0))
+            credit_amount, credit_amount_currency = amounts_map.get((line.ids[0], 'credit'), (0.0, 0.0))
 
             # Subtract the values from the account.partial.reconcile to compute the residual amounts.
             line.amount_residual = comp_curr.round(line.balance - debit_amount + credit_amount)
