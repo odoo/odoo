@@ -66,6 +66,8 @@ _CONST_OPCODES = set(to_opcodes([
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
     'BUILD_CONST_KEY_MAP',
     'LIST_EXTEND', 'SET_UPDATE',
+    # 3.11: new opcodes https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
+    'CALL', 'PRECALL', 'RESUME',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
