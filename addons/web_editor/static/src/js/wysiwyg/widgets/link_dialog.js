@@ -12,6 +12,7 @@ export class LinkDialog extends Link {
         focusField: { type: String, optional: true },
         close: { type: Function },
         onSave: { type: Function },
+        setSaveAction: { type: Function},
     };
     inputTextRef = useRef('inputText');
     inputUrlRef = useRef('inputUrl');
@@ -64,6 +65,7 @@ export class LinkDialog extends Link {
             };
         }
         data.linkDialog = this;
+        this.props.setSaveAction(true);
         this.props.close();
         this.props.onSave(data);
     }

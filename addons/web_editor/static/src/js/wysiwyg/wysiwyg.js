@@ -1493,6 +1493,7 @@ export class Wysiwyg extends Component {
             if (!link) {
                 return
             }
+            let saved = false;
             this._shouldDelayBlur = true;
             this.env.services.dialog.add(LinkDialog, {
                 ...this.options.linkOptions,
@@ -1515,9 +1516,15 @@ export class Wysiwyg extends Component {
                     setSelection(link, 0, link, link.childNodes.length, false);
                     link.focus();
                 },
-                close: () => {
+                setSaveAction: (data) => {
+                    saved = data;
+                }
+            }, {
+                onClose: () => {
                     this.odooEditor.historyUnpauseSteps();
-                    this.odooEditor.historyRevertUntil(historyStepIndex)
+                    if (!saved) {
+                        this.odooEditor.historyRevertUntil(historyStepIndex);
+                    }
                 }
             });
         }
