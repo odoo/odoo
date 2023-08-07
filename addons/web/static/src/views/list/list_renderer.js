@@ -991,6 +991,9 @@ export class ListRenderer extends Component {
                 this.optionalActiveFields[col.name] = col.optional === "show";
             }
         }
+        if (this.props.onOptionalFieldsChanged) {
+            this.props.onOptionalFieldsChanged(this.optionalActiveFields);
+        }
     }
 
     onClickSortColumn(column) {
@@ -1752,6 +1755,9 @@ export class ListRenderer extends Component {
 
     async toggleOptionalField(fieldName) {
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
+        if (this.props.onOptionalFieldsChanged) {
+            this.props.onOptionalFieldsChanged(this.optionalActiveFields);
+        }
         this.state.columns = this.getActiveColumns(this.props.list);
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
@@ -2066,6 +2072,7 @@ ListRenderer.props = [
     "editable?",
     "noContentHelp?",
     "nestedKeyOptionalFieldsData?",
+    "onOptionalFieldsChanged?",
 ];
 ListRenderer.defaultProps = { hasSelectors: false, cycleOnTab: true };
 
