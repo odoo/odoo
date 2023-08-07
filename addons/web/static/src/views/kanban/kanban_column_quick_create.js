@@ -82,7 +82,7 @@ export class KanbanColumnQuickCreate extends Component {
                     this.props.onValidate(groupName);
                 }
                 for (const groupName of foldedColumns) {
-                    this.props.onValidate(groupName, { [foldField]: true }, true);
+                    this.props.onValidate(groupName, foldField);
                 }
             },
         });

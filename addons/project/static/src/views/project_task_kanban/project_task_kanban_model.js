@@ -20,11 +20,11 @@ export class ProjectTaskKanbanDynamicGroupList extends RelationalModel.DynamicGr
         return !!this.groupByField && this.groupByField.name === "personal_stage_type_ids";
     }
 
-    async createGroup(groupName, groupData, isFolded) {
+    async createGroup(groupName, foldField) {
         if (this.isGroupedByPersonalStages) {
             return this.model.mutex.exec(async () => {
                 this.creatingPersonnalStage = true;
-                await this._createGroup(groupName, groupData, isFolded);
+                await this._createGroup(groupName, foldField);
                 delete this.creatingPersonnalStage;
             });
         }
