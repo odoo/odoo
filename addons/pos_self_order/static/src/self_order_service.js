@@ -178,6 +178,7 @@ export class SelfOrder {
 
         try {
             const orders = await this.rpc(`/pos-self-order/get-orders/`, {
+                access_token: this.access_token,
                 order_access_tokens: accessTokens,
             });
 
