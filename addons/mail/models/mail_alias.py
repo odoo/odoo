@@ -186,7 +186,7 @@ class Alias(models.Model):
             )
         return ",".join(value)
 
-    def _check_unique(self, sanitized_names):
+    def _check_unique(self, sanitized_names, skip_icp_keys=None):
         """ Check unicity constraint won't be raised, otherwise raise a UserError
         with a complete error message. Also check unicity against alias config
         parameters.
@@ -205,20 +205,27 @@ class Alias(models.Model):
                   alias_name=', '.join(dupes))
             )
 
-        catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
-        bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
-        valid_domain_aliases = filter(None, (bounce_alias, catchall_alias))
+        icp_to_check = dict(
+            (icp_key, self.env["ir.config_parameter"].sudo().get_param(icp_key))
+            for icp_key in {'mail.bounce.alias', 'mail.catchall.alias'}
+            if icp_key not in (skip_icp_keys or ())
+        )
+        icp_label_by_key = {
+            'mail.bounce.alias': _('bounce'),
+            'mail.catchall.alias': _('catchall'),
+        }
 
         # matches catchall or bounce alias
-        for sanitized_name in sanitized_names:
-            if sanitized_name in valid_domain_aliases:
-                matching_alias_name = '%s@%s' % (sanitized_name, alias_domain) if alias_domain else sanitized_name
-                raise UserError(
-                    _('The e-mail alias %(matching_alias_name)s is already used as %(alias_duplicate)s alias. Please choose another alias.',
-                      matching_alias_name=matching_alias_name,
-                      alias_duplicate=_('catchall') if sanitized_name == catchall_alias else _('bounce'))
-                )
+        for sanitized_name in valid_names:
+            for icp_key, icp_value in icp_to_check.items():
+                if icp_value and sanitized_name == icp_value:
+                    matching_alias_name = f'{sanitized_name}@{alias_domain}' if alias_domain else sanitized_name
+                    raise UserError(
+                        _('The e-mail alias %(matching_alias_name)s is already used as %(alias_duplicate)s alias. Please choose another alias.',
+                          matching_alias_name=matching_alias_name,
+                          alias_duplicate=icp_label_by_key[icp_key])
+                    )
 
         # matches existing alias
         matching_alias = self.env['mail.alias']
