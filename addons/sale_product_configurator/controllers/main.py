@@ -267,15 +267,18 @@ class ProductConfiguratorController(Controller):
             attribute_lines=[dict(
                 id=ptal.id,
                 attribute=dict(**ptal.attribute_id.read(['id', 'name', 'display_type'])[0]),
-                attribute_values=[dict(
-                    **ptav.read(['name', 'html_color', 'is_custom'])[0],
-                    price_extra=ptav.currency_id._convert(
-                        ptav.price_extra,
-                        currency,
-                        request.env.company,
-                        datetime.fromisoformat(so_date).date(),
-                    ),
-                ) for ptav in ptal.product_template_value_ids],
+                attribute_values=[
+                    dict(
+                        **ptav.read(['name', 'html_color', 'is_custom'])[0],
+                        price_extra=ptav.currency_id._convert(
+                            ptav.price_extra,
+                            currency,
+                            request.env.company,
+                            datetime.fromisoformat(so_date).date(),
+                        ),
+                    ) for ptav in ptal.product_template_value_ids
+                    if ptav.ptav_active
+                ],
                 selected_attribute_value_id=combination.filtered(
                     lambda c: ptal in c.attribute_line_id
                 ).id,
