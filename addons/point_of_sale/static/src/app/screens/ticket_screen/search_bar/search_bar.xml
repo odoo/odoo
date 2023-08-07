@@ -24,8 +24,9 @@
                             </t>
                         </ul>
                     </div>
-                    <div t-if="props.config.filter.show" class="filter radius-right btn btn-secondary py-2 dropdown-toggle h-100"
-                    t-on-click.stop="() => { state.showFilterOptions = !state.showFilterOptions }">
+                    <div t-if="props.config.filter.show" 
+                        class="filter btn btn-secondary d-flex align-items-center dropdown-toggle"
+                        t-on-click.stop="() => { state.showFilterOptions = !state.showFilterOptions }">
                         <span>
                             <t t-esc="props.config.filter.options.get(state.selectedFilter).text" />
                         </span>

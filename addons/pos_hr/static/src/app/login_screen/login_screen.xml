@@ -7,14 +7,14 @@
                     <span class="text-primary" t-esc="shopName" />
                 </div>
                 <div class="login-body d-flex d-flex flex-column flex-sm-row align-items-center justify-content-around px-3 py-4">
-                    <span class="login-element border p-3 rounded">
-                        <img class="login-barcode-img w-50"
+                    <span class="login-element border rounded">
+                        <img class="login-barcode-img img-fluid"
                              src="/point_of_sale/static/img/barcode.png" />
                         <div class="login-barcode-text mt-2">Scan your badge</div>
                     </span>
                     <span class="login-or m-2 fs-2 text-muted">or</span>
                     <span class="login-element">
-                        <button class="login-button select-cashier btn btn-lg btn-secondary py-5 px-3"
+                        <button class="login-button select-cashier btn btn-lg btn-secondary"
                                 t-on-click="selectCashier">Select Cashier</button>
                     </span>
                 </div>
