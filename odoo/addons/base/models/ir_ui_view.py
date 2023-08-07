@@ -472,9 +472,6 @@ actual arch.
                             'Invalid view %(name)s definition in %(file)s',
                             name=view_name, file=view.arch_fs
                         ))
-                    if check == "Warning":
-                        view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
-                        _logger.warning('Invalid view %s definition in %s \n%s', view_name, view.arch_fs, view.arch)
             except ValueError as e:
                 lines = etree.tostring(combined_arch, encoding='unicode').splitlines(keepends=True)
                 fivelines = "".join(lines[max(0, e.context["line"]-3):e.context["line"]+2])
