@@ -246,8 +246,6 @@ patch(uploadService, {
                     name: records.length > 1 ?
                     _t("Uploading %s '%s' images.", records.length, records[0].query) :
                     _t("Uploading '%s' image.", records[0].query),
-                    size: null,
-                    progress: 0,
                 });
 
                 try {
