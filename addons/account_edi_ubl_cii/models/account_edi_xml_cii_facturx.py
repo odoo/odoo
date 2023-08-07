@@ -140,7 +140,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         self._validate_taxes(invoice)
 
         # Create file content.
-        tax_details = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
+        tax_details = invoice._prepare_invoice_aggregated_taxes(grouping_key_generator=grouping_key_generator)
 
         # Fixed Taxes: filter them on the document level, and adapt the totals
         # Fixed taxes are not supposed to be taxes in real live. However, this is the way in Odoo to manage recupel
