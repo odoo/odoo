@@ -595,12 +595,14 @@ class StockQuant(models.Model):
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
         return domain
 
-    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
-        removal_strategy = self._get_removal_strategy(product_id, location_id)
-        removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
+    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, order_quants=True):
         domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
+        if order_quants:
+            removal_strategy = self._get_removal_strategy(product_id, location_id)
+            removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
 
-        return self.search(domain, order=removal_strategy_order).sorted(lambda q: not q.lot_id)
+            return self.search(domain, order=removal_strategy_order).sorted(lambda q: not q.lot_id)
+        return self.search(domain)
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
@@ -622,7 +624,7 @@ class StockQuant(models.Model):
         :return: available quantity as a float
         """
         self = self.sudo()
-        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, order_quants=False)
         rounding = product_id.uom_id.rounding
         if product_id.tracking == 'none':
             available_quantity = sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))

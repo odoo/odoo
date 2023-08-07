@@ -1684,13 +1684,14 @@ Please change the quantity done or the rounding precision of your unit of measur
                     # the reserved quantity on the quants, convert it here in
                     # `product_id.uom_id` (the UOM of the quants is the UOM of the product).
                     available_move_lines = move._get_available_move_lines(assigned_moves_ids, partially_available_moves_ids)
+                    move_reserved_qty = sum(move.move_line_ids.mapped('reserved_qty'))
                     if not available_move_lines:
                         continue
                     for move_line in move.move_line_ids.filtered(lambda m: m.reserved_qty):
                         if available_move_lines.get((move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)):
                             available_move_lines[(move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)] -= move_line.reserved_qty
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
-                        need = move.product_qty - sum(move.move_line_ids.mapped('reserved_qty'))
+                        need = move.product_qty - move_reserved_qty
                         # `quantity` is what is brought by chained done move lines. We double check
                         # here this quantity is available on the quants themselves. If not, this
                         # could be the result of an inventory adjustment that removed totally of
@@ -1708,6 +1709,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                             assigned_moves_ids.add(move.id)
                             break
                         partially_available_moves_ids.add(move.id)
+                        move_reserved_qty = sum(move.move_line_ids.mapped('reserved_qty'))
             if move.product_id.tracking == 'serial':
                 move.next_serial_count = move.product_uom_qty
 
