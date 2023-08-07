@@ -469,16 +469,16 @@ def call_kw(model, name, args, kwargs):
 
 
 class Environment(Mapping):
-    """ The environment stores various contextual data used by the ORM:
+    """ An environment wraps data for ORM records:
 
-    - :attr:`cr`: the current database cursor (for database queries);
-    - :attr:`uid`: the current user id (for access rights checks);
-    - :attr:`context`: the current context dictionary (arbitrary metadata);
-    - :attr:`su`: whether in superuser mode.
+        - :attr:`cr`, the current database cursor;
+        - :attr:`uid`, the current user id;
+        - :attr:`context`, the current context dictionary;
+        - :attr:`su`, whether in superuser mode.
 
-    It provides access to the registry by implementing a mapping from model
-    names to models. It also holds a cache for records, and a data
-    structure to manage recomputations.
+        It provides access to the registry by implementing a mapping from model
+        names to new api models. It also holds a cache for records, and a data
+        structure to manage recomputations.
     """
     def reset(self):
         """ Reset the transaction, see :meth:`Transaction.reset`. """
@@ -545,14 +545,13 @@ class Environment(Mapping):
     def __call__(self, cr=None, user=None, context=None, su=None):
         """ Return an environment based on ``self`` with modified parameters.
 
-        :param cr: optional database cursor to change the current cursor
-        :type cursor: :class:`~odoo.sql_db.Cursor`
-        :param user: optional user/user id to change the current user
-        :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.Users>`
-        :param dict context: optional context dictionary to change the current context
-        :param bool su: optional boolean to change the superuser mode
-        :returns: environment with specified args (new or existing one)
-        :rtype: :class:`Environment`
+            :param cr: optional database cursor to change the current cursor
+            :param user: optional user/user id to change the current user
+            :param context: optional context dictionary to change the current context
+            :param su: optional boolean to change the superuser mode
+            :type context: dict
+            :type user: int or :class:`~odoo.addons.base.models.res_users`
+            :type su: bool
         """
         cr = self.cr if cr is None else cr
         uid = self.uid if user is None else int(user)
@@ -561,13 +560,7 @@ class Environment(Mapping):
         return Environment(cr, uid, context, su)
 
     def ref(self, xml_id, raise_if_not_found=True):
-        """ Return the record corresponding to the given ``xml_id``.
-
-        :param str xml_id: record xml_id, under the format ``<module.id>``
-        :param bool raise_if_not_found: whether the method should raise if record is not found
-        :returns: Found record or None
-        :raise ValueError: if record wasn't found and ``raise_if_not_found`` is True
-        """
+        """Return the record corresponding to the given ``xml_id``."""
         res_model, res_id = self['ir.model.data']._xmlid_to_res_model_res_id(
             xml_id, raise_if_not_found=raise_if_not_found
         )
@@ -599,7 +592,7 @@ class Environment(Mapping):
         """Return the current user (as an instance).
 
         :returns: current user - sudoed
-        :rtype: :class:`res.users record<~odoo.addons.base.models.res_users.Users>`"""
+        :rtype: :class:`~odoo.addons.base.models.res_users`"""
         return self(su=True)['res.users'].browse(self.uid)
 
     @lazy_property
@@ -611,7 +604,7 @@ class Environment(Mapping):
 
         :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
         :return: current company (default=`self.user.company_id`), with the current environment
-        :rtype: :class:`res.company record<~odoo.addons.base.models.res_company.Company>`
+        :rtype: res.company
 
         .. warning::
 
@@ -641,7 +634,7 @@ class Environment(Mapping):
 
         :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
         :return: current companies (default=`self.user.company_ids`), with the current environment
-        :rtype: :class:`res.company recordset<~odoo.addons.base.models.res_company.Company>`
+        :rtype: res.company
 
         .. warning::
 
