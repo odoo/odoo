@@ -38,6 +38,7 @@ import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 import { sprintf } from "@web/core/utils/strings";
 import { uniqueId } from "@web/core/utils/functions";
 import { pick } from "@web/core/utils/objects";
+import { _t } from "@web/core/l10n/translation";
 import {
     isCSSColor,
     convertCSSColorToRgba,
@@ -45,7 +46,6 @@ import {
  } from '@web/core/utils/colors';
 
 var qweb = core.qweb;
-var _t = core._t;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const descendants = OdooEditorLib.descendants;
 const { DateTime } = luxon;

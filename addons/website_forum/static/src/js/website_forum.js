@@ -9,9 +9,8 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { Markup } from '@web/legacy/js/core/utils';
 import session from "web.session";
 import { escape, sprintf } from "@web/core/utils/strings";
+import { _t } from "@web/core/l10n/translation";
 var qweb = core.qweb;
-
-var _t = core._t;
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',

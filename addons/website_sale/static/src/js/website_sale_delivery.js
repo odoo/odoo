@@ -2,10 +2,9 @@
 
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
-
-const _t = core._t;
-const qweb = core.qweb;
+import { _t } from "@web/core/l10n/translation";
 import concurrency from "@web/legacy/js/core/concurrency";
+const qweb = core.qweb;
 
 publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     selector: '.oe_website_sale',

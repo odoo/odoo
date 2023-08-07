@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { loadJS } from "@web/core/assets";
-import { _t } from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import { Markup } from '@web/legacy/js/core/utils';
 import session from 'web.session';
 import publicRootData from '@web/legacy/js/public/public_root';

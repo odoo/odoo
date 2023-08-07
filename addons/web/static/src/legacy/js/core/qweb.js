@@ -2,9 +2,7 @@
 
 import { uniqueId } from "@web/core/utils/functions";
 import { range } from "@web/core/utils/numbers";
-import translation from "@web/legacy/js/core/translation";
-
-var _t = translation._t;
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @param {boolean} debug
@@ -24,7 +22,7 @@ function QWeb(debug, default_dict, enableTranslation) {
         'uniqueId': uniqueId,
         'range' : range,
         'JSON': JSON,
-        '_t' : translation._t,
+        '_t' : _t,
         '__debug__': debug,
         'moment': function(date) { return new moment(date); },
         'csrf_token': odoo.csrf_token,

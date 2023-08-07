@@ -1,10 +1,9 @@
 /** @odoo-module */
 
-import { _t } from "@web/legacy/js/services/core";
 import Widget from "@web/legacy/js/core/widget";
 import { computeScore } from "@auth_password_policy/password_policy";
 import { sprintf } from "@web/core/utils/strings";
-import { translationIsReady } from "@web/core/l10n/translation";
+import { translationIsReady, _t } from "@web/core/l10n/translation";
 
 export default Widget.extend({
     tagName: "meter",

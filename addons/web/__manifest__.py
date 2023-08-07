@@ -152,7 +152,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
             'web/static/src/legacy/xml/name_and_signature.xml',
-            'web/static/src/legacy/translations_loaded.js',
         ],
         'web.assets_emoji': [
             'web/static/src/core/emoji_picker/emoji_data.js'
@@ -374,7 +373,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
 
-            'web/static/src/legacy/translations_loaded.js',
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
 import publicWidget from "@web/legacy/js/public/public_widget";

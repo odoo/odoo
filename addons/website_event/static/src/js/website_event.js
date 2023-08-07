@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
 import ajax from "@web/legacy/js/core/ajax";
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
-
-var _t = core._t;
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = publicWidget.Widget.extend({

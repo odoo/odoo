@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import {_t} from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
-import "@web/legacy/translations_loaded";
 
 const { markup } = owl;
 
@@ -83,7 +82,7 @@ registry.category("web_tour.tours").add("sale_tour", {
 registry.category("web_tour.tours").add("sale_quote_tour", {
         url: "/web#action=sale.action_quotations_with_onboarding&view_type=form",
         rainbowMan: true,
-        rainbowManMessage: markup(_t("<b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.")),
+        rainbowManMessage: () => markup(_t("<b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.")),
         sequence: 30,
         steps: () => [{
         trigger: ".o_field_res_partner_many2one[name='partner_id']",

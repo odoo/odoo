@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import { Markup } from "@web/legacy/js/core/utils";
-let _t = core._t;
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({

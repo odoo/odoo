@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
-
-var _t = core._t;
 
 publicWidget.registry.subscribe = publicWidget.Widget.extend({
     selector: ".js_subscribe",

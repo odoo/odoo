@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import portalComposer from "@portal/js/portal_composer";
-
-var _t = core._t;
 
 var PortalComposer = portalComposer.PortalComposer;
 

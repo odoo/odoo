@@ -3,8 +3,7 @@
     import publicWidget from "@web/legacy/js/public/public_widget";
     import core from "@web/legacy/js/services/core";
     import { Markup } from "@web/legacy/js/core/utils";
-
-    var _t = core._t;
+    import { _t } from "@web/core/l10n/translation";
 
     $.blockUI.defaults.css.border = '0';
     $.blockUI.defaults.css["background-color"] = '';

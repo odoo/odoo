@@ -1,10 +1,7 @@
 /** @odoo-module **/
 
-    import core from "@web/legacy/js/services/core";
+    import { _t } from "@web/core/l10n/translation";
     import wTourUtils from "@website/js/tours/tour_utils";
-    import "@web/legacy/translations_loaded";
-
-    var _t = core._t;
 
     wTourUtils.registerBackendAndFrontendTour("question", {
         url: '/forum/1',

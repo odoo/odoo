@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
-import "@web/legacy/translations_loaded";
+import { _t } from "@web/core/l10n/translation";
 
-var _t = core._t;
 import PurchaseAdditionalTourSteps from "@purchase/js/tours/purchase_steps";
 
 PurchaseAdditionalTourSteps.include({

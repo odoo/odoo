@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
-const _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 import wTourUtils from "@website/js/tours/tour_utils";
-import "@web/legacy/translations_loaded";
 
 function addToCart({productName, search = true, productHasVariants = false}) {
     const steps = [];
