@@ -3,11 +3,47 @@
 
 import odoo.tests
 
+from odoo import Command
+
 
 @odoo.tests.tagged("post_install", "-at_install")
 class SelfOrderCommonTest(odoo.tests.HttpCase):
     browser_size = "375x667"
     touch_enabled = True
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.pos_user = cls.env['res.users'].create({
+            'name': 'POS User',
+            'login': 'pos_user',
+            'password': 'pos_user',
+            'groups_id': [
+                (4, cls.env.ref('base.group_user').id),
+                (4, cls.env.ref('point_of_sale.group_pos_user').id),
+            ],
+        })
+
+    def _add_tax_to_product_from_different_company(self):
+        new_company = self.env['res.company'].create({
+            'name': 'Test Company',
+            'currency_id': self.env.ref('base.USD').id,
+            'country_id': self.env.ref('base.us').id,
+        })
+
+        new_tax = self.env['account.tax'].with_company(new_company).create({
+            'name': 'Tax that should not be used',
+            'amount': 50,
+            'amount_type': 'percent',
+            'tax_group_id': self.env['account.tax.group'].with_company(new_company).create({
+                'name': 'Tax Group that should not be used',
+            }).id,
+            'company_id': new_company.id,
+        })
+
+        self.env['product.product'].search([]).with_company(new_company).write({
+            'taxes_id': [Command.link(id) for id in new_tax.ids],
+        })
 
     def setUp(self):
         super().setUp()
@@ -28,3 +64,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
             'amount': 15,
             'amount_type': 'percent',
         })
+
+        # A new tax is added to each product and this tax is from a different company.
+        # This is important in the test because the added tax should not be used in the tour.
+        self._add_tax_to_product_from_different_company()
