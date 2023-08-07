@@ -70,7 +70,7 @@ export const uploadService = {
                 for (const file of sortedFiles) {
                     let fileSize = file.size;
                     if (!fileSize) {
-                        fileSize = null;
+                        fileSize = "";
                     } else if (fileSize < 1024) {
                         fileSize = fileSize.toFixed(2) + " bytes";
                     } else if (fileSize < 1048576) {
@@ -87,10 +87,6 @@ export const uploadService = {
                         id,
                         name: file.name,
                         size: fileSize,
-                        progress: 0,
-                        hasError: false,
-                        uploaded: false,
-                        errorMessage: '',
                     });
                 }
 
