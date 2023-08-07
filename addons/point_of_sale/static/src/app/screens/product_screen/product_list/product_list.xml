@@ -3,11 +3,18 @@
 
     <t t-name="point_of_sale.ProductsWidget">
         <div class="products-widget d-flex flex-column flex-grow-1 overflow-auto">
-            <ProductsWidgetControlPanel
-                updateProductList.bind="updateProductList"
-                clearSearch.bind="clearSearch"
-                updateSearch.bind="updateSearch"
-                loadProductFromServer.bind="onPressEnterKey" />
+            <div class="products-widget-control d-flex bg-view shadow-sm">
+                <CategorySelector
+                    categories="getCategories()"
+                    onClick="(id) => this.pos.setSelectedCategoryId(id)"
+                />
+                <Input tModel="[pos, 'searchProductWord']"
+                    class="'ms-auto'"
+                    isSmall="ui.isSmall"
+                    placeholder="'Search products...'"
+                    icon="{type: 'fa', value: 'fa-search'}"
+                    debounceMillis="100" />
+            </div>
             <div class="product-list-container flex-grow-1 overflow-y-auto">
                 <div t-if="productsToDisplay.length != 0 and posHasValidProduct" t-attf-class="{{this.pos.productListViewMode}} product-list d-grid gap-1 p-1">
                     <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
@@ -50,5 +57,4 @@
             </div>
         </div>
     </t>
-
 </templates>

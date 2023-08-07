@@ -8,8 +8,11 @@
             <main class="modal-body">
                 <div class="opening-cash-section mb-3">
                     <span class="info-title d-flex flex-grow-1 align-items-start">Opening cash</span>
-                    <div class="cash-input-sub-section input-group" t-on-input="handleInputChange">
-                        <input class="pos-input form-control" type="number" t-model.number="state.openingCash" t-ref="cash-input" t-on-focus="ev=>ev.target.select()"/>
+                    <div class="cash-input-sub-section input-group">
+                        <Input tModel="[state, 'openingCash']"
+                            isValid.bind="env.utils.isValidFloat"
+                            callback.bind="handleInputChange"
+                            autofocus="true" />
                         <div class="button icon btn btn-secondary" t-on-click="openDetailsPopup">
                             <i class="fa fa-money fa-2x" role="img" title="Open the money details popup"/>
                         </div>
@@ -17,13 +20,18 @@
                 </div>
                 <div class="opening-notes-container d-flex flex-column align-items-start">
                     <label class="form-label" for="openingNotes">Opening note</label>
-                    <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-model="state.notes" placeholder="Add an opening note...">
-                        <t t-esc="openingNotes"/>
-                    </textarea>
+                    <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-model="state.notes" placeholder="Add an opening note..." />
                 </div>
             </main>
             <footer class="footer modal-footer">
-                <div class="button btn btn-lg btn-primary" t-on-click="confirm">Open session <span t-esc="env.utils.formatCurrency(state.openingCash)"/></div>
+                <button class="button btn btn-lg btn-primary" 
+                    t-on-click="confirm"
+                    t-att-disabled="!env.utils.isValidFloat(state.openingCash)"
+                    >
+                    Open session 
+                    <span t-if="env.utils.isValidFloat(state.openingCash)"
+                        t-esc="env.utils.formatCurrency(state.openingCash)"/>
+                </button>
             </footer>
         </div>
     </t>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.CategorySelector">
-        <div t-attf-class="{{props.class or ''}} d-flex overflow-auto">
+        <div t-attf-class="{{props.class}} d-flex overflow-auto">
             <div t-foreach="props.categories" t-as="category" t-key="category.id"
                 class="d-flex align-items-center">
                 <i  t-if="category.separator"

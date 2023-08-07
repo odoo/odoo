@@ -5,8 +5,7 @@ import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_erro
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { ErrorTracebackPopup } from "@point_of_sale/app/errors/popups/error_traceback_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { useEnv, onMounted, onPatched, onWillUnmount, useComponent, useRef } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { useEnv, onMounted, onPatched, useComponent, useRef } from "@odoo/owl";
 
 /**
  * Introduce error handlers in the component.
@@ -91,37 +90,6 @@ export function useAutoFocusToLast() {
     }
     onMounted(autofocus);
     onPatched(autofocus);
-}
-
-export function useValidateCashInput(inputRef, startingValue) {
-    const cashInput = useRef(inputRef);
-    const localization = useService("localization");
-    const decimalPoint = localization.decimalPoint;
-    const env = useEnv();
-    function handleCashInputChange(event) {
-        const inputValue = (event.target.value || "").trim();
-
-        // Check if the current input value is a valid float
-        const inputElement = event.target.closest(".input-container") || event.target;
-        if (!env.utils.isValidFloat(inputValue)) {
-            inputElement.classList.add("is-invalid");
-            event.target.classList.add("invalid-cash-input");
-        } else {
-            inputElement.classList.remove("is-invalid");
-            event.target.classList.remove("invalid-cash-input");
-        }
-    }
-    onMounted(() => {
-        if (cashInput.el) {
-            cashInput.el.value = (startingValue || 0).toString().replace(".", decimalPoint);
-            cashInput.el.addEventListener("input", handleCashInputChange);
-        }
-    });
-    onWillUnmount(() => {
-        if (cashInput.el) {
-            cashInput.el.removeEventListener("input", handleCashInputChange);
-        }
-    });
 }
 
 export function useAsyncLockedMethod(method) {

@@ -14,28 +14,28 @@
                                 Cash Out
                             </button>
                         </div>
-                        <div class="input-container popup-input align-items-center form-control d-flex">
-                            <span class="currency" t-esc="pos.currency.symbol" t-if="pos.currency.position=='before'"/>
-                            <input class="input-field border-0 px-2" type="text" name="amount" t-model="state.amount" t-ref="amountInput" t-on-keypress="_onAmountKeypress"/>
-                            <span class="currency" t-esc="pos.currency.symbol" t-if="pos.currency.position=='after'"/>
-                        </div>
+                        <Input tModel="[state, 'amount']"
+                            icon="{type: 'string', value: pos.currency.symbol}"
+                            iconOnLeftSide="pos.currency.position === 'before'"
+                            isValid.bind="env.utils.isValidFloat"
+                            autofocus="true"
+                            getRef="(ref) => this.inputRef = ref" />
                     </div>
                     <div class="form-floating">
                         <textarea class="form-control" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
                         <label for="reason">Reason</label>
                     </div>
-                    <span t-if="state.errorMessage" class="error-message alert alert-danger mt-2">
-                        <t t-esc="state.errorMessage" />
-                    </span>
                 </div>
             </main>
             <footer class="footer cash-move modal-footer">
-                <div class="button confirm disable highlight dynamic-size btn btn-lg btn-primary" t-on-click="confirm">
+                <button class="button confirm btn btn-lg btn-primary"
+                    t-on-click="confirm"
+                    t-att-disabled="!env.utils.isValidFloat(state.amount)">
                     Confirm <span t-esc="format(state.amount)"/>
-                </div>
-                <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
+                </button>
+                <button class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
                     Discard
-                </div>
+                </button>
             </footer>
         </div>
     </t>

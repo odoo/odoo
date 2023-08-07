@@ -1504,7 +1504,7 @@ class PosSession(models.Model):
             return {}
         return self.config_id.open_ui()
 
-    def set_cashbox_pos(self, cashbox_value, notes):
+    def set_cashbox_pos(self, cashbox_value: int, notes: str):
         self.state = 'opened'
         self.opening_notes = notes
         difference = cashbox_value - self.cash_register_balance_start

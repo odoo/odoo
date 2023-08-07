@@ -7,19 +7,15 @@ import { identifyError } from "@point_of_sale/app/errors/error_handlers";
 import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/rpc_service";
 
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
-import { ProductsWidgetControlPanel } from "@point_of_sale/app/screens/product_screen/product_list/control_panel/control_panel";
 import { Component, useState } from "@odoo/owl";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
+import { Input } from "@point_of_sale/app/generic_components/input/input";
 
 export class ProductsWidget extends Component {
-    static components = { ProductCard, ProductsWidgetControlPanel };
+    static components = { ProductCard, CategorySelector, Input };
     static template = "point_of_sale.ProductsWidget";
-
-    /**
-     * @param {Object} props
-     * @param {number?} props.startCategoryId
-     */
     setup() {
         this.state = useState({
             previousSearchWord: "",
@@ -27,9 +23,39 @@ export class ProductsWidget extends Component {
             loadingDemo: false,
         });
         this.pos = usePos();
+        this.ui = useState(useService("ui"));
         this.popup = useService("popup");
         this.notification = useService("pos_notification");
         this.orm = useService("orm");
+    }
+    /**
+     * @returns {import("@point_of_sale/app/generic_components/category_selector/category_selector").Category[]}
+     */
+    getCategories() {
+        return [
+            ...this.pos.db.get_category_ancestors_ids(this.pos.selectedCategoryId),
+            this.pos.selectedCategoryId,
+            ...this.pos.db.get_category_childs_ids(this.pos.selectedCategoryId),
+        ]
+            .map((id) => this.pos.db.category_by_id[id])
+            .map((category) => {
+                const isRootCategory = category.id === this.pos.db.root_category_id;
+                const hasSeparator =
+                    !isRootCategory &&
+                    [
+                        ...this.pos.db.get_category_ancestors_ids(this.pos.selectedCategoryId),
+                        this.pos.selectedCategoryId,
+                    ].includes(category.id);
+                return {
+                    id: category.id,
+                    name: !isRootCategory ? category.name : "",
+                    icon: isRootCategory ? "fa-home fa-2x" : "",
+                    separator: hasSeparator ? "fa-caret-right" : "",
+                    imageUrl:
+                        category?.has_image &&
+                        `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`,
+                };
+            });
     }
     get posHasValidProduct() {
         return this.pos.posHasValidProduct();
@@ -58,17 +84,8 @@ export class ProductsWidget extends Component {
     get shouldShowButton() {
         return this.productsToDisplay.length === 0 && this.searchWord;
     }
-    switchCategory(categoryId) {
-        this.pos.setSelectedCategoryId(categoryId);
-    }
-    updateSearch(searchWord) {
-        this.pos.searchProductWord = searchWord;
-    }
-    clearSearch() {
-        this.pos.searchProductWord = "";
-    }
     updateProductList(event) {
-        this.switchCategory(0);
+        this.pos.setSelectedCategoryId(0);
     }
     async onPressEnterKey() {
         const { searchProductWord } = this.pos;
