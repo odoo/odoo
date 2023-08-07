@@ -32,10 +32,9 @@ export class WebsitePreview extends Component {
         this.orm = useService('orm');
 
         this.iframeFallbackUrl = '/website/iframefallback';
-
         this.iframe = useRef('iframe');
-        this.iframefallback = useRef('iframefallback');
         this.container = useRef('container');
+        this.iframefallback = useRef('iframefallback');
         this.websiteContext = useState(this.websiteService.context);
         this.blockedState = useState({
             isBlocked: false,
@@ -468,9 +467,21 @@ export class WebsitePreview extends Component {
         // exist, so we do not replace the iframefallback content.
         // The iframefallback is hidden in test mode
         if (!this.websiteContext.edition && this.iframe.el.contentDocument.body && this.iframefallback.el) {
-            this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
-            this.iframefallback.el.classList.remove('d-none');
-            $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+            const fallbackEl = this.iframefallback.el
+
+            fallbackEl.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
+            fallbackEl.classList.remove('d-none');
+
+            // Restart the fadeOut animation
+            fallbackEl.classList.remove('fadeOut');
+            fallbackEl.classList.add('fadeOut');
+
+            setTimeout(() => {
+                fallbackEl.classList.add('d-none');
+                fallbackEl.contentDocument.body.innerHTML = '';
+            }, 300);
+
+            $().getScrollingElement(fallbackEl.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
             this._cleanIframeFallback();
         }
     }

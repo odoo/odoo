@@ -97,3 +97,41 @@ header {
 .o_block_preview {
     z-index: $zindex-dropdown - 1 !important;
 }
+
+@keyframes in {
+    0% {
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 0;
+    }
+
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes out {
+    0% {
+        opacity: 1;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.fadeIn {
+    animation: in 300ms;
+}
+
+.fadeOut {
+    animation: out 300ms;
+    animation-fill-mode: forwards;
+}
