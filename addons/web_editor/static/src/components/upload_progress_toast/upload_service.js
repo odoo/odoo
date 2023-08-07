@@ -74,7 +74,7 @@ export const uploadService = {
                         return null;
                     }
                     if (!fileSize) {
-                        fileSize = null;
+                        fileSize = "";
                     } else {
                         fileSize = humanNumber(fileSize) + "B";
                     }
@@ -87,10 +87,6 @@ export const uploadService = {
                         id,
                         name: file.name,
                         size: fileSize,
-                        progress: 0,
-                        hasError: false,
-                        uploaded: false,
-                        errorMessage: '',
                     });
                 }
 
