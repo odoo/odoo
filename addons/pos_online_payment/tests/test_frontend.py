@@ -9,6 +9,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.pos_online_payment.models.pos_order import PosOrder
 from odoo.addons.pos_online_payment.tests.online_payment_common import OnlinePaymentCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
+from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.osv.expression import AND
 
 import odoo.tests
@@ -184,8 +185,10 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         self._open_session_ui()
 
         before_tour_datetime = fields.Datetime.now()
-        with patch.object(PosOrder, 'get_and_set_online_payments_data', self._fake_get_and_set_online_payments_data):
+        def _run_tour():
             self._start_tour('OnlinePaymentServerFakePaymentTour')
+        with patch.object(PosOrder, 'get_and_set_online_payments_data', self._fake_get_and_set_online_payments_data):
+            TestPoSCommon._execute_with_fake_process_validated_sessions(_run_tour)
 
         test_orders = self.env['pos.order'].search(['&', ('config_id', '=', self.pos_config.id), ('date_order', '>=', before_tour_datetime)])
         self.assertEqual(len(test_orders), 1)

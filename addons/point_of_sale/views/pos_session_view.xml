@@ -9,8 +9,15 @@
                     <button name="open_frontend_cb" type="object" string="Continue Selling"
                         invisible="rescue or state not in ['opening_control', 'opened']"/>
                     <button id="validate_closing_control" name="action_pos_session_closing_control" type="object" string="Close Session &amp; Post Entries"
-                            invisible="(state != 'closing_control' and not rescue or state == 'closed' and rescue) and state != 'closing_control'"
+                            invisible="not rescue or state not in ['opening_control', 'opened']"
                     class="oe_highlight"/>
+                    <!-- (state = closing_control || rescue) && (state != closed || !rescue)-->
+                    <!-- state = closing_control || (state != closed && rescue) -->
+                    <!-- Now: state in ('opening_control', 'opened') && rescue -->
+                    <!-- Needed for rescue session -->
+                    <!-- Is it ok to be able to close rescue session in opening_control state ? -->
+                    <button id="open_close_session_wizard" name="action_close_session_wizard" type="object" string="Manage Processing Error" invisible="not need_close_wizard" class="oe_highlight"/>
+                    <button id="trigger_cron" name="action_trigger_processing_validated_sessions_cron" type="object" string="Trigger cron" invisible="not can_trigger_cron" class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="opened,closing_control,closed" nolabel="1" />
                 </header>
                 <sheet>
@@ -52,11 +59,21 @@
                             string="Cash Register"
                             invisible="not cash_control"
                             groups="account.group_account_readonly"/>
+                            <!-- Why groups="account.group_account_readonly" ? -->
                     </div>
                     <h1 class="oe_title">
                         <field name="name" invisible="name == '/'" class="oe_inline"/>
                     </h1>
+                    <div invisible="state != 'closing_control'" style="width: 100%;">
+                        Status:
+                        <span invisible="need_close_wizard or not can_process_validated">Validated, not yet processed</span>
+                        <span invisible="need_close_wizard or can_process_validated">Validated, processing...</span>
+                        <span invisible="not need_close_wizard">Error during processing</span>
+                    </div>
                     <group>
+                        <field name="need_close_wizard" invisible="1"/>
+                        <field name="can_trigger_cron" invisible="1"/>
+                        <field name="can_process_validated" invisible="1"/>
                         <field name="cash_control" invisible="1" />
                         <field name="user_id" readonly="state != 'opening_control'"/>
                         <field name="currency_id" invisible="1"/>

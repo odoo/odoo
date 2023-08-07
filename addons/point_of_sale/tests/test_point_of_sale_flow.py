@@ -8,7 +8,7 @@ import odoo
 from odoo import fields, tools
 from odoo.tools import float_compare, mute_logger, test_reports
 from odoo.tests.common import Form
-from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
+from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon, TestPoSCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -25,6 +25,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
     def test_order_refund(self):
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
         # I create a new PoS order with 2 lines
         order = self.PosOrder.create({
             'company_id': self.env.company.id,
@@ -84,14 +85,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertTrue(refund.payment_ids.payment_method_id.is_cash_count, msg='There should only be one payment and paid in cash.')
 
         total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        current_session.post_closing_cash_details(total_cash_payment)
-        current_session.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(current_session, counted_cash=total_cash_payment)
         self.assertEqual(current_session.state, 'closed', msg='State of current session should be closed.')
 
     def test_order_refund_lots(self):
         # open pos session
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
 
         # set up product iwith SN tracing and create two lots (1001, 1002)
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id
@@ -182,7 +183,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         refund_payment.with_context(**payment_context).check()
 
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
-        current_session.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(current_session)
 
     def test_order_to_picking(self):
         """
@@ -196,6 +197,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I click on create a new session button
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
 
         # I create a PoS order with 2 units of PCSC234 at 450 EUR
         # and 3 units of PCSC349 at 300 EUR.
@@ -392,7 +394,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'Move Lines should be in done state.'
         )
         # I close the session to generate the journal entries
-        self.pos_config.current_session_id.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(self.pos_config.current_session_id)
 
     def test_order_to_picking02(self):
         """ This test is similar to test_order_to_picking except that this time, there are two products:
@@ -426,6 +428,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.env['stock.quant']._update_available_quantity(untracked_product, shelf1_location, qty)
 
         self.pos_config.open_ui()
+        TestPoSCommon._open_session_if_needed(self.pos_config.current_session_id)
         self.pos_config.current_session_id.update_stock_at_closing = False
 
         untax, atax = self.compute_tax(tracked_product, 1.15, 1)
@@ -480,12 +483,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             self.assertEqual(tracked_line.location_id, shelf1_location)
             self.assertEqual(untracked_line.location_id, shelf1_location)
 
-        self.pos_config.current_session_id.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(self.pos_config.current_session_id)
 
     def test_order_to_invoice(self):
 
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
 
         untax1, atax1 = self.compute_tax(self.product3, 450*0.95, 2)
         untax2, atax2 = self.compute_tax(self.product4, 300*0.95, 3)
@@ -546,7 +550,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             invoice.amount_total, self.pos_order_pos1.amount_total, places=2, msg="Invoice not correct")
 
         # I close the session to generate the journal entries
-        current_session.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(current_session)
 
     def test_create_from_ui(self):
         """
@@ -660,8 +664,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I close the session
         total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        current_session.post_closing_cash_details(total_cash_payment)
-        current_session.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(current_session, counted_cash=total_cash_payment)
         self.assertEqual(current_session.state, 'closed', "Session was not properly closed")
         self.assertFalse(self.pos_config.current_session_id, "Current session not properly recomputed")
 
@@ -679,8 +682,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I close the rescue session
         total_cash_payment = sum(rescue_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        rescue_session.post_closing_cash_details(total_cash_payment)
-        rescue_session.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(rescue_session, counted_cash=total_cash_payment)
         self.assertEqual(rescue_session.state, 'closed', "Rescue session was not properly closed")
         self.assertEqual(rescue_session.cash_register_balance_start, current_session.cash_register_balance_end_real, "Rescue session does not start with the same amount as the previous session")
 
@@ -727,6 +729,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I click on create a new session button
         eur_config.open_ui()
         current_session = eur_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
 
         # I create a PoS order with 2 units of PCSC234 at 450 EUR (Tax Incl)
         # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
@@ -807,7 +810,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(self.pos_order_pos0.state, 'paid', 'Order should be in paid state.')
 
         # I generate the journal entries
-        current_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(current_session)
 
         # I test that the generated journal entry is attached to the PoS order
         self.assertTrue(current_session.move_id, "Journal entry should have been attached to the session.")
@@ -826,6 +829,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
     def test_order_to_invoice_no_tax(self):
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
 
         # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
         self.pos_order_pos1 = self.PosOrder.create({
@@ -884,7 +888,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         for iline in invoice.invoice_line_ids:
             self.assertFalse(iline.tax_ids)
 
-        self.pos_config.current_session_id.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(self.pos_config.current_session_id)
 
     def test_order_with_deleted_tax(self):
         # create tax
@@ -906,6 +910,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # sell product thru pos
         self.pos_config.open_ui()
         pos_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(pos_session)
         untax, atax = self.compute_tax(product5, 10.0)
         product5_order = {'data':
           {'amount_paid': untax + atax,
@@ -942,16 +947,20 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         dummy_50_perc_tax.unlink()
 
         total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        pos_session.post_closing_cash_details(total_cash_payment)
+        print("\n # test_point_of_sale_flow.py:942 - BEF close_session_from_ui")
+        print("\n # test_point_of_sale_flow.py:947 - ():  pos_session move_id BEF :", pos_session.move_id)
+        TestPoSCommon._close_from_ui_and_process_session(pos_session, counted_cash=total_cash_payment)
+        ## TODO Problem: no rollback in test, the move_id and pickings are therefore not removed. This test doesn't reflect the reality.
+        ## What could be done instead: put the amount_to_balance, balancing_account in advance, then just call _close_from_ui_and_process_session and remove the wizard get/open/click code below
+        ## It doesn't reflect the reality too, but is less dangerous IMO (no rollback ignored)
+        print("\n # test_point_of_sale_flow.py:947 - ():  pos_session move_id AFT :", pos_session.move_id)
 
         # close session (should not fail here)
-        # We don't call `action_pos_session_closing_control` to force the failed
-        # closing which will return the action because the internal rollback call messes
-        # with the rollback of the test runner. So instead, we directly call the method
-        # that returns the action by specifying the imbalance amount.
-        action = pos_session._close_session_action(5.0)
+        action = pos_session.action_close_session_wizard()
         wizard = self.env['pos.close.session.wizard'].browse(action['res_id'])
-        wizard.with_context(action['context']).close_session()
+        # Simulate close_session call of the wizard:
+        TestPoSCommon._close_and_process_session(pos_session, wizard.account_id)
+        # wizard.with_context(action['context']).close_session() ## TODO Can it be removed ?
 
         # check the difference line
         diff_line = pos_session.move_id.line_ids.filtered(lambda line: line.name == 'Difference at closing PoS session')
@@ -1172,6 +1181,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             })
             self.pos_config.open_ui()
             pos_session = self.pos_config.current_session_id
+            TestPoSCommon._open_session_if_needed(pos_session)
             untax, atax = self.compute_tax(product, 500, 1)
             pos_order_data = {
                 'data': {
@@ -1210,7 +1220,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             pos_order_id = self.PosOrder.create_from_ui([pos_order_data])[0]['id']
             pos_order = self.env['pos.order'].browse(pos_order_id)
             # End the session. The order has been created without any invoice.
-            self.pos_config.current_session_id.action_pos_session_closing_control()
+            TestPoSCommon._close_and_process_session(self.pos_config.current_session_id)
             self.assertFalse(pos_order.account_move.exists())
         # Client is back on the 3rd, asks for an invoice.
         with freeze_time('2020-01-03'):
@@ -1298,6 +1308,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # open pos session
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
 
         # set up product iwith SN tracing and create two lots (1001, 1002)
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id
@@ -1357,7 +1368,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I click on the validate button to register the payment.
         refund_payment.with_context(**payment_context).check()
-        current_session.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(current_session)
         self.assertEqual(refund.picking_ids.move_line_ids_without_package.owner_id.id, order.picking_ids.move_line_ids_without_package.owner_id.id, "The owner of the refund is not the same as the owner of the original order")
 
     def test_journal_entries_category_without_account(self):
@@ -1383,6 +1394,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         #create a new pos order with the product
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
         order = self.PosOrder.create({
             'company_id': self.env.company.id,
             'session_id': current_session.id,
@@ -1411,13 +1423,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'payment_method_id': self.cash_payment_method.id
         })
         order_payment.with_context(**payment_context).check()
-        current_session.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(current_session)
         self.assertEqual(current_session.move_id.line_ids[0].account_id.id, account.id)
 
     def test_tracked_product_with_owner(self):
         # open pos session
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
 
         # set up product iwith SN tracing and create two lots (1001, 1002)
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id
@@ -1471,7 +1484,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'payment_method_id': self.cash_payment_method.id
         })
         order_payment.with_context(**payment_context).check()
-        current_session.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(current_session)
         self.assertEqual(current_session.picking_ids.move_line_ids.owner_id.id, self.partner1.id)
 
     def test_order_refund_with_invoice(self):
@@ -1479,6 +1492,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            linked to the original invoice."""
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
 
         order_data = {'data':
           {'amount_paid': 450,
@@ -1523,7 +1537,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         refund_payment.with_context(**context_payment).check()
         refund.action_pos_order_invoice()
         #get last invoice created
-        current_session.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(current_session)
         invoices = self.env['account.move'].search([('move_type', '=', 'out_invoice')], order='id desc', limit=1)
         credit_notes = self.env['account.move'].search([('move_type', '=', 'out_refund')], order='id desc', limit=1)
         self.assertEqual(credit_notes.ref, "Reversal of: "+invoices.name)
@@ -1549,6 +1563,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         })
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
 
         # create pos order
         order = self.PosOrder.create({
@@ -1589,7 +1604,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         order_payment.with_context(**payment_context).check()
 
         # close session
-        current_session.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(current_session)
 
         # create invoice
         order.action_pos_order_invoice()
@@ -1635,6 +1650,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'property_account_income_id': self.account1.id,
         })
         self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        TestPoSCommon._open_session_if_needed(current_session)
         #create an order with product1
         order = self.PosOrder.create({
             'company_id': self.env.company.id,
@@ -1673,9 +1690,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'payment_method_id': self.cash_payment_method.id
         })
         order_payment.with_context(**payment_context).check()
-        session_id = self.pos_config.current_session_id
-        self.pos_config.current_session_id.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(current_session)
         #get journal entries created
-        aml = session_id.move_id.line_ids.filtered(lambda x: x.account_id == self.account1 and x.tax_ids == self.tax1)
+        aml = current_session.move_id.line_ids.filtered(lambda x: x.account_id == self.account1 and x.tax_ids == self.tax1)
         self.assertEqual(aml.price_total, 220)
         self.assertEqual(aml.price_subtotal, 200)

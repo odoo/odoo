@@ -145,5 +145,17 @@
         </record>
 
         <function model="pos.config" name="post_install_pos_localisation" />
+
+        <record model="ir.cron" id="cron_process_validated_not_empty_sessions">
+            <field name="name">Point of Sale: process validated not empty sessions</field>
+            <field name="model_id" ref="point_of_sale.model_pos_session"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_process_validated_not_empty_sessions()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall">False</field>
+            <field name="nextcall" eval="(datetime.now() + timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
     </data>
 </odoo>

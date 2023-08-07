@@ -55,7 +55,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
     def test_negative_margin(self):
         """
@@ -87,7 +87,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), -0.92)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
     def test_full_margin(self):
         """
@@ -119,7 +119,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(self.pos_session.order_ids[2].margin_percent, 1)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
     def test_tax_margin(self):
         """
@@ -153,7 +153,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
     def test_other_currency_margin(self):
         """
@@ -191,7 +191,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
         # set the config back
         self.config = current_config
@@ -233,7 +233,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(self.pos_session.order_ids[2].margin_percent, 0.4167)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
         # set the config back
         self.config = current_config
@@ -268,7 +268,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
     def test_fifo_margin_real_time(self):
         """
@@ -325,7 +325,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0.5)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
     def test_avco_margin_closing_time(self):
         """
@@ -386,8 +386,7 @@ class TestPosMargin(TestPoSCommon):
 
         # close session
         total_cash_payment = sum(self.pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        self.pos_session.post_closing_cash_details(total_cash_payment)
-        self.pos_session.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(self.pos_session, counted_cash=total_cash_payment)
 
         # check margins
         self.assertEqual(self.pos_session.order_ids[0].margin, 26)

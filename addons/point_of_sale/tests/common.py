@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from random import randint
 from datetime import datetime
+from unittest.mock import patch
 
 from odoo import fields, tools
+from odoo.addons.point_of_sale.models.pos_session import PosSession
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
@@ -624,8 +626,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         _logger.info('DONE: Checks for journal entries before closing the session.')
         cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
         total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.id == cash_payment_method.id).mapped('amount'))
-        pos_session.post_closing_cash_details(total_cash_payment)
-        pos_session.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(pos_session, counted_cash=total_cash_payment)
         after_closing_cb = args.get('after_closing_cb')
         if after_closing_cb:
             after_closing_cb()
@@ -715,3 +716,57 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         else:
             # if the expected_account_move_vals is falsy, the account_move should be falsy.
             self.assertFalse(account_move)
+
+    @staticmethod
+    def _open_session_if_needed(pos_session):
+        if pos_session.config_id.cash_control and pos_session.state == 'opening_control':
+            pos_session.set_cashbox_pos(pos_session.cash_register_balance_start, 'notes')
+
+    @staticmethod
+    def _close_and_process_session(pos_session, balancing_account=False):
+        """ Closes the provided session using the action_pos_session_closing_control
+            method and processes it in the same thread.
+            The cursor is not committed nor rollbacked because of Odoo test
+            environment limitations.
+            This is not the normal behavior, but allows to easily write tests.
+        """
+        def _close_session():
+            pos_session.action_pos_session_closing_control(balancing_account)
+        TestPoSCommon._execute_with_fake_process_validated_sessions(_close_session)
+
+    @staticmethod
+    def _close_from_ui_and_process_session(pos_session, bank_payment_method_diff_pairs=None, closing_notes=None, counted_cash=None):
+        """ Closes the provided session using the close_session_from_ui method
+            and processes it in the same thread.
+            The cursor is not committed nor rollbacked because of Odoo test
+            environment limitations.
+            This is not the normal behavior, but allows to easily write tests.
+        """
+        def _close_session():
+            pos_session.close_session_from_ui(bank_payment_method_diff_pairs=bank_payment_method_diff_pairs, closing_notes=closing_notes, counted_cash=counted_cash)
+        TestPoSCommon._execute_with_fake_process_validated_sessions(_close_session)
+
+    @staticmethod
+    def _execute_with_fake_process_validated_sessions(func):
+        """ Executes the provided function func doing the validated sessions
+            processing in the same thread.
+            The cursor is not committed nor rollbacked because of Odoo test
+            environment limitations.
+            This is not the normal behavior, but allows to easily write tests.
+        """
+        def _fake_trigger_processing_validated_sessions_cron_if_useful(method_self):
+            ## TODO keep or rm ?
+            # t = threading.Timer(1, method_self._cron_process_validated_not_empty_sessions)
+            # t.start()
+            # t.join()
+            method_self._cron_process_validated_not_empty_sessions()
+            return True
+
+        def _do_nothing(method_self):
+            return
+
+        def _fake_trigger_processing_validated_sessions_cron(method_self, cron_self_trigger=False):
+            return
+
+        with patch.object(PosSession, '_trigger_processing_validated_sessions_cron_if_useful', _fake_trigger_processing_validated_sessions_cron_if_useful), patch.object(PosSession, '_commit_cursor', _do_nothing), patch.object(PosSession, '_rollback_cursor', _do_nothing), patch.object(PosSession, '_trigger_processing_validated_sessions_cron', _fake_trigger_processing_validated_sessions_cron):
+            func()

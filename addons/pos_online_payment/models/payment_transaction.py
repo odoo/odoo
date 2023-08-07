@@ -32,7 +32,10 @@ class PaymentTransaction(models.Model):
     def _process_pos_online_payment(self):
         for tx in self:
             if tx and tx.pos_order_id and tx.state in ('authorized', 'done') and not tx.payment_id.pos_order_id:
-                pos_order = tx.pos_order_id
+                # Because payments should not be lost, the bypass_pos_session_modifiable_check is granted
+                # even if the session is being processed which could induce issues, but this situation is
+                # really unlikely (and the processing of a POS session can be retried).
+                pos_order = tx.pos_order_id.with_context(bypass_pos_session_modifiable_check=True)
                 if tools.float_compare(tx.amount, 0.0, precision_rounding=pos_order.currency_id.rounding) <= 0:
                     raise ValidationError(_('The payment transaction (%d) has a negative amount.', tx.id))
 
@@ -55,7 +58,7 @@ class PaymentTransaction(models.Model):
                     'online_account_payment_id': tx.payment_id.id,
                     'pos_order_id': pos_order.id,
                 })
-                tx.payment_id.update({
+                tx.payment_id.with_context(bypass_pos_session_modifiable_check=True).update({
                     'pos_payment_method_id': payment_method.id,
                     'pos_order_id': pos_order.id,
                     'pos_session_id': pos_order.session_id.id,

@@ -413,6 +413,9 @@ class PosConfig(models.Model):
 
         bypass_categories_forbidden_change = self.env.context.get('bypass_categories_forbidden_change', False)
 
+## This is a potentially really big result no ? It will look for all the sessions of all time for all configs in self just to know if there is one that is not closed
+## looking at only current_session_id would be enough no ? No because current_session_id doesn't take into account rescue sessions...abs
+## should then look for has_active_session (if it doesn't trigger a lot of db queries...), or do a single query: self.env['pos.session'].search(['&', ('config_id', 'in', self.ids), ('state', '!=', 'closed')], limit=1)
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
@@ -543,6 +546,11 @@ class PosConfig(models.Model):
         access session form to validate entries
         """
         self.ensure_one()
+        if self.current_session_id.state != 'closing_control':
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+            }
         return self._open_session(self.current_session_id.id)
 
     def _open_session(self, session_id):

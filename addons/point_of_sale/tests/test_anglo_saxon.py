@@ -5,6 +5,7 @@ import odoo
 import time
 from odoo import fields
 from odoo.tests import common
+from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 class TestAngloSaxonCommon(common.TransactionCase):
 
@@ -111,8 +112,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         # I close the current session to generate the journal entries
         current_session_id = self.pos_config.current_session_id
-        current_session_id.post_closing_cash_details(450.0)
-        current_session_id.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(current_session_id, counted_cash=450.0)
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
         # Check if there is account_move in the order.
@@ -192,8 +192,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         # validate the session
         current_session_id = self.pos_config.current_session_id
-        current_session_id.post_closing_cash_details(7 * 450.0)
-        current_session_id.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(current_session_id, counted_cash=7 * 450.0)
 
         # check the anglo saxon move lines
         # with uninvoiced orders, the account_move field of pos.order is empty.
@@ -272,8 +271,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         # I close the current session to generate the journal entries
         current_session_id = self.pos_config.current_session_id
-        current_session_id.post_closing_cash_details(450.0)
-        current_session_id.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(current_session_id, counted_cash=450.0)
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
         self.assertEqual(len(current_session.picking_ids), 2, "There should be 2 pickings")

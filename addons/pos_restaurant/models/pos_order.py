@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from functools import partial
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class PosOrderLine(models.Model):
@@ -42,6 +43,8 @@ class PosOrder(models.Model):
         """Set tip to `self` based on values in `tip_line_vals`."""
 
         self.ensure_one()
+        if not self._is_modifiable():
+            raise UserError(_('This order cannot be modified.'))
         PosOrderLine = self.env['pos.order.line']
         process_line = partial(PosOrderLine._order_line_fields, session_id=self.session_id.id)
 

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import secrets
+import time
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 from markupsafe import Markup, escape
 
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models, _, Command, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare, convert
 from odoo.service.common import exp_version
@@ -25,6 +26,28 @@ class PosSession(models.Model):
         ('closing_control', 'Closing Control'),  # method action_pos_session_close
         ('closed', 'Closed & Posted'),
     ]
+    # States description:
+    #
+    # - opening_control:
+    # The session is not yet open. It is awaiting the set_cashbox_pos call
+    # to define the opening data (opening cash and notes).
+    # This state is only for not rescue sessions with config_id.cash_control
+    # enabled (other sessions are directly in the 'opened' state).
+    #
+    # - opened:
+    # The session is open, orders can be created for it.
+    #
+    # - closing_control:
+    # The session has been closed but is not yet processed.
+    # It does not accept new orders.
+    # This state is reserved for the processing validated sessions cron.
+    # This is a frozen state: the session data (including its orders,
+    # payments, accounting) is by default protected from sensitive modification.
+    #
+    # - closed:
+    # The session has been closed and fully processed.
+    # This is a frozen state: the session data (including its orders,
+    # payments, accounting) is by default protected from sensitive modification.
 
     company_id = fields.Many2one('res.company', related='config_id.company_id', string="Company", readonly=True)
 
@@ -55,8 +78,8 @@ class PosSession(models.Model):
 
     opening_notes = fields.Text(string="Opening Notes")
     closing_notes = fields.Text(string="Closing Notes")
-    cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control', compute_sudo=True)
-    cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_all', string='Cash Journal', store=True)
+    cash_control = fields.Boolean(compute='_compute_cash_control', string='Has Cash Control', compute_sudo=True)
+    cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_journal_id', string='Cash Journal', store=True)
 
     cash_register_balance_end_real = fields.Monetary(
         string="Ending Balance",
@@ -98,30 +121,100 @@ class PosSession(models.Model):
     is_in_company_currency = fields.Boolean('Is Using Company Currency', compute='_compute_is_in_company_currency')
     update_stock_at_closing = fields.Boolean('Stock should be updated at closing')
     bank_payment_ids = fields.One2many('account.payment', 'pos_session_id', 'Bank Payments', help='Account payments representing aggregated and bank split payments.')
+    balancing_account_id = fields.Many2one('account.account', 'Balancing account')
+    amount_to_balance = fields.Float('Amount to balance', default=0)
+    last_validated_processing_time = fields.Datetime('Last time the validated data processing has been started', readonly=True, default=False)
+    has_recently_been_processed = fields.Boolean('Has recently been processed', compute='_compute_has_recently_been_processed')
+    is_being_processed = fields.Boolean('Is currently being processed', compute='_compute_is_being_processed')
+    can_process_validated = fields.Boolean('Can process validated data', compute='_compute_can_process_validated')
+    need_close_wizard = fields.Boolean('Need the close wizard', compute='_compute_need_close_wizard')
+    can_trigger_cron = fields.Boolean('Can trigger the processing validated sessions cron', compute='_compute_can_trigger_cron')
+    validated_processing_error = fields.Text('Error when processing validated data')
+    test_change = fields.Char('temp debug')
 
     _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique!")]
+
+    @staticmethod
+    def _get_recently_processed_datetime_min():
+        """ Minimum datetime to consider a validated data processing datetime as recent. """
+        return fields.Datetime.subtract(fields.Datetime.now(), seconds=60)
+        # return fields.Datetime.subtract(fields.Datetime.now(), days=1)
+
+    @api.depends('last_validated_processing_time')
+    def _compute_has_recently_been_processed(self):
+        for session in self:
+            session.has_recently_been_processed = session.last_validated_processing_time and session.last_validated_processing_time >= PosSession._get_recently_processed_datetime_min()
+
+    @api.depends('state', 'has_recently_been_processed', 'validated_processing_error')
+    def _compute_is_being_processed(self):
+        for session in self:
+            session.is_being_processed = session.state == 'closing_control' and session.has_recently_been_processed and not session.validated_processing_error
+            print("\n # pos_session.py:127 - _compute_is_being_processed():  session.is_being_processed :", session.is_being_processed)
+
+    @api.depends('state', 'currency_id', 'amount_to_balance', 'balancing_account_id', 'has_recently_been_processed')
+    def _compute_can_process_validated(self):
+        for session in self:
+            session.can_process_validated = session.state == 'closing_control' and (session.currency_id.is_zero(session.amount_to_balance) or session.balancing_account_id) and not session.has_recently_been_processed
+            print("\n # pos_session.py:126 - _compute_can_process_validated():  session.can_process_validated :", session.can_process_validated)
+            print("\n # pos_session.py:124 - _compute_can_process_validated():  session.has_recently_been_processed :", session.has_recently_been_processed)
+
+    @api.depends('can_process_validated')
+    def _compute_can_trigger_cron(self):
+        print("\n # pos_session.py:138 - ():  _compute_can_trigger_cron")
+        a_session_is_being_processed = None
+        can_trigger_cron = None
+        for session in self:
+            # session.can_trigger_cron = True
+            # continue
+            if not session.can_process_validated:
+                session.can_trigger_cron = False
+            else:
+                if can_trigger_cron is None:
+                    can_trigger_cron = self._can_trigger_processing_validated_sessions_cron()
+
+                print("\n # pos_session.py:147 - _compute_can_trigger_cron():  can_trigger_cron :", can_trigger_cron)
+                if not can_trigger_cron:
+                    session.can_trigger_cron = False
+                else:
+                    if a_session_is_being_processed is None:
+                        print("\n # pos_session.py:145 - _compute_can_trigger_cron():  BEF is none a_session_is_being_processed :", a_session_is_being_processed)
+                        a_session_is_being_processed = self.env['pos.session'].search_count(['&', '&', ('validated_processing_error', '=', False), ('state', '=', 'closing_control'), ('last_validated_processing_time', '>=', PosSession._get_recently_processed_datetime_min())], limit=1)
+                    print("\n # pos_session.py:145 - _compute_can_trigger_cron(): AFTER a_session_is_being_processed :", a_session_is_being_processed)
+                    session.can_trigger_cron = not a_session_is_being_processed
+
+    @api.depends('state', 'currency_id', 'amount_to_balance', 'validated_processing_error', 'is_being_processed')
+    def _compute_need_close_wizard(self):
+        for session in self:
+            print("\n # pos_session.py:113 - _compute_need_close_wizard():  session.amount_to_balance :", session.amount_to_balance)
+            session.need_close_wizard = session.state == 'closing_control' and (not session.currency_id.is_zero(session.amount_to_balance) or session.validated_processing_error) and not session.is_being_processed
+            print("\n # pos_session.py:148 - _compute_need_close_wizard():  session.validated_processing_error :", session.validated_processing_error)
+            print("\n # pos_session.py:148 - _compute_need_close_wizard():  session.need_close_wizard :", session.need_close_wizard)
 
     @api.depends('currency_id', 'company_id.currency_id')
     def _compute_is_in_company_currency(self):
         for session in self:
             session.is_in_company_currency = session.currency_id == session.company_id.currency_id
 
-    @api.depends('payment_method_ids', 'order_ids', 'cash_register_balance_start')
+    @api.depends('payment_method_ids', 'order_ids', 'cash_register_balance_start', 'cash_real_transaction', 'state', 'config_id', 'statement_line_ids.amount', 'cash_register_balance_end_real')
     def _compute_cash_balance(self):
         for session in self:
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
                 total_cash_payment = 0.0
                 last_session = session.search([('config_id', '=', session.config_id.id), ('id', '<', session.id)], limit=1)
-                result = self.env['pos.payment']._read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], aggregates=['amount:sum'])
+## Was taking into account payments of cancelled orders:
+                result = self.env['pos.payment']._read_group(['&', '&', ('pos_order_id.state', '!=', 'cancel'), ('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], aggregates=['amount:sum'])
                 total_cash_payment = result[0][0] or 0.0
-                if session.state == 'closed':
+                print("\n # pos_session.py:184 - _compute_cash_balance():  total_cash_payment :", total_cash_payment)
+                if session.state in ('closing_control', 'closed'):
                     session.cash_register_total_entry_encoding = session.cash_real_transaction + total_cash_payment
                 else:
                     session.cash_register_total_entry_encoding = sum(session.statement_line_ids.mapped('amount')) + total_cash_payment
 
+                print("\n # pos_session.py:188 - _compute_cash_balance(", session,"):  session.cash_register_total_entry_encoding :", session.cash_register_total_entry_encoding)
                 session.cash_register_balance_end = last_session.cash_register_balance_end_real + session.cash_register_total_entry_encoding
                 session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
+                print("\n # pos_session.py:192 - _compute_cash_balance(", session,"):  session.cash_register_difference :", session.cash_register_difference)
             else:
                 session.cash_register_total_entry_encoding = 0.0
                 session.cash_register_balance_end = 0.0
@@ -154,16 +247,17 @@ class PosSession(models.Model):
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
 
-    @api.depends('config_id', 'payment_method_ids')
-    def _compute_cash_all(self):
+## those changes in computing are needed because errors were happening when triggering manually the cron:
+    @api.depends('payment_method_ids')
+    def _compute_cash_journal_id(self):
         # Only one cash register is supported by point_of_sale.
         for session in self:
-            session.cash_journal_id = session.cash_control = False
-            cash_journal = session.payment_method_ids.filtered('is_cash_count')[:1].journal_id
-            if not cash_journal:
-                continue
-            session.cash_control = session.config_id.cash_control
-            session.cash_journal_id = cash_journal
+            session.cash_journal_id = session.payment_method_ids.filtered('is_cash_count')[:1].journal_id
+
+    @api.depends('cash_journal_id', 'config_id.cash_control')
+    def _compute_cash_control(self):
+        for session in self:
+            session.cash_control = session.cash_journal_id and session.config_id.cash_control
 
     @api.constrains('config_id')
     def _check_pos_config(self):
@@ -183,6 +277,7 @@ class PosSession(models.Model):
                 raise ValidationError(_("You cannot create a session before the accounting lock date."))
 
     def _check_invoices_are_posted(self):
+## is it intended to consider even cancelled orders here ?
         unposted_invoices = self.order_ids.sudo().with_company(self.company_id).account_move.filtered(lambda x: x.state != 'posted')
         if unposted_invoices:
             raise UserError(_('You cannot close the POS when invoices are not posted.\n'
@@ -224,6 +319,39 @@ class PosSession(models.Model):
         sessions.action_pos_session_open()
         return sessions
 
+    def write(self, vals):
+        if not self._is_modifiable():
+            print("\n # pos_session.py:293 - write():  vals :", vals)
+            raise UserError(_('Cannot modify this session.'))
+        return super().write(vals)
+
+    @api.model
+    def _bypass_modifiable_check(self):
+        return self.env.context.get('bypass_pos_session_modifiable_check', False)
+
+    def _is_modifiable(self):
+        """ :return: True if this recordset can be edited
+            (an empty recordset is considered as modifiable).
+            :rtype: bool
+        """
+        return not self or self._bypass_modifiable_check() or not any(session.state in ('closing_control', 'closed') for session in self)
+
+    @api.model
+    def _contains_unmodifiable_session(self, ids):
+        """ Checks if the specified ids are related to an existing
+            session that cannot be edited.
+            Note that this method doesn't check the existence of the
+            sessions, it only checks if any specified existing session
+            is unmodifiable.
+
+            :param ids: iterable containing pos.session ids
+            :type ids: iterable(int)
+            :return: True if at least one session corresponding to a
+            specified id is unmodifiable.
+            :rtype: bool
+        """
+        return ids and not self._bypass_modifiable_check() and self.env['pos.session'].sudo().search_count(['&', ('id', 'in', list(ids)), ('state', 'in', ['closing_control', 'closed'])], limit=1) == 1
+
     def unlink(self):
         self.statement_line_ids.unlink()
         return super(PosSession, self).unlink()
@@ -250,70 +378,269 @@ class PosSession(models.Model):
             session.write(values)
         return True
 
-    def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
-        bank_payment_method_diffs = bank_payment_method_diffs or {}
+## Rewrote it to fix it and make it more clear:
+    def action_pos_session_closing_control(self, balancing_account=False):
+        print("\n # pos_session.py:362 - ():  action_pos_session_closing_control :", self, balancing_account)
+        if any(session.state == 'closed' for session in self):
+            raise UserError(_('This session is already closed.'))
+        self._check_if_no_draft_orders()
+
+        rescue_sessions_needing_to_be_opened = self.filtered(lambda s: s.rescue and s.state == 'opening_control')
+        if rescue_sessions_needing_to_be_opened:
+            rescue_sessions_needing_to_be_opened.action_pos_session_open()
+
         for session in self:
-            if any(order.state == 'draft' for order in session.order_ids):
-                raise UserError(_("You cannot close the POS when orders are still in draft"))
-            if session.state == 'closed':
-                raise UserError(_('This session is already closed.'))
-            session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
-            if not session.config_id.cash_control:
-                return session.action_pos_session_close(balancing_account, amount_to_balance, bank_payment_method_diffs)
-            # If the session is in rescue, we only compute the payments in the cash register
-            # It is not yet possible to close a rescue session through the front end, see `close_session_from_ui`
-            if session.rescue and session.config_id.cash_control:
-                default_cash_payment_method_id = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[0]
-                orders = self.order_ids.filtered(lambda o: o.state == 'paid' or o.state == 'invoiced')
-                total_cash = sum(
-                    orders.payment_ids.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id).mapped('amount')
-                ) + self.cash_register_balance_start
+## moved after not to have to save a boolean in the db:
+## is it normal that the stop_at was updated after the close wizard ?
+            # session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
+            session._validate_session(balancing_account)
 
-                session.cash_register_balance_end_real = total_cash
-
-            return session.action_pos_session_validate(balancing_account, amount_to_balance, bank_payment_method_diffs)
-
-
-    def action_pos_session_validate(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
-        bank_payment_method_diffs = bank_payment_method_diffs or {}
-        return self.action_pos_session_close(balancing_account, amount_to_balance, bank_payment_method_diffs)
-
-    def action_pos_session_close(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
-        bank_payment_method_diffs = bank_payment_method_diffs or {}
-        # Session without cash payment method will not have a cash register.
-        # However, there could be other payment methods, thus, session still
-        # needs to be validated.
-        return self._validate_session(balancing_account, amount_to_balance, bank_payment_method_diffs)
-
-    def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
-        bank_payment_method_diffs = bank_payment_method_diffs or {}
+## Removed the amount_to_balance parameter, because only created by session, and no reason to take the risk to receive a bad amount.
+    def _validate_session(self, balancing_account=False):
         self.ensure_one()
-        data = {}
-        sudo = self.user_has_groups('point_of_sale.group_pos_user')
-        if self.order_ids or self.sudo().statement_line_ids:
-            self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
-            if self.state == 'closed':
-                raise UserError(_('This session is already closed.'))
+
+## As the code is now executed by the cron, check the perm before validating the session:
+## is it important to know who validated the session ? If so, where should it appear ? In the created journal logs ? The cashier info of orders seems enough for me...
+        if not self.user_has_groups('point_of_sale.group_pos_user'):
+            raise AccessError(_('You are not allowed to validate POS sessions.'))
+## Why wasn't the check on the session state not here ?:
+        if self.state not in ('opened', 'closing_control'):
+            raise UserError(_('Only sessions in opened or closing control state can be validated.'))
+## is self.order_ids guaranteed to be final after the user closes the session and the cron starts ?
+## => Not really, session state != opened so no more order can be linked to it through the web forms, but through the code no restriction
+## => With all the changes, it should be final (not fully but sensitive data yes)
+## self.statement_line_ids final ? Wasn't, but with all the changes is now final.
+## The criterion was "self.order_ids" not empty, but if there is only 1 cancelled order, does it make sense ?
+        if self.is_being_processed:
+            raise UserError(_('This session is currently being processed.'))
+
+        self = self.with_context(bypass_pos_session_modifiable_check=True)
+        self_sudo = self.sudo()
+        if self._get_valid_orders() or self_sudo.statement_line_ids:
             self._check_if_no_draft_orders()
             self._check_invoices_are_posted()
-            cash_difference_before_statements = self.cash_register_difference
-            if self.update_stock_at_closing:
-                self._create_picking_at_end_of_session()
-                self.order_ids.filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
-            try:
-                with self.env.cr.savepoint():
-                    data = self.with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
-            except AccessError as e:
-                if sudo:
-                    data = self.sudo().with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
-                else:
-                    raise e
+            self.config_id._check_profit_loss_cash_journal() # avoids as possible to do all the process and then fail with the _post_statement_difference() call
+            self_sudo.write({
+                'last_validated_processing_time': False,
+                'balancing_account_id': balancing_account if not balancing_account or not self.env.user.has_group('account.group_account_readonly') else self._get_balancing_account(),
+                'state': 'closing_control',
+                'stop_at': fields.Datetime.now(),
+            })
+## TODO should update the stop_at date everytime we change the balancing_account ?
+            self_sudo._update_validated_computed_data()
+            print("\n # pos_session.py:322 - ():  balancing_account_id :", self.balancing_account_id)
+            print("\n # pos_session.py:324 - ():  amount_to_balance :", self.amount_to_balance)
 
+## Start of long process, no more user error except "Force Close Session" and in _post_statement_difference
+## TODO remove comment:
+            self._trigger_processing_validated_sessions_cron_if_useful()
+        else:
+            self_sudo.stop_at = fields.Datetime.now()
+            self_sudo._update_validated_computed_data()
+            # The current session is processed directly and its status changes directly from 'opened' to 'closed' to prevent the cron from processing it.
+            self_sudo._post_statement_difference(self.cash_register_difference, False)
+            self_sudo._set_closed()
+
+    def _update_validated_computed_data(self):
+        vals_to_write = {}
+
+        # If the session is in rescue, we only compute the payments in the cash register
+        # It is not yet possible to close a rescue session through the front end, see `close_session_from_ui`
+        if self.rescue and self.config_id.cash_control:
+            default_cash_payment_method = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[0]
+## Replaced the computation with sum by a read group to limit amount of db queries
+            total_cash_payment_read = self.env['pos.payment']._read_group(['&', '&', ('pos_order_id.state', 'in', ['paid', 'invoiced']), ('session_id', '=', self.id), ('payment_method_id', '=', default_cash_payment_method.id)], aggregates=['amount:sum'])
+            print("\n # pos_session.py:516 - ():  total_cash_payment_read :", total_cash_payment_read)
+            total_cash_payment = total_cash_payment_read[0][0] or 0.0
+
+            vals_to_write.update({
+                'cash_register_balance_end_real': total_cash_payment + self.cash_register_balance_start,
+            })
+
+        vals_to_write.update({
+          'cash_real_transaction': sum(self.sudo().statement_line_ids.mapped('amount')),
+        })
+        self.sudo().write(vals_to_write)
+
+    def _set_closed(self):
+        self.ensure_one()
+        self.state = 'closed'
+        ## TODO ??:
+        # self.sudo().write({
+        #         'stop_at': fields.Datetime.now(),
+        #     })
+        self._clean_differences_by_bank_payment_method()
+        # if self.close_wizard:
+        #     self.close_wizard.unlink()
+
+    def _clean_differences_by_bank_payment_method(self):
+        self.ensure_one()
+        diff_by_bank_pm_sudo = self.env['pos.session.difference.by.bank.payment.method'].sudo().search([('pos_session_id', '=', self.id)])
+        diff_by_bank_pm_sudo.unlink()
+
+    def action_trigger_processing_validated_sessions_cron(self):
+        self.ensure_one()
+        if not self._trigger_processing_validated_sessions_cron_if_useful():
+            raise UserError(_('The processing validated sessions cron cannot be triggered now.'))
+        return PosSession._get_reload_action()
+
+    def _trigger_processing_validated_sessions_cron_if_useful(self):
+        """ Triggers the processing validated sessions cron if the current session needs it and if it is possible.
+            :return: True if the cron has been triggered.
+            :rtype: bool
+        """
+        self.ensure_one()
+        return self.can_trigger_cron and self._trigger_processing_validated_sessions_cron()
+
+    @api.model
+    def _trigger_processing_validated_sessions_cron(self, cron_self_trigger=False):
+        """ Triggers the processing validated sessions cron only if it is not already triggered.
+            :param cron_self_trigger: True if the trigger is requested by the cron itself, not to count it in the current triggers.
+        """
+        if self._can_trigger_processing_validated_sessions_cron(cron_self_trigger):
+            print("\n # pos_session.py:461 - _trigger_processing_validated_sessions_cron():  TRIGGER")
+            self.env.ref('point_of_sale.cron_process_validated_not_empty_sessions').sudo()._trigger()
+            return True
+        else:
+            print("\n # pos_session.py:461 - _trigger_processing_validated_sessions_cron():  NO TRIGGER :")
+            return False
+
+    @api.model
+    def _can_trigger_processing_validated_sessions_cron(self, cron_self_trigger=False):
+        """ The processing validated sessions cron can be triggered if it is not yet triggered.
+            :param cron_self_trigger: True if the trigger is requested by the cron itself, not to count it in the current triggers.
+        """
+        cron = self.env.ref('point_of_sale.cron_process_validated_not_empty_sessions', raise_if_not_found=False)
+        if not cron:
+            print("\n # pos_session.py:472 - _can_trigger_processing_validated_sessions_cron(): no cron")
+            return False
+        else:
+            cron_triggers_amount = self.env['ir.cron.trigger'].sudo().search_count([('cron_id', '=', cron.id)], limit=2)
+            print("\n # pos_session.py:475 - _can_trigger_processing_validated_sessions_cron():  cron_triggers_amount :", cron_triggers_amount)
+            return cron_triggers_amount == 0 if not cron_self_trigger else cron_triggers_amount <= 1
+
+    @staticmethod
+    def _get_reload_action():
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+    @api.model
+    def _cron_process_validated_not_empty_sessions(self):
+        """ Processes all the sessions that have been validated before
+            or during this method execution.
+            If the processing of a session fails, it will not prevent
+            other remaining sessions from being processed.
+        """
+        print("\n ####### pos_session.py:355 - ():  _cron_process_validated_not_empty_sessions")
+
+        sessions_to_process = self.env['pos.session'].search(['&', ('state', '=', 'closing_control'), '|', ('last_validated_processing_time', '=', False), ('last_validated_processing_time', '<', PosSession._get_recently_processed_datetime_min())]).filtered('can_process_validated') # cannot check amount_to_balance != 0 because float_is_zero must be called with the currency, it is therefore checked with can_process_validated
+        print("\n # pos_session.py:400 - _cron_process_validated_not_empty_sessions():  sessions_to_process :", sessions_to_process)
+        cron_time_limit = tools.config['limit_time_real_cron']
+        if cron_time_limit < 0:
+            cron_time_limit = 0 # unlimited time
+        start_time = fields.Datetime.now()
+        if sessions_to_process:
+            should_self_trigger = False
+            for i, session in enumerate(sessions_to_process):
+                print("\n # pos_session.py:551 - CRON ():  i :", i, session)
+                should_self_trigger = session._process_validated_not_empty() or should_self_trigger
+                print("\n # pos_session.py:555 - ():  should_self_trigger  after _porcess_vali...:", should_self_trigger)
+                # If the session has been processed, it potentially took time, and therefore it is
+                # possible that another session has been closed during this time period.
+                # Therefore, the cron should be triggered at the end to process this potential new
+                # session.
+                if cron_time_limit > 0 and fields.Datetime.now().timestamp() + 5.0 - start_time.timestamp() > cron_time_limit:
+                    # Not enough time for next sessions, they will be processed with another trigger.
+                    should_self_trigger = should_self_trigger or i + 1 < len(sessions_to_process)
+                    print("\n # pos_session.py:557 - CRON time limit reached:  should_self_trigger :", should_self_trigger)
+                    break
+            if should_self_trigger:
+                # After all sessions processed (which takes time), check again if there are new
+                # sessions to process, without doing an infinite loop.
+                # The cron is triggered again to free the worker and process any new session later.
+                print("\n # pos_session.py:430 - ():  _cron_process_validated_not_empty_sessions: CHECK AGAIN")
+                self._trigger_processing_validated_sessions_cron(cron_self_trigger=True)
+            else:
+                print("\n # pos_session.py:430 - ():  _cron_process_validated_not_empty_sessions: STOP")
+        else:
+            print("\n # pos_session.py:430 - ():  _cron_process_validated_not_empty_sessions: STOP")
+
+    @api.model
+    def _commit_cursor(self):
+        """ This code is extracted to be overridden in test environment.
+            Indeed, current Odoo tests do not support commit of cursor.
+        """
+        self.env.cr.commit()
+
+    @api.model
+    def _rollback_cursor(self):
+        """ This code is extracted to be overridden in test environment.
+            Indeed, current Odoo tests do not support rollback of cursor.
+        """
+        self.env.cr.rollback()
+
+    def _process_validated_not_empty(self):
+        """ Processes the session if can_process_validated.
+            Any error during the processing is not raised but saved with _save_validated_processing_error.
+
+            :return: True if the session processing has been tried.
+            :rtype: bool
+        """
+        self.ensure_one()
+        if not self.can_process_validated:
+            return False
+        self = self.with_context(bypass_pos_session_modifiable_check=True)
+        print("\n # pos_session.py:421 - _process_validated_not_empty(): BEF self.last_validated_processing_time :", self.last_validated_processing_time)
+        self.write({
+            'last_validated_processing_time': fields.Datetime.now(),
+            'validated_processing_error': False,
+        })
+        print("\n # pos_session.py:421 - _process_validated_not_empty(): AFT self.last_validated_processing_time :", self.last_validated_processing_time)
+        self._commit_cursor() # protect the session as soon as possible from being processed simultaneously with the current process
+
+        try:
+            print("\n # cron before time sleep")
+            # time.sleep(10) ## TODO rm
+            print("\n # cron after time sleep")
+            self.sudo()._update_validated_computed_data()
+            cash_difference_before_statements = self.cash_register_difference
+    ## cash_difference_before_statements could be saved in db before the cron, if needed
+    ## is cash_register_difference guaranteed not to change after the user closes and starts the cron ?
+    ## => payment_method_ids final because forbidden_change in pos_config and session != closed
+    ## => cash_register_balance_end_real was modifiable if rescue session but now updated with _update_validated_computed_data and protected by _is_modifiable check, otherwise final
+    ## => last_session.cash_register_balance_end_real final thanks to _is_modifiable check
+    ## => session.cash_register_total_entry_encoding = session.statement_line_ids: final, total_cash_payment: db search on pos.payment which are final
+            if self.update_stock_at_closing: ## final field, ok
+                self._create_picking_at_end_of_session() ## needs self.config_id.picking_type_id
+    ## TODO => picking_type_id NOT final, could be added to _get_forbidden_change_fields ?
+    ## could be executed in another batch, but after self._create_picking_at_end_of_session() fully done and if we don't need to rollback...:
+    ## this was executed on all orders, even cancelled...:
+                self._get_valid_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
+            diff_by_bank_pm_search = self.env['pos.session.difference.by.bank.payment.method'].search_read([('pos_session_id', '=', self.id)], ['payment_method_id', 'difference'])
+            print("\n # pos_session.py:362 - ():  diff_by_bank_pm_search :", diff_by_bank_pm_search)
+            bank_payment_method_diffs = {res['payment_method_id'][0]: res['difference'] for res in diff_by_bank_pm_search}
+            print("\n # pos_session.py:363 - ():  bank_payment_method_diffs :", bank_payment_method_diffs)
+    ## Why trying it first without sudo ? It makes the code less predictible, potentially consumes resources for nothing...
+    ## As the code is now executed by the cron, as sudo, removed:
+            # try:
+            #     with self.env.cr.savepoint():
+            #         data = self.with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(self.balancing_account_id, self.amount_to_balance, bank_payment_method_diffs)
+            # except AccessError as e:
+                # if sudo:
+            data = self.sudo().with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(self.balancing_account_id, self.amount_to_balance, bank_payment_method_diffs) ## TODO needs self.config_id.journal_id: NOT final could be added to forbidden_change ?, self.config_id.journal_id.*: NOT final, self.currency_id: NOT final and difficult to protect..., self.company_id.*: NOT final, self.move_id: Ok, self.config_id.cash_rounding: NOT final but could be added to get_forbidden_change_fields ?, orders.payment_method_ids.(receivable_account_id, outstanding_account_id,journal_id): NOT final but acceptable IMO,
+                # else:
+                #     raise e
+    ## self.move_id now final (_is_modifiable check) but created only by _create_account_move and modified just here.
+            # self.test_change = "Before test" ## TODO rm
+            # print("\n # pos_session.py:426 - _process_validated_not_empty():  self.test_change :", self.test_change)
+            # raise UserError('test')
             balance = sum(self.move_id.line_ids.mapped('balance'))
             try:
                 with self.move_id._check_balanced({'records': self.move_id.sudo()}):
                     pass
-            except UserError:
+            except UserError as ex:
                 # Creating the account move is just part of a big database transaction
                 # when closing a session. There are other database changes that will happen
                 # before attempting to create the account move, such as, creating the picking
@@ -321,10 +648,15 @@ class PosSession(models.Model):
                 # We don't, however, want them to be committed when the account move creation
                 # failed; therefore, we need to roll back this transaction before showing the
                 # close session wizard.
-                self.env.cr.rollback()
-                return self._close_session_action(balance)
+                print("\n # pos_session.py:638 - _process_validated():  Unbalanced error, rollback")
+                self._rollback_cursor()
+                self.amount_to_balance = balance
+                print("\n # pos_session.py:431 - _process_validated_not_empty(): usererror balanced self.amount_to_balance :", self.amount_to_balance)
 
-            self.sudo()._post_statement_difference(cash_difference_before_statements, False)
+                self._save_validated_processing_error(ex) # cannot raise the error because it would rollback the self.amount_to_balance change
+                return
+
+            self.sudo()._post_statement_difference(cash_difference_before_statements, False) ## needs self.config_id.cash_control: final, self.cash_journal_id.id: final, self.statement_line_ids: now final, fields.Date.context_today(self), self.cash_journal_id.loss_account_id: NOT final but acceptable IMO, self.cash_journal_id.profit_account_id: NOT final but acceptable IMO
             if self.move_id.line_ids:
                 self.move_id.sudo().with_company(self.company_id)._post()
                 #We need to write the price_subtotal and price_total here because if we do it earlier the compute functions will overwrite it here /account/models/account_move_line.py _compute_totals
@@ -338,21 +670,35 @@ class PosSession(models.Model):
             else:
                 self.move_id.sudo().unlink()
             self.sudo().with_company(self.company_id)._reconcile_account_move_lines(data)
-        else:
-            self.sudo()._post_statement_difference(self.cash_register_difference, False)
-
-        self.write({'state': 'closed'})
+            self._set_closed()
+        except Exception as ex:
+            print("\n # pos_session.py:638 - _process_validated():  Unexpected error, rollback")
+            self._rollback_cursor() # needed since the exception is not raised
+            ## print("\n # pos_session.py:426 - _process_validated_not_empty():  AFTER ROLLBACK self.test_change :", self.test_change)
+            self._save_validated_processing_error(ex)
+        finally:
+## TODO should we commit at the end to avoid problems if an error is raised later ?
+## is this dangerous, will it commit bad things in the try that triggered an error ?
+## TODO could add a log msg in the pos.session to say 'processing done'
+            self._commit_cursor() # save the successfully processed data, or the error, not to lose this process if an error is raised later
+            print("\n # pos_session.py:484 - (): FINALLY self.last_validated_processing_time :", self.last_validated_processing_time)
+            print("\n # pos_session.py:484 - (): FINALLY self.can_process_validated :", self.can_process_validated)
+            # print("\n # pos_session.py:426 - _process_validated_not_empty(): FINALLY self.test_change :", self.test_change)
         return True
 
+    def _save_validated_processing_error(self, exception):
+        self.ensure_one()
+        self.validated_processing_error = str(exception)
+
     def _post_statement_difference(self, amount, is_opening):
-        if amount:
-            if self.config_id.cash_control:
-                st_line_vals = {
-                    'journal_id': self.cash_journal_id.id,
-                    'amount': amount,
-                    'date': self.statement_line_ids.sorted()[-1:].date or fields.Date.context_today(self),
-                    'pos_session_id': self.id,
-                }
+## TODO if moved to the previous if (st_line_vals is used in the whole "if amount"):
+        if amount and self.config_id.cash_control:
+            st_line_vals = {
+                'journal_id': self.cash_journal_id.id,
+                'amount': amount,
+                'date': self.statement_line_ids.sorted()[-1:].date or fields.Date.context_today(self),
+                'pos_session_id': self.id,
+            }
 
             if amount < 0.0:
                 if not self.cash_journal_id.loss_account_id:
@@ -374,15 +720,26 @@ class PosSession(models.Model):
 
             self.env['account.bank.statement.line'].create(st_line_vals)
 
-    def _close_session_action(self, amount_to_balance):
+    def action_close_session_wizard(self):
+        self.ensure_one()
+        print("\n # pos_session.py:484 - action_close_session_wizard(): WIZARD self.last_validated_processing_time :", self.last_validated_processing_time)
+        print("\n # pos_session.py:484 - action_close_session_wizard(): WIZARD self.can_process_validated :", self.can_process_validated)
+        print("\n # pos_session.py:426 - _process_validated_not_empty(): WIZARD self.test_change :", self.test_change)
+        if not self.need_close_wizard:
+            return PosSession._get_reload_action()
+
         # NOTE This can't handle `bank_payment_method_diffs` because there is no field in the wizard that can carry it.
         default_account = self._get_balancing_account()
         wizard = self.env['pos.close.session.wizard'].create({
-            'amount_to_balance': amount_to_balance,
+            'pos_session_id': self.id,
+            # 'amount_to_balance': amount_to_balance,
             'account_id': default_account.id,
-            'account_readonly': not self.env.user.has_group('account.group_account_readonly'),
-            'message': _("There is a difference between the amounts to post and the amounts of the orders, it is probably caused by taxes or accounting configurations changes.")
+## TODO why was it **not** self.env.user.has_group('account.group_account_readonly') ?
+            'account_readonly': self.env.user.has_group('account.group_account_readonly'),
+            'message': _("There is a difference between the amounts to post and the amounts of the orders, it is probably caused by taxes or accounting configurations changes.\nError during process:\n") + str(self.validated_processing_error) ## TODO check if error or not and display it or not
         })
+## The wizard is automatically cleaned because it is a TransientModel, but when ?
+## TODO maybe remove the 'active_ids' as no longer used or is it needed for the TransientModel working ?
         return {
             'name': _("Force Close Session"),
             'type': 'ir.actions.act_window',
@@ -393,72 +750,109 @@ class PosSession(models.Model):
             'context': {**self.env.context, 'active_ids': self.ids, 'active_model': 'pos.session'},
         }
 
-    def close_session_from_ui(self, bank_payment_method_diff_pairs=None):
+    def action_retry_validated_processing(self):
+        self.ensure_one()
+        if not self.need_close_wizard:
+            raise UserError(_('This session processing cannot be retried now.'))
+        self.with_context(bypass_pos_session_modifiable_check=True).write({
+            'last_validated_processing_time': False,
+            'amount_to_balance': 0,
+            'validated_processing_error': False,
+        })
+        self._trigger_processing_validated_sessions_cron_if_useful()
+        return PosSession._get_reload_action()
+
+    def close_session_from_ui(self, bank_payment_method_diff_pairs=None, closing_notes=None, counted_cash=None):
         """Calling this method will try to close the session.
 
         param bank_payment_method_diff_pairs: list[(int, float)]
             Pairs of payment_method_id and diff_amount which will be used to post
             loss/profit when closing the session.
+        :param counted_cash: float, the total cash the user counted from his cash register
 
         If successful, it returns {'successful': True}
         Otherwise, it returns {'successful': False, 'message': str, 'redirect': bool}.
         'redirect' is a boolean used to know whether we redirect the user to the back end or not.
         When necessary, error (i.e. UserError, AccessError) is raised which should redirect the user to the back end.
         """
+        print("\n # pos_session.py:651 - ():  closing_notes :", closing_notes)
+        print("\n # pos_session.py:651 - ():  counted_cash :", counted_cash)
         bank_payment_method_diffs = dict(bank_payment_method_diff_pairs or [])
         self.ensure_one()
-        # Even if this is called in `post_closing_cash_details`, we need to call this here too for case
-        # where cash_control = False
         check_closing_session = self._cannot_close_session(bank_payment_method_diffs)
         if check_closing_session:
+            print("\n # pos_session.py:783 - ():  check_closing_session :", check_closing_session)
             return check_closing_session
+        ## The session state is guaranteed here to be 'opened'.
 
-        validate_result = self.action_pos_session_closing_control(bank_payment_method_diffs=bank_payment_method_diffs)
+        if counted_cash is not None:
+            print("\n # pos_session.py:675 - ():  counted_cash not none :", counted_cash)
+            if not self.cash_journal_id:
+                # The user is blocked anyway, this user error is mostly for developers that try to call this function
+                raise UserError(_("There is no cash register in this session."))
+            self.cash_register_balance_end_real = counted_cash
 
-        # If an error is raised, the user will still be redirected to the back end to manually close the session.
-        # If the return result is a dict, this means that normally we have a redirection or a wizard => we redirect the user
-        if isinstance(validate_result, dict):
-            # imbalance accounting entry
-            return {
-                'successful': False,
-                'message': validate_result.get('name'),
-                'redirect': True
-            }
+        self.closing_notes = closing_notes
+        self._post_cash_details_message('Closing', self.cash_register_difference, closing_notes)
 
+        print("\n # pos_session.py:286 - _validate_session():  bank_payment_method_diffs :", bank_payment_method_diffs)
+
+        self._clean_differences_by_bank_payment_method() # as this is unlikely to be changed frequently, there is no need to optimise creations/deletions
+
+        diff_by_bank_pm_to_create = [{
+            'pos_session_id': self.id,
+            'payment_method_id': pm_id,
+            'difference': diff,
+        } for pm_id, diff in bank_payment_method_diffs.items()]
+        print("\n # pos_session.py:323 - ():  diff_by_bank_pm_to_create :", diff_by_bank_pm_to_create)
+        if diff_by_bank_pm_to_create:
+            self.env['pos.session.difference.by.bank.payment.method'].sudo().create(diff_by_bank_pm_to_create)
+
+        print("\n # close_session_from_ui : action_pos_session_closing_control")
+        self.action_pos_session_closing_control()
+
+## TODO is it a problem to send this before the session is effectively processed and state changed to "closed" ? The advantage of sending this message here is that it is sent by the user who calls close_session_from_ui
         self.message_post(body='Point of Sale Session ended')
 
         return {'successful': True}
 
-    def update_closing_control_state_session(self, notes):
-        # Prevent closing the session again if it was already closed
-        if self.state == 'closed':
-            raise UserError(_('This session is already closed.'))
-        # Prevent the session to be opened again.
-        self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now(), 'closing_notes': notes})
-        self._post_cash_details_message('Closing', self.cash_register_difference, notes)
+## Why was this code not executed in close_session_from_ui or somewhere else ?:
+## It adds a request to the server...
+## It adds a new source for "closing_control", useless, that would complexify things.
+    # def update_closing_control_state_session(self, notes):
+    #     print("\n # pos_session.py:425 - ():  update_closing_control_state_session :")
+    #     # Prevent closing the session again if it was already closed
+    #     if self.state == 'closed':
+    #         raise UserError(_('This session is already closed.'))
+    #     # Prevent the session to be opened again.
+    #     self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now(), 'closing_notes': notes})
+    #     self._post_cash_details_message('Closing', self.cash_register_difference, notes)
 
-    def post_closing_cash_details(self, counted_cash):
-        """
-        Calling this method will try store the cash details during the session closing.
+## why this method was not merged into close_session_from_ui ?
+## should check if state != closing_control or if the cron is not already running ?
+    # def post_closing_cash_details(self, counted_cash):
+    #     """
+    #     Calling this method will try store the cash details during the session closing.
 
-        :param counted_cash: float, the total cash the user counted from its cash register
-        If successful, it returns {'successful': True}
-        Otherwise, it returns {'successful': False, 'message': str, 'redirect': bool}.
-        'redirect' is a boolean used to know whether we redirect the user to the back end or not.
-        When necessary, error (i.e. UserError, AccessError) is raised which should redirect the user to the back end.
-        """
-        self.ensure_one()
-        check_closing_session = self._cannot_close_session()
-        if check_closing_session:
-            return check_closing_session
+    #     :param counted_cash: float, the total cash the user counted from its cash register
+    #     If successful, it returns {'successful': True}
+    #     Otherwise, it returns {'successful': False, 'message': str, 'redirect': bool}.
+    #     'redirect' is a boolean used to know whether we redirect the user to the back end or not.
+    #     When necessary, error (i.e. UserError, AccessError) is raised which should redirect the user to the back end.
+    #     """
+    #     self.ensure_one()
+    #     print("\n # pos_session.py:444 - post_closing_cash_details():  ")
+    #     check_closing_session = self._cannot_close_session()
+    #     if check_closing_session:
+    #         return check_closing_session
 
-        if not self.cash_journal_id:
-            # The user is blocked anyway, this user error is mostly for developers that try to call this function
-            raise UserError(_("There is no cash register in this session."))
+    #     if not self.cash_journal_id:
+    #         # The user is blocked anyway, this user error is mostly for developers that try to call this function
+    #         raise UserError(_("There is no cash register in this session."))
 
-        self.cash_register_balance_end_real = counted_cash
+    #     self.cash_register_balance_end_real = counted_cash
 
-        return {'successful': True}
+    #     return {'successful': True}
 
     def _create_diff_account_move_for_split_payment_method(self, payment_method, diff_amount):
         self.ensure_one()
@@ -507,7 +901,15 @@ class PosSession(models.Model):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         if any(order.state == 'draft' for order in self.order_ids):
             return {'successful': False, 'message': _("You cannot close the POS when orders are still in draft"), 'redirect': False}
-        if self.state == 'closed':
+        if self.state == 'opening_control':
+            return {
+                'successful': False,
+                'type': 'alert',
+                'title': _('Session not yet open'),
+                'message': _("The session is not yet open, it therefore cannot be closed."),
+                'redirect': False,
+            }
+        elif self.state != 'opened':
             return {
                 'successful': False,
                 'type': 'alert',
@@ -602,7 +1004,8 @@ class PosSession(models.Model):
         else:
             session_destination_id = picking_type.default_location_dest_id.id
 
-        for order in self.order_ids:
+        for order in self._get_valid_orders():
+## order could be cancelled, but fixed. (trusted config & ship later & cancel order => Error)
             if order.company_id.anglo_saxon_accounting and order.is_invoiced or order.shipping_date:
                 continue
             destination_id = order.partner_id.property_stock_customer.id or session_destination_id
@@ -657,6 +1060,7 @@ class PosSession(models.Model):
 
         data = {'bank_payment_method_diffs': bank_payment_method_diffs or {}}
         data = self._accumulate_amounts(data)
+## line to comment for force close session:
         data = self._create_non_reconciliable_move_lines(data)
         data = self._create_bank_payment_moves(data)
         data = self._create_pay_later_receivable_lines(data)
@@ -698,7 +1102,8 @@ class PosSession(models.Model):
         rounded_globally = self.company_id.tax_calculation_rounding_method == 'round_globally'
         pos_receivable_account = self.company_id.account_default_pos_receivable_account_id
         currency_rounding = self.currency_id.rounding
-        for order in self.order_ids:
+        for order in self._get_valid_orders():
+## order could be cancelled, but fixed with _get_valid_orders. (trusted config & cancel order => Force Close Session Error => Picking is still created and validated, an accounting Product Sales line is created for that cancelled order, and a difference at closing pos session)
             order_is_invoiced = order.is_invoiced
             for payment in order.payment_ids:
                 amount = payment.amount
@@ -1150,7 +1555,7 @@ class PosSession(models.Model):
 
         # reconcile stock output lines
         pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
-        pickings |= self.order_ids.filtered(lambda o: not o.is_invoiced).mapped('picking_ids')
+        pickings |= self._get_valid_orders().filtered(lambda o: not o.is_invoiced).mapped('picking_ids')
         stock_moves = self.env['stock.move'].search([('picking_id', 'in', pickings.ids)])
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
@@ -1466,9 +1871,11 @@ class PosSession(models.Model):
         return self.env['account.move.line'].search([('ref', 'in', diff_lines_ref)]).mapped('move_id')
 
     def _get_related_account_moves(self):
-        pickings = self.picking_ids | self.order_ids.mapped('picking_ids')
-        invoices = self.mapped('order_ids.account_move')
-        invoice_payments = self.mapped('order_ids.payment_ids.account_move_id')
+## Was looking at picking_ids, invoices, payments from potentially cancelled orders, but fixed with _get_valid_orders
+        valid_orders = self._get_valid_orders()
+        pickings = self.picking_ids | valid_orders.mapped('picking_ids')
+        invoices = valid_orders.mapped('account_move')
+        invoice_payments = valid_orders.mapped('payment_ids.account_move_id')
         stock_account_moves = pickings.mapped('move_ids.account_move_ids')
         cash_moves = self.statement_line_ids.mapped('move_id')
         bank_payment_moves = self.bank_payment_ids.mapped('move_id')
@@ -1502,6 +1909,9 @@ class PosSession(models.Model):
         return self.config_id.open_ui()
 
     def set_cashbox_pos(self, cashbox_value, notes):
+        self.ensure_one()
+        if self.state != 'opening_control':
+            raise UserError(_('The order is not in opening control state.'))
         self.state = 'opened'
         self.opening_notes = notes
         difference = cashbox_value - self.cash_register_balance_start
@@ -1565,6 +1975,9 @@ class PosSession(models.Model):
         sessions = self.filtered('cash_journal_id')
         if not sessions:
             raise UserError(_("There is no cash payment method for this PoS Session"))
+## TODO maybe add this check:
+        if any(session.state != 'opened' for session in sessions):
+            raise UserError(_('The session is not open.'))
 
         self.env['account.bank.statement.line'].create([
             {
@@ -1802,7 +2215,7 @@ class PosSession(models.Model):
     def _ensure_access_token(self):
         # Code taken from addons/portal/models/portal_mixin.py
         if not self.access_token:
-            self.sudo().write({'access_token': secrets.token_hex(16)})
+            self.sudo().with_context(bypass_pos_session_modifiable_check=True).write({'access_token': secrets.token_hex(16)})
         return self.access_token
 
     def _get_bus_channel_name(self):
@@ -2093,6 +2506,7 @@ class PosSession(models.Model):
 
     def get_total_discount(self):
         amount = 0
+## taking into account cancelled orders, is it expected ?
         for line in self.env['pos.order.line'].search([('order_id', 'in', self.order_ids.ids), ('discount', '>', 0)]):
             original_price = line.tax_ids.compute_all(line.price_unit, line.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id)['total_included']
             amount += original_price - line.price_subtotal_incl
@@ -2179,6 +2593,9 @@ class PosSession(models.Model):
             'successful': allowed,
         }
 
+    def _get_valid_orders(self):
+        return self.order_ids.filtered(lambda o: o.state != 'cancel')
+
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
@@ -2188,3 +2605,11 @@ class ProcurementGroup(models.Model):
         self.env['pos.session']._alert_old_session()
         if use_new_cursor:
             self.env.cr.commit()
+
+class PosSessionDifferenceByBankPaymentMethod(models.Model):
+    _name = 'pos.session.difference.by.bank.payment.method'
+    _description = 'Point of Sale session difference by bank payment method'
+
+    pos_session_id = fields.Many2one('pos.session', required=True)
+    payment_method_id = fields.Many2one('pos.payment.method', string='Bank payment method', domain=[('type', '=', 'bank')], required=True)
+    difference = fields.Float('Difference between the expected and the actual total amount of the payments done with the bank payment method', required=True)

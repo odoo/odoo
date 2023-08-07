@@ -91,12 +91,13 @@ class PosOrder(models.Model):
                         order['name'],
                         order['amount_total'])
         rescue_session = PosSession.search([
-            ('state', 'not in', ('closed', 'closing_control')),
+            ('state', '=', 'opened'),
             ('rescue', '=', True),
             ('config_id', '=', closed_session.config_id.id),
         ], limit=1)
         if rescue_session:
             _logger.warning('reusing recovery session %s for saving order %s', rescue_session.name, order['name'])
+## The session could be unopened yet (cf. 'state' search). Below, "new_session.action_pos_session_open()" is called to return an opened session, and here there was no guarantee that the rescue_session is open.
             return rescue_session
 
         _logger.warning('attempting to create recovery session for saving order %s', order['name'])
@@ -153,6 +154,7 @@ class PosOrder(models.Model):
     def _process_saved_order(self, draft):
         self.ensure_one()
         if not draft:
+            print("\n # pos_order.py:154 - _process_saved_order():  Not draft... _create_order_picking")
             try:
                 self.action_pos_order_paid()
             except psycopg2.DatabaseError:
@@ -160,11 +162,16 @@ class PosOrder(models.Model):
                 raise
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
+                ## Why do we create_order_picking and invoice a not fully paid order ?
+## TODO _create_order_picking shouldn't be called several times on the same order. There should be a protection to prevent it.
+## currently, action_pos_order_paid can fail with an error different than psycopg2.DatabaseError and in that case, the _create_order_picking would be called, and the order would still be in 'draft' state, and create_from_ui could be called again for that order and the _process_saved_order again, and _create_order_picking called again for that same order which would induce duplicates of pickings...
+
             self._create_order_picking()
             self._compute_total_cost_in_real_time()
 
-        if self.to_invoice and self.state == 'paid':
-            self._generate_pos_order_invoice()
+        if self.to_invoice and self.state == 'paid': ## TODO should allow state = 'done' for the suggestion in action_pos_order_invoice
+            print("\n # pos_order.py:167 - _process_saved_order():  _generate_pos_order_invoice")
+            self._generate_pos_order_invoice() ## is safe if the account_move already exists
 
         return self.id
 
@@ -406,8 +413,8 @@ class PosOrder(models.Model):
         for order, price_subtotal, price_subtotal_incl in self.env['pos.order.line']._read_group([('order_id', 'in', self.ids)], ['order_id'], ['price_subtotal:sum', 'price_subtotal_incl:sum']):
             amounts[order.id]['taxed'] = price_subtotal_incl
             amounts[order.id]['taxes'] = price_subtotal_incl - price_subtotal
-
-        for order in self:
+## TODO this method is never used, and takes everything, should add the bypass to allow modification of orders of closed sessions ?
+        for order in self.with_context(bypass_pos_session_modifiable_check=True):
             order.write({
                 'amount_paid': amounts[order.id]['paid'],
                 'amount_return': amounts[order.id]['return'],
@@ -425,8 +432,18 @@ class PosOrder(models.Model):
         for pos_order in self.filtered(lambda pos_order: pos_order.state not in ['draft', 'cancel']):
             raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_unmodifiable_session(self):
+## TODO is it ok not to be able to delete a cancelled order if the session is closed ?
+        if not self.session_id._is_modifiable():
+            raise UserError(_('A POS order can only be deleted if its session is modifiable.'))
+
     @api.model_create_multi
     def create(self, vals_list):
+        session_ids = {vals['session_id'] for vals in vals_list if vals.get('session_id', False) is not False}
+        if session_ids and self.env['pos.session']._contains_unmodifiable_session(session_ids):
+            raise UserError(_('Cannot create a POS order with an unmodifiable POS session.'))
+
         for vals in vals_list:
             session = self.env['pos.session'].browse(vals['session_id'])
             vals = self._complete_values_from_session(session, vals)
@@ -442,10 +459,49 @@ class PosOrder(models.Model):
         return values
 
     def write(self, vals):
+        print("\n # pos_order.py:460 - write():  vals keys :", vals.keys())
+## TODO dangerous but good security IMO, could break things (or highlight existing issues...):
+        if not self._is_modifiable(vals):
+            raise UserError(_('Cannot modify this POS order.'))
+## Maybe a not draft order shouldn't be modifiable ?
         for order in self:
             if vals.get('state') and vals['state'] == 'paid' and order.name == '/':
                 vals['name'] = self._compute_order_name()
         return super(PosOrder, self).write(vals)
+
+    def _is_modifiable(self, vals=None):
+        """ Checks if this recordset can be edited.
+            If vals is provided, checks if the fields in vals can be modified.
+            Otherwise, checks if the orders of this recordset should be considered
+            as modifiable or not.
+            Note that therefore calling this method without vals could return False,
+            but calling it with vals containing only non essential fields changes
+            would return True for the same recordset.
+
+            :param vals: dict of changes that could be applied to the recordset (in
+            a write).
+            :return: True if the recordset should be considered as modifiable,
+            considering if specified the vals dict that holds the changes that would
+            be applied (in a write). An empty recordset is considered as modifiable.
+            :rtype: bool
+        """
+        if not self:
+            return True
+        ## TODO check the ??
+        essential_fields_name = {'date_order', 'user_id', 'amount_tax', 'amount_total', 'amount_paid', 'amount_return', 'lines', 'company_id', 'pricelist_id', 'session_id', 'state', 'account_move', 'picking_ids', 'procurement_group_id??', 'pos_reference', 'fiscal_position_id', 'payment_ids', 'shipping_date', 'is_tipped', 'tip_amount', 'ticket_code'}
+        ## partner_id: readonly only if order invoiced (cf. pos_order_view.xml), not readonly if draft or paid... So should it be allowed to be modified after the session is closed ?
+        ## => it must be editable, because in pos you can see all "paid" orders of previous sessions, and generate an invoice setting a customer if none was set before
+        ## TODO secure stock.picking and account.move
+        if vals is None or vals.keys() & essential_fields_name:
+            session_id = vals.get('session_id', False) if vals else False
+            sessions = self.session_id
+            if session_id is not False:
+                sessions |= self.env['pos.session'].browse(session_id)
+
+            print("\n # pos_order.py - _is_modifiable():  sessions :", sessions, "vals = ", vals)
+            return sessions._is_modifiable()
+        else:
+            return True
 
     def _compute_order_name(self):
         if len(self.refunded_order_ids) != 0:
@@ -579,7 +635,12 @@ class PosOrder(models.Model):
 
     def action_pos_order_paid(self):
         self.ensure_one()
-
+## No check if the order is in the paid, done or invoiced state ? (in invoiced state, calling this method would rollback the order to the 'paid' state, leading to inconsistency...)
+## TODO should not do anything if paid/done/invoiced to make my suggestion in action_pos_order_invoice work.
+        if self.state == 'cancel':
+            raise UserError(_('This order has been cancelled.'))
+        if self.state in ('paid', 'done', 'invoiced'):
+            return True
         # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
         if not self.config_id.cash_rounding \
            or self.config_id.only_round_cash_method \
@@ -828,14 +889,48 @@ class PosOrder(models.Model):
         (reversal_entry_receivable | payment_receivable).reconcile()
 
     def action_pos_order_invoice(self):
+## TODO no check ??? already invoiced, is paid, pickings already done...
+## according to addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js
+## action_pos_order_invoice can be called if order has no account_move
+## according to pos_order_view.xml, it can be called only if order.state == 'paid' (less permissive, only allowed when the session is open, not when another session is open)
         self.write({'to_invoice': True})
         res = self._generate_pos_order_invoice()
+## don't understand this code:
+## TODO why do we check self.session_id.update_stock_at_closing, we are not in the session closing state...
+## or maybe we should be, and the pos_order_view.xml shouldn't use action_pos_order_invoice, or not with the 'paid' state but only with the 'done' state ?
+## WARNING: _create_order_picking should be executed maximum 1 time per order. Executing it several times generates again the pickings
+## Example of current issue: Make an order without invoice, close session, open new session, open that previous order and click on "Invoice" button. Then you can see in the first session the pickings are duplicated for that order.
+## (if we comment the if self.company_id.anglo_saxon_accounting and s... which is not a real security, and is nonsense for me)
+## Reading the "fix" commit, I think I understand the goal...
+## The goal was to call _create_order_picking to do pickings as they are done when _should_create_picking_real_time is true, which is the case for anglosaxon and update_stock_at_closing.
+## and because of the check "if order.company_id.anglo_saxon_accounting and order.is_invoiced or order.shipping_date:" in _create_picking_at_end_of_session, the pickings were never done.
+## in the scenario of this "fix" commit, the order is paid but not invoiced, saved on the server, but the session is not closed. Therefore, in the _process_saved_order, _create_order_picking is called but because to_invoice is False, the pickings are not made.
+## But after, the user goes to the backend, clicks on "Invoice" button which calls this action_pos_order_invoice method.
+## The user expects the pickings to be done in anglo_saxon when he clicks on the "Invoice" button.
+## What I suggest (the _create_order_picking should be protected as explained in _process_saved_order):
+        # self.ensure_one()
+        # if self.session_id.is_being_processed:
+            # raise UserError(_('Cannot invoice an order while its session is being processed.'))
+        # if self.state not in ('paid', 'done'):
+            # raise UserError(_('...'))
+        # if not self.account_move:
+            # self = self.with_context(bypass_pos_session_modifiable_check=True)
+            # self.to_invoice = True
+            # self._process_saved_order(False)
+        # return self.action_view_invoice()
+## and change the pos_order_view.xml file to show the invoice button in paid/done states
         if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing:
             self._create_order_picking()
         return res
 
     def _generate_pos_order_invoice(self):
         moves = self.env['account.move']
+
+        if self.session_id.is_being_processed:
+            raise UserError(_('Cannot invoice an order while its session is being processed.'))
+        # An order can be invoiced after its session has been closed.
+        # Therefore, the order is allowed to be changed here even when its session is not modifiable.
+        self = self.with_context(bypass_pos_session_modifiable_check=True)
 
         for order in self:
             # Force company for all SUPERUSER_ID action
@@ -872,10 +967,6 @@ class PosOrder(models.Model):
             'target': 'current',
             'res_id': moves and moves.ids[0] or False,
         }
-
-    # this method is unused, and so is the state 'cancel'
-    def action_pos_order_cancel(self):
-        return self.write({'state': 'cancel'})
 
     def _apply_invoice_payments(self):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).with_company(self.company_id).property_account_receivable_id
@@ -931,6 +1022,7 @@ class PosOrder(models.Model):
                 pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(destination_id, self.lines, picking_type, self.partner_id)
                 pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
 
+## why is this method public rpc ? it is now protected by the _is_modifiable check
     def add_payment(self, data):
         """Create a new payment for the order"""
         self.ensure_one()
@@ -970,6 +1062,9 @@ class PosOrder(models.Model):
 
     def refund(self):
         """Create a copy of order  for refund order"""
+## No check to see if the order is paid ? Refunding a draft or cancelled order...
+        if any(order.state not in ('paid', 'done', 'invoiced') for order in self):
+            raise UserError(_('This order is unpaid.'))
         refund_orders = self.env['pos.order']
         for order in self:
             # When a refund is performed, we are creating it in a session having the same config as the original

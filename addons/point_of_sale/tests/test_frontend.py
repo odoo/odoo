@@ -5,6 +5,8 @@ from odoo import Command
 from odoo.api import Environment
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
+from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+
 from datetime import date, timedelta
 
 import odoo.tests
@@ -602,7 +604,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         pos_session = self.main_pos_config.current_session_id
 
         # Close the session and check the session journal entry.
-        pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(pos_session)
 
         lines = pos_session.move_id.line_ids.sorted('balance')
 
@@ -762,8 +764,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         """
         self.main_pos_config.open_ui()
         current_session = self.main_pos_config.current_session_id
-        current_session.post_closing_cash_details(100)
-        current_session.close_session_from_ui()
+        TestPoSCommon._open_session_if_needed(current_session)
+        TestPoSCommon._close_from_ui_and_process_session(current_session, counted_cash=100)
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashClosingDetails', login="pos_user")
@@ -774,7 +776,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_cash_payments_should_reflect_on_next_opening(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderPaidInCash', login="pos_user")
+        def _run_tour():
+            self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderPaidInCash', login="pos_user")
+        TestPoSCommon._execute_with_fake_process_validated_sessions(_run_tour)
 
     def test_fiscal_position_no_tax(self):
         #create a tax of 15% with price included

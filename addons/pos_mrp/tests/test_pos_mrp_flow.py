@@ -3,7 +3,7 @@
 
 import odoo
 
-from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
+from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon, TestPoSCommon
 from odoo.tests.common import Form
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -53,6 +53,7 @@ class TestPosMrp(TestPointOfSaleCommon):
         self.bom_a = bom_product_form.save()
 
         self.pos_config.open_ui()
+        TestPoSCommon._open_session_if_needed(self.pos_config.current_session_id)
         order = self.env['pos.order'].create({
             'session_id': self.pos_config.current_session_id.id,
             'lines': [(0, 0, {
@@ -78,6 +79,6 @@ class TestPosMrp(TestPointOfSaleCommon):
         })
         order_payment.with_context(**payment_context).check()
 
-        self.pos_config.current_session_id.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(self.pos_config.current_session_id)
         pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
         self.assertEqual(pos_order.lines[0].total_cost, 15.0)
