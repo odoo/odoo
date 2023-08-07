@@ -133,17 +133,23 @@ patch(ThreadService.prototype, {
                 });
             }
             onChange(thread, "state", () => {
-                if ([SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(thread.state)) {
+                if (
+                    ![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(this.livechatService.state)
+                ) {
                     this.livechatService.updateSession({ state: thread.state });
                 }
             });
             onChange(thread, "seen_message_id", () => {
-                if ([SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(thread.state)) {
+                if (
+                    ![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(this.livechatService.state)
+                ) {
                     this.livechatService.updateSession({ seen_message_id: thread.seen_message_id });
                 }
             });
             onChange(thread, "message_unread_counter", () => {
-                if ([SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(thread.state)) {
+                if (
+                    ![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(this.livechatService.state)
+                ) {
                     this.livechatService.updateSession({ channel: thread.channel });
                 }
             });

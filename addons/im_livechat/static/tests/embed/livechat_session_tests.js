@@ -62,3 +62,29 @@ QUnit.test("Session is reset after failing to persist the channel", async (asser
     await click(".o-livechat-LivechatButton");
     assert.containsOnce($, ".o-mail-ChatWindow");
 });
+
+QUnit.test("Thread state is saved on the session", async (assert) => {
+    await startServer();
+    await loadDefaultConfig();
+    const env = await start();
+    await click(".o-livechat-LivechatButton");
+    assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
+    await click(".o-mail-ChatWindow-header");
+    assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "folded");
+    await click(".o-mail-ChatWindow-header");
+    assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
+});
+
+QUnit.test("Seen message is saved on the session", async (assert) => {
+    await startServer();
+    await loadDefaultConfig();
+    const env = await start();
+    await click(".o-livechat-LivechatButton");
+    assert.notOk(env.services["im_livechat.livechat"].sessionCookie.seen_message_id);
+    await insertText(".o-mail-Composer-input", "Hello World!");
+    await afterNextRender(() => triggerHotkey("Enter"));
+    assert.strictEqual(
+        env.services["im_livechat.livechat"].sessionCookie.seen_message_id,
+        env.services["im_livechat.livechat"].thread.seenInfos[0].lastSeenMessage.id
+    );
+});
