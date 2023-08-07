@@ -32,10 +32,4 @@ export class ProductCard extends Component {
         const productId = this.props.line.product_id;
         return `${this.props.line.qty} x ${this.selfOrder.productByIds[productId].prices}`;
     }
-
-    getTotalPriceString() {
-        const productPriceWithTax = this.props.product.prices;
-        const quantity = this.props.line?.qty ? this.props.line.qty : 1;
-        return this.selfOrder.formatMonetary(productPriceWithTax * quantity);
-    }
 }

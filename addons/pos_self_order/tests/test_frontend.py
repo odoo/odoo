@@ -19,7 +19,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
     def test_self_order_pay_after_meal_tour(self):
         self.pos_config.self_order_table_mode = True
         self.pos_config.self_order_pay_after = "meal"
-        self.pos_config.open_ui()
+        self.pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
             self.pos_config._get_self_order_route(),
             "self_order_after_meal_cart_tour",
