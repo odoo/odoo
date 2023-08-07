@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add('account_tour', {
     url: "/web",
     sequence: 60,
     steps: () => [
-    ...stepUtils.goToAppSteps('account.menu_finance', _t('Send invoices to your customers in no time with the <b>Invoicing app</b>.')),
+    ...stepUtils.goToAppSteps('account.menu_finance', Markup(_t('Send invoices to your customers in no time with the <b>Invoicing app</b>.'))),
     {
         trigger: "a.o_onboarding_step_action[data-method=action_open_step_company_data]",
         content: _t("Start by checking your company's data."),
