@@ -578,16 +578,16 @@ class ProductProduct(models.Model):
     def _prepare_sellers(self, params=False):
         return self.seller_ids.filtered(lambda s: s.partner_id.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
+    def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
         if date is None:
             date = fields.Date.context_today(self)
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
-        res = self.env['product.supplierinfo']
-        sellers = self._prepare_sellers(params)
-        sellers = sellers.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
-        for seller in sellers:
+        sellers_filtered = self._prepare_sellers(params)
+        sellers_filtered = sellers_filtered.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
+        sellers = self.env['product.supplierinfo']
+        for seller in sellers_filtered:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
@@ -603,9 +603,16 @@ class ProductProduct(models.Model):
                 continue
             if seller.product_id and seller.product_id != self:
                 continue
+            sellers |= seller
+        return sellers
+
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
+        sellers = self._get_filtered_sellers(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, params=params)
+        res = self.env['product.supplierinfo']
+        for seller in sellers:
             if not res or res.partner_id == seller.partner_id:
                 res |= seller
-        return res.sorted('price')[:1]
+        return res and res.sorted('price')[:1]
 
     def price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
         company = company or self.env.company
