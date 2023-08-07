@@ -1425,7 +1425,6 @@ export class OdooEditor extends EventTarget {
                 this._activateContenteditable();
             }
             this.historySetSelection(step);
-            this.dispatchEvent(new Event('historyRevert'));
         }
     }
     /**
