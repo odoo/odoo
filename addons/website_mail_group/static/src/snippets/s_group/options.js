@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import options from "@web_editor/js/editor/snippets.options";
 import wUtils from "@website/js/utils";
-const _t = core._t;
 
 options.registry.Group = options.Class.extend({
     /**

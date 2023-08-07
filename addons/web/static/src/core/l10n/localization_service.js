@@ -87,6 +87,7 @@ export const localizationService = {
             multiLang,
             thousandsSep: userLocalization.thousands_sep,
             weekStart: userLocalization.week_start,
+            code:language, 
         });
         return localization;
     },

@@ -4,7 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { formatDateTime, parseDate, parseDateTime} from "@web/legacy/js/core/dates";
 import time from "@web/legacy/js/core/time";
 import config from "@web/legacy/js/services/config";
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
 import {getCookie, setCookie, deleteCookie} from "@web/legacy/js/core/cookie_utils";
@@ -12,7 +12,6 @@ import {getCookie, setCookie, deleteCookie} from "@web/legacy/js/core/cookie_uti
 import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
 
-var _t = core._t;
 var isMac = navigator.platform.toUpperCase().includes('MAC');
 
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloadImageMixin, {

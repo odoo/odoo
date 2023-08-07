@@ -2,7 +2,7 @@
 
 import publicWidget from '@web/legacy/js/public/public_widget';
 import '@website_slides/js/slides';
-import { _t } from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 
 export const ShareMail = publicWidget.Widget.extend({
     events: {

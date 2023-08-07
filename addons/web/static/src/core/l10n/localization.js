@@ -11,6 +11,7 @@
  * @property {boolean} multiLang
  * @property {string} thousandsSep
  * @property {number} weekStart
+ * @property {string} code
  */
 
 /**
@@ -41,4 +42,5 @@ export const localization = {
     multiLang: notReadyError,
     thousandsSep: notReadyError,
     weekStart: notReadyError,
+    code: notReadyError,
 };

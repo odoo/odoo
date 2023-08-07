@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import {_t} from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import Dialog from "@web/legacy/js/core/dialog";
 import {handleCheckIdentity} from "@portal/js/portal_security";

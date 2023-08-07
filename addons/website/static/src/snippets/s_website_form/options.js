@@ -9,9 +9,9 @@ import weUtils from "@web_editor/js/common/utils";
 import "@website/js/editor/snippets.options";
 import { sprintf } from "@web/core/utils/strings";
 import { unique } from "@web/core/utils/arrays";
+import { _t } from "@web/core/l10n/translation";
 
 const qweb = core.qweb;
-const _t = core._t;
 let currentActionName;
 
 const allFormsInfo = new Map();

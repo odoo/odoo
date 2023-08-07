@@ -1,6 +1,7 @@
 /** @odoo-modules **/
 
-import {qweb, _t} from "@web/legacy/js/services/core";
+import { qweb } from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import Dialog from "@web/legacy/js/core/dialog";
 import weSnippetEditor from "@web_editor/js/editor/snippets.editor";
 import wSnippetOptions from "@website/js/editor/snippets.options";

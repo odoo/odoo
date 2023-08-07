@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
-
-var _t = core._t;
 
 publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.extend({
     selector: '.o_website_event_track_proposal_form_tags',

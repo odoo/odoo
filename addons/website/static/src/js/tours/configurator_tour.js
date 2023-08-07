@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
 import wTourUtils from "@website/js/tours/tour_utils";
-import core from "@web/legacy/js/services/core";
-import "@web/legacy/translations_loaded";
-const _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 
 wTourUtils.registerThemeHomepageTour('configurator_tour', () => {
 

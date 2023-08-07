@@ -5,8 +5,8 @@ import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import core from "@web/legacy/js/services/core";
 import options from "@web_editor/js/editor/snippets.options";
 import wUtils from '@website/js/utils';
+import { _t } from "@web/core/l10n/translation";
 
-var _t = core._t;
 var qweb = core.qweb;
 
 /**

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import { localization } from "@web/core/l10n/localization";
 import time from "@web/legacy/js/core/time";
 
 QUnit.module('core', {}, function () {
@@ -147,16 +147,16 @@ QUnit.module('core', {}, function () {
 
     QUnit.test("Get lang datetime format", (assert) => {
         assert.expect(4);
-        const originalParameters = Object.assign({}, core._t.database.parameters);
-        Object.assign(core._t.database.parameters, {
-            date_format: '%m/%d/%Y',
-            time_format: '%H:%M:%S',
+        const originalParameters = Object.assign({}, localization);
+        Object.assign(localization, {
+            dateFormat: '%m/%d/%Y',
+            timeFormat: '%H:%M:%S',
         });
         assert.strictEqual(time.getLangDateFormat(), "MM/DD/YYYY");
         assert.strictEqual(time.getLangDateFormatWoZero(), "M/D/YYYY");
         assert.strictEqual(time.getLangTimeFormat(), "HH:mm:ss");
         assert.strictEqual(time.getLangTimeFormatWoZero(), "H:m:s");
-        Object.assign(core._t.database.parameters, originalParameters);
+        Object.assign(localization, originalParameters);
     });
 
 });

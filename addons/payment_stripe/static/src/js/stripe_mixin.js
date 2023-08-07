@@ -1,10 +1,8 @@
 /** @odoo-module */
 /* global Stripe */
 
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
-
-const _t = core._t;
 
 export default {
 
