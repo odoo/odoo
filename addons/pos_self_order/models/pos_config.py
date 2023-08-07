@@ -144,7 +144,6 @@ class PosConfig(models.Model):
         self.ensure_one()
         return (
             self.env["pos_self_order.custom_link"]
-            .sudo()
             .search_read(
                 [
                     "|",
@@ -163,7 +162,6 @@ class PosConfig(models.Model):
         self.ensure_one()
         return (
             self.env["product.product"]
-            .sudo()
             .search(
                 [
                     ("available_in_pos", "=", True),
@@ -186,7 +184,7 @@ class PosConfig(models.Model):
             "show_prices_with_tax_included": self.iface_tax_included == "total",
             "custom_links": self._get_self_order_custom_links(),
             "products": self._get_available_products()._get_self_order_data(self),
-            "pos_category": self.env['pos.category'].sudo().search_read(fields=["name", "sequence"], order="sequence"),
+            "pos_category": self.env['pos.category'].search_read(fields=["name", "sequence"], order="sequence"),
             "has_active_session": self.has_active_session,
         }
 
