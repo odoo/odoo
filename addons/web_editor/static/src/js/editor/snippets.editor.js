@@ -1550,12 +1550,6 @@ var SnippetsMenu = Widget.extend({
                 this.options.wysiwyg.odooEditor.addEventListener('observerApply', () => {
                     $(this.options.wysiwyg.odooEditor.editable).trigger('content_changed');
                 });
-                this.options.wysiwyg.odooEditor.addEventListener('historyRevert', _.debounce(() => {
-                    this.trigger_up('widgets_start_request', {
-                        $target: this.options.wysiwyg.$editable,
-                        editableMode: true,
-                    });
-                }, 50));
             }
 
             // Trigger a resize event once entering edit mode as the snippets
