@@ -435,11 +435,21 @@ class TestExpenses(TestExpenseCommon):
             'currency': self.env.company.currency_id
         })
 
-    def test_reset_move_to_draft(self):
+    def test_reset_to_draft_move_paid_by_employee(self):
         """
-        Test the state of an expense and its report
+        Test the state of an expense paid by an employee and its report
         after resetting the paid move to draft
         """
+        self._test_reset_move_to_draft('own_account')
+
+    def test_reset_to_draft_move_paid_by_company(self):
+        """
+        Test the state of an expense paid by a company and its report
+        after resetting the paid move to draft
+        """
+        self._test_reset_move_to_draft('company_account')
+
+    def _test_reset_move_to_draft(self, payment_mode):
         expense_sheet = self.env['hr.expense.sheet'].create({
             'company_id': self.env.company.id,
             'employee_id': self.expense_employee.id,
@@ -450,6 +460,7 @@ class TestExpenses(TestExpenseCommon):
                     'employee_id': self.expense_employee.id,
                     'product_id': self.product_a.id,
                     'unit_amount': 1000.00,
+                    'payment_mode': payment_mode,
                 }),
             ],
         })
@@ -473,15 +484,16 @@ class TestExpenses(TestExpenseCommon):
 
         # Create move
         expense_sheet.action_sheet_move_create()
-
-        self.assertEqual(expense.state, 'approved', 'Expense state must be draft after posting move')
-        self.assertEqual(expense_sheet.state, 'post', 'Sheet state must be draft after posting move')
-
-        # Pay move
         move = expense_sheet.account_move_id
-        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
-            'amount': 1000.0,
-        })._create_payments()
+
+        if payment_mode == 'own_account':
+            self.assertEqual(expense.state, 'approved', 'Expense state must be draft after posting move')
+            self.assertEqual(expense_sheet.state, 'post', 'Sheet state must be draft after posting move')
+
+            # Pay move
+            self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
+                'amount': 1000.0,
+            })._create_payments()
 
         self.assertEqual(expense.state, 'done', 'Expense state must be done after payment')
         self.assertEqual(expense_sheet.state, 'done', 'Sheet state must be done after payment')
@@ -494,9 +506,10 @@ class TestExpenses(TestExpenseCommon):
 
         # Post and pay move again
         move.action_post()
-        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
-            'amount': 1000.0,
-        })._create_payments()
+        if payment_mode == 'own_account':
+            self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
+                'amount': 1000.0,
+            })._create_payments()
 
         self.assertEqual(expense.state, 'done', 'Expense state must be done after payment')
         self.assertEqual(expense_sheet.state, 'done', 'Sheet state must be done after payment')
