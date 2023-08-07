@@ -62,6 +62,8 @@ export class ListController extends Component {
             canEdit: this.archInfo.activeActions.edit,
         });
 
+        this.optionalActiveFields = [];
+
         onWillStart(async () => {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
         });
@@ -341,10 +343,15 @@ export class ListController extends Component {
         return list.isGrouped ? list.nbTotalRecords : list.count;
     }
 
+    onOptionalFieldsChanged(optionalActiveFields) {
+        this.optionalActiveFields = optionalActiveFields;
+    }
+
     get defaultExportList() {
         return unique(
             this.props.archInfo.columns
                 .filter((col) => col.type === "field")
+                .filter((col) => !col.optional || this.optionalActiveFields[col.name])
                 .map((col) => this.props.fields[col.name])
                 .filter((field) => field.exportable !== false)
         );
