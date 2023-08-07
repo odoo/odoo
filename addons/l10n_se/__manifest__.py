@@ -21,6 +21,7 @@ It also includes the invoice OCR payment reference handling.
     'data': [
         'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
+        "data/res_country_data.xml",
         'views/partner_view.xml',
         'views/account_journal_view.xml',
     ],
