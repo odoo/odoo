@@ -32,7 +32,8 @@ class TestTodoUi(HttpCase):
             'child_ids': [
                 Command.create({
                     'name': 'New Sub-Task!',
-                    'project_id': False,
+                    'project_id': project.id,
+                    'display_in_project': False,
                 }),
             ]
         }])

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
@@ -383,6 +382,7 @@ class Project(models.Model):
         defaults = self._map_tasks_default_values(project)
         new_tasks = tasks.with_context(copy_project=True).copy(defaults)
         all_subtasks = new_tasks._get_all_subtasks()
+        project.write({'tasks': [Command.set(new_tasks.ids)]})
         subtasks_not_displayed = all_subtasks.filtered(
             lambda task: not task.display_in_project
         )
@@ -391,7 +391,6 @@ class Project(models.Model):
         ).write({
             'project_id': project.id
         })
-        project.write({'tasks': [Command.set(new_tasks.ids)]})
         subtasks_not_displayed.write({
             'display_in_project': False
         })
@@ -522,12 +521,11 @@ class Project(models.Model):
     def unlink(self):
         # Delete the empty related analytic account
         analytic_accounts_to_delete = self.env['account.analytic.account']
-        tasks = self.with_context(active_test=False).tasks
         for project in self:
             if project.analytic_account_id and not project.analytic_account_id.line_ids:
                 analytic_accounts_to_delete |= project.analytic_account_id
+        self.with_context(active_test=False).tasks.unlink()
         result = super(Project, self).unlink()
-        tasks.unlink()
         analytic_accounts_to_delete.unlink()
         return result
 
