@@ -96,6 +96,7 @@ class AccountMoveReversal(models.TransientModel):
 
     def _prepare_default_reversal(self, move):
         reverse_date = self.date if self.date_mode == 'custom' else move.date
+        mixed_payment_term = move.invoice_payment_term_id.id if move.invoice_payment_term_id and move.company_id.early_pay_discount_computation == 'mixed' else None
         return {
             'ref': _('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason)
                    if self.reason
@@ -104,7 +105,7 @@ class AccountMoveReversal(models.TransientModel):
             'invoice_date_due': reverse_date,
             'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
             'journal_id': self.journal_id.id,
-            'invoice_payment_term_id': None,
+            'invoice_payment_term_id': mixed_payment_term,
             'invoice_user_id': move.invoice_user_id.id,
             'auto_post': 'at_date' if reverse_date > fields.Date.context_today(self) else 'no',
         }
