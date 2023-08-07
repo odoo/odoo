@@ -58,12 +58,12 @@ patch(SaleOrderLineProductField.prototype, {
         );
         if(result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
-                await this.props.record.update({
-                    product_id: [result.product_id, result.product_name],
-                });
                 if (result.has_optional_products) {
                     this._openProductConfigurator();
                 } else {
+                    await this.props.record.update({
+                        product_id: [result.product_id, result.product_name],
+                    });
                     this._onProductUpdate();
                 }
             }
