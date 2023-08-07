@@ -3,6 +3,8 @@
 
 import psycopg2
 
+from ast import literal_eval
+
 from odoo import exceptions
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
@@ -276,6 +278,60 @@ class TestMailAliasMixin(TestMailAliasCommon):
 
         with self.assertRaises(exceptions.ValidationError):
             record.write({'alias_defaults': "{'custom_field': brokendict"})
+
+    @users('employee')
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_alias_mixin_alias_id_management(self):
+        """ Test alias_id being not mandatory """
+        record_wo_alias, record_w_alias = self.env['mail.test.alias.optional'].create([
+            {
+                'name': 'Test WoAlias Name',
+            }, {
+                'alias_name': 'Alias Name',
+                'name': 'Test WoAlias Name',
+            }
+        ])
+        self.assertFalse(record_wo_alias.alias_id, 'Alias record not created if not necessary (no alias_name)')
+        self.assertFalse(record_wo_alias.alias_id.alias_name)
+        self.assertFalse(record_wo_alias.alias_id.alias_defaults)
+        self.assertFalse(record_wo_alias.alias_name)
+        self.assertTrue(record_w_alias.alias_id, 'Alias record created as alias_name was given')
+        self.assertEqual(record_w_alias.alias_id.alias_name, 'alias-name', 'Alias name should go through sanitize')
+        self.assertEqual(
+            literal_eval(record_w_alias.alias_id.alias_defaults),
+            {'company_id': self.env.company.id}
+        )
+        self.assertEqual(record_w_alias.alias_name, 'alias-name', 'Alias name should go through sanitize')
+        self.assertEqual(
+            literal_eval(record_w_alias.alias_defaults),
+            {'company_id': self.env.company.id}
+        )
+
+        # update existing alias
+        record_w_alias.write({'alias_contact': 'followers', 'alias_name': 'Updated Alias Name'})
+        self.assertEqual(record_w_alias.alias_id.alias_contact, 'followers')
+        self.assertEqual(record_w_alias.alias_id.alias_name, 'updated-alias-name')
+        self.assertEqual(record_w_alias.alias_name, 'updated-alias-name')
+
+        # update non existing alias -> creates alias
+        record_wo_alias.write({'alias_name': 'trying a name'})
+        self.assertTrue(record_wo_alias.alias_id, 'Alias record should have been created to store the name')
+        self.assertEqual(record_wo_alias.alias_id.alias_name, 'trying-a-name')
+        self.assertEqual(
+            literal_eval(record_wo_alias.alias_id.alias_defaults),
+            {'company_id': self.env.company.id}
+        )
+        self.assertEqual(record_wo_alias.alias_name, 'trying-a-name')
+        self.assertEqual(
+            literal_eval(record_wo_alias.alias_defaults),
+            {'company_id': self.env.company.id}
+        )
+
+        # reset alias -> keep the alias as void, don't remove it
+        existing_aliases = record_wo_alias.alias_id + record_w_alias.alias_id
+        (record_wo_alias + record_w_alias).write({'alias_name': False})
+        self.assertEqual((record_wo_alias + record_w_alias).alias_id, existing_aliases)
+        self.assertFalse(list(filter(None, existing_aliases.mapped('alias_name'))))
 
     @users('employee')
     def test_alias_mixin_copy_content(self):
