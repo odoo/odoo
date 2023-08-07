@@ -58,9 +58,9 @@ class Applicant(models.Model):
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     partner_name = fields.Char("Applicant's Name")
     partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_phone', store=True, index='btree_not_null')
+        store=True, readonly=False, index='btree_not_null')
     partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_mobile', store=True, index='btree_not_null')
+        store=True, readonly=False, index='btree_not_null')
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one(
         'hr.department', "Department", compute='_compute_department', store=True, readonly=False,
@@ -254,22 +254,17 @@ class Applicant(models.Model):
     @api.depends('partner_id')
     def _compute_partner_phone_email(self):
         for applicant in self:
-            if applicant.partner_id:
+            if not applicant.partner_id:
+                continue
+            applicant.email_from = applicant.partner_id.email
+            if not applicant.partner_phone:
                 applicant.partner_phone = applicant.partner_id.phone
+            if not applicant.partner_mobile:
                 applicant.partner_mobile = applicant.partner_id.mobile
-                applicant.email_from = applicant.partner_id.email
 
     def _inverse_partner_email(self):
         for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):
             applicant.partner_id.email = applicant.email_from
-
-    def _inverse_partner_phone(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.partner_phone and not a.partner_id.phone):
-            applicant.partner_id.phone = applicant.partner_phone
-
-    def _inverse_partner_mobile(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.partner_mobile and not a.partner_id.mobile):
-            applicant.partner_id.mobile = applicant.partner_mobile
 
     @api.depends('stage_id.hired_stage')
     def _compute_date_closed(self):
@@ -388,8 +383,6 @@ class Applicant(models.Model):
                 'is_company': False,
                 'name': self.partner_name,
                 'email': self.email_from,
-                'phone': self.partner_phone,
-                'mobile': self.partner_mobile
             })
 
         partners = self.partner_id | self.department_id.manager_id.user_id.partner_id
@@ -551,8 +544,6 @@ class Applicant(models.Model):
                 if new_partner.create_date.date() == fields.Date.today():
                     new_partner.write({
                         'name': self.partner_name or self.email_from,
-                        'phone': self.partner_phone,
-                        'mobile': self.partner_mobile,
                     })
                 self.search([
                     ('partner_id', '=', False),
@@ -572,8 +563,6 @@ class Applicant(models.Model):
                 'is_company': False,
                 'name': self.partner_name,
                 'email': self.email_from,
-                'phone': self.partner_phone,
-                'mobile': self.partner_mobile
             })
 
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
