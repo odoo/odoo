@@ -9,6 +9,7 @@ import itertools
 import logging
 import mimetypes
 import os
+import psycopg2
 import re
 import uuid
 
@@ -174,7 +175,11 @@ class IrAttachment(models.Model):
         # but only attempt to grab the lock for a little bit, otherwise it'd
         # start blocking other transactions. (will be retried later anyway)
         cr.execute("SET LOCAL lock_timeout TO '10s'")
-        cr.execute("LOCK ir_attachment IN SHARE MODE")
+        try:
+            cr.execute("LOCK ir_attachment IN SHARE MODE")
+        except psycopg2.errors.LockNotAvailable:
+            cr.rollback()
+            return False
 
         self._gc_file_store_unsafe()
 
