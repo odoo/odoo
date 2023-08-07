@@ -2,8 +2,8 @@
 
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { _t } from "@web/core/l10n/translation";
 var QWeb = core.qweb;
-var _t = core._t;
 
 publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     selector: '.o_wbooth_registration',

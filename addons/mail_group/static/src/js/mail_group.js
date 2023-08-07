@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import core from "@web/legacy/js/services/core";
-const _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 
 publicWidget.registry.MailGroup = publicWidget.Widget.extend({
     selector: '.o_mail_group',

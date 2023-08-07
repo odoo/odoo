@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from "@web/legacy/js/services/core";
-import "@web/legacy/translations_loaded";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('order_lunch_tour', {

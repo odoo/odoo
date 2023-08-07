@@ -11,6 +11,7 @@ import wUtils from "@website/js/utils";
 import {isImageSupportedForStyle} from "@web_editor/js/editor/image_processing";
 import "@website/snippets/s_popup/options";
 import { range } from "@web/core/utils/numbers";
+import { _t } from "@web/core/l10n/translation";
 import {Domain} from "@web/core/domain";
 import {
     isCSSColor,
@@ -20,7 +21,6 @@ import {
     convertHslToRgb,
  } from '@web/core/utils/colors';
 
-var _t = core._t;
 var qweb = core.qweb;
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];

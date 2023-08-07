@@ -3,8 +3,7 @@
     import { escape, sprintf } from "@web/core/utils/strings";
     import core from "@web/legacy/js/services/core";
     import Dialog from "@web/legacy/js/core/dialog";
-
-    const _t = core._t;
+    import { _t } from "@web/core/l10n/translation";
 
     export default {
 

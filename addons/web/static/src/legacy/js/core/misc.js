@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import ajax from "@web/legacy/js/core/ajax";
 import Widget from "@web/legacy/js/core/widget";
-
-var _t = core._t;
 
 var messages_by_seconds = function() {
     return [

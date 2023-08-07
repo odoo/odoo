@@ -33,27 +33,29 @@ function changeTemplate(templateKey) {
     ];
 }
 
-let templatesSteps = [];
-for (const templateKey of templates) {
-    templatesSteps = templatesSteps.concat(changeTemplate(templateKey));
-}
 wTourUtils.registerWebsitePreviewTour('website_sale.snippet_products', {
     test: true,
     url: '/',
     edition: true,
 },
-() => [
-    wTourUtils.dragNDrop(productsSnippet),
-    wTourUtils.clickOnSnippet(productsSnippet),
-    ...templatesSteps,
-    ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
-    ...wTourUtils.clickOnSave(),
-    {
-        trigger: "iframe .s_dynamic_snippet_products .o_carousel_product_card_body .js_add_cart",
-        run: 'click',
-    },
-    wSaleTourUtils.goToCart({backend: true}),
-]);
+() => {
+    let templatesSteps = [];
+    for (const templateKey of templates) {
+        templatesSteps = templatesSteps.concat(changeTemplate(templateKey));
+    }
+    return [
+        wTourUtils.dragNDrop(productsSnippet),
+        wTourUtils.clickOnSnippet(productsSnippet),
+        ...templatesSteps,
+        ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
+        ...wTourUtils.clickOnSave(),
+        {
+            trigger: "iframe .s_dynamic_snippet_products .o_carousel_product_card_body .js_add_cart",
+            run: 'click',
+        },
+        wSaleTourUtils.goToCart({backend: true}),
+    ]
+});
 
 wTourUtils.registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
     test: true,

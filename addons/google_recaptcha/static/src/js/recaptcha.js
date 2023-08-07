@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import Class from "@web/legacy/js/core/class";
-import core from "@web/legacy/js/services/core";
 import { session } from "@web/session";
 import { loadJS } from "@web/core/assets";
-
-const _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 
 export const ReCaptcha = Class.extend({
     /**

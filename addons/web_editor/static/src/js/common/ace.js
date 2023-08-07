@@ -2,7 +2,7 @@
 
 import config from "@web/legacy/js/services/config";
 import concurrency from "@web/legacy/js/core/concurrency";
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
 import Dialog from "@web/legacy/js/core/dialog";
 import Widget from "@web/legacy/js/core/widget";
@@ -11,8 +11,6 @@ import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import { sortBy } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
-
-var _t = core._t;
 
 /**
  * Formats a content-check result (@see checkXML, checkSCSS).

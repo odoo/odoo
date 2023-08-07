@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import {_t} from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
-import "@web/legacy/translations_loaded";
 
 registry.category("web_tour.tours").add('project_tour', {
     sequence: 110,

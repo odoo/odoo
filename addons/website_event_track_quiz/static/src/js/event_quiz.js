@@ -4,9 +4,8 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import core from "@web/legacy/js/services/core";
 import session from "web.session";
-
+import { _t } from "@web/core/l10n/translation";
 var QWeb = core.qweb;
-var _t = core._t;
 
 /**
  * This widget is responsible of displaying quiz questions and propositions. Submitting the quiz will fetch the

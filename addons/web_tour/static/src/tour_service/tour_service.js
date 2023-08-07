@@ -59,7 +59,6 @@ export const tourService = {
     dependencies: ["orm", "effect", "ui", "localization"],
     start: async (_env, { orm, effect, ui }) => {
         await whenReady();
-        await odoo.ready("@web/legacy/translations_loaded");
 
         /** @type {{ [k: string]: Tour }} */
         const tours = {};

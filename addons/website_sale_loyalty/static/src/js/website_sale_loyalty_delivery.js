@@ -2,9 +2,7 @@
 
 import PublicWidget from '@web/legacy/js/public/public_widget';
 import { patch } from "@web/core/utils/patch";
-import core from "@web/legacy/js/services/core";
-
-const _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 
 patch(PublicWidget.registry.websiteSaleDelivery, {
     //--------------------------------------------------------------------------

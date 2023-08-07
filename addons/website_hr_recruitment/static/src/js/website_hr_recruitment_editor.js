@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import FormEditorRegistry from "@website/js/form_editor_registry";
-
-var _t = core._t;
 
 FormEditorRegistry.add('apply_job', {
     formFields: [{

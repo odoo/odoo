@@ -1,11 +1,9 @@
 /** @odoo-module **/
 /* global AdyenCheckout */
 
-    import core from "@web/legacy/js/services/core";
+    import { _t } from "@web/core/l10n/translation";
     import checkoutForm from "@payment/js/checkout_form";
     import manageForm from "@payment/js/manage_form";
-
-    const _t = core._t;
 
     const adyenMixin = {
 

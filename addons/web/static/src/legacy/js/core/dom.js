@@ -12,7 +12,7 @@
 import { uniqueId } from "@web/core/utils/functions";
 import concurrency from "@web/legacy/js/core/concurrency";
 import core from "@web/legacy/js/services/core";
-var _t = core._t;
+import { localization } from "@web/core/l10n/localization";
 
 /**
  * Private function to notify that something has been attached in the DOM
@@ -113,7 +113,7 @@ var dom = {
             class: $textarea[0].className,
         });
 
-        var direction = _t.database.parameters.direction === 'rtl' ? 'right' : 'left';
+        var direction = localization.direction === 'rtl' ? 'right' : 'left';
         $fixedTextarea.css({
             position: 'absolute',
             opacity: 0,

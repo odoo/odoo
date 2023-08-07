@@ -1,13 +1,11 @@
 /** @odoo-module **/
 
-    import core from "@web/legacy/js/services/core";
+    import { _t } from "@web/core/l10n/translation";
     import publicWidget from "@web/legacy/js/public/public_widget";
     import Dialog from "@web/legacy/js/core/dialog";
 
     import paymentFormMixin from "@payment/js/payment_form_mixin";
 import { debounce } from "@web/core/utils/timing";
-
-    const _t = core._t;
 
     publicWidget.registry.PaymentManageForm = publicWidget.Widget.extend(paymentFormMixin, {
         selector: 'form[name="o_payment_manage"]',

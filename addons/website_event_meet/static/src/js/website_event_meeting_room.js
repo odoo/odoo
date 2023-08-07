@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import core from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import Dialog from "@web/legacy/js/core/dialog";
-const _t = core._t;
 
 publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
     selector: '.o_wevent_meeting_room_card',

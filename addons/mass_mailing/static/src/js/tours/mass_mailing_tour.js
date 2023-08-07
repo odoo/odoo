@@ -2,8 +2,7 @@
 
     import { registry } from "@web/core/registry";
     import { stepUtils } from "@web_tour/tour_service/tour_utils";
-    import {_t} from "@web/legacy/js/services/core";
-    import "@web/legacy/translations_loaded";
+    import { _t } from "@web/core/l10n/translation";
     import { Markup } from "@web/legacy/js/core/utils";
     const { DateTime } = luxon;
 
