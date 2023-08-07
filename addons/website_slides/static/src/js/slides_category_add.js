@@ -28,6 +28,7 @@ var CategoryAddDialog = Dialog.extend({
             }]
         }, options || {});
 
+        this.csrf_token = odoo.csrf_token;
         this.channelId = options.channelId;
         this._super(parent, options);
     },

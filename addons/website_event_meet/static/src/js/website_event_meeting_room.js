@@ -14,6 +14,7 @@ publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
 
     start: function () {
         this._super.apply(this, arguments);
+        this.csrf_token = odoo.csrf_token;
         this.meetingRoomId = parseInt(this.$el.data('meeting-room-id'));
     },
 
