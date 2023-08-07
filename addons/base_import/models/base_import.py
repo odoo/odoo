@@ -1046,6 +1046,10 @@ class Import(models.TransientModel):
         import_fields = [f for f in fields if f]
 
         _file_length, rows_to_import = self._read_file(options)
+        if len(rows_to_import[0]) != len(fields):
+            raise ImportValidationError(
+                _("Error while importing records: all rows should be of the same size, but the title row has %d entries while the first row has %d. You may need to change the separator character.", len(fields), len(rows_to_import[0]))
+            )
 
         if options.get('has_headers'):
             rows_to_import = rows_to_import[1:]
