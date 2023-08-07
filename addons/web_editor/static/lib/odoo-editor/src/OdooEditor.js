@@ -3462,12 +3462,37 @@ export class OdooEditor extends EventTarget {
             item => item.type === 'text/html',
         );
         if (image || fileTransferItems.length || htmlTransferItem) {
-            if (this.document.caretPositionFromPoint) {
-                const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
-                setSelection(range.offsetNode, range.offset);
-            } else if (this.document.caretRangeFromPoint) {
-                const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
-                setSelection(range.startContainer, range.startOffset);
+            const range = this.document.caretPositionFromPoint ?
+                        this.document.caretPositionFromPoint(ev.clientX, ev.clientY) :
+                        (this.document.caretRangeFromPoint && this.document.caretRangeFromPoint(ev.clientX, ev.clientY));
+
+            if (range) {
+                let currentNode = this.isFirefox ? range.offsetNode : range.startContainer;
+                let currentOffset = this.isFirefox ? range.offset : range.startOffset;
+                if (isBlock(currentNode)) {
+                    getDeepRange(this.editable, { select: true });
+                }
+                while (!isBlock(currentNode.parentElement)) currentNode = currentNode.parentElement;
+                if (!isBlock(currentNode)) {
+                    const block = closestBlock(currentNode);
+                    const zws = this.document.createTextNode('\u200B');
+                    if (currentOffset === 0) {
+                        // Cursor is at start
+                        block.insertBefore(zws, currentNode);
+                        setSelection(zws, currentNode);
+                        cleanZWS(block);
+                    } else if (currentOffset === currentNode.textContent.length) {
+                        // Cursor is at end
+                        currentNode.after(zws);
+                        setSelection(zws, currentNode);
+                        cleanZWS(block);
+                    } else {
+                        // Cursor is at middle
+                        setSelection(currentNode,currentOffset);
+                    }
+                } else {
+                    setSelection(range.startContainer,range.startOffset);
+                }
             }
         }
         if (image) {
