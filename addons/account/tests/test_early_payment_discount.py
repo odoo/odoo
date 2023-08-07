@@ -788,3 +788,69 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 }) for price_unit, quantity, taxes in line_create_vals
             ]
         })
+
+    def test_mixed_epd_with_tax_refund(self):
+        """
+        Ensure epd line are addeed to refunds
+        """
+        self.env.company.early_pay_discount_computation = 'mixed'
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2022-02-21',
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'price_unit': 100.0,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(self.product_a.taxes_id.ids)],
+                })
+            ]
+        })
+        invoice.action_post()
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice.ids).create({
+            'date': fields.Date.from_string('2017-01-01'),
+            'reason': 'no reason again',
+            'refund_method': 'cancel',
+            'journal_id': invoice.journal_id.id,
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+
+        receivable_line = invoice.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+        self.assertTrue(receivable_line.full_reconcile_id, "Invoice should be fully reconciled with the credit note")
+
+        self.assertRecordValues(reverse_move.line_ids.sorted('id'), [
+            {
+                'balance': 100.0,
+                'tax_base_amount': 0.0,
+                'display_type': 'product',
+            },
+            {
+                'balance': -10.0,
+                'tax_base_amount': 0.0,
+                'display_type': 'epd',
+            },
+            {
+                'balance': 10.0,
+                'tax_base_amount': 0.0,
+                'display_type': 'epd',
+            },
+            {
+                'balance': 15.0,
+                'tax_base_amount': 100.0,
+                'display_type': 'tax',
+            },
+            {
+                'balance': -1.5,
+                'tax_base_amount': -10.0,
+                'display_type': 'tax',
+            },
+            {
+                'balance': -receivable_line.balance,
+                'tax_base_amount': 0.0,
+                'display_type': 'payment_term',
+            },
+        ])
