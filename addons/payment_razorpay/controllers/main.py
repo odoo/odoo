@@ -75,7 +75,7 @@ class RazorpayController(http.Controller):
                 # Handle the notification data.
                 tx_sudo._handle_notification_data('razorpay', entity_data)
             except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-                _logger.exception("Unable to handle the notification data; skipping to acknowledge")
+                _logger.warning("Unable to handle the notification data; skipping to acknowledge")
         return request.make_json_response('')
 
     @staticmethod
