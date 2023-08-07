@@ -1755,91 +1755,97 @@ actual arch.
 
     def _validate_attrs(self, node, name_manager, node_info):
         """ Generic validation of node attrs. """
-        for attr, expr in node.items():
-            if attr in ('class', 't-att-class', 't-attf-class'):
-                self._validate_classes(node, expr)
+        try:
+            for attr, expr in node.items():
+                if attr in ('class', 't-att-class', 't-attf-class'):
+                    self._validate_classes(node, expr)
 
-            elif attr == 'attrs':
-                for key, val_ast in get_dict_asts(expr).items():
-                    if isinstance(val_ast, ast.List):
-                        # domains in attrs are used for readonly, invisible, ...
-                        # and thus are only executed client side
-                        fnames, vnames = self._get_domain_identifiers(node, val_ast, attr, expr)
-                        name_manager.must_have_fields(node, fnames | vnames, f"attrs ({expr})")
-                    else:
-                        vnames = get_variable_names(val_ast)
-                        if vnames:
-                            name_manager.must_have_fields(node, vnames, f"attrs ({expr})")
+                elif attr == 'attrs':
+                    for key, val_ast in get_dict_asts(expr).items():
+                        if isinstance(val_ast, ast.List):
+                            # domains in attrs are used for readonly, invisible, ...
+                            # and thus are only executed client side
+                            fnames, vnames = self._get_domain_identifiers(node, val_ast, attr, expr)
+                            name_manager.must_have_fields(node, fnames | vnames, f"attrs ({expr})")
+                        else:
+                            vnames = get_variable_names(val_ast)
+                            if vnames:
+                                name_manager.must_have_fields(node, vnames, f"attrs ({expr})")
 
-            elif attr == 'context':
-                for key, val_ast in get_dict_asts(expr).items():
-                    if key == 'group_by':  # only in context
-                        if not isinstance(val_ast, ast.Str):
-                            msg = _(
-                                '"group_by" value must be a string %(attribute)s=%(value)r',
-                                attribute=attr, value=expr,
-                            )
-                            self._raise_view_error(msg, node)
-                        group_by = val_ast.s
-                        fname = group_by.split(':')[0]
-                        if fname not in name_manager.model._fields:
-                            msg = _(
-                                'Unknown field "%(field)s" in "group_by" value in %(attribute)s=%(value)r',
-                                field=fname, attribute=attr, value=expr,
-                            )
-                            self._raise_view_error(msg, node)
-                    else:
-                        vnames = get_variable_names(val_ast)
-                        if vnames:
-                            name_manager.must_have_fields(node, vnames, f"context ({expr})")
+                elif attr == 'context':
+                    for key, val_ast in get_dict_asts(expr).items():
+                        if key == 'group_by':  # only in context
+                            if not isinstance(val_ast, ast.Str):
+                                msg = _(
+                                    '"group_by" value must be a string %(attribute)s=%(value)r',
+                                    attribute=attr, value=expr,
+                                )
+                                self._raise_view_error(msg, node)
+                            group_by = val_ast.s
+                            fname = group_by.split(':')[0]
+                            if fname not in name_manager.model._fields:
+                                msg = _(
+                                    'Unknown field "%(field)s" in "group_by" value in %(attribute)s=%(value)r',
+                                    field=fname, attribute=attr, value=expr,
+                                )
+                                self._raise_view_error(msg, node)
+                        else:
+                            vnames = get_variable_names(val_ast)
+                            if vnames:
+                                name_manager.must_have_fields(node, vnames, f"context ({expr})")
 
-            elif attr == 'groups':
-                for group in expr.replace('!', '').split(','):
-                    name_manager.must_exist_group(group.strip(), node)
+                elif attr == 'groups':
+                    for group in expr.replace('!', '').split(','):
+                        name_manager.must_exist_group(group.strip(), node)
 
-            elif attr in ('col', 'colspan'):
-                # col check is mainly there for the tag 'group', but previous
-                # check was generic in view form
-                if not expr.isdigit():
-                    self._raise_view_error(
-                        _('%(attribute)r value must be an integer (%(value)s)',
-                          attribute=attr, value=expr),
-                        node,
-                    )
+                elif attr in ('col', 'colspan'):
+                    # col check is mainly there for the tag 'group', but previous
+                    # check was generic in view form
+                    if not expr.isdigit():
+                        self._raise_view_error(
+                            _('%(attribute)r value must be an integer (%(value)s)',
+                            attribute=attr, value=expr),
+                            node,
+                        )
 
-            elif attr.startswith('decoration-'):
-                vnames = get_variable_names(expr)
-                if vnames:
-                    name_manager.must_have_fields(node, vnames, f"{attr}={expr}")
+                elif attr.startswith('decoration-'):
+                    vnames = get_variable_names(expr)
+                    if vnames:
+                        name_manager.must_have_fields(node, vnames, f"{attr}={expr}")
 
-            elif attr == 'data-bs-toggle' and expr == 'tab':
-                if node.get('role') != 'tab':
-                    msg = 'tab link (data-bs-toggle="tab") must have "tab" role'
+                elif attr == 'data-bs-toggle' and expr == 'tab':
+                    if node.get('role') != 'tab':
+                        msg = 'tab link (data-bs-toggle="tab") must have "tab" role'
+                        self._log_view_warning(msg, node)
+                    aria_control = node.get('aria-controls') or node.get('t-att-aria-controls')
+                    if not aria_control and not node.get('t-attf-aria-controls'):
+                        msg = 'tab link (data-bs-toggle="tab") must have "aria_control" defined'
+                        self._log_view_warning(msg, node)
+                    if aria_control and '#' in aria_control:
+                        msg = 'aria-controls in tablink cannot contains "#"'
+                        self._log_view_warning(msg, node)
+
+                elif attr == "role" and expr in ('presentation', 'none'):
+                    msg = ("A role cannot be `none` or `presentation`. "
+                        "All your elements must be accessible with screen readers, describe it.")
                     self._log_view_warning(msg, node)
-                aria_control = node.get('aria-controls') or node.get('t-att-aria-controls')
-                if not aria_control and not node.get('t-attf-aria-controls'):
-                    msg = 'tab link (data-bs-toggle="tab") must have "aria_control" defined'
-                    self._log_view_warning(msg, node)
-                if aria_control and '#' in aria_control:
-                    msg = 'aria-controls in tablink cannot contains "#"'
+
+                elif attr == 'group':
+                    msg = "attribute 'group' is not valid.  Did you mean 'groups'?"
                     self._log_view_warning(msg, node)
 
-            elif attr == "role" and expr in ('presentation', 'none'):
-                msg = ("A role cannot be `none` or `presentation`. "
-                    "All your elements must be accessible with screen readers, describe it.")
-                self._log_view_warning(msg, node)
+                elif (re.match(r'^(t\-att\-|t\-attf\-)?data-tooltip(-template|-info)?$', attr)):
+                    self._raise_view_error(_("Forbidden attribute used in arch (%s).", attr), node)
 
-            elif attr == 'group':
-                msg = "attribute 'group' is not valid.  Did you mean 'groups'?"
-                self._log_view_warning(msg, node)
-
-            elif (re.match(r'^(t\-att\-|t\-attf\-)?data-tooltip(-template|-info)?$', attr)):
-                self._raise_view_error(_("Forbidden attribute used in arch (%s).", attr), node)
-
-            elif (attr.startswith("t-")):
-                self._validate_qweb_directive(node, attr, node_info["view_type"])
-                if (re.search(COMP_REGEX, expr)):
-                    self._raise_view_error(_("Forbidden use of `__comp__` in arch."), node)
+                elif (attr.startswith("t-")):
+                    self._validate_qweb_directive(node, attr, node_info["view_type"])
+                    if (re.search(COMP_REGEX, expr)):
+                        self._raise_view_error(_("Forbidden use of `__comp__` in arch."), node)
+        except SyntaxError:
+            msg = _(
+                    "\nThe 'attr' contains syntax error:\n'%s'", expr
+                )
+            self._raise_view_error(msg, node)
 
     def _validate_classes(self, node, expr):
         """ Validate the classes present on node. """

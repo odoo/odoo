@@ -3433,6 +3433,16 @@ Forbidden attribute used in arch (t-attf-data-tooltip-template)."""
 Forbidden use of `__comp__` in arch."""
         )
 
+    def test_validate_attrs_syntax_error(self):
+        arch = """
+            <tree>
+                <field name="groups_id"/>
+                <button type="object" name="action_archive" attrs="{'invisible': [('groups_id, '=', True)]}" string="Button1"/>
+            </tree>
+        """
+        with self.assertRaises(ValidationError):
+            self.assertValid(arch)
+
 
 @tagged('post_install', '-at_install')
 class TestDebugger(common.TransactionCase):
