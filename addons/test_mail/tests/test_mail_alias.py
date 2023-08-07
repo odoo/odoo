@@ -73,10 +73,8 @@ class TestMailAlias(TestMailAliasCommon):
                 ICP.set_param('mail.catchall.alias', catchall_value)
                 self.assertEqual(ICP.get_param('mail.catchall.alias'), expected_catchall)
 
-        # falsy values FIXME: fix ICP override for '' and ' ' as they make ICP
-        # udpate crash, they now try to write False in DB instead of removing
-        # the ICP
-        for config_value in [False, None]:
+        # falsy values
+        for config_value in [False, None, '', ' ']:
             with self.subTest(config_value=config_value):
                 ICP.set_param('mail.bounce.alias', config_value)
                 self.assertFalse(ICP.get_param('mail.bounce.alias'))
