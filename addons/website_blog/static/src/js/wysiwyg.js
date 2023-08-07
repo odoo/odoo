@@ -16,6 +16,10 @@ Wysiwyg.include({
     init() {
         this._super(...arguments);
         this.blogTagsPerBlogPost = {};
+        // TODO Remove in master.
+        for (const el of document.querySelectorAll(".o_wblog_social_links")) {
+            el.classList.add("o_not_editable");
+        }
     },
     /**
      * @override
