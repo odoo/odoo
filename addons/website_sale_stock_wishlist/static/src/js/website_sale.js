@@ -14,7 +14,7 @@ WebsiteSale.include({
     },
 
     _onClickSubmitWishlistStockNotificationForm(ev) {
-        const productId = JSON.parse(ev.currentTarget.closest('tr').dataset.productTrackingInfo).item_id;
+        const productId = ev.currentTarget.closest('tr').dataset.productId;
         this._handleClickSubmitStockNotificationForm(ev, productId);
     },
 });
