@@ -334,16 +334,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         sub_B_second = task_B.child_ids.filtered(lambda sub: sub.name == 'Sub B in second project')
         self.assertEqual(sub_B_second.sale_line_id, sale_order_line_B)
 
-        # [CASE 3] Without project --> no sale order line defined
-        task_B.write({
-            'child_ids': [
-                Command.create({'name': 'Sub B without project'}),
-            ]
-        })
-        sub_B_without = task_B.child_ids.filtered(lambda sub: sub.name == 'Sub B without project')
-        self.assertEqual(sub_B_without.sale_line_id, task_B.sale_line_id)
-
-        # [CASE 4] Without parent --> use sale order line of the project
+        # [CASE 3] Without parent --> use sale order line of the project
         task_D = self.env['project.task'].create({
             'name': 'Task D',
             'project_id': project_first.id,

@@ -318,6 +318,7 @@
                     <field name="project_id" invisible="1"/>
                     <field name="is_closed" invisible="1"/>
                     <field name="html_field_history_metadata" invisible="1"/>
+                    <field name="show_display_in_project" invisible="1"/>
                     <header>
                         <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id"/>
                         <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="1"/>
@@ -399,12 +400,23 @@
                     </div>
                     <group>
                         <group>
-                            <field name="display_in_project" invisible="1" force_save="1"/>
-                            <field name="project_id"
-                                   domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id)]"
-                                   widget="project"
-                            />
-                            <field name="display_in_project" invisible="True" force_save="1"/>
+                            <label for="project_id"/>
+                            <div name="project" class="d-inline-flex w-100">
+                                <field name="project_id"
+                                       domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id)]"
+                                       widget="project"
+                                />
+                                <field name="display_in_project" string="Display the sub-task in your pipeline"
+                                       widget="boolean_icon" options="{'icon': 'fa-eye-slash'}"
+                                       class="ms-0" style="width: fit-content;" force_save="1"
+                                       invisible="display_in_project or not show_display_in_project"
+                                />
+                                <field name="display_in_project" string="Hide the sub-task in your pipeline"
+                                       widget="boolean_icon" options="{'icon': 'fa-eye'}"
+                                       class="ms-0" style="width: fit-content;" force_save="1"
+                                       invisible="not display_in_project or not show_display_in_project"
+                                />
+                            </div>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
                                 context="{'default_project_id': project_id}"

@@ -248,6 +248,7 @@ class TestProjectMilestone(TestProjectCommon):
         self.assertEqual(task_2.milestone_id, extra_milestone_pigs, "The milestone of the child task should not be modified has it has already one set.")
 
         # C. Child task with no milestone set but belonging to another project
+        task_2.display_in_project = True
         self.task_1.project_id = self.project_goats
         task_2.milestone_id = False
         self.assertFalse(self.task_1.milestone_id)
