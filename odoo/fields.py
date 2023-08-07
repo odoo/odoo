@@ -23,7 +23,7 @@ import warnings
 import psycopg2
 import pytz
 from markupsafe import Markup
-from psycopg2.extras import Json as PsycopgJson, execute_values
+from psycopg2.extras import Json as PsycopgJson
 from psycopg2.sql import SQL, Identifier
 from difflib import get_close_matches, unified_diff
 from hashlib import sha256
@@ -4871,7 +4871,7 @@ class Many2many(_RelationalMulti):
                     Identifier(self.column1),
                     Identifier(self.column2),
                 )
-                execute_values(cr._obj, query, pairs)
+                cr.execute_values(query, pairs)
 
             # update the cache of inverse fields
             y_to_xs = defaultdict(set)

@@ -7,7 +7,6 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
-from psycopg2.extras import execute_values
 
 _logger = logging.getLogger(__name__)
 
@@ -373,7 +372,7 @@ class ProductTemplate(models.Model):
                 WHERE id = p.p_id
             """.format(table=self._table)
             values_args = [(prod_tmpl['id'], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)]
-            execute_values(self.env.cr._obj, query, values_args)
+            self.env.cr.execute_values(query, values_args)
         else:
             super(ProductTemplate, self)._init_column(column_name)
 
