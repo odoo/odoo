@@ -29,6 +29,7 @@ class ResPartner(models.Model):
         for partner in self:
             partner.static_map_url = partner._google_map_signed_img(zoom=13, width=598, height=200)
 
+    @api.depends('static_map_url')
     def _compute_static_map_url_is_valid(self):
         """Compute whether the link is valid.
 
@@ -37,7 +38,7 @@ class ResPartner(models.Model):
         """
         session = requests.Session()
         for partner in self:
-            url = self.static_map_url
+            url = partner.static_map_url
             if not url:
                 partner.static_map_url_is_valid = False
                 continue
