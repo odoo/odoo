@@ -3446,7 +3446,17 @@ export class OdooEditor extends EventTarget {
                 setSelection(range.offsetNode, range.offset);
             } else if (this.document.caretRangeFromPoint) {
                 const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
-                setSelection(range.startContainer, range.startOffset);
+                const parent = range.startContainer.parentNode;
+                if (range.startOffset === parent.textContent.length) {
+                    const br = this.document.createElement('BR');
+                    const block = closestBlock(range.startContainer);
+                    if (block.lastChild.nodeName !== 'BR') {
+                        block.appendChild(br);
+                    }
+                    setSelection(block.lastChild, 0);
+                } else {
+                    setSelection(range.startContainer,range.startOffset);
+                }
             }
         }
         if (image) {
