@@ -692,7 +692,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         foreign_company = self.company_data_2['company']
         foreign_company.currency_id = self.foreign_currency
         # a custom analytic contribution (number between 1 -> 100 included)
-        analytic_distribution = 42
+        analytic_distribution = 50
         analytic_contribution = analytic_distribution / 100.
         # Create an invoice with a foreign company with the AAL linked to the project account.
         invoice_1_foreign = self.env['account.move'].create({
@@ -783,7 +783,8 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         )
 
         # Ensures the sale_line_ids from multiple invoices from the same company are correctly computed.
-        # Create another invoice, with 2 lines, 2 diff products, the second line has a quantity of 2.
+        # Create another invoice, with 2 lines, 2 diff products, the second line has a quantity of 2, the third line has a negative amount
+        NEG_AMOUNT = -42
         invoice_2 = self.env['account.move'].create({
             "name": "I have 2 lines",
             "move_type": "out_invoice",
@@ -802,6 +803,12 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 "quantity": 2,
                 "product_uom_id": self.product_b.uom_id.id,
                 "price_unit": self.product_b.standard_price,
+            }), Command.create({
+                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: analytic_distribution},
+                "product_id": self.product_b.id,
+                "quantity": 1,
+                "product_uom_id": self.product_b.uom_id.id,
+                "price_unit": NEG_AMOUNT,
             })],
         })
         # The invoice_2 is not posted, therefore its cost should be in the "to_invoice" section
@@ -811,11 +818,11 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 'data': [{
                     'id': 'other_invoice_revenues',
                     'sequence': self.project_billable_no_company._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
-                    'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution,
+                    'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price + NEG_AMOUNT) * analytic_contribution,
                     'invoiced': self.product_a.standard_price * analytic_contribution * 1.2,
                 }],
                 'total': {
-                    'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution,
+                    'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price + NEG_AMOUNT) * analytic_contribution,
                     'invoiced': self.product_a.standard_price * analytic_contribution * 1.2,
                 },
             },
@@ -830,11 +837,11 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                     'id': 'other_invoice_revenues',
                     'sequence': self.project_billable_no_company._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
                     'to_invoice': 0.0,
-                    'invoiced': (2.2 * self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution,
+                    'invoiced': (2.2 * self.product_a.standard_price + 2 * self.product_b.standard_price + NEG_AMOUNT) * analytic_contribution,
                 }],
                 'total': {
                     'to_invoice': 0.0,
-                    'invoiced': (2.2 * self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution,
+                    'invoiced': (2.2 * self.product_a.standard_price + 2 * self.product_b.standard_price + NEG_AMOUNT) * analytic_contribution,
                 },
             },
         )
@@ -869,11 +876,11 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                     'id': 'other_invoice_revenues',
                     'sequence': self.project_billable_no_company._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
                     'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution * 0.2,
-                    'invoiced': (2.2 * self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution,
+                    'invoiced': (2.2 * self.product_a.standard_price + 2 * self.product_b.standard_price + NEG_AMOUNT) * analytic_contribution,
                 }],
                 'total': {
                     'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution * 0.2,
-                    'invoiced': (2.2 * self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution,
+                    'invoiced': (2.2 * self.product_a.standard_price + 2 * self.product_b.standard_price + NEG_AMOUNT) * analytic_contribution,
                 },
             },
         )
@@ -882,8 +889,8 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         # We use a float_compare in order to ensure the value is close enough to the expected result. This problem has no repercusion on the client side, since
         # there is also a rounding method on this side to ensure the amount is correctly displayed.
         items = self.project_billable_no_company._get_profitability_items(False)['revenues']
-        self.assertEqual(float_compare((self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution * 2.4, items['data'][0]['invoiced'], 2), 0)
-        self.assertEqual(float_compare((self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution * 2.4, items['total']['invoiced'], 2), 0)
+        self.assertEqual(float_compare(((self.product_a.standard_price + self.product_b.standard_price) * 2.4 + NEG_AMOUNT) * analytic_contribution, items['data'][0]['invoiced'], 2), 0)
+        self.assertEqual(float_compare(((self.product_a.standard_price + self.product_b.standard_price) * 2.4 + NEG_AMOUNT) * analytic_contribution, items['total']['invoiced'], 2), 0)
         self.assertEqual(items['data'][0]['id'], 'other_invoice_revenues')
         self.assertEqual(items['data'][0]['sequence'], self.project_billable_no_company._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'])
         self.assertEqual(items['data'][0]['to_invoice'], 0.0)
