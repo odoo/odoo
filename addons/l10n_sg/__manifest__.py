@@ -1,7 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Singapore - Accounting',
+<<<<<<< HEAD
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/singapore.html',
+||||||| parent of d9e3022e72f (temp)
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+=======
+    'website': 'https://www.odoo.com/documentation/saas-16.4/applications/finance/fiscal_localizations.html',
+>>>>>>> d9e3022e72f (temp)
     'icon': '/account/static/description/l10n.png',
     'countries': ['sg'],
     'author': 'Tech Receptives',

@@ -11,8 +11,16 @@
                     <field name="paypal_email_account"
                            required="code == 'paypal' and state != 'disabled'"/>
                     <field name="paypal_pdt_token"  password="True"
+<<<<<<< HEAD
                            required="code == 'paypal' and state != 'disabled'"/>
                     <a href="https://www.odoo.com/documentation/master/applications/finance/payment_providers/paypal.html"
+||||||| parent of d9e3022e72f (temp)
+                           attrs="{'required': [('code', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
+                    <a href="https://www.odoo.com/documentation/master/applications/finance/payment_providers/paypal.html"
+=======
+                           attrs="{'required': [('code', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
+                    <a href="https://www.odoo.com/documentation/saas-16.4/applications/finance/payment_providers/paypal.html"
+>>>>>>> d9e3022e72f (temp)
                        target="_blank"
                        colspan="2">
                         How to configure your paypal account?

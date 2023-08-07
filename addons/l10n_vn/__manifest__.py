@@ -5,7 +5,13 @@
     'countries': ['vn'],
     'version': '2.0.1',
     'author': 'General Solutions',
+<<<<<<< HEAD
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/vietnam.html',
+||||||| parent of d9e3022e72f (temp)
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+=======
+    'website': 'https://www.odoo.com/documentation/saas-16.4/applications/finance/fiscal_localizations.html',
+>>>>>>> d9e3022e72f (temp)
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the module to manage the accounting chart, bank information for Vietnam in Odoo.

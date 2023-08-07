@@ -9,7 +9,13 @@
     'description': """
 Odoo Arabic localization for most Saudi Arabia.
 """,
+<<<<<<< HEAD
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/saudi_arabia.html',
+||||||| parent of d9e3022e72f (temp)
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+=======
+    'website': 'https://www.odoo.com/documentation/saas-16.4/applications/finance/fiscal_localizations.html',
+>>>>>>> d9e3022e72f (temp)
     'depends': [
         'l10n_gcc_invoice',
         'account',
