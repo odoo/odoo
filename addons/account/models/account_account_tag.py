@@ -23,3 +23,16 @@ class AccountAccountTag(models.Model):
         escaped_tag_name = tag_name.replace('\\', '\\\\').replace('%', '\%').replace('_', '\_')
         domain = [('name', '=like', '_' + escaped_tag_name), ('country_id', '=', country_id), ('applicability', '=', 'taxes')]
         return self.env['account.account.tag'].with_context(active_test=False).search(domain)
+
+    def name_get(self):
+        if not self.env.company.multi_vat_foreign_country_ids:
+            return super().name_get()
+
+        res = []
+        for tag in self:
+            name = tag.name
+            if tag.applicability == "taxes" and tag.country_id and tag.country_id != self.env.company.account_fiscal_country_id:
+                name = _("%s (%s)", tag.name, tag.country_id.code)
+            res.append((tag.id, name,))
+
+        return res
