@@ -11,7 +11,7 @@ from collections.abc import Mapping
 from operator import itemgetter
 
 from psycopg2 import sql
-from psycopg2.extras import Json, execute_values
+from psycopg2.extras import Json
 from psycopg2.sql import Identifier, SQL, Placeholder
 
 from odoo import api, fields, models, tools, _, _lt, Command
@@ -84,7 +84,7 @@ def query_insert(cr, table, rows):
         cols=SQL(",").join(map(Identifier, cols)),
     )
     params = [tuple(row[col] for col in cols) for row in rows]
-    execute_values(cr._obj, query, params)
+    cr.execute_values(query, params)
     return [row[0] for row in cr.fetchall()]
 
 
