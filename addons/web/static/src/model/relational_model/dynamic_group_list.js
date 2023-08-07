@@ -64,12 +64,17 @@ export class DynamicGroupList extends DynamicList {
     // Public
     // -------------------------------------------------------------------------
 
-    async createGroup(groupName, groupData, isFolded) {
+    /**
+     * @param {string} groupName
+     * @param {string} [foldField] if given, will write true on this field to
+     *   make the group folded by default
+     */
+    async createGroup(groupName, foldField) {
         if (!this.groupByField || this.groupByField.type !== "many2one") {
             throw new Error("Cannot create a group on a non many2one group field");
         }
 
-        await this.model.mutex.exec(() => this._createGroup(groupName, groupData, isFolded));
+        await this.model.mutex.exec(() => this._createGroup(groupName, foldField));
     }
 
     async deleteGroups(groups) {
@@ -170,11 +175,21 @@ export class DynamicGroupList extends DynamicList {
     // Protected
     // -------------------------------------------------------------------------
 
-    async _createGroup(groupName, groupData = {}, isFolded = false) {
-        groupData = { ...groupData, name: groupName };
-        const [id] = await this.model.orm.create(this.groupByField.relation, [groupData], {
-            context: this.context,
-        });
+    async _createGroup(groupName, foldField = false) {
+        const [id] = await this.model.orm.call(
+            this.groupByField.relation,
+            "name_create",
+            [groupName],
+            { context: this.context }
+        );
+        if (foldField) {
+            await this.model.orm.write(
+                this.groupByField.relation,
+                [id],
+                { [foldField]: true },
+                { context: this.context }
+            );
+        }
         const lastGroup = this.groups.at(-1);
 
         // This is almost a copy/past of the code in relational_model.js
@@ -195,7 +210,7 @@ export class DynamicGroupList extends DynamicList {
             ...commonConfig,
             context,
             groupByFieldName: this.groupByField.name,
-            isFolded,
+            isFolded: Boolean(foldField),
             initialDomain: domain,
             list: {
                 ...commonConfig,
