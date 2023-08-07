@@ -159,3 +159,23 @@ class TestMembership(TestMembershipCommon):
         self.partner_1._compute_membership_state()
         self.assertEqual(invoice.state, 'cancel')
         self.assertEqual(self.partner_1.membership_state, 'canceled')
+
+    def test_apply_payment_term(self):
+        """
+            Check if the payment term defined on the partner is applied to the invoice
+        """
+        pay_term_15_days_after_today = self.env['account.payment.term'].create({
+            'name': '15 days after today',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 15,
+                    'option': 'day_after_invoice_date',
+                }),
+            ],
+        })
+        self.partner_1.write({
+            'property_payment_term_id': pay_term_15_days_after_today.id,
+        })
+        invoice = self.partner_1.create_membership_invoice(self.membership_1, 100.0)
+        self.assertEqual(invoice.invoice_payment_term_id, pay_term_15_days_after_today)
