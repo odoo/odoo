@@ -8,7 +8,7 @@ from odoo.http import request
 
 from odoo.addons.pos_self_order.controllers.utils import (
     get_any_pos_config_sudo,
-    get_table_sudo,
+    reduce_privilege,
 )
 
 
@@ -31,10 +31,8 @@ class PosQRMenuController(http.Controller):
         auth="public", website=True, sitemap=True,
     )
     def pos_self_order_start(self, config_id=None, access_token=None, table_identifier=None):
-        self_order_mode = 'qr_code'
-        table_infos = False
         pos_config_sudo = False
-        pos_config_access_token = False
+        table_sudo = False
 
         if config_id and config_id.isnumeric() and access_token:
             pos_config_sudo = request.env["pos.config"].sudo().search([
@@ -42,17 +40,23 @@ class PosQRMenuController(http.Controller):
                 ('access_token', '=', access_token)], limit=1)
 
         if pos_config_sudo and pos_config_sudo.has_active_session and pos_config_sudo.self_order_table_mode:
-            self_order_mode = pos_config_sudo.self_order_pay_after
-            pos_config_access_token = pos_config_sudo.access_token
-            table_sudo = get_table_sudo(identifier=table_identifier)
-            table_infos = table_sudo._get_self_order_data() if table_sudo else False
+            table_sudo = table_identifier and (
+                request.env["restaurant.table"]
+                .sudo()
+                .search([("identifier", "=", table_identifier), ("active", "=", True)], limit=1)
+            )
         elif config_id and config_id.isnumeric():
             pos_config_sudo = request.env["pos.config"].sudo().search([
                 ("id", "=", config_id), ("self_order_view_mode", "=", True)], limit=1)
         else:
             pos_config_sudo = get_any_pos_config_sudo()
 
-        if not pos_config_sudo:
+        company = pos_config_sudo.company_id
+        user = pos_config_sudo.current_session_id.user_id
+        pos_config = reduce_privilege(pos_config_sudo, company, user)
+        table = reduce_privilege(table_sudo, company, user)
+
+        if not pos_config:
             raise werkzeug.exceptions.NotFound()
 
         return request.render(
@@ -62,10 +66,10 @@ class PosQRMenuController(http.Controller):
                     **request.env["ir.http"].get_frontend_session_info(),
                     'currencies': request.env["ir.http"].get_currencies(),
                     'pos_self_order_data': {
-                        'self_order_mode': self_order_mode,
-                        'table': table_infos,
-                        'access_token': pos_config_access_token,
-                        **pos_config_sudo._get_self_order_data(),
+                        'self_order_mode': pos_config.self_order_pay_after,
+                        'table': table._get_self_order_data() if table else False,
+                        'access_token': pos_config.access_token,
+                        **pos_config._get_self_order_data(),
                     },
                     "base_url": request.env['pos.session'].get_base_url(),
                 }

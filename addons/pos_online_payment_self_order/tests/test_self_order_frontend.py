@@ -28,7 +28,7 @@ class TestSelfOrderFrontendMobile(SelfOrderCommonTest):
                 'self_order_pay_after': 'each',
                 'self_order_online_payment_method_id': self.self_order_online_payment_method_id,
             })
-            self.pos_config.open_ui()
+            self.pos_config.with_user(self.pos_user).open_ui()
 
             self.start_tour(
                 self.pos_config._get_self_order_route(),

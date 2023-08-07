@@ -14,7 +14,7 @@
                         t-if="quantityInCart and selfOrder.ordering"
                         t-esc="`${quantityInCart}x`"
                         />
-                    <span class="card-text small" t-esc="getTotalPriceString()" />
+                    <span class="card-text small" t-esc="selfOrder.formatMonetary(props.product.prices)" />
                 </div>
                 <p
                     t-if="props.product.description_sale"
@@ -27,7 +27,6 @@
                 t-attf-src="/menu/get-image/{{ props.product.id }}"
                 alt="Product image"
                 loading="lazy"
-                onerror="this.remove()"
                 />
             <span t-if="quantityInCart and selfOrder.ordering" class="position-absolute top-0 start-0 h-100 border-start border-5 border-primary" />
         </div>

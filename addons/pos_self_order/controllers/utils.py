@@ -2,7 +2,6 @@
 
 
 import werkzeug
-from typing import Optional
 
 from odoo.http import request
 from odoo.addons.pos_self_order.models.pos_config import PosConfig
@@ -16,14 +15,18 @@ def get_any_pos_config_sudo() -> PosConfig:
         request.env["pos.config"].sudo().search([("self_order_view_mode", "=", True)], limit=1)
     ) or _raise(werkzeug.exceptions.NotFound())
 
-
-def get_table_sudo(identifier):
-    return identifier and (
-        request.env["restaurant.table"]
-        .sudo()
-        .search([("identifier", "=", identifier), ("active", "=", True)], limit=1)
-    )
-
-
 def _raise(e):
     raise e
+
+def reduce_privilege(record_sudo, company, user=None):
+    """
+    Returns a record with reduced privileges based on company and user.
+    If user is not provided, we keep the sudo privilege, but still, the record
+    will be scoped to the company.
+    """
+    if record_sudo:
+        if user:
+            return record_sudo.sudo(False).with_company(company).with_user(user)
+        else:
+            return record_sudo.with_company(company)
+    return None

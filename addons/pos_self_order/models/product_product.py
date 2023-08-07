@@ -36,7 +36,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
 
         attributes = self._filter_applicable_attributes(
-            self.env["pos.session"].sudo()._get_attributes_by_ptal_id()
+            self.env["pos.session"]._get_attributes_by_ptal_id()
         )
         return self._add_price_info_to_attributes(
             attributes,
