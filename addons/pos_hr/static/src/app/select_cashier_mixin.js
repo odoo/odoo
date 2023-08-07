@@ -70,6 +70,9 @@ export function useCashierSelector(
                         isSelected: false,
                     };
                 });
+            if (!employeesList.length) {
+                return;
+            }
             const { confirmed, payload: employee } = await popup.add(SelectionPopup, {
                 title: _t("Change Cashier"),
                 list: employeesList,
