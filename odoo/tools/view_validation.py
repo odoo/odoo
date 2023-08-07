@@ -138,11 +138,8 @@ def valid_view(arch, **kwargs):
     for pred in _validators[arch.tag]:
         check = pred(arch, **kwargs)
         if not check:
-            _logger.error("Invalid XML: %s", pred.__doc__)
-            return False
-        if check == "Warning":
             _logger.warning("Invalid XML: %s", pred.__doc__)
-            return "Warning"
+            return False
     return True
 
 
@@ -176,7 +173,7 @@ def schema_valid(arch, **kwargs):
     if validator and not validator.validate(arch):
         result = True
         for error in validator.error_log:
-            _logger.error(tools.ustr(error))
+            _logger.warning(tools.ustr(error))
             result = False
         return result
     return True
