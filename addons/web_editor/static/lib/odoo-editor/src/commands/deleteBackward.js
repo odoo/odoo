@@ -164,7 +164,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
          */
         if (
             !this.previousElementSibling &&
-            ['BLOCKQUOTE', 'H1', 'H2', 'H3', 'PRE'].includes(this.nodeName) &&
+            ['BLOCKQUOTE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'PRE'].includes(this.nodeName) &&
             !closestLi
         ) {
             const p = document.createElement('p');
