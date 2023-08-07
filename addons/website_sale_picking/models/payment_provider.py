@@ -37,7 +37,7 @@ class PaymentProvider(models.Model):
             product.type in ('consu', 'product')
             for product in order.order_line.product_id
         ):
-            compatible_providers.filtered(
+            compatible_providers = compatible_providers.filtered(
                 lambda p: p.code != 'custom' or p.custom_mode != 'onsite'
             )
 
