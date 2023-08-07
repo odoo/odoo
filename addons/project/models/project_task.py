@@ -179,8 +179,11 @@ class Task(models.Model):
         help="Date on which the state of your task has last been modified.\n"
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
-    project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]", index=True, tracking=True, change_default=True)
-    display_in_project = fields.Boolean(default=True, readonly=True, export_string_translation=False)
+    project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
+                                 compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=True, change_default=True)
+    display_in_project = fields.Boolean(compute='_compute_display_in_project', store=True, readonly=False, export_string_translation=False)
+    # Technical field to display the 'Display in Project' button in the form view, depending on the project
+    show_display_in_project = fields.Boolean(compute='_compute_show_display_in_project')
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
     allocated_hours = fields.Float("Allocated Time", tracking=True)
     subtask_allocated_hours = fields.Float("Sub-tasks Allocated Time", compute='_compute_subtask_allocated_hours', export_string_translation=False,
@@ -308,6 +311,13 @@ class Task(models.Model):
             if task.partner_id and task.partner_id.company_id and task.company_id and task.company_id != task.partner_id.company_id:
                 raise ValidationError(_('The task and the associated partner must be linked to the same company.'))
 
+    @api.constrains('child_ids', 'project_id')
+    def _ensure_super_task_is_not_private(self):
+        """ Ensures that the company of the task is valid for the partner. """
+        for task in self:
+            if not task.project_id and task.subtask_count:
+                raise ValidationError(_('This task has sub-tasks, so it can\'t be private.'))
+
     @property
     def SELF_READABLE_FIELDS(self):
         return PROJECT_TASK_READABLE_FIELDS | self.SELF_WRITABLE_FIELDS
@@ -315,6 +325,35 @@ class Task(models.Model):
     @property
     def SELF_WRITABLE_FIELDS(self):
         return PROJECT_TASK_WRITABLE_FIELDS
+
+    @api.depends('parent_id.project_id')
+    def _compute_project_id(self):
+        self.env.remove_to_compute(self._fields['display_in_project'], self)
+        for task in self:
+            if not task.display_in_project and task.parent_id and task.parent_id.project_id != task.project_id:
+                task.project_id = task.parent_id.project_id
+
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        if self.display_in_project:
+            return
+        if not self.parent_id:
+            self.display_in_project = True
+        elif self.project_id != self.parent_id.project_id:
+            self.project_id = self.parent_id.project_id
+
+    @api.depends('project_id')
+    def _compute_display_in_project(self):
+        self.filtered(
+            lambda t: not t.display_in_project and (
+                not t.project_id or t.project_id != t.parent_id.project_id
+            )
+        ).display_in_project = True
+
+    @api.depends('project_id', 'parent_id')
+    def _compute_show_display_in_project(self):
+        for task in self:
+            task.show_display_in_project = bool(task.parent_id) and task.project_id == task.parent_id.project_id
 
     @api.depends('project_id.analytic_account_id')
     def _compute_analytic_account_id(self):
@@ -1004,6 +1043,7 @@ class Task(models.Model):
     def create(self, vals_list):
         new_context = dict(self.env.context)
         default_personal_stage = new_context.pop('default_personal_stage_type_ids', False)
+        default_project_id = new_context.get("default_project_id", False)
         self = self.with_context(new_context)
 
         is_portal_user = self.env.user._is_portal()
@@ -1011,14 +1051,14 @@ class Task(models.Model):
             self.check_access_rights('create')
         default_stage = dict()
         for vals in vals_list:
-            project_id = vals.get('project_id')
+            project_id = vals.get('project_id') or default_project_id
+
             if vals.get('user_ids'):
                 vals['date_assign'] = fields.Datetime.now()
-                if not (vals.get('parent_id') or project_id or self._context.get('default_project_id')):
+                if not (vals.get('parent_id') or project_id):
                     user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self.env['project.task'])
                     if self.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
                         vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
-
             if default_personal_stage and 'personal_stage_type_id' not in vals:
                 vals['personal_stage_type_id'] = default_personal_stage[0]
             if not vals.get('name') and vals.get('display_name'):
@@ -1026,26 +1066,6 @@ class Task(models.Model):
             if is_portal_user:
                 self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
 
-            if project_id:
-                # set the project => "I want to display the task in the project"
-                #                 => => set `display_in_project` to True
-                vals['display_in_project'] = vals.get('display_in_project', True)
-            elif vals.get('parent_id'):
-                # unset the project => 2 cases:
-                # 1) the task has no parent => "I want it to be private" => nothing to do
-                # 2) the task has a parent  => "I don't want to display the task in the project"
-                #                           => set `project_id` to the one of its parent and `display_in_project` to False
-                project_id = self.browse(vals['parent_id']).project_id.id
-                vals.update({
-                    'project_id': project_id,
-                    'display_in_project': vals.get('display_in_project', False),
-                })
-                if 'milestone_id' in vals:
-                    milestone_project_id = self.env['project.milestone'].browse(vals['milestone_id']).project_id.id
-                    if milestone_project_id != project_id:
-                        vals['milestone_id'] = False
-
-            project_id = project_id or self.env.context.get('default_project_id')
             if project_id and not "company_id" in vals:
                 vals["company_id"] = self.env["project.project"].browse(
                     project_id
@@ -1137,48 +1157,6 @@ class Task(models.Model):
             self.check_access_rule('write')
             portal_can_write = True
 
-        if 'project_id' in vals:
-            project_id = vals['project_id']
-            if project_id:
-                # set the project => "I want to display the task in the project"
-                #                 => set `display_in_project` to True
-                if 'display_in_project' not in vals:
-                    vals['display_in_project'] = True
-                    no_display_subtasks = self.child_ids.filtered(lambda t: not t.display_in_project)
-                    if no_display_subtasks:
-                        no_display_subtasks.write({'project_id': project_id})
-            else:
-                # unset the project => 2 cases:
-                # 1) the task has no parent => "I want it to be private" => nothing to do
-                # 2) the task has a parent  => "I don't want to display the task in the project"
-                #                           => set `project_id` back and `display_in_project` to False
-                if 'parent_id' in vals:
-                    if vals['parent_id']:
-                        vals.update({
-                            'project_id': self.browse(vals['parent_id']).project_id.id,
-                            'display_in_project': False,
-                        })
-                else:
-                    task_ids_per_parent_project_id = defaultdict(list)
-                    for task in self:
-                        task_ids_per_parent_project_id[task.parent_id.project_id.id].append(task.id)
-                    self = self.browse(task_ids_per_parent_project_id.pop(False, False))
-                    for parent_project_id, task_ids in task_ids_per_parent_project_id.items():
-                        self.browse(task_ids).write({
-                            **vals,
-                            'project_id': parent_project_id,
-                            'display_in_project': False,
-                        })
-
-        if 'parent_id' in vals:
-            parent_id = vals['parent_id']
-            if parent_id in self.ids:
-                raise UserError(_("You cannot set a task as its parent task."))
-            elif not parent_id:
-                # unset the parent => "I want to display the task back in the project"
-                #                    => set `display_in_project` to True
-                vals['display_in_project'] = True
-
         if 'milestone_id' in vals:
             # WARNING: has to be done after 'project_id' vals is written on subtasks
             milestone = self.env['project.milestone'].browse(vals['milestone_id'])
@@ -1217,6 +1195,9 @@ class Task(models.Model):
                                   task.state not in CLOSED_STATES))
             if subtasks_to_update:
                 subtasks_to_update.write({'milestone_id': vals['milestone_id']})
+
+        if vals.get('parent_id') in self.ids:
+            raise UserError(_("Sorry. You can't set a task as its parent task."))
 
         # stage change: update date_last_stage_update
         now = fields.Datetime.now()

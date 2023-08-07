@@ -412,31 +412,56 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 self.assertEqual(task.company_id, self.company_a, "Moving a task should change its company.")
 
     def test_create_subtask(self):
-        with self.sudo('employee-a'):
-            with self.allow_companies([self.company_a.id, self.company_b.id]):
-                # create subtask, set parent; the onchange will set the correct company and subtask project
-                with Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_parent_id': self.task_1.id, 'default_project_id': self.project_company_b.id})) as task_form:
-                    task_form.name = 'Test Subtask in company B'
-                task = task_form.save()
-                self.assertEqual(task.company_id, self.project_company_b.company_id, "The company of the subtask should be the one from its project, and not from its parent.")
+        # 1) Create a subtask and check that every field is correctly set on the subtask
+        with (
+            Form(self.task_1) as task_1_form,
+            task_1_form.child_ids.new() as subtask_line,
+        ):
+            self.assertEqual(subtask_line.project_id, self.task_1.project_id, "The task's project should already be set on the subtask.")
+            subtask_line.name = 'Test Subtask'
+        subtask = self.task_1.child_ids[0]
+        self.assertTrue(subtask.show_display_in_project, "The subtask's field 'display in project' should be visible.")
+        self.assertFalse(subtask.display_in_project, "The subtask's field 'display in project' should be unchecked.")
+        self.assertEqual(subtask.company_id, self.task_1.company_id, "The company of the subtask should be the one from its project.")
 
-                # For `parent_id` to  be visible in the view, you need
-                # 1. The debug mode
-                # <field name="parent_id" groups="base.group_no_one"/>
-                view = self.env.ref('project.view_task_form2').sudo()
-                tree = etree.fromstring(view.arch)
-                for node in tree.xpath('//field[@name="parent_id"][@invisible]'):
-                    node.attrib.pop('invisible')
-                view.arch = etree.tostring(tree)
-                with self.debug_mode():
-                    with Form(self.task_2) as task_form:
-                        task_form.name = 'Test Task 2 becomes child of Task 1 (other company)'
-                        task_form.parent_id = self.task_1
-                        task_form.project_id = self.env['project.project']
-                    task = task_form.save()
+        # 2) Change the project of the parent task and check that the subtask follows it
+        with Form(self.task_1) as task_1_form:
+            task_1_form.project_id = self.project_company_b
+        self.assertEqual(subtask.project_id, self.task_1.project_id, "The task's project should already be set on the subtask.")
+        self.assertTrue(subtask.show_display_in_project, "The subtask's field 'display in project' should be visible.")
+        self.assertFalse(subtask.display_in_project, "The subtask's field 'display in project' should be unchecked.")
+        self.assertEqual(subtask.company_id, self.project_company_b.company_id, "The company of the subtask should be the one from its project.")
+        task_1_form.project_id = self.project_company_a
 
-                self.assertEqual(task.project_id, task.parent_id.project_id, "The subtask should have the same project as its parents")
-                self.assertEqual(task.company_id, task.parent_id.company_id, "The company of the subtask should be the one from its parent when no project is set.")
+        # 3) Change the parent of the subtask and check that every field is correctly set on it
+        # For `parent_id` to  be visible in the view, you need
+        # 1. The debug mode
+        # <field name="parent_id" groups="base.group_no_one"/>
+        view = self.env.ref('project.view_task_form2').sudo()
+        tree = etree.fromstring(view.arch)
+        for node in tree.xpath('//field[@name="parent_id"][@invisible]'):
+            node.attrib.pop('invisible')
+        view.arch = etree.tostring(tree)
+        with (
+            self.debug_mode(),
+            Form(subtask) as subtask_form
+        ):
+            subtask_form.parent_id = self.task_2
+            self.assertEqual(subtask_form.project_id, self.task_2.project_id, "The task's project should already be set on the subtask.")
+            self.assertTrue(subtask.show_display_in_project, "The subtask's field 'display in project' should be visible.")
+            self.assertFalse(subtask.display_in_project, "The subtask's field 'display in project' should be unchecked.")
+        self.assertEqual(subtask.company_id, self.task_2.company_id, "The company of the subtask should be the one from its new project, set from its parent.")
+
+        # 4) Change the project of the subtask and check some fields
+        with (
+            self.debug_mode(),
+            Form(subtask) as subtask_form
+        ):
+            subtask.project_id = self.project_company_a
+            self.assertFalse(subtask.show_display_in_project, "The subtask's field 'display in project' shouldn't be visible.")
+            self.assertTrue(subtask.display_in_project, "The subtask's field 'display in project' should be checked.")
+        self.assertEqual(subtask.company_id, self.project_company_a.company_id, "The company of the subtask should be the one from its project, and not from its parent.")
+
 
     def test_cross_subtask_project(self):
 
@@ -454,12 +479,10 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 with self.debug_mode():
                     with Form(self.env['project.task'].with_context({'tracking_disable': True})) as task_form:
                         task_form.name = 'Test Subtask in company B'
+                        task_form.project_id = self.task_1.project_id
                         task_form.parent_id = self.task_1
-
                     task = task_form.save()
 
-                self.assertEqual(task.project_id, task.parent_id.project_id, "The subtask should have the same project as its parents")
-                self.assertEqual(task.company_id, task.parent_id.company_id, "The company of the subtask should be the one from its parent.")
                 self.assertEqual(self.task_1.child_ids.ids, [task.id])
 
         with self.sudo('employee-a'):

@@ -73,7 +73,12 @@ export class SubtaskKanbanList extends Component {
     }
 
     async _onSubtaskCreateNameChanged(name) {
-        await this.orm.create("project.task", [{ display_name: name, parent_id: this.props.record.resId, user_ids: this.props.record.data.user_ids.resIds }]);
+        await this.orm.create("project.task", [{
+            display_name: name,
+            parent_id: this.props.record.resId,
+            project_id: this.props.record.data.project_id[0],
+            user_ids: this.props.record.data.user_ids.resIds,
+        }]);
         this.subtaskCreate.open = false;
         this.subtaskCreate.name = "";
         this.props.record.load();

@@ -283,15 +283,11 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEqual(len(task_child.timesheet_ids), 1, "The timesheet still should be linked to task_child")
         self.assertEqual(len(task_grandchild.timesheet_ids), 1, "The timesheet still should be linked to task_grandchild")
 
-        # It is forbidden to unset the project of a task with timesheet...
+        # It is forbidden to unset the project of a task with timesheet
         with self.assertRaises(UserError):
             self.task1.write({
                 'project_id': False
             })
-        # ...except if one of its ascendant has one.
-        task_child.write({
-            'project_id': False
-        })
 
     def test_recompute_amount_for_multiple_timesheets(self):
         """ Check that amount is recomputed correctly when setting unit_amount for multiple timesheets at once. """
@@ -489,7 +485,7 @@ class TestTimesheet(TestCommonTimesheet):
             {
                 'name': 'Subtask 2',
                 'project_id': self.project_customer.id,
-                'child_ids': [Command.create({'name': 'Subsubtask'})],
+                'child_ids': [Command.create({'name': 'Subsubtask', 'project_id': self.project_customer.id})],
             },
         ])
         subsubtask = subtask_2.child_ids
@@ -647,12 +643,10 @@ class TestTimesheet(TestCommonTimesheet):
             self.task1.project_id = False
 
         self.task1.parent_id = self.task2
-        self.task1.project_id = False
-
         self.task1.project_id = self.project_customer
 
         with self.assertRaises(UserError):
-            self.task1.write({'project_id': False, 'parent_id': False})
+            self.task1.project_id = False
 
     def test_percentage_of_allocated_hours(self):
         """ Test the percentage of allocated hours on a task. """
