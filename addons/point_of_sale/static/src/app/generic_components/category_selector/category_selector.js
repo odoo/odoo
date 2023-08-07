@@ -27,4 +27,7 @@ export class CategorySelector extends Component {
         class: { type: String, optional: true },
         onClick: { type: Function },
     };
+    static defaultProps = {
+        class: "",
+    };
 }

@@ -210,7 +210,7 @@ class Do {
         return [
             {
                 content: "enter opening amount",
-                trigger: ".cash-input-sub-section > .pos-input",
+                trigger: ".cash-input-sub-section input",
                 run: "text " + amount,
             },
         ];
@@ -252,7 +252,7 @@ class Do {
     closeWithCashAmount(val) {
         return [
             {
-                trigger: ".pos-input",
+                trigger: "div.popup.close-pos-popup input",
                 run: `text ${val}`,
             },
         ];

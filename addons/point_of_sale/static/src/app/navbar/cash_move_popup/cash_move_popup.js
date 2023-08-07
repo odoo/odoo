@@ -2,18 +2,19 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { parseFloat, InvalidNumberError } from "@web/views/fields/parsers";
+import { useService } from "@web/core/utils/hooks";
+import { parseFloat } from "@web/views/fields/parsers";
 import { useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { useValidateCashInput, useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+import { Input } from "@point_of_sale/app/generic_components/input/input";
 
 export class CashMovePopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.CashMovePopup";
-
+    static components = { Input };
     setup() {
         super.setup();
         this.notification = useService("pos_notification");
@@ -26,28 +27,12 @@ export class CashMovePopup extends AbstractAwaitablePopup {
             type: "out",
             amount: "",
             reason: "",
-            errorMessage: "",
-            parsedAmount: 0,
         });
-        this.amountInput = useAutofocus({ refName: "amountInput" });
-        useValidateCashInput("amountInput");
         this.confirm = useAsyncLockedMethod(this.confirm);
     }
+
     async confirm() {
-        let amount;
-        try {
-            amount = parseFloat(this.state.amount);
-        } catch (err) {
-            if (!(err instanceof InvalidNumberError)) {
-                throw err;
-            }
-            this.state.errorMessage = _t("Invalid amount");
-            return;
-        }
-        if (amount < 0) {
-            this.state.errorMessage = _t("Insert a positive amount");
-            return;
-        }
+        const amount = parseFloat(this.state.amount);
         const formattedAmount = this.env.utils.formatCurrency(amount);
         if (!amount) {
             this.notification.add(_t("Cash in/out of %s is ignored.", formattedAmount), 3000);
@@ -111,12 +96,11 @@ export class CashMovePopup extends AbstractAwaitablePopup {
     }
     onClickButton(type) {
         this.state.type = type;
-        this.state.errorMessage = "";
-        this.amountInput.el.focus();
+        this.inputRef.el.focus();
     }
     format(value) {
         return this.env.utils.isValidFloat(value)
             ? this.env.utils.formatCurrency(parseFloat(value))
-            : "!!!";
+            : "";
     }
 }

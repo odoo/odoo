@@ -13,10 +13,10 @@ import { identifyError } from "@point_of_sale/app/errors/error_handlers";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
-import { useValidateCashInput } from "@point_of_sale/app/utils/hooks";
+import { Input } from "@point_of_sale/app/generic_components/input/input";
 
 export class ClosePosPopup extends AbstractAwaitablePopup {
-    static components = { SaleDetailsButton };
+    static components = { SaleDetailsButton, Input };
     static template = "point_of_sale.ClosePosPopup";
 
     setup() {
@@ -36,17 +36,6 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             displayMoneyDetailsPopup: false,
         });
         Object.assign(this.state, this.props.info.state);
-        useValidateCashInput("closingCashInput");
-        if (this.otherPaymentMethods && this.otherPaymentMethods.length > 0) {
-            this.otherPaymentMethods.forEach((pm) => {
-                if (this._getShowDiff(pm)) {
-                    useValidateCashInput(
-                        "closingCashInput_" + pm.id,
-                        this.state.payments[pm.id].counted
-                    );
-                }
-            });
-        }
     }
     //@override
     async confirm() {
@@ -108,8 +97,8 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
     async downloadSalesReport() {
         return this.report.download("point_of_sale.sale_details_report", [this.pos.pos_session.id]);
     }
-    handleInputChange(paymentId, event) {
-        if (event.target.classList.contains("invalid-cash-input")) {
+    handleInputChange(paymentId, amount) {
+        if (!this.env.utils.isValidFloat(amount)) {
             return;
         }
         let expectedAmount;
@@ -121,7 +110,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         } else {
             expectedAmount = this.otherPaymentMethods.find((pm) => paymentId === pm.id).amount;
         }
-        this.state.payments[paymentId].counted = parseFloat(event.target.value);
+        this.state.payments[paymentId].counted = parseFloat(amount);
         this.state.payments[paymentId].difference = this.env.utils.roundCurrency(
             this.state.payments[paymentId].counted - expectedAmount
         );

@@ -2,7 +2,7 @@
 
 import { formatMonetary } from "@web/views/fields/formatters";
 import { formatFloat, roundDecimals } from "@web/core/utils/numbers";
-import { escapeRegExp } from '@web/core/utils/strings';
+import { escapeRegExp } from "@web/core/utils/strings";
 import { registry } from "@web/core/registry";
 
 /**
@@ -21,7 +21,9 @@ export const contextualUtilsService = {
         let floatRegex;
         if (thousandsSep) {
             const escapedThousandsSep = escapeRegExp(thousandsSep);
-            floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
+            floatRegex = new RegExp(
+                `^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`
+            );
         } else {
             floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
         }
@@ -31,6 +33,7 @@ export const contextualUtilsService = {
         };
 
         const formatCurrency = (value, hasSymbol = true) => {
+            value = parseFloat(value);
             return formatMonetary(value, {
                 currencyId: currency.id,
                 noSymbol: !hasSymbol,
