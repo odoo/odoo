@@ -456,7 +456,7 @@
                 <p t-if="o.narration" name="comment">
                     <div class="row">
                         <div class="col-6 text-left">
-                            <span t-field="o.narration"/>
+                            <span t-field="o.with_context(lang=o.company_id.partner_id.lang or o.env.lang).company_id.invoice_terms"/>
                         </div>
                         <div class="col-6 text-right">
                             <span t-field="o_sec.narration"/>
