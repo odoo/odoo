@@ -19,8 +19,9 @@ class ProductTemplate(models.Model):
 
     def get_single_product_variant(self):
         res = super().get_single_product_variant()
-        if self.has_configurable_attributes:
-            res['mode'] = self.product_add_mode
-        else:
-            res['mode'] = 'configurator'
+        if self.env.context.get("from_sale"):
+            if self.has_configurable_attributes:
+                res['mode'] = self.product_add_mode
+            else:
+                res['mode'] = 'configurator'
         return res
