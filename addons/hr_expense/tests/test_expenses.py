@@ -393,6 +393,59 @@ class TestExpenses(TestExpenseCommon):
             {'currency_id': self.currency_data['currency'].id},
         ])
 
+    def test_account_entry_mixed_multi_currency_company_account(self):
+        """
+            Checking accounting payment entry when payment_mode is 'Company'. With multi-currency.
+            When several different currencies are found in the expense.
+        """
+        expenses = self.env['hr.expense'].create([{
+            'name': 'Company expense foreign currency',
+            'date': '2022-11-17',
+            'total_amount': 1000.0,
+            'payment_mode': 'company_account',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'currency_id': self.currency_data['currency'].id,  # rate is 1:2
+        }, {
+            'name': 'Company expense local currency',
+            'date': '2022-11-15',
+            'total_amount': 1000.0,
+            'payment_mode': 'company_account',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'currency_id': self.company_data['currency'].id,
+        }])
+
+        foreign_bank_journal = self.company_data['default_journal_bank'].copy()
+        foreign_bank_journal.currency_id = self.currency_data['currency'].id
+        foreign_bank_journal_account = foreign_bank_journal.default_account_id.copy()
+        foreign_bank_journal_account.currency_id = self.currency_data['currency'].id
+        foreign_bank_journal.default_account_id = foreign_bank_journal_account.id
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': "test_account_entry_multi_currency_own_account",
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2020-01-01',
+            'bank_journal_id': foreign_bank_journal.id,
+            'expense_line_ids': [Command.set(expenses.ids)],
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        self.assertRecordValues(expense_sheet.account_move_id.payment_id, [{
+            'currency_id': self.company_data['currency'].id,  # Should override to company currency
+        }])
+        self.assertRecordValues(expense_sheet.account_move_id.line_ids, [
+            {'currency_id': self.company_data['currency'].id},  # Should override to company currency
+            {'currency_id': self.company_data['currency'].id},  # Should override to company currency
+            {'currency_id': self.company_data['currency'].id},  # Should override to company currency
+            {'currency_id': self.company_data['currency'].id},  # Should override to company currency
+            {'currency_id': self.company_data['currency'].id},  # Should override to company currency
+            {'currency_id': self.company_data['currency'].id},  # Should override to company currency
+            {'currency_id': self.company_data['currency'].id},  # Should override to company currency
+        ])
+
     def test_account_entry_multi_currency_own_account(self):
         """ Checking accounting payment entry when payment_mode is 'Company'. With multi-currency."""
         expense = self.env['hr.expense'].create({
