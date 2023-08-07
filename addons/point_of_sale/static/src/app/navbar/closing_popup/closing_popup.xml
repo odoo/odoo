@@ -26,8 +26,10 @@
                                 <tr>
                                     <td t-esc="defaultCashDetails.name"/>
                                     <td t-esc="env.utils.formatCurrency(defaultCashDetails.amount)"/>
-                                    <td class="input-group" t-on-input="(event) => this.handleInputChange(defaultCashDetails.id, event)">
-                                        <input class="pos-input form-control text-end" t-ref="closingCashInput" t-on-focus="ev=>ev.target.select()"/>
+                                    <td class="d-flex">
+                                        <Input tModel="[state.payments[defaultCashDetails.id], 'counted']"
+                                            callback.bind="(value) => this.handleInputChange(defaultCashDetails.id, value)"
+                                            isValid.bind="env.utils.isValidFloat"/>
                                         <div class="button icon ClosePosPopup btn btn-secondary" t-on-click="openDetailsPopup">
                                             <i class="fa fa-money fa-2x" role="img" title="Open the money details popup"/>
                                         </div>
@@ -61,13 +63,15 @@
                                 </tr>
                             </tbody>
                         </t>
-                        <tbody t-if="otherPaymentMethods.length &gt; 0">
+                        <tbody t-if="otherPaymentMethods.length > 0">
                             <tr t-foreach="otherPaymentMethods" t-as="pm" t-key="pm.id">
                                 <td t-esc="pm.name"/>
                                 <td t-esc="env.utils.formatCurrency(pm.amount)"/>
                                 <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
-                                <td t-if="_showDiff" t-on-input="(event) => this.handleInputChange(pm.id, event)">
-                                    <input class="pos-input form-control" t-ref="closingCashInput_{{pm.id}}" t-on-focus="ev=>ev.target.select()"/>
+                                <td t-if="_showDiff">
+                                    <Input tModel="[state.payments[pm.id], 'counted']"
+                                        isValid.bind="env.utils.isValidFloat"
+                                        callback.bind="(value) => this.handleInputChange(pm.id, value)" />
                                 </td>
                                 <td t-if="_showDiff" t-esc="env.utils.formatCurrency(state.payments[pm.id].difference)" t-att-class="{'warning text-danger fw-bolder': state.payments[pm.id].difference}"/>
                             </tr>
