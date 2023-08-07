@@ -72,6 +72,11 @@ if (!$('.website_blog').length) {
 
 const NEW_TAG_PREFIX = 'new-blog-tag-';
 
+// TODO Remove in master.
+for (const el of document.querySelectorAll(".o_wblog_social_links")) {
+    el.classList.add("o_not_editable");
+}
+
 WysiwygMultizone.include({
     custom_events: Object.assign({}, WysiwygMultizone.prototype.custom_events, {
         'set_blog_post_updated_tags': '_onSetBlogPostUpdatedTags',
