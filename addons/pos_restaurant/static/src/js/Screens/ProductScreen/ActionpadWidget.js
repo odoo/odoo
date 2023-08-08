@@ -56,7 +56,7 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
         for (const idx in orderChange) {
             const orderline = orderChange[idx];
             const categoryId = this.pos.db.get_product_by_id(orderline.product_id).pos_categ_ids[0];
-            if (!categoryId) {
+            if (!categoryId || !this.pos.db.category_by_id[categoryId]) {
                 continue;
             }
             const category = this.pos.db.category_by_id[categoryId].name;
