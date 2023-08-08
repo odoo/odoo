@@ -101,18 +101,21 @@ export function useValidateCashInput(inputRef, startingValue) {
     const decimalPoint = localization.decimalPoint;
     const env = useEnv();
     function handleCashInputChange(event) {
-        let inputValue = (event.target.value || "").trim();
+        const inputValue = (event.target.value || "").trim();
 
         // Check if the current input value is a valid float
+        const inputElement = event.target.closest(".input-container") || event.target;
         if (!env.utils.isValidFloat(inputValue)) {
-            event.target.classList.add('invalid-cash-input');
+            inputElement.classList.add("is-invalid");
+            event.target.classList.add("invalid-cash-input");
         } else {
-            event.target.classList.remove('invalid-cash-input');
+            inputElement.classList.remove("is-invalid");
+            event.target.classList.remove("invalid-cash-input");
         }
     }
     onMounted(() => {
         if (cashInput.el) {
-            cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
+            cashInput.el.value = (startingValue || 0).toString().replace(".", decimalPoint);
             cashInput.el.addEventListener("input", handleCashInputChange);
         }
     });
@@ -120,5 +123,5 @@ export function useValidateCashInput(inputRef, startingValue) {
         if (cashInput.el) {
             cashInput.el.removeEventListener("input", handleCashInputChange);
         }
-    })
+    });
 }
