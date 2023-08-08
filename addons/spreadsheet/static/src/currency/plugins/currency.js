@@ -1,8 +1,9 @@
 /** @odoo-module */
 
-import * as spreadsheet from "@odoo/o-spreadsheet";
+import { helpers, registries, UIPlugin } from "@odoo/o-spreadsheet";
 import { CurrencyDataSource } from "../currency_data_source";
-const { featurePluginRegistry } = spreadsheet.registries;
+const { featurePluginRegistry } = registries;
+const { createCurrencyFormat } = helpers;
 
 const DATA_SOURCE_ID = "CURRENCIES";
 
@@ -10,7 +11,7 @@ const DATA_SOURCE_ID = "CURRENCIES";
  * @typedef {import("../currency_data_source").Currency} Currency
  */
 
-class CurrencyPlugin extends spreadsheet.UIPlugin {
+class CurrencyPlugin extends UIPlugin {
     constructor(config) {
         super(config);
         this.dataSources = config.custom.dataSources;
@@ -47,14 +48,11 @@ class CurrencyPlugin extends spreadsheet.UIPlugin {
         if (!currency) {
             return undefined;
         }
-        const decimalFormatPart = currency.decimalPlaces
-            ? "." + "0".repeat(currency.decimalPlaces)
-            : "";
-        const numberFormat = "#,##0" + decimalFormatPart;
-        const symbolFormatPart = "[$" + currency.symbol + "]";
-        return currency.position === "after"
-            ? numberFormat + symbolFormatPart
-            : symbolFormatPart + numberFormat;
+        return createCurrencyFormat({
+            symbol: currency.symbol,
+            position: currency.position,
+            decimalPlaces: currency.decimalPlaces,
+        });
     }
 
     /**
