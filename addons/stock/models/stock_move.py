@@ -1471,7 +1471,8 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         # do full packaging reservation when it's needed
         if self.product_packaging_id and self.product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
-            available_quantity = self.product_packaging_id._check_qty(available_quantity, self.product_id.uom_id, "DOWN")
+            default_rounding_method = self.env['ir.config_parameter'].sudo().get_param('stock.product_packaging_default_rounding_method', 'DOWN')
+            need = self.product_packaging_id._check_qty(need, self.product_id.uom_id, default_rounding_method)
 
         taken_quantity = min(available_quantity, need)
 
