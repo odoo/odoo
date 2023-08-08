@@ -2551,12 +2551,10 @@ export class OdooEditor extends EventTarget {
 
         const editableAreas = this.options.getContentEditableAreas(this);
         for (const node of editableAreas) {
-            if (!node.isContentEditable) {
-                if (isMediaElement(node)) {
-                    node.classList.add('o_editable_media');
-                } else if (!isNotAllowedContent(node)) {
-                    node.setAttribute('contenteditable', true);
-                }
+            if (isMediaElement(node)) {
+                node.classList.add('o_editable_media');
+            } else if (!node.isContentEditable && !isNotAllowedContent(node)) {
+                node.setAttribute('contenteditable', true);
             }
         }
         for (const node of this.options.getReadOnlyAreas()) {
