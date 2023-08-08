@@ -4,7 +4,10 @@ import { patch } from "@web/core/utils/patch";
 import { VideoSelector } from '@web_editor/components/media_dialog/video_selector';
 import wTourUtils from '@website/js/tours/tour_utils';
 
-const VIDEO_URL = 'https://www.youtube.com/watch?v=Dpq87YCHmJc';
+const VIDEO_ID = 'Dpq87YCHmJc'
+const VIDEO_PATH = `watch?v=${VIDEO_ID}`
+const VIDEO_URL = `https://www.youtube.com/${VIDEO_PATH}`
+const VIDEO_EMBED_URL = `https://www.youtube.com/embed/${VIDEO_ID}`
 
 /**
  * The purpose of this tour is to check the media replacement flow.
@@ -26,7 +29,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
             patch(VideoSelector.prototype, {
                 async _getVideoURLData(src, options) {
                     if (src === VIDEO_URL || src === 'about:blank') {
-                        return {platform: 'youtube', embed_url: 'about:blank'};
+                        return {platform: 'youtube', embed_url: VIDEO_EMBED_URL};
                     }
                     return super._getVideoURLData(...arguments);
                 },
@@ -107,15 +110,32 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
         trigger: ".o_select_media_dialog .nav-link:contains('Video')",
     },
     {
+        content: "click on add URL",
+        trigger: "button.o_upload_media_url_button",
+    },
+    {
         content: "enter a video URL",
-        trigger: ".o_select_media_dialog #o_video_text",
+        trigger: "input.o_input.o_we_url_input",
         // Design your first web page.
         run: `text ${VIDEO_URL}`,
     },
     {
+        content: "make sure the URL is valid",
+        trigger: "span.o_we_url_success",
+        run: function () {}, // check
+    },
+    {
+        content: "click on add URL",
+        trigger: "button.o_upload_media_url_button",
+    },
+    {
+        content: "select video",
+        trigger: `.o_select_media_dialog img[title='${VIDEO_PATH}']`,
+    },
+    {
         content: "wait for preview to appear",
         // "about:blank" because the VideoWidget was patched at the start of this tour
-        trigger: ".o_select_media_dialog div.media_iframe_video iframe[src='about:blank']",
+        trigger: `.o_select_media_dialog div.media_iframe_video iframe[src='${VIDEO_EMBED_URL}']`,
         run: function () {}, // check
     },
     {

@@ -1,147 +1,182 @@
 /** @odoo-module */
 
 import { useService } from '@web/core/utils/hooks';
-import { debounce } from '@web/core/utils/timing';
+import { Attachment, FileSelector, VIDEO_MIMETYPES } from "./file_selector";
+import { Component, useState, onWillStart } from "@odoo/owl";
 
-import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
+/* --- Constants ------------------------------------------------------------ */
 
-class VideoOption extends Component {}
-VideoOption.template = 'web_editor.VideoOption';
+const PLATFORMS = {
+    YOUTUBE: "youtube",
+    DAILYMOTION: "dailymotion",
+    VIMEO: "vimeo",
+    YOUKU: "youku",
+    SELFHOSTED: "selfhosted",
+};
 
-export class VideoSelector extends Component {
+const OPTIONS = {
+    autoplay: {
+        label: "Autoplay",
+        description: "Videos are muted when autoplay is enabled",
+        platforms: [
+            PLATFORMS.YOUTUBE,
+            PLATFORMS.DAILYMOTION,
+            PLATFORMS.VIMEO,
+            PLATFORMS.SELFHOSTED,
+        ],
+        urlParameter: "autoplay=1",
+    },
+    loop: {
+        label: "Loop",
+        platforms: [PLATFORMS.YOUTUBE, PLATFORMS.VIMEO, PLATFORMS.SELFHOSTED],
+        urlParameter: "loop=1",
+    },
+    hide_controls: {
+        label: "Hide player controls",
+        platforms: [
+            PLATFORMS.YOUTUBE,
+            PLATFORMS.DAILYMOTION,
+            PLATFORMS.VIMEO,
+            PLATFORMS.SELFHOSTED,
+        ],
+        urlParameter: "controls=0",
+    },
+    hide_fullscreen: {
+        label: "Hide fullscreen button",
+        platforms: [PLATFORMS.YOUTUBE],
+        urlParameter: "fs=0",
+        isHidden: (options) => options.filter((option) => option.id === "hide_controls")[0].value,
+    },
+    hide_yt_logo: {
+        label: "Hide Youtube logo",
+        platforms: [PLATFORMS.YOUTUBE],
+        urlParameter: "modestbranding=1",
+        isHidden: (options) => options.filter((option) => option.id === "hide_controls")[0].value,
+    },
+    hide_dm_logo: {
+        label: "Hide Dailymotion logo",
+        platforms: [PLATFORMS.DAILYMOTION],
+        urlParameter: "ui-logo=0",
+    },
+    hide_dm_share: {
+        label: "Hide sharing button",
+        platforms: [PLATFORMS.DAILYMOTION],
+        urlParameter: "sharing-enable=0",
+    },
+};
+
+/* --- Components ----------------------------------------------------------- */
+
+class VideoOption extends Component {
+    static template = "web_editor.VideoOption";
+}
+
+export class VideoAttachement extends Attachment {
+    static template = "web_editor.VideoAttachement";
+}
+
+export class VideoSelector extends FileSelector {
     setup() {
-        this.rpc = useService('rpc');
-        this.http = useService('http');
+        super.setup();
 
-        this.PLATFORMS = {
-            youtube: 'youtube',
-            dailymotion: 'dailymotion',
-            vimeo: 'vimeo',
-            youku: 'youku',
-        };
+        this.rpc = useService("rpc");
+        this.http = useService("http");
+        this.orm = useService("orm");
 
-        this.OPTIONS = {
-            autoplay: {
-                label: this.env._t("Autoplay"),
-                description: this.env._t("Videos are muted when autoplay is enabled"),
-                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.dailymotion, this.PLATFORMS.vimeo],
-                urlParameter: 'autoplay=1',
-            },
-            loop: {
-                label: this.env._t("Loop"),
-                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
-                urlParameter: 'loop=1',
-            },
-            hide_controls: {
-                label: this.env._t("Hide player controls"),
-                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.dailymotion, this.PLATFORMS.vimeo],
-                urlParameter: 'controls=0',
-            },
-            hide_fullscreen: {
-                label: this.env._t("Hide fullscreen button"),
-                platforms: [this.PLATFORMS.youtube],
-                urlParameter: 'fs=0',
-                isHidden: () => this.state.options.filter(option => option.id === 'hide_controls')[0].value,
-            },
-            hide_yt_logo: {
-                label: this.env._t("Hide Youtube logo"),
-                platforms: [this.PLATFORMS.youtube],
-                urlParameter: 'modestbranding=1',
-                isHidden: () => this.state.options.filter(option => option.id === 'hide_controls')[0].value,
-            },
-            hide_dm_logo: {
-                label: this.env._t("Hide Dailymotion logo"),
-                platforms: [this.PLATFORMS.dailymotion],
-                urlParameter: 'ui-logo=0',
-            },
-            hide_dm_share: {
-                label: this.env._t("Hide sharing button"),
-                platforms: [this.PLATFORMS.dailymotion],
-                urlParameter: 'sharing-enable=0',
-            },
-        };
+        this.uploadText = this.env._t("Upload a video");
+        this.urlPlaceholder = "URL or embed";
+        this.addText = (expended) => expended ? this.env._t( "Get video") : this.env._t( "Add URL");
+        this.searchPlaceholder = this.env._t("Search a video");
+        this.allLoadedText = this.env._t("All video have been loaded");
+        this.fileMimetypes = VIDEO_MIMETYPES.join(",");
 
         this.state = useState({
             options: [],
-            src: '',
-            urlInput: '',
+            src: "",
+            urlInput: "",
+            errorMessage: "",
             platform: null,
-            vimeoPreviews: [],
-            errorMessage: '',
         });
-        this.urlInputRef = useRef('url-input');
 
         onWillStart(async () => {
             if (this.props.media) {
-                const src = this.props.media.dataset.oeExpression || this.props.media.dataset.src || (this.props.media.tagName === 'IFRAME' && this.props.media.getAttribute('src')) || '';
+                const src =
+                    this.props.media.dataset.oeExpression ||
+                    this.props.media.dataset.src ||
+                    (this.props.media.tagName === "IFRAME" &&
+                        this.props.media.getAttribute("src")) ||
+                    "";
+
                 if (src) {
                     this.state.urlInput = src;
-                    await this.updateVideo();
-
                     this.state.options = this.state.options.map((option) => {
-                        const { urlParameter } = this.OPTIONS[option.id];
+                        const { urlParameter } = OPTIONS[option.id];
                         return { ...option, value: src.indexOf(urlParameter) >= 0 };
                     });
+
+                    await this.updateVideo();
                 }
             }
         });
 
-        onMounted(async () => {
-            await Promise.all(this.props.vimeoPreviewIds.map(async (videoId) => {
-                const { thumbnail_url: thumbnailSrc } = await this.http.get(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(videoId)}`);
-                this.state.vimeoPreviews.push({
-                    id: videoId,
-                    thumbnailSrc,
-                    src: `https://player.vimeo.com/video/${encodeURIComponent(videoId)}`
-                });
-            }));
-        });
-
-        this.onChangeUrl = debounce((ev) => this.updateVideo(ev.target.value), 500);
+        this.uploadUrl = this.uploadUrl.bind(this);
+        this.validateUrl = this.validateUrl.bind(this);
     }
 
     get shownOptions() {
         if (this.props.isForBgVideo) {
             return [];
         }
-        return this.state.options.filter(option => !this.OPTIONS[option.id].isHidden || !this.OPTIONS[option.id].isHidden());
+        return this.state.options.filter(
+            (option) =>
+                !OPTIONS[option.id].isHidden || !OPTIONS[option.id].isHidden(this.state.options)
+        );
+    }
+
+    /**
+     * Keep rpc call in distinct method make it patchable by test.
+     */
+    async _getVideoURLData(url, options) {
+        return await this.rpc("/web_editor/video_url/data", {
+            video_url: url,
+            ...options,
+        });
     }
 
     async onChangeOption(optionId) {
-        this.state.options = this.state.options.map(option => {
+        this.state.options = this.state.options.map((option) => {
             if (option.id === optionId) {
                 return { ...option, value: !option.value };
             }
             return option;
         });
         await this.updateVideo();
+        this.selectAttachment({ src: this.state.src });
     }
 
-    async onClickSuggestion(src) {
-        this.state.urlInput = src;
-        await this.updateVideo();
+    extractUrlFromEmbedCode(code) {
+        const embedMatch = code.match(/(src|href)=["']?([^"']+)?/);
+        if (embedMatch && embedMatch[2].length > 0 && embedMatch[2].indexOf("instagram")) {
+            embedMatch[1] = embedMatch[2]; // Instagram embed code is different
+        }
+        return embedMatch ? embedMatch[1] : code;
     }
 
     async updateVideo() {
         if (!this.state.urlInput) {
-            this.state.src = '';
-            this.state.urlInput = '';
+            this.state.src = "";
+            this.state.urlInput = "";
             this.state.options = [];
             this.state.platform = null;
-            this.state.errorMessage = '';
+            this.state.errorMessage = "";
             return;
         }
 
-        // Detect if we have an embed code rather than an URL
-        const embedMatch = this.state.urlInput.match(/(src|href)=["']?([^"']+)?/);
-        if (embedMatch && embedMatch[2].length > 0 && embedMatch[2].indexOf('instagram')) {
-            embedMatch[1] = embedMatch[2]; // Instagram embed code is different
-        }
-        const url = embedMatch ? embedMatch[1] : this.state.urlInput;
+        const url = this.extractUrlFromEmbedCode(this.state.urlInput);
 
         const options = {};
         if (this.props.isForBgVideo) {
-            Object.keys(this.OPTIONS).forEach(key => {
+            Object.keys(OPTIONS).forEach((key) => {
                 options[key] = true;
             });
         } else {
@@ -149,72 +184,124 @@ export class VideoSelector extends Component {
                 options[option.id] = option.value;
             }
         }
+
         const { embed_url: src, platform } = await this._getVideoURLData(url, options);
 
         if (!src) {
             this.state.errorMessage = this.env._t("The provided url is not valid");
         } else if (!platform) {
-            this.state.errorMessage =
-                this.env._t("The provided url does not reference any supported video");
+            this.state.errorMessage = this.env._t(
+                "The provided url does not reference any supported video"
+            );
         } else {
-            this.state.errorMessage = '';
+            this.state.errorMessage = "";
         }
+
         this.props.errorMessages(this.state.errorMessage);
 
         const newOptions = [];
         if (platform && platform !== this.state.platform) {
-            Object.keys(this.OPTIONS).forEach(key => {
-                if (this.OPTIONS[key].platforms.includes(platform)) {
-                    const { label, description } = this.OPTIONS[key];
+            Object.keys(OPTIONS).forEach((key) => {
+                if (OPTIONS[key].platforms.includes(platform)) {
+                    const { label, description } = OPTIONS[key];
                     newOptions.push({ id: key, label, description });
                 }
             });
         }
 
         this.state.src = src;
-        this.props.selectMedia({ id: src, src });
         if (platform !== this.state.platform) {
             this.state.platform = platform;
             this.state.options = newOptions;
         }
     }
 
-    /**
-     * Keep rpc call in distinct method make it patchable by test.
-     */
-    async _getVideoURLData(url, options) {
-        return await this.rpc('/web_editor/video_url/data', {
-            video_url: url,
-            ...options,
-        });
+    get attachmentsDomain() {
+        return [...super.attachmentsDomain, ["mimetype", "in", VIDEO_MIMETYPES]];
+    }
+
+    async onClickVideo(attachment) {
+        let url = attachment.url;
+        if (!attachment.public) {
+            let access_token = attachment.access_token;
+            if (!access_token) {
+                [access_token] = await this.orm.call("ir.attachment", "generate_access_token", [
+                    attachment.id,
+                ]);
+            }
+            url += `?access_token=${access_token}`;
+        }
+        this.state.urlInput = url;
+        await this.updateVideo();
+        this.selectAttachment({ ...attachment, src: this.state.src });
+    }
+
+    async onUploaded(attachment) {
+        attachment.platform = "selfhosted";
+        this.state.attachments = [attachment, ...this.state.attachments];
+        this.state.urlInput = `/watch/${attachment.id}`;
+        await this.updateVideo();
+        this.selectAttachment({ ...attachment, src: this.state.src });
+    }
+
+    async uploadUrl(url) {
+        const { platform } = await this._getVideoURLData(url, {});
+
+        const attachment = {
+            name: url.split("/").pop(),
+            url,
+            mimetype: "application/vnd.odoo.video-embed",
+            public: true,
+            platform,
+        };
+        attachment.id = await this.orm.call("ir.attachment", "create", [attachment]);
+        this.state.attachments = [attachment, ...this.state.attachments];
+        this.state.urlInput = url;
+        await this.updateVideo();
+        this.selectAttachment({ ...attachment, src: this.state.src });
+    }
+
+    async validateUrl(url) {
+        url = this.extractUrlFromEmbedCode(url);
+        const { embed_url, platform } = await this._getVideoURLData(url, {});
+        const path = url.split('?')[0];
+        const isValidUrl = !!embed_url && !!platform;
+        const isValidFileFormat = true;
+        return { isValidUrl, isValidFileFormat, path };
     }
 
     /**
      * Utility method, called by the MediaDialog component.
      */
-    static createElements(selectedMedia) {
-        return selectedMedia.map(video => {
-            const div = document.createElement('div');
-            div.dataset.oeExpression = video.src;
-            div.innerHTML = `
+    static async createElements(selectedMedia) {
+        return selectedMedia.map(media => {
+            const el = document.createElement('div');
+            el.dataset.oeExpression = media.src;
+            el.innerHTML = `
                 <div class="css_editable_mode_display"></div>
                 <div class="media_iframe_video_size" contenteditable="false"></div>
                 <iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
             `;
-            div.querySelector('iframe').src = video.src;
-            return div;
+            el.querySelector('iframe').src = media.src;
+            return el;
         });
     }
 }
-VideoSelector.mediaSpecificClasses = ['media_iframe_video'];
+
+VideoSelector.mediaSpecificClasses = ["media_iframe_video"];
 VideoSelector.mediaSpecificStyles = [];
 VideoSelector.mediaExtraClasses = [];
-VideoSelector.tagNames = ['IFRAME', 'DIV'];
-VideoSelector.template = 'web_editor.VideoSelector';
+VideoSelector.tagNames = ["IFRAME", "DIV"];
+
+VideoSelector.template = "web_editor.VideoSelector";
+VideoSelector.attachmentsListTemplate = "web_editor.VideoSelector.attachments";
 VideoSelector.components = {
+    ...FileSelector.components,
+    VideoAttachement,
     VideoOption,
 };
+
 VideoSelector.defaultProps = {
-    vimeoPreviewIds: [],
     isForBgVideo: false,
+    maxUploadSizeMib: 128,
 };

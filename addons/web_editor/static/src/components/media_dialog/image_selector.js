@@ -62,7 +62,7 @@ export class ImageSelector extends FileSelector {
 
         this.uploadText = this.env._t("Upload an image");
         this.urlPlaceholder = "https://www.odoo.com/logo.png";
-        this.addText = this.env._t("Add URL");
+        this.addText = (expended) => expended ? this.env._t("Get image") : this.env._t("Add URL");
         this.searchPlaceholder = this.env._t("Search an image");
         this.urlWarningTitle = this.env._t("Uploaded image's format is not supported. Try with: " + IMAGE_EXTENSIONS.join(', '));
         this.allLoadedText = this.env._t("All images have been loaded");
@@ -137,8 +137,8 @@ export class ImageSelector extends FileSelector {
         await this.uploadService.uploadFiles(files, { resModel: this.props.resModel, resId: this.props.resId, isImage: true }, (attachment) => this.onUploaded(attachment));
     }
 
-    validateUrl(...args) {
-        const { isValidUrl, path } = super.validateUrl(...args);
+    async validateUrl(...args) {
+        const { isValidUrl, path } = await super.validateUrl(...args);
         const isValidFileFormat = IMAGE_EXTENSIONS.some(format => path.endsWith(format));
         return { isValidFileFormat, isValidUrl };
     }

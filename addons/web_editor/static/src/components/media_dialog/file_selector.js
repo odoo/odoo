@@ -8,14 +8,17 @@ import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from './search_media';
 
 import { Component, xml, useState, useRef, onWillStart } from "@odoo/owl";
+import { sprintf } from '@web/core/utils/strings';
 
 export const IMAGE_MIMETYPES = ['image/jpg', 'image/jpeg', 'image/jpe', 'image/png', 'image/svg+xml', 'image/gif', 'image/webp'];
 export const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.jpe', '.png', '.svg', '.gif', '.webp'];
+export const VIDEO_MIMETYPES = ['video/mp4', 'video/webm', 'application/vnd.odoo.video-embed'];
+export const VIDEO_EXTENSIONS = ['.mp4', '.webm'];
 
 class RemoveButton extends Component {
     setup() {
         this.removeTitle = this.env._t("This file is attached to the current record.");
-        if (this.props.model === 'ir.ui.view') {
+        if (this.props.model === "ir.ui.view") {
             this.removeTitle = this.env._t("This file is a public view attachment.");
         }
     }
@@ -33,7 +36,7 @@ export class AttachmentError extends Component {
     }
 }
 AttachmentError.components = { Dialog };
-AttachmentError.template = xml `
+AttachmentError.template = xml`
 <Dialog title="title">
     <div class="form-text">
         <p>The image could not be deleted because it is used in the
@@ -74,6 +77,8 @@ export class Attachment extends Component {
                     });
                 }
             },
+            confirmLabel: this.env._t("Delete"),
+            cancel: () => { },
         });
     }
 }
@@ -110,13 +115,15 @@ export class FileSelectorControlPanel extends Component {
         }
     }
 
-    onUrlInput(ev) {
-        const { isValidUrl, isValidFileFormat } = this.props.validateUrl(ev.target.value);
+    async onUrlInput(ev) {
+        const { isValidUrl, isValidFileFormat } = await this.props.validateUrl(ev.target.value);
         this.state.isValidFileFormat = isValidFileFormat;
         this.state.isValidUrl = isValidUrl;
     }
 
     onClickUpload() {
+        this.state.urlInput = '';
+        this.state.showUrlInput = false;
         this.fileInput.el.click();
     }
 
@@ -139,6 +146,8 @@ export class FileSelector extends Component {
         this.notificationService = useService("notification");
         this.orm = useService('orm');
         this.uploadService = useService('upload');
+        this.dialogs = useService('dialog');
+
         this.keepLast = new KeepLast();
 
         this.loadMoreButtonRef = useRef('load-more-button');
@@ -175,18 +184,25 @@ export class FileSelector extends Component {
         return this.props.selectedMedia[this.props.id].filter(media => media.mediaType === 'attachment').map(({ id }) => id);
     }
 
-    get attachmentsDomain() {
-        const domain = [
-            '&',
-            ['res_model', '=', this.props.resModel],
-            ['res_id', '=', this.props.resId || 0]
-        ];
-        domain.unshift('|', ['public', '=', true]);
-        domain.push(['name', 'ilike', this.state.needle]);
-        return domain;
+    get selectedAttachments() {
+        return this.state.attachments.filter((attachment) =>
+            this.selectedAttachmentIds.includes(attachment.id)
+        );
     }
 
-    validateUrl(url) {
+    get attachmentsDomain() {
+        return [
+            '|',
+            ['public', '=', true],
+            '&',
+            ['res_model', '=', this.props.resModel],
+            ['res_id', '=', this.props.resId || 0],
+            ['name', 'ilike', this.state.needle],
+            ['hidden', '!=', true],
+        ];
+    }
+
+    async validateUrl(url) {
         const path = url.split('?')[0];
         const isValidUrl = /^.+\..+$/.test(path); // TODO improve
         const isValidFileFormat = true;
@@ -203,7 +219,12 @@ export class FileSelector extends Component {
                 [],
                 {
                     domain: this.attachmentsDomain,
-                    fields: ['name', 'mimetype', 'description', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'],
+                    fields: [
+                        'name', 'mimetype', 'description', 'checksum',
+                        'url', 'type', 'res_id', 'res_model', 'public',
+                        'access_token', 'image_src', 'image_width',
+                        'image_height', 'original_id', 'thumbnail',
+                        'platform'],
                     order: 'id desc',
                     // Try to fetch first record of next page just to know whether there is a next page.
                     limit,
@@ -253,6 +274,25 @@ export class FileSelector extends Component {
     }
 
     async uploadFiles(files) {
+        const nFilesTooBig = [...files].reduce((nFilesTooBig, file) => nFilesTooBig + (file.size > (this.props.maxUploadSizeMib ?? Infinity) * 1024 * 1024), 0);
+
+        if (nFilesTooBig) {
+            this.dialogs.add(ConfirmationDialog, {
+                title: this.env._t("File too big"),
+                body: sprintf(
+                    (nFilesTooBig === 1 && files.length === 1
+                        ? this.env._t(
+                            "The file you are trying to upload is too big. The maximum allowed size is %(maxUploadSizeMib)sMB."
+                        )
+                        : this.env._t(
+                            "Some of the files you are trying to upload are too big. The maximum allowed size is %(maxUploadSizeMib)sMB."
+                        )),
+                    { maxUploadSizeMib: this.props.maxUploadSizeMib }
+                ),
+            });
+            return;
+        }
+
         await this.uploadService.uploadFiles(files, { resModel: this.props.resModel, resId: this.props.resId }, attachment => this.onUploaded(attachment));
     }
 

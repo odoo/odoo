@@ -6,7 +6,7 @@ import base64
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
-from odoo.addons.web_editor.tools import get_video_embed_code, get_video_thumbnail
+from odoo.addons.web_editor.tools import get_video_embed_code, fetch_web_video_thumbnail
 
 
 class ProductImage(models.Model):
@@ -36,7 +36,7 @@ class ProductImage(models.Model):
     @api.onchange('video_url')
     def _onchange_video_url(self):
         if not self.image_1920:
-            thumbnail = get_video_thumbnail(self.video_url)
+            thumbnail = fetch_web_video_thumbnail(self.video_url)
             self.image_1920 = thumbnail and base64.b64encode(thumbnail) or False
 
     @api.depends('video_url')

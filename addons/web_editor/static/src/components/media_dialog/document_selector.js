@@ -11,18 +11,20 @@ export class DocumentSelector extends FileSelector {
 
         this.uploadText = this.env._t("Upload a document");
         this.urlPlaceholder = "https://www.odoo.com/mydocument";
-        this.addText = this.env._t("Add document");
+        this.addText = (expended) => expended ? this.env._t("Get document") : this.env._t("Add URL");
         this.searchPlaceholder = this.env._t("Search a document");
         this.allLoadedText = this.env._t("All documents have been loaded");
     }
 
     get attachmentsDomain() {
-        const domain = super.attachmentsDomain;
-        domain.push(['mimetype', 'not in', IMAGE_MIMETYPES]);
         // The assets should not be part of the documents.
         // All assets begin with '/web/assets/', see _get_asset_template_url().
-        domain.unshift('&', '|', ['url', '=', null], '!', ['url', '=like', '/web/assets/%']);
-        return domain;
+        return [
+            '&',
+            '|', ['url', '=', null],
+            '!', ['url', '=like', '/web/assets/%'],
+            ['mimetype', 'not in', IMAGE_MIMETYPES],
+        ];
     }
 
     async onClickDocument(document) {

@@ -1,10 +1,11 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import contextlib
 import re
 import requests
+import subprocess
+import os
 
 from markupsafe import Markup
 from werkzeug.urls import url_encode
@@ -17,11 +18,12 @@ valid_url_regex = r'^(http://|https://|//)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{
 
 # Regex for few of the widely used video hosting services
 player_regexes = {
-    'youtube': r'^(?:(?:https?:)?//)?(?:www\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$',
-    'vimeo': r'//(player.)?vimeo.com/([a-z]*/)*([0-9]{6,11})[?]?.*',
+    'youtube': r'^(?:(?:https?:)?//)?(?:www\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|watch\?v=|watch\?.+&v=))(?P<id>(?:\w|-){11})\S*$',
+    'vimeo': r'//(player.)?vimeo.com/([a-z]*/)*(?P<id>[0-9]{6,11})[?]?.*',
     'dailymotion': r'(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
-    'instagram': r'(?:(.*)instagram.com|instagr\.am)/p/(.[a-zA-Z0-9-_\.]*)',
+    'instagram': r'(?:(.*)instagram.com|instagr\.am)/p/(?P<id>.[a-zA-Z0-9-_\.]*)',
     'youku': r'(?:(https?:\/\/)?(v\.youku\.com/v_show/id_|player\.youku\.com/player\.php/sid/|player\.youku\.com/embed/|cloud\.youku\.com/services/sharev\?vid=|video\.tudou\.com/v/)|youku:)(?P<id>[A-Za-z0-9]+)(?:\.html|/v\.swf|)',
+    'selfhosted': r'^/watch/(?P<id>[0-9]*)\??.*',
 }
 
 
@@ -32,22 +34,11 @@ def get_video_source_data(video_url):
     if not video_url:
         return None
 
-    if re.search(valid_url_regex, video_url):
-        youtube_match = re.search(player_regexes['youtube'], video_url)
-        if youtube_match:
-            return ('youtube', youtube_match[2], youtube_match)
-        vimeo_match = re.search(player_regexes['vimeo'], video_url)
-        if vimeo_match:
-            return ('vimeo', vimeo_match[3], vimeo_match)
-        dailymotion_match = re.search(player_regexes['dailymotion'], video_url)
-        if dailymotion_match:
-            return ('dailymotion', dailymotion_match.group("id"), dailymotion_match)
-        instagram_match = re.search(player_regexes['instagram'], video_url)
-        if instagram_match:
-            return ('instagram', instagram_match[2], instagram_match)
-        youku_match = re.search(player_regexes['youku'], video_url)
-        if youku_match:
-            return ('youku', youku_match.group("id"), youku_match)
+    for key, regex in player_regexes.items():
+        match = re.search(regex, video_url)
+        if match:
+            return (key, match.group("id"), match)
+
     return None
 
 
@@ -66,8 +57,8 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
 
     if platform == 'youtube':
         params['rel'] = 0
-        params['autoplay'] = autoplay and 1 or 0
         if autoplay:
+            params['autoplay'] = 1
             params['mute'] = 1
             # The youtube js api is needed for autoplay on mobile. Note: this
             # was added as a fix, old customers may have autoplay videos
@@ -87,8 +78,8 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
         yt_extra = platform_match[1] or ''
         embed_url = f'//www.youtube{yt_extra}.com/embed/{video_id}'
     elif platform == 'vimeo':
-        params['autoplay'] = autoplay and 1 or 0
         if autoplay:
+            params['autoplay'] = 1
             params['muted'] = 1
             params['autopause'] = 0
         if hide_controls:
@@ -97,8 +88,8 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
             params['loop'] = 1
         embed_url = f'//player.vimeo.com/video/{video_id}'
     elif platform == 'dailymotion':
-        params['autoplay'] = autoplay and 1 or 0
         if autoplay:
+            params['autoplay'] = 1
             params['mute'] = 1
         if hide_controls:
             params['controls'] = 0
@@ -111,6 +102,18 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
         embed_url = f'//www.instagram.com/p/{video_id}/embed/'
     elif platform == 'youku':
         embed_url = f'//player.youku.com/embed/{video_id}'
+    elif platform == 'selfhosted':
+        if autoplay:
+            params['autoplay'] = 1
+            params['mute'] = 1
+        if hide_controls:
+            params['controls'] = 0
+        if loop:
+            params['loop'] = 1
+        if hide_fullscreen:
+            params['fs'] = 0
+
+        embed_url = f'/watch/{video_id}'
 
     if params:
         embed_url = f'{embed_url}?{url_encode(params)}'
@@ -127,30 +130,54 @@ def get_video_embed_code(video_url):
         return None
     return Markup('<iframe class="embed-responsive-item" src="%s" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen="true" frameborder="0"></iframe>') % data['embed_url']
 
-
-def get_video_thumbnail(video_url):
-    """ Computes the valid thumbnail image from given URL
-        (or None in case of invalid URL).
-    """
+def fetch_web_video_thumbnail_url(video_url):
     source = get_video_source_data(video_url)
     if source is None:
         return None
 
-    response = None
     platform, video_id = source[:2]
-    with contextlib.suppress(requests.exceptions.RequestException):
-        if platform == 'youtube':
-            response = requests.get(f'https://img.youtube.com/vi/{video_id}/0.jpg', timeout=10)
-        elif platform == 'vimeo':
-            res = requests.get(f'http://vimeo.com/api/oembed.json?url={video_url}', timeout=10)
-            if res.ok:
-                data = res.json()
-                response = requests.get(data['thumbnail_url'], timeout=10)
-        elif platform == 'dailymotion':
-            response = requests.get(f'https://www.dailymotion.com/thumbnail/video/{video_id}', timeout=10)
-        elif platform == 'instagram':
-            response = requests.get(f'https://www.instagram.com/p/{video_id}/media/?size=t', timeout=10)
+    if platform == 'youtube':
+        return f'https://img.youtube.com/vi/{video_id}/0.jpg'
+    elif platform == 'vimeo':
+        res = requests.get(
+            f'http://vimeo.com/api/oembed.json?url={video_url}', timeout=10)
+        if res.ok:
+            data = res.json()
+            return data['thumbnail_url']
+    elif platform == 'dailymotion':
+        return f'https://www.dailymotion.com/thumbnail/video/{video_id}'
+    elif platform == 'instagram':
+        return f'https://www.instagram.com/p/{video_id}/media/?size=t'
+    elif platform == 'selfhosted':
+        return f'/web/content/thumbnail/{video_id}'
 
-    if response and response.ok:
-        return image_process(response.content)
     return None
+
+def fetch_web_video_thumbnail(video_url):
+    """ Computes the valid thumbnail image from given URL
+        (or None in case of invalid URL).
+    """
+    with contextlib.suppress(requests.exceptions.RequestException):
+        thumbnail_url = fetch_web_video_thumbnail_url(video_url)
+        if thumbnail_url is None:
+            return None
+
+        response = requests.get(thumbnail_url, timeout=10)
+        if not response.ok:
+            return None
+
+        return image_process(response.content)
+
+def extract_video_thumbnail(video_path, destination):
+    """ Extracts the first frame of the given video as a thumbnail image
+        and saves it to the given destination path.
+        This method requires the ffmpeg binary to be installed on the system.
+    """
+    if not os.path.isfile(video_path):
+        return False
+
+    # Export the first frame of the video as a 480p jpeg image
+    cmd = ['ffmpeg', '-i', video_path, '-vframes', '1',
+           '-vf', 'scale=854:480', '-f', 'image2', destination]
+    subprocess.call(cmd)
+    return os.path.isfile(destination)

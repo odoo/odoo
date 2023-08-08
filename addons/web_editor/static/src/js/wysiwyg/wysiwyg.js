@@ -341,7 +341,7 @@ export class Wysiwyg extends Component {
                 '/web_editor/video_url/data',
                 { video_url: url },
             );
-            const [savedVideo] = VideoSelector.createElements([{src}]);
+            const [savedVideo] = await VideoSelector.createElements([{src}]);;
             savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
             return savedVideo;
         };

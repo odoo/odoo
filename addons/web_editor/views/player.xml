@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <template id="web_editor.player">
+            <html>
+                <head>
+                    <t t-call-assets="web_editor.assets_player" />
+                </head>
+
+                <body>
+                    <video class="w-100 h-100 bg-black" t-att="videoAttr">
+                        <source t-att="sourceAttr" />
+
+                        <!-- 
+                            The following source tag is used as a fallback in 
+                            case either the video was deleted or the video
+                            format is not supported by the browser 
+                        !-->
+                        <source src="/web/content/web_editor.s_video_fallback" />
+                    </video>
+                </body>
+            </html>
+        </template>
+    </data>
+</odoo>

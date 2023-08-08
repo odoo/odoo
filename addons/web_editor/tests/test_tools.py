@@ -86,14 +86,14 @@ class TestVideoUtils(common.BaseCase):
 
 @tagged('-standard', 'external')
 class TestVideoUtilsExternal(common.BaseCase):
-    def test_get_video_thumbnail(self):
+    def test_fetch_web_video_thumbnail(self):
         #youtube
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['youtube']), bytes)
+        self.assertIsInstance(tools.fetch_web_video_thumbnail(TestVideoUtils.urls['youtube']), bytes)
         #vimeo
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['vimeo']), bytes)
+        self.assertIsInstance(tools.fetch_web_video_thumbnail(TestVideoUtils.urls['vimeo']), bytes)
         #dailymotion
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['dailymotion']), bytes)
+        self.assertIsInstance(tools.fetch_web_video_thumbnail(TestVideoUtils.urls['dailymotion']), bytes)
         #instagram
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['instagram']), bytes)
+        self.assertIsInstance(tools.fetch_web_video_thumbnail(TestVideoUtils.urls['instagram']), bytes)
         #default
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['youku']), bytes)
+        self.assertIsInstance(tools.fetch_web_video_thumbnail(TestVideoUtils.urls['youku']), bytes)

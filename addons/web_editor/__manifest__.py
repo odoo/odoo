@@ -13,8 +13,10 @@ Odoo Web Editor widget.
     'data': [
         'security/ir.model.access.csv',
         'data/editor_assets.xml',
+        'data/ir_attachment.xml',
         'views/editor.xml',
         'views/snippets.xml',
+        'views/player.xml'
     ],
     'assets': {
 
@@ -34,6 +36,12 @@ Odoo Web Editor widget.
         ],
         'web_editor.assets_media_dialog': [
             'web_editor/static/src/components/**/*',
+        ],
+        'web_editor.assets_player': [
+            ('include', 'web._assets_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            ('include', 'web._assets_bootstrap'),
         ],
         'web_editor.assets_tests_styles': [
             ('include', 'web._assets_helpers'),
