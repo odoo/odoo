@@ -139,17 +139,16 @@ class Page(models.Model):
         # When a website_page is deleted, the ORM does not delete its
         # ir_ui_view. So we got to delete it ourself, but only if the
         # ir_ui_view is not used by another website_page.
-        for page in self:
-            # Other pages linked to the ir_ui_view of the page being deleted (will it even be possible?)
-            pages_linked_to_iruiview = self.search(
-                [('view_id', '=', page.view_id.id), ('id', '!=', page.id)]
-            )
-            if not pages_linked_to_iruiview and not page.view_id.inherit_children_ids:
-                # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
-                page.view_id.unlink()
+        views_to_delete = self.view_id.filtered(
+            lambda v: v.page_ids <= self and not v.inherit_children_ids
+        )
+        # Rebind self to avoid unlink already deleted records from `ondelete="cascade"`
+        self = self - views_to_delete.page_ids
+        views_to_delete.unlink()
+
         # Make sure website._get_menu_ids() will be recomputed
         self.env.registry.clear_cache()
-        return super(Page, self).unlink()
+        return super().unlink()
 
     def write(self, vals):
         for page in self:
