@@ -188,9 +188,10 @@
 
     .o_favorite {
         @include o-position-absolute(
-            $top: 3px,
+            $top: 1px,
             $left: calc(var(--KanbanRecord-padding-h) - #{$o-horizontal-padding})
         );
+        padding: $o-kanban-record-margin;
     }
 }
 
