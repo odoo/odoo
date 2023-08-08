@@ -21,7 +21,7 @@ export default class OdooChartCorePlugin extends CorePlugin {
         this.charts = {};
 
         globalFiltersFieldMatchers["chart"] = {
-            geIds: () => this.getters.getOdooChartIds(),
+            getIds: () => this.getters.getOdooChartIds(),
             getDisplayName: (chartId) => this.getters.getOdooChartDisplayName(chartId),
             getFieldMatching: (chartId, filterId) =>
                 this.getOdooChartFieldMatching(chartId, filterId),
@@ -184,8 +184,12 @@ export default class OdooChartCorePlugin extends CorePlugin {
      * @param {string} chartId
      * @param {Object} fieldMatching
      */
-    _addOdooChart(chartId, fieldMatching = {}) {
+    _addOdooChart(chartId, fieldMatching = undefined) {
         const charts = { ...this.charts };
+        if (!fieldMatching) {
+            const model = this.getters.getChartDefinition(chartId).metaData.resModel;
+            fieldMatching = this.getters.getFieldMatchingForModel(model);
+        }
         charts[chartId] = {
             fieldMatching,
         };

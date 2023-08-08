@@ -42,7 +42,7 @@ export default class PivotCorePlugin extends CorePlugin {
         /** @type {Object.<string, Pivot>} */
         this.pivots = {};
         globalFiltersFieldMatchers["pivot"] = {
-            geIds: () => this.getters.getPivotIds(),
+            getIds: () => this.getters.getPivotIds(),
             getDisplayName: (pivotId) => this.getters.getPivotName(pivotId),
             getTag: (pivotId) => sprintf(_t("Pivot #%s"), pivotId),
             getFieldMatching: (pivotId, filterId) => this.getPivotFieldMatching(pivotId, filterId),
@@ -255,8 +255,12 @@ export default class PivotCorePlugin extends CorePlugin {
      * @param {PivotDefinition} definition
      * @param {string} dataSourceId
      */
-    _addPivot(id, definition, fieldMatching = {}) {
+    _addPivot(id, definition, fieldMatching = undefined) {
         const pivots = { ...this.pivots };
+        if (!fieldMatching) {
+            const model = definition.metaData.resModel;
+            fieldMatching = this.getters.getFieldMatchingForModel(model);
+        }
         pivots[id] = {
             id,
             definition,

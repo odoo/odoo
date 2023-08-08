@@ -88,14 +88,14 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
             id: chartId,
         });
         assert.deepEqual(
-            globalFiltersFieldMatchers["chart"].geIds(),
+            globalFiltersFieldMatchers["chart"].getIds(),
             [],
             "it should have removed the chart and its fieldMatching and datasource altogether"
         );
         model.dispatch("REQUEST_UNDO");
         assert.deepEqual(model.getters.getChartFieldMatch(chartId)[filter.id], matching);
         model.dispatch("REQUEST_REDO");
-        assert.deepEqual(globalFiltersFieldMatchers["chart"].geIds(), []);
+        assert.deepEqual(globalFiltersFieldMatchers["chart"].getIds(), []);
     });
 
     QUnit.test("field matching is removed when filter is deleted", async function (assert) {
