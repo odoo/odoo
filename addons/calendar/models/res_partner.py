@@ -50,7 +50,7 @@ class Partner(models.Model):
                     if partner["id"] in self.ids:
                         meetings[partner["id"]] |= meetings[p["id"]]
                     partner = next((pt for pt in all_partners if partner["parent_id"] and pt["id"] == partner["parent_id"][0]), None)
-            return {p.id: list(meetings[p.id]) for p in self}
+            return {p_id: list(meetings[p_id]) for p_id in self.ids}
         return {}
 
     def get_attendee_detail(self, meeting_ids):
