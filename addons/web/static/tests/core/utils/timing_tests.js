@@ -248,4 +248,67 @@ QUnit.module("utils", () => {
         await advanceFrame();
         assert.verifySteps([]);
     });
+
+    QUnit.test("throttleForAnimationScrollEvent", async (assert) => {
+        assert.expect(9);
+        const { advanceFrame, execRegisteredAnimationFrames } = mockAnimationFrame();
+        let resolveThrottled;
+        let throttled = new Promise(resolve => resolveThrottled = resolve);
+        const throttledFn = throttleForAnimation((val, targetEl) => {
+            // In Chrome, the currentTarget of scroll events is lost after the
+            // event was handled, it is therefore null here.
+            // Because of this, if it is needed, it must be included in the
+            // callback signature.
+            const nodeName = val && val.currentTarget && val.currentTarget.nodeName;
+            const targetName = targetEl && targetEl.nodeName;
+            assert.step(`throttled function called with ${nodeName} in event, but ${targetName} in parameter`);
+            resolveThrottled();
+        });
+
+        const el = document.createElement("div");
+        el.style = "position: absolute; overflow: scroll; height: 100px; width: 100px;";
+        const childEl = document.createElement("div");
+        childEl.style = "height: 200px; width: 200px;";
+        let resolveScrolled;
+        let scrolled = new Promise(resolve => resolveScrolled = resolve);
+        el.appendChild(childEl);
+        el.addEventListener("scroll", (ev) => {
+            assert.step("before scroll");
+            throttledFn(ev, ev.currentTarget);
+            assert.step("after scroll");
+            resolveScrolled();
+        });
+        document.body.appendChild(el);
+        el.scrollBy(1, 1);
+        el.scrollBy(2, 2);
+        await scrolled;
+        await throttled;
+
+        assert.verifySteps([
+            "before scroll",
+            "throttled function called with DIV in event, but DIV in parameter",
+            "after scroll",
+        ], "scroll happened and direct first call to throttled function happened too");
+
+        throttled = new Promise(resolve => resolveThrottled = resolve);
+        scrolled = new Promise(resolve => resolveScrolled = resolve);
+        el.scrollBy(3, 3);
+        await scrolled;
+        assert.verifySteps([
+            "before scroll",
+            // Further call is delayed.
+            "after scroll",
+        ], "scroll happened but throttled function hasn't been called yet");
+        setTimeout(() => {
+            advanceFrame();
+            execRegisteredAnimationFrames();
+        });
+        await throttled;
+        assert.verifySteps(
+            ["throttled function called with null in event, but DIV in parameter"],
+            "currentTarget was not available in throttled function's event"
+        );
+        el.remove();
+    });
+
 });
