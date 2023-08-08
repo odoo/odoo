@@ -2262,6 +2262,9 @@ export class Wysiwyg extends Component {
         finalOptions.autohideToolbar = typeof finalOptions.autohideToolbar === 'boolean'
             ? finalOptions.autohideToolbar
             : !finalOptions.snippets;
+        if (finalOptions.inlineStyle) {
+            finalOptions.dropImageAsAttachment = false;
+        }
 
         return finalOptions;
     }
