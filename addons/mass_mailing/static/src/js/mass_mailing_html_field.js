@@ -51,6 +51,7 @@ export class MassMailingHtmlField extends HtmlField {
                 this.commitChanges();
                 this.wysiwyg.odooEditor.toolbarHide();
             },
+            dropImageAsAttachment: false,
             ...this.props.wysiwygOptions,
         };
     }
