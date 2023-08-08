@@ -21,7 +21,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
         useSubEnv({
             currencyId: this.props.record.context.product_catalog_currency_id,
             orderId: this.props.record.context.product_catalog_order_id,
-            productId: this.record.id.raw_value,
+            productId: this.props.record.resId,
             addProduct: this.addProduct.bind(this),
             removeProduct: this.removeProduct.bind(this),
             increaseQuantity: this.increaseQuantity.bind(this),

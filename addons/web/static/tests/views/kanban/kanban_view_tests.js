@@ -9078,6 +9078,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("resequence a record twice", async (assert) => {
         serverData.models.partner.records = [];
 
+        const def = makeDeferred();
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -9092,6 +9093,7 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route) {
                 if (route === "/web/dataset/resequence") {
                     assert.step("resequence");
+                    await def;
                 }
             },
         });
@@ -9116,6 +9118,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         await dragAndDrop(".o_kanban_record:nth-child(2)", ".o_kanban_record:nth-child(3)");
+        def.resolve();
+        await nextTick();
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.deepEqual(
@@ -9166,6 +9170,43 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(getCard(2).querySelector(".o_widget").innerText, '{"foo":"gnap"}');
+    });
+
+    QUnit.test("kanban card: record value should be update", async (assert) => {
+        class MyComponent extends Component {
+            static template = owl.xml`<div><button t-on-click="onClick">CLick</button></div>`;
+            onClick() {
+                this.props.record.update({ foo: "yolo" });
+            }
+        }
+        const myComponent = {
+            component: MyComponent,
+        };
+        viewWidgetRegistry.add("test", myComponent);
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+            <kanban>
+                <field name="foo"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <div class="foo" t-esc="record.foo.value"/>
+                            <widget name="test"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+        });
+
+        assert.strictEqual(getCard(0).querySelector(".foo").innerText, "yop");
+
+        await click(getCard(0).querySelector("button"));
+        await nextTick();
+        assert.strictEqual(getCard(0).querySelector(".foo").innerText, "yolo");
     });
 
     QUnit.test("column progressbars properly work", async (assert) => {
