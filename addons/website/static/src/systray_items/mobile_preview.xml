@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 <t t-name="website.MobilePreviewSystray" owl="1">
     <div class="o_mobile_preview o_menu_systray_item d-none d-md-block"
-         t-on-click="() => this.websiteService.context.isMobile = !this.websiteService.context.isMobile"
          t-att-class="{ 'o_mobile_preview_active': this.state.isMobile }">
-        <a href="#" accesskey="v" class="o_nav_entry">
+        <a href="#" accesskey="v" class="o_nav_entry"
+           t-on-click="() => this.websiteService.context.isMobile = !this.websiteService.context.isMobile">
             <span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-lg fa-mobile"/>
         </a>
     </div>

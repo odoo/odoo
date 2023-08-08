@@ -270,6 +270,8 @@
             'website/static/src/components/editor/editor.scss',
             'website/static/src/components/editor/editor.xml',
             'website/static/src/components/navbar/navbar.js',
+            'website/static/src/components/navbar/navbar.scss',
+            'website/static/src/components/navbar/navbar.xml',
             'website/static/src/components/burger_menu/burger_menu.js',
             'website/static/src/components/switch/switch.js',
             'website/static/src/components/switch/switch.scss',
