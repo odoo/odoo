@@ -158,7 +158,6 @@ class Groups(models.Model):
         # invalidate caches before updating groups, since the recomputation of
         # field 'share' depends on method has_group()
         self.env['ir.model.access'].call_cache_clearing_methods()
-        self.env['res.users'].has_group.clear_cache(self.env['res.users'])
         return super(Groups, self).write(vals)
 
 
@@ -376,7 +375,6 @@ class Users(models.Model):
         if 'groups_id' in values:
             self.env['ir.model.access'].call_cache_clearing_methods()
             self.env['ir.rule'].clear_caches()
-            self.has_group.clear_cache(self)
         if any(key.startswith('context_') or key in ('lang', 'tz') for key in values):
             self.context_get.clear_cache(self)
         if any(key in values for key in ['active'] + USER_PRIVATE_FIELDS):
@@ -609,8 +607,6 @@ class Users(models.Model):
                             (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                          (self._uid, module, ext_id))
         return bool(self._cr.fetchone())
-    # for a few places explicitly clearing the has_group cache
-    has_group.clear_cache = _has_group.clear_cache
 
     @api.multi
     def _is_public(self):
