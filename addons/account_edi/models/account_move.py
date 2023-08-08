@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import io
+import zipfile
+from werkzeug.urls import url_encode
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -441,6 +445,27 @@ class AccountMove(models.Model):
         self._retry_edi_documents_error_hook()
         self.edi_document_ids.write({'error': False, 'blocking_level': False})
         self.action_process_edi_web_services()
+
+    ####################################################
+    # Export Electronic Document
+    ####################################################
+
+    def _action_download_electronic_invoice(self):
+        if not self:
+            return False
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/account_edi/download_edi_documents?%s' % url_encode({'ids': self.filtered('edi_document_ids').ids}),
+            'target': 'new',
+        }
+
+    def _create_zipped(self):
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_DEFLATED) as zipfile_obj:
+            for invoice in self:
+                for document in invoice.edi_document_ids:
+                    zipfile_obj.writestr(document.display_name, document.attachment_id.raw)
+        return buffer.getvalue()
 
 
 class AccountMoveLine(models.Model):
