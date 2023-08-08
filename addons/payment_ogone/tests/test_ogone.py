@@ -64,7 +64,6 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
             'CURRENCY': self.currency.name,
             'LANGUAGE': self.partner.lang,
             'EMAIL': self.partner.email,
-            'CN': self.partner.name,
             'OWNERZIP': self.partner.zip,
             'OWNERADDRESS': payment_utils.format_partner_address(
                 self.partner.street, self.partner.street2
