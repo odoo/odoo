@@ -4463,6 +4463,7 @@ export class OdooEditor extends EventTarget {
             this.toolbar.style.pointerEvents = 'none';
             if (this.deselectTable() && hasValidSelection(this.editable)) {
                 this.document.getSelection().collapseToStart();
+                this._updateToolbar(false);
             }
         }
         // Handle table resizing.
